@@ -1052,6 +1052,12 @@ export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => 
         payload: setSlateParentParams
     })
 }
+export const setSlateMatterType = (setSlateParentParams) => (dispatch, getState) => {
+    return dispatch({
+        type: 'SET_SLATE_MATTER_TYPE',
+        payload: setSlateParentParams
+    })
+}
 export const getPageNumber = (elementID) => (dispatch, getState) => {
     dispatch({
         type: PAGE_NUMBER_LOADER,

@@ -467,13 +467,12 @@ it('testing------- updateAssignee failed response  action',()=>{
 
 it('testing------- deleteComment  action',()=>{
     store = mockStore(() => initialState);
-    let commentUrn = "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
-     elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b"
-    const expectedActions = [{
+    let commentUrn = "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c";
+    const expectedActions = {
         type: DELETE_COMMENT,
         payload: commentUrn
     
-    }];
+    };
     moxios.wait(() => {
         const request = moxios.requests.mostRecent();
         request.respondWith({
@@ -482,20 +481,18 @@ it('testing------- deleteComment  action',()=>{
         });
     });
 
-    return store.dispatch(actions.deleteComment(commentUrn,elementId)).then(() => {
-        expect(store.getActions()[0]).toEqual(expectedActions[0]);
-    });
+    const result =  store.dispatch(actions.deleteComment(commentUrn));
+    expect(result).toEqual(expectedActions);
 })
 
 it('testing------- deleteComment failed response  action',()=>{
     store = mockStore(() => initialState);
-    let commentUrn = "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c",
-     elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b"
-    const expectedActions = [{
+    let commentUrn = "urn:pearson:comment:90a27e87-9630-47e5-a5d8-ef2fe0e3626c";
+    const expectedActions = {
         type: DELETE_COMMENT,
         payload: commentUrn
     
-    }];
+    };
     moxios.wait(() => {
         const request = moxios.requests.mostRecent();
         request.respondWith({
@@ -504,9 +501,8 @@ it('testing------- deleteComment failed response  action',()=>{
         });
     });
 
-    return store.dispatch(actions.deleteComment(commentUrn,elementId)).then(() => {
-        expect(store.getActions()[0]).toEqual(expectedActions[0]);
-    });
+    const result =  store.dispatch(actions.deleteComment(commentUrn));
+    expect(result).toEqual(expectedActions);
 })
 
 it('testing------- fetchCommentByElement  action',()=>{

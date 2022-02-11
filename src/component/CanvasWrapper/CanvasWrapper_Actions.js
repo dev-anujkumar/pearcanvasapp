@@ -40,6 +40,7 @@ import { HideLoader, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../const
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
+import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -822,6 +823,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(fetchProjectFigures(currentParentUrn));
             dispatch(fetchFigureDropdownOptions());
             config.figureDataToBeFetched = false;
+            const slateMatterType = getState().appStore.slateMatterType
+            const allSlatesData = getState().appStore.allSlateData
+            getCurrentSlatesList(allSlatesData,slateMatterType,currentParentUrn,dispatch)
         }
 
         if (slateData.data[newVersionManifestId].type !== "popup") {
