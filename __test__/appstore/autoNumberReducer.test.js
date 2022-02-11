@@ -19,7 +19,9 @@ const initialState = {
         equationsList: [],
         audiosList:[],
         videosList:[],
-        interactiveList: []
+        interactiveList: [],
+        asidesList:[],
+        workedExamplesList:[]
     },
     autoNumberingDetails: {},
     autoNumberElementsIndex: {
@@ -28,7 +30,9 @@ const initialState = {
         equationsIndex: {},
         audioIndex: {},
         videoIndex: {},
-        interactiveIndex: {}
+        interactiveIndex: {},
+        workedExampleIndex:{},
+        asideIndex:{}
     },
     slateFigureList:[],
     autoNumberOption: '',
@@ -55,7 +59,9 @@ describe('testing for autoNumberReducer file --->', () => {
                 equationsList: [],
                 audiosList: {id: 1},
                 videosList:[],
-                interactiveList: []
+                interactiveList: [],
+                asidesList:[],
+                workedExamplesList:[]
             }
         };
         let mockData = {
@@ -108,7 +114,9 @@ describe('testing for autoNumberReducer file --->', () => {
                 equationsIndex: {},
                 audioIndex: {id:2},
                 videoIndex: {},
-                interactiveIndex: {}
+                interactiveIndex: {},
+                workedExampleIndex:{},
+                asideIndex:{}
             }
         };
         let mockData = {
@@ -131,7 +139,9 @@ describe('testing for autoNumberReducer file --->', () => {
                 equationsList: [],
                 audiosList:[],
                 videosList:[5],
-                interactiveList: []
+                interactiveList: [],
+                asidesList:[],
+                workedExamplesList:[]
             }, 
         };
 

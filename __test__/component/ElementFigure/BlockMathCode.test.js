@@ -50,6 +50,9 @@ describe('Testing BlockMathCode Component', () => {
         },
         projectMetadata:{},
         autoNumberReducer: mockAutoNumberReducerEmpty,
+        toolbarReducer : {
+            spellCheckToggle : false
+        }
     }
     const store = mockStore(initialState);
     config.figureFieldsPlaceholders = cypressConfig.figureFieldsPlaceholders
