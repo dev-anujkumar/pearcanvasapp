@@ -26,7 +26,7 @@ export const handleAutoNumberingOnCopyPaste = (params) => {
     const slateAncestors = getState().appStore.currentSlateAncestorData
     const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside']
     if (isAutoNumberingEnabled) {
-        //reset indexes of images on a slate after swap
+        //reset indexes of images on a slate after cut/copy operation
         const bodyMatter = currentSlateData.contents.bodymatter
         const slateFigures = getImagesInsideSlates(bodyMatter)
         if (slateFigures) {
@@ -107,7 +107,8 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
 
 
 /**
- *  This function resets sequence after SWAP when a container having figure is swapped
+ *  This function resets sequence after CUT/COPY Operation 
+ * for a container having autonumbered elements
  * @param {*} params
  */
 
@@ -122,6 +123,8 @@ export const updateAutoNumberSequenceOnCutCopyContainers = (params) => {
     } = params;
     let oldNumberedElements = { ...numberedElements }
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
+    /* get numberedElements with Object Values as Arrays for easy iteration 
+    where is array of elements is corr to current figureParentEntityUrn ONLY */
     Object.keys(oldNumberedElements).forEach(labelType => {
         if ((Array.isArray(oldNumberedElements[labelType]) && oldNumberedElements[labelType]?.length === 0) || (Object.keys(oldNumberedElements[labelType])?.length < 0)) {
             oldNumberedElements[labelType] = []
@@ -134,27 +137,32 @@ export const updateAutoNumberSequenceOnCutCopyContainers = (params) => {
             }
         }
     })
+    /** Iterate over NumberedElements ->
+     * For each label - autonumberd elements list corr to a given slateEntityUrn is updated
+     */
     Object.keys(oldNumberedElements).forEach(elementLabel => {
         const eleLabel = getKeyByValue(autoNumber_KeyMapperElements, elementLabel)
-        if (oldNumberedElements[elementLabel]?.length > 0) {
+        if (oldNumberedElements[elementLabel]?.length > 0) { //when elements of same label in the container exist
             const oldLabelElements = prevSelectedAutoNumberElements?.filter(ele => ele.displayedlabel === eleLabel)
             const activeLabelElements = updatedSlateAutoNumberedElements?.filter(ele => ele.displayedlabel === eleLabel)
             const activeNumberedElements = activeLabelElements.map(setElementDetails)
             const currentSlateEntityUrn = getSlateEntityUrn()
             if (oldLabelElements?.length > 0) { //when given slate has atleast one element of same label
                 const currentSlateStartIndex = oldNumberedElements[elementLabel]?.findIndex(ele => ele.slateEntityUrn === currentSlateEntityUrn)
+                //replace entire list of same label elements for this slate in the main autonumbered sequence
                 numberedElements[elementLabel][figureParentEntityUrn].splice(currentSlateStartIndex, oldLabelElements.length, ...activeNumberedElements)
-            } else {
-                if (tocContainerSlateList?.indexOf(currentSlateEntityUrn) === 0) { //insert at beginning of list
+            } else {// when no element of same label on given slate 
+                if (tocContainerSlateList?.indexOf(currentSlateEntityUrn) === 0) { // when inserting on the first slate on the container
+                    //insert at beginning of list
                     numberedElements[elementLabel][figureParentEntityUrn].splice(0, 0, ...activeNumberedElements)
-                } else {
+                } else { // when same label elements are in container but not on current slate
                     const elementCount = getSlateElementCount(tocContainerSlateList, oldNumberedElements[elementLabel])
                     const refImageSlateUrn = getReferenceSlateUrn(tocContainerSlateList, elementCount, currentSlateEntityUrn)
                     const refImageSlateLastIndex = numberedElements[elementLabel][figureParentEntityUrn].findLastIndex(ele => ele.slateEntityUrn === refImageSlateUrn)
                     numberedElements[elementLabel][figureParentEntityUrn].splice(refImageSlateLastIndex +1, 0, ...activeNumberedElements)
                 }
             }
-        } else { //when no element of same label in the container
+        } else { //when no element of same label in the container exists
             const activeLabelElements = updatedSlateAutoNumberedElements?.filter(ele => ele.displayedlabel === eleLabel)
             const activeNumberedElements = activeLabelElements.map(setElementDetails)
             numberedElements[elementLabel] = { [figureParentEntityUrn]: activeNumberedElements }
@@ -169,7 +177,7 @@ export const updateAutoNumberSequenceOnCutCopyContainers = (params) => {
     getAutoNumberSequence(numberedElements, dispatch)
 }
 
-
+/** Returns the object with keys as slateUrns and value as [index of slate in container, no fo elements of given label]  */
 export const getSlateElementCount = (listOfSlates, currentLabelElements) => {
     return listOfSlates.reduce((obj, item,index) => {
         obj[item] = [index,currentLabelElements?.filter(item1 => item1.slateEntityUrn === item).length]
@@ -177,6 +185,7 @@ export const getSlateElementCount = (listOfSlates, currentLabelElements) => {
     }, {})
 }
 
+/** Returns the slate preceeding the current slate that has atleast one element of same label  */
 export const getReferenceSlateUrn = (tocContainerSlateList, elementCount, currentSlateId) => {
     const preceedingSlateCount = tocContainerSlateList?.indexOf(currentSlateId)
     let referenceSlate = currentSlateId
@@ -188,6 +197,8 @@ export const getReferenceSlateUrn = (tocContainerSlateList, elementCount, curren
     return referenceSlate
 }
 
+
+/** Returns the key for the given value in the object */
 export const getKeyByValue = (object, value)  => {
     return Object.keys(object).find(key => object[key] === value);
 }
@@ -199,31 +210,27 @@ export const getKeyByValue = (object, value)  => {
 const setElementDetails = (element) => {
     if (element) {
         const elementToReturn = {
-            versionUrn: element.versionUrn,
-            contentUrn: element.contentUrn,
-            entityUrn: element.contentUrn,
-            slateEntityUrn: element.slateEntityUrn,
-            numberedandlabel: element.numberedandlabel
+            entityUrn: element.contentUrn
         }
-        if (element.hasOwnProperty('displayedlabel')) {
-            elementToReturn.displayedlabel = element.displayedlabel
-        }
-        if (element.hasOwnProperty('type')) {
-            elementToReturn.type = element.type
-        }
-        if (element.hasOwnProperty('figuretype')) {
-            elementToReturn.figureType = element.figuretype
-        }
-        if (element.hasOwnProperty('subtype')) {
-            elementToReturn.subType = element.subtype
-        }
-        if (element.hasOwnProperty('title')) {
-            elementToReturn.title = element.title
-        }
-        if (element.hasOwnProperty('manualoverride')) {
-            elementToReturn.title = element.manualoverride
-        }
+        Object.keys(elementIdMapper).forEach(prop => {
+            if (element.hasOwnProperty(prop)) {
+                elementToReturn[elementIdMapper[prop]] = element[prop]
+            }
+        })
         return elementToReturn
     }
     return {}
+}
+
+const elementIdMapper = {
+    'type': 'type',
+    'title': 'title',
+    'subtype': 'subType',
+    'figuretype': 'figureType',
+    'versionUrn': 'versionUrn',
+    'contentUrn': 'contentUrn',
+    'slateEntityUrn': 'slateEntityUrn',
+    'manualoverride': 'manualoverride',
+    'displayedlabel': 'displayedlabel',
+    'numberedandlabel': 'numberedandlabel'
 }
