@@ -101,7 +101,20 @@ const INITIAL_STATE = {
         video: ["No Label", "Custom"],
         tableasmarkup: ["No Label", 'Table', "Custom"],
         mathml: ["No Label", "Equation", "Custom"],
-		preformattedtext: ["No Label", "Exhibit", "Custom"]
+		preformattedtext: ["No Label", "Exhibit", "Custom"],
+        aside:["Aside"],
+        interactive:["Interactive"],
+        workedexample:["Worked Example"],
+        audioCustom: [],
+        imageCustom: [],
+        smartlinksCustom: [],
+        videoCustom: [],
+        tableasmarkupCustom: [],
+        mathmlCustom: [],
+		preformattedtextCustom: [],
+        asideCustom:[],
+        interactiveCustom:[],
+        workedexampleCustom:[]
     },
     asideTitleData: []
 };
