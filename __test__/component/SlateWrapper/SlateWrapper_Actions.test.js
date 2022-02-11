@@ -816,6 +816,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -836,6 +837,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -856,6 +858,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -876,6 +879,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -896,6 +900,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -916,6 +921,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -936,6 +942,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -956,6 +963,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1197,6 +1205,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: "popup"
                 }
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             autoNumberReducer: mockAutoNumberReducerEmpty,
         }
@@ -1238,6 +1247,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: "popup"
                 }
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             autoNumberReducer: mockAutoNumberReducerEmpty,
         }
@@ -1275,6 +1285,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: "popup"
                 }
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1315,6 +1326,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: "popup"
                 }
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1354,6 +1366,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: "popup"
                 }
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1426,6 +1439,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: "popup"
                 }
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1444,6 +1458,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1468,6 +1483,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1495,6 +1511,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1533,6 +1550,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1592,6 +1610,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1656,7 +1675,8 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
-            tcmReducer: { tcmSnapshot: ["78", "9"] }
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            autoNumberReducer: { isAutoNumberingEnabled: true }
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -1708,7 +1728,8 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
-            tcmReducer: { tcmSnapshot: ["78", "9"] }
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            autoNumberReducer: { isAutoNumberingEnabled: true }
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -1754,7 +1775,8 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
-            tcmReducer: { tcmSnapshot: ["78", "9"] }
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            autoNumberReducer: { isAutoNumberingEnabled: true }
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -1796,7 +1818,8 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
-            tcmReducer: { tcmSnapshot: ["78", "9"] }
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -1829,6 +1852,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1849,6 +1873,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1883,6 +1908,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1917,6 +1943,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1955,6 +1982,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);
@@ -1997,6 +2025,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: { isAutoNumberingEnabled: true }
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -2024,6 +2053,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -2051,6 +2081,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -2078,6 +2109,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -2105,6 +2137,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: mockAutoNumberReducerEmpty
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -2132,6 +2165,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: mockAutoNumberReducerEmpty
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -2170,6 +2204,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {
                 selection: {
@@ -2996,6 +3031,7 @@ describe('Tests Slate Wrapper Actions', () => {
                     type: ""
                 },
             },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
             tcmReducer: { tcmSnapshot: ["78", "9"] }
         }
         store3 = mockStore(() => initialState3);

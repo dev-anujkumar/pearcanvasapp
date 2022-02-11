@@ -1,9 +1,10 @@
 import toolbarReducer from '../../src/appstore/toolbarReducer';
-import { TOGGLE_BORDERS, TOGGLE_PAGE_NUMBER } from '../../src/constants/Action_Constants';
+import { TOGGLE_BORDERS, TOGGLE_PAGE_NUMBER, TOGGLE_SPELL_CHECK } from '../../src/constants/Action_Constants';
 
 const INIT_STATE = {
     elemBorderToggle: true,
-    pageNumberToggle:false
+    pageNumberToggle:false,
+    spellCheckToggle: true,
 }
 const expectedState={
     ...INIT_STATE,
@@ -12,6 +13,10 @@ const expectedState={
 const pageNumberExpectedState={
     ...INIT_STATE,
     pageNumberToggle: true
+}
+const spellcheckExpectedState={
+    ...INIT_STATE,
+    spellCheckToggle: false
 }
 describe('testing Toolbar Reducer cases --', () => {
 
@@ -33,6 +38,15 @@ describe('testing Toolbar Reducer cases --', () => {
                 pageNumberToggle: true
                }
            })).toEqual(pageNumberExpectedState);
+       })
+
+       it('Change spell check Toggle ', () => {
+        expect(toolbarReducer(INIT_STATE, {
+               type: TOGGLE_SPELL_CHECK,
+               payload: {
+                spellCheckToggle: false
+               }
+           })).toEqual(spellcheckExpectedState);
        })
 });
 

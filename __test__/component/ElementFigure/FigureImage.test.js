@@ -64,6 +64,7 @@ describe('Testing Figure image component', () => {
         },
         projectMetadata:{},
         autoNumberReducer: mockAutoNumberReducerEmpty,
+        keyboardReducer : {selectedElement: '' }
     }
     const store = mockStore(initialState);
 
@@ -671,6 +672,7 @@ describe('Testing Figure image component', () => {
         },
         projectMetadata: {},
         autoNumberReducer: mockAutoNumberReducerWithData,
+        keyboardReducer : {selectedElement: '' }
     }
     const store2 = mockStore(initialState2);
 

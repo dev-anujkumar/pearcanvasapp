@@ -128,7 +128,7 @@ export const getMediaElementInPopup = (containerData, numberedElements) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getMediaElementInAsideWE = (containerData, numberedElements) => {
+export const getMediaElementInAsideWE = (containerData, numberedElements, parentIndex) => {
     if (containerData?.elementdata?.bodymatter?.length > 0) {
         containerData?.elementdata?.bodymatter.forEach((element, index) => {
             element.parentDetails = containerData.parentDetails   || []

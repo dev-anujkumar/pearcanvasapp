@@ -233,7 +233,7 @@ describe('Testing Function - createLabelNumberTitleModel', () => {
     })
 })
 
-describe('Testing Function - getLabelNumberTitleHTML', () => {
+xdescribe('Testing Function - getLabelNumberTitleHTML', () => {
     let figureObj = newFigureObj;
     it('Case 1', () => {
         let result = getLabelNumberTitleHTML(figureObj);
