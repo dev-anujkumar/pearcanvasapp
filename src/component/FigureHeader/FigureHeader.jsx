@@ -52,7 +52,7 @@ export const FigureHeader = (props) => {
     const [slateAncestors, setSlateAncestors] = useState(props.currentSlateAncestorData || {});
     const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedlabel ?? props.model?.manualoverride?.overridelabelvalue ?? '');
     const [figureLabelData, setFigureLabelData] = useState([]);
-    const [labelNumberSetting, setLabelNumberSetting] = useState(null);
+    const [labelNumberSetting, setLabelNumberSetting] = useState(setAutoNumberSettingValue(props.model));
     const [labelDropDown, setLabelDropDown] = useState(false);
     const [labelNumberSettingDropDown, setLabelNumberSettingDropDown] = useState(false);
     const [showLabelField, setShowLabelField] = useState(true);
