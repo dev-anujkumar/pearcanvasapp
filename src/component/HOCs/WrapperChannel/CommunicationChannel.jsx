@@ -911,11 +911,15 @@ function CommunicationChannel(WrappedComponent) {
                 if (message?.node) {
                     let matterType = 'bodymatter'
                     if (message.node.parentOfParentItem !== "") {
-                        if (message.node.parentOfParentItem === 'backmatter' || message.node.nodeParentLabel === 'backmatter') {
+                        if (message.node.parentOfParentItem === 'backmatter') {
                             matterType = 'backmatter'
-                        } else if (message.node.parentOfParentItem === 'frontmatter' || message.node.nodeParentLabel === 'frontmatter') {
+                        } else if (message.node.parentOfParentItem === 'frontmatter') {
                             matterType = 'frontmatter'
                         }
+                    } else if (message.node.nodeParentLabel === 'backmatter') {
+                        matterType = 'backmatter'
+                    } else if (message.node.nodeParentLabel === 'frontmatter') {
+                        matterType = 'frontmatter'
                     }
                     this.props.setSlateMatterType(matterType);
                 }

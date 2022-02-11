@@ -825,8 +825,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             config.figureDataToBeFetched = false;
             const slateMatterType = getState().appStore.slateMatterType
             const allSlatesData = getState().appStore.allSlateData
-            getCurrentSlatesList(allSlatesData,slateMatterType,currentParentUrn)
-            dispatch(getCurrentSlatesList(getState().appStore.allSlateData));
+            getCurrentSlatesList(allSlatesData,slateMatterType,currentParentUrn,dispatch)
         }
 
         if (slateData.data[newVersionManifestId].type !== "popup") {

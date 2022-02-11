@@ -7,7 +7,8 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS,
     UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
     UPDATE_AUTONUMBERING_DROPDOWN_VALUE,
-    UPDATE_POPUP_PARENT_SLATE
+    UPDATE_POPUP_PARENT_SLATE,
+    GET_SLATE_LIST_IN_CONTAINER
 } from '../constants/Action_Constants.js';
 
 const INITIAL_STATE = {
@@ -35,7 +36,8 @@ const INITIAL_STATE = {
     },
     slateFigureList:[],
     autoNumberOption: '',
-    popupParentSlateData: {}
+    popupParentSlateData: {},
+    tocContainerSlateList:[]
 }
 
 const INITIAL_ACTION = {
@@ -103,6 +105,11 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 popupParentSlateData: action.payload
+            }
+        case GET_SLATE_LIST_IN_CONTAINER:
+            return {
+                ...state,
+                tocContainerSlateList: action.payload
             }
         default:
             return state
