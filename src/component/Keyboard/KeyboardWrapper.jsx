@@ -79,7 +79,7 @@ const isFirtstChild = (node, tinymceOffset) => {
         else if (firstTextNode === node) {
             return tinymceOffset === 0;
         }
-        else if (node?.parentNode?.parentNode?.id?.startsWith(QUERY_SELECTOR)) {
+        else if (node?.parentNode?.id?.startsWith(NORMAL_SELECTOR)) {
             
             if(firstTextNode?.nodeName === 'IMG') {
                 return tinymceOffset === 0;
@@ -166,7 +166,7 @@ const isLastChild = (node, tinymceOffset) => {
             else
                 return tinymceOffset === lastTextNode?.textContent?.length;
         }
-        else if (node?.parentNode?.parentNode?.id?.startsWith(QUERY_SELECTOR)) {
+        else if (node?.parentNode?.id?.startsWith(NORMAL_SELECTOR)) {
             // case for only single image
             if(lastTextNode?.nodeName === 'IMG') {
                 return tinymceOffset !==0
