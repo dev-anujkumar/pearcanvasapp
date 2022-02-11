@@ -13,6 +13,7 @@ import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
 import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData, INTERACTIVE } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
+import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -52,7 +53,7 @@ export const FigureHeader = (props) => {
     const [slateAncestors, setSlateAncestors] = useState(props.currentSlateAncestorData || {});
     const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedlabel ?? props.model?.manualoverride?.overridelabelvalue ?? '');
     const [figureLabelData, setFigureLabelData] = useState([]);
-    const [labelNumberSetting, setLabelNumberSetting] = useState(null);
+    const [labelNumberSetting, setLabelNumberSetting] = useState(setAutoNumberSettingValue(props.model));
     const [labelDropDown, setLabelDropDown] = useState(false);
     const [labelNumberSettingDropDown, setLabelNumberSettingDropDown] = useState(false);
     const [showLabelField, setShowLabelField] = useState(true);
@@ -290,10 +291,12 @@ export const FigureHeader = (props) => {
                 <label className={"transition-none"}>Preview</label>
                 <TextField disabled id="filled-disabled" className={"figure-preview"} variant="filled" placeholder="" defaultValue="" multiline value={previewData} fullWidth />
             </div>
-            <div className="floating-title-group">
-                <TinyMceEditor onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
-            </div>
+            <KeyboardWrapper enable index={`${props.index}-2`}>
+                <div className="floating-title-group">
+                    <TinyMceEditor onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
+                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                </div>
+            </KeyboardWrapper>
         </>
     );
 }
