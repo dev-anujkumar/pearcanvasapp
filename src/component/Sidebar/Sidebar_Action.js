@@ -840,6 +840,12 @@ export const updateBLMetaData = (elementId, elementData, metaData) => {
         if(metaData.columnnumber){
             elementData.columnnumber = metaData.columnnumber;
         }
+        if(metaData.fontstyle){
+            elementData.fontstyle = metaData.fontstyle;
+        }
+        if(metaData.iconcolor){
+            elementData.iconcolor = metaData.iconcolor;
+        }
     }
     else{
         if (elementData?.listdata?.bodymatter) {
