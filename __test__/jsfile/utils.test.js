@@ -1284,7 +1284,7 @@ describe('Utils file function testing', () => {
         expect(result).toEqual(`/images/logo.png?${(new Date()).getTime()}` )
     })
 
-    it("Testing removeImageCache function", () => {
+    xit("Testing removeImageCache function", () => {
         const nodeHTML = '<div><img src="/images/logo.png" class="poetryLine">&#65279;</img></div>';
         const result = removeImageCache(nodeHTML)
         expect(result).toEqual(`<div><img src="/images/logo.png?${(new Date()).getTime()}" class="poetryLine">&#65279;</img></div>`)
