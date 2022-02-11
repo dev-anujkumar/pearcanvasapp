@@ -55,8 +55,10 @@ describe('Test for Sidebar component', () => {
         }
     });
     let props = {
+        value:['fontValue','bulletValue'],
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
         activeElement: { elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",secondaryOption:'' },
+        activefontStyle:'font-type-1',
         updateElement: jest.fn(),
         updateBlockListMetadata: jest.fn()
     };
@@ -644,4 +646,135 @@ describe('Test for Sidebar component', () => {
             expect(spyHandlePrimaryOptionChange).toHaveBeenCalled();
         })
     })
+    describe('Test - Blocklist', () => {
+          it("Testing handleFontBulletOptionChange  function - fontStyle- string index", () => {
+        const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: "1-0",
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleFontBulletOptionChange')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'fontStyle',
+                activefontStyle:'font-type-1',
+                activeElementType:'manifestlist'
+            })
+            sidebarInstance.handleFontBulletOptionChange(target);
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handleFontBulletOptionChange  function - fontStyle- number index", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleFontBulletOptionChange')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'fontStyle',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleFontBulletOptionChange(target);
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+    })
+    // describe('Test handleFontBulletElementDropdown', () => {
+    //     it("Checking toggleElementDropdown function for font", () => {
+    //         let e = { target: { dataset: { element: "Font" }, getAttribute: jest.fn() }, stopPropagation: jest.fn() }
+    //         const activeElement = {
+    //             fontStyle:'font-type-1',
+    //             // secondaryOption: "secondary-single-assessment"
+    //         };
+    //         const sidebarWithData3 = mockStore({
+    //             appStore: {
+    //                 activeElement
+    //             },
+    //             metadataReducer: {
+    //                 currentSlateLOData: {}
+    //             },
+    //             // elementStatusReducer: {
+    //             //     'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+    //             //     "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+    //             //     "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+    //             //     "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+                    
+    //             // },
+    //             selectionReducer:{
+    //                 selection:""
+    //             },
+    //             tcmReducer: {
+    //                 tisTCMCanvasPopupLaunched:false,
+    //                 tcmSnapshotData: {},
+    //                 elementData: {},
+    //                 tcmStatus: false
+    //             }
+    //         });
+    //         let sidebar = mount(<Provider store={sidebarWithData3}><Sidebar {...props} /></Provider>);
+    //         const sidebarInstance = sidebar.find('Sidebar').instance();
+    //         sidebarInstance.props = {
+    //             // slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
+    //             // activeElement:
+    //                 activefontStyle:'font-type-1'
+    //         };
+    //         sidebarInstance.toggleElementDropdown(e);
+    //         expect(sidebarInstance.state.activefontStyle).toBe("font-type-1");
+    //     })
+    // })
 });
