@@ -180,6 +180,7 @@ export const UPDATE_DISCUSSION_ITEMS = 'UPDATE_DISCUSSION_ITEMS';
 export const UPDATE_USAGE_TYPE = 'UPDATE_USAGE_TYPE';
 export const UPDATE_LOB_PERMISSIONS = 'UPDATE_LOB_PERMISSIONS';
 export const UPDATE_LOB_WORKFLOW = 'UPDATE_LOB_WORKFLOW'
+export const OEP_DISCUSSION = 'onlineenglishproficiency'
 
 /*---------------- TCM POPUP ON CANVAS ------------------------*/
 export const LAUNCH_TCM_CANVAS_POPUP = 'LAUNCH_TCM_CANVAS_POPUP';
