@@ -1,6 +1,8 @@
 import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
-import { autoNumber_KeyMapperElements, autoNumber_ElementTypeKey, containerElementTypes, containerElements } from './AutoNumberConstants';
+import { autoNumber_KeyMapperElements, autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering } from './AutoNumberConstants';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
+import { containerBodyMatter } from './slateLevelMediaMapper';
+import { findElementsInContainer } from './AutoNumberCreate_helper';
 import {
     SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS
@@ -10,7 +12,7 @@ Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
-export const getElementsInContainer = (element, numberedElements = [], elementType) => {
+export const getElementsInContainer = async (element, numberedElements = [], elementType) => {
     switch (element.type) {
         case containerElements.SHOW_HIDE:
             getElementsInShowhide(element, numberedElements, elementType);
@@ -19,7 +21,8 @@ export const getElementsInContainer = (element, numberedElements = [], elementTy
             getElementsInMultiColumn(element, numberedElements, elementType);
             break;
         case containerElements.POPUP:
-            getElementsInPopup(element, numberedElements, elementType);
+            const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
+            await getElementsInPopup(popupContent, numberedElements, elementType);
             break;
         case containerElements.ASIDE:
             getElementsInAsideWE(element, numberedElements, elementType);
@@ -117,7 +120,7 @@ const getElementsInShowhide = (containerData, numberedElements, elementType) => 
                     element.parentDetails.push(colData.contentUrn) //column -id
                     if (element.type === elementType) {
                         let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                        numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype, parentDetails: element?.parentDetails });
+                        numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype, parentDetails: element?.parentDetails, interactivedata: element?.interactivedata, elementdata: element?.elementdata });
                     } else if (element.type === 'showhide' || element.type === 'element-aside') {
                         element.parentDetails.push(element.contentUrn)
                         getImagesInsideElement(containerBodyMatter(element), numberedElements, elementType);
@@ -131,7 +134,7 @@ const getElementsInShowhide = (containerData, numberedElements, elementType) => 
 export const getImagesInsideElement = (bodyMatter, numberedElements = [], elementType) => {
     if (bodyMatter?.length > 0) {
         bodyMatter?.forEach((element, index) => {
-            if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
+            if (element.type === elementType) {
                 let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
                 numberedElements.push({ contentUrn: element.contentUrn, index: index, indexPos: count, displayedlabel: element.displayedlabel, figuretype: element.figuretype });
                 count++;
@@ -181,7 +184,7 @@ export const handleAutoNumberingOnDelete = (params) => {
         if (containerElementTypes.includes(type)) {
             //reset auto-numbering
             dispatch(updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements));
-            updateAutoNumberSequenceOnDeleteInContainers(element, figureParentEntityUrn, contentUrn, getState, dispatch);
+            updateAutoNumberSequenceOnDeleteInContainers(element, figureParentEntityUrn, contentUrn, autoNumberedElements, dispatch);
         }
         else if (type == 'figure') {
             //reset auto-numbering
@@ -224,34 +227,73 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
  * @param {*} getState 
  * @param {*} dispatch 
  */
-export const updateAutoNumberSequenceOnDeleteInContainers = (deleteElemData, parentIndex, contentUrn, getState, dispatch) => {
-    const {autoNumberedElements, slateFigureList} = getState().autoNumberReducer;
-    let numberedElements = [];
+export const updateAutoNumberSequenceOnDeleteInContainers = (deleteElemData, parentIndex, contentUrn, autoNumberedElements, dispatch) => {
+    let childContainerElements = [];
+    let childNonContainerElements = [];
     const type = 'figure';
-    const childElements = getElementsInContainer(deleteElemData, numberedElements, type);
-    if (childElements.length > 0) {
-        for (let labelType in autoNumberedElements) {
-            if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex]) {
-                let elementData = autoNumberedElements[labelType][parentIndex];
-                let data = [];
-                for(let element of elementData){
-                    slateFigureList?.map(figure =>{
-                        if(figure.contentUrn === element.contentUrn && !figure.parentDetails.includes(contentUrn)) {
-                            data.push(figure);
-                        }
-                    });
+    switch (deleteElemData.type) {
+        case containerElements.MULTI_COLUMN:
+        case containerElements.SHOW_HIDE:
+        case containerElements.POPUP:
+            let elements = getElementsInContainer(deleteElemData, childContainerElements, containerElements.ASIDE);
+            elements.then( () => {
+                for (const label of displayLabelsForAutonumbering) {
+                    let elementsInContainer = [];
+                    elementsInContainer = findElementsInContainer(deleteElemData, [], { displayedlabel: label });
+                    childNonContainerElements = elementsInContainer.length > 0 ? childNonContainerElements.concat(elementsInContainer) : childNonContainerElements;
                 }
-                autoNumberedElements[labelType][parentIndex] = data
+            })
+        case containerElements.ASIDE:
+            for (const label of displayLabelsForAutonumbering) {
+                let elementsInContainer = [];
+                elementsInContainer = findElementsInContainer(deleteElemData, [], { displayedlabel: label });
+                childNonContainerElements = elementsInContainer.length > 0 ? childNonContainerElements.concat(elementsInContainer) : childNonContainerElements;
+            }
+            break;
+    }
+    
+    if (childContainerElements.length > 0 || childNonContainerElements.length > 0) {
+        if (childContainerElements.length > 0) {
+            for (const element of childContainerElements) {
+                deleteElementByLabelFromStore(autoNumberedElements, element, parentIndex);
             }
         }
-    }
-    dispatch({
-        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-        payload: {
-            numberedElements: autoNumberedElements
+        if (childNonContainerElements.length > 0) {
+            for (const element of childNonContainerElements) {
+                deleteElementByLabelFromStore(autoNumberedElements, element, parentIndex);
+            }
         }
-    });
-    getAutoNumberSequence(autoNumberedElements, dispatch)
+        dispatch({
+            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+            payload: {
+                numberedElements: autoNumberedElements
+            }
+        });
+        getAutoNumberSequence(autoNumberedElements, dispatch);
+    }
+        // for (let labelType in autoNumberedElements) {
+        //     if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex].length > 0) {
+        //         let elementData = autoNumberedElements[labelType][parentIndex];
+        //         let data = [];
+        //         for(let element of elementData){
+        //             slateFigureList?.map(figure =>{
+        //                 if(figure.contentUrn === element.contentUrn && !figure.parentDetails.includes(contentUrn)) {
+        //                     data.push(figure);
+        //                 }
+        //             });
+        //         }
+        //         autoNumberedElements[labelType][parentIndex] = data
+        //     }
+        // }
+}
+
+export const deleteElementByLabelFromStore = (numberedElements, element, parentIndex) => {
+    if (numberedElements[autoNumber_ElementTypeKey[element.displayedlabel]]?.hasOwnProperty(parentIndex) && numberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][parentIndex].length > 0) {
+        let index = numberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][parentIndex]?.findIndex(    ele => ele.contentUrn === element.contentUrn);
+        if (index > -1) {
+            numberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][parentIndex].splice(index, 1);
+        }
+    }
 }
 
 

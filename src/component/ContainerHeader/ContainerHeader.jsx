@@ -171,7 +171,7 @@ export const ContainerHeader = (props) => {
     let imgLabelValue = getLabelNumberFieldValue(props.model, elementLabelValue, containerNumber);
     imgLabelValue = labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ? props?.model?.displayedlabel : imgLabelValue;
     const parentNumber = containerNumber;
-    let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
+    let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {});
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })
     imgNumberValue = `${imgNumberValue?.toString()}`
     const newClass = labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? 'disable-number-field': '';
@@ -204,7 +204,7 @@ export const ContainerHeader = (props) => {
                         <span>{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                         {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
-                            <div className="figure-dropdown" style={{top: '9px', left: 0}} ref={labelDropdownWrapperRef} >
+                            <div className="figure-dropdown" style={imgLabelValue === 'Worked Example' ? {width: '132px', top: '9px', left: 0} : {top: '9px', left: 0} } ref={labelDropdownWrapperRef} >
                                 <ul>
                                     {elementLabelData.map((label, i) => {
                                         return (

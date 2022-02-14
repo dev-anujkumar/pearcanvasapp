@@ -94,7 +94,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
 
         const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
         const autoNumberParams = {
-            deleteElemData: response.data,
+            element: activeElement,
             type,
             getState,
             dispatch,

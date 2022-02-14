@@ -180,7 +180,7 @@ const getAllElementsInShowhide = (containerData, numberedElements, createdElemen
 export const getImagesInsideElement = (bodyMatter, numberedElements = [], createdElementData) => {
     if (bodyMatter?.length > 0) {
         bodyMatter?.forEach((element, index) => {
-            if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
+            if (element.displayedlabel === createdElementData.displayedlabel) {
                 let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
                 numberedElements.push({ contentUrn: element.contentUrn, index: index, indexPos: count, displayedlabel: element.displayedlabel, figuretype: element.figuretype });
                 count++;
@@ -224,7 +224,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
             break;
         case 'CONTAINER':
         case 'WORKED_EXAMPLE':
-            slateElements = getAsideElementsWrtKey(bodyMatter, 'element-aside');
+            slateElements = await getAsideElementsWrtKey(bodyMatter, 'element-aside', slateElements);
             break;
         default:
             slateElements = [];
@@ -288,7 +288,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 elementsList[slateEntityForAutonumber].push(createdElementData);
             }
             updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-        } else if (Array.isArray(elementObj.indexPos) && activeLabelElements.length > 1) {
+        } else if (Array.isArray(elementObj.indexPos)) {
             handleAutonumberingForElementsInContainers(bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch);
         } else if (activeLabelElements.length === 1) {
             checkElementExistenceInOtherSlates(createdElementData, config.slateEntityURN, getState, dispatch);
@@ -306,14 +306,14 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
 export const handleAutonumberingForElementsInContainers = (bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch) => {
     let elementsInContainer = findElementsInContainer(bodyMatter[elementObj.indexPos[0]], [], createdElementData);
     let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
-    let activeLabelElements = slateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
+    let activeLabelElementsInSlate = slateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
     if (elementsInContainer.length > 1) {
         appendElementToList(elementsInContainer, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
-    } else if (elementsInContainer.length == 1 && activeLabelElements.length > 1) {
+    } else if (elementsInContainer.length == 1 && activeLabelElementsInSlate.length > 1) {
         let count = 0;
-        activeLabelElements?.forEach(item => { item.indexPos = count; count++; });
-        appendElementToList(activeLabelElements, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
-    } else if (elementsInContainer.length == 1 && activeLabelElements.length == 1) {
+        activeLabelElementsInSlate?.forEach(item => { item.indexPos = count; count++; });
+        appendElementToList(activeLabelElementsInSlate, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
+    } else if (elementsInContainer.length == 1 && activeLabelElementsInSlate.length == 1) {
         checkElementExistenceInOtherSlates(createdElementData, config.slateEntityURN, getState, dispatch);
     }
 }

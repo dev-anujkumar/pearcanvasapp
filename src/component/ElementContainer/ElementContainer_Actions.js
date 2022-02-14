@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS, UPDATE_AUTONUMBERED_CONTAINER_ELEMENT } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
@@ -14,7 +14,8 @@ import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowH
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
-import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
 import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload } from '../FigureHeader/AutoNumber_helperFunctions';
@@ -526,16 +527,23 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         const slateAncestorData = getState().appStore.currentSlateAncestorData;
         let elementsList = {};
         if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
-            let slateFigures = getImagesInsideSlates(newBodymatter);
-            if (slateFigures) {
-                dispatch({
-                    type: SLATE_FIGURE_ELEMENTS,
-                    payload: {
-                        slateFigures
-                    }
-                });
+            let slateFigures = [];
+            let elementObj = {};
+            if (type2BAdded === 'CONTAINER' || type2BAdded === 'WORKED_EXAMPLE') {
+                slateFigures = await getAsideElementsWrtKey(newBodymatter, 'element-aside', slateFigures);
+            } else {
+                slateFigures = await getAutoNumberedElementsOnSlate(newParentData[config.slateManifestURN], { dispatch });
+                if (slateFigures) {
+                    dispatch({
+                        type: SLATE_FIGURE_ELEMENTS,
+                        payload: {
+                            slateFigures
+                        }
+                    });
+                }
             }
-            let elementObj = slateFigures.find(element => element.contentUrn === createdElemData.data.contentUrn);
+            
+            elementObj = slateFigures?.find(element => element.contentUrn === createdElemData.data.contentUrn);
             const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
             const labelType = createdElemData?.data?.displayedlabel;
             elementsList = autoNumberedElementsObj[listType];
@@ -982,6 +990,10 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
                 payload: {
                     slateLevelData: currentParentData
                 }
+            })
+            dispatch({
+                type: UPDATE_AUTONUMBERED_CONTAINER_ELEMENT,
+                payload: dataToSend
             })
         }
         const oldActiveElement = getState()?.appStore?.activeElement;

@@ -891,6 +891,9 @@ class ElementContainer extends Component {
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
                     this.props.updateAsideNumber(previousElementData, this.props.index, '', this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
+                    if (this.props.isAutoNumberingEnabled) {
+                        this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+                    }
                 }
                 break;
 
@@ -2661,7 +2664,8 @@ const mapStateToProps = (state) => {
         autoNumberedElements: state.autoNumberReducer.autoNumberedElements,
         currentSlateAncestorData: state.appStore.currentSlateAncestorData,
         slateLevelData: state.appStore.slateLevelData,
-        spellCheckToggle: state.toolbarReducer.spellCheckToggle
+        spellCheckToggle: state.toolbarReducer.spellCheckToggle,
+        updatedAutonumberedContainerData: state.appStore.updatedAutonumberedContainerData
     }
 }
 

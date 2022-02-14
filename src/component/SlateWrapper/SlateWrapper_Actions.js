@@ -37,7 +37,7 @@ const { SHOW_HIDE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
-import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
@@ -407,8 +407,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         })
         /** ---------------------------- Auto-Numbering handling ------------------------------*/
         if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
-            const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
-            let slateFigures = getImagesInsideSlates(bodyMatter);
+            let slateFigures = await getAutoNumberedElementsOnSlate(newParentData[config.slateManifestURN], { dispatch });
             if (slateFigures) {
                 dispatch({
                     type: SLATE_FIGURE_ELEMENTS,
