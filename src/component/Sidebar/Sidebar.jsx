@@ -59,7 +59,7 @@ class Sidebar extends Component {
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if (Object.keys(nextProps.activeElement).length > 0) {
             let elementDropdown = prevState.elementDropdown;
-            let fontBulletElementDropdown = prevState.fontBulletElementDropdown;
+            let fontBulletElementDropdown = prevState?.fontBulletElementDropdown;
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
@@ -75,8 +75,8 @@ class Sidebar extends Component {
                 activeElementId: nextProps.activeElement.elementId,
                 activeElementType: nextProps.activeElement.elementType,
                 activePrimaryOption: nextProps.activeElement.primaryOption,
-                activefontStyle: nextProps.activeElement.fontStyle,
-                activebulletIcon: nextProps.activeElement.bulletIcon,
+                activefontStyle: nextProps?.activeElement?.fontStyle,
+                activebulletIcon: nextProps?.activeElement?.bulletIcon,
                 activeSecondaryOption: nextProps.activeElement.secondaryOption,         
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom: nextProps.activeElement.startNumber,
@@ -172,11 +172,11 @@ class Sidebar extends Component {
         if(this.state.activeElementType === "manifestlist"){
           if(value?.includes('font')){
                 fontValue = value;
-                toolbar = elementList["fontStyle"][value].toolbar;
+                toolbar = elementList["fontStyle"][value]?.toolbar;
                 dataToSend.fontstyle = `fontStyle${fontValue?.split('-')[fontValue?.split('-').length-1]}`;
           } else if(value?.includes('bullet')){
                 iconColorValue = value;
-                toolbar = elementList["bulletIcon"][value].toolbar;
+                toolbar = elementList["bulletIcon"][value]?.toolbar;
                 dataToSend.iconcolor = `iconColor${iconColorValue?.split('-')[iconColorValue?.split('-').length-1]}`;
           }
         }
@@ -190,8 +190,8 @@ class Sidebar extends Component {
         activebulletIcon: iconColorValue,
       });
       const {asideData} = this.props;
-      if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== "element-assessment") {
-        if (this.props.activeElement.elementWipType == "manifestlist") {
+      if (this.props.activeElement.elementId !== "" &&this.props.activeElement?.elementWipType !== "element-assessment") {
+        if (this.props.activeElement?.elementWipType == "manifestlist") {
         let blockListMetaDataPayload = {
             blockListData: {
                 id:this.props.activeElement.elementId,
@@ -202,7 +202,7 @@ class Sidebar extends Component {
             fontStyle: fontValue,
             iconColor: iconColorValue,
             secondaryOption: secondaryFirstOption,
-            elementWipType: this.props.activeElement.elementWipType,
+            elementWipType: this.props.activeElement?.elementWipType,
             index: this.props.activeElement.index,
             labelText,
             blockListElement:true,
