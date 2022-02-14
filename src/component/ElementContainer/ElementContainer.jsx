@@ -1511,8 +1511,8 @@ class ElementContainer extends Component {
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle } = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
-        let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
-        let anyFlaggedComment = allComments.filter(({ flagComment }) => flagComment === true).length > 0
+        let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
+        let anyFlaggedComment = allComments?.filter(({ flagComment }) => flagComment === true).length > 0
         let isQuadInteractive = "";
         /** Handle TCM for tcm enable elements */
         let tcm = false;
