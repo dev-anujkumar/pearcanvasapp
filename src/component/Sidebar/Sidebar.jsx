@@ -951,15 +951,13 @@ class Sidebar extends Component {
     }  
 
     render = () => {
-        let currentElementIndex
-        let disableFontBullet
+        let currentElementIndex = this.props.activeElement?.index;
+        let disableFontBullet;
         if(this.props.asideData?.type === "showhide"){
-            currentElementIndex = this.props.activeElement?.index;
             disableFontBullet = typeof currentElementIndex === "number" ? "disableFontBullet" : "";
         }
         else{
-        currentElementIndex = this.props.activeElement?.index;
-        disableFontBullet = typeof currentElementIndex === "number" ? "" : "disableFontBullet";
+            disableFontBullet = typeof currentElementIndex === "number" ? "" : "disableFontBullet";
         }
         return (
             <>
