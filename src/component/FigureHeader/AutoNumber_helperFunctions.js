@@ -255,8 +255,10 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, settingsOpti
             }
         }
     }
-    elementLabel = settingsOption !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ? element?.displayedlabel : elementLabel;
-    elementLabel = !element.hasOwnProperty('displayedlabel') ? getValueOfLabel(element?.figuretype) : elementLabel;
+    if(settingsOption !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+        elementLabel = element?.displayedlabel;
+        elementLabel = !element.hasOwnProperty('displayedlabel') ? getValueOfLabel(element?.figuretype) : elementLabel;
+    }
     return elementLabel
 }
 

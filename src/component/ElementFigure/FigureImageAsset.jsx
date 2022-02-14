@@ -31,17 +31,21 @@ const FigureImageAsset = (props) => {
     }
 
     const focusUpdate = () => {
-        updateFigureRef.current.focus();
-        serFocusBackgrond(true);
+        if(props.isEnableKeyboard) {
+            updateFigureRef.current.focus();
+            serFocusBackgrond(true);
+        }
     }
 
     const triggerClickOnEnter = (event) => {
-        const keyCode = event.keyCode;
-        if(keyCode === 13) {
-            const node = document.activeElement;
-            node.click();
+        if(props.isEnableKeyboard) {     
+            const keyCode = event.keyCode;
+            if(keyCode === 13) {
+                const node = document.activeElement;
+                node.click();
+            }
+            event.preventDefault();
         }
-        event.preventDefault();
     }
     const removeFocus = () => {
         serFocusBackgrond(false);
@@ -63,7 +67,7 @@ const FigureImageAsset = (props) => {
                                 width={imgWidth}
                                 height={imgHeight}
                             /> : 
-                            <KeyboardWrapper index={`${props.index}-image-asset-1`} enable>
+                            <KeyboardWrapper index={`${props.index}-image-asset-1`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusSelectAnImage}>
                                     <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={addFigureRef} className='figurebutton' onClick={(e) => props.addFigureResource(e)}>{FIGURE_IMAGE_BUTTON_TITLE}</div>
                                 </div>
@@ -80,12 +84,12 @@ const FigureImageAsset = (props) => {
                                     <div className='image-figure-path'><p className='image-text'>{ALFRESCO_SITE_PATH}</p> <span className='image-info'>{props.model.figuredata && props.model.figuredata.path && props.model.figuredata.path !== DEFAULT_IMAGE_SOURCE ? props.alfrescoSite : ""}</span> </div>
                                 </div>
 
-                            <KeyboardWrapper index={`${props.index}-image-asset-1`} enable>
+                            <KeyboardWrapper index={`${props.index}-image-asset-1`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusUpdate}>
                                     <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={updateFigureRef} className='updatefigurebutton' onClick={(e) => props.addFigureResource(e)}>{UPDATE_FIGURE_IMAGE_BUTTON_TITLE}</div>
                                 </div>
                             </KeyboardWrapper>
-                            <KeyboardWrapper index={`${props.index}-image-asset-2`} enable>
+                            <KeyboardWrapper index={`${props.index}-image-asset-2`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusDelete}>
                                   <div onBlur={removeFocus} onKeyDown={triggerClickOnEnter} tabIndex={0} ref={deleteFigureRef} className='deletefigurebutton' onClick={() => props.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                                 </div>

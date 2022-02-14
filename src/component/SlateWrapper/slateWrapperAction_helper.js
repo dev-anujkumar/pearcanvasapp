@@ -340,13 +340,17 @@ export const onPasteSuccess = async (params) => {
     })
     /** ---------------------------- Auto-Numbering handling ------------------------------*/
     const isAutoNumberingEnabled = getState().autoNumberReducer?.isAutoNumberingEnabled;
+    const oldSlateFigureList = getState().autoNumberReducer?.slateFigureList || [];
+    const tocContainerSlateList = getState().autoNumberReducer?.tocContainerSlateList || []
     const autoNumberParams = {
         selectedElement: responseData,
         getState,
         dispatch,
         operationType,
         isAutoNumberingEnabled,
-        currentSlateData: newParentData[config.slateManifestURN]
+        currentSlateData: newParentData[config.slateManifestURN],
+        oldSlateFigureList,
+        tocContainerSlateList
     }
     handleAutoNumberingOnCopyPaste(autoNumberParams)
     /**-----------------------------------------------------------------------------------*/

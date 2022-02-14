@@ -53,7 +53,8 @@ import {
     UPDATE_OLD_AUDIOVIDEO_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     CHECK_ASIDE_NUMBER,
-    UPDATE_AUTONUMBERED_CONTAINER_ELEMENT
+    UPDATE_AUTONUMBERED_CONTAINER_ELEMENT,
+    SET_SLATE_MATTER_TYPE
 } from '../constants/Action_Constants';
 
 /**
@@ -373,6 +374,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             //     asideTitleData: action.payload
             // }
 
+        case SET_SLATE_MATTER_TYPE:
+            return {
+                ...state,
+                slateMatterType: action.payload
+            }
         default:
             return state;
     }
