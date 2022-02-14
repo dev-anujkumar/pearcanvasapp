@@ -1513,7 +1513,6 @@ class ElementContainer extends Component {
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
         let anyFlaggedComment = allComments?.filter(({ flagComment }) => flagComment === true).length > 0
-        console.log('ANY OPEN COMMENT', anyOpenComment, "ANY FLAGGED CIMMENT", anyFlaggedComment)
         let isQuadInteractive = "";
         /** Handle TCM for tcm enable elements */
         let tcm = false;
