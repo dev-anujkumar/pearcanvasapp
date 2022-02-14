@@ -17,7 +17,8 @@ import {
     ERROR_POPUP,
     PAGE_NUMBER_LOADER,
     WIRIS_ALT_TEXT_POPUP,
-    SLATE_FIGURE_ELEMENTS
+    SLATE_FIGURE_ELEMENTS,
+    SET_SLATE_MATTER_TYPE
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
@@ -1054,7 +1055,7 @@ export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => 
 }
 export const setSlateMatterType = (setSlateParentParams) => (dispatch, getState) => {
     return dispatch({
-        type: 'SET_SLATE_MATTER_TYPE',
+        type: SET_SLATE_MATTER_TYPE,
         payload: setSlateParentParams
     })
 }
