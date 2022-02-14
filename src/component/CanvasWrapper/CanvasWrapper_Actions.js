@@ -37,7 +37,7 @@ import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsP
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
-import { HideLoader, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
@@ -68,11 +68,11 @@ export const findElementType = (element, index) => {
             case "manifestlist":
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
-                    //primaryOption : "primary-column-1",
                     primaryOption: `primary-column-${element.columnnumber}`,
+                    fontStyle: element.fontstyle ? `font-style-${element.fontstyle[element.fontstyle.length-1]}` : 'font-style-1',
+                    bulletIcon: element.iconcolor ? `bullet-color-${element.iconcolor[element.iconcolor.length-1]}`: 'bullet-color-1',
                     secondaryOption: `secondary-column-${element.columnnumber}`,
                     contentUrn : element.contentUrn
-                    //secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
             case 'element-authoredtext':
@@ -341,7 +341,7 @@ export const fetchElementTag = (element, index = 0) => {
 export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     // Api to get Figure dropdown options
     let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
-    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type?isAutoNumberingEnabled=${isAutoNumberingEnabled}`;
+    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/project/${config.projectEntityUrn}/element-labels?isAutoNumberingEnabled=${isAutoNumberingEnabled}`;
     return axios.get(figureDropdownOptionsURL, {
         headers: {
             "Content-Type": "application/json",
@@ -355,6 +355,10 @@ export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
                 type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
                 payload: dropdownOptionsObj
             })
+            sendDataToIframe({
+                'type': SET_CONTROL_VOCAB_DETAILS,
+                'message': dropdownOptionsObj
+            });
         }
     }).catch(error => {
         console.log("Get figure dropdown options API Failed !!", error)
@@ -1090,6 +1094,11 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     return oldPath || ""
 }
 export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false, showHideObj = undefined) => (dispatch, getState) => {
+    if(activeElement.type === "manifestlist" && typeof index === 'string'){
+        let {fontstyle, iconcolor} = setParentFontIconDataToChild(index, getState);
+        activeElement.fontstyle = fontstyle;
+        activeElement.iconcolor = iconcolor
+    }
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -1720,4 +1729,35 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
         type: OWNERS_SUBSCRIBED_SLATE,
         payload: showPopup
     })
+}
+
+/**
+ * For Child block list, this function will retrive "fontStyle" & "iconcolor" value from parent
+ * and return that value
+ * @param {*} index 
+ * @param {*} getState 
+ * @returns 
+ */
+const setParentFontIconDataToChild = (index, getState) => {
+    let indexArr = index.split('-');
+    let parentData = getState().appStore.slateLevelData;
+    let slateLevelData = JSON.parse(JSON.stringify(parentData));
+    let bodyMatter =   slateLevelData[config.slateManifestURN].contents.bodymatter;
+    let element = bodyMatter[indexArr[0]];
+    
+    if(element?.type === 'showhide'){
+        let blockList = {}
+        if(indexArr[1] === "2" && element.interactivedata.hide) {
+            blockList = element.interactivedata.hide[indexArr[2]]
+        } else if(indexArr[1] === "0" && element.interactivedata.show) {
+            blockList = element.interactivedata.show[indexArr[2]]
+        }
+        if(blockList?.type === "manifestlist"){
+            return {fontstyle: blockList.fontstyle, iconcolor: blockList.iconcolor}
+        }
+    } else if(element?.type === "manifestlist") {
+        return {fontstyle: element.fontstyle, iconcolor: element.iconcolor}
+    }
+
+    return {fontstyle: 'font-style-1' , iconcolor: 'bullet-color-1'}
 }
