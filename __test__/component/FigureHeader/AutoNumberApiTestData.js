@@ -2581,3 +2581,83 @@ export const figureData = {
 		}
 	]
 }
+
+export const element  = {
+	"id": "urn:pearson:work:391140fc-bb0d-4de6-b29b-4cf0a07dbcfd",
+	"type": "figure",
+	"figuretype": "audio",
+	"subtype": "figureAudioSL",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+	"titlecontentintitlefield": true,
+	"alignment": "full",
+	"figuredata": {
+	  "height": "399",
+	  "width": "600",
+	  "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+	  "videoid": "",
+	  "posterimage": {
+		"imageid": "",
+		"path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
+	  },
+	  "videos": [
+		{
+		  "format": "",
+		  "path": ""
+		}
+	  ],
+	  "tracks": [],
+	  "srctype": "externallink"
+	},
+	"html": {
+	  "title": "<p class=\"paragraphNumeroUno\"><br></p>",
+	  "text": "",
+	  "postertext": "",
+	  "captions": "<p class=\"paragraphNumeroUno\"><br></p>",
+	  "credits": "<p class=\"paragraphNumeroUno\"><br></p>"
+	},
+	"versionUrn": "urn:pearson:work:391140fc-bb0d-4de6-b29b-4cf0a07dbcfd",
+	"contentUrn": "urn:pearson:entity:82f5f2f3-7974-4e5c-9f5f-bd4ba5852753",
+	"displayedlabel": "Audio",
+	"numberedandlabel": true,
+	"indexPos": 1,
+	"parentDetails": [],
+	"slateEntityUrn": "urn:pearson:entity:57ad9263-9fc2-4ad5-882d-9ecc1e45a720"
+  }
+
+export const newElement = {
+	"id": "urn:pearson:work:391140fc-bb0d-4de6-b29b-4cf0a07dbcfd",
+	"type": "figure",
+	"figuretype": "video",
+	"subtype": "figureVideo",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+	"titlecontentintitlefield": true,
+	"alignment": "full",
+	"figuredata": {
+	  "schema": "http://schemas.pearson.com/wip-authoring/video/1#/definitions/video",
+	  "height": "399",
+	  "width": "600",
+	  "videoid": "",
+	  "posterimage": {
+		"path": "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png",
+		"imageid": ""
+	  },
+	  "srctype": "externallink",
+	  "videos": [
+		{
+		  "path": "",
+		  "charAt": 0
+		}
+	  ]
+	},
+	"html": {
+	  "title": "<p class=\"paragraphNumeroUno\"><br></p>",
+	  "text": "",
+	  "postertext": "",
+	  "captions": "<p class=\"paragraphNumeroUno\"><br></p>",
+	  "credits": "<p class=\"paragraphNumeroUno\"><br></p>"
+	},
+	"versionUrn": "urn:pearson:work:391140fc-bb0d-4de6-b29b-4cf0a07dbcfd",
+	"contentUrn": "urn:pearson:entity:82f5f2f3-7974-4e5c-9f5f-bd4ba5852753",
+	"displayedlabel": "Audio",
+	"numberedandlabel": true
+  }

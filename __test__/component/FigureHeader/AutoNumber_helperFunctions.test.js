@@ -2,8 +2,12 @@
 import config from '../../../src/config/config';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../../../src/component/FigureHeader/AutoNumberConstants';
 import * as autonumber_helperFunctions from '../../../src/component/FigureHeader/AutoNumber_helperFunctions';
+import * as NestedFigureDataMapper from '../../../src/component/FigureHeader/NestedFigureDataMapper';
+import * as AutoNumberActions from '../../../src/component/FigureHeader/AutoNumberActions';
+import {GET_ALL_AUTO_NUMBER_ELEMENTS} from '../../../src/constants/Action_Constants'
 /*************************Import Constants*************************/
-import { mockSlateFiguresList, mockAutoNumberingDetails, slateAncestorFM, slateAncestorBM, slateAncestorPart, slateAncestorChapter, slateAncestorChapterwithMod, mockIndexedElements, figureData } from './AutoNumberApiTestData';
+import { mockSlateFiguresList, mockAutoNumberingDetails, slateAncestorFM, slateAncestorBM, slateAncestorPart, slateAncestorChapter, slateAncestorChapterwithMod, mockIndexedElements,
+         figureData, element, newElement, mockNumberedElements, slateLevelData} from './AutoNumberApiTestData';
 
 describe('-----------------Testing AutoNumber_helperFunctions-----------------', () => {
     describe('Test-1 setAutoNumberSettingValue-----------------', () => {
@@ -257,7 +261,7 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
             }
             const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getLabelNumberFieldValue');
             const result = autonumber_helperFunctions.getLabelNumberFieldValue(element, figureLabelValue, "2");
-            expect(result).toBe('Fig')
+            expect(result).toBe('Figure')
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
@@ -442,6 +446,86 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
                  }
             const result = autonumber_helperFunctions.prepareAutoNumberList(figureData);
             expect(result).toStrictEqual(output);
+        });
+    });
+    describe('Test-12 updateAutonumberingOnElementTypeUpdate---------------------', () => {
+        const getState=  () => {
+            return {
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false,
+                    autoNumberedElements: {
+                        imagesList: [],
+                        tablesList: [],
+                        equationsList: [],
+                        audiosList: [],
+                        videosList: []
+                    },
+                    autoNumberingDetails: {},
+                    autoNumberElementsIndex: {
+                        figureImageIndex: {},
+                        tableIndex: {},
+                        equationsIndex: {},
+                        audioIndex: {},
+                        videoIndex: {}
+                    },
+                    slateFigureList: [],
+                    autoNumberOption: ''
+                }
+            }
+        }
+
+        jest.spyOn(NestedFigureDataMapper, 'getAutoNumberedElementsOnSlate').mockImplementation(() => {
+            return Promise.resolve([{
+                    "alignment": "full",
+                    "contentUrn": "urn:pearson:entity:25960fb1-3080-4a24-a20d-6c6dcca19add",
+                    "displayedlabel": "Audio",
+                    "figuredata": {"schema": 'http://schemas.pearson.com/wip-authoring/audio/1#/definitions/audio', "height": '399', "width": '600', "audioid": '', "posterimage": {}},
+                    "figuretype": "audio",
+                    "html": {"title": '<p class="paragraphNumeroUno"><br></p>', "text": '', "postertext": '', "captions": '<p class="paragraphNumeroUno"><br></p>', "credits": '<p class="paragraphNumeroUno"><br></p>'},
+                    "id": "urn:pearson:work:f026ec86-19a2-4aad-9da9-a16f7e1ad2d8",
+                    "indexPos": 0,
+                    "numberedandlabel": true,
+                    "parentDetails": [],
+                    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                    "slateEntityUrn": "urn:pearson:entity:f167be8b-27a7-4bec-9196-4e5e7d393291",
+                    "subtype": "figureAudioSL",
+                    "titlecontentintitlefield": true,
+                    "type": "figure",
+                    "versionUrn": "urn:pearson:work:f026ec86-19a2-4aad-9da9-a16f7e1ad2d8",
+                }]);
+        });
+
+        jest.spyOn(AutoNumberActions, 'getAutoNumberSequence').mockImplementation(jest.fn())
+        it('Test-12.1 updateAutonumberingOnElementTypeUpdate ', () => {
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(GET_ALL_AUTO_NUMBER_ELEMENTS);
+            }
+            autonumber_helperFunctions.updateAutonumberingOnElementTypeUpdate(newElement, element, mockNumberedElements, slateAncestorChapter, slateLevelData)(dispatch);
+
+        });
+    });
+
+    describe('Test-13 getNumberedElements---------------------', () => {
+        it('Test-13.1 getNumberedElements ', () => {
+            const mockData = {
+                "contentUrn": "urn:pearson:entity:d45c8383-5480-4d8d-b74e-7406fbefa678",
+                "displayedlabel": "Figure",
+                "entityUrn": "urn:pearson:entity:d45c8383-5480-4d8d-b74e-7406fbefa678",
+                "figureType": "image",
+                "imageId": "",
+                "numberedandlabel": true,
+                "parentContainerEntityUrn": "urn:pearson:entity:968c4725-168b-42fc-ac3c-072c1416e937",
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                "slateEntityUrn": "urn:pearson:entity:968c4725-168b-42fc-ac3c-072c1416e937",
+                "subType": "imageTextWidth",
+                "title": "",
+                "type": "figure",
+                "versionUrn": "urn:pearson:work:f7d4ef4f-03ee-4e62-9f21-d2ef16f98a7d"
+                }
+            let data = { "figures": [mockData]}
+            const output = { imagesList: { frontMatter: [mockData] } }
+            const result = autonumber_helperFunctions.getNumberedElements(data, "frontMatter");
+            expect(result).toStrictEqual(output)
         });
     });
 })
