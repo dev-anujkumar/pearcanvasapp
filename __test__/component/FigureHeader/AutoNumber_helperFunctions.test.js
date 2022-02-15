@@ -246,7 +246,7 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
             }
             const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getLabelNumberFieldValue');
             const result = autonumber_helperFunctions.getLabelNumberFieldValue(element, figureLabelValue, "2");
-            expect(result).toBe('Fig')
+            expect(result).toBe('Figure')
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });

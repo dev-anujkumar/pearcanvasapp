@@ -379,6 +379,9 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.deleteComment(message)
                     break
                 }
+                case 'newCustomCanvasLabels': {
+                    this.props.fetchFigureDropdownOptions()
+                }
             }
         }
 
@@ -907,6 +910,21 @@ function CommunicationChannel(WrappedComponent) {
                 let slateData = {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
+                }
+                if (message?.node) {
+                    let matterType = 'bodymatter'
+                    if (message.node.parentOfParentItem !== "") {
+                        if (message.node.parentOfParentItem === 'backmatter') {
+                            matterType = 'backmatter'
+                        } else if (message.node.parentOfParentItem === 'frontmatter') {
+                            matterType = 'frontmatter'
+                        }
+                    } else if (message.node.nodeParentLabel === 'backmatter') {
+                        matterType = 'backmatter'
+                    } else if (message.node.nodeParentLabel === 'frontmatter') {
+                        matterType = 'frontmatter'
+                    }
+                    this.props.setSlateMatterType(matterType);
                 }
                 config.isPopupSlate = false;
                 config.figureDataToBeFetched = true;

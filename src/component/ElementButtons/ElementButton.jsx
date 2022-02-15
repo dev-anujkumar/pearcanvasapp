@@ -240,6 +240,11 @@ class ElementButton extends Component {
             case buttonTypes.ELEMENT_LABEL_CLICKABLE:
                 buttonJSX = <span className={`btn-element element-label-clickable-button ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
                 break;
+            case buttonTypes.COMMENT_FLAGGED:
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="flag" onClick={(e) => clickHandlerFn(e, elementId)}>
+                    {commentFlagged}
+                </span>
+                break;
         }
         return buttonJSX
     }
