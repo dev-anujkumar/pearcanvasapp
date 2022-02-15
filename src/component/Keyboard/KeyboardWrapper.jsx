@@ -153,6 +153,11 @@ const isLastChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const lastTextNode = getLastTextNode(tinymceNode);
         const uniCode = '\uFEFF';
+        if(lastTextNode.className == "Wirisformula") {
+            if(tinymceOffset != 0 && node.lastChild != null) {
+             return true;
+            }
+        }
         if (lastTextNode === node) {
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
                 if(lastTextNode?.parentNode?.id === "_mce_caret") {
