@@ -73,6 +73,9 @@ const isFirtstChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const firstTextNode = getFirstTextNode(tinymceNode);
         const uniCode = '\uFEFF';
+        if(tinymceOffset == 0) {
+            return true;
+        }
         if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
             return true;
         }
