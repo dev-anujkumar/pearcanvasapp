@@ -14,7 +14,8 @@ import {
     openerElement, 
     noteFlag , 
     tcmIcon, 
-    addNote, 
+    addNote,
+    viewNote,
     editInCypressPlus,
     textIcon, 
     imageIcon, 
@@ -34,7 +35,8 @@ import {
     multiColumnContainer,
     elmInteractiveIcon,
     editIcon,
-    approvedIcon
+    approvedIcon,
+    commentFlagged
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
@@ -73,9 +75,9 @@ class ElementButton extends Component {
                     {editInCypressPlus}
                 </span></Tooltip>
                 break;
-            case buttonTypes.COMMENT_FLAG:
-                buttonJSX = <span className={`btn-element small flag-icon ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
-                    {noteFlag}
+            case buttonTypes.VIEW_COMMENT:
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
+                    {viewNote}
                     </span>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
@@ -238,6 +240,11 @@ class ElementButton extends Component {
                 break;
             case buttonTypes.ELEMENT_LABEL_CLICKABLE:
                 buttonJSX = <span className={`btn-element element-label-clickable-button ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
+                break;
+            case buttonTypes.COMMENT_FLAGGED:
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="flag" onClick={(e) => clickHandlerFn(e, elementId)}>
+                    {commentFlagged}
+                </span>
                 break;
         }
         return buttonJSX

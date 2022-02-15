@@ -6,7 +6,9 @@ import {
     GET_TOC_AUTO_NUMBERING_LIST,
     GET_ALL_AUTO_NUMBER_ELEMENTS,
     UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
-    UPDATE_AUTONUMBERING_DROPDOWN_VALUE
+    UPDATE_AUTONUMBERING_DROPDOWN_VALUE,
+    UPDATE_POPUP_PARENT_SLATE,
+    GET_SLATE_LIST_IN_CONTAINER
 } from '../constants/Action_Constants.js';
 
 const INITIAL_STATE = {
@@ -15,8 +17,11 @@ const INITIAL_STATE = {
         imagesList: [],
         tablesList: [],
         equationsList: [],
-        audiosList:[],
-        videosList:[]
+        audiosList: [],
+        videosList: [],
+        asidesList: [],
+        workedExamplesList: [],
+        interactiveList: []
     },
     autoNumberingDetails: {},
     autoNumberElementsIndex: {
@@ -24,10 +29,15 @@ const INITIAL_STATE = {
         tableIndex: {},
         equationsIndex: {},
         audioIndex: {},
-        videoIndex: {}
+        videoIndex: {},
+        asideIndex: {},
+        workedExampleIndex: {},
+        interactiveIndex: {}
     },
     slateFigureList:[],
-    autoNumberOption: ''
+    autoNumberOption: '',
+    popupParentSlateData: {},
+    tocContainerSlateList:[]
 }
 
 const INITIAL_ACTION = {
@@ -88,9 +98,18 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 slateFigureList: [
-                    ...state.slateFigureList,
                     ...action.payload.slateFigures
                 ]
+            }
+        case UPDATE_POPUP_PARENT_SLATE:
+            return {
+                ...state,
+                popupParentSlateData: action.payload
+            }
+        case GET_SLATE_LIST_IN_CONTAINER:
+            return {
+                ...state,
+                tocContainerSlateList: action.payload
             }
         default:
             return state

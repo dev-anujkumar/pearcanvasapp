@@ -10,7 +10,7 @@ const middlewares = [thunk];
 import config from "../../../src/config/config.js"
 import wipData from './wipData';
 import { singleAssessmentElmDefault } from '../../../fixtures/ElementSingleAssessmentTestData'
-
+import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("innerText")) {
     Object.defineProperty(global.Element.prototype, 'innerText', {
@@ -43,7 +43,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     createLabelNumberTitleModel: jest.fn(),
     getLabelNumberTitleHTML: jest.fn(() => ({'formattedLabel': ''})),
     getTitleSubtitleModel: jest.fn(()=> ''),
-    isSubscriberRole:jest.fn(()=>{return true})
+    isSubscriberRole:jest.fn(()=>{return true}),
+    removeSpellCheckDOMAttributes: jest.fn(() => '')
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
@@ -240,7 +241,8 @@ const store = mockStore({
     markedIndexReducer: {
         markedIndexCurrentValue: {},
         markedIndexValue: { "type": "", "popUpStatus": false }
-    }
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty
 });
 
 config["elementStatus"] = {}
@@ -447,7 +449,8 @@ describe('Test for element container component', () => {
                 markedIndexReducer: {
                     markedIndexCurrentValue: {},
                     markedIndexValue: { "type": "", "popUpStatus": false }
-                }
+                },
+                autoNumberReducer: mockAutoNumberReducerEmpty
             });
             let props = {
                 element: wipData.pullquote,
@@ -1879,7 +1882,8 @@ describe('Test-Other Functions', () => {
             markedIndexReducer: {
                 markedIndexCurrentValue: '',
                 markedIndexValue: ''
-            }
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty
         });
         let props = {
             element: wipData.pullquote,
@@ -2001,7 +2005,8 @@ describe('Test-Other Functions', () => {
             markedIndexReducer: {
                 markedIndexCurrentValue: '',
                 markedIndexValue: ''
-            }
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty
         });
         let props = {
             element: wipData.pullquote,

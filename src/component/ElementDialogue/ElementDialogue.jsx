@@ -13,6 +13,8 @@ import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker } from '../../js/toggleLoader';
 import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
+import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
+
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
         super(props);
@@ -311,25 +313,29 @@ class ElementDialogue extends React.PureComponent {
                         <figure className="figureImageTextWidth" resource="">
                            {this.props.element?.elementdata?.numberedlines === true && <p id="startLineSetting">Start Line number-{this.props.element?.elementdata?.startNumber || 1}</p> }
                             <header className="figure-header">
+                            <KeyboardWrapper index={`${this.props.index}-0`}  enable>
                                 <TinyMceEditor
                                     {...copmpProps}
                                     index={`${this.props.index}-Act-Title`}
                                     placeholder="Enter Act Title..."
                                     tagName={'h4'}
-                                    className={"figureLabel "}
+                                    className={"figureLabel actTitle-h4"}
                                     model={this.props.element?.html?.actTitle}
                                     handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => this.handleOuterBlur("actTitle", eventTarget)}
 
                                 />
+                            </KeyboardWrapper>
+                            <KeyboardWrapper index={`${this.props.index}-1`}  enable>
                                 <TinyMceEditor
                                     {...copmpProps}
                                     index={`${this.props.index}-Scene-Title`}
                                     placeholder="Enter Scene Title..."
                                     tagName={'h4'}
-                                    className={" figureTitle "}
+                                    className={" figureTitle sceneTitle-h4"}
                                     model={this.props.element?.html?.sceneTitle}
                                     handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => this.handleOuterBlur("sceneTitle", eventTarget)}
                                 />
+                            </KeyboardWrapper>
                             </header>
                             <div>
                                 {<DialogueSeprator
@@ -349,15 +355,17 @@ class ElementDialogue extends React.PureComponent {
                             </div>
                         </figure>
                         <div>
+                        <KeyboardWrapper index={`${this.props.index}-2`}  enable>
                             <TinyMceEditor
                                 {...copmpProps}
                                 index={`${this.props.index}-Credit`}
                                 placeholder="Enter Credit..."
                                 tagName={'div'}
-                                className={" figureCredit "}
+                                className={" figureCredit credit-h4"}
                                 model={this.props.element?.html?.credits}
                                 handleBlur={(forceupdate, currentElement, eIndex, showHideType, eventTarget) => this.handleOuterBlur("credits", eventTarget)}
                             />
+                        </KeyboardWrapper>
                         </div>
                     </div>
                      { this.state.popup && <PopUp

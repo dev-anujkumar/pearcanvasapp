@@ -237,7 +237,8 @@ class ElementFigure extends Component {
             EPS_API: config.EPS_API,
             PROJECTAPI_ENDPOINT: config.PROJECTAPI_ENDPOINT,
             STRUCTURE_APIKEY:config.STRUCTURE_APIKEY,
-            AlfrescoSiteAPIUrl: config.ALFRESCO_EDIT_METADATA
+            AlfrescoSiteAPIUrl: config.ALFRESCO_EDIT_METADATA,
+            myCloudProxySession: config.myCloudProxySession
         }
         const configAPIKey = JSON.parse(JSON.stringify(tableConfig));
          sendDataToIframe({ 'type': 'launchTableSPA', 'message': {}, "id": this.props.elementId, editable ,slateData, configAPIKey});
@@ -267,7 +268,8 @@ class ElementFigure extends Component {
                     'Accept': 'application/json',
                     'ApiKey': config.CMDS_APIKEY,
                     'Content-Type': 'application/json',
-                    'PearsonSSOSession': SSOToken
+                    // 'PearsonSSOSession': SSOToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             })
             .then(function (response) {

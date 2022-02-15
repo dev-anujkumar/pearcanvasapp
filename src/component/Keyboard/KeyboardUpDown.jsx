@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
-import { QUERY_SELECTOR } from './KeyboardWrapper.jsx';
+import { NORMAL_SELECTOR, QUERY_SELECTOR } from './KeyboardWrapper.jsx';
 
 const KeyboardUpDown = (props) => {
     const keyboardUpDown = useRef(null);
@@ -14,10 +14,10 @@ const KeyboardUpDown = (props) => {
     }
 
     const getLastChild = (element) => {
-        if(element.lastChild) {
+        if(element && element.lastChild) {
             return getLastChild(element.lastChild);
         } else {
-            return element.parentNode;
+            return element;
         }
     }
 
@@ -27,24 +27,51 @@ const KeyboardUpDown = (props) => {
         const divHeight = parentNode.getBoundingClientRect().height;
         if (element) {
             dispatch(selectElement(element.id));
-            const childElement = element.childNodes[1];
+            // firstElement child as we done need text nodes;
+            const childElement = element.firstElementChild;
+
             const scrollTo = element.getBoundingClientRect().top - divHeight / 3;
             parentNode.scrollBy(0, scrollTo);
-            const lastChild = getLastChild(childElement?.firstChild);
-            if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
-                // for foot note
-                // add span at last and click on span
-                // childElement.click();
-                const span = document.createElement('span');
-                span.innerHTML = "<br>";
-                childElement.firstChild.appendChild(span);
-                span.click();
+            
+            // const firstChild = childElement?.firstChild ? childElement.firstChild : childElement;
+            // in case of para firstChild is childElement.first child
+            // in case of Image childElement is null;
+            
+            const tinymceChild = getTinymceElement(childElement);
+            const lastChild = getLastChild(tinymceChild);
+            if(lastChild) {
+                if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
+                    // for foot note
+                    // add span at last and click on span
+                    // childElement.click();
+                    const span = document.createElement('span');
+                    span.id = "f-e-s"
+                    span.innerHTML = "<br>";
+                    childElement.firstChild.appendChild(span);
+                    span.click();
+                }
+                else if(lastChild.id === "f-e-s") {
+                    if(lastChild?.previousSibling?.nodeName !== 'SUP') {
+                        lastChild.parentNode.removeChild(lastChild);
+                        childElement.click();
+                    }
+                    else {
+                        lastChild.click();
+                    }
+                }
+                else if (tinymceChild) {
+                    // case of floating placeholder
+                    if(tinymceChild.innerHTML === "<p></p>") {
+                        tinymceChild.innerHTML = '';
+                    }
+                    tinymceChild.click();
+                    tinymceChild.focus();
+                }
             }
             else {
                 childElement.click();
+                childElement.focus();
             }
-
-
         }
         else {
             // element not there 
@@ -61,8 +88,14 @@ const KeyboardUpDown = (props) => {
         }
     }
 
-    const shouldEnableScroll = (selectedNodeIndex, allElementLength) => {
-        return allElementLength;
+    const getTinymceElement = (element) => {
+        if(element?.id?.startsWith && element.id.startsWith(NORMAL_SELECTOR)){
+            return element;
+        }
+        if(element && element.querySelector) {
+            return element.querySelector(`[id^='${NORMAL_SELECTOR}']`);
+        }
+
     }
 
     const handleKeyDown = (event) => {
@@ -76,13 +109,16 @@ const KeyboardUpDown = (props) => {
                         selectedNodeIndex = currentIndex
                     }
                 });
+                // if last tinymce is not blured then cursor will
+                // keep on showing if next element is non text 
+                // element, like image's Label
+                allInteractiveElements[selectedNodeIndex]?.childNodes[1]?.blur();
                 if (event.keyCode === 38 && selectedNodeIndex !== 0) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex - 1]);
 
                 }
                 else if (event.keyCode === 40 && selectedNodeIndex !== allInteractiveElements.length) {
-                    const enableScroll = shouldEnableScroll(selectedNodeIndex, allInteractiveElements.length);
-                    getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], enableScroll, selectedNodeIndex);
+                    getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], selectedNodeIndex);
                 }
             }
         }

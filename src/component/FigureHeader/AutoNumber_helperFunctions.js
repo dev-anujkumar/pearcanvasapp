@@ -1,17 +1,14 @@
 import config from '../../config/config'
-import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_KeyMapper, autoNumber_ElementTypeKey, autoNumber_FigureTypeKeyMapper, autoNumber_ElementTypeToStoreKeysMapper } from './AutoNumberConstants';
+import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_KeyMapper, autoNumber_ElementTypeKey, autoNumber_FigureTypeKeyMapper, autoNumber_ElementTypeToStoreKeysMapper,
+        autoNumber_response_ElementType_mapper, displayLabelsForImage } from './AutoNumberConstants';
 import {
-    SET_AUTO_NUMBER_TOGGLE,
-    SET_AUTO_NUMBER_SEQUENCE,
-    UPDATE_AUTO_NUMBER_SEQUENCE,
-    GET_TOC_AUTO_NUMBERING_LIST,
-    GET_ALL_AUTO_NUMBER_ELEMENTS,
-    UPDATE_AUTO_NUMBER_ELEMENTS_LIST
+    GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import {getAutoNumberSequence} from './AutoNumberActions';
-import { findNearestMediaElement } from './AutoNumberCreate_helper';
-import { getImagesInsideSlates } from './slateLevelMediaMapper';
-import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO } from '../../constants/Element_Constants';
+import { findNearestElement } from './AutoNumberCreate_helper';
+import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
+import { checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE } from '../../constants/Element_Constants';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL,
@@ -76,7 +73,7 @@ export const getOverridedNumberValue = (element) => {
 const checkKeysInObj = (Obj) => {
     let check = true;
     for (let Key in Obj) {
-        if (Obj[Key] === '' || Obj[Key] === undefined || Obj[Key] === null) {
+        if (Obj[Key] === '' || Obj[Key] === undefined || Obj[Key] === null || Obj[Key] === NaN) {
             check = false;
             break;
         }
@@ -118,8 +115,7 @@ export const setAutonumberingValuesForPayload = (autoNumberOption, titleHTML, nu
             break;
         case AUTO_NUMBER_SETTING_REMOVE_NUMBER:
             objToReturn = {
-                numberedandlabel : false,
-                manualoverride : { }
+                numberedandlabel : false
             }
             isValid = true;
             break;
@@ -150,6 +146,9 @@ export const getValueOfLabel = (figuretype) => {
         case IMAGE: case TABLE: case MATH_IMAGE:
             label = 'Figure';
             break;
+        case INTERACTIVE:
+            label = 'Interactive';
+            break;
         default:
             label = '';
             break;
@@ -163,11 +162,19 @@ export const getValueOfLabel = (figuretype) => {
  * @param {*} param1 
  * @returns 
  */
-export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber }) => {
+export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber, currentLabelValue, labelNumberSetting, currentNumberValue }) => {
+    let labelValue = imgLabelValue
+    let numberValue = imgNumberValue
+    if (labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
+        labelValue = currentLabelValue
+    }
+    if (labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER || labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER || labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER) {
+        numberValue = currentNumberValue
+    }
     if (parentNumber && element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
-        return `${imgLabelValue} ${parentNumber}.${imgNumberValue}`
+        return `${labelValue} ${parentNumber}.${numberValue}`
     } else if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
-        return `${imgLabelValue} ${imgNumberValue}`
+        return `${labelValue} ${numberValue}`
     }
     return ""
 }
@@ -234,10 +241,9 @@ export const getContainerEntityUrn = (slateAncestors) =>{
  * @param {*} containerNumber 
  * @returns 
  */
-export const getLabelNumberFieldValue = (element, figureLabelValue, containerNumber) => {
-    let elementLabel = figureLabelValue || element?.displayedlabel || ""
+export const getLabelNumberFieldValue = (element, figureLabelValue, settingsOption) => {
+    let elementLabel = figureLabelValue || element?.displayedlabel;
     if (element?.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == false) {
-        // elementLabel = ""
         elementLabel = figureLabelValue;
     }
     else if (element?.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
@@ -248,6 +254,10 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, containerNum
                 elementLabel = figureLabelValue
             }
         }
+    }
+    if(settingsOption !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+        elementLabel = element?.displayedlabel;
+        elementLabel = !element.hasOwnProperty('displayedlabel') ? getValueOfLabel(element?.figuretype) : elementLabel;
     }
     return elementLabel
 }
@@ -299,6 +309,11 @@ export const prepareAutoNumberList = (imagesData) => {
  */
 export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => {
     if (parentIndex && element && autoNumberElementsIndex) {
+        if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
+            if (element.hasOwnProperty(MANUAL_OVERRIDE) && element[MANUAL_OVERRIDE] !== undefined && (Object.keys(element[MANUAL_OVERRIDE])?.length > 0) && element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_NUMBER_VALUE)) {
+                return element[MANUAL_OVERRIDE][OVERRIDE_NUMBER_VALUE];
+            }
+        }
         let labelType = autoNumber_KeyMapper[element?.displayedlabel || 'Figure']
         // Check added for overrided labels
         if (!(labelType)) {
@@ -326,7 +341,7 @@ export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNu
     const labelType = autoNumber_ElementTypeKey[elementLabel];
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
     if (autoNumberedElements[labelType]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[labelType][figureParentEntityUrn] && Object.keys(autoNumberedElements[labelType][figureParentEntityUrn]).length > 0) {
-        let index = autoNumberedElements[labelType][figureParentEntityUrn].findIndex(ele => ele.contentUrn === element.contentUrn);
+        let index = autoNumberedElements[labelType][figureParentEntityUrn]?.findIndex(ele => ele.contentUrn === element.contentUrn);
         if (index > -1) {
             autoNumberedElements[labelType][figureParentEntityUrn][index] = element;
         }
@@ -338,47 +353,47 @@ export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNu
     getAutoNumberSequence(autoNumberedElements, dispatch);
 }
 
-export const updateAutonumberingOnElementTypeUpdate = (newLabel, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => (dispatch) => {
-    let bodyMatter = slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
-    let slateFigures = getImagesInsideSlates(bodyMatter);
-    let elementSlateIndex = slateFigures.findIndex(ele => ele.contentUrn === element.contentUrn);
+export const updateAutonumberingOnElementTypeUpdate = (newElement, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => async (dispatch, getState) => {
+    const slateContent = getState().appStore?.slateLevelData || slateLevelData
+    let slateElements = await getAutoNumberedElementsOnSlate(slateContent[config?.slateManifestURN], { dispatch });
+    const activeLabelElements = slateElements?.filter(elem => elem.displayedlabel === newElement?.displayedlabel);
+    let elementSlateIndex = slateElements?.findIndex(ele => ele.contentUrn === element.contentUrn);
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
     if (autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn]) {
-        let index = autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn].findIndex(ele => ele.contentUrn === element.contentUrn);
+        let index = autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn]?.findIndex(ele => ele.contentUrn === element.contentUrn);
         if (index > -1) {
             autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn].splice(index, 1);
         }
+        dispatch({
+            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+            payload: autoNumberedElements
+        });
+        getAutoNumberSequence(autoNumberedElements, dispatch);
     }
-    element = {
-        ...element,
-        displayedlabel: newLabel
-    }
-    if (autoNumberedElements[autoNumber_ElementTypeKey[newLabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn]) {
-        let nearestElementObj = findNearestMediaElement(slateFigures, element, newLabel, elementSlateIndex);
-        if (nearestElementObj && Object.keys(nearestElementObj).length > 0) {
-            let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].findIndex(element => element.contentUrn === nearestElementObj.contentUrn);
-            autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].splice(storeIndex + 1, 0, element);
+    if (autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].length > 0 && activeLabelElements.length > 1) {
+        let nearestElementObj = findNearestElement(slateElements, element, newElement?.displayedlabel, elementSlateIndex);
+        if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
+            let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
+            storeIndex = nearestElementObj?.key === 'above' ? storeIndex + 1 : storeIndex;
+            autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].splice(storeIndex, 0, newElement);
         } else {
-            autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].splice(0, 0, element);
+            autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].splice(0, 0, newElement);
         }
-    } else {
-        autoNumberedElements[autoNumber_ElementTypeKey[newLabel]] = {
-            [figureParentEntityUrn]: []
-        }
-        autoNumberedElements[autoNumber_ElementTypeKey[newLabel]][figureParentEntityUrn].push(element);
-    }
-    dispatch({
-        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-        payload: autoNumberedElements
-    });
-    getAutoNumberSequence(autoNumberedElements, dispatch);
+        dispatch({
+            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+            payload: autoNumberedElements
+        });
+        getAutoNumberSequence(autoNumberedElements, dispatch);
+    } else if (activeLabelElements.length === 1) {
+        checkElementExistenceInOtherSlates(newElement, config?.slateEntityURN, getState, dispatch);
+    } 
 }
 
 export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements, currentSlateAncestorData) => (dispatch) => {
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
-    if (figureParentEntityUrn && updatedData?.contentUrn && autoNumberedElements) {
+    if (updatedData?.displayedlabel && figureParentEntityUrn && updatedData?.contentUrn && autoNumberedElements) {
         if (autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]) {
-            let index = autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn].findIndex(element => element.contentUrn === updatedData.contentUrn);
+            let index = autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]?.findIndex(element => element.contentUrn === updatedData.contentUrn);
             if (index > -1) {
                 let figureObj = autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn][index];
                 if (updatedData.hasOwnProperty(MANUAL_OVERRIDE) && updatedData[MANUAL_OVERRIDE] !== undefined && Object.keys(updatedData[MANUAL_OVERRIDE])?.length > 0) {
@@ -394,14 +409,106 @@ export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements
                     }
                 }
                 autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn][index] = figureObj;
+                dispatch({
+                    type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+                    payload: {
+                        autoNumberedElements
+                    }
+                });
+                getAutoNumberSequence(autoNumberedElements, dispatch);
             }
         }
     }
-    dispatch({
-        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-        payload: {
-            autoNumberedElements
+}
+
+/**
+ * This function prepares the data, from response of the numbered API, in the desired format 
+ * @param {*} data 
+ * @param {*} matterType 
+ * @returns 
+ */
+export const getNumberedElements = (data, matterType) => {
+    let numberedElements = {};
+
+    for(let matter in data){
+        numberedElements[autoNumber_response_ElementType_mapper[matter]] = {
+           [matterType]: data[matter].length > 0 ? data[matter] : []
         }
-    });
-    getAutoNumberSequence(autoNumberedElements, dispatch)
+    }
+
+    return numberedElements;
+}
+/**
+ * This function will validate the label & number for make the saving call
+ * @param {*} props 
+ * @param {*} previousElementData 
+ * @param {*} removeClassesFromHtml 
+ * @param {*} titleHTML 
+ * @param {*} numberHTML 
+ * @param {*} subtitleHTML 
+ * @param {*} captionHTML 
+ * @param {*} creditsHTML 
+ * @param {*} oldImage 
+ * @param {*} podwidth 
+ * @param {*} smartlinkContexts
+ * @param {*} index
+ * @param {*} changeInPodwidth
+ * @returns Boolean value
+ */
+export const validateLabelNumberSetting = (props, previousElementData, removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, changeInPodwidth) => {
+    // Not selecting remove label and number
+    if (props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+        let isValidValues = setAutonumberingValuesForPayload(props.autoNumberOption.option, titleHTML, numberHTML, true);
+        if (!isValidValues) return false;
+    }
+    // Selecting default case 
+    if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+        return true;
+    }
+    let isNumberDifferent = false;
+    let imgNumberValue = '';
+    let overridedNumber = getOverridedNumberValue(previousElementData);
+    let isOverridedLabelDifferent = false;
+    if (overridedNumber && overridedNumber !== '') {
+        isNumberDifferent = overridedNumber?.toString() !== numberHTML?.toString();
+    } else {
+        const figIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
+        imgNumberValue = getNumberData(figIndexParent, previousElementData, props.autoNumberElementsIndex || {});
+        isNumberDifferent = imgNumberValue?.toString() !== numberHTML?.toString();
+    }
+    if (previousElementData.hasOwnProperty('manualoverride') && previousElementData?.manualoverride.hasOwnProperty('overridelabelvalue')) {
+        isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
+    }
+    subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+    if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
+        titleHTML = previousElementData.displayedlabel;
+    }
+
+    let newInteractiveid = previousElementData?.figuredata?.interactiveid || "";
+    let result = (
+        titleHTML !== previousElementData.displayedlabel ||
+        removeClassesFromHtml(subtitleHTML) !== removeClassesFromHtml(previousElementData.html.title) ||
+        isNumberDifferent ||
+        isOverridedLabelDifferent ||
+        captionHTML !== removeClassesFromHtml(previousElementData.html.captions) ||
+        creditsHTML !== removeClassesFromHtml(previousElementData.html.credits) ||
+        oldImage !== newInteractiveid
+    );
+
+    if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
+        let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
+        let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
+        posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
+
+        let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ?
+            previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` :
+            "<p></p>";
+        return (
+            result ||
+            removeClassesFromHtml(posterTextHTML) !== removeClassesFromHtml(oldPosterText) ||
+            changeInPodwidth(podwidth, previousElementData?.figuredata?.posterimage?.podwidth)
+        );
+    }
+    
+    return result;
 }

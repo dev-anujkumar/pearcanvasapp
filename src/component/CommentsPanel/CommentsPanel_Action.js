@@ -12,10 +12,23 @@ import {
     UPDATE_ASSIGNEE,
     DELETE_COMMENT,
     ERROR_POPUP,
-    UPDATE_ROLE
+    UPDATE_ROLE,
+    ADD_NEW_COMMENT
 } from '../../constants/Action_Constants';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action';
+
+
+export const addNewComment = (payload) => ({
+    type: ADD_NEW_COMMENT,
+    payload
+});
+
+
+export const deleteComment = (payload) => ({
+    type: DELETE_COMMENT,
+    payload
+});
 
 
 /**
@@ -30,33 +43,15 @@ export const fetchComments = (contentUrn, title) => dispatch => {
     return axios.get(url, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         dispatch({
             type: FETCH_COMMENTS,
             payload: { comments: response.data.comments, title }
         })
-        let searchString = window.location.search;
-        let q = new URLSearchParams(searchString);
-        if (q.get('q')) {
-            let currentWorkId = q.get('q');
-            dispatch({
-                type: TOGGLE_COMMENTS_PANEL,
-                payload: true
-            })
-            dispatch({
-                type: FETCH_COMMENT_BY_ELEMENT,
-                payload: {
-                    elementId: currentWorkId,
-                    index: 0
-                }
-            })
 
-            dispatch(getCommentElements(currentWorkId));
-            //Replaces to the original URL to prevent multiple panel toggle
-            window.history.replaceState(null, null, `/toc-wrapper/index.html?projectUrn=${config.projectUrn}&entityUrn=${config.projectEntityUrn}`);
-        }
     }).catch(error => {
         console.log("failed to fetch comment", error);
     })
@@ -121,7 +116,8 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
             headers: {
                 "Content-Type": "application/json",
                 ApiKey: config.STRUCTURE_APIKEY,
-                PearsonSSOSession: config.ssoToken
+                // PearsonSSOSession: config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     )
@@ -159,7 +155,8 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
             headers: {
                 "Content-Type": "application/json",
                 ApiKey: config.STRUCTURE_APIKEY,
-                PearsonSSOSession: config.ssoToken
+                // PearsonSSOSession: config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     )
@@ -192,7 +189,8 @@ export const updateComment = (commentUrn, updateCommentParams, elementId) => dis
             headers: {
                 "Content-Type": "application/json",
                 ApiKey: config.STRUCTURE_APIKEY,
-                PearsonSSOSession: config.ssoToken
+                // PearsonSSOSession: config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     ).then(response => {
@@ -219,7 +217,8 @@ export const getProjectUsers = () => dispatch => {
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }).then(response => {
             dispatch({
@@ -248,7 +247,8 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
         headers: {
             "Content-Type": "application/json",
             ApiKey: config.STRUCTURE_APIKEY,
-            PearsonSSOSession: config.ssoToken
+            // PearsonSSOSession: config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         dispatch({
@@ -262,32 +262,6 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
 
 }
 
-/**
- * 
- *@discription - This function is to delete the comment of the project 
-  @param {String} commentUrn - Comment urn of comment to reply
-  @param {String} elementId -elementId of the element
-*/
-
-export const deleteComment = (commentUrn, elementId) => (dispatch, getState) => {
-    let url = `${config.REACT_APP_API_URL}v2/narrative/container/${elementId}/comment/${commentUrn}`
-    return axios.delete(url,
-        {
-            headers: {
-                "Content-Type": "application/json",
-                PearsonSSOSession: config.ssoToken
-            }
-        }).then(response => {
-            dispatch({
-                type: DELETE_COMMENT,
-                payload: commentUrn
-            });
-        }).catch(error => {
-            dispatch({ type: ERROR_POPUP, payload: { show: true } })
-            console.log("error while deleting user", error);
-        })
-
-}
 
 export const updateRole = (commentUrn, newRole, elementId) => dispatch => {
     let url = `${config.NARRATIVE_API_ENDPOINT}narrative/v1/comment/role`
@@ -300,7 +274,8 @@ export const updateRole = (commentUrn, newRole, elementId) => dispatch => {
         headers: {
             "Content-Type": "application/json",
             ApiKey: config.STRUCTURE_APIKEY,
-            PearsonSSOSession: config.ssoToken
+            // PearsonSSOSession: config.ssoToken
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         dispatch({

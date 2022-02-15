@@ -10,6 +10,7 @@ import {
     SPLIT_REMOVE_POPUP , CURRENT_SLATE_AUDIO_NARRATION , ADD_AUDIO_NARRATION , WRONG_AUDIO_REMOVE_POPUP, ERROR_POPUP
 } from '../../constants/Action_Constants.js'
 import { hideTocBlocker } from '../../js/toggleLoader'
+import { deleteAudio,REFRESH_MESSAGE } from '../../constants/IFrameMessageTypes.js'
 /**
  * 
  * @param {*} value 
@@ -86,18 +87,20 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'ApiKey': config.AUDIO_API_KEY,
-                    'PearsonSSOSession': config.ssoToken,
+                    // 'PearsonSSOSession': config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             });
             if(audioDataResponse && audioDataResponse.data && audioDataResponse.status == 200){
                 dispatch({ type: CURRENT_SLATE_AUDIO_NARRATION, payload: audioDataResponse.data});
                 dispatch({ type: OPEN_AUDIO_NARRATION, payload: true })
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: false })
-                if (config?.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS) {
+                if (config?.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && config.CYPRESS_PLUS_WINDOW) {
                     const wUrn = store.getState()?.appStore?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0]?.id
                     const urlCypress = `${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${wUrn}`
                     const obj = {
-                        type: "editPageAudioMessage", audioData: {
+                        type: "editPageAudioMessage",
+                        audioData: {
                             "narrativeAudioUrn": audioDataResponse?.data?.data[0]?.narrativeAudioUrn,
                             "location": audioDataResponse?.data?.data[0]?.location,
                             "title": {
@@ -146,17 +149,18 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'ApiKey': config.AUDIO_API_KEY,
-                    'PearsonSSOSession': config.ssoToken,
+                    // 'PearsonSSOSession': config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             });
             if (audioDataResponse && audioDataResponse.status == 200) {
                 fetchAudioNarrationForContainer(slateData)
                 dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: true })
-                if (config?.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS) {
+                if (config?.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && config.CYPRESS_PLUS_WINDOW) { 
                     const wUrn = store.getState()?.appStore?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0]?.id
                     const urlCypress = `${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${wUrn}`
-                    const obj = { type: "deletePageAudioMessage", message: "refresh on Cypress from Cypress_plus" }
+                    const obj = { type: deleteAudio, message: REFRESH_MESSAGE }
                     config.CYPRESS_PLUS_WINDOW.postMessage(obj, urlCypress)
                 }
             }
@@ -218,7 +222,8 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'ApiKey': config.AUDIO_API_KEY,
-                    'PearsonSSOSession': config.ssoToken,
+                    // 'PearsonSSOSession': config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             });
            // document.getElementsByClassName('.audio-block').style.pointerEvents = "auto"

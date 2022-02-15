@@ -19,7 +19,8 @@ export const getGlossaryFootnoteId = (elementId, enumType, callback) => {
     axios.post(url, null, { 
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     })
     .then(res => {

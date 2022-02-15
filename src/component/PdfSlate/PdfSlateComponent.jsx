@@ -1,7 +1,7 @@
 import React from 'react';
 import config from '../../config/config';
 import Tooltip from '../Tooltip';
-
+import {CYPRESS_PLUS_TOOLTIP} from '../../constants/ToolTip_Constant'
 function PdfSlateComponent(props)  {
 
 	const { showDetails, pdfId, filetitle, OpenAlfresco ,element} = props;
@@ -17,11 +17,11 @@ function PdfSlateComponent(props)  {
 							<div className="slate_assessment_data_id">ID: { pdfId }</div>
 							{(!config.SHOW_CYPRESS_PLUS || !config.isCypressPlusEnabled ) && (<div className="slate_assessment_change_button" onClick={ OpenAlfresco }>Change PDF</div>)}
 						</div>
-								{config.isCypressPlusEnabled && element?.elementdata?.conversionstatus  &&
+								{config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && element?.elementdata?.conversionstatus  &&
 						<div className='slate_cypress_plus_enhance' > 
 					
-						<Tooltip direction='enhance' tooltipText='The content has been updated' >
-							<div className="slate_assessment_cypress_plus_enhance enhanced_label">Cypress+ Enhanced</div>
+						<Tooltip direction='enhance' tooltipText={CYPRESS_PLUS_TOOLTIP} >
+							<div className="slate_assessment_cypress_plus_enhance">Cypress+ Enhanced</div>
 						</Tooltip>
 								
 							</div>

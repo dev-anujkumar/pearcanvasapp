@@ -28,7 +28,8 @@ import {
     OWNERS_SUBSCRIBED_SLATE,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     ERROR_API_POPUP,
-    SLATE_FIGURE_ELEMENTS
+    SLATE_FIGURE_ELEMENTS,
+    OEP_DISCUSSION
 } from '../../constants/Action_Constants';
 import { SLATE_API_ERROR } from '../../constants/Element_Constants';
 
@@ -36,10 +37,11 @@ import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsP
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
-import { HideLoader, UPDATE_PROJECT_METADATA } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
+import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -50,9 +52,10 @@ import { getContainerData } from './../Toolbar/Search/Search_Action.js';
 import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import ElementConstants from "../ElementContainer/ElementConstants.js";
-import { isAutoNumberEnabled } from '../FigureHeader/AutoNumberActions.js';
+import { isAutoNumberEnabled, fetchProjectFigures, setAutoNumberinBrowser } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
-import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
+import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -65,11 +68,11 @@ export const findElementType = (element, index) => {
             case "manifestlist":
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
-                    //primaryOption : "primary-column-1",
                     primaryOption: `primary-column-${element.columnnumber}`,
+                    fontStyle: element.fontstyle ? `font-style-${element.fontstyle[element.fontstyle.length-1]}` : 'font-style-1',
+                    bulletIcon: element.iconcolor ? `bullet-color-${element.iconcolor[element.iconcolor.length-1]}`: 'bullet-color-1',
                     secondaryOption: `secondary-column-${element.columnnumber}`,
                     contentUrn : element.contentUrn
-                    //secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
             case 'element-authoredtext':
@@ -335,13 +338,15 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 
-export const fetchFigureDropdownOptions = () => (dispatch) => {
+export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     // Api to get Figure dropdown options
-    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type`;
+    let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/project/${config.projectEntityUrn}/element-labels?isAutoNumberingEnabled=${isAutoNumberingEnabled}`;
     return axios.get(figureDropdownOptionsURL, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         let dropdownOptionsObj = response?.data;
@@ -350,6 +355,10 @@ export const fetchFigureDropdownOptions = () => (dispatch) => {
                 type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
                 payload: dropdownOptionsObj
             })
+            sendDataToIframe({
+                'type': SET_CONTROL_VOCAB_DETAILS,
+                'message': dropdownOptionsObj
+            });
         }
     }).catch(error => {
         console.log("Get figure dropdown options API Failed !!", error)
@@ -362,7 +371,8 @@ export const getProjectDetails = () => (dispatch, getState) => {
     return axios.get(lobURL, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then (response => {
         dispatch({
@@ -380,8 +390,8 @@ export const getProjectDetails = () => (dispatch, getState) => {
         if (data?.parameters && Object.keys(data?.parameters).length > 0) {
             let flag = data?.parameters?.enablenumberedandlabel || false;
             dispatch(isAutoNumberEnabled(flag, config.ENABLE_AUTO_NUMBER_CONTENT));
+            setAutoNumberinBrowser(flag, config.ENABLE_AUTO_NUMBER_CONTENT)
         }
-        dispatch(isAutoNumberEnabled(true, config.ENABLE_AUTO_NUMBER_CONTENT)); // by default set true figure autonumbering
         const {lineOfBusiness} = data;
         if(lineOfBusiness) {
             // Api to get LOB Permissions
@@ -389,7 +399,8 @@ export const getProjectDetails = () => (dispatch, getState) => {
             axios.get(lobPermissionsURL, {
                 headers: {
                     "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (response => {
                 const { elementPermissions } = response.data;
@@ -407,12 +418,17 @@ export const getProjectDetails = () => (dispatch, getState) => {
             axios.get(workflowRoleURL, {
                 headers: {
                     "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }).then(response => {
                 dispatch({
                     type: UPDATE_LOB_WORKFLOW,
                     payload: response.data
+                })
+                sendDataToIframe({
+                    'type': WORKFLOW_ROLES,
+                    'message': response.data
                 })
             }).catch(error => {
                 console.log("Get Workflow role API Failed!!")
@@ -426,9 +442,10 @@ export const getProjectDetails = () => (dispatch, getState) => {
              axios.get(usageTypeUrl, {
                 headers: {
                     ApiKey:config.STRUCTURE_APIKEY,
-                    PearsonSSOSession:config.ssoToken,
+                    // PearsonSSOSession:config.ssoToken,
                     'Content-Type':'application/json',
-                    Authorization:config.CMDS_AUTHORIZATION
+                    Authorization:config.CMDS_AUTHORIZATION,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (usageTypeResponse => {
                 //console.log("the usage type response is", usageTypeResponse);
@@ -444,21 +461,23 @@ export const getProjectDetails = () => (dispatch, getState) => {
             }).catch(error => {
             }) 
 
-
-
+            
+            
             // call api to get discussion items
+            /* If LOB is english, then it will change to onlineenglishproficiency(OEP) */
             const discussionURLEndPoint = 'v1/discussion/discussions';
             // 'https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1/discussion/discussions'
             const discussionUrl = `${config.REACT_APP_API_URL}${discussionURLEndPoint}`;
             return axios.post(discussionUrl, {
                 "lineOfBusinesses" : [
-                    lineOfBusiness
+                    (lineOfBusiness === "english" ? OEP_DISCUSSION : lineOfBusiness)
                 ]
             },
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (discussionResponse => {
                 if(Array.isArray(discussionResponse?.data)) {
@@ -543,7 +562,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => { 
          /* Slate tag issue */
@@ -800,7 +820,20 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             }
         }
         /** [TK-3289]- To get Current Slate details */
-        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData))
+        dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
+
+        // get data for auto-numbering
+        if(config.figureDataToBeFetched){
+            const slateAncestors = getState().appStore.currentSlateAncestorData;
+            const currentParentUrn = getContainerEntityUrn(slateAncestors);
+            dispatch(fetchProjectFigures(currentParentUrn));
+            dispatch(fetchFigureDropdownOptions());
+            config.figureDataToBeFetched = false;
+            const slateMatterType = getState().appStore.slateMatterType
+            const allSlatesData = getState().appStore.allSlateData
+            getCurrentSlatesList(allSlatesData,slateMatterType,currentParentUrn,dispatch)
+        }
+
         if (slateData.data[newVersionManifestId].type !== "popup") {
             if(slateData.data && Object.values(slateData.data).length > 0) {
                 let slateTitle = SLATE_TITLE;
@@ -831,16 +864,18 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(getContainerData(searchTerm));
         }
         /** Get List of Figures on a Slate for Auto-Numbering */
-        const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
-        const slateFigures = getImagesInsideSlates(bodyMatter)
-        if (slateFigures) {
+        // const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
+        // const slateFigures = getImagesInsideSlates(bodyMatter)
+        const slateFigures = getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
+        /* if (slateFigures) {
+            console.log('slateFigures',slateFigures)
             dispatch({
                 type: SLATE_FIGURE_ELEMENTS,
                 payload: {
-                    slateFigures
+                    slateFigures :slateFigures
                 }
             });
-        }
+        }*/
     })
     .catch(err => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -1059,6 +1094,11 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     return oldPath || ""
 }
 export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false, showHideObj = undefined) => (dispatch, getState) => {
+    if(activeElement.type === "manifestlist" && typeof index === 'string'){
+        let {fontstyle, iconcolor} = setParentFontIconDataToChild(index, getState);
+        activeElement.fontstyle = fontstyle;
+        activeElement.iconcolor = iconcolor
+    }
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -1122,7 +1162,8 @@ export const fetchAuthUser = () => dispatch => {
     return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}?userName=${config.userId}`, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
         let userInfo = response.data;
@@ -1131,6 +1172,22 @@ export const fetchAuthUser = () => dispatch => {
         document.cookie = (userInfo.userId)?`USER_ID=${userInfo.userId};path=/;`:`USER_ID=;path=/;`;
 		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
 		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
+        
+        /* 
+        To update the latest info
+        Since GetFirst Salte was called before fetch user
+        so sending user info with postmessage 
+        */
+
+        sendDataToIframe({
+            type: 'updateUserDetail',
+            message : {
+                userId : userInfo.userId,
+                firstName : userInfo.firstName,
+                lastName: userInfo.lastName
+            }
+            
+        });
     })
         .catch(err => {
             console.error('axios Error', err);
@@ -1166,8 +1223,9 @@ export const tcmCosConversionSnapshot = () => dispatch => {
     return axios.patch(`/cypress/trackchanges-srvr/pre-snapshot/${config.projectUrn}`, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken,
-            "Accept": "application/json"
+            // "PearsonSSOSession": config.ssoToken,
+            "Accept": "application/json",
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
         // console.log("response", response)
@@ -1339,7 +1397,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
     .then((response) => {
@@ -1403,7 +1462,8 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
     .then((response) => {
@@ -1580,10 +1640,11 @@ export const setSlateLength = (length) => {
 
 
 export const fetchLearnosityContent = () => dispatch => {
-    return axios.get(`${config.LEARNOSITY_CONTENT_BRIDGE_API}${config.projectEntityUrn}?PearsonSSOSession=${config.ssoToken}`, {
+    return axios.get(`${config.LEARNOSITY_CONTENT_BRIDGE_API}${config.projectEntityUrn}`, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
      if(response.status==200){
@@ -1607,8 +1668,9 @@ export const fetchProjectLFs = () => dispatch => {
         headers: {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken,
-            "x-Roles": "ContentPlanningAdmin"
+            // "PearsonSSOSession": config.ssoToken,
+            "x-Roles": "ContentPlanningAdmin",
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
@@ -1667,4 +1729,35 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
         type: OWNERS_SUBSCRIBED_SLATE,
         payload: showPopup
     })
+}
+
+/**
+ * For Child block list, this function will retrive "fontStyle" & "iconcolor" value from parent
+ * and return that value
+ * @param {*} index 
+ * @param {*} getState 
+ * @returns 
+ */
+const setParentFontIconDataToChild = (index, getState) => {
+    let indexArr = index.split('-');
+    let parentData = getState().appStore.slateLevelData;
+    let slateLevelData = JSON.parse(JSON.stringify(parentData));
+    let bodyMatter =   slateLevelData[config.slateManifestURN].contents.bodymatter;
+    let element = bodyMatter[indexArr[0]];
+    
+    if(element?.type === 'showhide'){
+        let blockList = {}
+        if(indexArr[1] === "2" && element.interactivedata.hide) {
+            blockList = element.interactivedata.hide[indexArr[2]]
+        } else if(indexArr[1] === "0" && element.interactivedata.show) {
+            blockList = element.interactivedata.show[indexArr[2]]
+        }
+        if(blockList?.type === "manifestlist"){
+            return {fontstyle: blockList.fontstyle, iconcolor: blockList.iconcolor}
+        }
+    } else if(element?.type === "manifestlist") {
+        return {fontstyle: element.fontstyle, iconcolor: element.iconcolor}
+    }
+
+    return {fontstyle: 'font-style-1' , iconcolor: 'bullet-color-1'}
 }

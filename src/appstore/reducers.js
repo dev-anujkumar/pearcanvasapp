@@ -52,7 +52,8 @@ import {
     UPDATE_OLD_SMARTLINK_INFO,
     UPDATE_OLD_AUDIOVIDEO_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
-    CHECK_ASIDE_NUMBER
+    CHECK_ASIDE_NUMBER,
+    SET_SLATE_MATTER_TYPE
 } from '../constants/Action_Constants';
 
 /**
@@ -98,7 +99,23 @@ const INITIAL_STATE = {
         audio: ["No Label", "Custom"],
         image: ['Figure', 'Table', 'Equation'],
         smartlinks: ["No Label", "Custom"],
-        video: ["No Label", "Custom"]
+        video: ["No Label", "Custom"],
+        tableasmarkup: ["No Label", 'Table', "Custom"],
+        mathml: ["No Label", "Equation", "Custom"],
+		preformattedtext: ["No Label", "Exhibit", "Custom"],
+        aside:["Aside"],
+        interactive:["Interactive"],
+        workedexample:["Worked Example"],
+        audioCustom: [],
+        imageCustom: [],
+        smartlinksCustom: [],
+        videoCustom: [],
+        tableasmarkupCustom: [],
+        mathmlCustom: [],
+		preformattedtextCustom: [],
+        asideCustom:[],
+        interactiveCustom:[],
+        workedexampleCustom:[]
     },
     asideTitleData: []
 };
@@ -358,11 +375,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 asideTitleData: [...asideTitleData, action.payload]
             }
-            // return{
-            //     ...state,
-            //     asideTitleData: action.payload
-            // }
-
+        case SET_SLATE_MATTER_TYPE:
+            return {
+                ...state,
+                slateMatterType: action.payload
+            }
         default:
             return state;
     }

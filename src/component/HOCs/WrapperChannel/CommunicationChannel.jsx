@@ -126,6 +126,7 @@ function CommunicationChannel(WrappedComponent) {
                     config.userId = message['x-prsn-user-id'].toLowerCase();
                     config.userName = message['x-prsn-user-id'].toLowerCase();
                     config.ssoToken = message.ssoToken;
+                    config.myCloudProxySession = message.myCloudProxySession;
                     config.projectUrn = message.id;
                     config.citeUrn = message.citeUrn;
                     config.isCypressPlusEnabled = message.isCypressPlusEnabled;
@@ -166,7 +167,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.currentSlateLO(message.LOList);
                     this.props.isLOExist(message);
                     this.props.currentSlateLOType(message.currentSlateLF);
-                    this.props.updateLastAlignedLO(message.lastAlignedLo)
                     break;
                 case 'loEditResponse':
                     this.setState({
@@ -326,6 +326,11 @@ function CommunicationChannel(WrappedComponent) {
                 case 'openInlineAlsfrescoPopup' :
                     this.props.alfrescoPopup(message);
                     break;
+                case 'spellCheckStatus':
+                    this.props.toggleSpellCheckAction();
+                    // refreshing the slate once spell check toggle is changed
+                    this.handleRefreshSlate();
+                    break;
                 case PROJECT_SHARING_ROLE:
                     if (message?.sharingContextRole) {
                         this.props.setProjectSharingRole(message.sharingContextRole);
@@ -360,14 +365,23 @@ function CommunicationChannel(WrappedComponent) {
                     const slateAncestors = this.props?.currentSlateAncestorData
                     const currentParentUrn = getContainerEntityUrn(slateAncestors)
                     if (currentParentUrn === message.currentTocParentContainer) {
-                        this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
-                        // get data for auto-numbering , 'AUDIO', 'VIDEO'
-                        const mediaElement = ['IMAGE','AUDIO', 'VIDEO']
-                        mediaElement.forEach(ele => {
-                            this.props.fetchProjectFigures(ele)
-                        })
+                        this.props.setTocContainersAutoNumberList(message.autoNumberingDetails);
+                        config.figureDataToBeFetched = true;
                     }
                     break;
+
+                case 'commentAdded' : {
+                    this.props.addNewComment(message)
+                    break
+                }
+
+                case 'commentDeleted' : {
+                    this.props.deleteComment(message)
+                    break
+                }
+                case 'newCustomCanvasLabels': {
+                    this.props.fetchFigureDropdownOptions()
+                }
             }
         }
 
@@ -897,15 +911,26 @@ function CommunicationChannel(WrappedComponent) {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
+                if (message?.node) {
+                    let matterType = 'bodymatter'
+                    if (message.node.parentOfParentItem !== "") {
+                        if (message.node.parentOfParentItem === 'backmatter') {
+                            matterType = 'backmatter'
+                        } else if (message.node.parentOfParentItem === 'frontmatter') {
+                            matterType = 'frontmatter'
+                        }
+                    } else if (message.node.nodeParentLabel === 'backmatter') {
+                        matterType = 'backmatter'
+                    } else if (message.node.nodeParentLabel === 'frontmatter') {
+                        matterType = 'frontmatter'
+                    }
+                    this.props.setSlateMatterType(matterType);
+                }
                 config.isPopupSlate = false;
+                config.figureDataToBeFetched = true;
                 this.props.fetchAudioNarrationForContainer(slateData)
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
-                // get data for auto-numbering , 'AUDIO', 'VIDEO'
-                const mediaElement = ['IMAGE','AUDIO', 'VIDEO']
-                mediaElement.forEach(ele => {
-                    this.props.fetchProjectFigures(ele)
-                })
                 this.props.fetchSlateData(message.node.containerUrn, config.slateEntityURN, config.page, '', "");
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);

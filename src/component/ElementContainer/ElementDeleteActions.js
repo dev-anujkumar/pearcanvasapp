@@ -11,16 +11,12 @@ import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { deleteBlockListElement } from '../ElementContainer/ElementContainerDelete_helpers';
 import { AUTHORING_ELEMENT_UPDATE, ERROR_POPUP } from "./../../constants/Action_Constants";
 import tinymce from 'tinymce';
+import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper'
 
 export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
     const elementIndex = eleIndex?.toString()?.split('-')
-    //const { showHideObj } = getState().appStore
     const { cutCopyParentUrn, parentUrn, parentElement, asideData, showHideObj, isSectionBreak } = containerElements
-    // const parentElementUrn = getState().appStore.parentUrn
-    //This block was unused, So commented it while writing testcases.
-    // if(type === 'popup'){
-    //     dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
-    // }
     const _requestData = prepareDeleteRequestData(type, { elementId, elementIndex, parentElement, parentUrn, activeElement, cutCopyParentUrn, isSectionBreak })
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
@@ -28,7 +24,8 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     ).then(async (response) => {
@@ -53,7 +50,6 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             parentUrn,
             asideData,
             contentUrn: activeElement.contentUrn,
-            // sectionType: showHideType[elementIndex[elementIndex.length - 2].toString()],
             newIndex,
             element: activeElement,
             isSectionBreak,
@@ -89,6 +85,23 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             const { prepareTCMforDelete } = (await import("./ElementContainerDelete_helpers.js"))
             prepareTCMforDelete(elementId, dispatch, getState);
         }
+
+        //--------------------- Handle Auto-numbering -----------------------------------
+        const slateData = getState()?.appStore?.slateLevelData;
+        const newslateData = JSON.parse(JSON.stringify(slateData));
+        const slateLevelData = newslateData[config.slateManifestURN];
+        getAutoNumberedElementsOnSlate(slateLevelData, {dispatch});
+
+        const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+        const autoNumberParams = {
+            type,
+            getState,
+            dispatch,
+            contentUrn: activeElement?.contentUrn,
+            isAutoNumberingEnabled,
+            asideData
+        }
+        handleAutoNumberingOnDelete(autoNumberParams);
     }).catch(error => {
         showError(error, dispatch, "error while creating element")
         if (cb) {

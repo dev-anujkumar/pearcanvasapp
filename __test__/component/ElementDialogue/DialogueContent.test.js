@@ -1,6 +1,9 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import DialogueContent from '../../../src/component/ElementDialogue/DialogueContent';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
 
 const oldPSData = {
 	"contentUrn":"urn:pearson:entity:4e474860-267a-452d-8e4e-159b1dc8dfde",
@@ -64,13 +67,17 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
     }
 })
 
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+
 const event = {
 	stopPropagation: jest.fn(),
 	preventDefault: jest.fn()
 }
-
+let initialState = {};
+let store = mockStore(initialState);
 const dialogueInstance = (props) => {
-    const component = mount(<DialogueContent {...props} />);
+    const component = mount(<Provider store={store}><DialogueContent {...props} /></Provider>);
     return component.find('DialogueContent').instance();
 }
 
@@ -123,7 +130,7 @@ describe('1. DialogueContent component test cases', () => {
 
 	};
     it('1.1 DialogueContent component render successfully', () => {
-        const component = mount(<DialogueContent {...props} />);
+        const component = mount(<Provider store={store}><DialogueContent {...props} /></Provider>);
         expect(component).toHaveLength(1);
         const compInstance = dialogueInstance(props);
         expect(compInstance).toBeDefined();

@@ -33,7 +33,7 @@ ajax.x = function () {
     }
 };
 
-ajax.send = function (url, cb, method, data, contentType, sync, pubApiKey) {
+ajax.send = function (url, cb, method, data, contentType, arnKey, sync, pubApiKey) {
     let xApiKey = '';
     if (pubApiKey !== undefined) {
         xApiKey = pubApiKey;
@@ -51,11 +51,14 @@ ajax.send = function (url, cb, method, data, contentType, sync, pubApiKey) {
 
     document.cookie = `CTOOL_APIKEY=${xApiKey}; domain=.pearson.com; path=/; secure=true`;
     x.setRequestHeader('Content-Type', contentType);
-    x.setRequestHeader('Content-Language', 'en');
-    x.setRequestHeader('x-apikey', xApiKey);
-    x.setRequestHeader('X-PearsonSSOSession', config_object.ssoToken);
-    x.setRequestHeader('If-Match', IF_MATCH !== "" ? IF_MATCH : "");
+    // x.setRequestHeader('Content-Language', 'en');
+    // x.setRequestHeader('x-apikey', xApiKey);
+    // x.setRequestHeader('PearsonSSOSession', config_object.ssoToken);
+    // x.setRequestHeader('If-Match', IF_MATCH !== "" ? IF_MATCH : "");
+    x.setRequestHeader('myCloudProxySession', config_object.myCloudProxySession);
     x.setRequestHeader('accept', 'application/json, text/plain, */*');
+    x.setRequestHeader('aws-resource', config_object.AWS_RESOURCE);
+    x.setRequestHeader('arn', arnKey)
 
     x.send(data);
 };
@@ -73,7 +76,7 @@ ajax.put = function (url, data, cb, contentType, sync) {
 };
 
 export function publishTitleDelay(project, section, cite, callBack, isPreview) {
-    var content_url = config_object.CTOOL_PUBTITLE;
+    var content_url = config_object.PROJECT_PREVIEW_ENDPOINT;
     let content_data = {};
     content_data["projectManifest"] = project;
     content_data["sectionManifest"] = section;
@@ -83,7 +86,7 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview) {
     if (isPreview == true) {
         content_data["preview"] = true;
     }
-    ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', false);
+    ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', config_object.PROJECT_PREVIEW_ARN, false);
     let parsedResponse = JSON.parse(response.responseText);
 
     if (parsedResponse.data && parsedResponse.data.previewURL) {
@@ -101,7 +104,7 @@ export const c4PublishObj = {
 
     publishSlate: function (project, section, cite) {
         const startTime = performance.now();
-        var content_url = config_object.CTOOL_PUBSLATE;
+        var content_url = config_object.SLATE_PREVIEW_ENDPOINT;
         let proactiveSlatePreview = config_object?.PROACTIVE_SLATE_PREVIEW_STATUS ? config_object.PROACTIVE_SLATE_PREVIEW_STATUS : "false";
         let content_data = {};
         content_data["projectManifest"] = project;
@@ -110,7 +113,7 @@ export const c4PublishObj = {
         content_data["requester"] = config_object.userEmail;//"requester": "james.cooney@pearson.com",
         content_data["timestamp"] = new Date().toISOString();//"timestamp": "2017-04-23T18:25:43.511Z"
         content_data["proactiveSlatePreview"] = proactiveSlatePreview;
-        ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', false);
+        ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', config_object.SLATE_PREVIEW_ARN, false);
 
         window.addEventListener('beforeunload', (e) => {
             if (store.getState().toolbar.editor_dirtyDoc) {

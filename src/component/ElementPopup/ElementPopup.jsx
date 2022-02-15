@@ -11,6 +11,7 @@ import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import { getTitleSubtitleModel, isSubscriberRole } from "../../constants/utility.js"
 import { findKey } from "lodash";
+import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -40,7 +41,13 @@ class ElementPopup extends React.Component {
         }
         if(event.target.classList.contains("buttonWidgetPU")){
             if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id  || config.savingInProgress)){
-                this.renderSlate()
+                this.renderSlate();
+                let popupParentSlateData = {
+                    isPopupSlate: true,
+                    parentSlateId: Object.keys(this.props.slateLevelData)[0],
+                    index: this.props.index
+                }
+                this.props.savePopupParentSlateData(popupParentSlateData);
             }
         } 
     }
@@ -188,6 +195,7 @@ export default connect(
     mapStatetoProps,
     {
         fetchSlateData,
-        createPopupUnit
+        createPopupUnit,
+        savePopupParentSlateData
     }
 )(ElementPopup);
