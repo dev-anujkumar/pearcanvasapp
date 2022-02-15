@@ -337,6 +337,13 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 
+export const setCanvasDropdown = (data) => (dispatch) => {
+    return dispatch({
+        type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
+        payload: data
+    })
+}
+
 export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     // Api to get Figure dropdown options
     let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
@@ -552,7 +559,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         dispatch(handleTCMData(tcmManifestUrn));
     }
     dispatch(resetAssessmentStore());//reset Assessment Store
-    const elementCount = getState().appStore.slateLength;
+    const elementCount = 4;
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
