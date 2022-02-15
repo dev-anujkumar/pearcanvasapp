@@ -33,7 +33,7 @@ import PageNumberContext from '../CanvasWrapper/PageNumberContext.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
-import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from './UpdateElements.js';
+import { createUpdatedData, createOpenerElementData, handleBlankLineDom, updateAutoNumberedElement } from './UpdateElements.js';
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
@@ -460,8 +460,9 @@ class ElementContainer extends Component {
             if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
-            return (titleHTML !== previousElementData.displayedlabel ||
-                this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title) || isNumberDifferent || isOverridedLabelDifferent ||
+            const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
+                return (isLabelDifferent || this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title)
+                || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
@@ -552,7 +553,9 @@ class ElementContainer extends Component {
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-        titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+        if (!this.props.isAutoNumberingEnabled) {
+            titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
+        }
 
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
@@ -980,7 +983,10 @@ class ElementContainer extends Component {
     
     handleAutonumberAfterUpdate = (previousElementData, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
-        if (!previousElementData?.numberedandlabel && dataToSend.numberedandlabel) {
+        const  labelNumberSetting = this.props?.autoNumberOption?.option
+        const finalValue =  updateAutoNumberedElement(labelNumberSetting,dataToSend,{ displayedlabel: dataToSend?.displayedlabel,    manualoverride: dataToSend?.manualoverride })
+        // remove/override to default means gets added to numbering system
+        if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
             if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride.hasOwnProperty('resumenumbervalue')) {
                 dataToSend = {
                     ...dataToSend,
@@ -990,9 +996,9 @@ class ElementContainer extends Component {
                 }
             }
             this.props.handleAutonumberingOnCreate(dataToSend?.figuretype?.toUpperCase(), dataToSend);
-        } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) {
+        } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) { //default/resume to remove
             this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
-        } else if ( (previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (!(dataToSend.hasOwnProperty('manualoverride')) || (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue'))) ) {
+        } else if ( (previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue')) ) {
             // resume case
             dataToSend = {
                 ...dataToSend,
@@ -1000,16 +1006,17 @@ class ElementContainer extends Component {
                     resumenumbervalue: parseInt(dataToSend?.manualoverride?.resumenumbervalue)
                 }
             }
-            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend?.displayedlabel, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
-        } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel === dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
+            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
+        } else if ((previousElementData?.numberedandlabel) && (!dataToSend.hasOwnProperty('displayedlabel')) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridelabelvalue'))) {
             // override label and number case 
-            this.props.updateAutonumberingOnOverridedCase(dataToSend?.displayedlabel, dataToSend, autoNumberedElements, currentSlateAncestorData);
-        } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
+            // this.props.updateAutonumberingOnOverridedCase(dataToSend?.displayedlabel, dataToSend, autoNumberedElements, currentSlateAncestorData);
+            this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
+        } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel === dataToSend.displayedlabel) && (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
             // override number only case 
-            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend?.displayedlabel, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
+            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else if ( (previousElementData?.numberedandlabel) && (!(dataToSend.hasOwnProperty('manualoverride'))) ) { 
             // default case
-            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend?.displayedlabel, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData);
+            this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else {
             this.props.updateAutonumberingKeysInStore(dataToSend, autoNumberedElements, currentSlateAncestorData);
         }
@@ -1505,7 +1512,8 @@ class ElementContainer extends Component {
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle } = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
-        let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
+        let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
+        let anyFlaggedComment = allComments?.filter(({ commentFlag }) => commentFlag === true).length > 0
         let isQuadInteractive = "";
         /** Handle TCM for tcm enable elements */
         let tcm = false;
@@ -2245,13 +2253,17 @@ class ElementContainer extends Component {
         });   
     }
 
-    addOrViewComment = ( e, elementId ,type) => {
+    addOrViewComment = (e, elementId, type) => {
+        const {slateLockInfo} = this.props
         this.props.setActiveElement(this.props.element);
-        sendDataToIframe({
-            'type': AddOrViewComment,
-            'message': {"id":elementId, "mode":type}
-        });  
-        e.stopPropagation(); 
+        let lockedUserId = slateLockInfo?.userId?.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
+        if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
+            sendDataToIframe({
+                'type': AddOrViewComment,
+                'message': { "id": elementId, "mode": type }
+            });
+        }
+        e.stopPropagation();
     }
 
      /**
@@ -2619,8 +2631,6 @@ const mapStateToProps = (state) => {
         autoNumberOption: state.autoNumberReducer.autoNumberOption,
         autoNumberElementsIndex: state.autoNumberReducer.autoNumberElementsIndex,
         autoNumberedElements: state.autoNumberReducer.autoNumberedElements,
-        currentSlateAncestorData: state.appStore.currentSlateAncestorData,
-        slateLevelData: state.appStore.slateLevelData,
         spellCheckToggle: state.toolbarReducer.spellCheckToggle
     }
 }

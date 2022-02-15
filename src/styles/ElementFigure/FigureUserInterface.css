@@ -911,7 +911,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .floating-number-group .transition-none, .image-label .transition-none {
     transition: none;
-    top: -6px;
+    top: 2px;
     bottom: 0px;
     font-size: 10px;
     color: #737373;

@@ -231,7 +231,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     axios.post(url, JSON.stringify(conversionDataToSend), { 
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(async res =>{
         let parentData = store;
@@ -387,7 +388,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         if (isAutoNumberingEnabled && autoNumberFigureTypesForConverion.includes(outputPrimaryOptionEnum)) {
             const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
             const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
-            dispatch(updateAutonumberingOnElementTypeUpdate(res.data?.displayedlabel, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
+            dispatch(updateAutonumberingOnElementTypeUpdate(res.data, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
         }
         /**
          * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
@@ -671,7 +672,8 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
         const newParentData = getState().appStore.slateLevelData;
@@ -707,7 +709,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
                 }
             })
         }
-        if(dataToSend.columnnumber){
+        if(dataToSend.columnnumber || dataToSend.fontstyle || dataToSend.iconcolor){
         let activeElementObject = {
             contentUrn: dataToUpdate.blockListData.contentUrn,
             elementId: dataToUpdate.blockListData.id,
@@ -715,6 +717,8 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             elementType: dataToUpdate.elementType,
             primaryOption: dataToUpdate.primaryOption,
             secondaryOption: dataToUpdate.secondaryOption,
+            fontStyle: dataToUpdate.fontStyle,
+            bulletIcon: dataToUpdate.iconColor,
             toolbar: dataToUpdate.toolbar,
             elementWipType: dataToUpdate.elementWipType,
             tag: "P"
@@ -774,7 +778,8 @@ export const updateContainerMetadata = (dataToUpdate) => (dispatch, getState) =>
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
         if (currentSlateData?.status === 'approved') {
@@ -834,6 +839,12 @@ export const updateBLMetaData = (elementId, elementData, metaData) => {
         }
         if(metaData.columnnumber){
             elementData.columnnumber = metaData.columnnumber;
+        }
+        if(metaData.fontstyle){
+            elementData.fontstyle = metaData.fontstyle;
+        }
+        if(metaData.iconcolor){
+            elementData.iconcolor = metaData.iconcolor;
         }
     }
     else{

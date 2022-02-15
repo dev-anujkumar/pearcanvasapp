@@ -17,7 +17,8 @@ import {
     ERROR_POPUP,
     PAGE_NUMBER_LOADER,
     WIRIS_ALT_TEXT_POPUP,
-    SLATE_FIGURE_ELEMENTS
+    SLATE_FIGURE_ELEMENTS,
+    SET_SLATE_MATTER_TYPE
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
@@ -83,7 +84,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     ).then(async createdElemData => {
@@ -489,7 +491,8 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         const response = await axios.post(url, JSON.stringify(_requestData), {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
 
@@ -567,6 +570,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     const { oldIndex, newIndex, currentSlateEntityUrn, swappedElementData, containerTypeElem,
          asideId, poetryId, parentElement, elementIndex, sectionType } = dataObj || {};
     const slateId = config.slateManifestURN;
+    swappedElementData.slateEntityUrn = currentSlateEntityUrn ? currentSlateEntityUrn : config.slateEntityURN;
 
     let _requestData = {
         "projectUrn": config.projectUrn,
@@ -592,7 +596,8 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
         .then((responseData) => {
@@ -812,7 +817,8 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     ).then(res => {
@@ -931,7 +937,8 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                     'Content-Type': 'application/json',
                     'Cache-Control': 'no-cache',
                     'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }
         ).then(res => {
@@ -975,7 +982,8 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                     'Content-Type': 'application/json',
                     'Cache-Control': 'no-cache',
                     'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }
         ).then(res => {
@@ -1045,6 +1053,12 @@ export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => 
         payload: setSlateParentParams
     })
 }
+export const setSlateMatterType = (setSlateParentParams) => (dispatch, getState) => {
+    return dispatch({
+        type: SET_SLATE_MATTER_TYPE,
+        payload: setSlateParentParams
+    })
+}
 export const getPageNumber = (elementID) => (dispatch, getState) => {
     dispatch({
         type: PAGE_NUMBER_LOADER,
@@ -1058,7 +1072,8 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
     let url = `${config.PAGE_NUMBER_UPDATE_ENDPOINT}/v2/pageNumberMapping/${elementID}`;
     return axios.get(url, {
         headers: {
-            PearsonSSOSession: config.ssoToken
+            // PearsonSSOSession: config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
         let newPageNumber = {
@@ -1123,7 +1138,8 @@ const fetchContainerData = (entityURN, manifestURN, isPopup) => {
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
 })
 }
@@ -1323,7 +1339,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 {
                     headers: {
                         "Content-Type": "application/json",
-                        "PearsonSSOSession": config.ssoToken
+                        // "PearsonSSOSession": config.ssoToken,
+                        'myCloudProxySession': config.myCloudProxySession
                     }
                 }
             )
@@ -1435,7 +1452,8 @@ export const cloneContainer = (insertionIndex, manifestUrn,parentUrn,asideData) 
                     "ApiKey": config.STRUCTURE_APIKEY,
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }
         )

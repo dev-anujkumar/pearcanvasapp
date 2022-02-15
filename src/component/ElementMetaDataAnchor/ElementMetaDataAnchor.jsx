@@ -127,7 +127,8 @@ export class ElementMetaDataAnchor extends Component {
           'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
           'productApiUrl': config.PRODUCTAPI_ENDPOINT,
           'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
-          'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+          'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
+          'myCloudProxySession': config.myCloudProxySession
         };
         sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys_LO, wrapperURL: config.WRAPPER_URL } }) 
       }
@@ -143,7 +144,8 @@ export class ElementMetaDataAnchor extends Component {
       'strApiKey': config.STRUCTURE_APIKEY,
       'productApiUrl': config.PRODUCTAPI_ENDPOINT,
       'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
-      'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+      'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
+      'myCloudProxySession': config.myCloudProxySession
     };
     const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = '';

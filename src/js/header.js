@@ -81,6 +81,7 @@ const logoutWithModernOpenAM = () => {
         localStorage.removeItem('hasOwnerEdit');
     }
     deleteCookie('PearsonSSOSession', 'pearson.com');
+    deleteCookie('myCloudProxySession', 'pearson.com');
     removeAllLocal();
 };
 

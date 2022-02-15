@@ -43,7 +43,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     createLabelNumberTitleModel: jest.fn(),
     getLabelNumberTitleHTML: jest.fn(() => ({'formattedLabel': ''})),
     getTitleSubtitleModel: jest.fn(()=> ''),
-    isSubscriberRole:jest.fn(()=>{return true})
+    isSubscriberRole:jest.fn(()=>{return true}),
+    removeSpellCheckDOMAttributes: jest.fn(() => '')
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],

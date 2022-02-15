@@ -27,7 +27,7 @@ export const autoNumber_FigureTypeKeyMapper = {
 
 export const autoNumber_KeyMapperElements = {
   'Figure': 'imagesList',
-  'Table': 'property',
+  'Table': 'tablesList',
   'Equation': 'equationsList',
   'Audio': 'audiosList',
   'Video': 'videosList',
