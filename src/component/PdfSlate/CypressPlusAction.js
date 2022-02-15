@@ -38,7 +38,7 @@ const startPdfConversion = (wUrn) => {
 
 const pdfConversionStatus = async (wUrn) => {
   try {
-    const res = await axios.get(`${config.REACT_APP_API_URL}v1/cypress-plus-api/conversion-status/${wUrn}`, {
+    const res = await axios.get(`${config.REACT_APP_API_URL}v1/cypress-plus-api/conversion-status/project/${config.PROJECT_DISTRIBUTABLE_URN}/manifest/${config.slateManifestURN}/entity/${config.slateEntityURN}`, {
       headers: {
         "Content-Type": "application/json",
         PearsonSSOSession: config.ssoToken
