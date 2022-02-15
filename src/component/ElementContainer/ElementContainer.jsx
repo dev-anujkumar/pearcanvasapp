@@ -2252,8 +2252,10 @@ class ElementContainer extends Component {
     }
 
     addOrViewComment = (e, elementId, type) => {
+        const {slateLockInfo} = this.props
         this.props.setActiveElement(this.props.element);
-        if (!this.props.slateLockInfo.isLocked) {
+        let lockedUserId = slateLockInfo?.userId?.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
+        if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
             sendDataToIframe({
                 'type': AddOrViewComment,
                 'message': { "id": elementId, "mode": type }
