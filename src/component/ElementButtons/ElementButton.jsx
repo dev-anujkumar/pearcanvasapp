@@ -35,7 +35,8 @@ import {
     multiColumnContainer,
     elmInteractiveIcon,
     editIcon,
-    approvedIcon
+    approvedIcon,
+    commentFlagged
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
