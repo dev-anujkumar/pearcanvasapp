@@ -16,7 +16,7 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
@@ -769,7 +769,7 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData) => {
+    handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData) => {
         let { parentUrn, asideData } = this.props;
         asideData = cgTitleFieldData?.asideData && Object.keys(cgTitleFieldData?.asideData).length > 0 ? cgTitleFieldData?.asideData : asideData;
         parentElement = cgTitleFieldData?.parentElement && Object.keys(cgTitleFieldData?.parentElement).length > 0 ? cgTitleFieldData?.parentElement : parentElement;
@@ -894,7 +894,31 @@ class ElementContainer extends Component {
                     config.isSavingElement = true
                     this.props.updateAsideNumber(previousElementData, this.props.index, '', this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
                     if (this.props.isAutoNumberingEnabled) {
-                        this.handleAutonumberAfterUpdate(previousElementData, dataToSend, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+                        let numberedandlabel = false;
+                        let manualoverride = {};
+                        let displayedlabel;
+                        let updatedElement = Object.assign({}, previousElementData);
+                        let dataArr = prepareAsideTitleForUpdate(this.props.index, this.props.isAutoNumberingEnabled);
+                        const payloadKeys = setAutonumberingValuesForPayload(this.props?.autoNumberOption?.option, dataArr[0], dataArr[1], false);
+                        numberedandlabel = payloadKeys?.numberedandlabel;
+                        manualoverride = payloadKeys?.manualoverride;
+                        displayedlabel = previousElementData?.displayedlabel;
+                        if (!(previousElementData.hasOwnProperty('displayedlabel')) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+                            displayedlabel = getValueOfLabel(previousElementData?.subtype);
+                        }
+                        updatedElement = {
+                            ...updatedElement,
+                            html: {
+                                ...updatedElement?.html,
+                                title: `<p>${dataArr[0]}</p>`
+                            },
+                            numberedandlabel: numberedandlabel,
+                            displayedlabel: displayedlabel,
+                            manualoverride: manualoverride
+                        }
+                        this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
+                        (this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;
+                        this.handleAutonumberAfterUpdate(previousElementData, updatedElement, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
                     }
                 }
                 break;
@@ -2668,8 +2692,7 @@ const mapStateToProps = (state) => {
         autoNumberedElements: state.autoNumberReducer.autoNumberedElements,
         currentSlateAncestorData: state.appStore.currentSlateAncestorData,
         slateLevelData: state.appStore.slateLevelData,
-        spellCheckToggle: state.toolbarReducer.spellCheckToggle,
-        updatedAutonumberedContainerData: state.appStore.updatedAutonumberedContainerData
+        spellCheckToggle: state.toolbarReducer.spellCheckToggle
     }
 }
 

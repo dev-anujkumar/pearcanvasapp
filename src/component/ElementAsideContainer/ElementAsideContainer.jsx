@@ -703,7 +703,7 @@ class ElementAsideContainer extends Component {
     }
 
     checkForAutoNumberedContent = (currentElement) => {
-        if ((currentElement?.type === 'element-aside') && currentElement.hasOwnProperty('displayedlabel') && this.props?.isAutoNumberingEnabled) {
+        if ((currentElement?.type === 'element-aside') && currentElement.hasOwnProperty('numberedandlabel') && this.props?.isAutoNumberingEnabled) {
             return true
         }
         return false

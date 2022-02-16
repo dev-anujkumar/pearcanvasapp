@@ -53,7 +53,6 @@ import {
     UPDATE_OLD_AUDIOVIDEO_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     CHECK_ASIDE_NUMBER,
-    UPDATE_AUTONUMBERED_CONTAINER_ELEMENT,
     SET_SLATE_MATTER_TYPE
 } from '../constants/Action_Constants';
 
@@ -105,8 +104,7 @@ const INITIAL_STATE = {
         mathml: ["No Label", "Equation", "Custom"],
 		preformattedtext: ["No Label", "Exhibit", "Custom"]
     },
-    asideTitleData: [],
-    updatedAutonumberedContainerData: {}
+    asideTitleData: []
 };
 
 const INITIAL_ACTION = {
@@ -364,16 +362,6 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 asideTitleData: [...asideTitleData, action.payload]
             }
-        case UPDATE_AUTONUMBERED_CONTAINER_ELEMENT:
-            return {
-                ...state,
-                updatedAutonumberedContainerData: action.payload
-            }
-            // return{
-            //     ...state,
-            //     asideTitleData: action.payload
-            // }
-
         case SET_SLATE_MATTER_TYPE:
             return {
                 ...state,

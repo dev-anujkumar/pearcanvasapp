@@ -7,7 +7,7 @@ import config from '../../config/config';
 import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
-import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData } from '../FigureHeader/AutoNumber_helperFunctions';
+import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, SIDEBAR, WORKED_EXAMPLE } from '../FigureHeader/AutoNumberConstants';
 import { labelHtmlData } from '../../constants/Element_Constants';
@@ -54,7 +54,7 @@ export const ContainerHeader = (props) => {
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
         {
-            elementLabelValue: props.model?.displayedlabel ?? 'Aside',
+            elementLabelValue: props.model?.displayedlabel ?? props.model?.manualoverride?.overridelabelvalue ?? 'Aside',
             elementLabelData: [],
             labelNumberSetting: null,
             labelDropDown: false,
@@ -88,6 +88,10 @@ export const ContainerHeader = (props) => {
         setState({ labelNumberSetting: dropdownVal });
         props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: dropdownVal});
         updateDropdownOptions();
+        if (!props?.model.hasOwnProperty('displayedlabel')) {
+            let label = getValueOfLabel(props?.model?.subtype);
+            setState({ elementLabelValue: label });
+        }
     }, [])
     useEffect(() => {
         if (props.activeElement.elementId === props.model.id && props?.autoNumberOption?.entityUrn === props?.model?.contentUrn) {
@@ -121,7 +125,7 @@ export const ContainerHeader = (props) => {
             }
             if (oldSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER || oldSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
                 updateDropdownOptions();
-                setState({ elementLabelValue: props.model?.displayedlabel ?? 'Aside' });
+                setState({ elementLabelValue: props?.model?.displayedlabel });
             }
         }
     }
@@ -168,8 +172,8 @@ export const ContainerHeader = (props) => {
     const { labelNumberSetting, labelNumberSettingDropDown, showLabelField, showNumberField, labelDropDown, elementLabelData, elementLabelValue } = state;
     const containerNumber = getContainerNumber(slateAncestors, props.autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
-    let imgLabelValue = getLabelNumberFieldValue(props.model, elementLabelValue, containerNumber);
-    imgLabelValue = labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ? props?.model?.displayedlabel : imgLabelValue;
+    let imgLabelValue = getLabelNumberFieldValue(props.model, elementLabelValue, labelNumberSetting);
+    console.log("container fileeeeeeeeeeee", elementLabelValue, imgLabelValue);
     const parentNumber = containerNumber;
     let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {});
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber })

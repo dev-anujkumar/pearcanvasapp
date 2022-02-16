@@ -1,5 +1,5 @@
 import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
-import { autoNumber_KeyMapperElements, autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering } from './AutoNumberConstants';
+import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering } from './AutoNumberConstants';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import { containerBodyMatter } from './slateLevelMediaMapper';
 import { findElementsInContainer } from './AutoNumberCreate_helper';
@@ -184,7 +184,7 @@ export const handleAutoNumberingOnDelete = (params) => {
         if (containerElementTypes.includes(type)) {
             //reset auto-numbering
             dispatch(updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements));
-            updateAutoNumberSequenceOnDeleteInContainers(element, figureParentEntityUrn, contentUrn, autoNumberedElements, dispatch);
+            updateAutoNumberSequenceOnDeleteInContainers(element, figureParentEntityUrn, autoNumberedElements, dispatch);
         }
         else if (type == 'figure') {
             //reset auto-numbering
@@ -227,7 +227,7 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
  * @param {*} getState 
  * @param {*} dispatch 
  */
-export const updateAutoNumberSequenceOnDeleteInContainers = (deleteElemData, parentIndex, contentUrn, autoNumberedElements, dispatch) => {
+export const updateAutoNumberSequenceOnDeleteInContainers = (deleteElemData, parentIndex, autoNumberedElements, dispatch) => {
     let childContainerElements = [];
     let childNonContainerElements = [];
     const type = 'figure';
@@ -242,7 +242,8 @@ export const updateAutoNumberSequenceOnDeleteInContainers = (deleteElemData, par
                     elementsInContainer = findElementsInContainer(deleteElemData, [], { displayedlabel: label });
                     childNonContainerElements = elementsInContainer.length > 0 ? childNonContainerElements.concat(elementsInContainer) : childNonContainerElements;
                 }
-            })
+            });
+            break;
         case containerElements.ASIDE:
             for (const label of displayLabelsForAutonumbering) {
                 let elementsInContainer = [];
@@ -363,7 +364,7 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
                 //find the closest image now and then add the new img at that index
                 const referenceFigure = activeLabelFigures[refIndex].contentUrn
                 const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-                const labelType = autoNumber_KeyMapperElements[swappedElementData.displayedlabel]
+                const labelType = autoNumber_ElementTypeKey[swappedElementData.displayedlabel]
                 if (figureParentEntityUrn && numberedElements) {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
                 }

@@ -27,16 +27,6 @@ export const autoNumber_FigureTypeKeyMapper = {
   'video': 'videoIndex'
 }
 
-export const autoNumber_KeyMapperElements = {
-  'Figure': 'imagesList',
-  'Table': 'tablesList',
-  'Equation': 'equationsList',
-  'Audio': 'audiosList',
-  'Video': 'videosList',
-  'Interactive': 'interactiveList'
-}
-
-
 export const autoNumber_IndexMapper = {
   'imagesList': 'figureImageIndex',
   'tablesList': 'tableIndex',

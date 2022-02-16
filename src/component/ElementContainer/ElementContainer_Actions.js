@@ -5,7 +5,7 @@ import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS, UPDATE_AUTONUMBERED_CONTAINER_ELEMENT } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
@@ -18,7 +18,7 @@ import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
 import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
 import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
-import { setAutonumberingValuesForPayload } from '../FigureHeader/AutoNumber_helperFunctions';
+import { setAutonumberingValuesForPayload, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberedElement } from './UpdateElements';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
@@ -851,7 +851,7 @@ const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
     }
 }
 
-const prepareAsideTitleForUpdate = (index, isAutoNumberingEnabled) => {
+export const prepareAsideTitleForUpdate = (index, isAutoNumberingEnabled) => {
     let labelDOM = document.getElementById(`cypress-${index}-t1`),
         numberDOM = document.getElementById(`cypress-${index}-t2`),
         titleDOM = document.getElementById(`cypress-${index}-t3`)
@@ -874,7 +874,9 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     let currentSlateData = currentParentData[config.slateManifestURN];
     let elementEntityUrn = "", updatedElement
     let titleHTML = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
-    let dataArr, payloadKeys, numberedandlabel, manualoverride, displayedlabel;
+    let dataArr, payloadKeys, displayedlabel;
+    let numberedandlabel = false;
+    let manualoverride = {};
     updatedElement = {
         ...previousData,
         html: {
@@ -888,6 +890,9 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
         displayedlabel = previousData.displayedlabel;
+        if (!(previousData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+            displayedlabel = getValueOfLabel(previousData?.subtype);
+        }
         updatedElement = {
             ...updatedElement,
             html : {
@@ -898,8 +903,8 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             displayedlabel : displayedlabel,
             manualoverride : manualoverride
         }
-        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete dataToSend.manualoverride : dataToSend;
-        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete dataToSend.displayedlabel : dataToSend;
+        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
+        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;
         const dataToReturn = updateAutoNumberedElement(autoNumberOption, updatedElement, { displayedlabel: updatedElement?.displayedlabel, manualoverride: updatedElement?.manualoverride })
         updatedElement = { ...dataToReturn }
     }
@@ -990,10 +995,6 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
                 payload: {
                     slateLevelData: currentParentData
                 }
-            })
-            dispatch({
-                type: UPDATE_AUTONUMBERED_CONTAINER_ELEMENT,
-                payload: dataToSend
             })
         }
         const oldActiveElement = getState()?.appStore?.activeElement;
