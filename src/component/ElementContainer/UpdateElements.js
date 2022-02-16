@@ -441,7 +441,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-const generateCommonFigureDataAT = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+const generateCommonFigureDataAT = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),
@@ -463,6 +463,21 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         creditsText = creditsDOM ? creditsDOM.innerText : "",
         eleText = textDOM ? textDOM.innerText : ""
 
+    /**Autonumbering Code */
+    let numberedandlabel = false;
+    let manualoverride = {};
+    let displayedlabel = previousElementData?.displayedlabel;
+    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+        displayedlabel = titleText;
+    } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+        displayedlabel = getValueOfLabel(previousElementData?.figuretype);
+    }
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
+    }
+    /**********************/
     captionHTML = replaceUnwantedtags(captionHTML, true)
     creditsHTML = replaceUnwantedtags(creditsHTML, true)
     subtitleHTML = replaceUnwantedtags(subtitleHTML, true)
@@ -518,6 +533,19 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
     }
+    /**Autonumbering Code */
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        data = {
+            ...data,
+            html : {
+                ...data.html,
+                title: `<p>${subtitleHTML}</p>`
+            }
+        }
+        const dataToReturn = updateAutoNumberedElement(autoNumberOption, data, { displayedlabel, manualoverride })
+        data = {...dataToReturn}  
+    }
+    /**********************/
     return data
 }
 
@@ -795,7 +823,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, elementType, primaryOption, secondaryOption)
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        dataToReturn = generateCommonFigureDataAT(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateCommonFigureDataAT(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                 }
                 

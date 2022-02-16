@@ -633,7 +633,41 @@ class ElementContainer extends Component {
         
         //Handle Autonumbering
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-            return validateLabelNumberChange(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, text, titleDetails, createLabelNumberTitleModel);
+            // Not selecting remove label and number
+            if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+                let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
+                console.log('isValidValues in AT: ',isValidValues)
+                if (!isValidValues) return false;
+            }
+            // Selecting default case 
+            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+                return true;
+            }
+
+            let isNumberDifferent = false;
+            let imgNumberValue = '';
+            let overridedNumber = getOverridedNumberValue(previousElementData);
+            let isOverridedLabelDifferent = false;
+            if (overridedNumber && overridedNumber !== '') {
+                isNumberDifferent = overridedNumber?.toString() !== numberHTML?.toString();
+            } else {
+                const figIndexParent = getContainerEntityUrn(this.props.currentSlateAncestorData);
+                imgNumberValue = getNumberData(figIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
+                isNumberDifferent = imgNumberValue?.toString() !== numberHTML?.toString();
+            }
+            if (previousElementData?.hasOwnProperty('manualoverride') && previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) {
+                isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
+            }
+            subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
+            if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
+                titleHTML = previousElementData.displayedlabel;
+            }
+            const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
+                return (isLabelDifferent || this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title)
+                || isNumberDifferent || isOverridedLabelDifferent ||
+                captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits)
+            );
         }
         
         return (titleHTML !== oldTitle ||
@@ -925,7 +959,7 @@ class ElementContainer extends Component {
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         if (this.figureDifferenceAT(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData)
+                            dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
