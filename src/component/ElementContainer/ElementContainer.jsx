@@ -636,7 +636,6 @@ class ElementContainer extends Component {
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
-                console.log('isValidValues in AT: ',isValidValues)
                 if (!isValidValues) return false;
             }
             // Selecting default case 
