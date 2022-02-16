@@ -379,6 +379,9 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.deleteComment(message)
                     break
                 }
+                case 'newCustomCanvasLabels': {
+                    this.props.fetchFigureDropdownOptions()
+                }
             }
         }
 

@@ -39,7 +39,6 @@ const KeyboardUpDown = (props) => {
             
             const tinymceChild = getTinymceElement(childElement);
             const lastChild = getLastChild(tinymceChild);
-            console.log("Last child is ", lastChild, childElement, tinymceChild);
             if(lastChild) {
                 if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
                     // for foot note
