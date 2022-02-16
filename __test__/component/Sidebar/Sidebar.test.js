@@ -773,4 +773,81 @@ describe('Test for Sidebar component', () => {
             expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
         })
     })
+    describe('Testing setToggleForAside',() => {
+        const sidebarWithData1 = mockStore({
+            appStore: {
+                activeElement: {
+                    "elementType": "element-aside",
+                    "primaryOption": "primary-aside-aside",
+                    "secondaryOption": "secondary-aside-sb1",
+                    "asideNumber": false,
+                    "elementId": "urn:pearson:manifest:a4b48624-2ae1-46aa-bf21-ddb88a5dcf82",
+                    "index": 0,
+                    "elementWipType": "element-aside",
+                    "toolbar": [],
+                    "tag": "As"
+                },
+                updateElement,
+                conversionElement,
+                slateLevelData,
+            },
+            metadataReducer: {
+                showModule: true
+            },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+            },
+            selectionReducer: {
+                selection: ""
+            },
+            tcmReducer: {
+                tisTCMCanvasPopupLaunched: false,
+                tcmSnapshotData: {},
+                elementData: {},
+                tcmStatus: false
+            }
+        });
+        let activeElement = {
+            "elementType": "element-aside",
+            "primaryOption": "primary-aside-aside",
+            "secondaryOption": "secondary-aside-sb1",
+            "asideNumber": false,
+            "elementId": "urn:pearson:manifest:a4b48624-2ae1-46aa-bf21-ddb88a5dcf82",
+            "index": 0,
+            "elementWipType": "element-aside",
+            "toolbar": [],
+            "tag": "As"
+        };
+        let asideTitleData = [
+            {
+                "isAsideNumber": true,
+                "elementId": "urn:pearson:manifest:a4b48624-2ae1-46aa-bf21-ddb88a5dcf82"
+            }
+        ];
+        let asideTitleData2 = [
+            {
+                "isAsideNumber": true,
+                "elementId": "urn:pearson:manifest:a4b48624-2ae1-46aa-bf21-ddb88a5dcf81"
+            }
+        ];
+        it('if condition', () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spySetToggleForAside = jest.spyOn(sidebarInstance, 'setToggleForAside')
+            const result = sidebarInstance.setToggleForAside(activeElement, asideTitleData);
+            expect(spySetToggleForAside).toHaveBeenCalled();
+            expect(result).toBe(true);
+        });
+        it('else condition', () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spySetToggleForAside = jest.spyOn(sidebarInstance, 'setToggleForAside')
+            const result = sidebarInstance.setToggleForAside(activeElement, asideTitleData2);
+            expect(spySetToggleForAside).toHaveBeenCalled();
+            expect(result).toBe(false);
+        });
+    });
 });
