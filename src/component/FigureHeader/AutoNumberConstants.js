@@ -140,7 +140,9 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'INTERACTIVE': 'interactiveList',
   'SMART_LINK': 'interactiveList',
   'TABLE_EDITOR': 'tablesList',
-  'MATH_ML_CHEM_EDITOR': 'equationsList'
+  'MATH_ML_CHEM_EDITOR': 'equationsList',
+  'TABLEASMARKUP': 'tablesList',
+  'AUTHOREDTEXT': 'equationsList'
 }
 
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive', 'tableasmarkup', 'authoredtext']
