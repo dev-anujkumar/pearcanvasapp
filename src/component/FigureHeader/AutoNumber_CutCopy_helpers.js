@@ -1,5 +1,4 @@
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
-import { autoNumber_KeyMapperElements } from './AutoNumberConstants';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
@@ -24,6 +23,7 @@ export const handleAutoNumberingOnCopyPaste = (params) => {
     } = params
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
     const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside']
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after cut/copy operation
@@ -39,10 +39,10 @@ export const handleAutoNumberingOnCopyPaste = (params) => {
         }
         if (operationType == 'copy' || operationType == 'cut') {
             if (containerElements.indexOf(selectedElement?.type) > -1) {
-                updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors, tocContainerSlateList })
+                updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors, tocContainerSlateList, autoNumber_ElementTypeKey })
             }
             else if (selectedElement?.type === 'figure') {
-                updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors })
+                updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
             }
         }
 
@@ -61,7 +61,8 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
         slateAncestors,
         numberedElements,
         selectedElement,
-        operationType
+        operationType,
+        autoNumber_ElementTypeKey
     } = params
     if (slateFigures || slateFigures?.length > 0) {
         const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === selectedElement.displayedlabel)
@@ -79,7 +80,7 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
             //find the closest image now and then add the new img at that index
             const referenceFigure = activeLabelFigures[refIndex].contentUrn
             const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-            const labelType = autoNumber_KeyMapperElements[selectedElement.displayedlabel]
+            const labelType = autoNumber_ElementTypeKey[selectedElement.displayedlabel]
             if (operationType == 'cut') {
                 if (figureParentEntityUrn && numberedElements) {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== selectedElement.contentUrn)
@@ -119,7 +120,8 @@ export const updateAutoNumberSequenceOnCutCopyContainers = (params) => {
         numberedElements,
         prevSelectedAutoNumberElements,
         tocContainerSlateList,
-        updatedSlateAutoNumberedElements
+        updatedSlateAutoNumberedElements,
+        autoNumber_ElementTypeKey
     } = params;
     let oldNumberedElements = { ...numberedElements }
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
@@ -141,7 +143,7 @@ export const updateAutoNumberSequenceOnCutCopyContainers = (params) => {
      * For each label - autonumberd elements list corr to a given slateEntityUrn is updated
      */
     Object.keys(oldNumberedElements).forEach(elementLabel => {
-        const eleLabel = getKeyByValue(autoNumber_KeyMapperElements, elementLabel)
+        const eleLabel = getKeyByValue(autoNumber_ElementTypeKey, elementLabel)
         if (oldNumberedElements[elementLabel]?.length > 0) { //when elements of same label in the container exist
             const oldLabelElements = prevSelectedAutoNumberElements?.filter(ele => ele.displayedlabel === eleLabel)
             const activeLabelElements = updatedSlateAutoNumberedElements?.filter(ele => ele.displayedlabel === eleLabel)

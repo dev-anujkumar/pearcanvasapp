@@ -29,7 +29,8 @@ import {
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     ERROR_API_POPUP,
     SLATE_FIGURE_ELEMENTS,
-    OEP_DISCUSSION
+    OEP_DISCUSSION,
+    UPDATE_AUTONUMBER_MAPPER_KEYS
 } from '../../constants/Action_Constants';
 import { SLATE_API_ERROR } from '../../constants/Element_Constants';
 
@@ -345,7 +346,6 @@ export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     return axios.get(figureDropdownOptionsURL, {
         headers: {
             "Content-Type": "application/json",
-            // "PearsonSSOSession": config.ssoToken,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
@@ -359,9 +359,52 @@ export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
                 'type': SET_CONTROL_VOCAB_DETAILS,
                 'message': dropdownOptionsObj
             });
+            updateAutoNumberLabelKeys(dropdownOptionsObj,{autoNumberReducer: getState().autoNumberReducer} , dispatch)
         }
     }).catch(error => {
         console.log("Get figure dropdown options API Failed !!", error)
+    })
+}
+export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReducer }, dispatch) => {
+    const autoNumber_KeyMapper = autoNumberReducer?.autoNumber_KeyMapper ?? {}
+    const autoNumber_ElementTypeKey = autoNumberReducer?.autoNumber_ElementTypeKey ?? {}
+    const autoNumber_response_ElementType_mapper = autoNumberReducer?.autoNumber_response_ElementType_mapper ?? {}
+    const autoNumber_IndexMapper = autoNumberReducer.autoNumber_IndexMapper ?? {}
+    let listOfCustomeLabels = []
+    const labelDefaultKeys = ['id', 'aside', 'audio', 'image', 'interactive', 'mathml', 'preformattedtext', 'smartlinks', 'tableasmarkup', 'video', 'workedexample']
+    Object.keys(dropdownOptionsObj)?.forEach(labelType => {
+        if (labelDefaultKeys.indexOf(labelType) == -1) {
+            listOfCustomeLabels = [...listOfCustomeLabels, ...dropdownOptionsObj[labelType]]
+        }
+    })
+    listOfCustomeLabels = listOfCustomeLabels.filter(function (item, index, inputArray) {
+        return inputArray.indexOf(item) == index;
+    });
+
+    listOfCustomeLabels.forEach(item => {
+        let customValue = item.replace(' ', '').toLowerCase()
+        if (!autoNumber_KeyMapper?.hasOwnProperty(item)) {
+            autoNumber_KeyMapper[item] = `${customValue}Index`
+        }
+        if (!autoNumber_ElementTypeKey?.hasOwnProperty(item)) {
+            autoNumber_ElementTypeKey[item] = `${customValue}List`
+        }
+        if (!autoNumber_IndexMapper?.hasOwnProperty(`${customValue}List`)) {
+            autoNumber_IndexMapper[`${customValue}List`] = `${customValue}Index`
+        }
+        if (!autoNumber_response_ElementType_mapper?.hasOwnProperty(`${customValue}s`)) {
+            autoNumber_response_ElementType_mapper[`${customValue}s`] = `${customValue}List`
+        }
+    });
+
+    dispatch({
+        type: UPDATE_AUTONUMBER_MAPPER_KEYS,
+        payload: {
+            autoNumber_KeyMapper,
+            autoNumber_IndexMapper,
+            autoNumber_ElementTypeKey,
+            autoNumber_response_ElementType_mapper
+        }
     })
 }
 
