@@ -8,6 +8,10 @@
     height: 500px;
     margin: 0;
   }
+  .pdf .AssessmentSlateCanvas{
+    height: 256px;
+    margin: 0px;
+  }
   div.element-container .AssessmentSlateCanvas,  div.element-container.active .AssessmentSlateCanvas{
     background-color: #f5f5f5;
   }

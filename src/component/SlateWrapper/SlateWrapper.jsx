@@ -1003,19 +1003,19 @@ class SlateWrapper extends Component {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     const typeOfEle = _slateType === SLATE_TYPE_ASSESSMENT ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
-                    this.props.createElement(typeOfEle, `${_elements.length}`, '', '', '', '', () => {
+                    this.props.createElement(typeOfEle, "0", '', '', '', '', () => {
                         config.isDefaultElementInProgress = true;
                     });
                 }
-                const isPdf = [SLATE_TYPE_PDF].includes(config.slateType);
-                if (_elements.length <= 1 && isPdf && config.isDefaultElementInProgress && !isSubscriberRole(projectSubscriptionDetails?.projectSharingRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)) {
-                    config.isDefaultElementInProgress = false;
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                    const typeOfEle = _slateType === SLATE_TYPE_PDF ? ELEMENT_PDF: null;
-                    this.props.createElement(typeOfEle, `${_elements.length}`, '', '', '', '', () => {
-                        config.isDefaultElementInProgress = true;
-                    });
-                }
+                // const isPdf = [SLATE_TYPE_PDF].includes(config.slateType);
+                // if (_elements.length <= 1 && isPdf && config.isDefaultElementInProgress && !isSubscriberRole(projectSubscriptionDetails?.projectSharingRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)) {
+                //     config.isDefaultElementInProgress = false;
+                //     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                //     const typeOfEle = _slateType === SLATE_TYPE_PDF ? ELEMENT_PDF: null;
+                //     this.props.createElement(typeOfEle, `${_elements.length}`, '', '', '', '', () => {
+                //         config.isDefaultElementInProgress = true;
+                //     });
+                // }
                 else if (_elements.length === 0 && _slateType != "assessment") {
                     return this.renderBlankSlate(this.props)
                 }

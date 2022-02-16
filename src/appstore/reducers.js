@@ -35,7 +35,7 @@ import {
     GET_ALL_SLATES_DATA,
     SET_CURRENT_SLATE_DATA,
     PAGE_NUMBER_LOADER,
-    GET_USAGE_TYPE ,
+    GET_USAGE_TYPE,
     SET_SLATE_LENGTH,
     VERSIONING_SLATEMANIFEST,
     SET_TOAST_MESSAGE,
@@ -52,7 +52,8 @@ import {
     UPDATE_OLD_SMARTLINK_INFO,
     UPDATE_OLD_AUDIOVIDEO_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
-    CHECK_ASIDE_NUMBER
+    CHECK_ASIDE_NUMBER,
+    CYPRESS_PLUS_ENABLED
 } from '../constants/Action_Constants';
 
 /**
@@ -74,23 +75,23 @@ const INITIAL_STATE = {
     showHideId: "",
     parentUrn: {},
     asideData: {},
-    showHideObj:{},
-    allSlateData:{},
-    currentSlateAncestorData:{},
-    allElemPageData:[],
-    pageNumberLoading:false,
-    usageTypeListData:{},
+    showHideObj: {},
+    allSlateData: {},
+    currentSlateAncestorData: {},
+    allElemPageData: [],
+    pageNumberLoading: false,
+    usageTypeListData: {},
     slateLength: "25",
-    toastMessage:"",
-    showToast:false,
-    oldFiguredata : {},
-    wirisAltText : {},
-    isLearnosityProjectInfo:{},
-    figureGlossaryData : {},
-    addfigureGlossarypopup:false,
-    openWrongImagePopup:false,
+    toastMessage: "",
+    showToast: false,
+    oldFiguredata: {},
+    wirisAltText: {},
+    isLearnosityProjectInfo: {},
+    figureGlossaryData: {},
+    addfigureGlossarypopup: false,
+    openWrongImagePopup: false,
     multipleColumnData: [],
-    removeGlossaryImage:false,
+    removeGlossaryImage: false,
     oldFigureDataForCompare: {},
     oldSmartLinkDataForCompare: {},
     oldAudioVideoDataForCompare: {},
@@ -101,9 +102,10 @@ const INITIAL_STATE = {
         video: ["No Label", "Custom"],
         tableasmarkup: ["No Label", 'Table', "Custom"],
         mathml: ["No Label", "Equation", "Custom"],
-		preformattedtext: ["No Label", "Exhibit", "Custom"]
+        preformattedtext: ["No Label", "Exhibit", "Custom"]
     },
-    asideTitleData: []
+    asideTitleData: [],
+    isCypressPlusEnabling:false
 };
 
 const INITIAL_ACTION = {
@@ -163,6 +165,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 slateType: action.payload
+            }
+        case CYPRESS_PLUS_ENABLED:
+            return {
+                ...state,
+                isCypressPlusEnabling: action.payload.isCypressPlusEnabling
             }
         case SET_SLATE_ENTITY:
             return {
@@ -280,36 +287,36 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 oldFiguredata: action.payload.oldFiguredata
             }
-        case WIRIS_ALT_TEXT_POPUP : 
-        return {
-            ...state,
-            wirisAltText : action.payload
-        }
-
-        case LEARNOSITY_PROJECT_INFO : 
-        return {
-            ...state,
-            isLearnosityProjectInfo : action.payload
-        }
-        case SET_FIGURE_GLOSSARY : 
-        return {
-            ...state,
-            figureGlossaryData : action.payload
-        }
-        case ADD_FIGURE_GLOSSARY_POPUP:
-            return{
+        case WIRIS_ALT_TEXT_POPUP:
+            return {
                 ...state,
-                addfigureGlossarypopup:action.payload
+                wirisAltText: action.payload
+            }
+
+        case LEARNOSITY_PROJECT_INFO:
+            return {
+                ...state,
+                isLearnosityProjectInfo: action.payload
+            }
+        case SET_FIGURE_GLOSSARY:
+            return {
+                ...state,
+                figureGlossaryData: action.payload
+            }
+        case ADD_FIGURE_GLOSSARY_POPUP:
+            return {
+                ...state,
+                addfigureGlossarypopup: action.payload
             }
         case WRONG_IMAGE_POPUP:
-            return{
+            return {
                 ...state,
-                openWrongImagePopup:action.payload
+                openWrongImagePopup: action.payload
             }
         case SHOW_REMOVE_GLOSSARY_IMAGE:
             return {
                 ...state,
-                removeGlossaryImage:action.payload
+                removeGlossaryImage: action.payload
             }
 
         case UPDATE_MULTIPLE_COLUMN_INFO:
@@ -361,10 +368,10 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 asideTitleData: [...asideTitleData, action.payload]
             }
-            // return{
-            //     ...state,
-            //     asideTitleData: action.payload
-            // }
+        // return{
+        //     ...state,
+        //     asideTitleData: action.payload
+        // }
 
         default:
             return state;

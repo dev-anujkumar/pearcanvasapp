@@ -4,6 +4,9 @@
     position: relative;
 }
 
+.container-pdf{
+    margin: 48px 40px 40px 51px !important;
+}
 .element-container {
     /* padding: 15px; */
     flex-grow: 1;
@@ -83,7 +86,14 @@
 
 .showBorder {
     border: 1px solid #737373;
+    
 }
+/* 
+.element-container.pdf.showBorder{
+    margin-bottom: 52px;
+    /* height:20px;  */
+/* }  */
+
 
 .editor.searched > .showBorder {
     border: 1px solid #ff9b19;

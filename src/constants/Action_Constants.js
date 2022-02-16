@@ -217,3 +217,5 @@ export const SET_AUTO_NUMBER_SEQUENCE = 'SET_AUTO_NUMBER_SEQUENCE';
 export const SLATE_FIGURE_ELEMENTS = 'SLATE_FIGURE_ELEMENTS';
 export const UPDATE_POPUP_PARENT_SLATE = 'UPDATE_POPUP_PARENT_SLATE';
 
+/*---------------- CypressPlusEnable Details ------------------------*/
+export const CYPRESS_PLUS_ENABLED = 'CYPRESS_PLUS_ENABLED'

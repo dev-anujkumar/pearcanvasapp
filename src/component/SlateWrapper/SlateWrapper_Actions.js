@@ -17,7 +17,8 @@ import {
     ERROR_POPUP,
     PAGE_NUMBER_LOADER,
     WIRIS_ALT_TEXT_POPUP,
-    SLATE_FIGURE_ELEMENTS
+    SLATE_FIGURE_ELEMENTS,
+    CYPRESS_PLUS_ENABLED
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
@@ -1027,12 +1028,25 @@ export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) => {
         payload: newSlateObj
     })
 }
+
 export const setSlateType = (slateType) => (dispatch, getState) => {
     return dispatch({
         type: SET_SLATE_TYPE,
         payload: slateType
     })
 }
+
+// function for cypressPlus
+
+export const cypressPlusEnabled = (flag, configValue) => dispatch => {
+    return dispatch({
+        type: CYPRESS_PLUS_ENABLED,
+        payload: {
+          isCypressPlusEnabling: flag && configValue
+        }
+    });
+}
+
 export const setSlateEntity = (setSlateEntityParams) => (dispatch, getState) => {
     return dispatch({
         type: SET_SLATE_ENTITY,
