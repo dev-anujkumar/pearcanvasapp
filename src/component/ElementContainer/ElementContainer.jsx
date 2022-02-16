@@ -16,7 +16,7 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
@@ -75,7 +75,7 @@ import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
 import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, updateAutonumberingOnOverridedCase, validateLabelNumberSetting } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForImage, displayLabelsForAudioVideo } from '../FigureHeader/AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForImage, displayLabelsForAudioVideo, displayLabelsForContainer } from '../FigureHeader/AutoNumberConstants';
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes'
 
 const {
@@ -370,7 +370,7 @@ class ElementContainer extends Component {
     }
 
 
-    asideDifference=(index, previousElementData)=>{
+    asideDifference = (index, previousElementData) => {
         let labelDOM = document.getElementById(`cypress-${index}-t1`),
             numberDOM = document.getElementById(`cypress-${index}-t2`),
             titleDOM = document.getElementById(`cypress-${index}-t3`),
@@ -380,9 +380,45 @@ class ElementContainer extends Component {
 
         labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
         numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-        titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
-        titleHTML = this.removeClassesFromHtml(titleHTML)
-        let oldTitleHTML = ""
+        let oldTitleHTML = "";
+
+        if (!this.props.isAutoNumberingEnabled && !previousElementData?.hasOwnProperty('numberedandlabel')) {
+            titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
+            titleHTML = this.removeClassesFromHtml(titleHTML);
+        }
+
+        /* Auto-numbering section */
+        if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+            // Not selecting remove label and number
+            if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+                let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
+                if (!isValidValues) return false;
+            }
+            // Selecting default case 
+            if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+                return true;
+            }
+
+            let isNumberDifferent = false;
+            let elementNumberValue = '';
+            let overridedNumber = getOverridedNumberValue(previousElementData);
+            let isOverridedLabelDifferent = false;
+            if (overridedNumber && overridedNumber !== '') {
+                isNumberDifferent = overridedNumber?.toString() !== numberHTML?.toString();
+            } else {
+                const elemIndexParent = getContainerEntityUrn(this.props.currentSlateAncestorData);
+                elementNumberValue = getNumberData(elemIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
+                isNumberDifferent = elementNumberValue?.toString() !== numberHTML?.toString();
+            }
+            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData?.manualoverride.hasOwnProperty('overridelabelvalue')) {
+                isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
+            }
+            if (!titleHTML || titleHTML === '' || !(displayLabelsForContainer.includes(titleHTML))) {
+                titleHTML = previousElementData.displayedlabel;
+            }
+            return (titleHTML !== previousElementData.displayedlabel || isNumberDifferent || isOverridedLabelDifferent);
+        }
+
         if (!(previousElementData?.html?.title)) {
             oldTitleHTML = createLabelNumberTitleModel("", "", "")
         } else {
@@ -733,7 +769,7 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData) => {
+    handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData) => {
         let { parentUrn, asideData } = this.props;
         asideData = cgTitleFieldData?.asideData && Object.keys(cgTitleFieldData?.asideData).length > 0 ? cgTitleFieldData?.asideData : asideData;
         parentElement = cgTitleFieldData?.parentElement && Object.keys(cgTitleFieldData?.parentElement).length > 0 ? cgTitleFieldData?.parentElement : parentElement;
@@ -856,9 +892,36 @@ class ElementContainer extends Component {
                 if (this.asideDifference(this.props.index, previousElementData) && previousElementData?.id !== "") {
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
-                    this.props.updateAsideNumber(previousElementData,this.props.index);
+                    this.props.updateAsideNumber(previousElementData, this.props.index, '', this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
+                    if (this.props.isAutoNumberingEnabled) {
+                        let numberedandlabel = false;
+                        let manualoverride = {};
+                        let displayedlabel;
+                        let updatedElement = Object.assign({}, previousElementData);
+                        let dataArr = prepareAsideTitleForUpdate(this.props.index, this.props.isAutoNumberingEnabled);
+                        const payloadKeys = setAutonumberingValuesForPayload(this.props?.autoNumberOption?.option, dataArr[0], dataArr[1], false);
+                        numberedandlabel = payloadKeys?.numberedandlabel;
+                        manualoverride = payloadKeys?.manualoverride;
+                        displayedlabel = previousElementData?.displayedlabel;
+                        if (!(previousElementData.hasOwnProperty('displayedlabel')) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+                            displayedlabel = getValueOfLabel(previousElementData?.subtype);
+                        }
+                        updatedElement = {
+                            ...updatedElement,
+                            html: {
+                                ...updatedElement?.html,
+                                title: `<p>${dataArr[0]}</p>`
+                            },
+                            numberedandlabel: numberedandlabel,
+                            displayedlabel: displayedlabel,
+                            manualoverride: manualoverride
+                        }
+                        this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
+                        (this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;
+                        this.handleAutonumberAfterUpdate(previousElementData, updatedElement, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
+                    }
                 }
-            break;
+                break;
 
             case elementTypeConstant.FIGURE:
                 switch (previousElementData.figuretype) {
@@ -2572,8 +2635,8 @@ const mapDispatchToProps = (dispatch) => {
         enableAsideNumbering: (data,id) => {
             dispatch(enableAsideNumbering(data,id))
         },
-        updateAsideNumber: (previousElementData, index) => {
-            dispatch(updateAsideNumber(previousElementData, index))
+        updateAsideNumber: (previousElementData, index, undefined, isAutoNumberingEnabled, autoNumberOption) => {
+            dispatch(updateAsideNumber(previousElementData, index, undefined, isAutoNumberingEnabled, autoNumberOption))
         },
         updateAutonumberingOnElementTypeUpdate: (titleHTML, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
             dispatch(updateAutonumberingOnElementTypeUpdate(titleHTML, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData))
