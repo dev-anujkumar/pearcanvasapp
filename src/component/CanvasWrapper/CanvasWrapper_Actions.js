@@ -350,21 +350,27 @@ export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
         }
     }).then(response => {
         let dropdownOptionsObj = response?.data;
-        if (Object.keys(dropdownOptionsObj).length > 0) {
-            dispatch({
-                type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
-                payload: dropdownOptionsObj
-            })
-            sendDataToIframe({
-                'type': SET_CONTROL_VOCAB_DETAILS,
-                'message': dropdownOptionsObj
-            });
-            updateAutoNumberLabelKeys(dropdownOptionsObj,{autoNumberReducer: getState().autoNumberReducer} , dispatch)
-        }
+        dispatch(updateFigureDropdownValues(dropdownOptionsObj))
     }).catch(error => {
         console.log("Get figure dropdown options API Failed !!", error)
     })
 }
+
+export const updateFigureDropdownValues = (dropdownOptionsObj) => (dispatch, getState) => {
+    if (Object.keys(dropdownOptionsObj).length > 0) {
+        dispatch({
+            type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
+            payload: dropdownOptionsObj
+        })
+        sendDataToIframe({
+            'type': SET_CONTROL_VOCAB_DETAILS,
+            'message': dropdownOptionsObj
+        });
+        const autoNumberReducer = getState().autoNumberReducer
+        updateAutoNumberLabelKeys(dropdownOptionsObj, { autoNumberReducer }, dispatch)
+    }
+}
+
 // update the keys' Object used for mapping in Autonumbering in the Redux store
 export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReducer }, dispatch) => {
     const autoNumber_KeyMapper = autoNumberReducer?.autoNumber_KeyMapper ?? {}
@@ -378,7 +384,7 @@ export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReduce
             listOfCustomeLabels = [...listOfCustomeLabels, ...dropdownOptionsObj[labelType]]
         }
     })
-    listOfCustomeLabels = listOfCustomeLabels.filter(function (item, index, inputArray) {
+    listOfCustomeLabels = listOfCustomeLabels.filter((item, index, inputArray) => {
         return inputArray.indexOf(item) == index;
     });
 
