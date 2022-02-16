@@ -35,7 +35,8 @@ import {
     multiColumnContainer,
     elmInteractiveIcon,
     editIcon,
-    approvedIcon
+    approvedIcon,
+    commentFlagged
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
@@ -239,6 +240,11 @@ class ElementButton extends Component {
                 break;
             case buttonTypes.ELEMENT_LABEL_CLICKABLE:
                 buttonJSX = <span className={`btn-element element-label-clickable-button ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
+                break;
+            case buttonTypes.COMMENT_FLAGGED:
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="flag" onClick={(e) => clickHandlerFn(e, elementId)}>
+                    {commentFlagged}
+                </span>
                 break;
         }
         return buttonJSX

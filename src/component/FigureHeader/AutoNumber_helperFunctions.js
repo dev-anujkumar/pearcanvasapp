@@ -1,6 +1,6 @@
 import config from '../../config/config'
-import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_KeyMapper, autoNumber_ElementTypeKey, autoNumber_FigureTypeKeyMapper, autoNumber_ElementTypeToStoreKeysMapper,
-        autoNumber_response_ElementType_mapper, displayLabelsForImage } from './AutoNumberConstants';
+import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_FigureTypeKeyMapper,
+        displayLabelsForImage } from './AutoNumberConstants';
 import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
@@ -8,6 +8,7 @@ import {getAutoNumberSequence} from './AutoNumberActions';
 import { findNearestElement, checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
 import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
 import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT } from '../../constants/Element_Constants';
+import store from '../../appstore/store'
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL,
@@ -313,6 +314,7 @@ export const prepareAutoNumberList = (imagesData) => {
  * @returns 
  */
 export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => {
+    const autoNumber_KeyMapper = store.getState()?.autoNumberReducer?.autoNumber_KeyMapper
     if (parentIndex && element && autoNumberElementsIndex) {
         if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
             if (element.hasOwnProperty(MANUAL_OVERRIDE) && element[MANUAL_OVERRIDE] !== undefined && (Object.keys(element[MANUAL_OVERRIDE])?.length > 0) && element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_NUMBER_VALUE)) {
@@ -342,7 +344,8 @@ export const getAutoNumberedElement = (element) =>{
     }
 }
 
-export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNumberedElements, currentSlateAncestorData) => (dispatch) => {
+export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNumberedElements, currentSlateAncestorData) => (dispatch, getState) => {
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
     const labelType = autoNumber_ElementTypeKey[elementLabel];
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
     if (autoNumberedElements[labelType]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[labelType][figureParentEntityUrn] && Object.keys(autoNumberedElements[labelType][figureParentEntityUrn]).length > 0) {
@@ -359,7 +362,9 @@ export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNu
 }
 
 export const updateAutonumberingOnElementTypeUpdate = (newElement, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => async (dispatch, getState) => {
-    let slateElements = await getAutoNumberedElementsOnSlate(slateLevelData[config?.slateManifestURN], { dispatch });
+    const slateContent = getState().appStore?.slateLevelData || slateLevelData
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
+    let slateElements = await getAutoNumberedElementsOnSlate(slateContent[config?.slateManifestURN], { dispatch });
     const activeLabelElements = slateElements?.filter(elem => elem.displayedlabel === newElement?.displayedlabel);
     let elementSlateIndex = slateElements?.findIndex(ele => ele.contentUrn === element.contentUrn);
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
@@ -393,8 +398,9 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
     } 
 }
 
-export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements, currentSlateAncestorData) => (dispatch) => {
+export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements, currentSlateAncestorData) => (dispatch,getState) => {
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
     if (updatedData?.displayedlabel && figureParentEntityUrn && updatedData?.contentUrn && autoNumberedElements) {
         if (autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]) {
             let index = autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]?.findIndex(element => element.contentUrn === updatedData.contentUrn);
@@ -433,7 +439,7 @@ export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements
  */
 export const getNumberedElements = (data, matterType) => {
     let numberedElements = {};
-
+    const autoNumber_response_ElementType_mapper = store.getState()?.autoNumberReducer?.autoNumber_response_ElementType_mapper
     for(let matter in data){
         numberedElements[autoNumber_response_ElementType_mapper[matter]] = {
            [matterType]: data[matter].length > 0 ? data[matter] : []
@@ -484,7 +490,16 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
         isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
     }
     subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-    if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
+    const { audio, video, interactive, interactiveCustom, audioCustom, videoCustom, } = props?.figureDropdownData
+    let validDropdownOptions = displayLabelsForImage
+    if (previousElementData.figuretype === 'interactive') {
+        validDropdownOptions = interactiveCustom ? [...interactive, ...interactiveCustom] : interactive
+    } else if (previousElementData.figuretype === 'video') {
+        validDropdownOptions = videoCustom ? [...video, ...videoCustom] : video
+    } else if (previousElementData.figuretype === 'audio') {
+        validDropdownOptions = audioCustom ? [...audio, ...audioCustom] : audio
+    }
+    if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
         titleHTML = previousElementData.displayedlabel;
     }
 

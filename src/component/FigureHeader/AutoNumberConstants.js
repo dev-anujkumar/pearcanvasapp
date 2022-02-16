@@ -23,6 +23,7 @@ export const autoNumber_FigureTypeKeyMapper = {
   'mathImage': 'equationsIndex',
   'audio': 'audioIndex',
   'video': 'videoIndex',
+  "interactive": 'interactiveIndex',
   'authoredtext': 'equationsIndex'
 }
 
@@ -34,7 +35,6 @@ export const autoNumber_KeyMapperElements = {
   'Video': 'videosList',
   'Interactive': 'interactiveList'
 }
-
 
 export const autoNumber_IndexMapper = {
   'imagesList': 'figureImageIndex',
@@ -51,7 +51,9 @@ export const autoNumber_ElementTypeKey = {
   'Equation': 'equationsList',
   'Audio': 'audiosList',
   'Video': 'videosList',
-  'Interactive': 'interactiveList'
+  'Interactive': 'interactiveList',
+  "Aside": "asidesList",
+  "Worked Example": "workedExamplesList"
 }
 
 export const autoNumber_response_ElementType_mapper = {

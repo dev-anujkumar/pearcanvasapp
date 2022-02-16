@@ -457,7 +457,9 @@ class ElementContainer extends Component {
                 isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-            if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
+            const { image, imageCustom } = this.props?.figureDropdownData
+            const validDropdownOptions = image ? (imageCustom ? [...image, ...imageCustom] : image) : displayLabelsForImage
+            if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
             const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
@@ -732,7 +734,14 @@ class ElementContainer extends Component {
             }
             let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
-            if (!titleHTML || titleHTML === '' || !(displayLabelsForAudioVideo.includes(titleHTML))) {
+            const { audio, video, audioCustom, videoCustom, } = this?.props?.figureDropdownData
+            let validDropdownOptions = displayLabelsForImage
+            if (previousElementData.figuretype === 'video') {
+                validDropdownOptions = videoCustom ? [...video, ...videoCustom] : video
+            } else if (previousElementData.figuretype === 'audio') {
+                validDropdownOptions = audioCustom ? [...audio, ...audioCustom] : audio
+            }
+            if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
@@ -1027,6 +1036,7 @@ class ElementContainer extends Component {
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
         const  labelNumberSetting = this.props?.autoNumberOption?.option
         const finalValue =  updateAutoNumberedElement(labelNumberSetting,dataToSend,{ displayedlabel: dataToSend?.displayedlabel,    manualoverride: dataToSend?.manualoverride })
+        // remove/override to default means gets added to numbering system
         if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
             if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride.hasOwnProperty('resumenumbervalue')) {
                 dataToSend = {
@@ -1037,7 +1047,7 @@ class ElementContainer extends Component {
                 }
             }
             this.props.handleAutonumberingOnCreate(dataToSend?.figuretype?.toUpperCase(), dataToSend);
-        } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) {
+        } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) { //default/resume to remove
             this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
         } else if ( (previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue')) ) {
             // resume case
@@ -1553,7 +1563,8 @@ class ElementContainer extends Component {
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle } = this.props;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
-        let anyOpenComment = allComments.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
+        let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
+        let anyFlaggedComment = allComments?.filter(({ commentFlag }) => commentFlag === true).length > 0
         let isQuadInteractive = "";
         /** Handle TCM for tcm enable elements */
         let tcm = false;
@@ -2293,13 +2304,17 @@ class ElementContainer extends Component {
         });   
     }
 
-    addOrViewComment = ( e, elementId ,type) => {
+    addOrViewComment = (e, elementId, type) => {
+        const {slateLockInfo} = this.props
         this.props.setActiveElement(this.props.element);
-        sendDataToIframe({
-            'type': AddOrViewComment,
-            'message': {"id":elementId, "mode":type}
-        });  
-        e.stopPropagation(); 
+        let lockedUserId = slateLockInfo?.userId?.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
+        if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
+            sendDataToIframe({
+                'type': AddOrViewComment,
+                'message': { "id": elementId, "mode": type }
+            });
+        }
+        e.stopPropagation();
     }
 
      /**
@@ -2667,9 +2682,8 @@ const mapStateToProps = (state) => {
         autoNumberOption: state.autoNumberReducer.autoNumberOption,
         autoNumberElementsIndex: state.autoNumberReducer.autoNumberElementsIndex,
         autoNumberedElements: state.autoNumberReducer.autoNumberedElements,
-        currentSlateAncestorData: state.appStore.currentSlateAncestorData,
-        slateLevelData: state.appStore.slateLevelData,
-        spellCheckToggle: state.toolbarReducer.spellCheckToggle
+        spellCheckToggle: state.toolbarReducer.spellCheckToggle,
+        figureDropdownData: state.appStore.figureDropdownData
     }
 }
 

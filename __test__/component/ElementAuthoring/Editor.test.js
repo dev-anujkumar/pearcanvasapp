@@ -222,6 +222,9 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
     },appStore:{
         slateLevelData:{}
     } ,
+    toolbarReducer : {
+        spellCheckToggle : false
+    },
     autoNumberReducer: mockAutoNumberReducerEmpty});
     const component = mount(<Provider store={store}> < TinyMceEditor {...props} /> </Provider>, { attachTo: document.body })
     let instance = component.find('TinyMceEditor').instance();

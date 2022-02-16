@@ -8,7 +8,7 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList, getNumberedElements } from './AutoNumber_helperFunctions';
-import { autoNumber_IndexMapper } from './AutoNumberConstants';
+import store from '../../appstore/store'
 /**
  * 
  */
@@ -65,6 +65,7 @@ export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) =>
  * @returns 
  */
 const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIndex) => {
+    const autoNumber_IndexMapper = store.getState()?.autoNumberReducer?.autoNumber_IndexMapper
     for (let labelType in numberedElements) {
         if (Object.prototype.hasOwnProperty.call(numberedElements, labelType)) {
             const Obj = prepareAutoNumberList(numberedElements[labelType])

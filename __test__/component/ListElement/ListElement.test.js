@@ -37,6 +37,9 @@ describe('ListElement', () => {
       slateLevelData: {}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+      spellCheckToggle : false
+  }
   }
   const store = mockStore(initialState);
   const component = mount(<Provider store={store}><ListElement {...props} /></Provider>,{ attachTo: document.body })
