@@ -365,6 +365,7 @@ export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
         console.log("Get figure dropdown options API Failed !!", error)
     })
 }
+// update the keys' Object used for mapping in Autonumbering in the Redux store
 export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReducer }, dispatch) => {
     const autoNumber_KeyMapper = autoNumberReducer?.autoNumber_KeyMapper ?? {}
     const autoNumber_ElementTypeKey = autoNumberReducer?.autoNumber_ElementTypeKey ?? {}

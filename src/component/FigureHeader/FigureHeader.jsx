@@ -109,7 +109,7 @@ export const FigureHeader = (props) => {
         updateDropdownOptions();
     }, [props.autoNumberElementsIndex]);
     useEffect(() => {
-        updateDropdownOptions();
+        updateDropdownOptions(); // update the dropdown options if any new value is introduced via Controlled Vocab in the Project Settings
     }, [props.figureDropdownData]);
     useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
