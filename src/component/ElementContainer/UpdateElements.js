@@ -37,6 +37,22 @@ export const replaceUnwantedtags = (html,flag) => {
     return tempDiv.innerHTML;
 }
 
+export const generateDropdownDataForFigures = (previousElementData) =>{
+    const figureDropdownData  = store.getState()?.appStore?.figureDropdownData
+    const { image, imageCustom , audio, video, interactive, interactiveCustom, audioCustom, videoCustom, } = figureDropdownData
+    let validDropdownOptions = displayLabelsForAutonumbering
+    if (previousElementData.figuretype === 'interactive') {
+        validDropdownOptions = interactiveCustom ? [...interactive, ...interactiveCustom] : interactive
+    } else if (previousElementData.figuretype === 'video') {
+        validDropdownOptions = videoCustom ? [...video, ...videoCustom] : video
+    } else if (previousElementData.figuretype === 'audio') {
+        validDropdownOptions = audioCustom ? [...audio, ...audioCustom] : audio
+    } else {
+        validDropdownOptions = imageCustom ? [...image, ...imageCustom] : image
+    }
+    return validDropdownOptions
+}
+
 /**
  * Generates updated element data for figure element
  * @param {*} index 
@@ -66,7 +82,8 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = previousElementData?.displayedlabel;
-    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+    const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
+    if (validDropdownOptions?.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
         displayedlabel = titleText;
     } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
@@ -215,7 +232,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = previousElementData?.displayedlabel;
-    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+    const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
+    if (validDropdownOptions?.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
         displayedlabel = titleText;
     } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);

@@ -109,6 +109,9 @@ export const FigureHeader = (props) => {
         updateDropdownOptions();
     }, [props.autoNumberElementsIndex]);
     useEffect(() => {
+        updateDropdownOptions();
+    }, [props.figureDropdownData]);
+    useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
         const figIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
         let currentNumber = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})

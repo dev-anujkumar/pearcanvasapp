@@ -457,7 +457,9 @@ class ElementContainer extends Component {
                 isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-            if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
+            const { image, imageCustom } = this.props?.figureDropdownData
+            const validDropdownOptions = image ? (imageCustom ? [...image, ...imageCustom] : image) : displayLabelsForImage
+            if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
             const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
@@ -693,7 +695,14 @@ class ElementContainer extends Component {
             }
             let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
-            if (!titleHTML || titleHTML === '' || !(displayLabelsForAudioVideo.includes(titleHTML))) {
+            const { audio, video, audioCustom, videoCustom, } = this?.props?.figureDropdownData
+            let validDropdownOptions = displayLabelsForImage
+            if (previousElementData.figuretype === 'video') {
+                validDropdownOptions = videoCustom ? [...video, ...videoCustom] : video
+            } else if (previousElementData.figuretype === 'audio') {
+                validDropdownOptions = audioCustom ? [...audio, ...audioCustom] : audio
+            }
+            if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
@@ -2631,7 +2640,8 @@ const mapStateToProps = (state) => {
         autoNumberOption: state.autoNumberReducer.autoNumberOption,
         autoNumberElementsIndex: state.autoNumberReducer.autoNumberElementsIndex,
         autoNumberedElements: state.autoNumberReducer.autoNumberedElements,
-        spellCheckToggle: state.toolbarReducer.spellCheckToggle
+        spellCheckToggle: state.toolbarReducer.spellCheckToggle,
+        figureDropdownData: state.appStore.figureDropdownData
     }
 }
 
