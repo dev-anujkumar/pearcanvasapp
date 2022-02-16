@@ -1986,14 +1986,19 @@ class ElementContainer extends Component {
         if (noTCM.indexOf(labelText) >= 0) {
             tcm = false;
         }
-
+        /**---------------------Double SPread Pdf Elements --------------------- */
+        let isJoinedPdf = false
+        if (this.props?.cypressPlusProjectStatus && this.props.isJoinedPdfSlate === true && labelText?.toLowerCase() === "pdf") {
+            isJoinedPdf = true
+        }
+        /**--------------------------------------------------------------------- */
         /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false;
         let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
         let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
                 return (
-                <div className={`editor ${searched} ${selection} ${labelText.toLowerCase() == "pdf" ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+                <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                     {this.renderCopyComponent(this.props, index, inContainer, tcm)}
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         <Button type="element-label"  elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
@@ -2625,7 +2630,9 @@ const mapStateToProps = (state) => {
         autoNumberedElements: state.autoNumberReducer.autoNumberedElements,
         currentSlateAncestorData: state.appStore.currentSlateAncestorData,
         slateLevelData: state.appStore.slateLevelData,
-        spellCheckToggle: state.toolbarReducer.spellCheckToggle
+        spellCheckToggle: state.toolbarReducer.spellCheckToggle,
+        cypressPlusProjectStatus: state.appStore.isCypressPlusEnabled,
+        isJoinedPdfSlate: state.appStore.isJoinedPdfSlate
     }
 }
 

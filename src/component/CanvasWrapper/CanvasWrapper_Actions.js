@@ -55,6 +55,7 @@ const { SHOW_HIDE } = ElementConstants;
 import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
 import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
+import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -585,6 +586,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 config.saveElmOnAS = true
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
+        }
+        /** ---- Check if current slate is Double Spread PDF ---- */
+        const isCypressPlusProject = getState()?.appStore?.isCypressPlusEnabled
+        if (isCypressPlusProject && config.slateType == 'pdfslate' && slateData && slateData.data[newVersionManifestId]) {
+            let pdfBodymatter = slateData?.data?.[newVersionManifestId]?.contents?.bodymatter ?? []
+            const hasMergedPdf = pdfBodymatter?.length === 2 ? true : false
+            dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });

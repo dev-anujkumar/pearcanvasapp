@@ -1042,7 +1042,7 @@ export const cypressPlusEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: CYPRESS_PLUS_ENABLED,
         payload: {
-          isCypressPlusEnabling: flag && configValue
+          isCypressPlusEnabled: flag && configValue
         }
     });
 }

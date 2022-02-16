@@ -53,7 +53,8 @@ import {
     UPDATE_OLD_AUDIOVIDEO_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     CHECK_ASIDE_NUMBER,
-    CYPRESS_PLUS_ENABLED
+    CYPRESS_PLUS_ENABLED,
+    SET_JOINED_PDF_STATUS
 } from '../constants/Action_Constants';
 
 /**
@@ -105,7 +106,8 @@ const INITIAL_STATE = {
         preformattedtext: ["No Label", "Exhibit", "Custom"]
     },
     asideTitleData: [],
-    isCypressPlusEnabling:false
+    isCypressPlusEnabled:false,
+    isJoinedPdfSlate: false
 };
 
 const INITIAL_ACTION = {
@@ -169,7 +171,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case CYPRESS_PLUS_ENABLED:
             return {
                 ...state,
-                isCypressPlusEnabling: action.payload.isCypressPlusEnabling
+                isCypressPlusEnabled: action.payload.isCypressPlusEnabled
             }
         case SET_SLATE_ENTITY:
             return {
@@ -368,10 +370,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 asideTitleData: [...asideTitleData, action.payload]
             }
-        // return{
-        //     ...state,
-        //     asideTitleData: action.payload
-        // }
+        case SET_JOINED_PDF_STATUS:
+            return {
+                ...state,
+                isJoinedPdfSlate: action.payload
+            }
 
         default:
             return state;

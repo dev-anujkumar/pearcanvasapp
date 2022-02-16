@@ -4,8 +4,8 @@
     position: relative;
 }
 
-.container-pdf{
-    margin: 48px 40px 40px 51px !important;
+.editor.container-pdf {
+    margin: 50px 40px 40px 50px !important;
 }
 .element-container {
     /* padding: 15px; */

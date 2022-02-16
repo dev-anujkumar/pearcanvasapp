@@ -206,6 +206,7 @@ export const CHECK_ASIDE_NUMBER = 'CHECK_ASIDE_NUMBER';
 export const COMPLETED = 'COMPLETED';
 export const FAILED = 'FAILED';
 export const ABORTED = 'ABORTED'
+export const SET_JOINED_PDF_STATUS = 'SET_JOINED_PDF_STATUS'
 
 /*---------------- AutoNumbering Media Elements ------------------------*/
 export const SET_AUTO_NUMBER_TOGGLE = 'SET_AUTO_NUMBER_TOGGLE';

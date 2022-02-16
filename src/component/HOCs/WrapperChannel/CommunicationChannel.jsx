@@ -381,6 +381,12 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.deleteComment(message)
                     break
                 }
+
+                case 'refreshCanvasOnPdfMerge': { // Refresh Toc & Canvas on PDF Merge operation in Cypress Plus
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    break;
+                }
             }
         }
 
@@ -910,6 +916,10 @@ function CommunicationChannel(WrappedComponent) {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
                 }
+                /* Message from TOC is current Slate is Joined PDF */
+                // const joinedPdfStatus = message.node && message.node.hasOwnProperty('isMergedPdf') ? message.node.isMergedPdf : false
+                // this.props.getJoinedPdfStatus(joinedPdfStatus)
+                /** ---------------------------------------------- */
                 config.isPopupSlate = false;
                 config.figureDataToBeFetched = true;
                 this.props.fetchAudioNarrationForContainer(slateData)
