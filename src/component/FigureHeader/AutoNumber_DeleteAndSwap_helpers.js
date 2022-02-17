@@ -1,6 +1,6 @@
 import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
-import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering } from './AutoNumberConstants';
-import { getImagesInsideSlates } from './slateLevelMediaMapper';
+import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering, displayLabelsForContainer, autoNumberFigureTypesAllowed, SHOWHIDE_SECTION } from './AutoNumberConstants';
+import { getImagesInsideSlates, getAsideElementsWrtKey } from './slateLevelMediaMapper';
 import { containerBodyMatter } from './slateLevelMediaMapper';
 import { findElementsInContainer } from './AutoNumberCreate_helper';
 import {
@@ -325,7 +325,7 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
             });
         }
         if (containerElements.indexOf(swappedElementData?.type) > -1) {
-            updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors })
+            updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, bodyMatter })
         }
         else if (swappedElementData?.type === 'figure') {
             updateAutoNumberSequenceOnSwappingElements({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors })
@@ -390,65 +390,52 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
  *  This function resets sequence after SWAP when a container having figure is swapped
  * @param {*} params
  */
-export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
+export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
     const {
         dispatch,
         slateFigures,
         slateAncestors,
         numberedElements,
-        swappedElementData
+        swappedElementData,
+        bodyMatter
     } = params;
 
-    let refElementObj = {}
-    let swappedElementsUrn = [];
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    let swappedElementIterated = false;
-    let swappedElementList = [];
-    let reNumberingRequired = false;
+    let swappedElementsUrn = {};
+    let nearestElement = {}
+    let containerElementsOnSlate = [];
+    getSwappedElementsURN(swappedElementData, swappedElementsUrn);
+    let swappedElementDisplaylabled = Object.keys(swappedElementsUrn);
 
-    for (let i in slateFigures) {
-        let element = slateFigures[i];
-        if (element?.parentDetails?.includes(swappedElementData?.contentUrn)) {
-            swappedElementsUrn.push(element.contentUrn);
-            swappedElementIterated = true;
-        } else {
-            reNumberingRequired = true;
-            if (swappedElementIterated) break;
-            refElementObj[autoNumber_ElementTypeKey[element.displayedlabel]] = element.contentUrn;
-        }
+    const isAutoNumberedContainerSwapped = swappedElementDisplaylabled.some(label => displayLabelsForContainer.indexOf(label) >= 0);
+    if(isAutoNumberedContainerSwapped){
+        containerElementsOnSlate = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, containerElementsOnSlate);
     }
+    getNearestElement(swappedElementsUrn, slateFigures, nearestElement, 'Figure');
+    getNearestElement(swappedElementsUrn, containerElementsOnSlate, nearestElement, 'Container');
 
-    if (reNumberingRequired) {
-        Object.values(autoNumber_ElementTypeKey).forEach(label => {
-            let elementArray = numberedElements[label][figureParentEntityUrn];
-            swappedElementList = [];
-            let prevElementURN = ""
-            if (elementArray && elementArray.length > 0) {
+    swappedElementDisplaylabled.forEach(label => {
+        let swappedElementList = [];
+        let nearestElementIndex;
+        if(nearestElement[label]?.urn !== ""){
+            let elementArray = numberedElements[autoNumber_ElementTypeKey[label]][figureParentEntityUrn];
+            if (elementArray && elementArray?.length > 0) {
                 elementArray.forEach((element, i) => {
-                    if (element?.slateEntityUrn === swappedElementData.slateEntityUrn && swappedElementsUrn.includes(element?.contentUrn)) {
-                        swappedElementList.push(element);
-                        prevElementURN = i > 0 ? elementArray[i - 1]?.contentUrn : ""
-                        elementArray.splice(i, 1);
+                    if(swappedElementsUrn[label].includes(element?.contentUrn)){
+                        swappedElementList.push(element);   
                     }
                 });
-                if (refElementObj[label]) {
-                    const findRefIndex = (element) => element.contentUrn === refElementObj[label]
-                    const refElementIndex = elementArray?.findIndex(findRefIndex);
-                    elementArray.splice(refElementIndex + 1, 0, ...swappedElementList);
-                } else {
-                    const findRefIndexInCurrentSlate = (element) => element.slateEntityUrn === swappedElementData.slateEntityUrn;
-                    const refIndexInCurrentSlate = elementArray?.findIndex(findRefIndexInCurrentSlate);
-                    if (refIndexInCurrentSlate < 0) {
-                        const findPrevElementIndex = (element) => element.contentUrn === prevElementURN;
-                        const prevElementIndex = elementArray?.findIndex(findPrevElementIndex);
-                        elementArray.splice(prevElementIndex + 1, 0, ...swappedElementList);
-                    } else {
-                        elementArray.splice(refIndexInCurrentSlate, 0, ...swappedElementList);
-                    }
-                }
-            }
-        });
+                elementArray = elementArray.filter(element =>  !swappedElementsUrn[label].includes(element?.contentUrn));
+                nearestElementIndex = elementArray.findIndex(element => element?.contentUrn === nearestElement[label]?.urn);
 
+                if(nearestElement[label]?.pos === 'below'){
+                    nearestElementIndex += 1;
+                }
+                elementArray.splice(nearestElementIndex, 0, ...swappedElementList);
+                numberedElements[autoNumber_ElementTypeKey[label]][figureParentEntityUrn] = elementArray;
+            }
+        }
+    });
         dispatch({
             type: GET_ALL_AUTO_NUMBER_ELEMENTS,
             payload: {
@@ -456,5 +443,104 @@ export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
             }
         });
         getAutoNumberSequence(numberedElements, dispatch)
+}
+
+const storeSwappedUrn = (urn, displayedlabel, data) => {
+    if(Array.isArray(data[displayedlabel])){
+        data[displayedlabel].push(urn);
+    } else {
+        data[displayedlabel] = [urn];
     }
+}
+
+const getSwappedElementsURN = (swappedElement, data) => {
+    switch (swappedElement.type) {
+        case containerElements.SHOW_HIDE:
+            getContentUrnFromShowHide(swappedElement?.interactivedata, data);
+            break;
+        case containerElements.MULTI_COLUMN:
+            getContentUrnFromMultiColumn(swappedElement?.groupeddata?.bodymatter, data);
+            break;
+        case containerElements.ASIDE:
+            storeSwappedUrn(swappedElement?.contentUrn, swappedElement?.displayedlabel, data);
+            getContentUrnFromAsideWE(swappedElement?.elementdata?.bodymatter, data);
+            break;
+        case containerElements.MANIFEST:
+            getContentUrnFromAsideWE(swappedElement?.contents?.bodymatter, data);
+            break;
+    }
+}
+
+const getContentUrnFromMultiColumn = (bodymatter, data) => {
+    if(bodymatter.length > 0) {
+        bodymatter.forEach(colData => {
+            if(colData?.groupdata?.bodymatter.length > 0){
+                colData?.groupdata?.bodymatter.forEach(elemData => {
+                    if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
+                        storeSwappedUrn(elemData?.contentUrn, elemData?.displayedlabel, data);
+                    }
+                    if(containerElementTypes.includes(elemData?.type)){
+                        getSwappedElementsURN(elemData, data)
+                    }
+                });
+            }
+        });
+    }
+}
+
+const getContentUrnFromAsideWE = (bodymatter, data) => {
+    if(bodymatter?.length > 0){
+        bodymatter.forEach(elemData => {
+            if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
+                storeSwappedUrn(elemData?.contentUrn, elemData?.displayedlabel, data);
+            }
+            if(containerElementTypes.includes(elemData?.type) || containerElements.MANIFEST === elemData?.type){
+                getSwappedElementsURN(elemData, data)
+            }
+        })
+    }
+}
+
+const getContentUrnFromShowHide = (interactivedata, data) => {
+    let showHideKeys = Object.values(SHOWHIDE_SECTION);
+    showHideKeys.forEach(section => {
+        interactivedata[section].forEach(elemData => {
+            if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
+                storeSwappedUrn(elemData.contentUrn, elemData.displayedlabel, data);
+            }
+            if(containerElementTypes.includes(elemData?.type)){
+                getSwappedElementsURN(elemData, data)
+            }
+        })
+    })
+}
+
+const getNearestElement = (swappedElementsUrn, elementsList, nearestElement, type) => {
+    let swappedElementDisplaylabled = [];
+    let status = {}
+    if(type === 'Figure'){
+        swappedElementDisplaylabled = Object.keys(swappedElementsUrn).filter(label => displayLabelsForAutonumbering.includes(label))
+    } else {
+        swappedElementDisplaylabled = Object.keys(swappedElementsUrn).filter(label => displayLabelsForContainer.includes(label))
+    }
+
+    swappedElementDisplaylabled.forEach(label => {
+        status[label] = false;
+        nearestElement[label] = {
+            urn: "",
+            pos: ""
+        }
+    });
+
+    elementsList.forEach(element => {
+        let label = element?.displayedlabel; 
+        if(swappedElementDisplaylabled.includes(label)){
+            if(swappedElementsUrn[label].includes(element?.contentUrn)){
+                status[label] = true;
+            } else if(!status[label] || !nearestElement[label].urn) {
+                nearestElement[label].urn = element?.contentUrn;
+                nearestElement[label].pos = status[label] ? 'above' : 'below'
+            }
+        }
+    });
 }

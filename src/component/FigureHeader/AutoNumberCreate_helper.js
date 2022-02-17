@@ -220,6 +220,9 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
     switch (type) {
         case 'IMAGE':
         case 'VIDEO':
+        case 'INTERACTIVE':
+        case 'SMART_LINK':
+        case 'MMI_ELM':
             slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[config?.slateManifestURN], { dispatch });
             break;
         case 'CONTAINER':

@@ -57,7 +57,7 @@ export const autoNumber_response_ElementType_mapper = {
   "videos":"videosList",
   "interactives":"interactiveList",
   "asides": "asidesList",
-  "worked examples": "workedExamplesList"
+  "workedexamples": "workedExamplesList"
 }
 
 export const moduleTypes = ['module', 'appendix']
