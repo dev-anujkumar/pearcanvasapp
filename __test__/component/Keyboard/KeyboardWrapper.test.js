@@ -32,10 +32,12 @@ describe("KeyboardWrapper Testing", () => {
         firstChild: {
           firstChild: {
             parentNode: {},
+            querySelector : () =>({parentNode: {}}),
           },
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
         },
       },
       0
@@ -50,10 +52,12 @@ describe("KeyboardWrapper Testing", () => {
         firstChild: {
           firstChild: {
             parentNode: {},
+            querySelector : () =>({parentNode: {}}),
           },
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
         },
       },
       0
@@ -68,6 +72,7 @@ describe("KeyboardWrapper Testing", () => {
         firstChild: {
           firstChild: {
             parentNode: {},
+            querySelector : () =>({parentNode: {}}),
           },
         },
         lastChild: {
@@ -75,8 +80,10 @@ describe("KeyboardWrapper Testing", () => {
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           parentNode: {
             id: QUERY_SELECTOR + "-1",
+            querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           }
         },
       },
@@ -92,6 +99,7 @@ describe("KeyboardWrapper Testing", () => {
         firstChild: {
           firstChild: {
             parentNode: {},
+            querySelector : () =>({parentNode: {}}),
           },
         },
         lastChild: {
@@ -99,8 +107,10 @@ describe("KeyboardWrapper Testing", () => {
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           parentNode: {
             id: QUERY_SELECTOR + "-1",
+            querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           }
         },
       },
@@ -116,6 +126,7 @@ describe("KeyboardWrapper Testing", () => {
         firstChild: {
           firstChild: {
             parentNode: {},
+          querySelector : () =>({parentNode: {}}),
           },
         },
         lastChild: {
@@ -123,8 +134,10 @@ describe("KeyboardWrapper Testing", () => {
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           parentNode: {
             id: "different id",
+            querySelector : () =>({parentNode: {id:"different id"}}),
           }
         },
       },
@@ -143,6 +156,7 @@ describe("KeyboardWrapper Testing", () => {
         // },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
         },
       },
       0
@@ -157,12 +171,15 @@ describe("KeyboardWrapper Testing", () => {
         firstChild: {
           firstChild: {
             parentNode: {},
+            querySelector : () =>({parentNode: {}}),
           },
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           parentNode: {
-            id: QUERY_SELECTOR + "-1"
+            id: QUERY_SELECTOR + "-1",
+            querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           }
         },
       },

@@ -13,6 +13,7 @@ import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
 import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData, INTERACTIVE } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
+import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -52,7 +53,7 @@ export const FigureHeader = (props) => {
     const [slateAncestors, setSlateAncestors] = useState(props.currentSlateAncestorData || {});
     const [figureLabelValue, setFigureLabelValue] = useState(props.model?.displayedlabel ?? props.model?.manualoverride?.overridelabelvalue ?? '');
     const [figureLabelData, setFigureLabelData] = useState([]);
-    const [labelNumberSetting, setLabelNumberSetting] = useState(null);
+    const [labelNumberSetting, setLabelNumberSetting] = useState(setAutoNumberSettingValue(props.model));
     const [labelDropDown, setLabelDropDown] = useState(false);
     const [labelNumberSettingDropDown, setLabelNumberSettingDropDown] = useState(false);
     const [showLabelField, setShowLabelField] = useState(true);
@@ -65,18 +66,23 @@ export const FigureHeader = (props) => {
     useOutsideAlerter(labelDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
     const updateDropdownOptions = () => {
         let figureLabelDropdownVal = [];
+        const figureCustom = props.figureDropdownData.imageCustom ? [ ...props.figureDropdownData.image, ...props.figureDropdownData.imageCustom] : props.figureDropdownData.image;
+        const audioCustom = props.figureDropdownData.audioCustom ? [ ...props.figureDropdownData.audio, ...props.figureDropdownData.audioCustom] : props.figureDropdownData.audio;
+        const videoCustom = props.figureDropdownData.videoCustom ? [ ...props.figureDropdownData.video, ...props.figureDropdownData.videoCustom] : props.figureDropdownData.video;
+        const interactiveCustom = props.figureDropdownData.interactiveCustom ? [ ...props.figureDropdownData.interactive, ...props.figureDropdownData.interactiveCustom] : props.figureDropdownData.interactive;
+
         switch (props.model.figuretype) {
             case AUDIO:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Audio'] : props.figureDropdownData.audio;
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? audioCustom : props.figureDropdownData.audio;
                 break;
             case VIDEO:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Video'] : props.figureDropdownData.video;
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? videoCustom : props.figureDropdownData.video;
                 break;
             case IMAGE: case TABLE: case MATH_IMAGE:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Figure', 'Table', 'Equation'] : props.figureDropdownData.video;
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? figureCustom : props.figureDropdownData.video;
                 break;
             case INTERACTIVE:
-                figureLabelDropdownVal = props.isAutoNumberingEnabled ? ['Interactive']: props.figureDropdownData.smartlinks;
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? interactiveCustom : props.figureDropdownData.smartlinks;
                 break;
             default:
                 figureLabelDropdownVal = [];
@@ -102,6 +108,9 @@ export const FigureHeader = (props) => {
     useEffect(() => {
         updateDropdownOptions();
     }, [props.autoNumberElementsIndex]);
+    useEffect(() => {
+        updateDropdownOptions(); // update the dropdown options if any new value is introduced via Controlled Vocab in the Project Settings
+    }, [props.figureDropdownData]);
     useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
         const figIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
@@ -285,10 +294,12 @@ export const FigureHeader = (props) => {
                 <label className={"transition-none"}>Preview</label>
                 <TextField disabled id="filled-disabled" className={"figure-preview"} variant="filled" placeholder="" defaultValue="" multiline value={previewData} fullWidth />
             </div>
-            <div className="floating-title-group">
-                <TinyMceEditor onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
-            </div>
+            <KeyboardWrapper enable index={`${props.index}-2`}>
+                <div className="floating-title-group">
+                    <TinyMceEditor onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
+                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                </div>
+            </KeyboardWrapper>
         </>
     );
 }

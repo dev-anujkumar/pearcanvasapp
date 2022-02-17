@@ -381,10 +381,13 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.deleteComment(message)
                     break
                 }
-
                 case 'refreshCanvasOnPdfMerge': { // Refresh Toc & Canvas on PDF Merge operation in Cypress Plus
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                    //sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    break;
+                }
+                case 'newCustomCanvasLabels': {
+                    this.props.updateFigureDropdownValues(message)
                     break;
                 }
             }
@@ -920,6 +923,21 @@ function CommunicationChannel(WrappedComponent) {
                 // const joinedPdfStatus = message.node && message.node.hasOwnProperty('isMergedPdf') ? message.node.isMergedPdf : false
                 // this.props.getJoinedPdfStatus(joinedPdfStatus)
                 /** ---------------------------------------------- */
+                if (message?.node) {
+                    let matterType = 'bodymatter'
+                    if (message.node.parentOfParentItem !== "") {
+                        if (message.node.parentOfParentItem === 'backmatter') {
+                            matterType = 'backmatter'
+                        } else if (message.node.parentOfParentItem === 'frontmatter') {
+                            matterType = 'frontmatter'
+                        }
+                    } else if (message.node.nodeParentLabel === 'backmatter') {
+                        matterType = 'backmatter'
+                    } else if (message.node.nodeParentLabel === 'frontmatter') {
+                        matterType = 'frontmatter'
+                    }
+                    this.props.setSlateMatterType(matterType);
+                }
                 config.isPopupSlate = false;
                 config.figureDataToBeFetched = true;
                 this.props.fetchAudioNarrationForContainer(slateData)

@@ -18,7 +18,8 @@ import {
     PAGE_NUMBER_LOADER,
     WIRIS_ALT_TEXT_POPUP,
     SLATE_FIGURE_ELEMENTS,
-    CYPRESS_PLUS_ENABLED
+    CYPRESS_PLUS_ENABLED,
+    SET_SLATE_MATTER_TYPE
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
@@ -1061,6 +1062,12 @@ export const accessDenied = (value) => (dispatch, getState) => {
 export const setSlateParent = (setSlateParentParams) => (dispatch, getState) => {
     return dispatch({
         type: SET_PARENT_NODE,
+        payload: setSlateParentParams
+    })
+}
+export const setSlateMatterType = (setSlateParentParams) => (dispatch, getState) => {
+    return dispatch({
+        type: SET_SLATE_MATTER_TYPE,
         payload: setSlateParentParams
     })
 }

@@ -325,6 +325,9 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         slateLevelData:{}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+        spellCheckToggle : false
+    }
  });
     const component = mount(<Provider store={store}><span class="randomClass"><b><em><u><div class="codeNoHighlightLineOne">TinyMce</div></u></em></b></span> < TinyMceEditor {...props} /> </Provider>, { attachTo: document.body })
     let instance = component.find('TinyMceEditor').instance();
@@ -7230,6 +7233,9 @@ describe('------------------------------Test2 TINY_MCE_EDITOR-------------------
         slateLevelData:{}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+        spellCheckToggle : false
+    }
  });
     let newProps = {
         ...props,
@@ -7846,6 +7852,9 @@ describe('------------------------------Test3 TINY_MCE_EDITOR blockquote if-----
         slateLevelData:{}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+        spellCheckToggle : false
+    }
      });
     let newProps = {
         ...props,
@@ -7939,6 +7948,9 @@ describe('------------------------------Test3 TINY_MCE_EDITOR blockquote else---
         Permission: false
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+        spellCheckToggle : false
+    },
     appStore:{
         slateLevelData:{}
     } });
@@ -8033,6 +8045,9 @@ describe('------------------------------Test4 TINY_MCE_EDITOR-------------------
         slateLevelData:{}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+        spellCheckToggle : false
+    }
     });
     let newProps = {
         ...props,
@@ -8125,6 +8140,9 @@ describe('------------------------------Test4 TINY_MCE_EDITOR-------------------
         slateLevelData:{}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+        spellCheckToggle : false
+    }
     });
     let newProps = {
         ...props,
@@ -8173,6 +8191,9 @@ describe('------------------------------Test TINY_MCE_EDITOR case: figureCredit-
         slateLevelData:{}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+        spellCheckToggle : false
+    }
     });
     let newProps = {
         ...props,
@@ -8222,6 +8243,9 @@ describe('------------------------------Test TINY_MCE_EDITOR case: element-citat
         slateLevelData:{}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+        spellCheckToggle : false
+    }
     });
     let newProps = {
         ...props,
@@ -8324,6 +8348,9 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
         slateLevelData:{}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+        spellCheckToggle : false
+    }
     });
     let newProps = {
         ...props,
@@ -9514,6 +9541,9 @@ describe('------------------------------Test TINY_MCE_EDITOR case: Heading 4----
         slateLevelData:{}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+        spellCheckToggle : false
+    }
     });
     let newProps = {
         ...props,
@@ -9566,6 +9596,9 @@ describe('------------------------------Test TINY_MCE_EDITOR case: tagName - P -
             slateLevelData: {}
         },
         autoNumberReducer: mockAutoNumberReducerEmpty,
+        toolbarReducer : {
+            spellCheckToggle : false
+        }
     });
     let newProps = {
         ...props,
@@ -9624,6 +9657,9 @@ describe('------------------------------Test TINY_MCE_EDITOR case: tagName - cod
             slateLevelData: {}
         },
         autoNumberReducer: mockAutoNumberReducerEmpty,
+        toolbarReducer : {
+            spellCheckToggle : false
+        }
     });
     let newProps = {
         ...props,
@@ -9683,6 +9719,9 @@ describe('------------------------------Test TINY_MCE_EDITOR case: tagName - fig
             slateLevelData: {}
         },
         autoNumberReducer: mockAutoNumberReducerEmpty,
+        toolbarReducer : {
+            spellCheckToggle : false
+        }
     });
     let newProps = {
         ...props,
@@ -9758,6 +9797,9 @@ describe('------------------------------Test TINY_MCE_EDITOR case: Methods -----
             slateLevelData: {}
         },
         autoNumberReducer: mockAutoNumberReducerEmpty,
+        toolbarReducer : {
+            spellCheckToggle : false
+        }
     });
     let newProps = {
         ...props,
