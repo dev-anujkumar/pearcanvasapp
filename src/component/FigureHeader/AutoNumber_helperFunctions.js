@@ -1,6 +1,6 @@
 import config from '../../config/config'
 import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_FigureTypeKeyMapper,
-        displayLabelsForImage } from './AutoNumberConstants';
+        displayLabelsForAutonumbering } from './AutoNumberConstants';
 import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
@@ -493,15 +493,7 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
         isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
     }
     subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-    const { audio, video, interactive, interactiveCustom, audioCustom, videoCustom, } = props?.figureDropdownData
-    let validDropdownOptions = displayLabelsForImage
-    if (previousElementData.figuretype === 'interactive') {
-        validDropdownOptions = interactiveCustom ? [...interactive, ...interactiveCustom] : interactive
-    } else if (previousElementData.figuretype === 'video') {
-        validDropdownOptions = videoCustom ? [...video, ...videoCustom] : video
-    } else if (previousElementData.figuretype === 'audio') {
-        validDropdownOptions = audioCustom ? [...audio, ...audioCustom] : audio
-    }
+    const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
     if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
         titleHTML = previousElementData.displayedlabel;
     }
@@ -533,4 +525,35 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
     }
     
     return result;
+}
+
+/**
+ *  Returns the Label Dropdown Values based on Figuretype
+ * @param {*} previousElementData 
+ * @returns 
+ */
+export const generateDropdownDataForFigures = (previousElementData) => {
+    const figureDropdownData = store.getState()?.appStore?.figureDropdownData
+    const { image, imageCustom, audio, video, interactive, interactiveCustom, audioCustom, videoCustom, } = figureDropdownData
+    let validDropdownOptions = displayLabelsForAutonumbering;
+    if (previousElementData?.figuretype && figureDropdownData) {
+        switch (previousElementData.figuretype) {
+            case AUDIO:
+                validDropdownOptions = audioCustom ? [...audio, ...audioCustom] : audio
+                break;
+            case VIDEO:
+                validDropdownOptions = videoCustom ? [...video, ...videoCustom] : video
+                break;
+            case INTERACTIVE:
+                validDropdownOptions = interactiveCustom ? [...interactive, ...interactiveCustom] : interactive
+                break;
+            case IMAGE: case TABLE: case MATH_IMAGE:
+                validDropdownOptions = imageCustom ? [...image, ...imageCustom] : image
+                break;
+            default:
+                validDropdownOptions = displayLabelsForAutonumbering
+                break;
+        }
+    }
+    return validDropdownOptions
 }

@@ -7,9 +7,9 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel, getTitleSubtitleModel, removeSpellCheckDOMAttributes } from '../../constants/utility';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForAutonumbering } from '../FigureHeader/AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
-import { setAutonumberingValuesForPayload, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
+import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForFigures } from '../FigureHeader/AutoNumber_helperFunctions';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -35,22 +35,6 @@ export const replaceUnwantedtags = (html,flag) => {
     // calling the function to remove tinymce spell check DOM attributes from innerHTML
     // tempDiv.innerHTML = removeSpellCheckDOMAttributes(tempDiv.innerHTML);
     return tempDiv.innerHTML;
-}
-
-export const generateDropdownDataForFigures = (previousElementData) =>{
-    const figureDropdownData  = store.getState()?.appStore?.figureDropdownData
-    const { image, imageCustom , audio, video, interactive, interactiveCustom, audioCustom, videoCustom, } = figureDropdownData
-    let validDropdownOptions = displayLabelsForAutonumbering
-    if (previousElementData.figuretype === 'interactive') {
-        validDropdownOptions = interactiveCustom ? [...interactive, ...interactiveCustom] : interactive
-    } else if (previousElementData.figuretype === 'video') {
-        validDropdownOptions = videoCustom ? [...video, ...videoCustom] : video
-    } else if (previousElementData.figuretype === 'audio') {
-        validDropdownOptions = audioCustom ? [...audio, ...audioCustom] : audio
-    } else {
-        validDropdownOptions = imageCustom ? [...image, ...imageCustom] : image
-    }
-    return validDropdownOptions
 }
 
 /**
