@@ -534,7 +534,7 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
  */
 export const generateDropdownDataForFigures = (previousElementData) => {
     const figureDropdownData = store.getState()?.appStore?.figureDropdownData
-    const { image, imageCustom, audio, video, interactive, interactiveCustom, audioCustom, videoCustom, } = figureDropdownData
+    const { image, imageCustom, audio, audioCustom, video, videoCustom, interactive, interactiveCustom, tableasmarkup, tableasmarkupCustom, mathml, mathmlCustom, preformattedtext, preformattedtextCustom } = figureDropdownData
     let validDropdownOptions = displayLabelsForAutonumbering;
     if (previousElementData?.figuretype && figureDropdownData) {
         switch (previousElementData.figuretype) {
@@ -549,6 +549,15 @@ export const generateDropdownDataForFigures = (previousElementData) => {
                 break;
             case IMAGE: case TABLE: case MATH_IMAGE:
                 validDropdownOptions = imageCustom ? [...image, ...imageCustom] : image
+                break;
+            case TABLE_AS_MARKUP:
+                validDropdownOptions = tableasmarkupCustom ? [...tableasmarkup, ...tableasmarkupCustom] : tableasmarkup
+                break;
+            case AUTHORED_TEXT:
+                validDropdownOptions = mathmlCustom ? [...mathml, ...mathmlCustom] : mathml
+                break;
+            case CODELISTING:
+                validDropdownOptions = preformattedtextCustom ? [...preformattedtext, ...preformattedtextCustom] : preformattedtext
                 break;
             default:
                 validDropdownOptions = displayLabelsForAutonumbering
