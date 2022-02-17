@@ -72,10 +72,10 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
-import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, updateAutonumberingOnOverridedCase, validateLabelNumberSetting } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, updateAutonumberingOnOverridedCase, validateLabelNumberSetting, generateDropdownDataForFigures } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForImage, displayLabelsForAudioVideo } from '../FigureHeader/AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes'
 
 const {
@@ -457,8 +457,7 @@ class ElementContainer extends Component {
                 isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-            const { image, imageCustom } = this.props?.figureDropdownData
-            const validDropdownOptions = image ? (imageCustom ? [...image, ...imageCustom] : image) : displayLabelsForImage
+            const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
             if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
@@ -695,13 +694,7 @@ class ElementContainer extends Component {
             }
             let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
-            const { audio, video, audioCustom, videoCustom, } = this?.props?.figureDropdownData
-            let validDropdownOptions = displayLabelsForImage
-            if (previousElementData.figuretype === 'video') {
-                validDropdownOptions = videoCustom ? [...video, ...videoCustom] : video
-            } else if (previousElementData.figuretype === 'audio') {
-                validDropdownOptions = audioCustom ? [...audio, ...audioCustom] : audio
-            }
+            const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
             if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
                 titleHTML = previousElementData.displayedlabel;
             }
