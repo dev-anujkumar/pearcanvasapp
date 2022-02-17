@@ -16,7 +16,6 @@ const initialState = {
 }
 
 export const projectInfo = (state = initialState, action={type:'', payload:{}}) => {
- 
     switch(action.type) {
         case UPDATE_PROJECT_INFO: {
             return {

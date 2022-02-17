@@ -41,7 +41,6 @@ import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Ac
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import {markedIndexPopup} from '../MarkIndexPopup/MarkIndex_Action';
 import { fetchProjectFigures, setTocContainersAutoNumberList } from '../FigureHeader/AutoNumberActions';
- 
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);

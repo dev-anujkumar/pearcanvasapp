@@ -1036,8 +1036,6 @@ export const setSlateType = (slateType) => (dispatch, getState) => {
     })
 }
 
-// function for cypressPlus
-
 export const cypressPlusEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: CYPRESS_PLUS_ENABLED,

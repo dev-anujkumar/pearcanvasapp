@@ -129,7 +129,7 @@ class PdfSlate extends Component {
 	}
 	
 	render(){
-			return(
+		return(
 			<div className="AssessmentSlateCanvas div-position-relative pdf-slate">
 				<PdfSlateComponent 
 					showDetails = {this.state.showDetails}

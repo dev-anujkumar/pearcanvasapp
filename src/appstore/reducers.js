@@ -35,7 +35,7 @@ import {
     GET_ALL_SLATES_DATA,
     SET_CURRENT_SLATE_DATA,
     PAGE_NUMBER_LOADER,
-    GET_USAGE_TYPE,
+    GET_USAGE_TYPE ,
     SET_SLATE_LENGTH,
     VERSIONING_SLATEMANIFEST,
     SET_TOAST_MESSAGE,
@@ -76,23 +76,23 @@ const INITIAL_STATE = {
     showHideId: "",
     parentUrn: {},
     asideData: {},
-    showHideObj: {},
-    allSlateData: {},
-    currentSlateAncestorData: {},
-    allElemPageData: [],
-    pageNumberLoading: false,
-    usageTypeListData: {},
+    showHideObj:{},
+    allSlateData:{},
+    currentSlateAncestorData:{},
+    allElemPageData:[],
+    pageNumberLoading:false,
+    usageTypeListData:{},
     slateLength: "25",
-    toastMessage: "",
-    showToast: false,
-    oldFiguredata: {},
-    wirisAltText: {},
-    isLearnosityProjectInfo: {},
-    figureGlossaryData: {},
-    addfigureGlossarypopup: false,
-    openWrongImagePopup: false,
+    toastMessage:"",
+    showToast:false,
+    oldFiguredata : {},
+    wirisAltText : {},
+    isLearnosityProjectInfo:{},
+    figureGlossaryData : {},
+    addfigureGlossarypopup:false,
+    openWrongImagePopup:false,
     multipleColumnData: [],
-    removeGlossaryImage: false,
+    removeGlossaryImage:false,
     oldFigureDataForCompare: {},
     oldSmartLinkDataForCompare: {},
     oldAudioVideoDataForCompare: {},
@@ -289,36 +289,36 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 oldFiguredata: action.payload.oldFiguredata
             }
-        case WIRIS_ALT_TEXT_POPUP:
-            return {
-                ...state,
-                wirisAltText: action.payload
-            }
+        case WIRIS_ALT_TEXT_POPUP : 
+        return {
+            ...state,
+            wirisAltText : action.payload
+        }
 
-        case LEARNOSITY_PROJECT_INFO:
-            return {
-                ...state,
-                isLearnosityProjectInfo: action.payload
-            }
-        case SET_FIGURE_GLOSSARY:
-            return {
-                ...state,
-                figureGlossaryData: action.payload
-            }
+        case LEARNOSITY_PROJECT_INFO : 
+        return {
+            ...state,
+            isLearnosityProjectInfo : action.payload
+        }
+        case SET_FIGURE_GLOSSARY : 
+        return {
+            ...state,
+            figureGlossaryData : action.payload
+        }
         case ADD_FIGURE_GLOSSARY_POPUP:
-            return {
+            return{
                 ...state,
-                addfigureGlossarypopup: action.payload
+                addfigureGlossarypopup:action.payload
             }
         case WRONG_IMAGE_POPUP:
-            return {
+            return{
                 ...state,
-                openWrongImagePopup: action.payload
+                openWrongImagePopup:action.payload
             }
         case SHOW_REMOVE_GLOSSARY_IMAGE:
             return {
                 ...state,
-                removeGlossaryImage: action.payload
+                removeGlossaryImage:action.payload
             }
 
         case UPDATE_MULTIPLE_COLUMN_INFO:
