@@ -7,7 +7,9 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS,
     UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
     UPDATE_AUTONUMBERING_DROPDOWN_VALUE,
-    UPDATE_POPUP_PARENT_SLATE
+    UPDATE_POPUP_PARENT_SLATE,
+    GET_SLATE_LIST_IN_CONTAINER,
+    UPDATE_AUTONUMBER_MAPPER_KEYS
 } from '../constants/Action_Constants.js';
 
 const INITIAL_STATE = {
@@ -35,7 +37,45 @@ const INITIAL_STATE = {
     },
     slateFigureList:[],
     autoNumberOption: '',
-    popupParentSlateData: {}
+    popupParentSlateData: {},
+    tocContainerSlateList:[],
+    autoNumber_KeyMapper: {
+        'Figure': 'figureImageIndex',
+        'Table': 'tableIndex',
+        'Equation': 'equationsIndex',
+        'Audio': 'audioIndex',
+        'Video': 'videoIndex',
+        "Interactive": 'interactiveIndex'
+    },
+    autoNumber_ElementTypeKey: {
+        'Figure': 'imagesList',
+        'Table': 'tablesList',
+        'Equation': 'equationsList',
+        'Audio': 'audiosList',
+        'Video': 'videosList',
+        'Interactive': 'interactiveList',
+        "Aside": "asidesList",
+        "Worked Example": "workedExamplesList"
+    },
+    autoNumber_response_ElementType_mapper: {
+        "figures": "imagesList",
+        "tables": "tablesList",
+        "equations": "equationsList",
+        "audios": "audiosList",
+        "videos": "videosList",
+        "interactives": "interactiveList",
+        "asides": "asidesList",
+        "workedExamples": "workedExamplesList"
+    },
+    autoNumber_IndexMapper: {
+        'imagesList': 'figureImageIndex',
+        'tablesList': 'tableIndex',
+        'equationsList': 'equationsIndex',
+        'audiosList': 'audioIndex',
+        'videosList': 'videoIndex',
+        'interactiveList': 'interactiveIndex'
+    }
+
 }
 
 const INITIAL_ACTION = {
@@ -103,6 +143,19 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 popupParentSlateData: action.payload
+            }
+        case GET_SLATE_LIST_IN_CONTAINER:
+            return {
+                ...state,
+                tocContainerSlateList: action.payload
+            }
+        case UPDATE_AUTONUMBER_MAPPER_KEYS:
+            return {
+                ...state,
+                autoNumber_KeyMapper: action.payload.autoNumber_KeyMapper,
+                autoNumber_IndexMapper: action.payload.autoNumber_IndexMapper,
+                autoNumber_ElementTypeKey: action.payload.autoNumber_ElementTypeKey,
+                autoNumber_response_ElementType_mapper: action.payload.autoNumber_response_ElementType_mapper
             }
         default:
             return state

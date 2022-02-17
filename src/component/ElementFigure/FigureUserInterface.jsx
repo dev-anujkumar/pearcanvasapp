@@ -32,7 +32,7 @@ import { createRef } from 'react';
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
 const BLANK_PARA_VALUES = ['<p></p>', '<p><br></p>', '<p><br/></p>', '<br data-mce-bogus="1">', '<p><br data-mce-bogus="1"></p>'];
-
+const KEYBOARD_ENABLE = [AUDIO, VIDEO];
 class FigureUserInterface extends Component {
     constructor(props) {
         super(props);
@@ -86,9 +86,11 @@ class FigureUserInterface extends Component {
             this.updateDropdownOptions();
         }
         if(!prevState.figureDropDown && this.state.figureDropDown) {
-            this.setState({showingListIndex: 0});
-            this.labelListRef.current.childNodes[0].focus();
-            this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown)
+            if(this.isEnableKeyboard()) {
+                this.setState({showingListIndex: 0});
+                this.labelListRef.current.childNodes[0].focus();
+                this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown)
+            }
         }
     }
 
@@ -152,6 +154,12 @@ class FigureUserInterface extends Component {
         this.setState({
             figureDropDown: false
         })
+    }
+
+    isEnableKeyboard = () => {
+        if(KEYBOARD_ENABLE.indexOf(this.props.element.figuretype) > -1) {
+            return true;
+        }
     }
 
     onFigureElementFieldFocus = (id) => {
@@ -258,8 +266,8 @@ class FigureUserInterface extends Component {
 
                 </div>
 
-                <KeyboardWrapper enable index={`${this.props.index}-add-asset`}>
-                        <div onClick={() => this.addVideoRef.current.focus()}>
+                <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${this.props.index}-add-asset`}>
+                        <div onClick={() => {if(this.isEnableKeyboard()) {this.addVideoRef.current.focus()}}}>
                         <div className="media-assets">
                         <div tabIndex={0} onKeyDown={this.clickNode} ref={this.addVideoRef} className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
                         <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} />
@@ -292,13 +300,13 @@ class FigureUserInterface extends Component {
                         <RoundedButton title="Update Available" className='rounded_btn' onClick={() => this.props.updateElm()}/>
                     }
                     <div className="media-button-group">
-                        <KeyboardWrapper enable index={`${this.props.index}-update-asset`}>
-                        <div onClick={() => this.updateRef.current.focus()}>
+                        <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${this.props.index}-update-asset`}>
+                        <div onClick={() => {if(this.isEnableKeyboard()){this.updateRef.current.focus()}}}>
                          <div onKeyDown={this.clickNode} ref={this.updateRef} tabIndex={0} className='update-figure-button' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
                         </div>
                         </KeyboardWrapper>
-                    <KeyboardWrapper enable index={`${this.props.index}-delete-asset`}>
-                     <div onClick={() => this.deleteRef.current.focus()}>
+                    <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${this.props.index}-delete-asset`}>
+                     <div onClick={() => {if(this.isEnableKeyboard) {this.deleteRef.current.focus()}}}>
                          <div onKeyDown={this.clickNode} ref={this.deleteRef} tabIndex={0} className={`delete-figure-button ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                      </div>
                         </KeyboardWrapper>
@@ -552,8 +560,8 @@ class FigureUserInterface extends Component {
 
                                 <div className='figure-label-field'>
                                     <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
-                                    <KeyboardWrapper index={`${this.props.index}-figure-label`} enable>
-                                        <div onClick={() => {this.figureLabelRef.current.focus()}}> 
+                                    <KeyboardWrapper index={`${this.props.index}-figure-label`} enable={this.isEnableKeyboard()}>
+                                        <div onClick={() => {if(this.isEnableKeyboard()) {this.figureLabelRef.current.focus()}}}> 
                                             <div onKeyDown={this.clickNode} tabIndex={0} ref={this.figureLabelRef}  className={this.props.selectedElement === `${QUERY_SELECTOR}-${this.props.index}-figure-label` ? "figure-label-highlight" : "figure-label"} onClick={this.handleFigureDropdown}>
                                                 <span>{figureLabelValue}</span>
                                                 <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
@@ -577,7 +585,7 @@ class FigureUserInterface extends Component {
                                 }
                                 {
                                     figureLabelValue === 'Custom' ?
-                                    <KeyboardWrapper enable>
+                                    <KeyboardWrapper index={`${index}-0`} enable={this.isEnableKeyboard()}>
                                         
                                         <div className='image-label'>
                                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
@@ -586,16 +594,12 @@ class FigureUserInterface extends Component {
 
                                     </KeyboardWrapper>
                                         :
-                                        <KeyboardWrapper>
-                                            
                                         <div className='image-label hide-field'>
                                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                             <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
                                         </div>
-
-                                        </KeyboardWrapper>
                                 }
-                                <KeyboardWrapper enable index={`${index}-1`}>
+                                <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${index}-1`}>
                                     <div className="floating-number-group">
                                         <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-1`} placeholder="Number" tagName={'h4'} className={figNumberClass} model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                         <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
@@ -604,7 +608,7 @@ class FigureUserInterface extends Component {
                               
 
                             </header>
-                                <KeyboardWrapper  index={`${index}-2`}  enable>
+                                <KeyboardWrapper  index={`${index}-2`} enable={this.isEnableKeyboard()}>
                                 <div className="floating-title-group">
                                     <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass} model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                     <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
@@ -630,7 +634,7 @@ class FigureUserInterface extends Component {
                                 </div>
                             </div>
                             <figcaption className={captionDivClass} >
-                            <KeyboardWrapper enable index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} >
+                            <KeyboardWrapper enable={this.isEnableKeyboard()} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} >
                                 
                                 <div className="floating-caption-group">
                                     <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass} model={captionsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
@@ -639,7 +643,7 @@ class FigureUserInterface extends Component {
                                 </KeyboardWrapper>
                             </figcaption>
                             <figcredit >
-                                <KeyboardWrapper enable index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`}>
+                                <KeyboardWrapper enable={this.isEnableKeyboard()} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`}>
                                     <div className="floating-credit-group">
                                         <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass} model={creditsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                         <label className={checkHTMLdataInsideString(element?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
