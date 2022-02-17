@@ -1036,7 +1036,7 @@ export const setSlateType = (slateType) => (dispatch, getState) => {
         payload: slateType
     })
 }
-
+// calling this function in communicationChannel 
 export const cypressPlusEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: CYPRESS_PLUS_ENABLED,
