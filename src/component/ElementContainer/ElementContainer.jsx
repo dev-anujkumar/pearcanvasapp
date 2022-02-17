@@ -1515,7 +1515,7 @@ class ElementContainer extends Component {
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
-        let anyFlaggedComment = allComments?.filter(({ commentFlag, commentOnEntity }) => commentOnEntity === element.id && commentFlag).length > 0
+        let anyFlaggedComment = allComments?.filter(({ commentFlag, commentOnEntity }) => commentOnEntity === element.id && commentFlag === true).length > 0
         let isQuadInteractive = "";
         /** Handle TCM for tcm enable elements */
         let tcm = false;
