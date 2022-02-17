@@ -38,7 +38,7 @@ import { createRef } from 'react';
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
 //const BLANK_NUMBER_LABEL_OPTIONS = ['Default Auto-number', 'Override number only'];
 const BLANK_NUMBER_LABEL_OPTIONS = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
-const imageFigureTypes = ["image","mathImage","table","tableasmarkup","authoredtext"];
+const imageFigureTypes = ["image","mathImage","table","tableasmarkup","authoredtext","codelisting"];
 const blockMathCodeTypes = ["authoredtext","codelisting"];
 
 const KEYBOARD_ENABLE = [TABLE, MATH_IMAGE, MATH_ML, BLOCK_CODE, IMAGE];

@@ -22,7 +22,8 @@ const INITIAL_STATE = {
         videosList: [],
         asidesList: [],
         workedExamplesList: [],
-        interactiveList: []
+        interactiveList: [],
+        exhibitsList: []
     },
     autoNumberingDetails: {},
     autoNumberElementsIndex: {
@@ -33,7 +34,8 @@ const INITIAL_STATE = {
         videoIndex: {},
         asideIndex: {},
         workedExampleIndex: {},
-        interactiveIndex: {}
+        interactiveIndex: {},
+        exhibitsIndex: {}
     },
     slateFigureList:[],
     autoNumberOption: '',
@@ -45,7 +47,8 @@ const INITIAL_STATE = {
         'Equation': 'equationsIndex',
         'Audio': 'audioIndex',
         'Video': 'videoIndex',
-        "Interactive": 'interactiveIndex'
+        "Interactive": 'interactiveIndex',
+        'Exhibit': 'exhibitsIndex'
     },
     autoNumber_ElementTypeKey: {
         'Figure': 'imagesList',
@@ -55,7 +58,8 @@ const INITIAL_STATE = {
         'Video': 'videosList',
         'Interactive': 'interactiveList',
         "Aside": "asidesList",
-        "Worked Example": "workedExamplesList"
+        "Worked Example": "workedExamplesList",
+        'Exhibit': 'exhibitsList'
     },
     autoNumber_response_ElementType_mapper: {
         "figures": "imagesList",
@@ -65,7 +69,8 @@ const INITIAL_STATE = {
         "videos": "videosList",
         "interactives": "interactiveList",
         "asides": "asidesList",
-        "workedExamples": "workedExamplesList"
+        "workedExamples": "workedExamplesList",
+        'exhibits': 'exhibitsList'
     },
     autoNumber_IndexMapper: {
         'imagesList': 'figureImageIndex',
@@ -73,7 +78,8 @@ const INITIAL_STATE = {
         'equationsList': 'equationsIndex',
         'audiosList': 'audioIndex',
         'videosList': 'videoIndex',
-        'interactiveList': 'interactiveIndex'
+        'interactiveList': 'interactiveIndex',
+        'exhibitsList': 'exhibitsIndex'
     }
 
 }

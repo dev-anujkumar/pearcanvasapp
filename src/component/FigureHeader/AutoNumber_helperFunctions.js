@@ -7,7 +7,7 @@ import {
 import {getAutoNumberSequence} from './AutoNumberActions';
 import { findNearestElement, checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
 import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
-import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT } from '../../constants/Element_Constants';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
 import store from '../../appstore/store'
 const {
     MANUAL_OVERRIDE,
@@ -154,6 +154,9 @@ export const getValueOfLabel = (figuretype) => {
             break;
         case AUTHORED_TEXT:
             label = 'Equation';
+            break;
+        case CODELISTING:
+            label = 'Exhibit';
             break;
         default:
             label = '';

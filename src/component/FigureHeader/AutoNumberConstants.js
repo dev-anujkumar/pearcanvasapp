@@ -14,7 +14,8 @@ export const autoNumber_KeyMapper = {
     'Equation': 'equationsIndex',
     'Audio': 'audioIndex',
     'Video': 'videoIndex',
-    "Interactive": 'interactiveIndex'
+    "Interactive": 'interactiveIndex',
+    'Exhibit': 'exhibitsIndex'
 }
 
 export const autoNumber_FigureTypeKeyMapper = {
@@ -24,16 +25,8 @@ export const autoNumber_FigureTypeKeyMapper = {
   'audio': 'audioIndex',
   'video': 'videoIndex',
   "interactive": 'interactiveIndex',
-  'authoredtext': 'equationsIndex'
-}
-
-export const autoNumber_KeyMapperElements = {
-  'Figure': 'imagesList',
-  'Table': 'tablesList',
-  'Equation': 'equationsList',
-  'Audio': 'audiosList',
-  'Video': 'videosList',
-  'Interactive': 'interactiveList'
+  'authoredtext': 'equationsIndex',
+  'codelisting': 'exhibitsIndex'
 }
 
 export const autoNumber_IndexMapper = {
@@ -42,7 +35,8 @@ export const autoNumber_IndexMapper = {
   'equationsList': 'equationsIndex',
   'audiosList': 'audioIndex',
   'videosList': 'videoIndex',
-  'interactiveList': 'interactiveIndex'
+  'interactiveList': 'interactiveIndex',
+  'exhibitsList': 'exhibitsIndex'
 }
 
 export const autoNumber_ElementTypeKey = {
@@ -53,7 +47,8 @@ export const autoNumber_ElementTypeKey = {
   'Video': 'videosList',
   'Interactive': 'interactiveList',
   "Aside": "asidesList",
-  "Worked Example": "workedExamplesList"
+  "Worked Example": "workedExamplesList",
+  'Exhibit': 'exhibitsList'
 }
 
 export const autoNumber_response_ElementType_mapper = {
@@ -64,7 +59,8 @@ export const autoNumber_response_ElementType_mapper = {
   "videos":"videosList",
   "interactives":"interactiveList",
   "asides": "asidesList",
-  "workedExamples": "workedExamplesList"
+  "workedExamples": "workedExamplesList",
+  'exhibits': 'exhibitsList'
 }
 
 export const moduleTypes = ['module', 'appendix']
@@ -123,7 +119,8 @@ export const DISPLAYED_LABELS = {
   IMAGE: "Figure",
   TABLE: "Table",
   EQUATIONS: "Equation",
-  INTERACTIVE: "Interactive"
+  INTERACTIVE: "Interactive",
+  EXHIBITS: "Exhibit"
 }
 
 export const ELEMENT_TYPES = {
@@ -144,14 +141,16 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'TABLE_EDITOR': 'tablesList',
   'MATH_ML_CHEM_EDITOR': 'equationsList',
   'TABLEASMARKUP': 'tablesList',
-  'AUTHOREDTEXT': 'equationsList'
+  'AUTHOREDTEXT': 'equationsList',
+  'BLOCK_CODE_EDITOR': 'exhibitsList',
+  'CODELISTING': 'exhibitsList'
 }
 
-export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive', 'tableasmarkup', 'authoredtext']
+export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive', 'tableasmarkup', 'authoredtext', 'codelisting']
 export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO', 'SMART_LINK']
-export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive']
+export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive', 'Exhibit']
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
 export const displayLabelsForAudioVideo = ['Audio', 'Video'];
-export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'TABLE_EDITOR', 'MATH_ML_CHEM_EDITOR'];
+export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'TABLE_EDITOR', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR'];
 
 export const autoNumberFieldsPlaceholders = ['Number', 'Label']

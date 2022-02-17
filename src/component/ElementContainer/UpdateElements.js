@@ -369,7 +369,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) || document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
     let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
@@ -394,6 +394,21 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
+    /**Autonumbering Code */
+    let numberedandlabel = false;
+    let manualoverride = {};
+    let displayedlabel = previousElementData?.displayedlabel;
+    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+        displayedlabel = titleText;
+    } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+        displayedlabel = getValueOfLabel(previousElementData?.figuretype);
+    }
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
+    }
+    /**********************/
         captionHTML = replaceUnwantedtags(captionHTML,true)
         creditsHTML = replaceUnwantedtags(creditsHTML,true)
         subtitleHTML = replaceUnwantedtags(subtitleHTML,true)
@@ -448,6 +463,19 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
     }
+    /**Autonumbering Code */
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        data = {
+            ...data,
+            html : {
+                ...data.html,
+                title: `<p>${subtitleHTML}</p>`
+            }
+        }
+        const dataToReturn = updateAutoNumberedElement(autoNumberOption, data, { displayedlabel, manualoverride })
+        data = {...dataToReturn}  
+    }
+    /**********************/
     return data
 }
 
@@ -838,7 +866,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:
-                        dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         dataToReturn = generateCommonFigureDataAT(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
