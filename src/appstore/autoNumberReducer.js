@@ -13,7 +13,7 @@ import {
 } from '../constants/Action_Constants.js';
 
 const INITIAL_STATE = {
-    isAutoNumberingEnabled: true,
+    isAutoNumberingEnabled: false,
     autoNumberedElements: {
         imagesList: [],
         tablesList: [],
