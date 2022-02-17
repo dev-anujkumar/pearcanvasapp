@@ -1494,6 +1494,31 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         expect(elementInteractiveInstance.state.interactiveTitle).toBe(pufObj.title)
         expect(elementInteractiveInstance.state.elementType).toBe(pufObj.interactiveType)
     })
+
+    it("Test - addElmInteractive- without interactiveType", () => {
+        let pufObj = {
+            id: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+            // interactiveType: "simulation",
+            title: "Interative 2 -UCA",
+            callFrom: "fromEventHandling"
+        }
+        let thumbnailData = {
+            posterImage: {
+                path: 'path'
+            },
+            alttext: 'altText',
+        }
+        axios.get = jest.fn(() => Promise.resolve({
+            thumbnailData
+        }));
+        const spyaddElmInteractive = jest.spyOn(elementInteractiveInstance, 'addElmInteractive')
+        elementInteractiveInstance.addElmInteractive(pufObj, cb)
+        expect(spyaddElmInteractive).toHaveBeenCalled()
+        expect(elementInteractiveInstance.state.itemID).toBe(pufObj.id)
+        expect(elementInteractiveInstance.state.interactiveTitle).toBe(pufObj.title)
+        expect(elementInteractiveInstance.state.elementType).toBe()
+    })
+
     it("Test - togglePopup -elminteractive", () => {
         const spytogglePopup = jest.spyOn(elementInteractiveInstance, 'togglePopup')
         const e = {
@@ -1729,6 +1754,14 @@ describe('Testing Methods', () => {
         const res = newInteractiveInstance.deleteElementAsset()
         expect(res).not.toBe(null);
     })
+    it('Testing showDeleteAssetPopup : else condition', () => {
+        newInteractiveInstance.setState({
+            deleteAssetPopup: false
+        })
+        const res = newInteractiveInstance.showDeleteAssetPopup()
+        expect(res).toBe(null);
+    })
+
     it('Testing showElmVersionStatus', () => {
         newInteractiveInstance.setState({
             itemID: "urn:pearson:work:11227eef-66cc-4375-8387-3f0d69da5fb7"
