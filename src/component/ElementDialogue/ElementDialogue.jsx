@@ -354,7 +354,6 @@ class ElementDialogue extends React.PureComponent {
                                 {this.renderDialogueContent(this.props)}
                             </div>
                         </figure>
-                            {console.log("check1",this.props.index)}
                         <div>
                         <KeyboardWrapper index={`${this.props.index}-2`}  enable>
                             <TinyMceEditor

@@ -380,7 +380,7 @@ function CommunicationChannel(WrappedComponent) {
                     break
                 }
                 case 'newCustomCanvasLabels': {
-                    this.props.setCanvasDropdown(message) 
+                    this.props.updateFigureDropdownValues(message)
                 }
             }
         }

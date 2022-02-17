@@ -73,6 +73,9 @@ const isFirtstChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const firstTextNode = getFirstTextNode(tinymceNode);
         const uniCode = '\uFEFF';
+        if(tinymceOffset == 0) {
+            return true;
+        }
         if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
             return true;
         }
@@ -150,6 +153,11 @@ const isLastChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const lastTextNode = getLastTextNode(tinymceNode);
         const uniCode = '\uFEFF';
+        if(lastTextNode.className == "Wirisformula") {
+            if(tinymceOffset != 0 && node.lastChild != null) {
+             return true;
+            }
+        }
         if (lastTextNode === node) {
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
                 if(lastTextNode?.parentNode?.id === "_mce_caret") {

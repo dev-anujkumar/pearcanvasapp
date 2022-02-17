@@ -52,7 +52,8 @@ import {
     UPDATE_OLD_SMARTLINK_INFO,
     UPDATE_OLD_AUDIOVIDEO_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
-    CHECK_ASIDE_NUMBER
+    CHECK_ASIDE_NUMBER,
+    SET_SLATE_MATTER_TYPE
 } from '../constants/Action_Constants';
 
 /**
@@ -374,15 +375,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 asideTitleData: [...asideTitleData, action.payload]
             }
-            // return{
-            //     ...state,
-            //     asideTitleData: action.payload
-            // }
-            case 'SET_SLATE_MATTER_TYPE':
-                return {
-                    ...state,
-                    slateMatterType: action.payload
-                }
+        case SET_SLATE_MATTER_TYPE:
+            return {
+                ...state,
+                slateMatterType: action.payload
+            }
         default:
             return state;
     }
