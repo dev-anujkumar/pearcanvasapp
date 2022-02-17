@@ -382,7 +382,7 @@ function CommunicationChannel(WrappedComponent) {
                     break
                 }
                 case 'refreshCanvasOnPdfMerge': { // Refresh Toc & Canvas on PDF Merge operation in Cypress Plus
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                    //sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
                     break;
                 }
