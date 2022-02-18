@@ -72,10 +72,10 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
-import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, updateAutonumberingOnOverridedCase, validateLabelNumberSetting, generateDropdownDataForFigures } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, updateAutonumberingOnOverridedCase, validateLabelNumberSetting, generateDropdownDataForFigures, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForImage, displayLabelsForAudioVideo, displayLabelsForContainer } from '../FigureHeader/AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForImage, displayLabelsForAudioVideo, displayLabelsForContainer, autoNumber_ElementSubTypeToCeateKeysMapper, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes'
 
 const {
@@ -379,8 +379,8 @@ class ElementContainer extends Component {
             numberHTML = numberDOM ? numberDOM.innerHTML : "",
             titleHTML = titleDOM ? titleDOM.innerHTML : ""
 
-        labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
-        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
         let oldTitleHTML = "";
 
         if (!this.props.isAutoNumberingEnabled && !previousElementData?.hasOwnProperty('numberedandlabel')) {
@@ -392,7 +392,7 @@ class ElementContainer extends Component {
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
-                let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
+                let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, labeleHTML, numberHTML, true);
                 if (!isValidValues) return false;
             }
             // Selecting default case 
@@ -403,7 +403,7 @@ class ElementContainer extends Component {
             let isNumberDifferent = false;
             let elementNumberValue = '';
             let overridedNumber = getOverridedNumberValue(previousElementData);
-            let isOverridedLabelDifferent = false;
+            let isLabelDifferent = false;
             if (overridedNumber && overridedNumber !== '') {
                 isNumberDifferent = overridedNumber?.toString() !== numberHTML?.toString();
             } else {
@@ -411,15 +411,23 @@ class ElementContainer extends Component {
                 elementNumberValue = getNumberData(elemIndexParent, previousElementData, this.props.autoNumberElementsIndex || {});
                 isNumberDifferent = elementNumberValue?.toString() !== numberHTML?.toString();
             }
-            if (previousElementData.hasOwnProperty('manualoverride') && previousElementData?.manualoverride.hasOwnProperty('overridelabelvalue')) {
-                isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
+            titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`;
+            /* Checking that if label & number are different for api trigger */ 
+            if ((!(previousElementData?.hasOwnProperty('displayedlabel')) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER))) {
+                isLabelDifferent = false;
+            } else if (previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) {
+                isLabelDifferent = labeleHTML !== previousElementData?.manualoverride?.overridelabelvalue;
+                /* case for remove label to override label */
+            } else if (!(previousElementData?.hasOwnProperty('displayedlabel')) && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
+                let oldLabel = '';
+                isLabelDifferent = labeleHTML !== oldLabel;
+                /* case for numberedandlabel: true to override label */
+            } else if (previousElementData?.hasOwnProperty('displayedlabel') && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
+                isLabelDifferent = labeleHTML !== previousElementData?.displayedlabel;
             }
-            if (!titleHTML || titleHTML === '' || !(displayLabelsForContainer.includes(titleHTML))) {
-                titleHTML = previousElementData.displayedlabel;
-            }
-            return (titleHTML !== previousElementData.displayedlabel || isNumberDifferent || isOverridedLabelDifferent);
+            console.log("asideeeeeeee", titleHTML, this.removeClassesFromHtml(titleHTML), this.removeClassesFromHtml(previousElementData?.html?.title),  titleHTML !== this.removeClassesFromHtml(previousElementData?.html?.title));
+            return (isLabelDifferent || isNumberDifferent || this.removeClassesFromHtml(titleHTML) !== previousElementData?.html?.title);
         }
-
         if (!(previousElementData?.html?.title)) {
             oldTitleHTML = createLabelNumberTitleModel("", "", "")
         } else {
@@ -1050,7 +1058,6 @@ class ElementContainer extends Component {
     handleAutonumberAfterUpdate = (previousElementData, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
         const  labelNumberSetting = this.props?.autoNumberOption?.option
-        const finalValue =  updateAutoNumberedElement(labelNumberSetting,dataToSend,{ displayedlabel: dataToSend?.displayedlabel,    manualoverride: dataToSend?.manualoverride })
         // remove/override to default means gets added to numbering system
         if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
             if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride.hasOwnProperty('resumenumbervalue')) {
@@ -1061,8 +1068,12 @@ class ElementContainer extends Component {
                     }
                 }
             }
-            this.props.handleAutonumberingOnCreate(dataToSend?.figuretype?.toUpperCase(), dataToSend);
-        } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) { //default/resume to remove
+            if (autoNumberContainerTypesAllowed.includes(dataToSend?.type)) {
+                this.props.handleAutonumberingOnCreate(autoNumber_ElementSubTypeToCeateKeysMapper[dataToSend?.subtype], dataToSend);
+            } else {
+                this.props.handleAutonumberingOnCreate(dataToSend?.figuretype?.toUpperCase(), dataToSend);
+            }
+        } else if (previousElementData?.numberedandlabel && !dataToSend.numberedandlabel) {
             this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
         } else if ( (previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel !== dataToSend.displayedlabel) && (dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue')) ) {
             // resume case

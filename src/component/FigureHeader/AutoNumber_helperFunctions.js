@@ -1,13 +1,14 @@
 import config from '../../config/config'
 import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_FigureTypeKeyMapper,
-    displayLabelsForAutonumbering, SIDEBAR, WORKED_EXAMPLE } from './AutoNumberConstants';
-
+    displayLabelsForAutonumbering, SIDEBAR, WORKED_EXAMPLE, ELEMENT_TYPES } from './AutoNumberConstants';
 import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import {getAutoNumberSequence} from './AutoNumberActions';
 import { findNearestElement, checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
 import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
+import { checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
+import { getAsideElementsWrtKey } from './slateLevelMediaMapper';
 import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE } from '../../constants/Element_Constants';
 import store from '../../appstore/store'
 const {
@@ -262,9 +263,9 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, settingsOpti
             }
         }
     }
-    if(settingsOption !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+    if (settingsOption !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
         elementLabel = element?.displayedlabel;
-        elementLabel = !element.hasOwnProperty('displayedlabel') ? getValueOfLabel(element?.figuretype) : elementLabel;
+        elementLabel = !element.hasOwnProperty('displayedlabel') ? getValueOfLabel(element?.type === 'figure' ? element?.figuretype : element?.subtype) : elementLabel;
     }
     return elementLabel
 }
@@ -363,9 +364,18 @@ export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNu
 }
 
 export const updateAutonumberingOnElementTypeUpdate = (newElement, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => async (dispatch, getState) => {
-    const slateContent = getState().appStore?.slateLevelData || slateLevelData
-    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
-    let slateElements = await getAutoNumberedElementsOnSlate(slateContent[config?.slateManifestURN], { dispatch });
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey;
+    let slateElements;
+    switch (element.type) {
+        case ELEMENT_TYPES.FIGURE:
+            slateElements = await getAutoNumberedElementsOnSlate(slateLevelData[config?.slateManifestURN], { dispatch });
+            break;
+        case ELEMENT_TYPES.ELEMENT_ASIDE:
+            slateElements = await getAsideElementsWrtKey(slateLevelData[config?.slateManifestURN]?.contents?.bodymatter, ELEMENT_TYPES.ELEMENT_ASIDE, slateElements);
+            break;
+        default:
+            slateElements = [];
+    }
     const activeLabelElements = slateElements?.filter(elem => elem.displayedlabel === newElement?.displayedlabel);
     let elementSlateIndex = slateElements?.findIndex(ele => ele.contentUrn === element.contentUrn);
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);

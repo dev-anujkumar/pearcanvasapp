@@ -121,7 +121,13 @@ export const DISPLAYED_LABELS = {
 }
 
 export const ELEMENT_TYPES = {
-  FIGURE: 'figure'
+  FIGURE: 'figure',
+  ELEMENT_ASIDE: 'element-aside'
+}
+
+export const autoNumber_ElementSubTypeToCeateKeysMapper = {
+  'sidebar': 'CONTAINER',
+  'workedexample': 'WORKED_EXAMPLE',
 }
 
 export const autoNumber_ElementTypeToStoreKeysMapper = {
@@ -149,4 +155,4 @@ export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
 export const displayLabelsForAudioVideo = ['Audio', 'Video'];
 export const displayLabelsForContainer = ['Aside', 'Worked Example'];
 export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'CONTAINER', 'WORKED_EXAMPLE'];
-export const autoNumberFieldsPlaceholders = ['Number', 'Label']
+export const autoNumberFieldsPlaceholders = ['Number', 'Label', 'Label Name']

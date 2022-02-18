@@ -858,12 +858,12 @@ export const prepareAsideTitleForUpdate = (index, isAutoNumberingEnabled) => {
     let labeleHTML = labelDOM ? labelDOM.innerHTML : "",
         numberHTML = numberDOM ? numberDOM.innerHTML : "",
         titleHTML = titleDOM ? titleDOM.innerHTML : ""
-    labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
-    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-    titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
+    labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
     if (isAutoNumberingEnabled) {
-        return [labeleHTML, numberHTML]
+        return [labeleHTML, numberHTML, titleHTML];
     } else {
+        titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
         return titleHTML
     }
 }
@@ -897,7 +897,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             ...updatedElement,
             html : {
                 ...updatedElement.html,
-                title: `<p>${dataArr[0]}</p>`
+                title: `<p>${dataArr[2]}</p>`
             },
             numberedandlabel : numberedandlabel,
             displayedlabel : displayedlabel,
@@ -947,7 +947,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             ...dataToSend,
             html : {
                 ...dataToSend.html,
-                title: `<p>${dataArr[0]}</p>`
+                title: `<p>${dataArr[2]}</p>`
             },
             numberedandlabel : numberedandlabel,
             displayedlabel : displayedlabel,
