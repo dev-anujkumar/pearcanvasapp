@@ -1,10 +1,11 @@
 /**
- * This functions sets the current slate ancestor data
+ * This functions gets the list of slates in the given toc container
  * @param {*} apiData 
  * @param {*} slateEntityUrn 
  * @returns SlatesList
  */
 import { GET_SLATE_LIST_IN_CONTAINER } from '../constants/Action_Constants';
+import { MATTER_TYPES, TOC_CONTAINER } from '../constants/Toc_Constants';
 export const getCurrentSlatesList = async (allSlateData, slateMatterType, currentParentUrn,dispatch) => {
     const currentMatterData = allSlateData[slateMatterType]
     const slatesList = await fetchCurrentContainerSlateList(currentMatterData, currentParentUrn.toLowerCase())
@@ -16,8 +17,8 @@ export const getCurrentSlatesList = async (allSlateData, slateMatterType, curren
 
 const fetchCurrentContainerSlateList = (currentMatterData, currentParentUrn, slatesList = []) => {
     switch (currentParentUrn) {
-        case 'frontmatter':
-        case 'backmatter':
+        case TOC_CONTAINER.FRONT_MATTER:
+        case TOC_CONTAINER.BACK_MATTER:
             slatesList = getSlatesinFMandBM(currentMatterData, slatesList)
             break;
         default:
@@ -37,21 +38,21 @@ const getSlatesinBodymatter = (currentMatterData, currentParentUrn, slatesList) 
         }
         else {
             currentMatterData.forEach(container => {
-                if (container.label == 'part' && container.contents?.length > 0) {
+                if (container.label == TOC_CONTAINER.PART && container.contents?.length > 0) {
                     const isParentatLevel2 = container.contents.findIndex(item2 => item2.entityUrn === currentParentUrn)
                     if (isParentatLevel2 > -1) {  //chapter in part 
                         const currentContainerData2 = container.contents[isParentatLevel2]?.contents || []
-                        if (container.contents[isParentatLevel2]?.label == 'part' && currentContainerData2?.length > 0) {
+                        if (container.contents[isParentatLevel2]?.label == TOC_CONTAINER.PART && currentContainerData2?.length > 0) {
                             slatesList = getSlatesinFMandBM([currentContainerData2[0]], slatesList)
                         } else {
                             slatesList = getSlatesinFMandBM(currentContainerData2, slatesList)
                         }
                     }
-                } else if (container.label == 'volume' && container?.contents?.length > 0) {
+                } else if (container.label == TOC_CONTAINER.VOLUME && container?.contents?.length > 0) {
                     const isParentatLevel3 = container.contents.findIndex(item3 => item3.entityUrn === currentParentUrn)
                     if (isParentatLevel3 > -1) { //part IS in volume, chapter
                         const currentContainerData3 = container.contents[isParentatLevel3]?.contents || []
-                        if (container.contents[isParentatLevel3]?.label == 'part' && currentContainerData3?.length > 0) {
+                        if (container.contents[isParentatLevel3]?.label == TOC_CONTAINER.PART && currentContainerData3?.length > 0) {
                             slatesList = getSlatesinFMandBM([currentContainerData3[0]], slatesList)
                         } else {
                             slatesList = getSlatesinFMandBM(currentContainerData3, slatesList)
@@ -60,7 +61,7 @@ const getSlatesinBodymatter = (currentMatterData, currentParentUrn, slatesList) 
                     }
                     else {
                         container?.contents?.forEach(item2 => {
-                            if (item2?.label == 'part' && item2?.contents?.length > 0) { //chapter in part in volume
+                            if (item2?.label == TOC_CONTAINER.PART && item2?.contents?.length > 0) { //chapter in part in volume
                                 const isParentatLevel4 = item2.contents.findIndex(item4 => item4.entityUrn === currentParentUrn)
                                 if (isParentatLevel4 > -1) { //part IS in volume, chapter
                                     const currentContainerData4 = item2?.contents[isParentatLevel4]?.contents || []

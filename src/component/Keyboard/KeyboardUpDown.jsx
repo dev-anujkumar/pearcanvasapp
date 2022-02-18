@@ -39,7 +39,6 @@ const KeyboardUpDown = (props) => {
             
             const tinymceChild = getTinymceElement(childElement);
             const lastChild = getLastChild(tinymceChild);
-            console.log("Last child is ", lastChild, childElement, tinymceChild);
             if(lastChild) {
                 if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
                     // for foot note
@@ -117,6 +116,10 @@ const KeyboardUpDown = (props) => {
                 if (event.keyCode === 38 && selectedNodeIndex !== 0) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex - 1]);
 
+                }
+                else if ((event.keyCode === 38 && selectedNodeIndex === 0) ||
+                    (event.keyCode === 40 && selectedNodeIndex === allInteractiveElements.length - 1)) {
+                    getChildAndClick(allInteractiveElements[selectedNodeIndex]);
                 }
                 else if (event.keyCode === 40 && selectedNodeIndex !== allInteractiveElements.length) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], selectedNodeIndex);
