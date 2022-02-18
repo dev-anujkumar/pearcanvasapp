@@ -45,7 +45,9 @@ const INITIAL_STATE = {
         'Equation': 'equationsIndex',
         'Audio': 'audioIndex',
         'Video': 'videoIndex',
-        "Interactive": 'interactiveIndex'
+        "Interactive": 'interactiveIndex',
+        "Aside": "asideIndex",
+        "Worked Example": "workedExampleIndex"
     },
     autoNumber_ElementTypeKey: {
         'Figure': 'imagesList',
@@ -65,7 +67,7 @@ const INITIAL_STATE = {
         "videos": "videosList",
         "interactives": "interactiveList",
         "asides": "asidesList",
-        "workedExamples": "workedExamplesList"
+        "workedexamples": "workedExamplesList"
     },
     autoNumber_IndexMapper: {
         'imagesList': 'figureImageIndex',
@@ -73,7 +75,9 @@ const INITIAL_STATE = {
         'equationsList': 'equationsIndex',
         'audiosList': 'audioIndex',
         'videosList': 'videoIndex',
-        'interactiveList': 'interactiveIndex'
+        'interactiveList': 'interactiveIndex',
+        'asidesList': 'asideIndex',
+        'workedExamplesList': 'workedExampleIndex'
     }
 
 }

@@ -7,7 +7,6 @@ import {
 import {getAutoNumberSequence} from './AutoNumberActions';
 import { findNearestElement, checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
 import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
-import { checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
 import { getAsideElementsWrtKey } from './slateLevelMediaMapper';
 import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE } from '../../constants/Element_Constants';
 import store from '../../appstore/store'
