@@ -425,8 +425,8 @@ class ElementContainer extends Component {
             } else if (previousElementData?.hasOwnProperty('displayedlabel') && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
                 isLabelDifferent = labeleHTML !== previousElementData?.displayedlabel;
             }
-            console.log("asideeeeeeee", titleHTML, this.removeClassesFromHtml(titleHTML), this.removeClassesFromHtml(previousElementData?.html?.title),  titleHTML !== this.removeClassesFromHtml(previousElementData?.html?.title));
-            return (isLabelDifferent || isNumberDifferent || this.removeClassesFromHtml(titleHTML) !== previousElementData?.html?.title);
+            const isTitleDifferent = previousElementData?.html?.title ? this.removeClassesFromHtml(titleHTML) !== previousElementData?.html?.title : false;
+            return (isLabelDifferent || isNumberDifferent || isTitleDifferent);
         }
         if (!(previousElementData?.html?.title)) {
             oldTitleHTML = createLabelNumberTitleModel("", "", "")

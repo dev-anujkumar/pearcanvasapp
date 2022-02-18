@@ -199,7 +199,6 @@ export const ContainerHeader = (props) => {
     imgNumberValue = `${imgNumberValue?.toString()}`
     const newClass = labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? 'disable-number-field': '';
     const removeLabelCondition = labelNumberSetting !== AUTO_NUMBER_SETTING_REMOVE_NUMBER ? true : false;
-    console.log(">>>>>>>>>>>", props?.model?.html?.title, checkHTMLdataInsideString(props?.model?.html?.title))
     return (
         <>
         <div className="asideHeader">
