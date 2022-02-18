@@ -80,7 +80,8 @@ import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTyp
 
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
-    AUTO_NUMBER_SETTING_REMOVE_NUMBER
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 class ElementContainer extends Component {
     constructor(props) {
@@ -458,11 +459,11 @@ class ElementContainer extends Component {
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
                 titleHTML = previousElementData.displayedlabel;
             }
             const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
-                return (isLabelDifferent || this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title)
+            return (isLabelDifferent || this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title)
                 || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
@@ -551,7 +552,7 @@ class ElementContainer extends Component {
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
                 titleHTML = previousElementData.displayedlabel;
             }
             const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
@@ -706,7 +707,7 @@ class ElementContainer extends Component {
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
                 titleHTML = previousElementData.displayedlabel;
             }
             const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
@@ -784,7 +785,7 @@ class ElementContainer extends Component {
             let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||

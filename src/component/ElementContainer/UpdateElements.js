@@ -73,7 +73,8 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
@@ -223,7 +224,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
