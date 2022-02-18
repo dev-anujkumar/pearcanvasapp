@@ -5,7 +5,7 @@ import {
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
 import { containerBodyMatter } from './slateLevelMediaMapper';
-import { containerElements, autoNumberElementsAllowed, autoNumber_ElementTypeToStoreKeysMapper, autoNumber_ElementTypeKey } from './AutoNumberConstants';
+import { containerElements, autoNumberElementsAllowed, autoNumber_ElementTypeToStoreKeysMapper } from './AutoNumberConstants';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getImagesInsideSlates, getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
 import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
@@ -633,6 +633,7 @@ export const checkElementExistenceInOtherSlates = (createdElementData, slateEnti
     const allSlateData = getState().appStore?.allSlateData;
     const slateAncestorData = getState().appStore?.currentSlateAncestorData;
     const parentUrn = getContainerEntityUrn(slateAncestorData);
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer?.autoNumber_ElementTypeKey
     let autoNumberedElements = getState().autoNumberReducer?.autoNumberedElements;
     const listType = autoNumber_ElementTypeKey[createdElementData?.displayedlabel];
     let elementsList = autoNumberedElements[listType];

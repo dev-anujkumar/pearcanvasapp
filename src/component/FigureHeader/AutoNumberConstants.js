@@ -24,7 +24,8 @@ export const autoNumber_FigureTypeKeyMapper = {
   'table': 'tableIndex',
   'mathImage': 'equationsIndex',
   'audio': 'audioIndex',
-  'video': 'videoIndex'
+  'video': 'videoIndex',
+  "interactive": 'interactiveIndex'
 }
 
 export const autoNumber_IndexMapper = {

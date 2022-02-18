@@ -26,6 +26,8 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
     } = params
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
+    const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside']
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after cut/copy operation
         const bodyMatter = currentSlateData.contents.bodymatter
@@ -56,7 +58,7 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
                 }
             }
             else if (selectedElement?.type === 'figure') {
-                updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors })
+                updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
             }
         }
 
@@ -75,7 +77,8 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
         slateAncestors,
         numberedElements,
         selectedElement,
-        operationType
+        operationType,
+        autoNumber_ElementTypeKey
     } = params
     if (slateFigures || slateFigures?.length > 0) {
         const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === selectedElement.displayedlabel)
@@ -133,7 +136,8 @@ export const updateAutoNumberSequenceOnCutCopyContainers = (params) => {
         numberedElements,
         prevSelectedAutoNumberElements,
         tocContainerSlateList,
-        updatedSlateAutoNumberedElements
+        updatedSlateAutoNumberedElements,
+        autoNumber_ElementTypeKey
     } = params;
     let oldNumberedElements = { ...numberedElements }
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);

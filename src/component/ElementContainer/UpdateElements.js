@@ -7,9 +7,9 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel, getTitleSubtitleModel, removeSpellCheckDOMAttributes } from '../../constants/utility';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForAutonumbering } from '../FigureHeader/AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
-import { setAutonumberingValuesForPayload, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
+import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForFigures } from '../FigureHeader/AutoNumber_helperFunctions';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -66,13 +66,15 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = previousElementData?.displayedlabel;
-    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+    const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
+    if (validDropdownOptions?.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
         displayedlabel = titleText;
     } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
     if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
@@ -215,13 +217,15 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = previousElementData?.displayedlabel;
-    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+    const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
+    if (validDropdownOptions?.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
         displayedlabel = titleText;
     } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }

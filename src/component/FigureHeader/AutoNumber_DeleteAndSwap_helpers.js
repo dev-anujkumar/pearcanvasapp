@@ -311,6 +311,7 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
     } = params
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
     const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside']
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after swap
@@ -325,10 +326,10 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
             });
         }
         if (containerElements.indexOf(swappedElementData?.type) > -1) {
-            updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, bodyMatter })
+            updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
         }
         else if (swappedElementData?.type === 'figure') {
-            updateAutoNumberSequenceOnSwappingElements({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors })
+            updateAutoNumberSequenceOnSwappingElements({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
         }
 
 
@@ -347,7 +348,8 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
         slateFigures,
         slateAncestors,
         numberedElements,
-        swappedElementData
+        swappedElementData,
+        autoNumber_ElementTypeKey
     } = params
     if (swappedElementData?.type === 'figure' && swappedElementData?.hasOwnProperty('displayedlabel')) {
         if (slateFigures || slateFigures?.length > 0) {
@@ -397,7 +399,7 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
         slateAncestors,
         numberedElements,
         swappedElementData,
-        bodyMatter
+        autoNumber_ElementTypeKey
     } = params;
 
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);

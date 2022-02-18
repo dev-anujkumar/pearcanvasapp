@@ -1,6 +1,5 @@
 import config from '../../config/config.js';
 import axios from 'axios';
-import { mediaElementAPI_Handler } from './mediaElementDataMapper.js';
 import {
     SET_AUTO_NUMBER_TOGGLE,
     SET_AUTO_NUMBER_SEQUENCE,
@@ -8,7 +7,17 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList, getNumberedElements } from './AutoNumber_helperFunctions';
-import { autoNumber_IndexMapper } from './AutoNumberConstants';
+import store from '../../appstore/store'
+/**
+ * 
+ */
+
+const commonHeaders = {
+    "ApiKey": config.STRUCTURE_APIKEY,
+    "Content-Type": "application/json",
+    // "PearsonSSOSession": config.ssoToken
+    'myCloudProxySession': config.myCloudProxySession
+}
 
 /**
  * This API fetches the autonumbered elements in the current TOC Container (P,C,FM,BM)
@@ -61,6 +70,7 @@ export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
  * @returns 
  */
 const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIndex) => {
+    const autoNumber_IndexMapper = store.getState()?.autoNumberReducer?.autoNumber_IndexMapper
     for (let labelType in numberedElements) {
         if (Object.prototype.hasOwnProperty.call(numberedElements, labelType)) {
             const Obj = prepareAutoNumberList(numberedElements[labelType])

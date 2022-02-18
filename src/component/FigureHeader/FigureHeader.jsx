@@ -107,11 +107,20 @@ export const FigureHeader = (props) => {
     }, [props.autoNumberOption]);
     useEffect(() => {
         updateDropdownOptions();
+        const figIndexParent3 = getContainerEntityUrn(props.currentSlateAncestorData);
+        let activeNumber = getNumberData(figIndexParent3, props.model, props.autoNumberElementsIndex || {})
+        if(activeNumber && typeof activeNumber === 'string' && activeNumber.trim() !== ""){
+            activeNumber?.replace(/&nbsp;/g, ' ')
+        }
+        setCurrentNumberValue(activeNumber)
     }, [props.autoNumberElementsIndex]);
     useEffect(() => {
+        updateDropdownOptions(); // update the dropdown options if any new value is introduced via Controlled Vocab in the Project Settings
+    }, [props.figureDropdownData]);
+    useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
-        const figIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
-        let currentNumber = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
+        const figIndexParent2 = getContainerEntityUrn(props.currentSlateAncestorData);
+        let currentNumber = getNumberData(figIndexParent2, props.model, props.autoNumberElementsIndex || {})
         if(currentNumber && typeof currentNumber === 'string' && currentNumber.trim() !== ""){
             currentNumber?.replace(/&nbsp;/g, ' ')
         }
@@ -215,7 +224,7 @@ export const FigureHeader = (props) => {
             if (labelNumberSettingDropDown === AUTO_NUMBER_SETTING_RESUME_NUMBER && !isnum) {
                 return false;
             } else {
-                setCurrentNumberValue(evt.target.innerText?.replace(/&nbsp;/g, ' '));
+                setCurrentNumberValue(evt.target.innerText?.replace(/&nbsp;/g, ' ')?.replaceAll('&nbsp;', ' '));
             }
         }
     }
