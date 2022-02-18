@@ -1,4 +1,4 @@
-import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
+import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
@@ -77,17 +77,21 @@ export const updateAutoNumberSequenceOnDeleteInContainers = (parentIndex, conten
     const {autoNumberedElements, slateFigureList} = getState().autoNumberReducer;
     if (autoNumberedElements) {
         for (let labelType in autoNumberedElements) {
-            if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex]) {
-                let elementData = autoNumberedElements[labelType][parentIndex];
-                let data = [];
-                for(let element of elementData){
-                    slateFigureList?.map(figure =>{
-                        if(figure.contentUrn === element.contentUrn && !figure.parentDetails.includes(contentUrn)) {
-                            data.push(figure);
+            if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex]?.length > 0) {
+                let elementsInTocContainer = autoNumberedElements[labelType][parentIndex];
+                if (slateFigureList?.length > 0) {
+                    for (let [index, element] of elementsInTocContainer.entries()) {
+                        const eleIndex = slateFigureList?.findIndex(slateElem => (slateElem.contentUrn === element.contentUrn))
+                        const condition = element.slateEntityUrn == getSlateEntityUrn() && eleIndex === -1
+                        condition && autoNumberedElements[labelType][parentIndex].splice(index, 1)
+                    }
+                } else {
+                    for (let [index, element] of elementsInTocContainer.entries()) {
+                        if (element.slateEntityUrn == getSlateEntityUrn()) {
+                            autoNumberedElements[labelType][parentIndex].splice(index, 1)
                         }
-                    });
+                    }
                 }
-                autoNumberedElements[labelType][parentIndex] = data
             }
         }
     }
