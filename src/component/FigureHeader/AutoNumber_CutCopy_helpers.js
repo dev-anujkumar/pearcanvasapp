@@ -1,5 +1,5 @@
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
-import { autoNumber_ElementTypeKey, containerElementTypes, containerElements } from './AutoNumberConstants';
+import { containerElementTypes, containerElements } from './AutoNumberConstants';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import { getAsideElementsWrtKey } from './slateLevelMediaMapper';
 import {
@@ -27,7 +27,6 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
     const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
-    const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside']
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after cut/copy operation
         const bodyMatter = currentSlateData.contents.bodymatter
@@ -52,8 +51,8 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
                         updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors, tocContainerSlateList });
                         break;
                     case containerElements.ASIDE:
-                        updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures: slateUpdatedNumberedContainerElements, slateAncestors });
-                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors, tocContainerSlateList });
+                        updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures: slateUpdatedNumberedContainerElements, slateAncestors, autoNumber_ElementTypeKey });
+                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors, tocContainerSlateList, autoNumber_ElementTypeKey });
                         break;
                 }
             }

@@ -326,7 +326,7 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
             });
         }
         if (containerElements.indexOf(swappedElementData?.type) > -1) {
-            updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
+            updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, bodyMatter, autoNumber_ElementTypeKey })
         }
         else if (swappedElementData?.type === 'figure') {
             updateAutoNumberSequenceOnSwappingElements({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
@@ -399,6 +399,7 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
         slateAncestors,
         numberedElements,
         swappedElementData,
+        bodyMatter,
         autoNumber_ElementTypeKey
     } = params;
 
