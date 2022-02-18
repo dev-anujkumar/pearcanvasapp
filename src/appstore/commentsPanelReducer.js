@@ -49,9 +49,10 @@ export default function (state = initialState, action = INITIAL_ACTION) {
                 comments: payload.comments
             };
         case ADD_NEW_COMMENT: {
+            const allComments = state.allComments.filter(item => item.commentUrn !== action.payload?.commentUrn);
             return {
                 ...state,
-                allComments: [action.payload, ...state.allComments]
+                allComments: [action.payload, ...allComments]
             }
         }
         case DELETE_COMMENT: {

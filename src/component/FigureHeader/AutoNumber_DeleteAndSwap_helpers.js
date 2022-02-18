@@ -1,5 +1,4 @@
 import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
-import { autoNumber_KeyMapperElements, autoNumber_ElementTypeKey } from './AutoNumberConstants';
 import { getImagesInsideSlates } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
@@ -113,6 +112,7 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
     } = params
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
     const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside']
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after swap
@@ -127,10 +127,10 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
             });
         }
         if (containerElements.indexOf(swappedElementData?.type) > -1) {
-            updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors })
+            updateAutoNumberSequenceOnSwappingContainers({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
         }
         else if (swappedElementData?.type === 'figure') {
-            updateAutoNumberSequenceOnSwappingElements({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors })
+            updateAutoNumberSequenceOnSwappingElements({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
         }
 
 
@@ -149,7 +149,8 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
         slateFigures,
         slateAncestors,
         numberedElements,
-        swappedElementData
+        swappedElementData,
+        autoNumber_ElementTypeKey
     } = params
     if (swappedElementData?.type === 'figure' && swappedElementData?.hasOwnProperty('displayedlabel')) {
         if (slateFigures || slateFigures?.length > 0) {
@@ -166,7 +167,7 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
                 //find the closest image now and then add the new img at that index
                 const referenceFigure = activeLabelFigures[refIndex].contentUrn
                 const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-                const labelType = autoNumber_KeyMapperElements[swappedElementData.displayedlabel]
+                const labelType = autoNumber_ElementTypeKey[swappedElementData.displayedlabel]
                 if (figureParentEntityUrn && numberedElements) {
                     numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== swappedElementData.contentUrn)
                 }
@@ -198,7 +199,8 @@ export const updateAutoNumberSequenceOnSwappingContainers = (params) => {
         slateFigures,
         slateAncestors,
         numberedElements,
-        swappedElementData
+        swappedElementData,
+        autoNumber_ElementTypeKey
     } = params;
 
     let refElementObj = {}
