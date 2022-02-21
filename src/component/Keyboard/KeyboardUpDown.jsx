@@ -61,9 +61,9 @@ const KeyboardUpDown = (props) => {
                 }
                 else if (tinymceChild) {
                     // case of floating placeholder
-                    if(tinymceChild.innerHTML === "<p></p>") {
-                        tinymceChild.innerHTML = '';
-                    }
+                    // if(tinymceChild.innerHTML === "<p></p>") {
+                    //     tinymceChild.innerHTML = '';
+                    // }
                     tinymceChild.click();
                     tinymceChild.focus();
                 }
