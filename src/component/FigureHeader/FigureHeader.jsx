@@ -14,6 +14,7 @@ import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData, INTERACTIVE } from '
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
+import Tooltip from '../Tooltip/Tooltip.jsx';
 
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -263,7 +264,8 @@ export const FigureHeader = (props) => {
                                 <ul>
                                     {figureLabelData.map((label, i) => {
                                         return (
-                                            <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>{label}</li>
+                                            <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>
+                                            <Tooltip direction="right" tooltipText={label}>{label}</Tooltip></li>
                                         )
 
                                     })}

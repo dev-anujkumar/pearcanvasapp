@@ -788,7 +788,7 @@ th ol li.listItemNumeroUnoNone:before {
   padding: 10px;
   margin: 0;
   font-size: 14px;
-  overflow-wrap: break-word;
+  white-space: nowrap;
 }
 .figure-dropdown ul li:hover {
   background-color: #efefef;
