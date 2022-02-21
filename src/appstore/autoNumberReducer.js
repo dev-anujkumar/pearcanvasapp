@@ -22,7 +22,8 @@ const INITIAL_STATE = {
         videosList: [],
         asidesList: [],
         workedExamplesList: [],
-        interactiveList: []
+        interactiveList: [],
+        exhibitsList: []
     },
     autoNumberingDetails: {},
     autoNumberElementsIndex: {
@@ -33,7 +34,8 @@ const INITIAL_STATE = {
         videoIndex: {},
         asideIndex: {},
         workedExampleIndex: {},
-        interactiveIndex: {}
+        interactiveIndex: {},
+        exhibitsIndex: {}
     },
     slateFigureList:[],
     autoNumberOption: '',
@@ -47,7 +49,8 @@ const INITIAL_STATE = {
         'Video': 'videoIndex',
         "Interactive": 'interactiveIndex',
         "Aside": "asideIndex",
-        "Worked Example": "workedExampleIndex"
+        "Worked Example": "workedExampleIndex",
+        'Exhibit': 'exhibitsIndex'
     },
     autoNumber_ElementTypeKey: {
         'Figure': 'imagesList',
@@ -57,7 +60,8 @@ const INITIAL_STATE = {
         'Video': 'videosList',
         'Interactive': 'interactiveList',
         "Aside": "asidesList",
-        "Worked Example": "workedExamplesList"
+        "Worked Example": "workedExamplesList",
+        'Exhibit': 'exhibitsList'
     },
     autoNumber_response_ElementType_mapper: {
         "figures": "imagesList",
@@ -67,7 +71,8 @@ const INITIAL_STATE = {
         "videos": "videosList",
         "interactives": "interactiveList",
         "asides": "asidesList",
-        "workedexamples": "workedExamplesList"
+        "workedExamples": "workedExamplesList",
+        'exhibits': 'exhibitsList'
     },
     autoNumber_IndexMapper: {
         'imagesList': 'figureImageIndex',
@@ -77,7 +82,8 @@ const INITIAL_STATE = {
         'videosList': 'videoIndex',
         'interactiveList': 'interactiveIndex',
         'asidesList': 'asideIndex',
-        'workedExamplesList': 'workedExampleIndex'
+        'workedExamplesList': 'workedExampleIndex',
+        'exhibitsList': 'exhibitsIndex'
     },
     containerLists: ['asidesList', 'workedExamplesList'],
     nonContainerLists: ['imagesList', 'tablesList', 'equationsList', 'audiosList', 'videosList', 'interactiveList']
