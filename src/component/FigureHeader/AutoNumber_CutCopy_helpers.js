@@ -47,8 +47,8 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
                     case containerElements.MULTI_COLUMN:
                     case containerElements.SHOW_HIDE:
                     case containerElements.POPUP:
-                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: slateOldNumberedContainerElements, updatedSlateAutoNumberedElements : slateUpdatedNumberedContainerElements, slateAncestors, tocContainerSlateList });
-                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors, tocContainerSlateList });
+                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: slateOldNumberedContainerElements, updatedSlateAutoNumberedElements : slateUpdatedNumberedContainerElements, slateAncestors, tocContainerSlateList, autoNumber_ElementTypeKey });
+                        updateAutoNumberSequenceOnCutCopyContainers({ operationType, getState, dispatch, selectedElement, numberedElements, prevSelectedAutoNumberElements: oldSlateFigureList, updatedSlateAutoNumberedElements : slateFigures, slateAncestors, tocContainerSlateList, autoNumber_ElementTypeKey });
                         break;
                     case containerElements.ASIDE:
                         updateAutoNumberSequenceOnCopyElements({ operationType, getState, dispatch, selectedElement, numberedElements, slateFigures: slateUpdatedNumberedContainerElements, slateAncestors, autoNumber_ElementTypeKey });
