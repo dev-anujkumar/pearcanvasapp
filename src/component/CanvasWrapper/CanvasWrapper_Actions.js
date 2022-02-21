@@ -1144,11 +1144,11 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     return oldPath || ""
 }
 export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false, showHideObj = undefined) => (dispatch, getState) => {
-    if(activeElement.type === "manifestlist" && typeof index === 'string'){
-        let {fontstyle, iconcolor} = setParentFontIconDataToChild(index, getState);
-        activeElement.fontstyle = fontstyle;
-        activeElement.iconcolor = iconcolor
-    }
+    // if(activeElement.type === "manifestlist" && typeof index === 'string'){
+    //     let {fontstyle, iconcolor} = setParentFontIconDataToChild(index, getState);
+    //     activeElement.fontstyle = fontstyle;
+    //     activeElement.iconcolor = iconcolor
+    // }
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -1781,33 +1781,33 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
     })
 }
 
-/**
- * For Child block list, this function will retrive "fontStyle" & "iconcolor" value from parent
- * and return that value
- * @param {*} index 
- * @param {*} getState 
- * @returns 
- */
-const setParentFontIconDataToChild = (index, getState) => {
-    let indexArr = index.split('-');
-    let parentData = getState().appStore.slateLevelData;
-    let slateLevelData = JSON.parse(JSON.stringify(parentData));
-    let bodyMatter =   slateLevelData[config.slateManifestURN].contents.bodymatter;
-    let element = bodyMatter[indexArr[0]];
+// /**
+//  * For Child block list, this function will retrive "fontStyle" & "iconcolor" value from parent
+//  * and return that value
+//  * @param {*} index 
+//  * @param {*} getState 
+//  * @returns 
+//  */
+// const setParentFontIconDataToChild = (index, getState) => {
+//     let indexArr = index.split('-');
+//     let parentData = getState().appStore.slateLevelData;
+//     let slateLevelData = JSON.parse(JSON.stringify(parentData));
+//     let bodyMatter =   slateLevelData[config.slateManifestURN].contents.bodymatter;
+//     let element = bodyMatter[indexArr[0]];
     
-    if(element?.type === 'showhide'){
-        let blockList = {}
-        if(indexArr[1] === "2" && element.interactivedata.hide) {
-            blockList = element.interactivedata.hide[indexArr[2]]
-        } else if(indexArr[1] === "0" && element.interactivedata.show) {
-            blockList = element.interactivedata.show[indexArr[2]]
-        }
-        if(blockList?.type === "manifestlist"){
-            return {fontstyle: blockList.fontstyle, iconcolor: blockList.iconcolor}
-        }
-    } else if(element?.type === "manifestlist") {
-        return {fontstyle: element.fontstyle, iconcolor: element.iconcolor}
-    }
+//     if(element?.type === 'showhide'){
+//         let blockList = {}
+//         if(indexArr[1] === "2" && element.interactivedata.hide) {
+//             blockList = element.interactivedata.hide[indexArr[2]]
+//         } else if(indexArr[1] === "0" && element.interactivedata.show) {
+//             blockList = element.interactivedata.show[indexArr[2]]
+//         }
+//         if(blockList?.type === "manifestlist"){
+//             return {fontstyle: blockList.fontstyle, iconcolor: blockList.iconcolor}
+//         }
+//     } else if(element?.type === "manifestlist") {
+//         return {fontstyle: element.fontstyle, iconcolor: element.iconcolor}
+//     }
 
-    return {fontstyle: 'font-style-1' , iconcolor: 'bullet-color-1'}
-}
+//     return {fontstyle: 'font-style-1' , iconcolor: 'bullet-color-1'}
+// }
