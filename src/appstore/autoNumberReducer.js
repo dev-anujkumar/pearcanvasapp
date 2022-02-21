@@ -71,7 +71,7 @@ const INITIAL_STATE = {
         "videos": "videosList",
         "interactives": "interactiveList",
         "asides": "asidesList",
-        "workedExamples": "workedExamplesList",
+        "workedexamples": "workedExamplesList",
         'exhibits': 'exhibitsList'
     },
     autoNumber_IndexMapper: {
