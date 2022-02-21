@@ -1012,7 +1012,7 @@ class SlateWrapper extends Component {
                 }
                 /* @hideSapratorFor@ List of slates where seprator is hidden */
                 const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(_slateType);
-                return _elements.map((element, index) => { 
+                return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>
                                <LazyLoad 

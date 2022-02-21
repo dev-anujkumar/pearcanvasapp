@@ -1509,7 +1509,7 @@ class ElementContainer extends Component {
      * Render Element function takes current element from bodymatter and render it into current slate 
      * @param {element} 
     */
-     renderElement = (element = {}) => { 
+    renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle } = this.props;
         let labelText = fetchElementTag(element, index);
