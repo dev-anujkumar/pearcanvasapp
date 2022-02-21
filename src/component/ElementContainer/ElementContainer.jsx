@@ -2088,14 +2088,19 @@ class ElementContainer extends Component {
         if (noTCM.indexOf(labelText) >= 0) {
             tcm = false;
         }
-
+        /**---------------------Double SPread Pdf Elements --------------------- */
+        let isJoinedPdf = false
+        if (this.props?.cypressPlusProjectStatus && this.props.isJoinedPdfSlate === true && labelText?.toLowerCase() === "pdf") {
+            isJoinedPdf = true
+        }
+        /**--------------------------------------------------------------------- */
         /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false;
         let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
         let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
-        return (
-                <div className={`editor ${searched} ${selection}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
+                return (
+                <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                     {this.renderCopyComponent(this.props, index, inContainer, tcm)}
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         <Button type="element-label"  elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
@@ -2122,7 +2127,7 @@ class ElementContainer extends Component {
                         }
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
-                        {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
+                        {isJoinedPdf && (feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />))}
                     </div> : ''}
                     {this.state.popup && <PopUp
                         togglePopup={this.handleCommentPopup}
@@ -2731,6 +2736,8 @@ const mapStateToProps = (state) => {
         autoNumberElementsIndex: state.autoNumberReducer.autoNumberElementsIndex,
         autoNumberedElements: state.autoNumberReducer.autoNumberedElements,
         spellCheckToggle: state.toolbarReducer.spellCheckToggle,
+        cypressPlusProjectStatus: state.appStore.isCypressPlusEnabled,
+        isJoinedPdfSlate: state.appStore.isJoinedPdfSlate,
         figureDropdownData: state.appStore.figureDropdownData
     }
 }

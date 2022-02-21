@@ -18,6 +18,7 @@ import {
     PAGE_NUMBER_LOADER,
     WIRIS_ALT_TEXT_POPUP,
     SLATE_FIGURE_ELEMENTS,
+    CYPRESS_PLUS_ENABLED,
     SET_SLATE_MATTER_TYPE
 } from '../../constants/Action_Constants';
 
@@ -1028,12 +1029,23 @@ export const setUpdatedSlateTitle = (newSlateObj) => (dispatch, getState) => {
         payload: newSlateObj
     })
 }
+
 export const setSlateType = (slateType) => (dispatch, getState) => {
     return dispatch({
         type: SET_SLATE_TYPE,
         payload: slateType
     })
 }
+// calling this function in communicationChannel 
+export const cypressPlusEnabled = (flag, configValue) => dispatch => {
+    return dispatch({
+        type: CYPRESS_PLUS_ENABLED,
+        payload: {
+          isCypressPlusEnabled: flag && configValue
+        }
+    });
+}
+
 export const setSlateEntity = (setSlateEntityParams) => (dispatch, getState) => {
     return dispatch({
         type: SET_SLATE_ENTITY,
