@@ -190,8 +190,9 @@ export const FigureHeader = (props) => {
         } else if (props?.model?.figuretype == 'audio' || props?.model?.figuretype == 'video') {
             props.updateAudioVideoDataForCompare(props.model.figuredata);
         }
-
-        props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: labelNumberSetting});
+        if (!(id === `${props.index}-2` && props.autoNumberOption?.option === labelNumberSetting)) {
+            props.updateAutoNumberingDropdownForCompare({ entityUrn: props.model.contentUrn, option: labelNumberSetting });
+        }
     }
 
     const onFigureHeaderFieldBlur = (id) => {

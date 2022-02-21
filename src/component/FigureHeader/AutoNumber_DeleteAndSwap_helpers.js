@@ -1,8 +1,8 @@
-import { getContainerEntityUrn } from './AutoNumber_helperFunctions';
+import config from '../../config/config';
+import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering, displayLabelsForContainer, autoNumberFigureTypesAllowed, SHOWHIDE_SECTION } from './AutoNumberConstants';
 import { getImagesInsideSlates, getAsideElementsWrtKey } from './slateLevelMediaMapper';
 import { containerBodyMatter } from './slateLevelMediaMapper';
-import { findElementsInContainer } from './AutoNumberCreate_helper';
 import {
     SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS
@@ -183,8 +183,7 @@ export const handleAutoNumberingOnDelete = (params) => {
     if (isAutoNumberingEnabled) {
         if (containerElementTypes.includes(type)) {
             //reset auto-numbering
-            dispatch(updateAutoNumberSequenceOnDelete(figureParentEntityUrn, contentUrn, autoNumberedElements));
-            updateAutoNumberSequenceOnDeleteInContainers(element, figureParentEntityUrn, autoNumberedElements, dispatch);
+            updateAutoNumberSequenceOnDeleteInContainers(figureParentEntityUrn, getState, dispatch);
         }
         else if (type == 'figure') {
             //reset auto-numbering
@@ -227,65 +226,48 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
  * @param {*} getState 
  * @param {*} dispatch 
  */
-export const updateAutoNumberSequenceOnDeleteInContainers = (deleteElemData, parentIndex, autoNumberedElements, dispatch) => {
-    let childContainerElements = [];
-    let childNonContainerElements = [];
-    const type = 'figure';
-    switch (deleteElemData.type) {
-        case containerElements.MULTI_COLUMN:
-        case containerElements.SHOW_HIDE:
-        case containerElements.POPUP:
-            let elements = getElementsInContainer(deleteElemData, childContainerElements, containerElements.ASIDE);
-            elements.then( () => {
-                for (const label of displayLabelsForAutonumbering) {
-                    let elementsInContainer = [];
-                    elementsInContainer = findElementsInContainer(deleteElemData, [], { displayedlabel: label });
-                    childNonContainerElements = elementsInContainer.length > 0 ? childNonContainerElements.concat(elementsInContainer) : childNonContainerElements;
+export const updateAutoNumberSequenceOnDeleteInContainers = async (parentIndex, getState, dispatch) => {
+    let { autoNumberedElements } = getState().autoNumberReducer;
+    const containerLists = getState().autoNumberReducer.containerLists;
+    if (autoNumberedElements) {
+        for (let labelType in autoNumberedElements) {
+            let removeValFromIndex = [];
+            if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex]?.length > 0) {
+                let elementsInTocContainer = autoNumberedElements[labelType][parentIndex];
+                let slateElements = [];
+                if (containerLists.includes(labelType)) {
+                    slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[config.slateManifestURN]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
+                } else {
+                    slateElements = getState().autoNumberReducer.slateFigureList;
                 }
-            });
-            break;
-        case containerElements.ASIDE:
-            for (const label of displayLabelsForAutonumbering) {
-                let elementsInContainer = [];
-                elementsInContainer = findElementsInContainer(deleteElemData, [], { displayedlabel: label });
-                childNonContainerElements = elementsInContainer.length > 0 ? childNonContainerElements.concat(elementsInContainer) : childNonContainerElements;
-            }
-            break;
-    }
-    
-    if (childContainerElements.length > 0 || childNonContainerElements.length > 0) {
-        if (childContainerElements.length > 0) {
-            for (const element of childContainerElements) {
-                deleteElementByLabelFromStore(autoNumberedElements, element, parentIndex);
-            }
-        }
-        if (childNonContainerElements.length > 0) {
-            for (const element of childNonContainerElements) {
-                deleteElementByLabelFromStore(autoNumberedElements, element, parentIndex);
+                if (slateElements?.length > 0) {
+                    for (let [index, element] of elementsInTocContainer.entries()) {
+                        const eleIndex = slateElements?.findIndex(slateElem => (slateElem.contentUrn === element.contentUrn))
+                        const condition = element.slateEntityUrn == getSlateEntityUrn() && eleIndex === -1
+                        condition && removeValFromIndex.push(index);
+                    }
+                    
+                } else {
+                    for (let [index, element] of elementsInTocContainer.entries()) {
+                        if (element.slateEntityUrn == getSlateEntityUrn()) {
+                            removeValFromIndex.push(index);
+                        }
+                    }
+                }
+                if (removeValFromIndex.length) {
+                    for (let i = removeValFromIndex.length - 1; i >= 0; i--)
+                        autoNumberedElements[labelType][parentIndex].splice(removeValFromIndex[i], 1);
+                }
             }
         }
-        dispatch({
-            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-            payload: {
-                numberedElements: autoNumberedElements
-            }
-        });
-        getAutoNumberSequence(autoNumberedElements, dispatch);
     }
-        // for (let labelType in autoNumberedElements) {
-        //     if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex].length > 0) {
-        //         let elementData = autoNumberedElements[labelType][parentIndex];
-        //         let data = [];
-        //         for(let element of elementData){
-        //             slateFigureList?.map(figure =>{
-        //                 if(figure.contentUrn === element.contentUrn && !figure.parentDetails.includes(contentUrn)) {
-        //                     data.push(figure);
-        //                 }
-        //             });
-        //         }
-        //         autoNumberedElements[labelType][parentIndex] = data
-        //     }
-        // }
+    dispatch({
+        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+        payload: {
+            numberedElements: autoNumberedElements
+        }
+    });
+    getAutoNumberSequence(autoNumberedElements, dispatch);
 }
 
 export const deleteElementByLabelFromStore = (numberedElements, element, parentIndex) => {

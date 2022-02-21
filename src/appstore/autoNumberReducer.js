@@ -78,7 +78,9 @@ const INITIAL_STATE = {
         'interactiveList': 'interactiveIndex',
         'asidesList': 'asideIndex',
         'workedExamplesList': 'workedExampleIndex'
-    }
+    },
+    containerLists: ['asidesList', 'workedExamplesList'],
+    nonContainerLists: ['imagesList', 'tablesList', 'equationsList', 'audiosList', 'videosList', 'interactiveList']
 
 }
 
