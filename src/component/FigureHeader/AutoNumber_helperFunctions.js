@@ -1,13 +1,14 @@
 import config from '../../config/config'
 import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_FigureTypeKeyMapper,
-        displayLabelsForAutonumbering } from './AutoNumberConstants';
+    displayLabelsForAutonumbering, SIDEBAR, WORKED_EXAMPLE, ELEMENT_TYPES } from './AutoNumberConstants';
 import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import {getAutoNumberSequence} from './AutoNumberActions';
 import { findNearestElement, checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
 import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
-import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE } from '../../constants/Element_Constants';
+import { getAsideElementsWrtKey } from './slateLevelMediaMapper';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
 import store from '../../appstore/store'
 const {
     MANUAL_OVERRIDE,
@@ -149,6 +150,20 @@ export const getValueOfLabel = (figuretype) => {
         case INTERACTIVE:
             label = 'Interactive';
             break;
+        case SIDEBAR:
+            label = 'Aside';
+            break;
+        case WORKED_EXAMPLE:
+            label = 'Worked Example';
+        case TABLE_AS_MARKUP:
+            label = 'Table';
+            break;
+        case AUTHORED_TEXT:
+            label = 'Equation';
+            break;
+        case CODELISTING:
+            label = 'Exhibit';
+            break;
         default:
             label = '';
             break;
@@ -255,9 +270,9 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, settingsOpti
             }
         }
     }
-    if(settingsOption !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+    if (settingsOption !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
         elementLabel = element?.displayedlabel;
-        elementLabel = !element.hasOwnProperty('displayedlabel') ? getValueOfLabel(element?.figuretype) : elementLabel;
+        elementLabel = !element.hasOwnProperty('displayedlabel') ? getValueOfLabel(element?.type === 'figure' ? element?.figuretype : element?.subtype) : elementLabel;
     }
     return elementLabel
 }
@@ -356,9 +371,18 @@ export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNu
 }
 
 export const updateAutonumberingOnElementTypeUpdate = (newElement, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => async (dispatch, getState) => {
-    const slateContent = getState().appStore?.slateLevelData || slateLevelData
-    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
-    let slateElements = await getAutoNumberedElementsOnSlate(slateContent[config?.slateManifestURN], { dispatch });
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey;
+    let slateElements;
+    switch (element.type) {
+        case ELEMENT_TYPES.FIGURE:
+            slateElements = await getAutoNumberedElementsOnSlate(slateLevelData[config?.slateManifestURN], { dispatch });
+            break;
+        case ELEMENT_TYPES.ELEMENT_ASIDE:
+            slateElements = await getAsideElementsWrtKey(slateLevelData[config?.slateManifestURN]?.contents?.bodymatter, ELEMENT_TYPES.ELEMENT_ASIDE, slateElements);
+            break;
+        default:
+            slateElements = [];
+    }
     const activeLabelElements = slateElements?.filter(elem => elem.displayedlabel === newElement?.displayedlabel);
     let elementSlateIndex = slateElements?.findIndex(ele => ele.contentUrn === element.contentUrn);
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
@@ -485,7 +509,7 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
     }
     subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
     const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-    if (!titleHTML || titleHTML === '' || !(validDropdownOptions.includes(titleHTML))) {
+    if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
         titleHTML = previousElementData.displayedlabel;
     }
 
@@ -525,7 +549,7 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
  */
 export const generateDropdownDataForFigures = (previousElementData) => {
     const figureDropdownData = store.getState()?.appStore?.figureDropdownData
-    const { image, imageCustom, audio, video, interactive, interactiveCustom, audioCustom, videoCustom, } = figureDropdownData
+    const { image, imageCustom, audio, audioCustom, video, videoCustom, interactive, interactiveCustom, tableasmarkup, tableasmarkupCustom, mathml, mathmlCustom, preformattedtext, preformattedtextCustom } = figureDropdownData
     let validDropdownOptions = displayLabelsForAutonumbering;
     if (previousElementData?.figuretype && figureDropdownData) {
         switch (previousElementData.figuretype) {
@@ -540,6 +564,15 @@ export const generateDropdownDataForFigures = (previousElementData) => {
                 break;
             case IMAGE: case TABLE: case MATH_IMAGE:
                 validDropdownOptions = imageCustom ? [...image, ...imageCustom] : image
+                break;
+            case TABLE_AS_MARKUP:
+                validDropdownOptions = tableasmarkupCustom ? [...tableasmarkup, ...tableasmarkupCustom] : tableasmarkup
+                break;
+            case AUTHORED_TEXT:
+                validDropdownOptions = mathmlCustom ? [...mathml, ...mathmlCustom] : mathml
+                break;
+            case CODELISTING:
+                validDropdownOptions = preformattedtextCustom ? [...preformattedtext, ...preformattedtextCustom] : preformattedtext
                 break;
             default:
                 validDropdownOptions = displayLabelsForAutonumbering

@@ -38,13 +38,15 @@ import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/A
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
 import { getDataFromLastTag, isKWChild, isLastChild, moveCursor, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
-import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
 import cypressConfig from '../config/cypressConfig';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
 const {
-    AUTO_NUMBER_SETTING_RESUME_NUMBER
+    AUTO_NUMBER_SETTING_RESUME_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export class TinyMceEditor extends Component {
@@ -1012,7 +1014,7 @@ export class TinyMceEditor extends Component {
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
             /** Update the PREVIEW field with Label Value immediately */
-            if (this.props.isAutoNumberingEnabled && this.props?.element?.type === 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder)) {
+            if (this.props.isAutoNumberingEnabled && (autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder)) {
                 this.props.onFigureLabelChange(e, this.props?.placeholder);
             }
             this.isctrlPlusV = false;
@@ -1249,13 +1251,14 @@ export class TinyMceEditor extends Component {
              */
             moveCursor(e, selectionNode, tinymceOffset);
             /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering START xxxxxxxxxxxxxxxxxxx */
-            if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn) {
+            if (this.props.isAutoNumberingEnabled && (autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn) {
                 const keyCode = e.keyCode || e.which;
-                const allowedKeys = [8, 37, 38, 39, 40, 46]
-                const allowedFormattingKeys = [66, 73, 85]
+                const allowedKeys = [8, 37, 38, 39, 40, 46] // Keys for Arrows, Del, BkSpc
+                const allowedFormattingKeys = [66, 73, 85] // keys for B,I,U
+                const cutPasteKeys = [67,86,88] // add support for Cut/Copy/Paste Operations
                 // Restrict limit to Numbers only in Number Field for Resume Number option
                 if (this.props.placeholder === 'Number' && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
-                    if ((e.ctrlKey && keyCode !== 86) || e.shiftKey || ((keyCode < 48 || keyCode > 57) && (keyCode < 96 || keyCode > 105) && keyCode !== 86) && keyCode !== 8 && keyCode !== 37 && keyCode !== 39 && keyCode !== 46) {
+                    if ((e.ctrlKey && (!cutPasteKeys.includes(keyCode)) || !e.ctrlKey && (keyCode == 86 || keyCode == 67 || keyCode == 88)) || e.shiftKey || ((keyCode < 48 || keyCode > 57) && (keyCode < 96 || keyCode > 105) && keyCode !== 86) && keyCode !== 8 && keyCode !== 37 && keyCode !== 39 && keyCode !== 46) {
                         e.preventDefault();
                         e.stopPropagation();
                         return false;
@@ -2331,10 +2334,16 @@ export class TinyMceEditor extends Component {
     }
     editorPaste = (editor) => {
         editor.on('paste', (e) => {
-            if (this.props.isAutoNumberingEnabled && this.props?.element?.type === 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && this.props?.placeholder === 'Number' && this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
+            if (this.props.isAutoNumberingEnabled && (autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && this.props?.placeholder === 'Number' && this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
                 const currentValue = e.clipboardData.getData('Text');
                 const isNum = /^[1-9][0-9]*$/.test(currentValue);
-                if(!isNum){
+                let isValidPaste = true
+                const currentContent = editor?.getContent() ?? ''
+                /* Paste Valid Content in Number Field for Resume Number Case */
+                if (currentValue?.length > 9 || currentContent?.length > 8 || !(currentContent?.length < 9 && currentContent.length + currentValue.length < 10)) {
+                    isValidPaste = false
+                }
+                if (!isNum || (isNum && !isValidPaste)) {
                     e.preventDefault();
                     e.stopPropagation();
                     return false;
@@ -3460,7 +3469,11 @@ export class TinyMceEditor extends Component {
         let toolbar;
         switch (placeholder) {
             case "Number":
-                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.numberToolbarAutonumberMode : config.figureNumberToolbar;
+                if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) {
+                    toolbar =  (this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER || this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ) ? config.labelToolbarAutonumberMode : config.numberToolbarAutonumberMode;
+                } else {
+                    toolbar = config.figureNumberToolbar;
+                }
                 break;
             case "Label":
             case "Label Name":
@@ -3483,12 +3496,14 @@ export class TinyMceEditor extends Component {
 
     setAsideNumberingToolbar = (placeholder) => {
         let toolbar;
+        let isAutoNumberingEnabled = this.props.isAutoNumberingEnabled;
         switch (placeholder) {
             case "Number":
-                toolbar = config.AsideNumber;
+                toolbar = isAutoNumberingEnabled ? config.numberToolbarAutonumberMode : config.AsideNumber;
                 break;
             case "Label":
-                toolbar = config.AsideLabel;
+            case "Label Name":
+                toolbar = isAutoNumberingEnabled ? config.labelToolbarAutonumberMode : config.AsideLabel;
                 break;
             case "Title":
                 toolbar = config.AsideTitle;

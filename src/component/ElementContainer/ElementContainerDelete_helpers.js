@@ -42,22 +42,7 @@ export const onDeleteSuccess = (params) => {
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
-    
-    /** ---------------------------- Auto-Numbering handling ------------------------------*/
-    const slateLevelData = newParentData[config.slateManifestURN];
-    getAutoNumberedElementsOnSlate(slateLevelData, {dispatch});
 
-    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
-    const autoNumberParams = {
-        type,
-        getState,
-        dispatch,
-        contentUrn,
-        isAutoNumberingEnabled,
-        asideData
-    }
-    handleAutoNumberingOnDelete(autoNumberParams)
-    /**-----------------------------------------------------------------------------------*/
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const tcmDeleteArgs = {
         deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
@@ -85,7 +70,10 @@ export const onDeleteSuccess = (params) => {
         asideData,
         index,
         poetryData,
-        newParentData
+        newParentData,
+        getState,
+        type,
+        contentUrn
     }
     deleteFromStore(args)
     
@@ -124,7 +112,7 @@ export function prepareTCMforDelete(elmId, dispatch, getState) {
     
 }
 
-export const deleteFromStore = (params) => {
+export const deleteFromStore = async (params) => {
     const {
         dispatch,
         elmId,
@@ -132,7 +120,10 @@ export const deleteFromStore = (params) => {
         asideData,
         index,
         poetryData,
-        newParentData
+        newParentData,
+        getState,
+        type,
+        contentUrn
     } = params
 
     /* Get the slate bodymatter data */
@@ -279,6 +270,21 @@ export const deleteFromStore = (params) => {
             slateLevelData: newParentData
         }
     })
+    
+    /** ---------------------------- Auto-Numbering handling ------------------------------*/
+    const slateLevelData = newParentData[config.slateManifestURN];
+    await getAutoNumberedElementsOnSlate(slateLevelData, {dispatch});
+    const isAutoNumberingEnabled = getState().autoNumberReducer?.isAutoNumberingEnabled;
+    const autoNumberParams = {
+        type,
+        getState,
+        dispatch,
+        contentUrn,
+        isAutoNumberingEnabled,
+        asideData
+    }
+    handleAutoNumberingOnDelete(autoNumberParams)
+    /**-----------------------------------------------------------------------------------*/
 }
 
 /**
