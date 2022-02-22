@@ -1,6 +1,6 @@
 import config from '../../config/config'
 import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_FigureTypeKeyMapper,
-    displayLabelsForAutonumbering, SIDEBAR, WORKED_EXAMPLE, ELEMENT_TYPES } from './AutoNumberConstants';
+    displayLabelsForAutonumbering, displayLabelsForContainer, SIDEBAR, WORKED_EXAMPLE, ELEMENT_TYPES } from './AutoNumberConstants';
 import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
@@ -397,7 +397,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
         });
         getAutoNumberSequence(autoNumberedElements, dispatch);
     }
-    if (autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].length > 0 && activeLabelElements.length > 1) {
+    if (autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].length > 0 && activeLabelElements.length > 0) {
         let nearestElementObj = findNearestElement(slateElements, element, newElement?.displayedlabel, elementSlateIndex);
         if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
             let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
@@ -411,7 +411,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
             payload: autoNumberedElements
         });
         getAutoNumberSequence(autoNumberedElements, dispatch);
-    } else if (activeLabelElements.length === 1) {
+    } else if (activeLabelElements.length === 0) {
         checkElementExistenceInOtherSlates(newElement, config?.slateEntityURN, getState, dispatch);
     } 
 }
@@ -580,4 +580,30 @@ export const generateDropdownDataForFigures = (previousElementData) => {
         }
     }
     return validDropdownOptions
+}
+
+
+/**
+ *  Returns the Label Dropdown Values based on subtype
+ * @param {*} previousElementData 
+ * @returns 
+ */
+ export const generateDropdownDataForContainers = (previousElementData) => {
+    const figureDropdownData = store.getState()?.appStore?.figureDropdownData;
+    const { aside, asideCustom, workedexample, workedexampleCustom } = figureDropdownData;
+    let validDropdownOptions = displayLabelsForContainer;
+    if (previousElementData?.subtype && figureDropdownData) {
+        switch (previousElementData.subtype) {
+            case SIDEBAR:
+                validDropdownOptions = asideCustom ? [...aside, ...asideCustom] : aside;
+                break;
+            case WORKED_EXAMPLE:
+                validDropdownOptions = workedexample ? [...workedexample, ...workedexampleCustom] : workedexample;
+                break;
+            default:
+                validDropdownOptions = displayLabelsForContainer;
+                break;
+        }
+    }
+    return validDropdownOptions;
 }
