@@ -223,6 +223,9 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
         case 'INTERACTIVE':
         case 'SMART_LINK':
         case 'MMI_ELM':
+        case 'TABLE_EDITOR':
+        case 'MATH_ML_CHEM_EDITOR':
+        case 'BLOCK_CODE_EDITOR':
             slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[config?.slateManifestURN], { dispatch });
             break;
         case 'CONTAINER':
