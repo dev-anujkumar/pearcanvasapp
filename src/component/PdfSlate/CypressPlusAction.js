@@ -1,7 +1,7 @@
 import config from "../../config/config"
 import axios from 'axios'
 import { reloadSlate } from "../ElementContainer/AssessmentEventHandling"
-import { COMPLETED,FAILED,ABORTED } from "../../constants/Action_Constants"
+import { COMPLETED,FAILED,ABORTED, SET_JOINED_PDF_STATUS } from "../../constants/Action_Constants"
 
 let pool
 const poolFunc = (wUrn) => {
@@ -51,4 +51,16 @@ const pdfConversionStatus = async () => {
     console.error('pdfConversionStaus error', error)
   }
 }
+/**
+ * Set status if current pdf slate is merged or not
+ * @param {*} flag 
+ * @returns 
+ */
+export const getJoinedPdfStatus = (flag) => (dispatch) => {
+  dispatch({
+      type: SET_JOINED_PDF_STATUS,
+      payload: flag
+  });
+}
+
 export { startPdfConversion, pdfConversionStatus, poolFunc, clearPool }

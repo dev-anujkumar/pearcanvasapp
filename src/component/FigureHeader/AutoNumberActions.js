@@ -1,6 +1,5 @@
 import config from '../../config/config.js';
 import axios from 'axios';
-import { mediaElementAPI_Handler } from './mediaElementDataMapper.js';
 import {
     SET_AUTO_NUMBER_TOGGLE,
     SET_AUTO_NUMBER_SEQUENCE,
@@ -25,18 +24,25 @@ const commonHeaders = {
  * @param {*} currentParentUrn TOC Container EntityUrn
  * @returns 
  */
-export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) => {
-    const url = getAPIUrl(currentParentUrn);
-    axios.get(url, {
-        headers: {
+export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
+    try{
+        const headers = {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": "application/json",
             // "PearsonSSOSession": config.ssoToken
             'myCloudProxySession': config.myCloudProxySession
         }
-    }).then(async response => {
-        if (response?.data) {
-            const projectContent = response.data;
+        const figureUrl = getAPIUrl(currentParentUrn);
+        const containerUrl = ['frontMatter', 'backMatter'].includes(currentParentUrn) ? `${figureUrl}?aside=true` : `${figureUrl}&aside=true`;
+        let figurePromise = axios.get(figureUrl, {headers});
+        let containerPromise = axios.get(containerUrl, {headers});
+        
+        let response = await Promise.all([figurePromise, containerPromise]);
+        let projectContent = {}
+        response.forEach(res => {
+            projectContent = { ...res.data, ...projectContent}
+        })
+        if (Object.keys(projectContent)?.length > 0) {
             let numberedElements = {}
             numberedElements = getNumberedElements(projectContent, currentParentUrn);
             console.log('numberedElements>>>>', numberedElements)
@@ -51,11 +57,10 @@ export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) =>
         } else {
             commonDispatch(dispatch, GET_ALL_AUTO_NUMBER_ELEMENTS, {})
         }
-    }).catch(error => {
+    } catch(error){
         console.error('Error in fetching list of figures in the project>>>> ', error)
-        commonDispatch(dispatch, GET_ALL_AUTO_NUMBER_ELEMENTS, {})
-    })
-
+        commonDispatch(dispatch, GET_ALL_AUTO_NUMBER_ELEMENTS, {});
+    }
 };
 
 /**

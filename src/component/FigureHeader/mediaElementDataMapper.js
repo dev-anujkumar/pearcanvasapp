@@ -212,6 +212,9 @@ const prepareElementList = (element, numberedElements = {}, slateEntityUrn) => {
             case DISPLAYED_LABELS.EQUATIONS:
                 numberedElements['equationsList'].push(element)
                 break;
+            case DISPLAYED_LABELS.EXHIBITS:
+                numberedElements['exhibitsList'].push(element)
+                break;
             case ELEMENT_TYPES.FIGURE:
             default:
                 numberedElements['imagesList'].push(element)
