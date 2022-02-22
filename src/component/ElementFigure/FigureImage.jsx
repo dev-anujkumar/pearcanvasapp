@@ -38,7 +38,7 @@ import { createRef } from 'react';
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
 //const BLANK_NUMBER_LABEL_OPTIONS = ['Default Auto-number', 'Override number only'];
 const BLANK_NUMBER_LABEL_OPTIONS = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
-const imageFigureTypes = ["image","mathImage","table"];
+const imageFigureTypes = ["image","mathImage","table","tableasmarkup","authoredtext","codelisting"];
 const blockMathCodeTypes = ["authoredtext","codelisting"];
 
 const KEYBOARD_ENABLE = [TABLE, MATH_IMAGE, MATH_ML, BLOCK_CODE, IMAGE];
@@ -148,7 +148,12 @@ class FigureImage extends Component {
     }
 
     isEnableKeyboard = () => {
+    if (this.props.model?.figuredata?.programlanguage === "Select") {
+            return false
+        }
+        else {
         return KEYBOARD_ENABLE.indexOf(this.props.model.figuretype) > -1
+        }
     }
 
     /**
@@ -596,6 +601,10 @@ class FigureImage extends Component {
                                                         const key = e.which || e.keyCode;
                                                         if(key === 13) {
                                                             this.handleFigureDropdown();
+                                                        }
+                                                        if(key === 38) {
+                                                            e.stopPropagation();
+                                                            e.preventDefault();
                                                         }
                                                     }
                                                 }}>
