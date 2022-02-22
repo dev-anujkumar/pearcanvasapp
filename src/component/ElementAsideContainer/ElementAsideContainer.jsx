@@ -750,7 +750,8 @@ const mapStateToProps = state => {
         searchUrn: state.searchReducer.searchTerm,
         asideTitleData: state.appStore.asideTitleData,
         activeElement: state.appStore.activeElement,
-        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
+        figureDropdownData: state.appStore.figureDropdownData
     };
 };
 

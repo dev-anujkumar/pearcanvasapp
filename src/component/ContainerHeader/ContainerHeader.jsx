@@ -72,12 +72,14 @@ export const ContainerHeader = (props) => {
     useOutsideAlerter(labelDropdownWrapperRef, setState);
     const updateDropdownOptions = () => {
         let elementLabelDropdownVal = [];
+        const asideCustom = props.figureDropdownData.asideCustom ? [...props.figureDropdownData.aside, ...props.figureDropdownData.asideCustom] : props.figureDropdownData.aside;
+        const workedExampleCustom = props.figureDropdownData.workedexampleCustom ? [...props.figureDropdownData.workedexample, ...props.figureDropdownData.workedexampleCustom] : props.figureDropdownData.workedexample;
         switch (props?.model?.subtype) {
             case SIDEBAR:
-                elementLabelDropdownVal = props.isAutoNumberingEnabled ? ['Aside'] : [];
+                elementLabelDropdownVal = props.isAutoNumberingEnabled ? asideCustom : [];
                 break;
             case WORKED_EXAMPLE:
-                elementLabelDropdownVal = props.isAutoNumberingEnabled ? ['Worked Example'] : [];
+                elementLabelDropdownVal = props.isAutoNumberingEnabled ? workedExampleCustom : [];
                 break;
             default:
                 elementLabelDropdownVal = [];
@@ -103,6 +105,10 @@ export const ContainerHeader = (props) => {
     useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
     }, [props.currentSlateAncestorData]);
+
+    useEffect(() => {
+        updateDropdownOptions();
+    }, [props.figureDropdownData?.asideCustom || props.figureDropdownData?.workedexampleCustom]);
     
     const handleCloseDropDrown = () => {
         setState({ labelDropDown: false, labelNumberSettingDropDown: false });
