@@ -951,14 +951,6 @@ class Sidebar extends Component {
     }  
 
     render = () => {
-        // let currentElementIndex = this.props.activeElement?.index;
-        // let disableFontBullet;
-        // if(this.props.asideData?.type === "showhide"){
-        //     disableFontBullet = typeof currentElementIndex === "number" ? "disableFontBullet" : "";
-        // }
-        // else{
-        //     disableFontBullet = typeof currentElementIndex === "number" ? "" : "disableFontBullet";
-        // }
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
