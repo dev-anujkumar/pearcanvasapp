@@ -1190,8 +1190,10 @@ export class TinyMceEditor extends Component {
         let currentElement = editor.selection.getNode();
         let childNodes = currentElement.childNodes;
         if (showHide) {
-            if (childNodes.length) {
+            if (childNodes.length && childNodes.length <= 1) {
                 this.setCursorOnCode(childNodes[childNodes.length - 1], editor);
+            } else if(childNodes.length > 1 && childNodes[0]?.classList?.contains('figureCodeContent')){ // keyboard navigation for block code content
+                this.setCursorOnCode(childNodes[childNodes.length - 2], editor);
             }
         } else {
             if (childNodes.length > 1) {
