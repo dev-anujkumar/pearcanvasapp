@@ -882,7 +882,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
         const validDropdownOptions = generateDropdownDataForContainers(previousData);
-        if (validDropdownOptions?.includes(dataArr[0]) && dataArr[0] !== previousData?.displayedlabel) {
+        if (validDropdownOptions?.includes(dataArr[0])) {
             displayedlabel = dataArr[0];
         } else if (!(previousData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
             displayedlabel = getValueOfLabel(previousData?.subtype);

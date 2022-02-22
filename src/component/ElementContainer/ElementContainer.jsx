@@ -1008,7 +1008,7 @@ class ElementContainer extends Component {
                         manualoverride = payloadKeys?.manualoverride;
                         displayedlabel = previousElementData?.displayedlabel;
                         const validDropdownOptions = generateDropdownDataForContainers(previousElementData);
-                        if (validDropdownOptions?.includes(dataArr[0]) && dataArr[0] !== previousElementData?.displayedlabel) {
+                        if (validDropdownOptions?.includes(dataArr[0])) {
                             displayedlabel = dataArr[0];
                         } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                             displayedlabel = getValueOfLabel(previousElementData?.subtype);
