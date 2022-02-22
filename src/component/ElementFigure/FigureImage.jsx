@@ -148,7 +148,12 @@ class FigureImage extends Component {
     }
 
     isEnableKeyboard = () => {
+    if (this.props.model?.figuredata?.programlanguage === "Select") {
+            return false
+        }
+        else {
         return KEYBOARD_ENABLE.indexOf(this.props.model.figuretype) > -1
+        }
     }
 
     /**
