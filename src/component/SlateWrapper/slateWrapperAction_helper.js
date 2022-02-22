@@ -12,6 +12,7 @@ import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementConta
 import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
 import { handleAutoNumberingOnCopyPaste } from '../FigureHeader/AutoNumber_CutCopy_helpers';
+import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
 const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP, POETRY_ELEMENT } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
@@ -131,6 +132,8 @@ export const onPasteSuccess = async (params) => {
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     const currentSlateData = newParentData[config.slateManifestURN];
+    let slateOldNumberedContainerElements = [];
+    slateOldNumberedContainerElements = await getAsideElementsWrtKey(currentSlateData?.contents?.bodymatter, ELEMENT_ASIDE, slateOldNumberedContainerElements);
 
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
     if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type!=='popup') {
@@ -350,7 +353,8 @@ export const onPasteSuccess = async (params) => {
         isAutoNumberingEnabled,
         currentSlateData: newParentData[config.slateManifestURN],
         oldSlateFigureList,
-        tocContainerSlateList
+        tocContainerSlateList,
+        slateOldNumberedContainerElements
     }
     handleAutoNumberingOnCopyPaste(autoNumberParams)
     /**-----------------------------------------------------------------------------------*/

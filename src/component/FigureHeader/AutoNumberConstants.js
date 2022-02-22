@@ -14,6 +14,8 @@ export const autoNumber_KeyMapper = {
     'Equation': 'equationsIndex',
     'Audio': 'audioIndex',
     'Video': 'videoIndex',
+    'Aside': 'asideIndex',
+    'Worked Example': 'workedExampleIndex',
     "Interactive": 'interactiveIndex',
     'Exhibit': 'exhibitsIndex'
 }
@@ -35,6 +37,8 @@ export const autoNumber_IndexMapper = {
   'equationsList': 'equationsIndex',
   'audiosList': 'audioIndex',
   'videosList': 'videoIndex',
+  'asidesList': 'asideIndex',
+  'workedExamplesList': 'workedExampleIndex',
   'interactiveList': 'interactiveIndex',
   'exhibitsList': 'exhibitsIndex'
 }
@@ -46,7 +50,7 @@ export const autoNumber_ElementTypeKey = {
   'Audio': 'audiosList',
   'Video': 'videosList',
   'Interactive': 'interactiveList',
-  "Aside": "asidesList",
+  'Aside': 'asidesList',
   "Worked Example": "workedExamplesList",
   'Exhibit': 'exhibitsList'
 }
@@ -124,7 +128,13 @@ export const DISPLAYED_LABELS = {
 }
 
 export const ELEMENT_TYPES = {
-  FIGURE: 'figure'
+  FIGURE: 'figure',
+  ELEMENT_ASIDE: 'element-aside'
+}
+
+export const autoNumber_ElementSubTypeToCeateKeysMapper = {
+  'sidebar': 'CONTAINER',
+  'workedexample': 'WORKED_EXAMPLE',
 }
 
 export const autoNumber_ElementTypeToStoreKeysMapper = {
@@ -135,6 +145,8 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'AUDIO': 'audiosList',
   'VIDEO': 'videosList',
   'MATHIMAGE': 'equationsList',
+  'CONTAINER': 'asidesList',
+  'WORKED_EXAMPLE': 'workedExamplesList',
   'MMI_ELM': 'interactiveList',
   'INTERACTIVE': 'interactiveList',
   'SMART_LINK': 'interactiveList',
@@ -145,12 +157,15 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'BLOCK_CODE_EDITOR': 'exhibitsList',
   'CODELISTING': 'exhibitsList'
 }
-
+export const SIDEBAR = "sidebar"
+export const WORKED_EXAMPLE = "workedexample"
+export const autoNumberContainerTypesAllowed = ['element-aside']
+export const containerElementTypes = ['popup', 'showhide', 'groupedcontent', 'element-aside'];
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive', 'tableasmarkup', 'authoredtext', 'codelisting']
-export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO', 'SMART_LINK']
+export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO', 'SMART_LINK', 'CONTAINER', 'WORKED_EXAMPLE']
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive', 'Exhibit']
 export const displayLabelsForImage = ['Figure', 'Table', 'Equation']
 export const displayLabelsForAudioVideo = ['Audio', 'Video'];
-export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'TABLE_EDITOR', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR'];
-
-export const autoNumberFieldsPlaceholders = ['Number', 'Label']
+export const displayLabelsForContainer = ['Aside', 'Worked Example'];
+export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'CONTAINER', 'WORKED_EXAMPLE', 'TABLE_EDITOR', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR'];
+export const autoNumberFieldsPlaceholders = ['Number', 'Label', 'Label Name']

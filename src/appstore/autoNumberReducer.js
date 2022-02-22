@@ -48,6 +48,8 @@ const INITIAL_STATE = {
         'Audio': 'audioIndex',
         'Video': 'videoIndex',
         "Interactive": 'interactiveIndex',
+        "Aside": "asideIndex",
+        "Worked Example": "workedExampleIndex",
         'Exhibit': 'exhibitsIndex'
     },
     autoNumber_ElementTypeKey: {
@@ -69,7 +71,7 @@ const INITIAL_STATE = {
         "videos": "videosList",
         "interactives": "interactiveList",
         "asides": "asidesList",
-        "workedExamples": "workedExamplesList",
+        "workedexamples": "workedExamplesList",
         'exhibits': 'exhibitsList'
     },
     autoNumber_IndexMapper: {
@@ -79,8 +81,12 @@ const INITIAL_STATE = {
         'audiosList': 'audioIndex',
         'videosList': 'videoIndex',
         'interactiveList': 'interactiveIndex',
+        'asidesList': 'asideIndex',
+        'workedExamplesList': 'workedExampleIndex',
         'exhibitsList': 'exhibitsIndex'
-    }
+    },
+    containerLists: ['asidesList', 'workedExamplesList'],
+    nonContainerLists: ['imagesList', 'tablesList', 'equationsList', 'audiosList', 'videosList', 'interactiveList']
 
 }
 
