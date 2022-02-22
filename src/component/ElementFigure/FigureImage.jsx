@@ -148,7 +148,12 @@ class FigureImage extends Component {
     }
 
     isEnableKeyboard = () => {
+    if (this.props.model?.figuredata?.programlanguage === "Select") {
+            return false
+        }
+        else {
         return KEYBOARD_ENABLE.indexOf(this.props.model.figuretype) > -1
+        }
     }
 
     /**
@@ -596,6 +601,10 @@ class FigureImage extends Component {
                                                         const key = e.which || e.keyCode;
                                                         if(key === 13) {
                                                             this.handleFigureDropdown();
+                                                        }
+                                                        if(key === 38) {
+                                                            e.stopPropagation();
+                                                            e.preventDefault();
                                                         }
                                                     }
                                                 }}>
