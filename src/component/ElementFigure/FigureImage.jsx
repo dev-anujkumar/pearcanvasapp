@@ -602,6 +602,10 @@ class FigureImage extends Component {
                                                         if(key === 13) {
                                                             this.handleFigureDropdown();
                                                         }
+                                                        if(key === 38) {
+                                                            e.stopPropagation();
+                                                            e.preventDefault();
+                                                        }
                                                     }
                                                 }}>
                                                     <div className={this.props.selectedElement === `${QUERY_SELECTOR}-${this.props.index}-label-1` ? "figure-label-highlight" : "figure-label"} onClick={this.handleFigureDropdown}>
