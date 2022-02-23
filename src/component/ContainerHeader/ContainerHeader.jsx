@@ -56,7 +56,7 @@ export const ContainerHeader = (props) => {
         {
             elementLabelValue: props.model?.displayedlabel ?? props.model?.manualoverride?.overridelabelvalue ?? 'Aside',
             elementLabelData: [],
-            labelNumberSetting: null,
+            labelNumberSetting: setAutoNumberSettingValue(props?.model),
             labelDropDown: false,
             labelNumberSettingDropDown: false,
             showLabelField: true,
@@ -93,7 +93,7 @@ export const ContainerHeader = (props) => {
         props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: dropdownVal});
         updateDropdownOptions();
         if (!props?.model.hasOwnProperty('displayedlabel')) {
-            let label = getValueOfLabel(props?.model?.subtype);
+            let label = props?.model?.manualoverride.hasOwnProperty('overridelabelvalue') ? props?.model?.manualoverride?.overridelabelvalue : getValueOfLabel(props?.model?.subtype);
             setState({ elementLabelValue: label });
         }
     }, [])
@@ -104,8 +104,23 @@ export const ContainerHeader = (props) => {
     }, [props.autoNumberOption]);
     useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
+        const elementIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
+        let activeNumber = getNumberData(elementIndexParent, props?.model, props?.autoNumberElementsIndex || {})
+        if(activeNumber && typeof activeNumber === 'string' && activeNumber.trim() !== ""){
+            activeNumber?.replace(/&nbsp;/g, ' ')
+        }
+        setState({ currentNumberValue: activeNumber});
     }, [props.currentSlateAncestorData]);
 
+    useEffect(() => {
+        updateDropdownOptions();
+        const elementIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
+        let activeNumber = getNumberData(elementIndexParent, props?.model, props?.autoNumberElementsIndex || {})
+        if(activeNumber && typeof activeNumber === 'string' && activeNumber.trim() !== ""){
+            activeNumber?.replace(/&nbsp;/g, ' ')
+        }
+        setState({ currentNumberValue: activeNumber});
+    }, [props.autoNumberElementsIndex]);
     useEffect(() => {
         updateDropdownOptions(); // update the dropdown options if any new value is introduced via Controlled Vocab in the Project Settings
     }, [props.figureDropdownData?.asideCustom, props.figureDropdownData?.workedexampleCustom]);
@@ -129,7 +144,7 @@ export const ContainerHeader = (props) => {
             }
             if (oldSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER || oldSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
                 updateDropdownOptions();
-                let label = getValueOfLabel(props?.model?.subtype);
+                let label = props?.model?.manualoverride.hasOwnProperty('overridelabelvalue') ? props?.model?.manualoverride?.overridelabelvalue : getValueOfLabel(props?.model?.subtype);
                 setState({ elementLabelValue: label });
             }
         }

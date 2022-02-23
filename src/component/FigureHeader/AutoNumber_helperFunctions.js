@@ -155,6 +155,7 @@ export const getValueOfLabel = (figuretype) => {
             break;
         case WORKED_EXAMPLE:
             label = 'Worked Example';
+            break;
         case TABLE_AS_MARKUP:
             label = 'Table';
             break;
@@ -598,7 +599,7 @@ export const generateDropdownDataForFigures = (previousElementData) => {
                 validDropdownOptions = asideCustom ? [...aside, ...asideCustom] : aside;
                 break;
             case WORKED_EXAMPLE:
-                validDropdownOptions = workedexample ? [...workedexample, ...workedexampleCustom] : workedexample;
+                validDropdownOptions = workedexampleCustom ? [...workedexample, ...workedexampleCustom] : workedexample;
                 break;
             default:
                 validDropdownOptions = displayLabelsForContainer;
