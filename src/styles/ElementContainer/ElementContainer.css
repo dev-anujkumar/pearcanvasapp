@@ -4,6 +4,9 @@
     position: relative;
 }
 
+.editor.container-pdf {
+    margin: 50px 40px 40px 50px !important;
+}
 .element-container {
     /* padding: 15px; */
     flex-grow: 1;
@@ -83,6 +86,7 @@
 
 .showBorder {
     border: 1px solid #737373;
+    
 }
 
 .editor.searched > .showBorder {

@@ -55,8 +55,13 @@ import store from '../appstore/store';
 export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlfrescoElement) => {
 
     const imageArgs = store.getState()?.alfrescoReducer?.imageArgs;
-    const currentAsset = imageArgs?.id ? {
-        id: imageArgs.id?.split(':')?.pop() || "",
+    let currentAssetId = ""
+    if (imageArgs?.id) {
+        const imageId = imageArgs?.id?.split(':')
+        currentAssetId = imageId[0] === 'imageAssetContent' ? imageId[1] : (imageId?.pop() || "")
+    }
+    const currentAsset = currentAssetId?.trim() !== "" ? {
+        id: currentAssetId || "",
         type: 'image',
     } : null;
     let alfrescoPath = config.alfrescoMetaData;
@@ -102,7 +107,8 @@ function handleSiteOptionsDropdown (alfrescoPath, id) {
                 'Accept': 'application/json',
                 'ApiKey': config.CMDS_APIKEY,
                 'Content-Type': 'application/json',
-                'PearsonSSOSession': SSOToken
+                // 'PearsonSSOSession': SSOToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
         .then(function (response) {
@@ -242,9 +248,10 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
 /**
  * This method is used to rescrit spell check for specific element
  */
-export const restrictSpellCheck = (props) => {
-    return !(props?.element?.figuretype === 'codelisting' && (/-3$/.test(props?.index)))
-}
+// PCAT-2426 - This may be used with tinymcespellchecker pro version but not required with browser spellcheck
+// export const restrictSpellCheck = (props) => {
+//     return !(props?.element?.figuretype === 'codelisting' && (/-3$/.test(props?.index)))
+// }
 
 /**
  * This method is used to check current active element

@@ -14,10 +14,19 @@ import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowH
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
-import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
 import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
-import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
+import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
+import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
+import { updateAutoNumberedElement } from './UpdateElements';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
+
+const { 
+    AUTO_NUMBER_SETTING_DEFAULT,
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
@@ -44,8 +53,8 @@ export const addComment = (commentString, elementId) => (dispatch) => {
             headers: {
                 "Content-Type": "application/json",
                 ApiKey: config.STRUCTURE_APIKEY,
-                PearsonSSOSession: config.ssoToken,
-
+                // PearsonSSOSession: config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     )
@@ -102,7 +111,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     )
@@ -198,7 +208,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "PearsonSSOSession": config.ssoToken
+                    // "PearsonSSOSession": config.ssoToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             }
         )
@@ -371,7 +382,8 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     ).then(response => {
@@ -460,7 +472,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     ).then( async (createdElemData) => {
@@ -514,16 +527,15 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         const slateAncestorData = getState().appStore.currentSlateAncestorData;
         let elementsList = {};
         if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
-            let slateFigures = getImagesInsideSlates(newBodymatter);
-            if (slateFigures) {
-                dispatch({
-                    type: SLATE_FIGURE_ELEMENTS,
-                    payload: {
-                        slateFigures
-                    }
-                });
+            let slateFigures = [];
+            let elementObj = {};
+            if (type2BAdded === 'CONTAINER' || type2BAdded === 'WORKED_EXAMPLE') {
+                slateFigures = await getAsideElementsWrtKey(newBodymatter, 'element-aside', slateFigures);
+            } else {
+                slateFigures = await getAutoNumberedElementsOnSlate(newParentData[config.slateManifestURN], { dispatch });
             }
-            let elementObj = slateFigures.find(element => element.contentUrn === createdElemData.data.contentUrn);
+            
+            elementObj = slateFigures?.find(element => element.contentUrn === createdElemData.data.contentUrn);
             const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
             const labelType = createdElemData?.data?.displayedlabel;
             elementsList = autoNumberedElementsObj[listType];
@@ -714,8 +726,9 @@ export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'PearsonSSOSession': config.ssoToken,
-            'ApiKey': config.APO_API_KEY
+            // 'PearsonSSOSession': config.ssoToken,
+            'ApiKey': config.APO_API_KEY,
+            'myCloudProxySession': config.myCloudProxySession
         }
       })
     try {
@@ -830,31 +843,64 @@ const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
     }
 }
 
-const prepareAsideTitleForUpdate = (index) => {
+export const prepareAsideTitleForUpdate = (index, isAutoNumberingEnabled) => {
     let labelDOM = document.getElementById(`cypress-${index}-t1`),
         numberDOM = document.getElementById(`cypress-${index}-t2`),
         titleDOM = document.getElementById(`cypress-${index}-t3`)
     let labeleHTML = labelDOM ? labelDOM.innerHTML : "",
         numberHTML = numberDOM ? numberDOM.innerHTML : "",
         titleHTML = titleDOM ? titleDOM.innerHTML : ""
-    labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
-    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-    titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
-    return titleHTML
+    labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    if (isAutoNumberingEnabled) {
+        return [labeleHTML, numberHTML, titleHTML];
+    } else {
+        titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
+        return titleHTML
+    }
 }
-export const updateAsideNumber = (previousData, index,elementId) => (dispatch, getState) => {
+export const updateAsideNumber = (previousData, index, elementId, isAutoNumberingEnabled, autoNumberOption) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
     const activeElementId=elementId;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
     let elementEntityUrn = "", updatedElement
-    let titleHTML = prepareAsideTitleForUpdate(index);
-    
+    let titleHTML = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
+    let dataArr, payloadKeys, displayedlabel;
+    let numberedandlabel = false;
+    let manualoverride = {};
     updatedElement = {
         ...previousData,
         html: {
             title: titleHTML
         }
+    }
+    /** Updation of AutoNumbered Elements */
+    if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
+        dataArr = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
+        payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, dataArr[0], dataArr[1], false);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
+        const validDropdownOptions = generateDropdownDataForContainers(previousData);
+        if (validDropdownOptions?.includes(dataArr[0])) {
+            displayedlabel = dataArr[0];
+        } else if (!(previousData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+            displayedlabel = getValueOfLabel(previousData?.subtype);
+        }
+        updatedElement = {
+            ...updatedElement,
+            html: {
+                ...updatedElement.html,
+                title: `<p>${dataArr[2]}</p>`
+            },
+            numberedandlabel: numberedandlabel,
+            displayedlabel: displayedlabel,
+            manualoverride: manualoverride
+        }
+        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
+        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;
+        const dataToReturn = updateAutoNumberedElement(autoNumberOption, updatedElement, { displayedlabel: updatedElement?.displayedlabel, manualoverride: updatedElement?.manualoverride })
+        updatedElement = { ...dataToReturn }
     }
     const updateParams = {
         index,
@@ -888,13 +934,28 @@ export const updateAsideNumber = (previousData, index,elementId) => (dispatch, g
         versionUrn: activeElementId,
         contentUrn: previousData.contentUrn,
         status: updatedSlateLevelData.status
-
+    }
+    if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
+        
+        dataToSend = {
+            ...dataToSend,
+            html : {
+                ...dataToSend.html,
+                title: `<p>${dataArr[2]}</p>`
+            },
+            numberedandlabel : numberedandlabel,
+            displayedlabel : displayedlabel,
+            manualoverride : manualoverride
+        }
+        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete dataToSend.manualoverride : dataToSend;
+        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete dataToSend.displayedlabel : dataToSend;
     }
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
         if (currentSlateData?.status === 'approved') {

@@ -232,7 +232,8 @@ export const getCrossReferenceValues = () => async (dispatch) => {
         const result = await axios.get(url, {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken
+                'myCloudProxySession': config.myCloudProxySession
             }
         });
 

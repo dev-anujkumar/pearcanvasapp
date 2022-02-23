@@ -52,7 +52,10 @@ import {
     UPDATE_OLD_SMARTLINK_INFO,
     UPDATE_OLD_AUDIOVIDEO_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
-    CHECK_ASIDE_NUMBER
+    CHECK_ASIDE_NUMBER,
+    CYPRESS_PLUS_ENABLED,
+    SET_JOINED_PDF_STATUS,
+    SET_SLATE_MATTER_TYPE
 } from '../constants/Action_Constants';
 
 /**
@@ -101,9 +104,24 @@ const INITIAL_STATE = {
         video: ["No Label", "Custom"],
         tableasmarkup: ["No Label", 'Table', "Custom"],
         mathml: ["No Label", "Equation", "Custom"],
-		preformattedtext: ["No Label", "Exhibit", "Custom"]
+		preformattedtext: ["No Label", "Exhibit", "Custom"],
+        aside:["Aside"],
+        interactive:["Interactive"],
+        workedexample:["Worked Example"],
+        audioCustom: [],
+        imageCustom: [],
+        smartlinksCustom: [],
+        videoCustom: [],
+        tableasmarkupCustom: [],
+        mathmlCustom: [],
+		preformattedtextCustom: [],
+        asideCustom:[],
+        interactiveCustom:[],
+        workedexampleCustom:[]
     },
-    asideTitleData: []
+    asideTitleData: [],
+    isCypressPlusEnabled:false,
+    isJoinedPdfSlate: false
 };
 
 const INITIAL_ACTION = {
@@ -163,6 +181,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 slateType: action.payload
+            }
+        case CYPRESS_PLUS_ENABLED:
+            return {
+                ...state,
+                isCypressPlusEnabled: action.payload.isCypressPlusEnabled
             }
         case SET_SLATE_ENTITY:
             return {
@@ -361,11 +384,17 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 asideTitleData: [...asideTitleData, action.payload]
             }
-            // return{
-            //     ...state,
-            //     asideTitleData: action.payload
-            // }
+        case SET_JOINED_PDF_STATUS:
+            return {
+                ...state,
+                isJoinedPdfSlate: action.payload
+            }
 
+        case SET_SLATE_MATTER_TYPE:
+            return {
+                ...state,
+                slateMatterType: action.payload
+            }
         default:
             return state;
     }

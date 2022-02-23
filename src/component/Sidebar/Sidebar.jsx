@@ -34,9 +34,12 @@ class Sidebar extends Component {
         let podwidth = this.props.activeElement.podwidth;
         this.state = {
             elementDropdown: '',
+            fontBulletElementDropdown: '',
             activeElementId: this.props.activeElement.elementId || "",
             activeElementType: elementType,
             activePrimaryOption: primaryFirstOption,
+            activefontStyle: "Font Type 1" ,
+            activebulletIcon: "Bullet Color 1",
             activeSecondaryOption: secondaryFirstOption,
             activeLabelText: labelText,
             attrInput: "",
@@ -56,26 +59,25 @@ class Sidebar extends Component {
     static getDerivedStateFromProps = (nextProps, prevState) => {
         if (Object.keys(nextProps.activeElement).length > 0) {
             let elementDropdown = prevState.elementDropdown;
-            //let numberStartFrom = prevState.bceNumberStartFrom;
-            //let bceToggle = prevState.bceToggleValue;
-            //let bceSyntaxHighlight = prevState.syntaxHighlightingToggleValue;
+            let fontBulletElementDropdown = prevState?.fontBulletElementDropdown;
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
-                //numberStartFrom = nextProps.activeElement.startNumber;
-                //bceToggle = nextProps.activeElement.numbered;
-                //bceSyntaxHighlight = nextProps.activeElement.syntaxhighlighting ;
+                fontBulletElementDropdown = "";
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false
             }
             
             return {
                 elementDropdown: elementDropdown,
+                fontBulletElementDropdown,
                 activeElementId: nextProps.activeElement.elementId,
                 activeElementType: nextProps.activeElement.elementType,
                 activePrimaryOption: nextProps.activeElement.primaryOption,
-                activeSecondaryOption: nextProps.activeElement.secondaryOption,
+                activefontStyle: nextProps?.activeElement?.fontStyle,
+                activebulletIcon: nextProps?.activeElement?.bulletIcon,
+                activeSecondaryOption: nextProps.activeElement.secondaryOption,         
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom: nextProps.activeElement.startNumber,
                 bceToggleValue: nextProps.activeElement.numbered,
@@ -110,9 +112,11 @@ class Sidebar extends Component {
         elementList[this.state.activeElementType][value].subtype;
       let secondaryFirstOption = Object.keys(secondaryelementList)[0];
       let labelText = secondaryelementList[secondaryFirstOption].labelText;
+      const {activefontStyle, activebulletIcon} = this.state
 
       this.setState({
         elementDropdown: "",
+        fontBulletElementDropdown: "",
         activePrimaryOption: value,
         activeSecondaryOption: secondaryFirstOption,
         activeLabelText: labelText,
@@ -129,6 +133,8 @@ class Sidebar extends Component {
             },
             elementType: this.state.activeElementType,
             primaryOption: value,
+            fontStyle: activefontStyle,
+            iconColor: activebulletIcon,
             secondaryOption: secondaryFirstOption,
             elementWipType: this.props.activeElement.elementWipType,
             index: this.props.activeElement.index,
@@ -147,10 +153,65 @@ class Sidebar extends Component {
             elementId: this.props.activeElement.elementId,
             elementType: this.state.activeElementType,
             primaryOption: value,
+            fontBulletOption: value,
             secondaryOption: secondaryFirstOption,
             labelText,
             toolbar: elementList[this.state.activeElementType][value].toolbar,
           });
+        }
+      }
+    };
+
+    handleFontBulletOptionChange = (e) => {
+        let value = e.target.getAttribute("data-value");
+        let primaryOptionValue = this.state.activePrimaryOption;
+        let fontValue = this.state.activefontStyle;
+        let iconColorValue = this.state.activebulletIcon;
+        let toolbar = [];
+        let dataToSend = {}
+        if(this.state.activeElementType === "manifestlist"){
+          if(value?.includes('font')){
+                fontValue = value;
+                toolbar = elementList["fontStyle"][value]?.toolbar;
+                dataToSend.fontstyle = `fontStyle${fontValue?.split('-')[fontValue?.split('-').length-1]}`;
+          } else if(value?.includes('bullet')){
+                iconColorValue = value;
+                toolbar = elementList["bulletIcon"][value]?.toolbar;
+                dataToSend.iconcolor = `iconColor${iconColorValue?.split('-')[iconColorValue?.split('-').length-1]}`;
+          }
+        }
+
+        let secondaryFirstOption = this.state.activeSecondaryOption;
+        let labelText = this.state.activeLabelText;
+
+      this.setState({
+        fontBulletElementDropdown: "",
+        activefontStyle: fontValue,
+        activebulletIcon: iconColorValue,
+      });
+      const {asideData} = this.props;
+      if (this.props.activeElement.elementId !== "" &&this.props.activeElement?.elementWipType !== "element-assessment") {
+        if (this.props.activeElement?.elementWipType == "manifestlist") {
+        let blockListMetaDataPayload = {
+            blockListData: {
+                id:this.props.activeElement.elementId,
+                contentUrn:this.props.activeElement.contentUrn
+            },
+            elementType: this.state.activeElementType,
+            primaryOption: primaryOptionValue,
+            fontStyle: fontValue,
+            iconColor: iconColorValue,
+            secondaryOption: secondaryFirstOption,
+            elementWipType: this.props.activeElement?.elementWipType,
+            index: this.props.activeElement.index,
+            labelText,
+            blockListElement:true,
+            toolbar,
+            slateLevelBLIndex:typeof this.props.activeElement.index==="number"?this.props.activeElement.index: this.props.activeElement.index.split("-"),
+            dataToSend,
+            asideData:asideData
+          }
+          this.props.updateBlockListMetadata(blockListMetaDataPayload);
         }
       }
     };
@@ -167,13 +228,16 @@ class Sidebar extends Component {
             }
         }
         let elementDropdown = e.target.getAttribute('data-element');
-        if (this.state.elementDropdown === elementDropdown) {
-            elementDropdown = '';
+
+        
+        if (elementDropdown == 'font' || elementDropdown == 'bullet'){
+            if(this.state.fontBulletElementDropdown === elementDropdown)  elementDropdown = '';
+            this.setState({fontBulletElementDropdown: elementDropdown});
+        } else {
+            if(this.state.elementDropdown === elementDropdown) elementDropdown = '';
+            this.setState({elementDropdown, fontBulletElementDropdown: ""});
         }
-        this.setState({
-            elementDropdown,
-            podOption: false
-        });
+        this.setState({ podOption: false });
     }
 
     primaryOption = () => {
@@ -238,6 +302,54 @@ class Sidebar extends Component {
 
     }
 
+    fontBulletOption = (data) => {
+        let dataValue = "";
+        let dataElement;
+        let fontBulletOptions = '';
+        let fontBulletOptionObject = [];
+
+        if(data === "fontStyle") {
+            fontBulletOptionObject = elementList[data];
+            dataElement = "font",
+            dataValue =  this.state.activefontStyle
+        } else if(data === "bulletIcon") {
+            fontBulletOptionObject = elementList[data];
+            dataElement = "bullet",
+            dataValue = this.state.activebulletIcon
+        }
+
+        let className = ""
+        let fontBulletOptionList = Object.keys(fontBulletOptionObject);
+        fontBulletOptions = fontBulletOptionList.map(item => {
+            if (item !== 'enumType') {
+                return <li key={item} data-value={item} onClick={this.handleFontBulletOptionChange}>
+                    {fontBulletOptionObject[item].text}    
+                </li>;
+            }
+        });
+
+        let active = '';
+        if (data === "fontStyle" && this.state.fontBulletElementDropdown === 'font') {
+            active = 'active';
+        } else if (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet'){
+            active = 'active';
+        }
+        const sidebarDisableCondition = ((this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+        
+        fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
+            className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
+            <div className={`element-dropdown-title ${className}`} data-element= {dataElement} onClick={this.toggleElementDropdown}>
+                {fontBulletOptionObject[dataValue]?.text}
+                {disabledPrimaryOption.indexOf(dataValue) > -1 ? null : dropdownArrow}
+            </div>
+            <ul className={`element-dropdown-content primary-options ${active}`}>
+                {fontBulletOptions}
+            </ul>
+        </div> : null;
+        
+        return fontBulletOptions;
+    }
+    
     showUpdateAssessmentTypePopup=()=>{
         this.props.showCanvasBlocker(true);
         hideToc();
@@ -439,6 +551,11 @@ class Sidebar extends Component {
             toggleAsideNumber = this.setToggleForAside(this.props.activeElement, this.props.asideTitleData);
         }
         let hasAsideTitleData = this.props?.activeElement?.asideNumber || false;
+        /* Show Aside toggle ON and DISABLED if autonumbering is enabled */
+        if (this.props.isAutoNumberingEnabled) {
+            toggleAsideNumber = true;
+            hasAsideTitleData = true;
+        }
         let attributions = '';
         let attributionsObject = {};
         let attributionsList = [];
@@ -839,6 +956,14 @@ class Sidebar extends Component {
     }  
 
     render = () => {
+        let currentElementIndex = this.props.activeElement?.index;
+        let disableFontBullet;
+        if(this.props.asideData?.type === "showhide"){
+            disableFontBullet = typeof currentElementIndex === "number" ? "disableFontBullet" : "";
+        }
+        else{
+            disableFontBullet = typeof currentElementIndex === "number" ? "" : "disableFontBullet";
+        }
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
@@ -850,6 +975,12 @@ class Sidebar extends Component {
                     {this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
+                    {this.state.activeElementType ==="manifestlist" && <div className={`${disableFontBullet}`}>
+                    <div className="canvas-sidebar-font-bullet-type">Font Type</div>
+                    {this.fontBulletOption("fontStyle")}
+                    <div className="canvas-sidebar-font-bullet-type">Bullet Color</div>
+                    {this.fontBulletOption("bulletIcon")}
+                    </div>}
                 </div>
                 }
                 {this.props.isTCMCanvasPopupLaunched &&
@@ -892,7 +1023,8 @@ const mapStateToProps = state => {
         elementData: state.tcmReducer.elementData,
         tcmStatus: state.tcmReducer.tcmStatus,
         asideData:state.appStore.asideData,
-        asideTitleData: state.appStore.asideTitleData
+        asideTitleData: state.appStore.asideTitleData,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled
     };
 };
 

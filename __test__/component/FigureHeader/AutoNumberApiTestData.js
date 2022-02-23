@@ -1043,7 +1043,8 @@ export const mockAutoNumberReducerEmpty = {
         videoIndex: {}
     },
     slateFigureList:[],
-    autoNumberOption: ''
+    autoNumberOption: '',
+	autoNumberSettingsOption : ''
 }
 
 export const mockAutoNumberingDetails = {

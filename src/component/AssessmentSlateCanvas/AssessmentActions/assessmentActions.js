@@ -42,7 +42,8 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
     let url = `${config.AUDIO_NARRATION_URL}/usagetypes/v3/${entityType}?locale=en`;
     return axios.get(url, {
         headers: {
-            PearsonSSOSession: config.ssoToken
+            // PearsonSSOSession: config.ssoToken,
+            myCloudProxySession: config.myCloudProxySession
         }
     }).then((res) => {
         dispatchUsageTypeList(entityType, res, 200, dispatch);
@@ -63,7 +64,8 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
             headers: {
                 "Content-Type": "application/json",
                 "ApiKey": config.STRUCTURE_APIKEY,
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }).then(async (res) => {
             if (res && res.data && res.data.status) {
@@ -97,7 +99,8 @@ export const fetchAssessmentVersions = (entityUrn, type, createdDate, assessment
         headers: {
             "Content-Type": "application/json",
             "ApiKey": config.STRUCTURE_APIKEY,
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(async (res) => {
         if (res && res.data && res.data.length > 0) {
@@ -138,7 +141,8 @@ export const fetchAssessmentItems = (itemEntityUrn, apiParams) => dispatch => {
     let url = `${config.REACT_APP_API_URL}v1/slate/assessment/${activeWorkUrn}/items`;
     return axios.get(url, {
         headers: {
-            PearsonSSOSession: config.ssoToken
+            // PearsonSSOSession: config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(async (res) => {
         if (res?.data?.items?.length > 0) {
@@ -196,7 +200,8 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
     return axios.post(url, {}, {
         headers: {
             "Cache-Control": "no-cache",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then((res) => {
         if (res.status == 202) {

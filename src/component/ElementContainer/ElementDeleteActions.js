@@ -24,7 +24,8 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     ).then(async (response) => {
@@ -93,6 +94,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
 
         const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
         const autoNumberParams = {
+            element: activeElement,
             type,
             getState,
             dispatch,
