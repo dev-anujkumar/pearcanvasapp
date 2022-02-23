@@ -109,7 +109,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             let slateData = {
                 currentParentData: newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
-                response: createdElemData.data
+                response: createdElemData.data,
+                cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             };
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
@@ -507,7 +508,8 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
                 const slateData = {
                     currentParentData: newParentData,
                     bodymatter: currentSlateData.contents.bodymatter,
-                    response: response.data[indexOfElement]
+                    response: response.data[indexOfElement],
+                    cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
                 };
                 if (currentSlateData.status === 'approved') {
                     await tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);

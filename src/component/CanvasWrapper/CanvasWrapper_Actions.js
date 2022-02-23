@@ -1485,7 +1485,8 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             let slateData = {
                 currentParentData:newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
-                response: response.data
+                response: response.data,
+                cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             };
             if(config.tcmStatus){
                 prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)

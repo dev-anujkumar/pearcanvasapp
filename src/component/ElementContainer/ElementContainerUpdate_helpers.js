@@ -807,6 +807,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             slateManifestUrn: config.slateManifestURN,
             CurrentSlateStatus: currentSlateData?.status,
             figureData: oldFigureData,
+            cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             
         }
 

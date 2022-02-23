@@ -147,7 +147,8 @@ export const onPasteSuccess = async (params) => {
             responseData,
             dispatch,
             index,
-            elmFeedback: feedback, index2ShowHide
+            elmFeedback: feedback, index2ShowHide,
+            cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
         }
         await handleTCMSnapshotsForCreation(snapArgs, operationType)
     }
@@ -450,7 +451,8 @@ export const handleTCMSnapshotsForCreation = async (params, operationType = null
     const slateData = {
         currentParentData: newParentData,
         bodymatter: currentSlateData.contents.bodymatter,
-        response: responseData
+        response: responseData,
+        cypressPlusProjectStatus
     };
     if (currentSlateData.status === 'approved') {
         await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index, operationType, elmFeedback);
