@@ -718,7 +718,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 response: res.data,
                 updatedId:elementWorkId,
                 slateManifestUrn: config.slateManifestURN,
-                CurrentSlateStatus: currentSlateData?.status
+                CurrentSlateStatus: currentSlateData?.status,
+                cypressPlusProjectStatus: store.getState()?.appStore?.isCypressPlusEnabled
             },
                 containerElement = {
                     asideData:tcmParentData.asideData,

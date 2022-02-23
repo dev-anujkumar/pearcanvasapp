@@ -786,7 +786,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .new-figure-image-header {
   position: relative;
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
 }
 .figure-label-number-field{

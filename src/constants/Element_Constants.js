@@ -2,7 +2,8 @@ import { WORKED_EXAMPLE } from "../component/SlateWrapper/SlateWrapperConstants"
 /*---------------- Error message constants -----------------*/
 export const SLATE_API_ERROR = "Error in getting slate data. Please try again."
 
-/*---------------Element Figure ----------------------*/ 
+/*---------------Element Figure ----------------------*/
+export const TABLE_AS_MARKUP = "tableasmarkup" 
 export const FIGURE = "figure"
 export const IMAGE = "image"
 export const TABLE = "table"

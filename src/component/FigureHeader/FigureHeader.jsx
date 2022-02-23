@@ -9,8 +9,8 @@ import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
-import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData, INTERACTIVE } from '../../constants/Element_Constants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, LABEL_DROPDOWN_VALUES } from './AutoNumberConstants';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
@@ -70,6 +70,9 @@ export const FigureHeader = (props) => {
         const audioCustom = props.figureDropdownData.audioCustom ? [ ...props.figureDropdownData.audio, ...props.figureDropdownData.audioCustom] : props.figureDropdownData.audio;
         const videoCustom = props.figureDropdownData.videoCustom ? [ ...props.figureDropdownData.video, ...props.figureDropdownData.videoCustom] : props.figureDropdownData.video;
         const interactiveCustom = props.figureDropdownData.interactiveCustom ? [ ...props.figureDropdownData.interactive, ...props.figureDropdownData.interactiveCustom] : props.figureDropdownData.interactive;
+        const tableasmarkupCustom = props.figureDropdownData.tableasmarkupCustom ? [...props.figureDropdownData.tableasmarkup, ...props.figureDropdownData.tableasmarkupCustom] : props.figureDropdownData.tableasmarkup;
+        const mathmlCustom = props.figureDropdownData.mathmlCustom ? [...props.figureDropdownData.mathml, ...props.figureDropdownData.mathmlCustom] : props.figureDropdownData.mathml;
+        const preformattedtextCustom = props.figureDropdownData.preformattedtextCustom ? [...props.figureDropdownData.preformattedtext, ...props.figureDropdownData.preformattedtextCustom] : props.figureDropdownData.preformattedtext;
 
         switch (props.model.figuretype) {
             case AUDIO:
@@ -83,6 +86,16 @@ export const FigureHeader = (props) => {
                 break;
             case INTERACTIVE:
                 figureLabelDropdownVal = props.isAutoNumberingEnabled ? interactiveCustom : props.figureDropdownData.smartlinks;
+                break;
+            case TABLE_AS_MARKUP:
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? tableasmarkupCustom : props.figureDropdownData.tableasmarkup;
+                break;
+            //AUTHORED_TEXT is for Math ML
+            case AUTHORED_TEXT:
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? mathmlCustom : props.figureDropdownData.mathml;
+                break;
+            case CODELISTING:
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? preformattedtextCustom : props.figureDropdownData.preformattedtext;
                 break;
             default:
                 figureLabelDropdownVal = [];
@@ -107,14 +120,20 @@ export const FigureHeader = (props) => {
     }, [props.autoNumberOption]);
     useEffect(() => {
         updateDropdownOptions();
+        const figIndexParent3 = getContainerEntityUrn(props.currentSlateAncestorData);
+        let activeNumber = getNumberData(figIndexParent3, props.model, props.autoNumberElementsIndex || {})
+        if(activeNumber && typeof activeNumber === 'string' && activeNumber.trim() !== ""){
+            activeNumber?.replace(/&nbsp;/g, ' ')
+        }
+        setCurrentNumberValue(activeNumber)
     }, [props.autoNumberElementsIndex]);
     useEffect(() => {
         updateDropdownOptions(); // update the dropdown options if any new value is introduced via Controlled Vocab in the Project Settings
     }, [props.figureDropdownData]);
     useEffect(() => {
         setSlateAncestors(props.currentSlateAncestorData);
-        const figIndexParent = getContainerEntityUrn(props.currentSlateAncestorData);
-        let currentNumber = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
+        const figIndexParent2 = getContainerEntityUrn(props.currentSlateAncestorData);
+        let currentNumber = getNumberData(figIndexParent2, props.model, props.autoNumberElementsIndex || {})
         if(currentNumber && typeof currentNumber === 'string' && currentNumber.trim() !== ""){
             currentNumber?.replace(/&nbsp;/g, ' ')
         }
@@ -184,8 +203,9 @@ export const FigureHeader = (props) => {
         } else if (props?.model?.figuretype == 'audio' || props?.model?.figuretype == 'video') {
             props.updateAudioVideoDataForCompare(props.model.figuredata);
         }
-
-        props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: labelNumberSetting});
+        if (!(id === `${props.index}-2` && props.autoNumberOption?.option === labelNumberSetting)) {
+            props.updateAutoNumberingDropdownForCompare({ entityUrn: props.model.contentUrn, option: labelNumberSetting });
+        }
     }
 
     const onFigureHeaderFieldBlur = (id) => {
@@ -218,7 +238,7 @@ export const FigureHeader = (props) => {
             if (labelNumberSettingDropDown === AUTO_NUMBER_SETTING_RESUME_NUMBER && !isnum) {
                 return false;
             } else {
-                setCurrentNumberValue(evt.target.innerText?.replace(/&nbsp;/g, ' '));
+                setCurrentNumberValue(evt.target.innerText?.replace(/&nbsp;/g, ' ')?.replaceAll('&nbsp;', ' '));
             }
         }
     }

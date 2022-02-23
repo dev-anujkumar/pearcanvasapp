@@ -551,6 +551,11 @@ class Sidebar extends Component {
             toggleAsideNumber = this.setToggleForAside(this.props.activeElement, this.props.asideTitleData);
         }
         let hasAsideTitleData = this.props?.activeElement?.asideNumber || false;
+        /* Show Aside toggle ON and DISABLED if autonumbering is enabled */
+        if (this.props.isAutoNumberingEnabled) {
+            toggleAsideNumber = true;
+            hasAsideTitleData = true;
+        }
         let attributions = '';
         let attributionsObject = {};
         let attributionsList = [];
@@ -1018,7 +1023,8 @@ const mapStateToProps = state => {
         elementData: state.tcmReducer.elementData,
         tcmStatus: state.tcmReducer.tcmStatus,
         asideData:state.appStore.asideData,
-        asideTitleData: state.appStore.asideTitleData
+        asideTitleData: state.appStore.asideTitleData,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled
     };
 };
 
