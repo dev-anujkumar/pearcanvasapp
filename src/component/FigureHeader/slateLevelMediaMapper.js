@@ -24,9 +24,10 @@ export const getAutoNumberedElementsOnSlate = (slateLevelData, params) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[], popupElementsList = []) => {
+export const getImagesInsideSlates = async (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[], popupElementsList = []) => {
     if (bodyMatter?.length > 0) {
-        bodyMatter?.forEach(async (element, index) => {
+        for(let index in bodyMatter){
+            let element = bodyMatter[index];
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
                 if (parentIndex?.length) {
                     element.indexPos = [...parentIndex]
@@ -62,7 +63,7 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                         } else {
                             const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
                             if (parentIndex?.length) popupContent.parentDetails = parentIndex
-                            await getMediaElementInPopup(popupContent, numberedElements)
+                            getMediaElementInPopup(popupContent, numberedElements)
                         }
                         break;
                     case containerElements.ASIDE:
@@ -73,7 +74,7 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                         break;
                 }
             }
-        })
+        }
     }
     return numberedElements
 }

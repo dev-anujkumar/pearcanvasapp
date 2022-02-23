@@ -284,7 +284,7 @@ export const deleteElementByLabelFromStore = (numberedElements, element, parentI
  * Handle AUTO-NUMBERING on Swapping
  * @param {*} params 
  */
-export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) => {
+export const handleAutoNumberingOnSwapping = async (isAutoNumberingEnabled, params) => {
     const {
         getState,
         dispatch,
@@ -298,7 +298,7 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after swap
         const bodyMatter = currentSlateData.contents.bodymatter
-        const slateFigures = getImagesInsideSlates(bodyMatter)
+        const slateFigures = await getImagesInsideSlates(bodyMatter)
         if (slateFigures) {
             dispatch({
                 type: SLATE_FIGURE_ELEMENTS,
