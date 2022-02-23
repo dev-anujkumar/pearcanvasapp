@@ -94,7 +94,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         const newParentData = JSON.parse(JSON.stringify(parentData));
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         let currentSlateData = newParentData[config.slateManifestURN];
-
+        const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
         /**This will be removed when BL supports TCM */
         const tempSlateWrapperConstants = [...slateWrapperConstants.elementType].filter( item => item !== "MANIFEST_LIST")
@@ -110,7 +110,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 currentParentData: newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
                 response: createdElemData.data,
-                cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
+                cypressPlusProjectStatus: cypressPlusProjectStatus
             };
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
@@ -392,7 +392,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
         if (config.tcmStatus) {
             //This check is for the TEXT element which gets created inside BL on Shift+Enter
-            if(!blockListDetails) {
+            if(!blockListDetails && !(cypressPlusProjectStatus && createdElementData?.type === 'element-pdf')) {
                 //This check will be removed once BlockList will support TCM
                 if(type !== "MANIFEST_LIST") {
                 if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
