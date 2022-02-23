@@ -18,7 +18,7 @@ import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
 import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
 import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
-import { setAutonumberingValuesForPayload, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
+import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberedElement } from './UpdateElements';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
@@ -534,14 +534,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 slateFigures = await getAsideElementsWrtKey(newBodymatter, 'element-aside', slateFigures);
             } else {
                 slateFigures = await getAutoNumberedElementsOnSlate(newParentData[config.slateManifestURN], { dispatch });
-                if (slateFigures) {
-                    dispatch({
-                        type: SLATE_FIGURE_ELEMENTS,
-                        payload: {
-                            slateFigures
-                        }
-                    });
-                }
             }
             
             elementObj = slateFigures?.find(element => element.contentUrn === createdElemData.data.contentUrn);
@@ -890,19 +882,21 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, dataArr[0], dataArr[1], false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
-        displayedlabel = previousData.displayedlabel;
-        if (!(previousData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+        const validDropdownOptions = generateDropdownDataForContainers(previousData);
+        if (validDropdownOptions?.includes(dataArr[0])) {
+            displayedlabel = dataArr[0];
+        } else if (!(previousData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
             displayedlabel = getValueOfLabel(previousData?.subtype);
         }
         updatedElement = {
             ...updatedElement,
-            html : {
+            html: {
                 ...updatedElement.html,
                 title: `<p>${dataArr[2]}</p>`
             },
-            numberedandlabel : numberedandlabel,
-            displayedlabel : displayedlabel,
-            manualoverride : manualoverride
+            numberedandlabel: numberedandlabel,
+            displayedlabel: displayedlabel,
+            manualoverride: manualoverride
         }
         autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
         (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;

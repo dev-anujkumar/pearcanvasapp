@@ -107,8 +107,8 @@ export const ContainerHeader = (props) => {
     }, [props.currentSlateAncestorData]);
 
     useEffect(() => {
-        updateDropdownOptions();
-    }, [props.figureDropdownData?.asideCustom || props.figureDropdownData?.workedexampleCustom]);
+        updateDropdownOptions(); // update the dropdown options if any new value is introduced via Controlled Vocab in the Project Settings
+    }, [props.figureDropdownData?.asideCustom, props.figureDropdownData?.workedexampleCustom]);
     
     const handleCloseDropDrown = () => {
         setState({ labelDropDown: false, labelNumberSettingDropDown: false });

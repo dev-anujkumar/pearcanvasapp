@@ -72,10 +72,10 @@ import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import BlockListWrapper from '../BlockListComponent/BlockListWrapper.jsx';
 import {prepareCommentsManagerIcon} from './CommentsManagrIconPrepareOnPaste.js'
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
-import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, updateAutonumberingOnOverridedCase, validateLabelNumberSetting, generateDropdownDataForFigures, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, updateAutonumberingOnOverridedCase, validateLabelNumberSetting, generateDropdownDataForFigures, generateDropdownDataForContainers, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForImage, displayLabelsForAudioVideo, displayLabelsForContainer, autoNumber_ElementSubTypeToCeateKeysMapper, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumber_ElementSubTypeToCeateKeysMapper, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes';
 import { checkHTMLdataInsideString } from '../../constants/utility';
  
@@ -413,8 +413,11 @@ class ElementContainer extends Component {
                 isNumberDifferent = elementNumberValue?.toString() !== numberHTML?.toString();
             }
             titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`;
-            /* Checking that if label & number are different for api trigger */ 
-            if ((!(previousElementData?.hasOwnProperty('displayedlabel')) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER))) {
+            const validDropdownOptions = generateDropdownDataForContainers(previousElementData);
+            /* Checking that if label & number are different for api trigger */
+            if (previousElementData?.hasOwnProperty('displayedlabel') && validDropdownOptions.includes(labeleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER)) {
+                isLabelDifferent = labeleHTML !== previousElementData?.displayedlabel;
+            } else if ((!(previousElementData?.hasOwnProperty('displayedlabel')) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER))) {
                 isLabelDifferent = false;
             } else if (previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) {
                 isLabelDifferent = labeleHTML !== previousElementData?.manualoverride?.overridelabelvalue;
@@ -1004,7 +1007,10 @@ class ElementContainer extends Component {
                         numberedandlabel = payloadKeys?.numberedandlabel;
                         manualoverride = payloadKeys?.manualoverride;
                         displayedlabel = previousElementData?.displayedlabel;
-                        if (!(previousElementData.hasOwnProperty('displayedlabel')) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+                        const validDropdownOptions = generateDropdownDataForContainers(previousElementData);
+                        if (validDropdownOptions?.includes(dataArr[0])) {
+                            displayedlabel = dataArr[0];
+                        } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                             displayedlabel = getValueOfLabel(previousElementData?.subtype);
                         }
                         updatedElement = {
