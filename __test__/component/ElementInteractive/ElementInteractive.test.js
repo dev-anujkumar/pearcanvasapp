@@ -9,7 +9,7 @@ import  { getMCQGuidedData}  from '../../../src/component/AssessmentSlateCanvas/
 import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivepdf, InteractiveWeblink,
     InteractivePopupWeblink, InteractiveTable,InteractiveShowHide,InteractivePopWindow,Interactivegraph
     ,Interactivesimulation,Interactivesurvey,Interactivetimeline,Interactivehotspot,Interactiveaccountingtable,
-    Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm, interactiveElm2 } from '../../../fixtures/ElementInteractiveTesting.js'
+    Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm } from '../../../fixtures/ElementInteractiveTesting.js'
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -738,7 +738,7 @@ describe('Testing Interactive element component', () => {
                 expect(elementInteractiveInstance.state.itemID).toBe("urn:pearson:alfresco:d039c78e-6f36-4c64-9c50-20e0622486b2")
                 spydataFromAlfresco.mockClear()
             })
-            it('Test- if case workflow-smartLinkType-website', () => {    
+            it('Test- if case workflow-smartLinkType-website', () => {
                 let data =  {
                     "modifiedAt":"2019-07-03T06:43:33.661+0000",
                     "name":"External Website Link - 20th April",
