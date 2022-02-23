@@ -257,7 +257,7 @@ export const FigureHeader = (props) => {
                 {removeLabelCondition && showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && <div className='figure-label-field'>
                     <span className={`label ${labelDropDown ? 'active' : ''}`}>Label</span>
                     <div className="figure-label" onClick={handleLabelDropdown}>
-                        <span>{imgLabelValue}</span>
+                        <span className='canvas-dropdown' >{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                         {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
                             <div className="figure-dropdown" style={{top: '9px', left: 0}} ref={labelDropdownWrapperRef} >
@@ -265,9 +265,8 @@ export const FigureHeader = (props) => {
                                     {figureLabelData.map((label, i) => {
                                         return (
                                             <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>
-                                            <Tooltip direction="right" tooltipText={label}>{label}</Tooltip></li>
+                                                {label}</li>
                                         )
-
                                     })}
                                 </ul>
                             </div>

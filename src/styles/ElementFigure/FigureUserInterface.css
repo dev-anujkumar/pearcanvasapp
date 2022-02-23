@@ -788,7 +788,7 @@ th ol li.listItemNumeroUnoNone:before {
   padding: 10px;
   margin: 0;
   font-size: 14px;
-  white-space: nowrap;
+  overflow-wrap: break-word;
 }
 .figure-dropdown ul li:hover {
   background-color: #efefef;
@@ -812,6 +812,12 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .figure-label-field {
   margin-right: 24px;
+}
+.canvas-dropdown {
+    overflow: hidden;
+    width: 112px;
+    white-space: nowrap;
+    display: block;
 }
 .videoIconWrapper {
     width:398px;
