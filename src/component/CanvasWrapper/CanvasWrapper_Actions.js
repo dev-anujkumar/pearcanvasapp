@@ -340,7 +340,6 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 
-
 export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     // Api to get Figure dropdown options
     let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
