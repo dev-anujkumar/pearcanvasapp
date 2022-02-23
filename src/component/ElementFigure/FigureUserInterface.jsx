@@ -221,7 +221,9 @@ class FigureUserInterface extends Component {
            const node = document.activeElement;
            node.click();
         }
-        event.preventDefault();
+        if(event.keyCode === 38){
+            event.preventDefault();
+        }
     }
 
 
