@@ -52,6 +52,9 @@ describe('Test for Sidebar component', () => {
             tcmSnapshotData: {},
             elementData: {},
             tcmStatus: false
+        },
+        autoNumberReducer: {
+            isAutoNumberingEnabled: false
         }
     });
     let props = {
@@ -165,6 +168,9 @@ describe('Test for Sidebar component', () => {
                 tcmSnapshotData: {},
                 elementData: {},
                 tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
             }
         });
 
@@ -307,6 +313,9 @@ describe('Test for Sidebar component', () => {
                 tcmSnapshotData: {},
                 elementData: {},
                 tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
             }
         });
 
@@ -353,6 +362,9 @@ describe('Test for Sidebar component', () => {
                 tcmSnapshotData: {},
                 elementData: {},
                 tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
             }
         });
 
@@ -391,6 +403,9 @@ describe('Test for Sidebar component', () => {
                 tcmSnapshotData: {},
                 elementData: {},
                 tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
             }
 
         });
@@ -431,6 +446,9 @@ describe('Test for Sidebar component', () => {
                         tcmSnapshotData: {},
                         elementData: {},
                         tcmStatus: false
+                    },
+                    autoNumberReducer: {
+                        isAutoNumberingEnabled: false
                     }
                 });
                 let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props} /></Provider>);
@@ -467,6 +485,9 @@ describe('Test for Sidebar component', () => {
                         tcmSnapshotData: {},
                         elementData: {},
                         tcmStatus: false
+                    },
+                    autoNumberReducer: {
+                        isAutoNumberingEnabled: false
                     }
                 });
                 let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props} /></Provider>);
@@ -617,6 +638,9 @@ describe('Test for Sidebar component', () => {
                     tcmSnapshotData: {},
                     elementData: {},
                     tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar   {...props} /></Provider>);
@@ -668,6 +692,9 @@ describe('Test for Sidebar component', () => {
                     tcmSnapshotData: {},
                     elementData: {},
                     tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar   {...props} /></Provider>);
@@ -685,8 +712,8 @@ describe('Test for Sidebar component', () => {
         })
     })
     describe('Test - Blocklist', () => {
-          it("Testing handleFontBulletOptionChange  function - fontStyle- string index", () => {
-        const sidebarWithData2 = mockStore({
+        it("Testing handleFontBulletOptionChange  function - fontStyle- string index", () => {
+            const sidebarWithData2 = mockStore({
                 appStore: {
                     activeElement: {
                         ...activeElement,
@@ -710,6 +737,9 @@ describe('Test for Sidebar component', () => {
                     tcmSnapshotData: {},
                     elementData: {},
                     tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -753,6 +783,9 @@ describe('Test for Sidebar component', () => {
                     tcmSnapshotData: {},
                     elementData: {},
                     tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -808,6 +841,9 @@ describe('Test for Sidebar component', () => {
                 tcmSnapshotData: {},
                 elementData: {},
                 tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
             }
         });
         let activeElement = {
