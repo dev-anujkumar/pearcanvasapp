@@ -4,6 +4,7 @@ import { tcmSnapshotsForUpdate } from '../TcmSnapshots/TcmSnapshotsCreate_Update
 import { sendDataToIframe } from '../../constants/utility.js';
 import { updateAssessmentVersion } from '../../component/AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { updateAutoNumberedElement } from './UpdateElements';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../../component/FigureHeader/AutoNumberConstants';
 //Constants
 import {
     AUTHORING_ELEMENT_UPDATE,
@@ -136,7 +137,7 @@ export const updateElementInStore = (paramsObj) => {
     /* update the store on update of showhide elements inside container elements */
     if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
         const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList);
-        updateShowhideElements(sh_Object, updatedData, iList);
+        updateShowhideElements(sh_Object, updatedData, iList, { isAutoNumberingEnabled, autoNumberSettingsOption });
     } else
     if (parentElement && parentElement.type === "citations") {
         const indexes = typeof elementIndex === 'string' ? elementIndex?.split("-"): elementIndex;
@@ -169,6 +170,12 @@ export const updateElementInStore = (paramsObj) => {
     } else if (parentElement && parentElement.type === "groupedcontent") {
         const indexes = elementIndex.split("-")
         let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+        /** Updation of AutoNumbered Elements */
+        if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+            element = { ...element, ...updatedData }
+            const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+            element = { ...dataToReturn }
+        }
         _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = {
             ...element,
             ...updatedData,
@@ -179,11 +186,6 @@ export const updateElementInStore = (paramsObj) => {
                 text: updatedData.elementdata ? updatedData.elementdata.text : null
             },
             tcm: _slateObject.tcm ? true : false
-        }
-        /** Updation of AutoNumbered Elements */
-        if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
-            const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
-            element = { ...dataToReturn }
         }
     } 
     else if (updatedData?.loData?.length) {
@@ -220,11 +222,6 @@ export const updateElementInStore = (paramsObj) => {
                             text: updatedData?.elementdata?.text
                         },
                     }
-                    /** Updation of AutoNumbered Elements */
-                    if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
-                        const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
-                        element = { ...dataToReturn }
-                    }
                 }
             }else if (parentElement?.type == "showhide" && showHideType) {
                 _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType].map((showHideData) => {
@@ -236,7 +233,13 @@ export const updateElementInStore = (paramsObj) => {
             }
             else {
                 /** updation of text and figure elements inside aside/WE of multicolumn */
-                const element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
+                let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
+                /** Updation of AutoNumbered Elements */
+                if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                    element = { ...element, ...updatedData }
+                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                    element = { ...dataToReturn }
+                }
                 _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
                 ...element,
                 ...updatedData,
@@ -248,16 +251,11 @@ export const updateElementInStore = (paramsObj) => {
                 },
                 tcm: _slateObject.tcm ? true : false
                 }
-                /** Updation of AutoNumbered Elements */
-                if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
-                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
-                    element = { ...dataToReturn }
-                }
             }
         } else if(indexes?.length == 5 && parentUrn?.elementType === "manifest") {
             /* 2C:WE-BODY/Section Break:PS */
             if(parentElement?.type === "popup") {  /* 2C:WE-BODY/Section Break:Popup*/
-                const element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata;
+                let element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata;
                 if(updatedData.sectionType === "postertextobject"){ /* 2C:WE-BODY/Section Break:Popup: posterobjectdata*/
                     _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata.postertextobject[0] = {
                         ...element.postertextobject[0],
@@ -266,11 +264,6 @@ export const updateElementInStore = (paramsObj) => {
                             ...element.postertextobject[0].elementdata,
                             text: updatedData?.elementdata?.text
                         },
-                    }
-                    /** Updation of AutoNumbered Elements */
-                    if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
-                        const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
-                        element = { ...dataToReturn }
                     }
                 } else { /* 2C:WE-BODY/Section Break:Popup: formatted-title */
                     _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata["formatted-title"] = {
@@ -291,6 +284,12 @@ export const updateElementInStore = (paramsObj) => {
                 })
             }else {
                 let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                /** Updation of AutoNumbered Elements */
+                if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                    element = { ...element, ...updatedData }
+                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                    element = { ...dataToReturn }
+                }
                 _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
                     ...element,
                     ...updatedData,
@@ -301,11 +300,6 @@ export const updateElementInStore = (paramsObj) => {
                         text: updatedData.elementdata ? updatedData.elementdata.text : null
                     },
                     tcm: _slateObject.tcm ? true : false
-                }
-                /** Updation of AutoNumbered Elements */
-                if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
-                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
-                    element = { ...dataToReturn }
                 }
             }  
         }
@@ -705,7 +699,7 @@ export const updateElementInStore = (paramsObj) => {
 *  @param {Object} element - showhide object data 
 *  @param {Object} updatedData - updated data of inner elements 
 *  @param {Array}  indexs - indexs of element heirarchy */
-export function updateShowhideElements(element, updatedData, indexs) {
+export function updateShowhideElements(element, updatedData, indexs, {isAutoNumberingEnabled,autoNumberSettingsOption, updatedSH_Object}) {
     if(element?.type === SHOW_HIDE) {
         /* Get the section type of showhide; Index of section (indexs?.length - 2) */
         const section = findSectionType(indexs[indexs?.length - 2]);
@@ -715,6 +709,10 @@ export function updateShowhideElements(element, updatedData, indexs) {
                 if(showHideElement?.type === AUTHORED_TEXT) { /* For update paragraph - TEXT */
                     showHideElement.elementdata.text = updatedData.elementdata.text;
                 } else if(showHideElement?.type === FIGURE) { /* For update - FIGURE */
+                    /** Updation of AutoNumbered Elements */
+                    if (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(showHideElement?.figuretype) && autoNumberSettingsOption?.entityUrn === updatedData.contentUrn) {
+                        updateFigureElement_InSH(autoNumberSettingsOption?.option, showHideElement, { displayedlabel: updatedData?.displayedlabel, manualoverride: updatedData?.manualoverride })
+                    }
                     showHideElement.figuredata = updatedData?.figuredata;
                 } else if(showHideElement?.type === ELEMENT_DIALOGUE) { /* For update PS  - linenumber */
                     showHideElement.elementdata = updatedData?.elementdata;
@@ -724,6 +722,47 @@ export function updateShowhideElements(element, updatedData, indexs) {
     }
 }
 
+export const updateFigureElement_InSH = (autoNumberOption, oldElement, { displayedlabel, manualoverride }) => {
+    const {
+        AUTO_NUMBER_SETTING_DEFAULT,
+        AUTO_NUMBER_SETTING_RESUME_NUMBER,
+        AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+        AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
+        AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
+    } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
+    switch (autoNumberOption) {
+        case AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER:
+            oldElement.manualoverride = manualoverride
+            oldElement.numberedandlabel = true
+            if (oldElement?.hasOwnProperty('displayedlabel')) {
+                delete oldElement.displayedlabel
+            }
+            break;
+        case AUTO_NUMBER_SETTING_RESUME_NUMBER:
+        case AUTO_NUMBER_SETTING_OVERRIDE_NUMBER:
+            oldElement.displayedlabel = displayedlabel
+            oldElement.manualoverride = manualoverride
+            oldElement.numberedandlabel = true
+            break;
+        case AUTO_NUMBER_SETTING_REMOVE_NUMBER:
+            oldElement.numberedandlabel = false
+            if (oldElement?.hasOwnProperty('displayedlabel')) {
+                delete oldElement.displayedlabel
+            }
+            if (oldElement?.hasOwnProperty('manualoverride')) {
+                delete oldElement.manualoverride
+            }
+            break;
+        case AUTO_NUMBER_SETTING_DEFAULT:
+        default:
+            oldElement.numberedandlabel = true
+            oldElement.displayedlabel = displayedlabel
+            if (oldElement?.hasOwnProperty('manualoverride')) {
+                delete oldElement.manualoverride
+            }
+            break;
+    }
+}
 export const collectDataAndPrepareTCMSnapshot = async (params) => {
     const {
         getState,
@@ -768,6 +807,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             slateManifestUrn: config.slateManifestURN,
             CurrentSlateStatus: currentSlateData?.status,
             figureData: oldFigureData,
+            cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             
         }
 
@@ -1016,6 +1056,10 @@ export const updateStoreInCanvas = (params) => {
 export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, versionedData, updatedData }) => {
     if (updatedData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(updatedData.figuretype)) {
         return false
+    }
+    const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
+    if (cypressPlusProjectStatus && updatedData?.type === 'element-pdf') {
+        return false; // disable TCM for all PDF slates in Cypress+ Enabled Projects
     }
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
