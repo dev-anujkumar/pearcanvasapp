@@ -81,6 +81,11 @@ const isFirtstChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const firstTextNode = getFirstTextNode(tinymceNode);
         const uniCode = '\uFEFF';
+        console.log("Ss")
+        //for bce when code have blank lines
+        if (node?.className === 'codeNoHighlightLine' && node?.innerText === '') {
+            return false
+        }
         if(tinymceOffset == 0) {
             return true;
         }
@@ -161,6 +166,10 @@ const isLastChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const lastTextNode = getLastTextNode(tinymceNode);
         const uniCode = '\uFEFF';
+        //for bce when code have blank lines
+        if (node?.className === 'codeNoHighlightLine' && node?.innerText === '') {
+            return false
+        }
         if(lastTextNode.className == "Wirisformula") {
             if(tinymceOffset != 0 && node.lastChild != null) {
              return true;
