@@ -155,7 +155,17 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
             result = autonumber_helperFunctions.getValueOfLabel("mathImage");
             expect(result).toBe('Figure')
             result = autonumber_helperFunctions.getValueOfLabel("interactive");
-            expect(result).toBe('Interactive')
+            expect(result).toBe('Interactive');
+            result = autonumber_helperFunctions.getValueOfLabel("sidebar");
+            expect(result).toBe('Aside');
+            result = autonumber_helperFunctions.getValueOfLabel("workedexample");
+            expect(result).toBe('Worked Example');
+            result = autonumber_helperFunctions.getValueOfLabel("tableasmarkup");
+            expect(result).toBe('Table');
+            result = autonumber_helperFunctions.getValueOfLabel("authoredtext");
+            expect(result).toBe('Equation');
+            result = autonumber_helperFunctions.getValueOfLabel("codelisting");
+            expect(result).toBe('Exhibit');
             result = autonumber_helperFunctions.getValueOfLabel("mathml");
             expect(result).toBe('')
             expect(spyFunction).toHaveBeenCalled();
