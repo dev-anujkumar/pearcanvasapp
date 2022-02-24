@@ -1,9 +1,17 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import config from "../../src/config/config"
+import thunk from 'redux-thunk';
+import configureMockStore from 'redux-mock-store';
 import * as actions from '../../src/component/PdfSlate/CypressPlusAction';
+import { SET_JOINED_PDF_STATUS } from '../../src/constants/Action_Constants';
 
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
 describe('CyprssPlusAction', () => {
+    let store;
+    let initialState = { appStore: {} };
+    store = mockStore(() => initialState);
     it('returns 200 when convertPdf is called', () => {
         var mock = new MockAdapter(axios);
         const data = { response: true };
@@ -21,4 +29,10 @@ describe('CyprssPlusAction', () => {
         actions.pdfConversionStatus();
         expect(spygetCommentElements).toHaveBeenCalled();
     });
+    it('testing------- cypressPlusEnabled  ------action', () => {
+        store.dispatch(actions.getJoinedPdfStatus({}))
+        const { type } = store.getActions()[0];
+        expect(type).toBe(SET_JOINED_PDF_STATUS);
+    });
+
 });
