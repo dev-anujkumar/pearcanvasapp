@@ -531,9 +531,8 @@ export const searchDisussion = (() => {
 
 export const commentFlagged = (() => {
     return (
-        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+        <svg width="11" height="12" viewBox="3 3 12 12" xmlns="http://www.w3.org/2000/svg">
             <g fill="none" fill-rule="evenodd">
-                <path fill="#005A70" d="M0 0h20v20H0z" />
                 <path fill="#FFF" d="M11.635 5.412 11.353 4H5v12h1.412v-4.941h3.953l.282 1.412h4.941V5.41z" />
             </g>
         </svg>  

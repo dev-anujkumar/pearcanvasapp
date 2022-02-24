@@ -432,8 +432,7 @@ export const handleTCMSnapshotsForCreation = async (params, operationType = null
         responseData,
         dispatch,
         index,
-        elmFeedback, index2ShowHide,
-        cypressPlusProjectStatus
+        elmFeedback, index2ShowHide, cypressPlusProjectStatus
     } = params
 
     let containerElement = {
