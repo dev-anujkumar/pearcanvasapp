@@ -1151,6 +1151,10 @@ function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
     if (resData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(resData.figuretype)) {
         return false
     }
+    const cypressPlusProjectStatus = store.getState()?.appStore?.isCypressPlusEnabled
+    if (cypressPlusProjectStatus && resData?.type === 'element-pdf') {
+        return false; // disable TCM for all PDF slates in Cypress+ Enabled Projects
+    }
     const tcmData = store.getState().tcmReducer.tcmSnapshot;
     let indexes = []
     tcmData.filter(function (element, index) {

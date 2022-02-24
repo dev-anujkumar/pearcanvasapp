@@ -134,7 +134,7 @@ export const onPasteSuccess = async (params) => {
     const currentSlateData = newParentData[config.slateManifestURN];
     let slateOldNumberedContainerElements = [];
     slateOldNumberedContainerElements = await getAsideElementsWrtKey(currentSlateData?.contents?.bodymatter, ELEMENT_ASIDE, slateOldNumberedContainerElements);
-
+    const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
     if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type!=='popup') {
         const snapArgs = {
@@ -148,7 +148,7 @@ export const onPasteSuccess = async (params) => {
             dispatch,
             index,
             elmFeedback: feedback, index2ShowHide,
-            cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
+            cypressPlusProjectStatus: cypressPlusProjectStatus
         }
         await handleTCMSnapshotsForCreation(snapArgs, operationType)
     }
@@ -330,7 +330,7 @@ export const onPasteSuccess = async (params) => {
         newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
     }
 
-    if (config.tcmStatus) {
+    if (config.tcmStatus && !(cypressPlusProjectStatus && responseData?.type === ELEMENT_TYPE_PDF)) {
         if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
             await prepareDataForTcmCreate(slateWrapperConstants.checkTCM(responseData), responseData, getState, dispatch , selectedElem);
         }

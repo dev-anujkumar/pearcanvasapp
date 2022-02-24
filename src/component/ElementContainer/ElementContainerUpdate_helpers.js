@@ -1057,6 +1057,10 @@ export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, ver
     if (updatedData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(updatedData.figuretype)) {
         return false
     }
+    const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
+    if (cypressPlusProjectStatus && updatedData?.type === 'element-pdf') {
+        return false; // disable TCM for all PDF slates in Cypress+ Enabled Projects
+    }
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
     tcmData && tcmData.filter(function (element, index) {
