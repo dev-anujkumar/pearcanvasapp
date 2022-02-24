@@ -492,7 +492,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         let slateData = {
             currentParentData: newParentData,
             bodymatter: currentSlateData.contents.bodymatter,
-            response: createdElemData.data
+            response: createdElemData.data,
+            cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
         };
         //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed 
         if(type2BAdded !== "MANIFEST_LIST") {

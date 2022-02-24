@@ -1480,9 +1480,11 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             let slateData = {
                 currentParentData:newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
-                response: response.data
+                response: response.data,
+                cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             };
-            if(config.tcmStatus){
+            // disable TCM for all PDF slates in Cypress+ Enabled Projects
+            if(config.tcmStatus && !(slateData?.cypressPlusProjectStatus && slateData?.response?.type === 'element-pdf')){
                 prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
             }
             tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);

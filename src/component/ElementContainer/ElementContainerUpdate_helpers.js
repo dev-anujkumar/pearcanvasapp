@@ -807,6 +807,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
             slateManifestUrn: config.slateManifestURN,
             CurrentSlateStatus: currentSlateData?.status,
             figureData: oldFigureData,
+            cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             
         }
 
@@ -1055,6 +1056,10 @@ export const updateStoreInCanvas = (params) => {
 export const prepareDataForUpdateTcm = ({ updatedDataID, getState, dispatch, versionedData, updatedData }) => {
     if (updatedData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(updatedData.figuretype)) {
         return false
+    }
+    const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
+    if (cypressPlusProjectStatus && updatedData?.type === 'element-pdf') {
+        return false; // disable TCM for all PDF slates in Cypress+ Enabled Projects
     }
     const tcmData = getState().tcmReducer.tcmSnapshot;
     let indexes = []
