@@ -5,7 +5,8 @@
 }
 
 .editor.container-pdf {
-    margin: 50px 40px 40px 50px !important;
+    margin: 48px 0px 40px 0px !important;
+    padding: 4px 0 0 0 !important;
 }
 .element-container {
     /* padding: 15px; */
