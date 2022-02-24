@@ -29,7 +29,8 @@ import {
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     ERROR_API_POPUP,
     SLATE_FIGURE_ELEMENTS,
-    OEP_DISCUSSION
+    OEP_DISCUSSION,
+    UPDATE_AUTONUMBER_MAPPER_KEYS
 } from '../../constants/Action_Constants';
 import { SLATE_API_ERROR } from '../../constants/Element_Constants';
 
@@ -57,6 +58,7 @@ const { SHOW_HIDE } = ElementConstants;
 import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
 import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
+import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -345,23 +347,72 @@ export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     return axios.get(figureDropdownOptionsURL, {
         headers: {
             "Content-Type": "application/json",
-            // "PearsonSSOSession": config.ssoToken,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         let dropdownOptionsObj = response?.data;
-        if (Object.keys(dropdownOptionsObj).length > 0) {
-            dispatch({
-                type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
-                payload: dropdownOptionsObj
-            })
-            sendDataToIframe({
-                'type': SET_CONTROL_VOCAB_DETAILS,
-                'message': dropdownOptionsObj
-            });
-        }
+        dispatch(updateFigureDropdownValues(dropdownOptionsObj))
     }).catch(error => {
         console.log("Get figure dropdown options API Failed !!", error)
+    })
+}
+
+export const updateFigureDropdownValues = (dropdownOptionsObj) => (dispatch, getState) => {
+    if (Object.keys(dropdownOptionsObj).length > 0) {
+        dispatch({
+            type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
+            payload: dropdownOptionsObj
+        })
+        sendDataToIframe({
+            'type': SET_CONTROL_VOCAB_DETAILS,
+            'message': dropdownOptionsObj
+        });
+        const autoNumberReducer = getState().autoNumberReducer
+        updateAutoNumberLabelKeys(dropdownOptionsObj, { autoNumberReducer }, dispatch)
+    }
+}
+
+// update the keys' Object used for mapping in Autonumbering in the Redux store
+export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReducer }, dispatch) => {
+    const autoNumber_KeyMapper = autoNumberReducer?.autoNumber_KeyMapper ?? {}
+    const autoNumber_ElementTypeKey = autoNumberReducer?.autoNumber_ElementTypeKey ?? {}
+    const autoNumber_response_ElementType_mapper = autoNumberReducer?.autoNumber_response_ElementType_mapper ?? {}
+    const autoNumber_IndexMapper = autoNumberReducer.autoNumber_IndexMapper ?? {}
+    let listOfCustomeLabels = []
+    const labelDefaultKeys = ['id', 'aside', 'audio', 'image', 'interactive', 'mathml', 'preformattedtext', 'smartlinks', 'tableasmarkup', 'video', 'workedexample']
+    Object.keys(dropdownOptionsObj)?.forEach(labelType => {
+        if (labelDefaultKeys.indexOf(labelType) == -1) {
+            listOfCustomeLabels = [...listOfCustomeLabels, ...dropdownOptionsObj[labelType]]
+        }
+    })
+    listOfCustomeLabels = listOfCustomeLabels.filter((item, index, inputArray) => {
+        return inputArray.indexOf(item) == index;
+    });
+
+    listOfCustomeLabels.forEach(item => {
+        let customValue = item.replace(' ', '').toLowerCase()
+        if (!autoNumber_KeyMapper?.hasOwnProperty(item)) {
+            autoNumber_KeyMapper[item] = `${customValue}Index`
+        }
+        if (!autoNumber_ElementTypeKey?.hasOwnProperty(item)) {
+            autoNumber_ElementTypeKey[item] = `${customValue}List`
+        }
+        if (!autoNumber_IndexMapper?.hasOwnProperty(`${customValue}List`)) {
+            autoNumber_IndexMapper[`${customValue}List`] = `${customValue}Index`
+        }
+        if (!autoNumber_response_ElementType_mapper?.hasOwnProperty(`${customValue}s`)) {
+            autoNumber_response_ElementType_mapper[`${customValue}s`] = `${customValue}List`
+        }
+    });
+
+    dispatch({
+        type: UPDATE_AUTONUMBER_MAPPER_KEYS,
+        payload: {
+            autoNumber_KeyMapper,
+            autoNumber_IndexMapper,
+            autoNumber_ElementTypeKey,
+            autoNumber_response_ElementType_mapper
+        }
     })
 }
 
@@ -592,6 +643,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 config.saveElmOnAS = true
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
+        }
+        /** ---- Check if current slate is Double Spread PDF ---- */
+        const isCypressPlusProject = getState()?.appStore?.isCypressPlusEnabled
+        if (isCypressPlusProject && config.slateType == 'pdfslate' && slateData && slateData.data[newVersionManifestId]) {
+            let pdfBodymatter = slateData?.data?.[newVersionManifestId]?.contents?.bodymatter ?? []
+            const hasMergedPdf = pdfBodymatter?.length === 2 ? true : false
+            dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -1094,11 +1152,6 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     return oldPath || ""
 }
 export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false, showHideObj = undefined) => (dispatch, getState) => {
-    if(activeElement.type === "manifestlist" && typeof index === 'string'){
-        let {fontstyle, iconcolor} = setParentFontIconDataToChild(index, getState);
-        activeElement.fontstyle = fontstyle;
-        activeElement.iconcolor = iconcolor
-    }
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -1427,9 +1480,11 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             let slateData = {
                 currentParentData:newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
-                response: response.data
+                response: response.data,
+                cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             };
-            if(config.tcmStatus){
+            // disable TCM for all PDF slates in Cypress+ Enabled Projects
+            if(config.tcmStatus && !(slateData?.cypressPlusProjectStatus && slateData?.response?.type === 'element-pdf')){
                 prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
             }
             tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
@@ -1729,35 +1784,4 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
         type: OWNERS_SUBSCRIBED_SLATE,
         payload: showPopup
     })
-}
-
-/**
- * For Child block list, this function will retrive "fontStyle" & "iconcolor" value from parent
- * and return that value
- * @param {*} index 
- * @param {*} getState 
- * @returns 
- */
-const setParentFontIconDataToChild = (index, getState) => {
-    let indexArr = index.split('-');
-    let parentData = getState().appStore.slateLevelData;
-    let slateLevelData = JSON.parse(JSON.stringify(parentData));
-    let bodyMatter =   slateLevelData[config.slateManifestURN].contents.bodymatter;
-    let element = bodyMatter[indexArr[0]];
-    
-    if(element?.type === 'showhide'){
-        let blockList = {}
-        if(indexArr[1] === "2" && element.interactivedata.hide) {
-            blockList = element.interactivedata.hide[indexArr[2]]
-        } else if(indexArr[1] === "0" && element.interactivedata.show) {
-            blockList = element.interactivedata.show[indexArr[2]]
-        }
-        if(blockList?.type === "manifestlist"){
-            return {fontstyle: blockList.fontstyle, iconcolor: blockList.iconcolor}
-        }
-    } else if(element?.type === "manifestlist") {
-        return {fontstyle: element.fontstyle, iconcolor: element.iconcolor}
-    }
-
-    return {fontstyle: 'font-style-1' , iconcolor: 'bullet-color-1'}
 }

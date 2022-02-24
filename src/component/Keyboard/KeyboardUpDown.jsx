@@ -61,9 +61,9 @@ const KeyboardUpDown = (props) => {
                 }
                 else if (tinymceChild) {
                     // case of floating placeholder
-                    if(tinymceChild.innerHTML === "<p></p>") {
-                        tinymceChild.innerHTML = '';
-                    }
+                    // if(tinymceChild.innerHTML === "<p></p>") {
+                    //     tinymceChild.innerHTML = '';
+                    // }
                     tinymceChild.click();
                     tinymceChild.focus();
                 }
@@ -116,6 +116,10 @@ const KeyboardUpDown = (props) => {
                 if (event.keyCode === 38 && selectedNodeIndex !== 0) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex - 1]);
 
+                }
+                else if ((event.keyCode === 38 && selectedNodeIndex === 0) ||
+                    (event.keyCode === 40 && selectedNodeIndex === allInteractiveElements.length - 1)) {
+                    getChildAndClick(allInteractiveElements[selectedNodeIndex]);
                 }
                 else if (event.keyCode === 40 && selectedNodeIndex !== allInteractiveElements.length) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], selectedNodeIndex);

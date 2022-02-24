@@ -1,14 +1,15 @@
 import config from '../../config/config'
-import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_KeyMapper, autoNumber_ElementTypeKey, autoNumber_FigureTypeKeyMapper, autoNumber_ElementTypeToStoreKeysMapper,
-        autoNumber_response_ElementType_mapper, displayLabelsForImage } from './AutoNumberConstants';
+import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_FigureTypeKeyMapper,
+    displayLabelsForAutonumbering, displayLabelsForContainer, SIDEBAR, WORKED_EXAMPLE, ELEMENT_TYPES } from './AutoNumberConstants';
 import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import {getAutoNumberSequence} from './AutoNumberActions';
-import { findNearestElement } from './AutoNumberCreate_helper';
+import { findNearestElement, checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
 import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
-import { checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
-import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE } from '../../constants/Element_Constants';
+import { getAsideElementsWrtKey } from './slateLevelMediaMapper';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
+import store from '../../appstore/store'
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL,
@@ -149,6 +150,21 @@ export const getValueOfLabel = (figuretype) => {
         case INTERACTIVE:
             label = 'Interactive';
             break;
+        case SIDEBAR:
+            label = 'Aside';
+            break;
+        case WORKED_EXAMPLE:
+            label = 'Worked Example';
+            break;
+        case TABLE_AS_MARKUP:
+            label = 'Table';
+            break;
+        case AUTHORED_TEXT:
+            label = 'Equation';
+            break;
+        case CODELISTING:
+            label = 'Exhibit';
+            break;
         default:
             label = '';
             break;
@@ -255,9 +271,9 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, settingsOpti
             }
         }
     }
-    if(settingsOption !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+    if (settingsOption !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
         elementLabel = element?.displayedlabel;
-        elementLabel = !element.hasOwnProperty('displayedlabel') ? getValueOfLabel(element?.figuretype) : elementLabel;
+        elementLabel = !element.hasOwnProperty('displayedlabel') ? getValueOfLabel(element?.type === 'figure' ? element?.figuretype : element?.subtype) : elementLabel;
     }
     return elementLabel
 }
@@ -308,6 +324,7 @@ export const prepareAutoNumberList = (imagesData) => {
  * @returns 
  */
 export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => {
+    const autoNumber_KeyMapper = store.getState()?.autoNumberReducer?.autoNumber_KeyMapper
     if (parentIndex && element && autoNumberElementsIndex) {
         if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == true) {
             if (element.hasOwnProperty(MANUAL_OVERRIDE) && element[MANUAL_OVERRIDE] !== undefined && (Object.keys(element[MANUAL_OVERRIDE])?.length > 0) && element[MANUAL_OVERRIDE].hasOwnProperty(OVERRIDE_NUMBER_VALUE)) {
@@ -337,7 +354,8 @@ export const getAutoNumberedElement = (element) =>{
     }
 }
 
-export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNumberedElements, currentSlateAncestorData) => (dispatch) => {
+export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNumberedElements, currentSlateAncestorData) => (dispatch, getState) => {
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
     const labelType = autoNumber_ElementTypeKey[elementLabel];
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
     if (autoNumberedElements[labelType]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[labelType][figureParentEntityUrn] && Object.keys(autoNumberedElements[labelType][figureParentEntityUrn]).length > 0) {
@@ -354,8 +372,18 @@ export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNu
 }
 
 export const updateAutonumberingOnElementTypeUpdate = (newElement, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => async (dispatch, getState) => {
-    const slateContent = getState().appStore?.slateLevelData || slateLevelData
-    let slateElements = await getAutoNumberedElementsOnSlate(slateContent[config?.slateManifestURN], { dispatch });
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey;
+    let slateElements;
+    switch (element.type) {
+        case ELEMENT_TYPES.FIGURE:
+            slateElements = await getAutoNumberedElementsOnSlate(slateLevelData[config?.slateManifestURN], { dispatch });
+            break;
+        case ELEMENT_TYPES.ELEMENT_ASIDE:
+            slateElements = await getAsideElementsWrtKey(slateLevelData[config?.slateManifestURN]?.contents?.bodymatter, ELEMENT_TYPES.ELEMENT_ASIDE, slateElements);
+            break;
+        default:
+            slateElements = [];
+    }
     const activeLabelElements = slateElements?.filter(elem => elem.displayedlabel === newElement?.displayedlabel);
     let elementSlateIndex = slateElements?.findIndex(ele => ele.contentUrn === element.contentUrn);
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
@@ -370,7 +398,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
         });
         getAutoNumberSequence(autoNumberedElements, dispatch);
     }
-    if (autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].length > 0 && activeLabelElements.length > 1) {
+    if (autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].length > 0 && activeLabelElements.length > 0) {
         let nearestElementObj = findNearestElement(slateElements, element, newElement?.displayedlabel, elementSlateIndex);
         if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
             let storeIndex = autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
@@ -384,13 +412,14 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
             payload: autoNumberedElements
         });
         getAutoNumberSequence(autoNumberedElements, dispatch);
-    } else if (activeLabelElements.length === 1) {
+    } else if (activeLabelElements.length === 0) {
         checkElementExistenceInOtherSlates(newElement, config?.slateEntityURN, getState, dispatch);
     } 
 }
 
-export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements, currentSlateAncestorData) => (dispatch) => {
+export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements, currentSlateAncestorData) => (dispatch,getState) => {
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
+    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
     if (updatedData?.displayedlabel && figureParentEntityUrn && updatedData?.contentUrn && autoNumberedElements) {
         if (autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]) {
             let index = autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]?.findIndex(element => element.contentUrn === updatedData.contentUrn);
@@ -429,7 +458,7 @@ export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements
  */
 export const getNumberedElements = (data, matterType) => {
     let numberedElements = {};
-
+    const autoNumber_response_ElementType_mapper = store.getState()?.autoNumberReducer?.autoNumber_response_ElementType_mapper
     for(let matter in data){
         numberedElements[autoNumber_response_ElementType_mapper[matter]] = {
            [matterType]: data[matter].length > 0 ? data[matter] : []
@@ -480,7 +509,8 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
         isOverridedLabelDifferent = previousElementData?.manualoverride?.overridelabelvalue !== titleHTML;
     }
     subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
-    if (!titleHTML || titleHTML === '' || !(displayLabelsForImage.includes(titleHTML))) {
+    const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
+    if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
         titleHTML = previousElementData.displayedlabel;
     }
 
@@ -511,4 +541,70 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
     }
     
     return result;
+}
+
+/**
+ *  Returns the Label Dropdown Values based on Figuretype
+ * @param {*} previousElementData 
+ * @returns 
+ */
+export const generateDropdownDataForFigures = (previousElementData) => {
+    const figureDropdownData = store.getState()?.appStore?.figureDropdownData
+    const { image, imageCustom, audio, audioCustom, video, videoCustom, interactive, interactiveCustom, tableasmarkup, tableasmarkupCustom, mathml, mathmlCustom, preformattedtext, preformattedtextCustom } = figureDropdownData
+    let validDropdownOptions = displayLabelsForAutonumbering;
+    if (previousElementData?.figuretype && figureDropdownData) {
+        switch (previousElementData.figuretype) {
+            case AUDIO:
+                validDropdownOptions = audioCustom ? [...audio, ...audioCustom] : audio
+                break;
+            case VIDEO:
+                validDropdownOptions = videoCustom ? [...video, ...videoCustom] : video
+                break;
+            case INTERACTIVE:
+                validDropdownOptions = interactiveCustom ? [...interactive, ...interactiveCustom] : interactive
+                break;
+            case IMAGE: case TABLE: case MATH_IMAGE:
+                validDropdownOptions = imageCustom ? [...image, ...imageCustom] : image
+                break;
+            case TABLE_AS_MARKUP:
+                validDropdownOptions = tableasmarkupCustom ? [...tableasmarkup, ...tableasmarkupCustom] : tableasmarkup
+                break;
+            case AUTHORED_TEXT:
+                validDropdownOptions = mathmlCustom ? [...mathml, ...mathmlCustom] : mathml
+                break;
+            case CODELISTING:
+                validDropdownOptions = preformattedtextCustom ? [...preformattedtext, ...preformattedtextCustom] : preformattedtext
+                break;
+            default:
+                validDropdownOptions = displayLabelsForAutonumbering
+                break;
+        }
+    }
+    return validDropdownOptions
+}
+
+
+/**
+ *  Returns the Label Dropdown Values based on subtype
+ * @param {*} previousElementData 
+ * @returns 
+ */
+ export const generateDropdownDataForContainers = (previousElementData) => {
+    const figureDropdownData = store.getState()?.appStore?.figureDropdownData;
+    const { aside, asideCustom, workedexample, workedexampleCustom } = figureDropdownData;
+    let validDropdownOptions = displayLabelsForContainer;
+    if (previousElementData?.subtype && figureDropdownData) {
+        switch (previousElementData.subtype) {
+            case SIDEBAR:
+                validDropdownOptions = asideCustom ? [...aside, ...asideCustom] : aside;
+                break;
+            case WORKED_EXAMPLE:
+                validDropdownOptions = workedexampleCustom ? [...workedexample, ...workedexampleCustom] : workedexample;
+                break;
+            default:
+                validDropdownOptions = displayLabelsForContainer;
+                break;
+        }
+    }
+    return validDropdownOptions;
 }

@@ -551,6 +551,11 @@ class Sidebar extends Component {
             toggleAsideNumber = this.setToggleForAside(this.props.activeElement, this.props.asideTitleData);
         }
         let hasAsideTitleData = this.props?.activeElement?.asideNumber || false;
+        /* Show Aside toggle ON and DISABLED if autonumbering is enabled */
+        if (this.props.isAutoNumberingEnabled) {
+            toggleAsideNumber = true;
+            hasAsideTitleData = true;
+        }
         let attributions = '';
         let attributionsObject = {};
         let attributionsList = [];
@@ -951,14 +956,6 @@ class Sidebar extends Component {
     }  
 
     render = () => {
-        let currentElementIndex = this.props.activeElement?.index;
-        let disableFontBullet;
-        if(this.props.asideData?.type === "showhide"){
-            disableFontBullet = typeof currentElementIndex === "number" ? "disableFontBullet" : "";
-        }
-        else{
-            disableFontBullet = typeof currentElementIndex === "number" ? "" : "disableFontBullet";
-        }
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && <div className="canvas-sidebar">
@@ -970,7 +967,7 @@ class Sidebar extends Component {
                     {this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
-                    {this.state.activeElementType ==="manifestlist" && <div className={`${disableFontBullet}`}>
+                    {this.state.activeElementType ==="manifestlist" && <div>
                     <div className="canvas-sidebar-font-bullet-type">Font Type</div>
                     {this.fontBulletOption("fontStyle")}
                     <div className="canvas-sidebar-font-bullet-type">Bullet Color</div>
@@ -1018,7 +1015,8 @@ const mapStateToProps = state => {
         elementData: state.tcmReducer.elementData,
         tcmStatus: state.tcmReducer.tcmStatus,
         asideData:state.appStore.asideData,
-        asideTitleData: state.appStore.asideTitleData
+        asideTitleData: state.appStore.asideTitleData,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled
     };
 };
 
