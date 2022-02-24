@@ -10,10 +10,10 @@ function DialogueContent(props) {
     if (props.labelText === 'DE') {
         let dialogueModel= prepareDialogueDom(props.model[props.index]?.text)
         editor = <Fragment>
-            <KeyboardWrapper index={`${props.elementIndex}-${props.index}-0`}  enable>
+            <KeyboardWrapper index={`${props.elementIndex}-${props.index}-0-DE`}  enable>
             <TinyMceEditor
 
-                index={`${props.elementIndex}-${props.index}-0-DE`}
+                index={`${props.elementIndex}-${props.index}-0`}
                 permissions={props.permissions}
                 openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}
                 element={props.element}

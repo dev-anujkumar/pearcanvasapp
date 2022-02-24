@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
@@ -11,6 +11,8 @@ export const NORMAL_SELECTOR = `cypress-`
  * @param {*} e : event
  * @param {*} move : boolean true or false.
  */
+ let selectedNodeIndex = 0;
+ let allInteractiveElements=[]
 const updateCursor = (e, move) => {
     if (move) {
         // moves to next element
@@ -35,8 +37,14 @@ export const moveCursor = (e, node, tinymceOffset) => {
         updateCursor(e, move);
     }
     else if (e.keyCode === 40) {
-        move = isLastChild(node, tinymceOffset);
-        updateCursor(e, move)
+        //for last selected element
+        if (selectedNodeIndex === allInteractiveElements.length - 1) {
+            updateCursor(e, false)
+        }
+        else {
+            move = isLastChild(node, tinymceOffset);
+            updateCursor(e, move)
+        }
     }
     else {
         e.stopPropagation();
@@ -232,6 +240,13 @@ const isParentFootnote = (node) => {
 
 
 const KeyboardWrapper = (props) => {
+    const activeElement = useSelector(state => state.keyboardReducer.selectedElement);
+    allInteractiveElements = document.querySelectorAll(`[id^='${QUERY_SELECTOR}-']`);
+    allInteractiveElements.forEach((currentValue, currentIndex) => {
+        if (currentValue.id === activeElement) {
+            selectedNodeIndex = currentIndex
+        }
+    });
     const dispatch = useDispatch();
     // alphanumeric, id should be unique for all the elements.
     const id = `${QUERY_SELECTOR}-${props.index}`;

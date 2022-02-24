@@ -718,7 +718,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 response: res.data,
                 updatedId:elementWorkId,
                 slateManifestUrn: config.slateManifestURN,
-                CurrentSlateStatus: currentSlateData?.status
+                CurrentSlateStatus: currentSlateData?.status,
+                cypressPlusProjectStatus: store.getState()?.appStore?.isCypressPlusEnabled
             },
                 containerElement = {
                     asideData:tcmParentData.asideData,
@@ -1149,6 +1150,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
     if (resData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(resData.figuretype)) {
         return false
+    }
+    const cypressPlusProjectStatus = store.getState()?.appStore?.isCypressPlusEnabled
+    if (cypressPlusProjectStatus && resData?.type === 'element-pdf') {
+        return false; // disable TCM for all PDF slates in Cypress+ Enabled Projects
     }
     const tcmData = store.getState().tcmReducer.tcmSnapshot;
     let indexes = []

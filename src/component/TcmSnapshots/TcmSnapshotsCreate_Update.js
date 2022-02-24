@@ -27,6 +27,7 @@ const {
     ELEMENT_ASSESSMENT,
     allowedFigureTypesForTCM,
     SHOWHIDE,
+    ELEMENT_TYPE_PDF
 }
     = TcmConstants;
 
@@ -42,6 +43,9 @@ const {
 export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot) => {
     if (elementUpdateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementUpdateData.response.figuretype)) {
         return false
+    }
+    if(elementUpdateData?.cypressPlusProjectStatus && elementUpdateData?.response?.type === ELEMENT_TYPE_PDF){
+        return false; // disable TCM for all PDF slates in Cypress+ Enabled Projects
     }
     let actionStatus = {
         action:"update",
@@ -147,6 +151,9 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
 export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch, index, operationType = null, elmFeedback = null) => {
     if (elementCreateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementCreateData.response.figuretype)) {
         return false
+    }
+    if(elementCreateData?.cypressPlusProjectStatus && elementCreateData?.response?.type === ELEMENT_TYPE_PDF){
+        return false; // disable TCM for all PDF slates in Cypress+ Enabled Projects
     }
     const actionStatus = {
         action: operationType === 'cut' ? "update" : "create",

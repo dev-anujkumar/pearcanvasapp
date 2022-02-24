@@ -813,6 +813,12 @@ th ol li.listItemNumeroUnoNone:before {
 .figure-label-field {
   margin-right: 24px;
 }
+.canvas-dropdown {
+    overflow: hidden;
+    width: 112px;
+    white-space: nowrap;
+    display: block;
+}
 .videoIconWrapper {
     width:398px;
     padding: 16px;

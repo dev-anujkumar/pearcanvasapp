@@ -44,7 +44,9 @@ const FigureImageAsset = (props) => {
                 const node = document.activeElement;
                 node.click();
             }
-            event.preventDefault();
+            if(event.keyCode === 38){
+                event.preventDefault();
+            }
         }
     }
     const removeFocus = () => {

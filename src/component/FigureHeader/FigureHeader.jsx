@@ -9,11 +9,12 @@ import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
-import { IMAGE,TABLE,MATH_IMAGE,AUDIO,VIDEO, labelHtmlData, INTERACTIVE } from '../../constants/Element_Constants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, LABEL_DROPDOWN_VALUES } from './AutoNumberConstants';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
+import Tooltip from '../Tooltip/Tooltip.jsx';
 
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -70,6 +71,9 @@ export const FigureHeader = (props) => {
         const audioCustom = props.figureDropdownData.audioCustom ? [ ...props.figureDropdownData.audio, ...props.figureDropdownData.audioCustom] : props.figureDropdownData.audio;
         const videoCustom = props.figureDropdownData.videoCustom ? [ ...props.figureDropdownData.video, ...props.figureDropdownData.videoCustom] : props.figureDropdownData.video;
         const interactiveCustom = props.figureDropdownData.interactiveCustom ? [ ...props.figureDropdownData.interactive, ...props.figureDropdownData.interactiveCustom] : props.figureDropdownData.interactive;
+        const tableasmarkupCustom = props.figureDropdownData.tableasmarkupCustom ? [...props.figureDropdownData.tableasmarkup, ...props.figureDropdownData.tableasmarkupCustom] : props.figureDropdownData.tableasmarkup;
+        const mathmlCustom = props.figureDropdownData.mathmlCustom ? [...props.figureDropdownData.mathml, ...props.figureDropdownData.mathmlCustom] : props.figureDropdownData.mathml;
+        const preformattedtextCustom = props.figureDropdownData.preformattedtextCustom ? [...props.figureDropdownData.preformattedtext, ...props.figureDropdownData.preformattedtextCustom] : props.figureDropdownData.preformattedtext;
 
         switch (props.model.figuretype) {
             case AUDIO:
@@ -83,6 +87,16 @@ export const FigureHeader = (props) => {
                 break;
             case INTERACTIVE:
                 figureLabelDropdownVal = props.isAutoNumberingEnabled ? interactiveCustom : props.figureDropdownData.smartlinks;
+                break;
+            case TABLE_AS_MARKUP:
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? tableasmarkupCustom : props.figureDropdownData.tableasmarkup;
+                break;
+            //AUTHORED_TEXT is for Math ML
+            case AUTHORED_TEXT:
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? mathmlCustom : props.figureDropdownData.mathml;
+                break;
+            case CODELISTING:
+                figureLabelDropdownVal = props.isAutoNumberingEnabled ? preformattedtextCustom : props.figureDropdownData.preformattedtext;
                 break;
             default:
                 figureLabelDropdownVal = [];
@@ -190,8 +204,9 @@ export const FigureHeader = (props) => {
         } else if (props?.model?.figuretype == 'audio' || props?.model?.figuretype == 'video') {
             props.updateAudioVideoDataForCompare(props.model.figuredata);
         }
-
-        props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: labelNumberSetting});
+        if (!(id === `${props.index}-2` && props.autoNumberOption?.option === labelNumberSetting)) {
+            props.updateAutoNumberingDropdownForCompare({ entityUrn: props.model.contentUrn, option: labelNumberSetting });
+        }
     }
 
     const onFigureHeaderFieldBlur = (id) => {
@@ -262,16 +277,16 @@ export const FigureHeader = (props) => {
                 {removeLabelCondition && showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && <div className='figure-label-field'>
                     <span className={`label ${labelDropDown ? 'active' : ''}`}>Label</span>
                     <div className="figure-label" onClick={handleLabelDropdown}>
-                        <span>{imgLabelValue}</span>
+                        <span className='canvas-dropdown' >{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                         {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
                             <div className="figure-dropdown" style={{top: '9px', left: 0}} ref={labelDropdownWrapperRef} >
                                 <ul>
                                     {figureLabelData.map((label, i) => {
                                         return (
-                                            <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>{label}</li>
+                                            <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>
+                                                {label}</li>
                                         )
-
                                     })}
                                 </ul>
                             </div>
