@@ -81,7 +81,6 @@ const isFirtstChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const firstTextNode = getFirstTextNode(tinymceNode);
         const uniCode = '\uFEFF';
-        console.log("Ss")
         //for bce when code have blank lines
         if (node?.className === 'codeNoHighlightLine' && node?.innerText === '') {
             return false
