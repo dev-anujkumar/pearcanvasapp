@@ -175,6 +175,11 @@ const isLastChild = (node, tinymceOffset) => {
             }
         }
         if (lastTextNode === node) {
+            if(lastTextNode?.previousSibling?.className == "answerLineContent") {
+                if(tinymceOffset != 0 && lastTextNode.lastChild == null) {
+                    return true;
+                   }
+            }
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
                 if(lastTextNode?.parentNode?.id === "_mce_caret") {
                     // unicode inside footnote
