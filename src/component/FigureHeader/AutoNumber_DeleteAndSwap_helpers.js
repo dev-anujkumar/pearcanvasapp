@@ -1,6 +1,6 @@
 import config from '../../config/config';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
-import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering, displayLabelsForContainer, autoNumberFigureTypesAllowed, SHOWHIDE_SECTION } from './AutoNumberConstants';
+import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering, displayLabelsForContainer, autoNumberFigureTypesAllowed, SHOWHIDE_SECTION, autoNumberContainerTypeForDelete } from './AutoNumberConstants';
 import { getImagesInsideSlates, getAsideElementsWrtKey } from './slateLevelMediaMapper';
 import { containerBodyMatter } from './slateLevelMediaMapper';
 import {
@@ -228,14 +228,13 @@ export const updateAutoNumberSequenceOnDelete = (parentIndex, contentUrn, number
  */
 export const updateAutoNumberSequenceOnDeleteInContainers = async (parentIndex, getState, dispatch) => {
     let { autoNumberedElements } = getState().autoNumberReducer;
-    const containerLists = getState().autoNumberReducer.containerLists;
     if (autoNumberedElements) {
         for (let labelType in autoNumberedElements) {
             let removeValFromIndex = [];
             if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex]?.length > 0) {
                 let elementsInTocContainer = autoNumberedElements[labelType][parentIndex];
                 let slateElements = [];
-                if (containerLists.includes(labelType)) {
+                if (autoNumberContainerTypeForDelete.includes(autoNumberedElements[labelType][parentIndex][0].type)) {
                     slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[config.slateManifestURN]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
                 } else {
                     slateElements = getState().autoNumberReducer.slateFigureList;
