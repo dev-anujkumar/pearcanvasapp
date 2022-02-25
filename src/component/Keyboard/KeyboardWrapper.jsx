@@ -84,8 +84,10 @@ const isFirtstChild = (node, tinymceOffset) => {
         //for bce when code have blank lines
         if (node?.className === 'codeNoHighlightLine' || node?.parentNode?.className === 'codeNoHighlightLine' ) {
             if(node?.parentNode?.className === 'codeNoHighlightLine'){
-                return !node?.parentNode?.previousSibling
+                //when line is not empty
+                return !node?.parentNode?.previousSibling && tinymceOffset === 0
             }
+            //for empty line
             else return !node?.previousSibling
         }
         if(tinymceOffset == 0) {
@@ -171,8 +173,10 @@ const isLastChild = (node, tinymceOffset) => {
         //for bce when code have blank lines
         if (node?.className === 'codeNoHighlightLine' || node?.parentNode?.className === 'codeNoHighlightLine') {
             if (node?.parentNode?.className === 'codeNoHighlightLine') {
-                return !node?.parentNode?.nextSibling
+                //when line is not empty
+                return !node?.parentNode?.nextSibling && tinymceOffset === node?.length
             }
+            //for empty line
             else return !node?.nextSibling
         }
         if(lastTextNode.className == "Wirisformula") {
