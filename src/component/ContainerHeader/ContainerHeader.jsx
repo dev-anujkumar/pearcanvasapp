@@ -93,8 +93,8 @@ export const ContainerHeader = (props) => {
         props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: dropdownVal});
         updateDropdownOptions();
         if (!props?.model.hasOwnProperty('displayedlabel')) {
-            let label = props?.model?.manualoverride.hasOwnProperty('overridelabelvalue') ? props?.model?.manualoverride?.overridelabelvalue : getValueOfLabel(props?.model?.subtype);
-            setState({ elementLabelValue: label });
+            let label = props?.model?.manualoverride?.hasOwnProperty('overridelabelvalue') ? props?.model?.manualoverride?.overridelabelvalue : getValueOfLabel(props?.model?.subtype);
+            setState({ elementLabelValue: label, currentLabelValue: label });
         }
     }, [])
     useEffect(() => {
@@ -144,7 +144,7 @@ export const ContainerHeader = (props) => {
             }
             if (oldSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER || oldSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
                 updateDropdownOptions();
-                let label = props?.model?.manualoverride.hasOwnProperty('overridelabelvalue') ? props?.model?.manualoverride?.overridelabelvalue : getValueOfLabel(props?.model?.subtype);
+                let label = props?.model?.manualoverride?.hasOwnProperty('overridelabelvalue') ? props?.model?.manualoverride?.overridelabelvalue : getValueOfLabel(props?.model?.subtype);
                 setState({ elementLabelValue: label });
             }
         }

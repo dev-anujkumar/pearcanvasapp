@@ -86,7 +86,7 @@ const INITIAL_STATE = {
         'exhibitsList': 'exhibitsIndex'
     },
     containerLists: ['asidesList', 'workedExamplesList'],
-    nonContainerLists: ['imagesList', 'tablesList', 'equationsList', 'audiosList', 'videosList', 'interactiveList']
+    nonContainerLists: ['imagesList', 'tablesList', 'equationsList', 'audiosList', 'videosList', 'interactiveList', 'exhibitsList']
 
 }
 
