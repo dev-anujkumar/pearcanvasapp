@@ -61,6 +61,7 @@ export const FigureHeader = (props) => {
     const [showNumberField, setShowNumberField] = useState(true);
     const [currentLabelValue, setCurrentLabelValue] = useState(getLabelNumberFieldValue(props.model, figureLabelValue, labelNumberSetting));
     const [currentNumberValue, setCurrentNumberValue] = useState("");
+    const [initiateBlurCall, setInitiateBlurCall] = useState(false);
     const settingDropdownWrapperRef = useRef(null);
     useOutsideAlerter(settingDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
     const labelDropdownWrapperRef = useRef(null);
@@ -115,7 +116,8 @@ export const FigureHeader = (props) => {
         }
     }, [])
     useEffect(() => {
-        if (props.activeElement.elementId === props.model.id) {
+        if (props.activeElement.elementId === props.model.id && initiateBlurCall) {
+            setInitiateBlurCall(false)// to call blur only when settings option changes
             props.handleBlur();
         }
     }, [props.autoNumberOption]);
@@ -160,6 +162,7 @@ export const FigureHeader = (props) => {
         if (oldSettings !== newSettings) {
             setLabelNumberSetting(newSettings);
             props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: newSettings});
+            setInitiateBlurCall(true)
             if (newSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && document.getElementById(`cypress-${props.index}-0`)) {
                 document.getElementById(`cypress-${props.index}-0`).innerHTML = `${props?.model?.displayedlabel || props?.model?.manualoverride?.overridelabelvalue || ''}`;
             }
