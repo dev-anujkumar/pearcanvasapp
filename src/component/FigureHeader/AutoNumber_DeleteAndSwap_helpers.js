@@ -394,9 +394,9 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
     
     if(swappedElementData.type === "popup"){
         popupElementsList = await getSlateLevelData(swappedElementData.versionUrn, swappedElementData.contentUrn);
-        getSwappedElementsURN(popupElementsList, swappedElementsUrn);
+        await getSwappedElementsURN(popupElementsList, swappedElementsUrn);
     } else {
-        getSwappedElementsURN(swappedElementData, swappedElementsUrn);
+        await getSwappedElementsURN(swappedElementData, swappedElementsUrn);
     }
     let swappedElementDisplaylabled = Object.keys(swappedElementsUrn);
 
@@ -446,75 +446,84 @@ const storeSwappedUrn = (urn, displayedlabel, data) => {
     }
 }
 
-const getSwappedElementsURN = (swappedElement, data) => {
+const getSwappedElementsURN = async (swappedElement, data) => {
     switch (swappedElement.type) {
         case containerElements.SHOW_HIDE:
-            getContentUrnFromShowHide(swappedElement?.interactivedata, data);
+            await getContentUrnFromShowHide(swappedElement?.interactivedata, data);
             break;
         case containerElements.MULTI_COLUMN:
-            getContentUrnFromMultiColumn(swappedElement?.groupeddata?.bodymatter, data);
+            await getContentUrnFromMultiColumn(swappedElement?.groupeddata?.bodymatter, data);
             break;
         case containerElements.ASIDE:
             storeSwappedUrn(swappedElement?.contentUrn, swappedElement?.displayedlabel, data);
-            getContentUrnFromAsideWE(swappedElement?.elementdata?.bodymatter, data);
+            await getContentUrnFromAsideWE(swappedElement?.elementdata?.bodymatter, data);
             break;
         case containerElements.MANIFEST:
-            getContentUrnFromAsideWE(swappedElement?.contents?.bodymatter, data);
+            await getContentUrnFromAsideWE(swappedElement?.contents?.bodymatter, data);
             break;
         case containerElements.POPUP:
-            getContentUrnFromPopUp(swappedElement?.contents?.bodymatter, data);
+            if(swappedElement?.contents?.bodymatter){
+                getContentUrnFromPopUp(swappedElement?.contents?.bodymatter, data);
+            } else {
+                let popupElementsList = await getSlateLevelData(swappedElement.versionUrn, swappedElement.contentUrn);
+                getContentUrnFromPopUp(popupElementsList?.contents?.bodymatter, data);
+            }
             break
     }
 }
 
-const checkForSwappedElement = (elemData, data) => {
+const checkForSwappedElement = async (elemData, data) => {
     if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
         storeSwappedUrn(elemData?.contentUrn, elemData?.displayedlabel, data);
     }
     if(containerElementTypes.includes(elemData?.type)){
-        getSwappedElementsURN(elemData, data)
+        await getSwappedElementsURN(elemData, data)
     }
 }
 
-const getContentUrnFromMultiColumn = (bodymatter, data) => {
+const getContentUrnFromMultiColumn = async (bodymatter, data) => {
     if(bodymatter.length > 0) {
-        bodymatter.forEach(colData => {
+        for(let i in bodymatter){
+            let colData = bodymatter[i];
             if(colData?.groupdata?.bodymatter.length > 0){
-                colData?.groupdata?.bodymatter.forEach(elemData => {
-                    checkForSwappedElement(elemData, data);
-                });
+                let groupBodyMatter = colData?.groupdata?.bodymatter;
+                for(let j in groupBodyMatter){
+                    await checkForSwappedElement(groupBodyMatter[j], data);
+                }
             }
-        });
+        };
     }
 }
 
-const getContentUrnFromAsideWE = (bodymatter, data) => {
+const getContentUrnFromAsideWE = async (bodymatter, data) => {
     if(bodymatter?.length > 0){
-        bodymatter.forEach(elemData => {
+        for(let i in bodymatter){
+            let elemData = bodymatter[i];
             if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
                 storeSwappedUrn(elemData?.contentUrn, elemData?.displayedlabel, data);
             }
             if(containerElementTypes.includes(elemData?.type) || containerElements.MANIFEST === elemData?.type){
-                getSwappedElementsURN(elemData, data)
+                await getSwappedElementsURN(elemData, data)
             }
-        })
+        }
     }
 }
 
-const getContentUrnFromShowHide = (interactivedata, data) => {
+const getContentUrnFromShowHide = async (interactivedata, data) => {
     let showHideKeys = Object.values(SHOWHIDE_SECTION);
-    showHideKeys.forEach(section => {
-        interactivedata[section].forEach(elemData => {
-            checkForSwappedElement(elemData, data);
-        })
-    })
+    for(let i in showHideKeys){
+        let section = showHideKeys[i];
+        for(let j in interactivedata[section]){
+            await checkForSwappedElement(interactivedata[j], data);
+        }
+    }
 }
 
-const getContentUrnFromPopUp = (bodymatter, data) => {
+const getContentUrnFromPopUp = async (bodymatter, data) => {
     if(bodymatter?.length > 0){
-        bodymatter.forEach(elemData => {
-            checkForSwappedElement(elemData, data);
-        });
+        for(let i in bodymatter){
+            await checkForSwappedElement(bodymatter[i], data);
+        }
     }
 }
 
