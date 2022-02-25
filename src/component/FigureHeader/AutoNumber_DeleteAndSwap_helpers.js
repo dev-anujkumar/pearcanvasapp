@@ -7,7 +7,7 @@ import {
     SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
-import { getAutoNumberSequence } from './AutoNumberActions';
+import { getAutoNumberSequence, getSlateLevelData } from './AutoNumberActions';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -390,12 +390,19 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
     let swappedElementsUrn = {};
     let nearestElement = {}
     let containerElementsOnSlate = [];
-    getSwappedElementsURN(swappedElementData, swappedElementsUrn);
+    let popupElementsList = [];
+    
+    if(swappedElementData.type === "popup"){
+        popupElementsList = await getSlateLevelData(swappedElementData.versionUrn, swappedElementData.contentUrn);
+        getSwappedElementsURN(popupElementsList, swappedElementsUrn);
+    } else {
+        getSwappedElementsURN(swappedElementData, swappedElementsUrn);
+    }
     let swappedElementDisplaylabled = Object.keys(swappedElementsUrn);
 
     const isAutoNumberedContainerSwapped = swappedElementDisplaylabled.some(label => displayLabelsForContainer.indexOf(label) >= 0);
     if(isAutoNumberedContainerSwapped){
-        containerElementsOnSlate = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, containerElementsOnSlate);
+        containerElementsOnSlate = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, containerElementsOnSlate, [], [], [popupElementsList]);
     }
     getNearestElement(swappedElementsUrn, slateFigures, nearestElement, 'Figure');
     getNearestElement(swappedElementsUrn, containerElementsOnSlate, nearestElement, 'Container');
@@ -422,13 +429,13 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
             }
         }
     });
-        dispatch({
-            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-            payload: {
-                numberedElements
-            }
-        });
-        getAutoNumberSequence(numberedElements, dispatch)
+    dispatch({
+        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+        payload: {
+            numberedElements
+        }
+    });
+    getAutoNumberSequence(numberedElements, dispatch)
 }
 
 const storeSwappedUrn = (urn, displayedlabel, data) => {
@@ -454,6 +461,18 @@ const getSwappedElementsURN = (swappedElement, data) => {
         case containerElements.MANIFEST:
             getContentUrnFromAsideWE(swappedElement?.contents?.bodymatter, data);
             break;
+        case containerElements.POPUP:
+            getContentUrnFromPopUp(swappedElement?.contents?.bodymatter, data);
+            break
+    }
+}
+
+const checkForSwappedElement = (elemData, data) => {
+    if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
+        storeSwappedUrn(elemData?.contentUrn, elemData?.displayedlabel, data);
+    }
+    if(containerElementTypes.includes(elemData?.type)){
+        getSwappedElementsURN(elemData, data)
     }
 }
 
@@ -462,12 +481,7 @@ const getContentUrnFromMultiColumn = (bodymatter, data) => {
         bodymatter.forEach(colData => {
             if(colData?.groupdata?.bodymatter.length > 0){
                 colData?.groupdata?.bodymatter.forEach(elemData => {
-                    if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
-                        storeSwappedUrn(elemData?.contentUrn, elemData?.displayedlabel, data);
-                    }
-                    if(containerElementTypes.includes(elemData?.type)){
-                        getSwappedElementsURN(elemData, data)
-                    }
+                    checkForSwappedElement(elemData, data);
                 });
             }
         });
@@ -491,14 +505,17 @@ const getContentUrnFromShowHide = (interactivedata, data) => {
     let showHideKeys = Object.values(SHOWHIDE_SECTION);
     showHideKeys.forEach(section => {
         interactivedata[section].forEach(elemData => {
-            if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
-                storeSwappedUrn(elemData.contentUrn, elemData.displayedlabel, data);
-            }
-            if(containerElementTypes.includes(elemData?.type)){
-                getSwappedElementsURN(elemData, data)
-            }
+            checkForSwappedElement(elemData, data);
         })
     })
+}
+
+const getContentUrnFromPopUp = (bodymatter, data) => {
+    if(bodymatter?.length > 0){
+        bodymatter.forEach(elemData => {
+            checkForSwappedElement(elemData, data);
+        });
+    }
 }
 
 const getNearestElement = (swappedElementsUrn, elementsList, nearestElement, type) => {
@@ -525,7 +542,7 @@ const getNearestElement = (swappedElementsUrn, elementsList, nearestElement, typ
                 status[label] = true;
             } else if(!status[label] || !nearestElement[label].urn) {
                 nearestElement[label].urn = element?.contentUrn;
-                nearestElement[label].pos = status[label] ? 'above' : 'below'
+                nearestElement[label].pos = status[label] ? 'above' : 'below';
             }
         }
     });

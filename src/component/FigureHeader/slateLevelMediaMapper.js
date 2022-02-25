@@ -109,9 +109,9 @@ export const getPopupDataInsideContainer = async (bodyMatter, parentIndex, numbe
  * @param {*} imagesList 
  * @returns 
  */
-export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = []) => {
+export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = [], popupElementsList =[]) => {
     if (bodyMatter?.length > 0 && typeKey) {
-        for (let index in bodyMatter) {
+        for(let index in bodyMatter){
             let element = bodyMatter[index];
             if (element.type === typeKey) {
                 if (parentIndex?.length) {
@@ -142,10 +142,17 @@ export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElemen
                         getContainerInMultiColumn(element, numberedElements, [...element.indexPos], typeKey);
                         break;
                     case containerElements.POPUP:
-                        const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
-                        if (parentIndex?.length) popupContent.parentDetails = parentIndex;
-                        getContainerInPopup(popupContent, numberedElements, typeKey);
-                        break;
+                        if (popupElementsList.length) {
+                            const popupData = popupElementsList.filter(function (data) {
+                                return data.id == element.id
+                            })
+                            if (popupData.length > 0) getContainerInPopup(popupData[0], numberedElements, typeKey);
+                        } else {
+                            const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
+                            if (parentIndex?.length) popupContent.parentDetails = parentIndex;
+                            getContainerInPopup(popupContent, numberedElements, typeKey);
+                            break;
+                        }
                 }
             }
         }

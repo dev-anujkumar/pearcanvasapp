@@ -27,7 +27,7 @@ export const updateCreatedElementInAutonumberList = (mediaType, mediaList, autoN
 
 export const findNearestElement = (elementsArr, elementObj, elementType, index = undefined) => {
     let objToReturn = {};
-    let mainIndex = index !== undefined ? index : elementObj.indexPos;
+    let mainIndex = index !== undefined ? index : elementObj?.indexPos;
     if (mainIndex > 0) {
         if (mainIndex > elementsArr.length) mainIndex = elementsArr.length;
         for (let i = mainIndex - 1; i > -1; i--) {
