@@ -194,6 +194,9 @@ const isLastChild = (node, tinymceOffset) => {
                 if(lastTextNode?.parentNode?.id === "_mce_caret") {
                     // unicode inside footnote
                     return true;
+                } else if( lastTextNode?.nodeName == "#text" && lastTextNode?.previousSibling?.nodeName === "SUP" 
+                && tinymceOffset == 2 && lastTextNode === node){
+                    return true
                 }
                 else {
                     // unicode inside inline code
