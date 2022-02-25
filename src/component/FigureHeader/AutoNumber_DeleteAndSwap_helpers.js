@@ -234,8 +234,10 @@ export const updateAutoNumberSequenceOnDeleteInContainers = async (parentIndex, 
             if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex]?.length > 0) {
                 let elementsInTocContainer = autoNumberedElements[labelType][parentIndex];
                 let slateElements = [];
+                const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
+                const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
                 if (autoNumberContainerTypeForDelete.includes(autoNumberedElements[labelType][parentIndex][0].type)) {
-                    slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[config.slateManifestURN]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
+                    slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
                 } else {
                     slateElements = getState().autoNumberReducer.slateFigureList;
                 }

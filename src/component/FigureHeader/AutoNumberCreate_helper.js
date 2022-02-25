@@ -5,7 +5,7 @@ import {
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
 import { containerBodyMatter } from './slateLevelMediaMapper';
-import { containerElements, autoNumberElementsAllowed, autoNumber_ElementTypeToStoreKeysMapper } from './AutoNumberConstants';
+import { containerElements, autoNumber_ElementTypeToStoreKeysMapper, displayLabelsForContainer } from './AutoNumberConstants';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getImagesInsideSlates, getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
 import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
@@ -103,7 +103,7 @@ const getAllElementsInAsideWE = (containerData, numberedElements, createdElement
                 numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element?.displayedlabel, figuretype: element.figuretype });
                 count++;
             } else if ((element.type === 'manifest' && element.contents.bodymatter) || (element.type === 'showhide')) {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
+                getSameElementsInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
             }
         })
     }
@@ -117,7 +117,7 @@ const getAllElementsInManifest = (containerData, numberedElements, createdElemen
                 numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element?.displayedlabel, figuretype: element.figuretype });
                 count++;
             } else if (element.type === 'showhide') {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
+                getSameElementsInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
             }
         })
     }
@@ -138,7 +138,7 @@ const getAllElementsInShowhide = (containerData, numberedElements, createdElemen
                 numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype });
                 count++;
             } else if (element.type === 'element-aside') {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
+                getSameElementsInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
             }
         })
     }
@@ -163,7 +163,7 @@ const getAllElementsInShowhide = (containerData, numberedElements, createdElemen
                         numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype, parentDetails: element?.parentDetails });
                     } else if (element.type === 'showhide' || element.type === 'element-aside') {
                         element.parentDetails.push(element.contentUrn)
-                        getImagesInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
+                        getSameElementsInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
                     }
                 })
             }
@@ -177,7 +177,7 @@ const getAllElementsInShowhide = (containerData, numberedElements, createdElemen
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideElement = (bodyMatter, numberedElements = [], createdElementData) => {
+export const getSameElementsInsideElement = (bodyMatter, numberedElements = [], createdElementData) => {
     if (bodyMatter?.length > 0) {
         bodyMatter?.forEach((element, index) => {
             if (element.displayedlabel === createdElementData.displayedlabel) {
@@ -200,7 +200,7 @@ export const getImagesInsideElement = (bodyMatter, numberedElements = [], create
                         getAllElementsInAsideWE(element, numberedElements, createdElementData)
                         break;
                     case containerElements.MANIFEST:
-                        getImagesInsideElement(element?.contents?.bodymatter, numberedElements, createdElementData);
+                        getSameElementsInsideElement(element?.contents?.bodymatter, numberedElements, createdElementData);
                         break;
                 }
             }
@@ -233,7 +233,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
             break;
         case 'CONTAINER':
         case 'WORKED_EXAMPLE':
-            slateElements = await getAsideElementsWrtKey(bodyMatter, 'element-aside', slateElements);
+            slateElements = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, slateElements);
             break;
         default:
             slateElements = [];
@@ -328,31 +328,47 @@ export const handleAutonumberingForElementsInContainers = (bodyMatter, elementOb
 }
 
 export const addElementInPopupSlate = async (createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, listType, labelType, getState, dispatch) => {
-    let popupSlateFigures = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[config.slateManifestURN], { dispatch });
+    let popupSlateElements = [];
+    if (displayLabelsForContainer.includes(createdElementData?.displayedlabel)) {
+        popupSlateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[config.slateManifestURN]?.contents?.bodymatter, containerElements.ASIDE, popupSlateElements);
+    } else {
+        popupSlateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[config.slateManifestURN], { dispatch });
+    }
     let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
-    let activeLabelElements = popupSlateFigures?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
+    let activeLabelElements = popupSlateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
     const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
     let nearestElementObj = {};
     let index;
     if (activeLabelElements.length > 1) {
         let count = 0;
-        popupSlateFigures.forEach(item => {
+        popupSlateElements.forEach(item => {
             item.indexPos = count;
             count++;
         });
-        appendElementToList(popupSlateFigures, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
+        appendElementToList(popupSlateElements, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
     } else if (activeLabelElements.length == 1 && popupParentSlateData?.isPopupSlate) {
         let popupIndex = popupParentSlateData?.index;
         let popupParentSlateBodymatter = getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId]?.contents?.bodymatter;
         let popupParentSlateEntityUrn = getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId]?.contentUrn;
         let elementsInContainer = [];
         let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
-        let slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId], { dispatch });
+        let slateElements = [];
+        if (displayLabelsForContainer.includes(createdElementData?.displayedlabel)) {
+            slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
+        } else {
+            slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId], { dispatch });
+        }
         let activeElements = slateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
+        /* if active elements are there then modify indexPos key bcoz elements may be exist in containers */
+        if (activeElements?.length > 0) {
+            let count = 0;
+            activeElements?.forEach(item => { item.indexPos = count; count++; });
+        }
+        let elementObj = activeElements.find(element => element.contentUrn === createdElementData.contentUrn);
         if (typeof (popupIndex) == 'number') {
             if (activeElements.length > 1) {
                 if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && (Object.keys(elementsList[slateEntityForAutonumber]).length > 0)) {
-                    nearestElementObj = findNearestElement(activeElements, {}, labelType, popupIndex);
+                    nearestElementObj = findNearestElement(activeElements, elementObj, labelType);
                     if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                         index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
                         index = nearestElementObj?.key === 'above' ? index + 1 : index;
@@ -374,9 +390,9 @@ export const addElementInPopupSlate = async (createdElementData, elementsList, s
         } else {
             let indexes = popupIndex.split('-');
             if ((indexes.length === 2 || indexes.length === 3) && popupParentSlateBodymatter[indexes[0]].type === containerElements.ASIDE) {
-                getImagesInsideElement(containerBodyMatter(popupParentSlateBodymatter[indexes[0]]), elementsInContainer, createdElementData);
+                getSameElementsInsideElement(containerBodyMatter(popupParentSlateBodymatter[indexes[0]]), elementsInContainer, createdElementData);
                 if (elementsInContainer.length > 0 && indexes.length === 2) {
-                    nearestElementObj = findNearestElement(elementsInContainer, createdElementData, labelType);
+                    nearestElementObj = findNearestElement(elementsInContainer, elementObj, labelType);
                     if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                         if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && elementsList[slateEntityForAutonumber].length > 0) {
                             index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
@@ -393,13 +409,13 @@ export const addElementInPopupSlate = async (createdElementData, elementsList, s
                     }
                 } else if (elementsInContainer.length > 0 && indexes.length === 3) {
                     let elementsInManifest = [];
-                    getImagesInsideElement(containerBodyMatter(popupParentSlateBodymatter[indexes[0]].elementdata.bodymatter[popupParentSlateBodymatter[indexes[0]].elementdata.bodymatter.length - 1]), elementsInManifest, createdElementData);
+                    getSameElementsInsideElement(containerBodyMatter(popupParentSlateBodymatter[indexes[0]].elementdata.bodymatter[popupParentSlateBodymatter[indexes[0]].elementdata.bodymatter.length - 1]), elementsInManifest, createdElementData);
                     if (elementsInManifest.length == 1) {
                         nearestElementObj = {
                             obj: elementsInManifest[0]
                         }
                     } else if (elementsInManifest.length > 1) {
-                        nearestElementObj = findNearestElement(elementsInManifest, createdElementData, labelType);
+                        nearestElementObj = findNearestElement(elementsInManifest, elementObj, labelType);
                     } else {
                         nearestElementObj = {
                             obj: elementsInContainer[elementsInContainer.length - 1]
@@ -425,7 +441,7 @@ export const addElementInPopupSlate = async (createdElementData, elementsList, s
                     }
                 } else if (elementsInContainer.length == 0 && activeElements.length > 0) {
                     if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && (Object.keys(elementsList[slateEntityForAutonumber]).length > 0)) {
-                        nearestElementObj = findNearestElement(activeElements, {}, labelType, parseInt(indexes[0]));
+                        nearestElementObj = findNearestElement(activeElements, elementObj, labelType);
                         if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                             index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
                             index = nearestElementObj?.key === 'above' ? index + 1 : index;
@@ -446,9 +462,9 @@ export const addElementInPopupSlate = async (createdElementData, elementsList, s
                 }
             } else if ((indexes.length === 4 || indexes.length === 5) && popupParentSlateBodymatter[indexes[0]].type === containerElements.MULTI_COLUMN) {
                 let elementsInInnerContainer = [];
-                getImagesInsideElement(containerBodyMatter(popupParentSlateBodymatter[indexes[0]].groupeddata?.bodymatter[indexes[1]].groupdata?.bodymatter[indexes[2]]), elementsInInnerContainer, createdElementData);
+                getSameElementsInsideElement(containerBodyMatter(popupParentSlateBodymatter[indexes[0]].groupeddata?.bodymatter[indexes[1]].groupdata?.bodymatter[indexes[2]]), elementsInInnerContainer, createdElementData);
                 if (elementsInInnerContainer.length > 0 && indexes.length === 4) {
-                    nearestElementObj = findNearestElement(elementsInInnerContainer, createdElementData, labelType);
+                    nearestElementObj = findNearestElement(elementsInInnerContainer, elementObj, labelType);
                     if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                         if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && elementsList[slateEntityForAutonumber].length > 0) {
                             index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
@@ -465,13 +481,13 @@ export const addElementInPopupSlate = async (createdElementData, elementsList, s
                     }
                 } else if (elementsInInnerContainer.length > 0 && indexes.length === 5) {
                     let elementsInManifest = [];
-                    getImagesInsideElement(containerBodyMatter(popupParentSlateBodymatter[indexes[0]].groupeddata?.bodymatter[indexes[1]].groupdata?.bodymatter[indexes[2]].elementdata.bodymatter[popupParentSlateBodymatter[indexes[0]].groupeddata?.bodymatter[indexes[1]].groupdata?.bodymatter[indexes[2]].elementdata.bodymatter.length - 1]), elementsInManifest, createdElementData);
+                    getSameElementsInsideElement(containerBodyMatter(popupParentSlateBodymatter[indexes[0]].groupeddata?.bodymatter[indexes[1]].groupdata?.bodymatter[indexes[2]].elementdata.bodymatter[popupParentSlateBodymatter[indexes[0]].groupeddata?.bodymatter[indexes[1]].groupdata?.bodymatter[indexes[2]].elementdata.bodymatter.length - 1]), elementsInManifest, createdElementData);
                     if (elementsInManifest.length == 1) {
                         nearestElementObj = {
                             obj: elementsInManifest[0]
                         }
                     } else if (elementsInManifest.length > 1) {
-                        nearestElementObj = findNearestElement(elementsInManifest, createdElementData, labelType);
+                        nearestElementObj = findNearestElement(elementsInManifest, elementObj, labelType);
                     } else {
                         nearestElementObj = {
                             obj: elementsInInnerContainer[elementsInInnerContainer.length - 1]
@@ -498,9 +514,9 @@ export const addElementInPopupSlate = async (createdElementData, elementsList, s
                 } else if (elementsInInnerContainer.length == 0 && (indexes.length === 4 || indexes.length === 5)) {
                     let elementsInOuterContainer = findElementsInContainer(popupParentSlateBodymatter[indexes[0]], [], createdElementData);
                     let elementsInCurrentColumn = [];
-                    getImagesInsideElement(containerBodyMatter(popupParentSlateBodymatter[indexes[0]].groupeddata?.bodymatter[indexes[1]]), elementsInCurrentColumn, createdElementData);
+                    getSameElementsInsideElement(containerBodyMatter(popupParentSlateBodymatter[indexes[0]].groupeddata?.bodymatter[indexes[1]]), elementsInCurrentColumn, createdElementData);
                     if (elementsInCurrentColumn.length > 0) {
-                        nearestElementObj = findNearestElement(elementsInCurrentColumn, {}, labelType, parseInt(indexes[indexes.length - 2]));  // index of inner container
+                        nearestElementObj = findNearestElement(elementsInCurrentColumn, elementObj, labelType);  // index of inner container
                         if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                             if ((Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && elementsList[slateEntityForAutonumber].length > 0) {
                                 let index = elementsList[slateEntityForAutonumber].findIndex(ele => ele.contentUrn === nearestElementObj?.obj?.contentUrn);
@@ -561,7 +577,7 @@ export const addElementInPopupSlate = async (createdElementData, elementsList, s
                         updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
                     } else if (elementsInOuterContainer.length == 0 && activeElements.length > 0) {
                         if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && (Object.keys(elementsList[slateEntityForAutonumber]).length > 0)) {
-                            nearestElementObj = findNearestElement(activeElements, {}, labelType, parseInt(indexes[0]));
+                            nearestElementObj = findNearestElement(activeElements, elementObj, labelType);
                             if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                                 index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
                                 index = nearestElementObj?.key === 'above' ? index + 1 : index;

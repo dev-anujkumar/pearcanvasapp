@@ -79,6 +79,29 @@ export const getImagesInsideSlates = async (bodyMatter, numberedElements = [],pa
     return numberedElements
 }
 
+export const getPopupDataInsideContainer = async (bodyMatter, parentIndex, numberedElements, typeKey) => {
+    for (let headIndex in bodyMatter) {
+        let innerElement = bodyMatter[headIndex];
+        console.log("KKKKKKKKKKKKKKKK", innerElement, innerElement.type === containerElements.POPUP)
+        if (innerElement.type === containerElements.POPUP) {
+            const popupContent = await getSlateLevelData(innerElement.versionUrn, innerElement.contentUrn);
+            console.log("rrrrrrrrrrrrrr", popupContent);
+            if (parentIndex?.length) popupContent.parentDetails = parentIndex;
+            getContainerInPopup(popupContent, numberedElements, typeKey);
+        } else if (innerElement.type === containerElements.MANIFEST) {
+            for (let bodyIndex in innerElement?.contents?.bodymatter) {
+                let bodyElement = innerElement?.contents?.bodymatter[bodyIndex];
+                if (bodyElement.type === containerElements.POPUP) {
+                    const popupContent = await getSlateLevelData(bodyElement.versionUrn, bodyElement.contentUrn);
+                    if (parentIndex?.length) popupContent.parentDetails = parentIndex;
+                    getContainerInPopup(popupContent, numberedElements, typeKey);
+                }
+            }
+        }
+    }
+    return numberedElements
+}
+
 
 /**
  * Get List of Aside Elements on a Slate
@@ -86,9 +109,10 @@ export const getImagesInsideSlates = async (bodyMatter, numberedElements = [],pa
  * @param {*} imagesList 
  * @returns 
  */
-export const getAsideElementsWrtKey = (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = []) => {
+export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = []) => {
     if (bodyMatter?.length > 0 && typeKey) {
-        bodyMatter?.forEach(async (element, index) => {
+        for (let index in bodyMatter) {
+            let element = bodyMatter[index];
             if (element.type === typeKey) {
                 if (parentIndex?.length) {
                     element.indexPos = [...parentIndex]
@@ -103,8 +127,10 @@ export const getAsideElementsWrtKey = (bodyMatter, typeKey, numberedElements = [
                 }
                 element.slateEntityUrn = getSlateEntityUrn()
                 numberedElements.push({ ...element })
-            }
-            else if (Object.values(containerElements).indexOf(element.type) > -1) {
+                if (typeKey === containerElements.ASIDE) {
+                    numberedElements = await getPopupDataInsideContainer(element?.elementdata?.bodymatter, parentIndex, numberedElements, typeKey);
+                }
+            } else if (Object.values(containerElements).indexOf(element.type) > -1) {
                 element.indexPos = [...parentIndex];
                 element.indexPos.push(index);
                 if (parentIndex?.length) element.parentDetails = parentIndex;
@@ -116,20 +142,13 @@ export const getAsideElementsWrtKey = (bodyMatter, typeKey, numberedElements = [
                         getContainerInMultiColumn(element, numberedElements, [...element.indexPos], typeKey);
                         break;
                     case containerElements.POPUP:
-                        if (popupElementsList.length) {
-                            const popupData = popupElementsList.filter(function (data) {
-                                return data.id == element.id
-                            })
-                            if (popupData.length > 0) getMediaElementInPopup(popupData[0], numberedElements);
-                        } else {
-                            const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
-                            if (parentIndex?.length) popupContent.parentDetails = parentIndex;
-                            await getContainerInPopup(popupContent, numberedElements, typeKey)
-                        }
+                        const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
+                        if (parentIndex?.length) popupContent.parentDetails = parentIndex;
+                        getContainerInPopup(popupContent, numberedElements, typeKey);
                         break;
                 }
             }
-        })
+        }
     }
     return numberedElements
 }
@@ -302,27 +321,32 @@ export const getContainerInPopup = (containerData, numberedElements, elementType
  * @param {*} imagesList 
  * @returns 
  */
-export const getContainerInMultiColumn = (containerData, numberedElements, parentIndex, elementType) => {
+export const getContainerInMultiColumn = async (containerData, numberedElements, parentIndex, elementType) => {
     if (containerData?.groupeddata?.bodymatter?.length > 0) {
-        containerData?.groupeddata?.bodymatter.forEach((colData, i) => {
-            if (colData.type === containerElements.GROUP) {
+        for (let index in containerData?.groupeddata?.bodymatter) {
+            let colData = containerData?.groupeddata?.bodymatter[index];
+            if (colData?.type === containerElements.GROUP) {
                 containerData.indexPos = [...parentIndex];
-                containerData.indexPos.push(i);
+                containerData.indexPos.push(index);
                 if (colData?.groupdata?.bodymatter?.length > 0) {
-                    colData?.groupdata?.bodymatter.forEach((element, index) => {
+                    for (let innerIndex in colData?.groupdata?.bodymatter) {
+                        let element = colData?.groupdata?.bodymatter[innerIndex];
                         element.parentDetails = containerData.parentDetails  || []
                         element.parentDetails.push(containerData.contentUrn) //multi-column id
                         element.parentDetails.push(colData.contentUrn) //column -id
                         if (element.type === elementType) {
-                            containerData.indexPos.push(index);
+                            containerData.indexPos.push(innerIndex);
                             element.indexPos = [...containerData.indexPos];
                             element.slateEntityUrn = getSlateEntityUrn();
                             numberedElements.push({...element});
+                            if (elementType === containerElements.ASIDE) {
+                                numberedElements = await getPopupDataInsideContainer(element?.elementdata?.bodymatter, parentIndex, numberedElements, elementType);
+                            }
                         }
-                    })
+                    }
                 }
             }
-        })
+        }
     }
 }
 
