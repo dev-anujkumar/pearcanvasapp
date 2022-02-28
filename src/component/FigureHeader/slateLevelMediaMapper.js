@@ -25,10 +25,9 @@ export const getAutoNumberedElementsOnSlate = async(slateLevelData, params) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideSlates = async (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[], popupElementsList = []) => {
+export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[], popupElementsList = []) => {
     if (bodyMatter?.length > 0) {
-        for(let index in bodyMatter){
-            let element = bodyMatter[index];
+        bodyMatter?.forEach(async (element, index) => {
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
                 if (parentIndex?.length) {
                     element.indexPos = [...parentIndex]
@@ -83,7 +82,7 @@ export const getImagesInsideSlates = async (bodyMatter, numberedElements = [],pa
                         break;
                 }
             }
-        }
+        })
     }
     return numberedElements
 }
