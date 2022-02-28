@@ -2,7 +2,6 @@ import config from '../../config/config';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering, displayLabelsForContainer, autoNumberFigureTypesAllowed, SHOWHIDE_SECTION, autoNumberContainerTypeForDelete } from './AutoNumberConstants';
 import { getImagesInsideSlates, getAsideElementsWrtKey } from './slateLevelMediaMapper';
-import { containerBodyMatter } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS
@@ -11,157 +10,6 @@ import { getAutoNumberSequence, getSlateLevelData } from './AutoNumberActions';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
-
-export const getElementsInContainer = async (element, numberedElements = [], elementType) => {
-    switch (element.type) {
-        case containerElements.SHOW_HIDE:
-            getElementsInShowhide(element, numberedElements, elementType);
-            break;
-        case containerElements.MULTI_COLUMN:
-            getElementsInMultiColumn(element, numberedElements, elementType);
-            break;
-        case containerElements.POPUP:
-            const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
-            await getElementsInPopup(popupContent, numberedElements, elementType);
-            break;
-        case containerElements.ASIDE:
-            getElementsInAsideWE(element, numberedElements, elementType);
-            break;
-        case containerElements.MANIFEST:
-            getElementsInManifest(element, numberedElements, elementType);
-            break;
-    }
-    return numberedElements;
-}
-
-
-export const getElementsInPopup = (containerData, numberedElements, elementType) => {
-    containerData = {...containerData, indexPos: []}
-    if (containerData?.contents?.bodymatter?.length > 0) {
-        containerData?.contents?.bodymatter.forEach((element, index) => {
-            element.indexPos = containerData?.indexPos.push(index)
-            if (element.type === elementType) {
-                containerData?.indexPos.push(index)
-                element.indexPos = [...containerData.indexPos]
-                element.slateEntityUrn = getSlateEntityUrn()
-                numberedElements.push({...element})
-            } else if ((element.type === containerElements.MANIFEST && element.contents.bodymatter) || (Object.values(containerElements).indexOf(element.type) > -1)) {
-                containerData?.indexPos.push(index)
-                element.indexPos = [...containerData.indexPos]
-                getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos])
-            }
-        })
-    }
-    return numberedElements
-}
-
-const getElementsInAsideWE = (containerData, numberedElements, elementType) => {
-    if (containerData?.elementdata?.bodymatter?.length > 0) {
-        containerData?.elementdata?.bodymatter.forEach((element, index) => {
-            if (element.type === elementType) {
-                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element?.displayedlabel, figuretype: element.figuretype });
-                count++;
-            } else if ((element.type === 'manifest' && element.contents.bodymatter) || (element.type === 'showhide')) {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements, elementType);
-            }
-        })
-    }
-}
-
-const getElementsInManifest = (containerData, numberedElements, elementType) => {
-    if (containerData?.contents?.bodymatter?.length > 0) {
-        containerData?.contents?.bodymatter.forEach((element, index) => {
-            if (element.type === elementType) {
-                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element?.displayedlabel, figuretype: element.figuretype });
-                count++;
-            } else if (element.type === 'showhide') {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements, elementType);
-            }
-        })
-    }
-}
-
-/**
- * Prepare list of media elements in Showhide
- * @param {*} containerData 
- * @param {*} numberedElements 
- * @returns 
- */
-const getElementsInShowhide = (containerData, numberedElements, elementType) => {
-    const showHideContent = containerBodyMatter(containerData);
-    if (showHideContent?.length > 0) {
-        showHideContent.forEach((element, index) => {
-            if (element.type === elementType) {
-                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype });
-                count++;
-            } else if (element.type === 'element-aside') {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements, elementType);
-            }
-        })
-    }
-}
-
-/**
- * Prepare list of media elements in MultiColumn 2C/3C
- * @param {*} containerData 
- * @param {*} numberedElements 
- * @returns 
- */
- const getElementsInMultiColumn = (containerData, numberedElements, elementType) => {
-    if (containerData?.groupeddata?.bodymatter?.length > 0) {
-        containerData?.groupeddata?.bodymatter.forEach(colData => {
-            if (colData?.groupdata?.bodymatter?.length > 0) {
-                colData?.groupdata?.bodymatter.forEach((element, index) => {
-                    element.parentDetails = containerData.parentDetails  || []
-                    element.parentDetails.push(containerData.contentUrn) //multi-column id
-                    element.parentDetails.push(colData.contentUrn) //column -id
-                    if (element.type === elementType) {
-                        let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                        numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype, parentDetails: element?.parentDetails, interactivedata: element?.interactivedata, elementdata: element?.elementdata });
-                    } else if (element.type === 'showhide' || element.type === 'element-aside') {
-                        element.parentDetails.push(element.contentUrn)
-                        getImagesInsideElement(containerBodyMatter(element), numberedElements, elementType);
-                    }
-                })
-            }
-        })
-    }
-}
-
-export const getImagesInsideElement = (bodyMatter, numberedElements = [], elementType) => {
-    if (bodyMatter?.length > 0) {
-        bodyMatter?.forEach((element, index) => {
-            if (element.type === elementType) {
-                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                numberedElements.push({ contentUrn: element.contentUrn, index: index, indexPos: count, displayedlabel: element.displayedlabel, figuretype: element.figuretype });
-                count++;
-            }
-            else if (Object.values(containerElements).indexOf(element.type) > -1) {
-                switch (element.type) {
-                    case containerElements.SHOW_HIDE:
-                        getElementsInShowhide(element, numberedElements, elementType)
-                        break;
-                    case containerElements.MULTI_COLUMN:
-                        getElementsInMultiColumn(element, numberedElements, elementType)
-                        break;
-                    case containerElements.POPUP:
-                        getElementsInPopup(element, numberedElements, elementType);
-                        break;
-                    case containerElements.ASIDE:
-                        getElementsInAsideWE(element, numberedElements, elementType)
-                        break;
-                    case containerElements.MANIFEST:
-                        getImagesInsideElement(element?.contents?.bodymatter, numberedElements, elementType);
-                        break;
-                }
-            }
-        })
-    }
-    return numberedElements
-}
 
 /**
  * Handle AUTO-NUMBERING on Delete
@@ -463,10 +311,10 @@ const getSwappedElementsURN = async (swappedElement, data) => {
             break;
         case containerElements.POPUP:
             if(swappedElement?.contents?.bodymatter){
-                getContentUrnFromPopUp(swappedElement?.contents?.bodymatter, data);
+                await getContentUrnFromPopUp(swappedElement?.contents?.bodymatter, data);
             } else {
                 let popupElementsList = await getSlateLevelData(swappedElement.versionUrn, swappedElement.contentUrn);
-                getContentUrnFromPopUp(popupElementsList?.contents?.bodymatter, data);
+                await getContentUrnFromPopUp(popupElementsList?.contents?.bodymatter, data);
             }
             break
     }
