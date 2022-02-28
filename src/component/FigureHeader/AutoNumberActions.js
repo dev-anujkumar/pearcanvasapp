@@ -4,7 +4,8 @@ import {
     SET_AUTO_NUMBER_TOGGLE,
     SET_AUTO_NUMBER_SEQUENCE,
     GET_TOC_AUTO_NUMBERING_LIST,
-    GET_ALL_AUTO_NUMBER_ELEMENTS
+    GET_ALL_AUTO_NUMBER_ELEMENTS,
+    UPDATE_CHAPTER_POPUP_DATA
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList, getNumberedElements } from './AutoNumber_helperFunctions';
 import store from '../../appstore/store'
@@ -194,4 +195,12 @@ export const setAutoNumberinBrowser = (flag, configValue) => {
         [config.projectEntityUrn]: flag && configValue
     }
     localStorage.setItem('projectAutoNumberStatus', JSON.stringify({ ...projectAutoNumberStatus }));
+}
+
+export const updateChapterPopupData = (dataObj, key) => {
+    store.dispatch({
+        type: UPDATE_CHAPTER_POPUP_DATA,
+        key: key,
+        payload: dataObj
+    });
 }

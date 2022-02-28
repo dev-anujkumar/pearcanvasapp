@@ -2,7 +2,8 @@ import config from '../../config/config';
 import { containerElements, autoNumberElementsAllowed, SHOWHIDE_SECTION, ELEMENT_TYPES } from './AutoNumberConstants';
 import { SLATE_FIGURE_ELEMENTS } from "../../constants/Action_Constants";
 import { getSlateEntityUrn } from './AutoNumber_helperFunctions';
-import { getSlateLevelData } from './AutoNumberActions';
+import { getSlateLevelData, updateChapterPopupData } from './AutoNumberActions';
+import store from '../../appstore/store';
 
 export const getAutoNumberedElementsOnSlate = async(slateLevelData, params) => {
     const { dispatch } = params
@@ -61,8 +62,16 @@ export const getImagesInsideSlates = async (bodyMatter, numberedElements = [],pa
                             })
                             if (popupData.length > 0) await getMediaElementInPopup(popupData[0], numberedElements);
                         } else {
-                            const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
-                            if (parentIndex?.length) popupContent.parentDetails = parentIndex
+                            const popupParentData = store.getState().autoNumberReducer?.popupParentSlateData;
+                            const popupElementsData = store.getState().autoNumberReducer?.popupElementsData;
+                            let popupContent = {};
+                            popupContent = popupElementsData.find( (data) => { return data.versionUrn === element?.versionUrn; })
+                            if (popupParentData?.versionUrn === element?.versionUrn || !popupContent) {
+                                popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn);
+                                if (parentIndex?.length) popupContent.parentDetails = parentIndex;
+                                updateChapterPopupData(popupContent, element?.versionUrn);
+                            }
+                            if (parentIndex?.length) popupContent.parentDetails = parentIndex;
                             await getMediaElementInPopup(popupContent, numberedElements)
                         }
                         break;
@@ -79,21 +88,30 @@ export const getImagesInsideSlates = async (bodyMatter, numberedElements = [],pa
     return numberedElements
 }
 
-export const getPopupDataInsideContainer = async (bodyMatter, parentIndex, numberedElements, typeKey) => {
+export const getPopupDataInsideContainer = async (bodyMatter, parentIndex = [], numberedElements, typeKey) => {
+    const popupParentData = store.getState().autoNumberReducer?.popupParentSlateData;
+    const popupElementsData = store.getState().autoNumberReducer?.popupElementsData;
+    let popupContent = {};
     for (let headIndex in bodyMatter) {
         let innerElement = bodyMatter[headIndex];
-        // console.log("KKKKKKKKKKKKKKKK", innerElement, innerElement.type === containerElements.POPUP)
         if (innerElement.type === containerElements.POPUP) {
-            const popupContent = await getSlateLevelData(innerElement.versionUrn, innerElement.contentUrn);
-            // console.log("rrrrrrrrrrrrrr", popupContent);
-            if (parentIndex?.length) popupContent.parentDetails = parentIndex;
+            popupContent = popupElementsData.find((data) => { return data.versionUrn === innerElement?.versionUrn; });
+            if (popupParentData?.versionUrn === innerElement?.versionUrn || !popupContent) {
+                popupContent = await getSlateLevelData(innerElement?.versionUrn, innerElement?.contentUrn);
+                if (parentIndex?.length) popupContent.parentDetails = parentIndex;
+                updateChapterPopupData(popupContent, innerElement?.versionUrn);
+            }
             getContainerInPopup(popupContent, numberedElements, typeKey);
         } else if (innerElement.type === containerElements.MANIFEST) {
             for (let bodyIndex in innerElement?.contents?.bodymatter) {
                 let bodyElement = innerElement?.contents?.bodymatter[bodyIndex];
                 if (bodyElement.type === containerElements.POPUP) {
-                    const popupContent = await getSlateLevelData(bodyElement.versionUrn, bodyElement.contentUrn);
-                    if (parentIndex?.length) popupContent.parentDetails = parentIndex;
+                    popupContent = popupElementsData.find((data) => { return data.versionUrn === bodyElement?.versionUrn; })
+                    if (popupParentData?.versionUrn === bodyElement?.versionUrn || !popupContent) {
+                        popupContent = await getSlateLevelData(bodyElement?.versionUrn, bodyElement?.contentUrn);
+                        if (parentIndex?.length) popupContent.parentDetails = parentIndex;
+                        updateChapterPopupData(popupContent, bodyElement?.versionUrn);
+                    }
                     getContainerInPopup(popupContent, numberedElements, typeKey);
                 }
             }
@@ -139,20 +157,21 @@ export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElemen
                         getContainerInShowhide(element, numberedElements, typeKey);
                         break;
                     case containerElements.MULTI_COLUMN:
-                        getContainerInMultiColumn(element, numberedElements, [...element.indexPos], typeKey);
+                        await getContainerInMultiColumn(element, numberedElements, [...element.indexPos], typeKey);
                         break;
                     case containerElements.POPUP:
-                        if (popupElementsList.length) {
-                            const popupData = popupElementsList.filter(function (data) {
-                                return data.id == element.id
-                            })
-                            if (popupData.length > 0) getContainerInPopup(popupData[0], numberedElements, typeKey);
-                        } else {
-                            const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
+                        const popupParentData = store.getState().autoNumberReducer?.popupParentSlateData;
+                        const popupElementsData = store.getState().autoNumberReducer?.popupElementsData;
+                        let popupContent = {};
+                        popupContent = popupElementsData.find( (data) => { return data.versionUrn === element?.versionUrn; })
+                        if (popupParentData?.versionUrn === element?.versionUrn || !popupContent) {
+                            popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn);
                             if (parentIndex?.length) popupContent.parentDetails = parentIndex;
-                            getContainerInPopup(popupContent, numberedElements, typeKey);
-                            break;
+                            updateChapterPopupData(popupContent, element?.versionUrn);
                         }
+                        if (parentIndex?.length) popupContent.parentDetails = parentIndex;
+                        getContainerInPopup(popupContent, numberedElements, typeKey);
+                        break;
                 }
             }
         }
