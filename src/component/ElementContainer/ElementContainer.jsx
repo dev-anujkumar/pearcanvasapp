@@ -2398,7 +2398,14 @@ class ElementContainer extends Component {
             as 'containsBlockList' in const detailsToSet will be removed once BL will be supported  in AS,WE,2C & 3C
         */
         if(element?.type === 'showhide') {
-            let elementsList = [...element?.interactivedata?.show.concat(...element?.interactivedata?.hide)]
+            let elementsList;
+            if (element?.interactivedata?.show && element?.interactivedata?.hide) {
+                elementsList = [...element?.interactivedata?.show.concat(...element?.interactivedata?.hide)]
+            } else if (element?.interactivedata?.show) {
+                elementsList = [...element?.interactivedata?.show]
+            } else if (element?.interactivedata?.hide) {
+                elementsList = [...element?.interactivedata?.hide]
+            }
             detailsToSet['containsBlockList'] = elementsList.some(item => item.type === 'manifestlist')
         }
 
