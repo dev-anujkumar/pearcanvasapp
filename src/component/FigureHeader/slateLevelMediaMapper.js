@@ -301,7 +301,7 @@ export const getMediaElementInMultiColumn = async (containerData, numberedElemen
                             containerData.indexPos.push(index)
                             element.indexPos = [...containerData.indexPos]
                             element.parentDetails.push(element.contentUrn)  //element -id
-                            await getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos],element.parentDetails)
+                            await getImagesInsideSlates(await containerBodyMatter(element), numberedElements, [...element.indexPos],element.parentDetails)
                         }
                     }
                 }
@@ -333,7 +333,7 @@ export const getMediaElementInShowhide = async (containerData, numberedElements,
                 containerData.indexPos.push(index);
                 element.indexPos = [...containerData.indexPos];
                 element.parentDetails.push(element.contentUrn);  //element -id
-                await getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails);
+                await getImagesInsideSlates(await containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails);
             }
         }
     }
