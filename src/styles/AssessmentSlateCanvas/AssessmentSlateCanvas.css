@@ -137,7 +137,7 @@
   }
   .slate_assessment_data_label{
     float: left;
-    width: 25%;
+    width: 24.2%;
     font-size: 14px;
     
   }
@@ -146,7 +146,7 @@
   }
   .slate_assessment_data_details{
     float: left;
-    width: 75%;
+    width: 75.8%;
   }
   .slate_assessment_data_title{
     overflow:hidden;
@@ -168,16 +168,16 @@
 
   .slate_assessment_data_id{
     font-size: 14px;
-    overflow:hidden;
-    text-overflow: ellipsis;
-    word-break: break-all;
+    /* overflow:hidden; */
+    /* text-overflow: ellipsis; */
+    /* word-break: break-all; */
     white-space: nowrap;
   }
   .slate_assessment_data_id:hover{
-    overflow: visible; 
-    white-space: normal; 
-    height:auto; 
-  }
+    /* overflow: visible;  */
+    /* white-space: normal;  */
+    /* height:auto;  */
+    }
   .slate_assessment_change_button{
     font-size: 13px;
     color: #424242;
