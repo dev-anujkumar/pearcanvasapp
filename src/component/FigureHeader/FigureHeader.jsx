@@ -14,6 +14,7 @@ import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TAB
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
+import Tooltip from '../Tooltip/Tooltip.jsx';
 
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -60,6 +61,7 @@ export const FigureHeader = (props) => {
     const [showNumberField, setShowNumberField] = useState(true);
     const [currentLabelValue, setCurrentLabelValue] = useState(getLabelNumberFieldValue(props.model, figureLabelValue, labelNumberSetting));
     const [currentNumberValue, setCurrentNumberValue] = useState("");
+    const [initiateBlurCall, setInitiateBlurCall] = useState(false);
     const settingDropdownWrapperRef = useRef(null);
     useOutsideAlerter(settingDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
     const labelDropdownWrapperRef = useRef(null);
@@ -114,7 +116,8 @@ export const FigureHeader = (props) => {
         }
     }, [])
     useEffect(() => {
-        if (props.activeElement.elementId === props.model.id) {
+        if (props.activeElement.elementId === props.model.id && initiateBlurCall) {
+            setInitiateBlurCall(false)// to call blur only when settings option changes
             props.handleBlur();
         }
     }, [props.autoNumberOption]);
@@ -159,6 +162,7 @@ export const FigureHeader = (props) => {
         if (oldSettings !== newSettings) {
             setLabelNumberSetting(newSettings);
             props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: newSettings});
+            setInitiateBlurCall(true)
             if (newSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && document.getElementById(`cypress-${props.index}-0`)) {
                 document.getElementById(`cypress-${props.index}-0`).innerHTML = `${props?.model?.displayedlabel || props?.model?.manualoverride?.overridelabelvalue || ''}`;
             }
@@ -276,16 +280,16 @@ export const FigureHeader = (props) => {
                 {removeLabelCondition && showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && <div className='figure-label-field'>
                     <span className={`label ${labelDropDown ? 'active' : ''}`}>Label</span>
                     <div className="figure-label" onClick={handleLabelDropdown}>
-                        <span>{imgLabelValue}</span>
+                        <span className='canvas-dropdown' >{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                         {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
                             <div className="figure-dropdown" style={{top: '9px', left: 0}} ref={labelDropdownWrapperRef} >
                                 <ul>
                                     {figureLabelData.map((label, i) => {
                                         return (
-                                            <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>{label}</li>
+                                            <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>
+                                                {label}</li>
                                         )
-
                                     })}
                                 </ul>
                             </div>
