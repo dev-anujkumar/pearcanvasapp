@@ -76,7 +76,7 @@ class ElementButton extends Component {
                 </span></Tooltip>
                 break;
             case buttonTypes.VIEW_COMMENT:
-                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="note" onClick={(e)=>clickHandlerFn(e,elementId)}>
                     {viewNote}
                     </span>
                 break;
