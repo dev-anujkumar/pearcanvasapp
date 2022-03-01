@@ -138,6 +138,7 @@ function CommunicationChannel(WrappedComponent) {
                         if (message?.alfresco?.siteId) config.alfrescoMetaData.alfresco.siteId = alfrescoRepository
                         fetchAlfrescoSiteDropdownList('projectAlfrescoSettings')
                     }
+                    this.props.cypressPlusEnabled( message.isCypressPlusEnabled, config.SHOW_CYPRESS_PLUS,)
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
                     this.props.fetchLearnosityContent()
@@ -378,6 +379,15 @@ function CommunicationChannel(WrappedComponent) {
                 case 'commentDeleted' : {
                     this.props.deleteComment(message)
                     break
+                }
+                case 'refreshCanvasOnPdfMerge': { // Refresh Toc & Canvas on PDF Merge operation in Cypress Plus
+                    //sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    break;
+                }
+                case 'newCustomCanvasLabels': {
+                    this.props.updateFigureDropdownValues(message)
+                    break;
                 }
             }
         }
@@ -907,6 +917,25 @@ function CommunicationChannel(WrappedComponent) {
                 let slateData = {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
+                }
+                /* Message from TOC is current Slate is Joined PDF */
+                // const joinedPdfStatus = message.node && message.node.hasOwnProperty('isMergedPdf') ? message.node.isMergedPdf : false
+                // this.props.getJoinedPdfStatus(joinedPdfStatus)
+                /** ---------------------------------------------- */
+                if (message?.node) {
+                    let matterType = 'bodymatter'
+                    if (message.node.parentOfParentItem !== "") {
+                        if (message.node.parentOfParentItem === 'backmatter') {
+                            matterType = 'backmatter'
+                        } else if (message.node.parentOfParentItem === 'frontmatter') {
+                            matterType = 'frontmatter'
+                        }
+                    } else if (message.node.nodeParentLabel === 'backmatter') {
+                        matterType = 'backmatter'
+                    } else if (message.node.nodeParentLabel === 'frontmatter') {
+                        matterType = 'frontmatter'
+                    }
+                    this.props.setSlateMatterType(matterType);
                 }
                 config.isPopupSlate = false;
                 config.figureDataToBeFetched = true;
