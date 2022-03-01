@@ -7,8 +7,7 @@ import { getAutoNumberSequence } from './AutoNumberActions';
 import { containerBodyMatter } from './slateLevelMediaMapper';
 import { containerElements, autoNumber_ElementTypeToStoreKeysMapper, displayLabelsForContainer } from './AutoNumberConstants';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
-import { getImagesInsideSlates, getAsideElementsWrtKey, getPopupDataInsideContainer } from '../FigureHeader/slateLevelMediaMapper';
-import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
+import { getImagesInsideSlates, getAutoNumberedElementsOnSlate, getAsideElementsWrtKey, getPopupDataInsideContainer } from './slateLevelMediaMapper';
 
 export const updateCreatedElementInAutonumberList = (mediaType, mediaList, autoNumberedElementsObj, dispatch) => {
     dispatch({
@@ -233,36 +232,37 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
     const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
     const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
     let bodyMatter = getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter;
-    let slateElements;
-    switch (type) {
-        case 'IMAGE':
-        case 'VIDEO':
-        case 'INTERACTIVE':
-        case 'SMART_LINK':
-        case 'MMI_ELM':
-        case 'TABLE_EDITOR':
-        case 'TABLEASMARKUP':
-        case 'MATH_ML_CHEM_EDITOR':
-        case 'AUTHOREDTEXT':
-        case 'BLOCK_CODE_EDITOR':
-        case 'CODELISTING':
-            slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[slateManifestUrn], { dispatch });
-            break;
-        case 'CONTAINER':
-        case 'WORKED_EXAMPLE':
-            slateElements = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, slateElements);
-            break;
-        default:
-            slateElements = [];
-    }
-
-    let elementObj = slateElements.find(element => element.contentUrn === createdElementData.contentUrn);
     let elementsList = autoNumberedElementsObj[listType];
-    let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
-    const activeLabelElements = slateElements?.filter(img => img.displayedlabel === createdElementData.displayedlabel);
+
     if (popupParentSlateData?.isPopupSlate) {
         addElementInPopupSlate(createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, listType, labelType, getState, dispatch);
     } else {
+        let slateElements;
+        switch (type) {
+            case 'IMAGE':
+            case 'VIDEO':
+            case 'INTERACTIVE':
+            case 'SMART_LINK':
+            case 'MMI_ELM':
+            case 'TABLE_EDITOR':
+            case 'TABLEASMARKUP':
+            case 'MATH_ML_CHEM_EDITOR':
+            case 'AUTHOREDTEXT':
+            case 'BLOCK_CODE_EDITOR':
+            case 'CODELISTING':
+                slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[slateManifestUrn], { dispatch });
+                break;
+            case 'CONTAINER':
+            case 'WORKED_EXAMPLE':
+                slateElements = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, slateElements);
+                break;
+            default:
+                slateElements = [];
+        }
+
+        let elementObj = slateElements?.find(element => element.contentUrn === createdElementData.contentUrn);
+        let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
+        const activeLabelElements = slateElements?.filter(img => img.displayedlabel === createdElementData.displayedlabel);
         if (elementObj.indexPos == 0 && activeLabelElements.length > 1) {
             let count = 0;
             slateElements.forEach(item => {
@@ -271,7 +271,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
             });
             if ((elementsList && Object.keys(elementsList).length > 0) && slateEntityForAutonumber && (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1) && (Object.keys(elementsList[slateEntityForAutonumber]).length > 0)) {
                 let nearestElementObj = findNearestElement(slateElements, elementObj, labelType);
-    
+
                 if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                     let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
                     index = nearestElementObj?.key === 'above' ? index + 1 : index;
@@ -298,7 +298,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 count++;
             });
             let nearestElementObj = findNearestElement(slateElements, elementObj, labelType);
-    
+
             if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                 let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
                 index = nearestElementObj?.key === 'above' ? index + 1 : index;

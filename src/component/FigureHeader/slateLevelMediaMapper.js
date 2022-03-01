@@ -5,7 +5,7 @@ import { getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getSlateLevelData, updateChapterPopupData } from './AutoNumberActions';
 import store from '../../appstore/store';
 
-export const getAutoNumberedElementsOnSlate = async(slateLevelData, params) => {
+export const getAutoNumberedElementsOnSlate = async (slateLevelData, params) => {
     const { dispatch } = params
     const bodyMatter = slateLevelData?.contents?.bodymatter || []
     const slateFigures = await getImagesInsideSlates(bodyMatter)
@@ -16,7 +16,9 @@ export const getAutoNumberedElementsOnSlate = async(slateLevelData, params) => {
                 slateFigures
             }
         });
+        return slateFigures;
     }
+    return [];
 }
 
 /**
@@ -25,9 +27,10 @@ export const getAutoNumberedElementsOnSlate = async(slateLevelData, params) => {
  * @param {*} imagesList 
  * @returns 
  */
-export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIndex=[], parentDetails=[], popupElementsList = []) => {
+export const getImagesInsideSlates = async (bodyMatter, numberedElements = [], parentIndex = [], parentDetails = [], popupElementsList = []) => {
     if (bodyMatter?.length > 0) {
-        bodyMatter?.forEach(async (element, index) => {
+        for (let index in bodyMatter) {
+            let element = bodyMatter[index];
             if (autoNumberElementsAllowed.indexOf(element.type) > -1) {
                 if (parentIndex?.length) {
                     element.indexPos = [...parentIndex]
@@ -64,14 +67,14 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                             const popupParentData = store.getState().autoNumberReducer?.popupParentSlateData;
                             const popupElementsData = store.getState().autoNumberReducer?.popupElementsData;
                             let popupContent = {};
-                            popupContent = popupElementsData.find( (data) => { return data.versionUrn === element?.versionUrn; })
+                            popupContent = popupElementsData.find((data) => { return data.versionUrn === element?.versionUrn; })
                             if (popupParentData?.versionUrn === element?.versionUrn || !popupContent) {
                                 popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn);
                                 if (parentIndex?.length) popupContent.parentDetails = parentIndex;
                                 updateChapterPopupData(popupContent, element?.versionUrn);
                             }
                             if (parentIndex?.length) popupContent.parentDetails = parentIndex;
-                            await getMediaElementInPopup(popupContent, numberedElements)
+                            await getMediaElementInPopup(popupContent, numberedElements);
                         }
                         break;
                     case containerElements.ASIDE:
@@ -82,7 +85,7 @@ export const getImagesInsideSlates = (bodyMatter, numberedElements = [],parentIn
                         break;
                 }
             }
-        })
+        }
     }
     return numberedElements
 }
@@ -126,9 +129,9 @@ export const getPopupDataInsideContainer = async (bodyMatter, parentIndex = [], 
  * @param {*} imagesList 
  * @returns 
  */
-export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = [], popupElementsList =[]) => {
+export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = [], popupElementsList = []) => {
     if (bodyMatter?.length > 0 && typeKey) {
-        for(let index in bodyMatter){
+        for (let index in bodyMatter) {
             let element = bodyMatter[index];
             if (element.type === typeKey) {
                 if (parentIndex?.length) {
@@ -162,7 +165,7 @@ export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElemen
                         const popupParentData = store.getState().autoNumberReducer?.popupParentSlateData;
                         const popupElementsData = store.getState().autoNumberReducer?.popupElementsData;
                         let popupContent = {};
-                        popupContent = popupElementsData.find( (data) => { return data.versionUrn === element?.versionUrn; })
+                        popupContent = popupElementsData.find((data) => { return data.versionUrn === element?.versionUrn; })
                         if (popupParentData?.versionUrn === element?.versionUrn || !popupContent) {
                             popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn);
                             if (parentIndex?.length) popupContent.parentDetails = parentIndex;
@@ -178,7 +181,7 @@ export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElemen
     return numberedElements
 }
 
-export const containerBodyMatter = (container) => {
+export const containerBodyMatter = async (container) => {
     let dataToReturn = []
     switch (container.type) {
         case containerElements.SHOW_HIDE:
@@ -197,8 +200,18 @@ export const containerBodyMatter = (container) => {
         case containerElements.ASIDE:
             dataToReturn = container?.elementdata?.bodymatter ?? []
             break;
-        case containerElements.MANIFEST:
         case containerElements.POPUP:
+            const popupParentData = store.getState().autoNumberReducer?.popupParentSlateData;
+            const popupElementsData = store.getState().autoNumberReducer?.popupElementsData;
+            let popupContent = {};
+            popupContent = popupElementsData.find((data) => { return data.versionUrn === container?.versionUrn; })
+            if (popupParentData?.versionUrn === container?.versionUrn || !popupContent) {
+                popupContent = await getSlateLevelData(container?.versionUrn, container?.contentUrn);
+                updateChapterPopupData(popupContent, container?.versionUrn);
+            }
+            dataToReturn = popupContent?.contents?.bodymatter ?? [];
+            break;
+        case containerElements.MANIFEST:
         default:
             dataToReturn = container?.contents?.bodymatter ?? [];
             break;
@@ -223,7 +236,7 @@ export const getMediaElementInPopup = async (containerData, numberedElements) =>
                 containerData?.indexPos?.push(index)
                 element.indexPos = containerData?.indexPos ? [...containerData.indexPos] : [index]
                 element.parentDetails.push(element.contentUrn) //element id
-                await getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails)
+                await getImagesInsideSlates(await containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails)
             }
         }
     }
@@ -238,20 +251,21 @@ export const getMediaElementInPopup = async (containerData, numberedElements) =>
 export const getMediaElementInAsideWE = async (containerData, numberedElements, parentIndex) => {
     if (containerData?.elementdata?.bodymatter?.length > 0) {
         let bodyMatter = containerData?.elementdata?.bodymatter;
-        for(let index in bodyMatter){
-            let element = bodyMatter[index]; 
-            element.parentDetails = containerData.parentDetails   || []
+        for (let index in bodyMatter) {
+            let element = bodyMatter[index];
+            element.parentDetails = containerData.parentDetails || []
             element.parentDetails.push(containerData.contentUrn) //as|we:head -id
             if (element.type === ELEMENT_TYPES.FIGURE) {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
                 element.slateEntityUrn = getSlateEntityUrn()
-                numberedElements.push({...element})
+                numberedElements.push({ ...element })
             } else if ((element.type === containerElements.MANIFEST && element.contents.bodymatter) || (Object.values(containerElements).indexOf(element.type) > -1)) {
                 containerData.indexPos.push(index)
                 element.indexPos = [...containerData.indexPos]
                 element.parentDetails.push(element.contentUrn) //we:body | elemen -id
-                await getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails)
+                let bodymatter = await containerBodyMatter(element);
+                await getImagesInsideSlates(bodymatter, numberedElements, [...element.indexPos], element.parentDetails)
             }
         }
     }

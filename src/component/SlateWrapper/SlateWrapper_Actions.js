@@ -39,7 +39,7 @@ const { SHOW_HIDE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
-import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';

@@ -17,7 +17,7 @@ import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
-import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper'; 
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper'; 
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,

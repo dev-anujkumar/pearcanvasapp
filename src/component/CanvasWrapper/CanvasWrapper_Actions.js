@@ -56,7 +56,7 @@ import ElementConstants from "../ElementContainer/ElementConstants.js";
 import { isAutoNumberEnabled, fetchProjectFigures, setAutoNumberinBrowser } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
 import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
-import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
+import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 export const findElementType = (element, index) => {
