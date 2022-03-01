@@ -90,7 +90,9 @@ const isFirtstChild = (node, tinymceOffset) => {
             //for empty line
             else return !node?.previousSibling
         }
-        if(tinymceOffset == 0) {
+        if(tinymceOffset == 0 && (node?.parentNode?.classList.contains("figureCredit") 
+        || node?.classList?.contains("figureCaption")
+        || node?.classList?.contains("figureTitle") || node?.classList?.contains('figureNumber'))) {
             return true;
         }
         if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
