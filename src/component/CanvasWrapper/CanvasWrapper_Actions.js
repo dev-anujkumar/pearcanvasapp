@@ -56,7 +56,7 @@ import ElementConstants from "../ElementContainer/ElementConstants.js";
 import { isAutoNumberEnabled, fetchProjectFigures, setAutoNumberinBrowser } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
 import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
-import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
+import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 export const findElementType = (element, index) => {
@@ -922,18 +922,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(getContainerData(searchTerm));
         }
         /** Get List of Figures on a Slate for Auto-Numbering */
-        // const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
-        // const slateFigures = getImagesInsideSlates(bodyMatter)
         const slateFigures = getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
-        /* if (slateFigures) {
-            console.log('slateFigures',slateFigures)
-            dispatch({
-                type: SLATE_FIGURE_ELEMENTS,
-                payload: {
-                    slateFigures :slateFigures
-                }
-            });
-        }*/
     })
     .catch(err => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });

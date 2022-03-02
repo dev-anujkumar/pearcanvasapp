@@ -6,8 +6,7 @@ import {
 } from '../../constants/Action_Constants.js';
 import {getAutoNumberSequence} from './AutoNumberActions';
 import { findNearestElement, checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
-import { getAutoNumberedElementsOnSlate } from './NestedFigureDataMapper';
-import { getAsideElementsWrtKey } from './slateLevelMediaMapper';
+import { getAutoNumberedElementsOnSlate, getAsideElementsWrtKey } from './slateLevelMediaMapper';
 import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
 import store from '../../appstore/store'
 const {
@@ -373,24 +372,26 @@ export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNu
 
 export const updateAutonumberingOnElementTypeUpdate = (newElement, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => async (dispatch, getState) => {
     const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey;
+    const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
+    const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
     let slateElements;
     switch (element.type) {
         case ELEMENT_TYPES.FIGURE:
-            slateElements = await getAutoNumberedElementsOnSlate(slateLevelData[config?.slateManifestURN], { dispatch });
+            slateElements = await getAutoNumberedElementsOnSlate(slateLevelData[slateManifestUrn], { dispatch });
             break;
         case ELEMENT_TYPES.ELEMENT_ASIDE:
-            slateElements = await getAsideElementsWrtKey(slateLevelData[config?.slateManifestURN]?.contents?.bodymatter, ELEMENT_TYPES.ELEMENT_ASIDE, slateElements);
+            slateElements = await getAsideElementsWrtKey(slateLevelData[slateManifestUrn]?.contents?.bodymatter, ELEMENT_TYPES.ELEMENT_ASIDE, slateElements);
             break;
         default:
             slateElements = [];
     }
-    const activeLabelElements = slateElements?.filter(elem => elem.displayedlabel === newElement?.displayedlabel);
     let elementSlateIndex = slateElements?.findIndex(ele => ele.contentUrn === element.contentUrn);
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
     if (autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn]) {
         let index = autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn]?.findIndex(ele => ele.contentUrn === element.contentUrn);
         if (index > -1) {
             autoNumberedElements[autoNumber_ElementTypeKey[element.displayedlabel]][figureParentEntityUrn].splice(index, 1);
+            slateElements.splice(elementSlateIndex, 1);
         }
         dispatch({
             type: GET_ALL_AUTO_NUMBER_ELEMENTS,
@@ -398,6 +399,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
         });
         getAutoNumberSequence(autoNumberedElements, dispatch);
     }
+    const activeLabelElements = slateElements?.filter(elem => elem.displayedlabel === newElement?.displayedlabel);
     if (autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[newElement?.displayedlabel]][figureParentEntityUrn].length > 0 && activeLabelElements.length > 0) {
         let nearestElementObj = findNearestElement(slateElements, element, newElement?.displayedlabel, elementSlateIndex);
         if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {

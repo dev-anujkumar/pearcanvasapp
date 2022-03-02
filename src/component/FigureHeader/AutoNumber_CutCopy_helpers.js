@@ -30,7 +30,7 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after cut/copy operation
         const bodyMatter = currentSlateData.contents.bodymatter
-        const slateFigures = getImagesInsideSlates(bodyMatter);
+        const slateFigures = await getImagesInsideSlates(bodyMatter);
         let slateUpdatedNumberedContainerElements = [];
         slateUpdatedNumberedContainerElements = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, slateUpdatedNumberedContainerElements);
         if (slateFigures) {

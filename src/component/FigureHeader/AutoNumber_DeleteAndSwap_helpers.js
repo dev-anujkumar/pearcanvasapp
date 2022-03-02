@@ -2,166 +2,14 @@ import config from '../../config/config';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering, displayLabelsForContainer, autoNumberFigureTypesAllowed, SHOWHIDE_SECTION, autoNumberContainerTypeForDelete } from './AutoNumberConstants';
 import { getImagesInsideSlates, getAsideElementsWrtKey } from './slateLevelMediaMapper';
-import { containerBodyMatter } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
-import { getAutoNumberSequence } from './AutoNumberActions';
+import { getAutoNumberSequence, getSlateLevelData } from './AutoNumberActions';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
-
-export const getElementsInContainer = async (element, numberedElements = [], elementType) => {
-    switch (element.type) {
-        case containerElements.SHOW_HIDE:
-            getElementsInShowhide(element, numberedElements, elementType);
-            break;
-        case containerElements.MULTI_COLUMN:
-            getElementsInMultiColumn(element, numberedElements, elementType);
-            break;
-        case containerElements.POPUP:
-            const popupContent = await getSlateLevelData(element.versionUrn, element.contentUrn)
-            await getElementsInPopup(popupContent, numberedElements, elementType);
-            break;
-        case containerElements.ASIDE:
-            getElementsInAsideWE(element, numberedElements, elementType);
-            break;
-        case containerElements.MANIFEST:
-            getElementsInManifest(element, numberedElements, elementType);
-            break;
-    }
-    return numberedElements;
-}
-
-
-export const getElementsInPopup = (containerData, numberedElements, elementType) => {
-    containerData = {...containerData, indexPos: []}
-    if (containerData?.contents?.bodymatter?.length > 0) {
-        containerData?.contents?.bodymatter.forEach((element, index) => {
-            element.indexPos = containerData?.indexPos.push(index)
-            if (element.type === elementType) {
-                containerData?.indexPos.push(index)
-                element.indexPos = [...containerData.indexPos]
-                element.slateEntityUrn = getSlateEntityUrn()
-                numberedElements.push({...element})
-            } else if ((element.type === containerElements.MANIFEST && element.contents.bodymatter) || (Object.values(containerElements).indexOf(element.type) > -1)) {
-                containerData?.indexPos.push(index)
-                element.indexPos = [...containerData.indexPos]
-                getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos])
-            }
-        })
-    }
-    return numberedElements
-}
-
-const getElementsInAsideWE = (containerData, numberedElements, elementType) => {
-    if (containerData?.elementdata?.bodymatter?.length > 0) {
-        containerData?.elementdata?.bodymatter.forEach((element, index) => {
-            if (element.type === elementType) {
-                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element?.displayedlabel, figuretype: element.figuretype });
-                count++;
-            } else if ((element.type === 'manifest' && element.contents.bodymatter) || (element.type === 'showhide')) {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements, elementType);
-            }
-        })
-    }
-}
-
-const getElementsInManifest = (containerData, numberedElements, elementType) => {
-    if (containerData?.contents?.bodymatter?.length > 0) {
-        containerData?.contents?.bodymatter.forEach((element, index) => {
-            if (element.type === elementType) {
-                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element?.displayedlabel, figuretype: element.figuretype });
-                count++;
-            } else if (element.type === 'showhide') {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements, elementType);
-            }
-        })
-    }
-}
-
-/**
- * Prepare list of media elements in Showhide
- * @param {*} containerData 
- * @param {*} numberedElements 
- * @returns 
- */
-const getElementsInShowhide = (containerData, numberedElements, elementType) => {
-    const showHideContent = containerBodyMatter(containerData);
-    if (showHideContent?.length > 0) {
-        showHideContent.forEach((element, index) => {
-            if (element.type === elementType) {
-                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype });
-                count++;
-            } else if (element.type === 'element-aside') {
-                getImagesInsideElement(containerBodyMatter(element), numberedElements, elementType);
-            }
-        })
-    }
-}
-
-/**
- * Prepare list of media elements in MultiColumn 2C/3C
- * @param {*} containerData 
- * @param {*} numberedElements 
- * @returns 
- */
- const getElementsInMultiColumn = (containerData, numberedElements, elementType) => {
-    if (containerData?.groupeddata?.bodymatter?.length > 0) {
-        containerData?.groupeddata?.bodymatter.forEach(colData => {
-            if (colData?.groupdata?.bodymatter?.length > 0) {
-                colData?.groupdata?.bodymatter.forEach((element, index) => {
-                    element.parentDetails = containerData.parentDetails  || []
-                    element.parentDetails.push(containerData.contentUrn) //multi-column id
-                    element.parentDetails.push(colData.contentUrn) //column -id
-                    if (element.type === elementType) {
-                        let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                        numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype, parentDetails: element?.parentDetails, interactivedata: element?.interactivedata, elementdata: element?.elementdata });
-                    } else if (element.type === 'showhide' || element.type === 'element-aside') {
-                        element.parentDetails.push(element.contentUrn)
-                        getImagesInsideElement(containerBodyMatter(element), numberedElements, elementType);
-                    }
-                })
-            }
-        })
-    }
-}
-
-export const getImagesInsideElement = (bodyMatter, numberedElements = [], elementType) => {
-    if (bodyMatter?.length > 0) {
-        bodyMatter?.forEach((element, index) => {
-            if (element.type === elementType) {
-                let count = numberedElements.length > 0 ? numberedElements[numberedElements.length - 1].indexPos + 1 : 0;
-                numberedElements.push({ contentUrn: element.contentUrn, index: index, indexPos: count, displayedlabel: element.displayedlabel, figuretype: element.figuretype });
-                count++;
-            }
-            else if (Object.values(containerElements).indexOf(element.type) > -1) {
-                switch (element.type) {
-                    case containerElements.SHOW_HIDE:
-                        getElementsInShowhide(element, numberedElements, elementType)
-                        break;
-                    case containerElements.MULTI_COLUMN:
-                        getElementsInMultiColumn(element, numberedElements, elementType)
-                        break;
-                    case containerElements.POPUP:
-                        getElementsInPopup(element, numberedElements, elementType);
-                        break;
-                    case containerElements.ASIDE:
-                        getElementsInAsideWE(element, numberedElements, elementType)
-                        break;
-                    case containerElements.MANIFEST:
-                        getImagesInsideElement(element?.contents?.bodymatter, numberedElements, elementType);
-                        break;
-                }
-            }
-        })
-    }
-    return numberedElements
-}
 
 /**
  * Handle AUTO-NUMBERING on Delete
@@ -234,8 +82,10 @@ export const updateAutoNumberSequenceOnDeleteInContainers = async (parentIndex, 
             if (autoNumberedElements[labelType]?.hasOwnProperty(parentIndex) && autoNumberedElements[labelType][parentIndex]?.length > 0) {
                 let elementsInTocContainer = autoNumberedElements[labelType][parentIndex];
                 let slateElements = [];
+                const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
+                const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
                 if (autoNumberContainerTypeForDelete.includes(autoNumberedElements[labelType][parentIndex][0].type)) {
-                    slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[config.slateManifestURN]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
+                    slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
                 } else {
                     slateElements = getState().autoNumberReducer.slateFigureList;
                 }
@@ -283,7 +133,7 @@ export const deleteElementByLabelFromStore = (numberedElements, element, parentI
  * Handle AUTO-NUMBERING on Swapping
  * @param {*} params 
  */
-export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) => {
+export const handleAutoNumberingOnSwapping = async (isAutoNumberingEnabled, params) => {
     const {
         getState,
         dispatch,
@@ -297,7 +147,7 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after swap
         const bodyMatter = currentSlateData.contents.bodymatter
-        const slateFigures = getImagesInsideSlates(bodyMatter)
+        const slateFigures = await getImagesInsideSlates(bodyMatter)
         if (slateFigures) {
             dispatch({
                 type: SLATE_FIGURE_ELEMENTS,
@@ -312,8 +162,6 @@ export const handleAutoNumberingOnSwapping = (isAutoNumberingEnabled, params) =>
         else if (swappedElementData?.type === 'figure') {
             updateAutoNumberSequenceOnSwappingElements({ getState, dispatch, swappedElementData, numberedElements, slateFigures, slateAncestors, autoNumber_ElementTypeKey })
         }
-
-
     }
 }
 
@@ -388,12 +236,19 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
     let swappedElementsUrn = {};
     let nearestElement = {}
     let containerElementsOnSlate = [];
-    getSwappedElementsURN(swappedElementData, swappedElementsUrn);
+    let popupElementsList = [];
+    
+    if(swappedElementData.type === "popup"){
+        popupElementsList = await getSlateLevelData(swappedElementData.versionUrn, swappedElementData.contentUrn);
+        await getSwappedElementsURN(popupElementsList, swappedElementsUrn);
+    } else {
+        await getSwappedElementsURN(swappedElementData, swappedElementsUrn);
+    }
     let swappedElementDisplaylabled = Object.keys(swappedElementsUrn);
 
     const isAutoNumberedContainerSwapped = swappedElementDisplaylabled.some(label => displayLabelsForContainer.indexOf(label) >= 0);
     if(isAutoNumberedContainerSwapped){
-        containerElementsOnSlate = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, containerElementsOnSlate);
+        containerElementsOnSlate = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, containerElementsOnSlate, [], [], [popupElementsList]);
     }
     getNearestElement(swappedElementsUrn, slateFigures, nearestElement, 'Figure');
     getNearestElement(swappedElementsUrn, containerElementsOnSlate, nearestElement, 'Container');
@@ -420,13 +275,13 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
             }
         }
     });
-        dispatch({
-            type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-            payload: {
-                numberedElements
-            }
-        });
-        getAutoNumberSequence(numberedElements, dispatch)
+    dispatch({
+        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+        payload: {
+            numberedElements
+        }
+    });
+    getAutoNumberSequence(numberedElements, dispatch)
 }
 
 const storeSwappedUrn = (urn, displayedlabel, data) => {
@@ -437,66 +292,85 @@ const storeSwappedUrn = (urn, displayedlabel, data) => {
     }
 }
 
-const getSwappedElementsURN = (swappedElement, data) => {
+const getSwappedElementsURN = async (swappedElement, data) => {
     switch (swappedElement.type) {
         case containerElements.SHOW_HIDE:
-            getContentUrnFromShowHide(swappedElement?.interactivedata, data);
+            await getContentUrnFromShowHide(swappedElement?.interactivedata, data);
             break;
         case containerElements.MULTI_COLUMN:
-            getContentUrnFromMultiColumn(swappedElement?.groupeddata?.bodymatter, data);
+            await getContentUrnFromMultiColumn(swappedElement?.groupeddata?.bodymatter, data);
             break;
         case containerElements.ASIDE:
             storeSwappedUrn(swappedElement?.contentUrn, swappedElement?.displayedlabel, data);
-            getContentUrnFromAsideWE(swappedElement?.elementdata?.bodymatter, data);
+            await getContentUrnFromAsideWE(swappedElement?.elementdata?.bodymatter, data);
             break;
         case containerElements.MANIFEST:
-            getContentUrnFromAsideWE(swappedElement?.contents?.bodymatter, data);
+            await getContentUrnFromAsideWE(swappedElement?.contents?.bodymatter, data);
             break;
-    }
-}
-
-const getContentUrnFromMultiColumn = (bodymatter, data) => {
-    if(bodymatter.length > 0) {
-        bodymatter.forEach(colData => {
-            if(colData?.groupdata?.bodymatter.length > 0){
-                colData?.groupdata?.bodymatter.forEach(elemData => {
-                    if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
-                        storeSwappedUrn(elemData?.contentUrn, elemData?.displayedlabel, data);
-                    }
-                    if(containerElementTypes.includes(elemData?.type)){
-                        getSwappedElementsURN(elemData, data)
-                    }
-                });
+        case containerElements.POPUP:
+            if(swappedElement?.contents?.bodymatter){
+                await getContentUrnFromPopUp(swappedElement?.contents?.bodymatter, data);
+            } else {
+                let popupElementsList = await getSlateLevelData(swappedElement.versionUrn, swappedElement.contentUrn);
+                await getContentUrnFromPopUp(popupElementsList?.contents?.bodymatter, data);
             }
-        });
+            break
     }
 }
 
-const getContentUrnFromAsideWE = (bodymatter, data) => {
+const checkForSwappedElement = async (elemData, data) => {
+    if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
+        storeSwappedUrn(elemData?.contentUrn, elemData?.displayedlabel, data);
+    }
+    if(containerElementTypes.includes(elemData?.type)){
+        await getSwappedElementsURN(elemData, data)
+    }
+}
+
+const getContentUrnFromMultiColumn = async (bodymatter, data) => {
+    if(bodymatter.length > 0) {
+        for(let i in bodymatter){
+            let colData = bodymatter[i];
+            if(colData?.groupdata?.bodymatter.length > 0){
+                let groupBodyMatter = colData?.groupdata?.bodymatter;
+                for(let j in groupBodyMatter){
+                    await checkForSwappedElement(groupBodyMatter[j], data);
+                }
+            }
+        };
+    }
+}
+
+const getContentUrnFromAsideWE = async (bodymatter, data) => {
     if(bodymatter?.length > 0){
-        bodymatter.forEach(elemData => {
+        for(let i in bodymatter){
+            let elemData = bodymatter[i];
             if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
                 storeSwappedUrn(elemData?.contentUrn, elemData?.displayedlabel, data);
             }
             if(containerElementTypes.includes(elemData?.type) || containerElements.MANIFEST === elemData?.type){
-                getSwappedElementsURN(elemData, data)
+                await getSwappedElementsURN(elemData, data)
             }
-        })
+        }
     }
 }
 
-const getContentUrnFromShowHide = (interactivedata, data) => {
+const getContentUrnFromShowHide = async (interactivedata, data) => {
     let showHideKeys = Object.values(SHOWHIDE_SECTION);
-    showHideKeys.forEach(section => {
-        interactivedata[section].forEach(elemData => {
-            if(autoNumberFigureTypesAllowed.includes(elemData?.figuretype)){
-                storeSwappedUrn(elemData.contentUrn, elemData.displayedlabel, data);
-            }
-            if(containerElementTypes.includes(elemData?.type)){
-                getSwappedElementsURN(elemData, data)
-            }
-        })
-    })
+    for(let i in showHideKeys){
+        let section = showHideKeys[i];
+        for(let j in interactivedata[section]){
+            await checkForSwappedElement(interactivedata[j], data);
+        }
+    }
+}
+
+const getContentUrnFromPopUp = async (bodymatter, data) => {
+    if(bodymatter?.length > 0){
+        for(let i in bodymatter){
+            await checkForSwappedElement(bodymatter[i], data);
+        }
+    }
 }
 
 const getNearestElement = (swappedElementsUrn, elementsList, nearestElement, type) => {
@@ -523,7 +397,7 @@ const getNearestElement = (swappedElementsUrn, elementsList, nearestElement, typ
                 status[label] = true;
             } else if(!status[label] || !nearestElement[label].urn) {
                 nearestElement[label].urn = element?.contentUrn;
-                nearestElement[label].pos = status[label] ? 'above' : 'below'
+                nearestElement[label].pos = status[label] ? 'above' : 'below';
             }
         }
     });
