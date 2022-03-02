@@ -177,11 +177,11 @@
     overflow: visible; 
     white-space: normal; 
     height:auto; 
-    }
+  }
   .slate_pdf_data_id {
     font-size: 14px;
     white-space: nowrap;
-    }
+  }
   .slate_assessment_change_button{
     font-size: 13px;
     color: #424242;
