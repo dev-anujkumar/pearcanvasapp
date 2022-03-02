@@ -1235,9 +1235,9 @@ export const fetchAuthUser = () => dispatch => {
         sendDataToIframe({
             type: 'updateUserDetail',
             message : {
-                userId : userInfo.userId,
-                firstName : userInfo.firstName,
-                lastName: userInfo.lastName
+                userId: userInfo.userId ? userInfo.userId : '',
+                firstName: userInfo.firstName ? userInfo.firstName : '',
+                lastName: userInfo.lastName ? userInfo.lastName : ''
             }
             
         });
