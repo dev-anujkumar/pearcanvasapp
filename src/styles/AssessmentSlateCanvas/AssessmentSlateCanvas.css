@@ -168,15 +168,19 @@
 
   .slate_assessment_data_id{
     font-size: 14px;
-    /* overflow:hidden; */
-    /* text-overflow: ellipsis; */
-    /* word-break: break-all; */
+    overflow:hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
     white-space: nowrap;
   }
   .slate_assessment_data_id:hover{
-    /* overflow: visible;  */
-    /* white-space: normal;  */
-    /* height:auto;  */
+    overflow: visible; 
+    white-space: normal; 
+    height:auto; 
+    }
+  .slate_pdf_data_id {
+    font-size: 14px;
+    white-space: nowrap;
     }
   .slate_assessment_change_button{
     font-size: 13px;
