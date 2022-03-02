@@ -46,7 +46,8 @@ const initialState = {
         pageNumberToggle:false
     },
     alfrescoReducer: {
-        editor:{}
+        editor:{},
+        savedElement:{}
     },
     projectInfo:{
         projectSubscriptionDetails: {
@@ -56,6 +57,12 @@ const initialState = {
                 isSubscribed: true
             }
         }
+    },
+    markedIndexReducer:{
+        markedIndexValue: { "type": "", "popUpStatus": false },
+        markedIndexCurrentValue: '',
+        elementIndex: '',
+        markedIndexGlossary: {popUpStatus: false,  indexEntries: {}, markedIndexEntryURN: 'test', }
     }
 };
 
@@ -189,7 +196,7 @@ jest.mock('../../../src/component/ElementMetaDataAnchor/ExternalLO_helpers.js', 
         setCurrentSlateLOs: jest.fn(()=>[])
     }
 })
-xdescribe('Testing communication channel', () => {
+describe('Testing communication channel', () => {
     let store = mockStore(initialState);
     let props = {
         slateLevelData: {
@@ -252,12 +259,29 @@ xdescribe('Testing communication channel', () => {
         showWrongAudioPopup: jest.fn(),
         saveImageDataFromAlfresco: jest.fn(),
         setElmPickerData: jest.fn(),
-        currentSlateLOType: jest.fn()
+        currentSlateLOType: jest.fn(),
+        getProjectDetails: jest.fn(),
+        fetchProjectLFs: jest.fn(),
+        tcmCosConversionSnapshot: jest.fn(),
+        addNewComment: jest.fn(),
+        deleteComment: jest.fn()
     }
     let wrapper = mount(<Provider store={store}><CanvasWrapper {...props} /></Provider>)
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
     expect(wrapper).toHaveLength(1);
     expect(channelInstance).toBeDefined();
+    test('Test for tocContainersLabelUpdate else case', () => {
+        let event = {
+            data: {
+                type: "tocContainersLabelUpdate",
+                message: ""
+            }
+        }
+        const spyshowNotificationOnCanvas = jest.spyOn(channelInstance, 'showNotificationOnCanvas')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.showNotificationOnCanvas).toHaveBeenCalled()
+        spyshowNotificationOnCanvas.mockClear()
+    })
     test('Test for getPermissions else case', () => {
         let event = {
             data: {
@@ -685,7 +709,16 @@ xdescribe('Testing communication channel', () => {
                         'id':'10',
                         'citeUrn':'citeUrn',
                         'entityUrn':'entityUrn',
-                        'name':'vetest'
+                        'name':'vetest',
+                        'alfresco': {
+                            repositoryFolder: "001_C5 Media POC - AWS US ",
+                            repositoryName: "AWS US",
+                            repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
+                            visibility: "MODERATED",
+                            title:'',
+                            name:'',
+                            siteId: "c5-media-poc"
+                        },
                     }
                 }
             }
@@ -704,7 +737,16 @@ xdescribe('Testing communication channel', () => {
                         'id':'10',
                         'citeUrn':'citeUrn',
                         'entityUrn':'entityUrn',
-                        'name':'vetest'
+                        'name':'vetest',
+                        'alfresco': {
+                            repositoryFolder: null,
+                            repositoryName: "AWS US",
+                            repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
+                            visibility: "MODERATED",
+                            title:'',
+                            name:'',
+                            siteId: "c5-media-poc"
+                        },
                     }
                 }
             }
@@ -1368,6 +1410,18 @@ xdescribe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
+        it('Test for spellCheckStatus case', () => {
+            let event = {
+                data: {
+                    type: "spellCheckStatus",
+                    message: ""
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            spyhandleIncommingMessages.mockClear()
+        })
         it('Test for saveAlfrescoDataToConfig case', () => {
             let event = {
                 data: {
@@ -1410,7 +1464,7 @@ xdescribe('Testing communication channel', () => {
                 data: {
                     type: "selectedAlfrescoAssetData",
                     message: {
-                        isEditor: true
+                        isEditor: true,
                     }
                 }
             }
@@ -1425,14 +1479,14 @@ xdescribe('Testing communication channel', () => {
                     type: "selectedAlfrescoAssetData",
                     message: {
                         calledFrom: "NarrativeAudio",
-                        asset: {
+                        asset: [{
                             content: {
                                 mimeType: "audio"
                             },
                             properties: {
                                 "cm:description": "audio"
                             }
-                        }
+                        }]
                     }
                 }
             }
@@ -1446,15 +1500,25 @@ xdescribe('Testing communication channel', () => {
                 data: {
                     type: "selectedAlfrescoAssetData",
                     message: {
+                        isEditor:true,
                         calledFrom: "NarrativeAudio",
-                        asset: {
+                        assets: [{
                             content: {
                                 mimeType: ""
                             },
                             properties: {
                                 "cm:description": ""
                             }
-                        }
+                        }],
+                        site: {
+                            "role": "SiteManager",
+                            "visibility": "MODERATED",
+                            "guid": "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+                            "id": "c5-media-poc",
+                            "preset": "site-dashboard",
+                            "title": "001_C5 Media POC",
+                            "citeNodeRef":"001-c5"
+                        },
                     }
                 }
             }
@@ -2191,6 +2255,78 @@ xdescribe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spysendingPermissions.mockClear()
     });
+    test('Test for editPageAudioMessage case', () => {
+        let event = {
+            data: {
+                type: "editPageAudioMessage",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for ResetAutoNumberSequence case', () => {
+        let event = {
+            data: {
+                type: "ResetAutoNumberSequence",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for commentAdded case', () => {
+        let event = {
+            data: {
+                type: "commentAdded",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for commentDeleted case', () => {
+        let event = {
+            data: {
+                type: "commentDeleted",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for refreshCanvasOnPdfMerge case', () => {
+        let event = {
+            data: {
+                type: "refreshCanvasOnPdfMerge",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
+    test('Test for newCustomCanvasLabels case', () => {
+        let event = {
+            data: {
+                type: "newCustomCanvasLabels",
+                message:{}
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
     test('Test for selectedSlate case - node - isSubscribed', () => {
         config.S3MathImagePath = 'test345';
         channelInstance.setState({
@@ -2323,7 +2459,8 @@ xdescribe('Testing communication channel', () => {
     test('Test - handleUnlinkedLODataCypress method - metadataElems empty', () => {
         const message = {
             statusForSave: true,
-            unlinkedLOs: ['2']
+            unlinkedLOs: ['2'],
+
         }
         const spyhandleUnlinkedLODataCypress  = jest.spyOn(channelInstance1, 'handleUnlinkedLODataCypress')
         channelInstance1.handleUnlinkedLODataCypress(message);
