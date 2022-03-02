@@ -272,8 +272,6 @@ export const deleteFromStore = async (params) => {
     })
     
     /** ---------------------------- Auto-Numbering handling ------------------------------*/
-    const slateLevelData = newParentData[config.slateManifestURN];
-    await getAutoNumberedElementsOnSlate(slateLevelData, {dispatch});
     const isAutoNumberingEnabled = getState().autoNumberReducer?.isAutoNumberingEnabled;
     const autoNumberParams = {
         type,

@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
 import slateLevelData from './slateData';
+import elementList from '../../../src/component/Sidebar/elementTypes';
 jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions', () => ({
     prepareDataForTcmUpdate: jest.fn()
 }))
@@ -52,6 +53,9 @@ describe('Test for Sidebar component', () => {
             tcmSnapshotData: {},
             elementData: {},
             tcmStatus: false
+        },
+        autoNumberReducer: {
+            isAutoNumberingEnabled: false
         }
     });
     let props = {
@@ -63,7 +67,9 @@ describe('Test for Sidebar component', () => {
             type:'showhide'
         },
         updateElement: jest.fn(),
-        updateBlockListMetadata: jest.fn()
+        updateBlockListMetadata: jest.fn(),
+        updateContainerMetadata: jest.fn(),
+        setBCEMetadata: jest.fn()
     };
 
     let sidebar = mount(<Provider store={sidebarWithData}>
@@ -165,6 +171,9 @@ describe('Test for Sidebar component', () => {
                 tcmSnapshotData: {},
                 elementData: {},
                 tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
             }
         });
 
@@ -307,6 +316,9 @@ describe('Test for Sidebar component', () => {
                 tcmSnapshotData: {},
                 elementData: {},
                 tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
             }
         });
 
@@ -353,6 +365,9 @@ describe('Test for Sidebar component', () => {
                 tcmSnapshotData: {},
                 elementData: {},
                 tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
             }
         });
 
@@ -391,6 +406,9 @@ describe('Test for Sidebar component', () => {
                 tcmSnapshotData: {},
                 elementData: {},
                 tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
             }
 
         });
@@ -431,6 +449,9 @@ describe('Test for Sidebar component', () => {
                         tcmSnapshotData: {},
                         elementData: {},
                         tcmStatus: false
+                    },
+                    autoNumberReducer: {
+                        isAutoNumberingEnabled: false
                     }
                 });
                 let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props} /></Provider>);
@@ -467,6 +488,9 @@ describe('Test for Sidebar component', () => {
                         tcmSnapshotData: {},
                         elementData: {},
                         tcmStatus: false
+                    },
+                    autoNumberReducer: {
+                        isAutoNumberingEnabled: false
                     }
                 });
                 let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props} /></Provider>);
@@ -617,6 +641,9 @@ describe('Test for Sidebar component', () => {
                     tcmSnapshotData: {},
                     elementData: {},
                     tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar   {...props} /></Provider>);
@@ -668,6 +695,9 @@ describe('Test for Sidebar component', () => {
                     tcmSnapshotData: {},
                     elementData: {},
                     tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar   {...props} /></Provider>);
@@ -685,8 +715,8 @@ describe('Test for Sidebar component', () => {
         })
     })
     describe('Test - Blocklist', () => {
-          it("Testing handleFontBulletOptionChange  function - fontStyle- string index", () => {
-        const sidebarWithData2 = mockStore({
+        it("Testing handleFontBulletOptionChange  function - fontStyle- string index", () => {
+            const sidebarWithData2 = mockStore({
                 appStore: {
                     activeElement: {
                         ...activeElement,
@@ -710,6 +740,9 @@ describe('Test for Sidebar component', () => {
                     tcmSnapshotData: {},
                     elementData: {},
                     tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -753,6 +786,9 @@ describe('Test for Sidebar component', () => {
                     tcmSnapshotData: {},
                     elementData: {},
                     tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -773,4 +809,483 @@ describe('Test for Sidebar component', () => {
             expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
         })
     })
+    describe('Testing setToggleForAside',() => {
+        const sidebarWithData1 = mockStore({
+            appStore: {
+                activeElement: {
+                    "elementType": "element-aside",
+                    "primaryOption": "primary-aside-aside",
+                    "secondaryOption": "secondary-aside-sb1",
+                    "asideNumber": false,
+                    "elementId": "urn:pearson:manifest:a4b48624-2ae1-46aa-bf21-ddb88a5dcf82",
+                    "index": 0,
+                    "elementWipType": "element-aside",
+                    "toolbar": [],
+                    "tag": "As"
+                },
+                updateElement,
+                conversionElement,
+                slateLevelData,
+            },
+            metadataReducer: {
+                showModule: true
+            },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+            },
+            selectionReducer: {
+                selection: ""
+            },
+            tcmReducer: {
+                tisTCMCanvasPopupLaunched: false,
+                tcmSnapshotData: {},
+                elementData: {},
+                tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
+            }
+        });
+        let activeElement = {
+            "elementType": "element-aside",
+            "primaryOption": "primary-aside-aside",
+            "secondaryOption": "secondary-aside-sb1",
+            "asideNumber": false,
+            "elementId": "urn:pearson:manifest:a4b48624-2ae1-46aa-bf21-ddb88a5dcf82",
+            "index": 0,
+            "elementWipType": "element-aside",
+            "toolbar": [],
+            "tag": "As"
+        };
+        let asideTitleData = [
+            {
+                "isAsideNumber": true,
+                "elementId": "urn:pearson:manifest:a4b48624-2ae1-46aa-bf21-ddb88a5dcf82"
+            }
+        ];
+        let asideTitleData2 = [
+            {
+                "isAsideNumber": true,
+                "elementId": "urn:pearson:manifest:a4b48624-2ae1-46aa-bf21-ddb88a5dcf81"
+            }
+        ];
+        it('if condition', () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spySetToggleForAside = jest.spyOn(sidebarInstance, 'setToggleForAside')
+            const result = sidebarInstance.setToggleForAside(activeElement, asideTitleData);
+            expect(spySetToggleForAside).toHaveBeenCalled();
+            expect(result).toBe(true);
+        });
+        it('else condition', () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spySetToggleForAside = jest.spyOn(sidebarInstance, 'setToggleForAside')
+            const result = sidebarInstance.setToggleForAside(activeElement, asideTitleData2);
+            expect(spySetToggleForAside).toHaveBeenCalled();
+            expect(result).toBe(false);
+        });
+    });
+    describe('Testing saveElementAttributes', () => {
+        const storeData = {
+            appStore: {
+                activeElement: {
+                    elementId: "urn:pearson:manifest:e6546106-c72c-4e8d-aacf-c185792ee254",
+                    elementType: "poetry",
+                    elementWipType: "poetry",
+                    index: 0,
+                    numbered: true,
+                    primaryOption: "primary-poetry",
+                    secondaryOption: "secondary-poetry",
+                    startNumber: "1",
+                    tag: "PE"
+                },
+                updateElement,
+                conversionElement,
+                slateLevelData
+            },
+            metadataReducer: {
+                showModule: true
+            },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+            },
+            selectionReducer: {
+                selection: ""
+            },
+            tcmReducer: {
+                tisTCMCanvasPopupLaunched: false,
+                tcmSnapshotData: {},
+                elementData: {},
+                tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
+            }
+        }
+        const sidebarWithData1 = mockStore(storeData);
+        it('case poetry - numbered true', () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            document.querySelector = () => {
+                return {
+                    querySelector: () => {
+                        return {
+                            getAttribute: (attribute) => {
+                                if(attribute === "numbered") {
+                                    return "true"
+                                } else {
+                                    return 2
+                                }
+                            },
+                            setAttribute: () => {
+                                return jest.fn()
+                            }
+                        }
+                    }
+                }
+            }
+            const spySaveElementAttributes = jest.spyOn(sidebarInstance, 'saveElementAttributes');
+            sidebarInstance.saveElementAttributes();
+            expect(spySaveElementAttributes).toHaveBeenCalled();
+        });
+        it('case poetry - numbered false', () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            document.querySelector = () => {
+                return {
+                    querySelector: () => {
+                        return {
+                            getAttribute: (attribute) => {
+                                if(attribute === "numbered") {
+                                    return "false"
+                                } else {
+                                    return 2
+                                }
+                            },
+                            setAttribute: () => {
+                                return jest.fn()
+                            }
+                        }
+                    }
+                }
+            }
+            const spySaveElementAttributes = jest.spyOn(sidebarInstance, 'saveElementAttributes');
+            sidebarInstance.saveElementAttributes();
+            expect(spySaveElementAttributes).toHaveBeenCalled();
+        });
+    });
+    describe("Testing handleSecondaryOptionChange", () => {
+        const storeData = {
+            appStore: {
+                activeElement: {
+                    "elementType": "element-assessment",
+                    "primaryOption": "primary-single-assessment",
+                    "secondaryOption": "secondary-single-assessment-puf",
+                    "usageType": "",
+                    "elementId": "urn:pearson:work:b20e7b38-46fd-4800-a960-7c481bb3ae2b",
+                    "index": 0,
+                    "elementWipType": "figure",
+                    "toolbar": [],
+                    "tag": "Qu"
+                },
+                updateElement,
+                conversionElement,
+                slateLevelData
+            },
+            metadataReducer: {
+                showModule: true
+            },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+            },
+            selectionReducer: {
+                selection: ""
+            },
+            tcmReducer: {
+                tisTCMCanvasPopupLaunched: false,
+                tcmSnapshotData: {},
+                elementData: {},
+                tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
+            }
+        }
+        const sidebarWithData1 = mockStore(storeData);
+        it('if condition', () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            let event = {
+                target: {
+                    getAttribute: () => {
+                        return 'secondary-single-assessment-puf'
+                    }
+                }
+            }
+            document.querySelector = () => {
+                return {
+                    querySelector: () => {
+                        return {
+                            getAttribute: jest.fn(),
+                            setAttribute: () => {
+                                return jest.fn()
+                            }
+                        }
+                    }
+                }
+            }
+            const spyHandleSecondaryOptionChange = jest.spyOn(sidebarInstance, 'handleSecondaryOptionChange');
+            sidebarInstance.setState({
+                activeElementType: 'element-assessment',
+                activePrimaryOption: 'primary-single-assessment',
+                activeSecondaryOption: 'secondary-single-assessment-puf'
+            });
+            sidebarInstance.handleSecondaryOptionChange(event);
+            expect(spyHandleSecondaryOptionChange).toHaveBeenCalled();
+        });
+    });
+    describe("Testing podOption", () => {
+        const storeData = {
+            appStore: {
+                activeElement: {
+                    "elementType": "element-interactive",
+                    "primaryOption": "primary-smartlink",
+                    "altText": "",
+                    "longDesc": "",
+                    "tag": "SL",
+                    "secondaryOption": "secondary-interactive-smartlink-third",
+                    "elementId": "urn:pearson:work:60f26a17-87e8-48f6-8570-468fd968bca7",
+                    "index": 0,
+                    "elementWipType": "figure",
+                    "toolbar": []
+                },
+                updateElement,
+                conversionElement,
+                slateLevelData
+            },
+            metadataReducer: {
+                showModule: true
+            },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+            },
+            selectionReducer: {
+                selection: ""
+            },
+            tcmReducer: {
+                tisTCMCanvasPopupLaunched: false,
+                tcmSnapshotData: {},
+                elementData: {},
+                tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
+            }
+        }
+        const sidebarWithData1 = mockStore(storeData);
+        it("Test for Smartlink", () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            document.querySelector = () => {
+                return {
+                    querySelector: () => {
+                        return {
+                            getAttribute: () => {
+                                return jest.fn()
+                            },
+                            setAttribute: () => {
+                                return jest.fn()
+                            }
+                        }
+                    }
+                }
+            }
+            const spyPodOption = jest.spyOn(sidebarInstance, 'podOption');
+            sidebarInstance.setState({
+                podOption: true,
+                activeElementType: 'element-interactive',
+                activePrimaryOption: 'primary-smartlink',
+                activeSecondaryOption: 'secondary-interactive-smartlink-third'
+            });
+            sidebarInstance.podOption();
+            expect(spyPodOption).toHaveBeenCalled();
+        });
+        it("Testing togglePODDropdown for print50 pod option", () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            let event = {
+                target: {
+                    getAttribute: () => {
+                        return 'print50'
+                    }
+                }
+            }
+            const spyTogglePODDropdown = jest.spyOn(sidebarInstance, 'togglePODDropdown');
+            sidebarInstance.togglePODDropdown(event);
+            expect(spyTogglePODDropdown).toHaveBeenCalled();
+        });
+    });
+    describe("Testing Other Methods", () => {
+        const storeData1 = {
+            appStore: {
+                activeElement: {
+                    "elementType": "figure",
+                    "primaryOption": "primary-blockcode-equation",
+                    "numbered": true,
+                    "startNumber": "1",
+                    "syntaxhighlighting": true,
+                    "secondaryOption": "secondary-blockcode-language-html",
+                    "elementId": "urn:pearson:work:0c423606-c2fe-4505-96c3-f04834870bd0",
+                    "index": 0,
+                    "elementWipType": "figure",
+                    "toolbar": [],
+                    "tag": "BCE"
+                },
+                updateElement,
+                conversionElement,
+                slateLevelData
+            },
+            metadataReducer: {
+                showModule: true
+            },
+            elementStatusReducer: {
+                'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+                "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+                "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+                "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+            },
+            selectionReducer: {
+                selection: ""
+            },
+            tcmReducer: {
+                tisTCMCanvasPopupLaunched: false,
+                tcmSnapshotData: {},
+                elementData: {},
+                tcmStatus: false
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: false
+            }
+        }
+        const storeData2 = {
+            ...storeData1,
+            appStore: {
+                activeElement: {
+                    "elementType": "figure",
+                    "primaryOption": "primary-blockcode-equation",
+                    "numbered": true,
+                    "startNumber": "1",
+                    "syntaxhighlighting": true,
+                    "secondaryOption": "secondary-blockcode-language-html",
+                    "elementId": "urn:pearson:work:0c423606-c2fe-4505-96c3-f04834870bd0",
+                    "index": 0,
+                    "elementWipType": "figure",
+                    "toolbar": [],
+                    "tag": "BCE"
+                },
+                updateElement,
+                conversionElement,
+                slateLevelData
+            }
+        }
+        const sidebarWithData1 = mockStore(storeData1);
+        const sidebarWithData2 = mockStore(storeData2);
+        it("Test renderSyntaxHighlighting if consition tag='BCE' ", () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            let tag = "BCE";
+            const spyRenderSyntaxHighlighting = jest.spyOn(sidebarInstance, 'renderSyntaxHighlighting');
+            sidebarInstance.renderSyntaxHighlighting(tag);
+            expect(spyRenderSyntaxHighlighting).toHaveBeenCalled();
+        });
+        it("Test handleBQAttributionBlur if condition activeBQNode", () => {
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar {...props} /></Provider>);
+            document.querySelector = () => {
+                return {
+                    focus: () => {
+                        return jest.fn()
+                    },
+                    blur: () => {
+                        return jest.fn()
+                    },
+                    getAttribute: () => {
+                        return jest.fn()
+                    },
+                    setAttribute: () => {
+                        return jest.fn()
+                    },
+                    querySelector: () => {
+                        return {
+                            getAttribute: () => {
+                                return jest.fn()
+                            },
+                            setAttribute: () => {
+                                return jest.fn()
+                            }
+                        }
+                    }
+                }
+            }
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleBQAttributionBlur = jest.spyOn(sidebarInstance, 'handleBQAttributionBlur');
+            sidebarInstance.handleBQAttributionBlur();
+            expect(spyHandleBQAttributionBlur).toHaveBeenCalled();
+        });
+        it("Test handleBceBlur", () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            document.querySelector = () => {
+                return {
+                    querySelector: () => {
+                        return {
+                            getAttribute: () => {
+                                return jest.fn()
+                            },
+                            setAttribute: () => {
+                                return jest.fn()
+                            }
+                        }
+                    },
+                    focus: () => {
+                        return jest.fn()
+                    },
+                    blur: () => {
+                        return jest.fn()
+                    },
+                    getAttribute: () => {
+                        return jest.fn()
+                    },
+                    setAttribute: () => {
+                        return jest.fn()
+                    }
+                }
+            }
+            document.getElementById = () => {
+                return {
+                    focus: () => {
+                        return jest.fn()
+                    },
+                    blur: () => {
+                        return jest.fn()
+                    }
+                }
+            }
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleBceBlur = jest.spyOn(sidebarInstance, 'handleBceBlur');
+            sidebarInstance.handleBceBlur();
+            expect(spyHandleBceBlur).toHaveBeenCalled();
+        });
+    });
 });

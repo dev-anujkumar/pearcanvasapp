@@ -523,18 +523,20 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 shObject.interactivedata[type] = sectionOfSH;
             }   
         }
-        let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
-        const slateAncestorData = getState().appStore.currentSlateAncestorData;
+        let autoNumberedElementsObj = getState().autoNumberReducer?.autoNumberedElements;
+        const slateAncestorData = getState().appStore?.currentSlateAncestorData;
+        const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
+        const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
+        let bodyMatter = getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter;
         let elementsList = {};
         if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
             let slateFigures = [];
             let elementObj = {};
             if (type2BAdded === 'CONTAINER' || type2BAdded === 'WORKED_EXAMPLE') {
-                slateFigures = await getAsideElementsWrtKey(newBodymatter, 'element-aside', slateFigures);
+                slateFigures = await getAsideElementsWrtKey(bodyMatter, 'element-aside', slateFigures);
             } else {
-                slateFigures = await getAutoNumberedElementsOnSlate(newParentData[config.slateManifestURN], { dispatch });
+                slateFigures = await getAutoNumberedElementsOnSlate(newParentData[slateManifestUrn], { dispatch });
             }
-            
             elementObj = slateFigures?.find(element => element.contentUrn === createdElemData.data.contentUrn);
             const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
             const labelType = createdElemData?.data?.displayedlabel;
