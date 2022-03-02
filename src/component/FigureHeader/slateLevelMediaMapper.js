@@ -129,7 +129,7 @@ export const getPopupDataInsideContainer = async (bodyMatter, parentIndex = [], 
  * @param {*} imagesList 
  * @returns 
  */
-export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = [], popupElementsList = []) => {
+export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = []) => {
     if (bodyMatter?.length > 0 && typeKey) {
         for (let index in bodyMatter) {
             let element = bodyMatter[index];
@@ -301,7 +301,7 @@ export const getMediaElementInMultiColumn = async (containerData, numberedElemen
                             containerData.indexPos.push(index)
                             element.indexPos = [...containerData.indexPos]
                             element.parentDetails.push(element.contentUrn)  //element -id
-                            await getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos],element.parentDetails)
+                            await getImagesInsideSlates(await containerBodyMatter(element), numberedElements, [...element.indexPos],element.parentDetails)
                         }
                     }
                 }
@@ -317,7 +317,7 @@ export const getMediaElementInMultiColumn = async (containerData, numberedElemen
  * @returns 
  */
 export const getMediaElementInShowhide = async (containerData, numberedElements, containerIndex) => {
-    const showHideContent = containerBodyMatter(containerData)
+    const showHideContent = await containerBodyMatter(containerData);
     if (showHideContent?.length > 0) {
         for(let index in showHideContent){
             let element = showHideContent[index];
@@ -333,7 +333,7 @@ export const getMediaElementInShowhide = async (containerData, numberedElements,
                 containerData.indexPos.push(index);
                 element.indexPos = [...containerData.indexPos];
                 element.parentDetails.push(element.contentUrn);  //element -id
-                await getImagesInsideSlates(containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails);
+                await getImagesInsideSlates(await containerBodyMatter(element), numberedElements, [...element.indexPos], element.parentDetails);
             }
         }
     }

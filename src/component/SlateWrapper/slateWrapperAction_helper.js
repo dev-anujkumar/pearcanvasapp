@@ -84,12 +84,14 @@ export const onPasteSuccess = async (params) => {
 
         let deleteParams = {
             dispatch,
+            getState,
             elmId: deleteElm.id,
             parentUrn: deleteElm.parentUrn,
             asideData: deleteElm.asideData,
             index: deleteElm.index,
             poetryData: deleteElm.poetryData,
-            newParentData 
+            newParentData,
+            type: deleteElm.type,
         }
         deleteFromStore(deleteParams)
     }

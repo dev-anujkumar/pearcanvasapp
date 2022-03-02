@@ -45,6 +45,7 @@ class ElementPopup extends React.Component {
                 let popupParentSlateData = {
                     isPopupSlate: true,
                     parentSlateId: Object.keys(this.props?.slateLevelData)[0],
+                    parentSlateEntityUrn: Object.values(this.props?.slateLevelData)[0]?.contentUrn,
                     index: this.props?.index,
                     versionUrn: this.props?.element?.id
                 }
