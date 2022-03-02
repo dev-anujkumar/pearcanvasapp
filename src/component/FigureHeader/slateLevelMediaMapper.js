@@ -317,7 +317,7 @@ export const getMediaElementInMultiColumn = async (containerData, numberedElemen
  * @returns 
  */
 export const getMediaElementInShowhide = async (containerData, numberedElements, containerIndex) => {
-    const showHideContent = containerBodyMatter(containerData)
+    const showHideContent = await containerBodyMatter(containerData);
     if (showHideContent?.length > 0) {
         for(let index in showHideContent){
             let element = showHideContent[index];

@@ -137,7 +137,7 @@ const getAllElementsInManifest = async (containerData, numberedElements, created
  * @returns 
  */
 const getAllElementsInShowhide = async (containerData, numberedElements, createdElementData) => {
-    const showHideContent = containerBodyMatter(containerData);
+    const showHideContent = await containerBodyMatter(containerData);
     if (showHideContent?.length > 0) {
         for (let index in showHideContent) {
             let element = showHideContent[index];
@@ -202,16 +202,16 @@ export const getSameElementsInsideElement = async (bodyMatter, numberedElements 
             else if (Object.values(containerElements).indexOf(element.type) > -1) {
                 switch (element.type) {
                     case containerElements.SHOW_HIDE:
-                        getAllElementsInShowhide(element, numberedElements, createdElementData)
+                        await getAllElementsInShowhide(element, numberedElements, createdElementData)
                         break;
                     case containerElements.MULTI_COLUMN:
-                        getAllElementsInMultiColumn(element, numberedElements, createdElementData)
+                        await getAllElementsInMultiColumn(element, numberedElements, createdElementData)
                         break;
                     case containerElements.POPUP:
                         getAllElementsInPopup(element, numberedElements, createdElementData);
                         break;
                     case containerElements.ASIDE:
-                        getAllElementsInAsideWE(element, numberedElements, createdElementData)
+                        await getAllElementsInAsideWE(element, numberedElements, createdElementData)
                         break;
                     case containerElements.MANIFEST:
                         await getSameElementsInsideElement(element?.contents?.bodymatter, numberedElements, createdElementData);
