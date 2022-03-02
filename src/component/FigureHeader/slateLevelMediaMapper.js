@@ -129,7 +129,7 @@ export const getPopupDataInsideContainer = async (bodyMatter, parentIndex = [], 
  * @param {*} imagesList 
  * @returns 
  */
-export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = [], popupElementsList = []) => {
+export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = []) => {
     if (bodyMatter?.length > 0 && typeKey) {
         for (let index in bodyMatter) {
             let element = bodyMatter[index];

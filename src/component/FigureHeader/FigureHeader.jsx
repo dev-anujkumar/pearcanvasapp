@@ -175,7 +175,8 @@ export const FigureHeader = (props) => {
             }
             if (oldSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER || oldSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
                 updateDropdownOptions();
-                setFigureLabelValue(props.model?.displayedlabel);
+                let label = props?.model?.manualoverride?.hasOwnProperty('overridelabelvalue') ? props?.model?.manualoverride?.overridelabelvalue : getValueOfLabel(props?.model?.figuretype);
+                setFigureLabelValue(label);
             }
         }
     }
