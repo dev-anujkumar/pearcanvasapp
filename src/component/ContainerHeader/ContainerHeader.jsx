@@ -137,6 +137,9 @@ export const ContainerHeader = (props) => {
         if (oldSettings !== newSettings) {
             setState({ labelNumberSetting: newSettings });
             props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: newSettings});
+            if (newSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && document.getElementById(`cypress-${props.index}-t1`).innerHTML) {
+                setState({ elementLabelValue: props.model?.displayedlabel, currentLabelValue: props.model?.displayedlabel });
+            }
             if (newSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 setState({ showLabelField: false, showNumberField: false });
             } else {
