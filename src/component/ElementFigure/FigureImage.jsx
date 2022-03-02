@@ -92,13 +92,16 @@ class FigureImage extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         const { alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup, elementId } = this.props;
+        console.log("figure image - labelListRef - inside componentDidUpdate ", this.labelListRef);
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
             this.dataFromNewAlfresco(alfrescoAssetData)
         }
         if(!prevState.figureDropDown && this.state.figureDropDown) {
             this.setState({showingListIndex: 0});
+            console.log("figure image - childNode value", this.labelListRef.current.childNodes[0]);
             this.labelListRef.current.childNodes[0].focus();
-            this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown)
+            this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown);
+            console.log("figure image - after adding  event listener ", this.labelListRef.current);
         }
     }
 
@@ -595,6 +598,7 @@ class FigureImage extends Component {
                                     <header className="figure-header new-figure-image-header">
                                         <div className='figure-label-field'>
                                             <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
+                                            {console.log("figure image - labelRef - inside return ", this.labelRef)};
                                             <KeyboardWrapper index={`${this.props.index}-label-1`} enable={this.isEnableKeyboard()} focus>
                                                 <div ref={this.labelRef} tabIndex={0} onKeyDown={(e) => {
                                                     if(this.isEnableKeyboard()) {

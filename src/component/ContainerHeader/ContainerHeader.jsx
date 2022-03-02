@@ -225,7 +225,7 @@ export const ContainerHeader = (props) => {
         <div className="asideHeader">
             <header className="figure-header new-figure-image-header">
                 <div className='figure-label-number-field'>
-                    <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number Settings</span>
+                    <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number1 Settings</span>
                     <div className="figure-label-number" onClick={handleSettingsDropdown}>
                         <span>{labelNumberSetting}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>

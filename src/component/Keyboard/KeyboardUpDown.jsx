@@ -106,6 +106,7 @@ const KeyboardUpDown = (props) => {
         if (event.keyCode === 38 || event.keyCode === 40) {
 
             const allInteractiveElements = document.querySelectorAll(`[id^='${QUERY_SELECTOR}-']`);
+            console.log("all interactive elements ", allInteractiveElements);
             if (activeElement) {
                 let selectedNodeIndex = 0;
                 allInteractiveElements.forEach((currentValue, currentIndex) => {

@@ -13,8 +13,9 @@ import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, LABEL_DROPDOWN_VALUES } from './
 import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
-import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
+import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx';
 import Tooltip from '../Tooltip/Tooltip.jsx';
+import { createRef } from 'react';
 
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -23,6 +24,8 @@ const {
     AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
+
+// const KEYBOARD_ENABLE = [TABLE, MATH_IMAGE, BLOCK_CODE, IMAGE];
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -45,6 +48,7 @@ function useOutsideAlerter(ref, setLabelNumberSettingDropDown, setLabelDropDown)
         return () => {
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
+            // settingDropdownWrapperRef?.current?.removeEventListener('keydown', settingDropdownWrapperRef);
         };
     }, [ref]);
 }
@@ -62,7 +66,10 @@ export const FigureHeader = (props) => {
     const [currentLabelValue, setCurrentLabelValue] = useState(getLabelNumberFieldValue(props.model, figureLabelValue, labelNumberSetting));
     const [currentNumberValue, setCurrentNumberValue] = useState("");
     const [initiateBlurCall, setInitiateBlurCall] = useState(false);
+    const [showingListIndex, setShowingListIndex] = useState(0);
     const settingDropdownWrapperRef = useRef(null);
+    const labelRef = useRef(null);
+    const labelListRef = useRef(null);
     useOutsideAlerter(settingDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
     const labelDropdownWrapperRef = useRef(null);
     useOutsideAlerter(labelDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
@@ -147,6 +154,19 @@ export const FigureHeader = (props) => {
         const defaultElementLabel = getValueOfLabel(props.model?.figuretype) || props.model?.manualoverride?.overridelabelvalue || ''
         setFigureLabelValue(props.model?.displayedlabel ?? defaultElementLabel);
     }, [props.model.figuretype]);
+    useEffect(() => {
+        // this.setState({showingListIndex: 0});
+        console.log("auto numbering - console inside useEffect");
+        console.log("autonumbering - labelListRef - inside useEffect ", labelListRef);
+        console.log("auto numbering - childNode value", labelListRef?.current?.childNodes[0]);
+        console.log("auto numbering - li array ", labelListRef?.current?.childNodes);
+        console.log("auto numbering - labelNumberSettingDropdown value ", labelNumberSettingDropDown);
+        setShowingListIndex(0);
+        labelListRef?.current?.childNodes[1].focus();
+        // labelListRef?.current?.addEventListener('keydown', handleAutoLabelKeyDown)
+        labelListRef?.current?.addEventListener('keydown', handleAutoLabelKeyDown);
+        console.log("labelListRef after adding even listener", labelListRef.current);
+    }, [labelNumberSettingDropDown, labelListRef.current])
     /**---------------------------------------- */
     const handleCloseDropDrown = () => {
         setLabelDropDown(false)
@@ -180,6 +200,37 @@ export const FigureHeader = (props) => {
         }
     }
     /**---------------------------------------- */
+    const handleAutoLabelKeyDown = (event) => {
+        console.log("outside of every loop in handleLabelKeyDropdown");
+        if(true) {
+             if(event.keyCode === 13) {
+                 console.log("pressed 13");
+                 labelListRef?.current?.childNodes[showingListIndex].click();
+                 labelRef?.current.focus();
+             }
+ 
+             else if (event.keyCode === 40) {
+                 console.log("outside 40");
+                 if(labelListRef?.current?.childNodes[setShowingListIndex(showingListIndex + 1)]) {
+                     console.log("pressed 40");
+                     labelListRef?.current?.childNodes[setShowingListIndex(showingListIndex + 1) ].focus();
+                     setShowingListIndex(showingListIndex + 1);
+                 }
+             } else if (event.keyCode === 38) {
+                 console.log("outside 38");
+                 if(labelListRef?.current?.childNodes[setShowingListIndex(showingListIndex - 1)]) {
+                     console.log("pressed 38");
+                     labelListRef?.current?.childNodes[setShowingListIndex(showingListIndex - 1)].focus();
+                     setShowingListIndex(showingListIndex - 1);
+                 
+                 }
+             }
+             event.stopPropagation();
+             event.preventDefault();
+         }
+         console.log("outside handleLabelKeyDropdown");
+     }
+
     const handleLabelDropdown = () => {
         setLabelDropDown(!labelDropDown)
         setLabelNumberSettingDropDown(false)
@@ -246,6 +297,11 @@ export const FigureHeader = (props) => {
             }
         }
     }
+
+    // const isEnableKeyboard = () => {
+    //     return KEYBOARD_ENABLE.indexOf(props.model.figuretype) > -1
+    // }
+
     const { figureHtmlData, figLabelClass, figTitleClass } = props
     const containerNumber = getContainerNumber(slateAncestors, props.autoNumberingDetails) //F,B,P1,23
     const figIndexParent = getContainerEntityUrn(slateAncestors);
@@ -260,18 +316,35 @@ export const FigureHeader = (props) => {
         <>
             <header className="figure-header new-figure-image-header">
                 <div className='figure-label-number-field'>
-                    <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number Settings</span>
-                    <div className="figure-label-number" onClick={handleSettingsDropdown}>
+                    <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number2 Settings</span>
+                    <KeyboardWrapper index={`${props.index}-labelautonumber-1`} enable focus>
+                    {console.log("auto numbering - labelRef - inside return ", labelRef)}
+                    <div ref={labelRef} tabIndex={0} onKeyDown={(e) => {
+                        if(true) {
+                            const key = e.which || e.keyCode;
+                            if(key === 13) {
+                                handleSettingsDropdown();
+                            }
+                            if(key === 38) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                            }
+                        }
+                    }}>
+                    {/* {console.log("selected element ", props.selectedElement)} */}
+                    <div className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-labelautonumber-1` ? "figure-label-highlight" : "figure-label-number"} onClick={handleSettingsDropdown}>
                         <span>{labelNumberSetting}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                     </div>
+                    </div>
+                    </KeyboardWrapper>
                 </div>
                 {labelNumberSettingDropDown &&
-                    <div className="figure-number-dropdown" ref={settingDropdownWrapperRef}>
-                        <ul>
+                    <div tabIndex={0} className="figure-number-dropdown" ref={settingDropdownWrapperRef}>
+                        <ul ref={labelListRef}>
                             {AUTO_NUMBER_SETTING_DROPDOWN_VALUES.map((label, i) => {
                                 return (
-                                    <li key={i} onClick={() => { changeAutoNumberSettings(labelNumberSetting, label); }}>{label}</li>
+                                    <li tabIndex={0} key={i} onClick={() => { changeAutoNumberSettings(labelNumberSetting, label); }}>{label}</li>
                                 )
                             })}
                         </ul>
@@ -279,22 +352,38 @@ export const FigureHeader = (props) => {
                 }
                 {removeLabelCondition && showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && <div className='figure-label-field'>
                     <span className={`label ${labelDropDown ? 'active' : ''}`}>Label</span>
+                    {/* <KeyboardWrapper index={`${props.index}-labelautonumber-2`} enable focus> */}
+                    {/* <div className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-labelautonumber-2` ? "figure-label-highlight" : "figure-label"} onClick={handleLabelDropdown}> */}
                     <div className="figure-label" onClick={handleLabelDropdown}>
-                        <span className='canvas-dropdown' >{imgLabelValue}</span>
-                        <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
-                        {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
-                            <div className="figure-dropdown" style={{top: '9px', left: 0}} ref={labelDropdownWrapperRef} >
-                                <ul>
-                                    {figureLabelData.map((label, i) => {
-                                        return (
-                                            <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>
-                                                {label}</li>
-                                        )
-                                    })}
-                                </ul>
-                            </div>
+                    {/* <div ref={labelRef} tabIndex={0} onKeyDown={(e) => {
+                        if(true) {
+                            const key = e.which || e.keyCode;
+                            if(key === 13) {
+                                handleLabelDropdown();
+                            }
+                            if(key === 38) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                            }
                         }
+                    }}> */}
+                    <span className='canvas-dropdown' >{imgLabelValue}</span>
+                    <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
+                    {/* </div> */}
+                    {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
+                        <div className="figure-dropdown" style={{top: '9px', left: 0}} ref={labelDropdownWrapperRef} >
+                            <ul>
+                                {figureLabelData.map((label, i) => {
+                                    return (
+                                        <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>
+                                            {label}</li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                    }
                     </div>
+                    {/* </KeyboardWrapper> */}
                 </div>}
                 {
                    removeLabelCondition &&  (showLabelField && labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ?
@@ -309,7 +398,9 @@ export const FigureHeader = (props) => {
                         </div>)
                 }
                 {removeLabelCondition && showNumberField && <div className="floating-number-group">
+                    <KeyboardWrapper enable index={`${props.index}-51`}>
                     <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} labelNumberSetting={labelNumberSetting} contenteditable={labelNumberSetting !== AUTO_NUMBER_SETTING_DEFAULT} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber " + newClass} model={imgNumberValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
+                    </KeyboardWrapper>
                     <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? "transition-none" : "floating-number"}>Number</label>
                 </div>}
 
@@ -333,7 +424,8 @@ const mapStateToProps = state => ({
     currentSlateAncestorData: state.appStore.currentSlateAncestorData,
     activeElement: state.appStore.activeElement,
     autoNumberElementsIndex: state.autoNumberReducer.autoNumberElementsIndex,
-    autoNumberingDetails: state.autoNumberReducer.autoNumberingDetails
+    autoNumberingDetails: state.autoNumberReducer.autoNumberingDetails,
+    selectedElement: state.keyboardReducer.selectedElement
 })
 
 const mapActionsToProps = (dispatch) => {

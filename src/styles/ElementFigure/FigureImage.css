@@ -771,6 +771,10 @@ th ol li.listItemNumeroUnoNone:before {
 .figure-number-dropdown ul li:hover {
   background-color: #efefef;
 }
+.figure-number-dropdown ul li:focus {
+    background-color: #005a70;
+    color: white;
+}
 .figure-label-number .dropdown-arrow{
   width: 8px;
   position: absolute;
