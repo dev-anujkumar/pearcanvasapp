@@ -63,6 +63,9 @@ const initialState = {
         markedIndexCurrentValue: '',
         elementIndex: '',
         markedIndexGlossary: {popUpStatus: false,  indexEntries: {}, markedIndexEntryURN: 'test', }
+    },
+    autoNumberReducer: {
+        isAutoNumberingEnabled: true
     }
 };
 
@@ -264,7 +267,9 @@ describe('Testing communication channel', () => {
         fetchProjectLFs: jest.fn(),
         tcmCosConversionSnapshot: jest.fn(),
         addNewComment: jest.fn(),
-        deleteComment: jest.fn()
+        deleteComment: jest.fn(),
+        handleSlateRefresh: jest.fn(),
+        setTocContainersAutoNumberList: jest.fn()
     }
     let wrapper = mount(<Provider store={store}><CanvasWrapper {...props} /></Provider>)
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
@@ -323,7 +328,9 @@ describe('Testing communication channel', () => {
                 type: "container",
                 unformattedTitle: {
                     en: '1'
-                }
+                },
+                parentOfParentItem:'frontmatter',
+                nodeParentLabel:'backmatter'
             },
             disableNext: false,
             disablePrev: false,
@@ -418,7 +425,7 @@ describe('Testing communication channel', () => {
             id: "urn:pearson:manifest:3c780b1f-06ad-4e3d-b226-6775cba97b29",
             parentId: 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4',
             parentType: "chapter",
-            title: "blank",
+            // title: "blank",
             type: "assessment",
             slateType: "section",
             node: {
@@ -435,7 +442,9 @@ describe('Testing communication channel', () => {
                 nodeParentLabel: "chapter",
                 parentBodyMatterLengthFlag: false,
                 parentEntityUrn: "urn:pearson:entity:b4fab541-891a-4766-ac65-6dc58b68b0b3",
-                type: "container"
+                type: "container",
+                autoNumberingDetails:{id:1},
+                parentOfParentItem:'backmatter'
             }
         }
         let event = {
@@ -739,7 +748,7 @@ describe('Testing communication channel', () => {
                         'entityUrn':'entityUrn',
                         'name':'vetest',
                         'alfresco': {
-                            repositoryFolder: null,
+                            repositoryFolder: "werew",
                             repositoryName: "AWS US",
                             repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
                             visibility: "MODERATED",
@@ -1460,6 +1469,15 @@ describe('Testing communication channel', () => {
             spyhandleIncommingMessages.mockClear()
         })
         it('Test for selectedAlfrescoAssetData case - isEditor - if block', () => {
+            let initialState3 = {
+                ...initialState,
+                alfrescoReducer: {
+                    savedElement:{editor:true}
+                }
+            }
+            let store3 = mockStore(initialState3)
+            let wrapper = mount(<Provider store={store3}><CanvasWrapper {...props} /></Provider>)
+            let channelInstance = wrapper.find('CommunicationWrapper').instance();
             let event = {
                 data: {
                     type: "selectedAlfrescoAssetData",
@@ -1537,7 +1555,8 @@ describe('Testing communication channel', () => {
                             content: {
                                 mimeType: "image"
                             },
-                            properties: {}
+                            properties: {},
+                            espUrl:'asf'
                         }
                     }
                 }
@@ -1651,7 +1670,10 @@ describe('Testing communication channel', () => {
                             label: {
                                 en: 'en'
                             }
-                        }]
+                        }],
+                        loUnlinked:{
+                            lourn:'123'
+                        }
                     }
                 }
             }
@@ -1735,7 +1757,7 @@ describe('Testing communication channel', () => {
                         }],
                         unlinkedLOs: ['1'],
                         loObj: {
-                            id: '1',
+                            // id: '1',
                             loUrn: '1'
                         }
                     }
@@ -2063,7 +2085,31 @@ describe('Testing communication channel', () => {
         let event = {
             data: {
                 type: "titleChanging",
-                message: {}
+                message: {
+                    node: {
+                        parentOfParentItem:'',
+                        nodeParentLabel:'backmatter'
+                    }
+                }
+            }
+        }
+        props.withinLockPeriod = true;
+        const spysetCurrentSlate = jest.spyOn(channelInstance, 'setCurrentSlate')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.setCurrentSlate).toHaveBeenCalled()
+        spysetCurrentSlate.mockClear()
+    })
+
+    test('Test for titleChanging case - else blocks- nodeLabelParent case', () => {
+        let event = {
+            data: {
+                type: "titleChanging",
+                message: {
+                    node: {
+                        parentOfParentItem:'',
+                        nodeParentLabel:'frontmatter'
+                    }
+                }
             }
         }
         props.withinLockPeriod = true;
