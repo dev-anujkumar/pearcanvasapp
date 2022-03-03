@@ -183,9 +183,15 @@ export const ContainerHeader = (props) => {
             labelElement?.nextElementSibling?.classList?.remove('transition-none');
             if (id === '0-0') {
                 labelElement?.nextElementSibling?.classList?.add('floating-label');
-            } else {
-                labelElement?.nextElementSibling?.classList?.add('floating-number');
             }
+        }
+        let lastIndex = id && id.toString().split('-');
+        if (!labelHtmlData.includes(checkHTMLdataInsideString(`<p>${labelElement?.innerHTML}</p>`)) && lastIndex[lastIndex.length - 1] == 't2') {
+            labelElement?.nextElementSibling?.classList?.remove('floating-number');
+            labelElement?.nextElementSibling?.classList?.add('transition-none');
+        } else if (labelHtmlData.includes(checkHTMLdataInsideString(`<p>${labelElement?.innerHTML}</p>`)) && lastIndex[lastIndex.length - 1] == 't2') {
+            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+            labelElement?.nextElementSibling?.classList?.add('floating-number');
         }
     }
 
@@ -193,7 +199,7 @@ export const ContainerHeader = (props) => {
         if (fieldType == 'Label Name') {
             setState({ currentLabelValue: evt.target.innerText?.replace(/&nbsp;/g, ' ')} );
         } else {
-            if (evt?.target?.innerText?.length > 9) {
+            if (evt?.target?.innerText?.length > 9 && state.labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
                 return false;
             }
             let isnum = true;

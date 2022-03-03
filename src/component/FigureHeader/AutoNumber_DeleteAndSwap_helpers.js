@@ -6,7 +6,7 @@ import {
     SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
-import { getAutoNumberSequence, getSlateLevelData } from './AutoNumberActions';
+import { getAutoNumberSequence, getSlateLevelData, updateChapterPopupData } from './AutoNumberActions';
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
@@ -15,7 +15,7 @@ Array.prototype.move = function (from, to) {
  * Handle AUTO-NUMBERING on Delete
  * @param {*} params 
  */
-export const handleAutoNumberingOnDelete = (params) => {
+export const handleAutoNumberingOnDelete = async (params) => {
     const {
         element,
         type,
@@ -28,6 +28,11 @@ export const handleAutoNumberingOnDelete = (params) => {
     const slateAncestors = getState().appStore.currentSlateAncestorData;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
     const autoNumberedElements = getState().autoNumberReducer.autoNumberedElements;
+    const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
+    if (popupParentSlateData?.isPopupSlate) {
+        const popupContent = await getSlateLevelData(popupParentSlateData?.versionUrn, popupParentSlateData.contentUrn);
+        updateChapterPopupData(popupContent, popupParentSlateData?.versionUrn);
+    }
     if (isAutoNumberingEnabled) {
         if (containerElementTypes.includes(type)) {
             //reset auto-numbering

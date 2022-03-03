@@ -344,15 +344,18 @@ export const handleAutonumberingForElementsInContainers = async (bodyMatter, ele
 }
 
 export const addElementInPopupSlate = async (createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, listType, labelType, getState, dispatch) => {
+    const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
     let popupSlateElements = [];
+    let slateElements = [];
     if (displayLabelsForContainer.includes(createdElementData?.displayedlabel)) {
         popupSlateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[config.slateManifestURN]?.contents?.bodymatter, containerElements.ASIDE, popupSlateElements);
+        slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
     } else {
         popupSlateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[config.slateManifestURN], { dispatch });
+        slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId], { dispatch });
     }
     let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
     let activeLabelElements = popupSlateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
-    const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
     if (activeLabelElements?.length > 1) {
         let count = 0;
         popupSlateElements.forEach(item => {
@@ -362,12 +365,6 @@ export const addElementInPopupSlate = async (createdElementData, elementsList, s
         appendElementToList(popupSlateElements, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
     } else if (activeLabelElements?.length == 1 && popupParentSlateData?.isPopupSlate) {
         let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
-        let slateElements = [];
-        if (displayLabelsForContainer.includes(createdElementData?.displayedlabel)) {
-            slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
-        } else {
-            slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId], { dispatch });
-        }
         let activeElements = slateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
         /* if active elements are there then modify indexPos key bcoz elements may be exist in containers */
         if (activeElements?.length > 0) {
