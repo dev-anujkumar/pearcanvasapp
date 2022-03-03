@@ -68,8 +68,11 @@ const KeyboardUpDown = (props) => {
                     // if(tinymceChild.innerHTML === "<p></p>") {
                     //     tinymceChild.innerHTML = '';
                     // }
-                    tinymceChild.click();
+                    //To avoid save call error
                     tinymceChild.focus();
+                    setTimeout(() => {
+                        tinymceChild.click();
+                    }, 0)
                 }
             }
             else {
