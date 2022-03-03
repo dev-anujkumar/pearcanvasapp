@@ -92,7 +92,7 @@ const isFirtstChild = (node, tinymceOffset) => {
         }
         if(tinymceOffset == 0 && (node?.parentNode?.classList.contains("figureCredit") 
         || node?.classList?.contains("figureCaption")
-        || node?.classList?.contains("figureTitle") || node?.classList?.contains('figureNumber'))) {
+        || node?.classList?.contains("figureTitle") || node?.classList?.contains("figureLabel") || node?.classList?.contains('figureNumber'))) {
             return true;
         }
         if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {

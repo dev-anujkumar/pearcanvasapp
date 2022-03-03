@@ -373,7 +373,8 @@ export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNu
 export const updateAutonumberingOnElementTypeUpdate = (newElement, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => async (dispatch, getState) => {
     const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey;
     const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
-    const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
+    const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config?.slateManifestURN;
+    const slateEntityUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateEntityUrn : config?.slateEntityURN;
     let slateElements;
     switch (element.type) {
         case ELEMENT_TYPES.FIGURE:
@@ -415,7 +416,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
         });
         getAutoNumberSequence(autoNumberedElements, dispatch);
     } else if (activeLabelElements.length === 0) {
-        checkElementExistenceInOtherSlates(newElement, config?.slateEntityURN, getState, dispatch);
+        checkElementExistenceInOtherSlates(newElement, slateEntityUrn, getState, dispatch);
     } 
 }
 

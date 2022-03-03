@@ -53,22 +53,22 @@ export const findNearestElement = (elementsArr, elementObj, elementType, index =
     return objToReturn;
 }
 
-export const findElementsInContainer = (element, numberedElements = [], createdElementData) => {
+export const findElementsInContainer = async (element, numberedElements = [], createdElementData) => {
     switch (element.type) {
         case containerElements.SHOW_HIDE:
-            getAllElementsInShowhide(element, numberedElements, createdElementData);
+            await getAllElementsInShowhide(element, numberedElements, createdElementData);
             break;
         case containerElements.MULTI_COLUMN:
-            getAllElementsInMultiColumn(element, numberedElements, createdElementData);
+            await getAllElementsInMultiColumn(element, numberedElements, createdElementData);
             break;
         case containerElements.POPUP:
             getAllElementsInPopup(element, numberedElements, createdElementData);
             break;
         case containerElements.ASIDE:
-            getAllElementsInAsideWE(element, numberedElements, createdElementData);
+            await getAllElementsInAsideWE(element, numberedElements, createdElementData);
             break;
         case containerElements.MANIFEST:
-            getAllElementsInManifest(element, numberedElements, createdElementData);
+            await getAllElementsInManifest(element, numberedElements, createdElementData);
             break;
     }
     return numberedElements;
@@ -106,7 +106,7 @@ const getAllElementsInAsideWE = async (containerData, numberedElements, createdE
                     numberedElements = await getPopupDataInsideContainer(element?.elementdata?.bodymatter, [], numberedElements, containerElements.ASIDE);
                 }
             } else if ((element.type === 'manifest' && element.contents.bodymatter) || (element.type === 'showhide')) {
-                await getSameElementsInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
+                await getSameElementsInsideElement(await containerBodyMatter(element), numberedElements, createdElementData);
             }
         }
     }
@@ -124,7 +124,7 @@ const getAllElementsInManifest = async (containerData, numberedElements, created
                     numberedElements = await getPopupDataInsideContainer(element?.elementdata?.bodymatter, [], numberedElements, containerElements.ASIDE);
                 }
             } else if (element.type === 'showhide') {
-                await getSameElementsInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
+                await getSameElementsInsideElement(await containerBodyMatter(element), numberedElements, createdElementData);
             }
         }
     }
@@ -137,7 +137,7 @@ const getAllElementsInManifest = async (containerData, numberedElements, created
  * @returns 
  */
 const getAllElementsInShowhide = async (containerData, numberedElements, createdElementData) => {
-    const showHideContent = containerBodyMatter(containerData);
+    const showHideContent = await containerBodyMatter(containerData);
     if (showHideContent?.length > 0) {
         for (let index in showHideContent) {
             let element = showHideContent[index];
@@ -146,7 +146,7 @@ const getAllElementsInShowhide = async (containerData, numberedElements, created
                 numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype });
                 count++;
             } else if (element.type === 'element-aside') {
-                await getSameElementsInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
+                await getSameElementsInsideElement(await containerBodyMatter(element), numberedElements, createdElementData);
             }
         }
     }
@@ -173,7 +173,7 @@ const getAllElementsInShowhide = async (containerData, numberedElements, created
                         numberedElements.push({ contentUrn: element.contentUrn, indexPos: count, displayedlabel: element.displayedlabel || 'Figure', figuretype: element.figuretype, parentDetails: element?.parentDetails });
                     } else if (element.type === 'showhide' || element.type === 'element-aside') {
                         element.parentDetails.push(element.contentUrn)
-                        await getSameElementsInsideElement(containerBodyMatter(element), numberedElements, createdElementData);
+                        await getSameElementsInsideElement(await containerBodyMatter(element), numberedElements, createdElementData);
                     }
                 }
             }
@@ -202,16 +202,16 @@ export const getSameElementsInsideElement = async (bodyMatter, numberedElements 
             else if (Object.values(containerElements).indexOf(element.type) > -1) {
                 switch (element.type) {
                     case containerElements.SHOW_HIDE:
-                        getAllElementsInShowhide(element, numberedElements, createdElementData)
+                        await getAllElementsInShowhide(element, numberedElements, createdElementData)
                         break;
                     case containerElements.MULTI_COLUMN:
-                        getAllElementsInMultiColumn(element, numberedElements, createdElementData)
+                        await getAllElementsInMultiColumn(element, numberedElements, createdElementData)
                         break;
                     case containerElements.POPUP:
                         getAllElementsInPopup(element, numberedElements, createdElementData);
                         break;
                     case containerElements.ASIDE:
-                        getAllElementsInAsideWE(element, numberedElements, createdElementData)
+                        await getAllElementsInAsideWE(element, numberedElements, createdElementData)
                         break;
                     case containerElements.MANIFEST:
                         await getSameElementsInsideElement(element?.contents?.bodymatter, numberedElements, createdElementData);
@@ -263,7 +263,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
         let elementObj = slateElements?.find(element => element.contentUrn === createdElementData.contentUrn);
         let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
         const activeLabelElements = slateElements?.filter(img => img.displayedlabel === createdElementData.displayedlabel);
-        if (elementObj.indexPos == 0 && activeLabelElements.length > 1) {
+        if (elementObj?.indexPos == 0 && activeLabelElements.length > 1) {
             let count = 0;
             slateElements.forEach(item => {
                 item.indexPos = count;
@@ -291,7 +291,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 elementsList[slateEntityForAutonumber].push(createdElementData);
             }
             updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-        } else if (elementObj.indexPos > 0 && activeLabelElements.length > 1) {
+        } else if (elementObj?.indexPos > 0 && activeLabelElements?.length > 1) {
             let count = 0;
             slateElements.forEach(item => {
                 item.indexPos = count;
@@ -313,9 +313,9 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 elementsList[slateEntityForAutonumber].push(createdElementData);
             }
             updateCreatedElementInAutonumberList(listType, elementsList, autoNumberedElementsObj, dispatch);
-        } else if (Array.isArray(elementObj.indexPos)) {
+        } else if (Array.isArray(elementObj?.indexPos)) {
             handleAutonumberingForElementsInContainers(bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch);
-        } else if (activeLabelElements.length === 1) {
+        } else if (activeLabelElements?.length === 1) {
             checkElementExistenceInOtherSlates(createdElementData, config.slateEntityURN, getState, dispatch);
         }
     }
@@ -328,56 +328,53 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
  * @param {*} imagesList 
  * @returns 
  */
-export const handleAutonumberingForElementsInContainers = (bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch) => {
-    let elementsInContainer = findElementsInContainer(bodyMatter[elementObj.indexPos[0]], [], createdElementData);
+export const handleAutonumberingForElementsInContainers = async (bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch) => {
+    let elementsInContainer = await findElementsInContainer(bodyMatter[elementObj.indexPos[0]], [], createdElementData);
     let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
     let activeLabelElementsInSlate = slateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
-    if (elementsInContainer.length > 1) {
+    if (elementsInContainer?.length > 1) {
         appendElementToList(elementsInContainer, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
-    } else if (elementsInContainer.length == 1 && activeLabelElementsInSlate.length > 1) {
+    } else if (elementsInContainer?.length == 1 && activeLabelElementsInSlate?.length > 1) {
         let count = 0;
         activeLabelElementsInSlate?.forEach(item => { item.indexPos = count; count++; });
         appendElementToList(activeLabelElementsInSlate, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
-    } else if (elementsInContainer.length == 1 && activeLabelElementsInSlate.length == 1) {
+    } else if (elementsInContainer?.length == 1 && activeLabelElementsInSlate?.length == 1) {
         checkElementExistenceInOtherSlates(createdElementData, config.slateEntityURN, getState, dispatch);
     }
 }
 
 export const addElementInPopupSlate = async (createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, listType, labelType, getState, dispatch) => {
+    const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
     let popupSlateElements = [];
+    let slateElements = [];
     if (displayLabelsForContainer.includes(createdElementData?.displayedlabel)) {
         popupSlateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[config.slateManifestURN]?.contents?.bodymatter, containerElements.ASIDE, popupSlateElements);
+        slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
     } else {
         popupSlateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[config.slateManifestURN], { dispatch });
+        slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId], { dispatch });
     }
     let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
     let activeLabelElements = popupSlateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
-    const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
-    if (activeLabelElements.length > 1) {
+    if (activeLabelElements?.length > 1) {
         let count = 0;
         popupSlateElements.forEach(item => {
             item.indexPos = count;
             count++;
         });
         appendElementToList(popupSlateElements, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
-    } else if (activeLabelElements.length == 1 && popupParentSlateData?.isPopupSlate) {
+    } else if (activeLabelElements?.length == 1 && popupParentSlateData?.isPopupSlate) {
         let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
-        let slateElements = [];
-        if (displayLabelsForContainer.includes(createdElementData?.displayedlabel)) {
-            slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
-        } else {
-            slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[popupParentSlateData?.parentSlateId], { dispatch });
-        }
         let activeElements = slateElements?.filter(elem => elem.displayedlabel === createdElementData.displayedlabel);
         /* if active elements are there then modify indexPos key bcoz elements may be exist in containers */
         if (activeElements?.length > 0) {
             let count = 0;
             activeElements?.forEach(item => { item.indexPos = count; count++; });
         }
-        if (activeElements.length > 1) {
+        if (activeElements?.length > 1) {
             appendElementToList(activeElements, createdElementData, labelType, elementsList, slateEntityForAutonumber, listType, autoNumberedElementsObj, dispatch);
-        } else if (activeElements.length == 1) {
-            checkElementExistenceInOtherSlates(createdElementData, config.slateEntityURN, getState, dispatch);
+        } else if (activeElements?.length == 1) {
+            checkElementExistenceInOtherSlates(createdElementData, popupParentSlateData?.parentSlateEntityUrn, getState, dispatch);
         }
     }
 }
@@ -462,7 +459,7 @@ export const checkElementExistenceInOtherSlates = (createdElementData, slateEnti
             }
         }
 
-        if (slatesArr.length > 1) {
+        if (slatesArr?.length > 1) {
             slateIndex = slatesArr.findIndex(slate => slate.entityUrn === slateEntityURN);
             if (slateIndex === (slatesArr.length - 1)) {
                 slateKey = 'above';
