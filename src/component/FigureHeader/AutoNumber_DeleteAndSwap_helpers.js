@@ -365,7 +365,7 @@ const getContentUrnFromShowHide = async (interactivedata, data) => {
     for(let i in showHideKeys){
         let section = showHideKeys[i];
         for(let j in interactivedata[section]){
-            await checkForSwappedElement(interactivedata[j], data);
+            await checkForSwappedElement(interactivedata[section][j], data);
         }
     }
 }
