@@ -750,6 +750,22 @@ th ol li.listItemNumeroUnoNone:before {
     position: relative;
     padding: 3px 4px;
 }
+.figure-label-number-highlight{
+    width: 230px;
+    font-size: 14px;
+    line-height: 1.71;
+    color: #000;
+    border-bottom: 2px solid #005a70;
+    cursor: pointer;
+    position: relative;
+    padding: 3px 4px;
+}
+.figure-label-number-highlight .dropdown-arrow{
+    width: 8px;
+    position: absolute;
+    right: 0;
+    top: 14px;
+}
 .figure-number-dropdown{
   width: 230px;
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);

@@ -66,7 +66,7 @@ export const FigureHeader = (props) => {
     const [currentLabelValue, setCurrentLabelValue] = useState(getLabelNumberFieldValue(props.model, figureLabelValue, labelNumberSetting));
     const [currentNumberValue, setCurrentNumberValue] = useState("");
     const [initiateBlurCall, setInitiateBlurCall] = useState(false);
-    const [showingListIndex, setShowingListIndex] = useState(0);
+    const [showingAutoListIndex, setShowingAutoListIndex] = useState(0);
     const settingDropdownWrapperRef = useRef(null);
     const labelRef = useRef(null);
     const labelListRef = useRef(null);
@@ -154,6 +154,7 @@ export const FigureHeader = (props) => {
         const defaultElementLabel = getValueOfLabel(props.model?.figuretype) || props.model?.manualoverride?.overridelabelvalue || ''
         setFigureLabelValue(props.model?.displayedlabel ?? defaultElementLabel);
     }, [props.model.figuretype]);
+
     useEffect(() => {
         // this.setState({showingListIndex: 0});
         console.log("auto numbering - console inside useEffect");
@@ -161,12 +162,14 @@ export const FigureHeader = (props) => {
         console.log("auto numbering - childNode value", labelListRef?.current?.childNodes[0]);
         console.log("auto numbering - li array ", labelListRef?.current?.childNodes);
         console.log("auto numbering - labelNumberSettingDropdown value ", labelNumberSettingDropDown);
-        setShowingListIndex(0);
-        labelListRef?.current?.childNodes[1].focus();
+       // setShowingAutoListIndex(0);
+        console.log("AN-show",showingAutoListIndex);
+        labelListRef?.current?.childNodes[0].focus();
         // labelListRef?.current?.addEventListener('keydown', handleAutoLabelKeyDown)
         labelListRef?.current?.addEventListener('keydown', handleAutoLabelKeyDown);
         console.log("labelListRef after adding even listener", labelListRef.current);
-    }, [labelNumberSettingDropDown, labelListRef.current])
+    })
+
     /**---------------------------------------- */
     const handleCloseDropDrown = () => {
         setLabelDropDown(false)
@@ -205,26 +208,30 @@ export const FigureHeader = (props) => {
         if(true) {
              if(event.keyCode === 13) {
                  console.log("pressed 13");
-                 labelListRef?.current?.childNodes[showingListIndex].click();
+                 labelListRef?.current?.childNodes[showingAutoListIndex].click();
                  labelRef?.current.focus();
              }
  
              else if (event.keyCode === 40) {
-                 console.log("outside 40");
-                 if(labelListRef?.current?.childNodes[setShowingListIndex(showingListIndex + 1)]) {
-                     console.log("pressed 40");
-                     labelListRef?.current?.childNodes[setShowingListIndex(showingListIndex + 1) ].focus();
-                     setShowingListIndex(showingListIndex + 1);
+                 //console.log("outside 40",labelListRef?.current?.childNodes);
+                 console.log("Auto-40-out", showingAutoListIndex);
+                 if(labelListRef?.current?.childNodes[showingAutoListIndex + 1]) {
+                     console.log("pressed 40",showingAutoListIndex,labelListRef?.current?.childNodes[showingAutoListIndex + 1]);
+                     labelListRef?.current?.childNodes[showingAutoListIndex + 1].focus();
+                     setShowingAutoListIndex(showingAutoListIndex + 1);
+                     console.log("Auto-40-in", showingAutoListIndex);
                  }
+                 console.log("out of focus");
              } else if (event.keyCode === 38) {
                  console.log("outside 38");
-                 if(labelListRef?.current?.childNodes[setShowingListIndex(showingListIndex - 1)]) {
+                 if(labelListRef?.current?.childNodes[showingAutoListIndex + 1]) {
                      console.log("pressed 38");
-                     labelListRef?.current?.childNodes[setShowingListIndex(showingListIndex - 1)].focus();
-                     setShowingListIndex(showingListIndex - 1);
+                     labelListRef?.current?.childNodes[showingAutoListIndex + 1].focus();
+                     setShowingAutoListIndex(showingAutoListIndex + 1);
                  
                  }
              }
+             console.log("11111111",showingAutoListIndex);
              event.stopPropagation();
              event.preventDefault();
          }
@@ -332,7 +339,7 @@ export const FigureHeader = (props) => {
                         }
                     }}>
                     {/* {console.log("selected element ", props.selectedElement)} */}
-                    <div className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-labelautonumber-1` ? "figure-label-highlight" : "figure-label-number"} onClick={handleSettingsDropdown}>
+                    <div className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-labelautonumber-1` ? "figure-label-number-highlight" : "figure-label-number"} onClick={handleSettingsDropdown}>
                         <span>{labelNumberSetting}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                     </div>

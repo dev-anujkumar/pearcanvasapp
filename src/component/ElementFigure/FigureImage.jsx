@@ -114,9 +114,11 @@ class FigureImage extends Component {
             }
 
             else if (event.keyCode === 40) {
+                console.log("40-out", this.state.showingListIndex);
                 if(this.labelListRef.current.childNodes[this.state.showingListIndex + 1]) {
                     this.labelListRef.current.childNodes[this.state.showingListIndex + 1 ].focus();
                     this.setState({showingListIndex: this.state.showingListIndex + 1});
+                    console.log("40-in", this.state.showingListIndex);
                 }
             } else if (event.keyCode === 38) {
                 if(this.labelListRef.current.childNodes[this.state.showingListIndex - 1]) {
