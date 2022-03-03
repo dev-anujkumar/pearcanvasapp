@@ -228,6 +228,7 @@ export const updateAutoNumberSequenceOnSwappingElements = (params) => {
  */
 export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
     const {
+        getState,
         dispatch,
         slateFigures,
         slateAncestors,
@@ -251,13 +252,9 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
     }
     let swappedElementDisplaylabled = Object.keys(swappedElementsUrn);
 
-    const isAutoNumberedContainerSwapped = swappedElementDisplaylabled.some(label => displayLabelsForContainer.indexOf(label) >= 0);
-    if(isAutoNumberedContainerSwapped){
-        containerElementsOnSlate = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, containerElementsOnSlate, [], [], [popupElementsList]);
-    }
-    getNearestElement(swappedElementsUrn, slateFigures, nearestElement, 'Figure');
-    getNearestElement(swappedElementsUrn, containerElementsOnSlate, nearestElement, 'Container');
-
+    containerElementsOnSlate = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, containerElementsOnSlate, [], [], [popupElementsList]);
+    getNearestElement(swappedElementsUrn, slateFigures, nearestElement, getState);
+    getNearestElement(swappedElementsUrn, containerElementsOnSlate, nearestElement, getState);
     swappedElementDisplaylabled.forEach(label => {
         let swappedElementList = [];
         let nearestElementIndex;
@@ -378,14 +375,10 @@ const getContentUrnFromPopUp = async (bodymatter, data) => {
     }
 }
 
-const getNearestElement = (swappedElementsUrn, elementsList, nearestElement, type) => {
-    let swappedElementDisplaylabled = [];
+const getNearestElement = (swappedElementsUrn, elementsList, nearestElement, getState) => {
     let status = {}
-    if(type === 'Figure'){
-        swappedElementDisplaylabled = Object.keys(swappedElementsUrn).filter(label => displayLabelsForAutonumbering.includes(label))
-    } else {
-        swappedElementDisplaylabled = Object.keys(swappedElementsUrn).filter(label => displayLabelsForContainer.includes(label))
-    }
+    let displayLabelList = Object.keys(getState().autoNumberReducer.autoNumber_KeyMapper)
+    let swappedElementDisplaylabled = Object.keys(swappedElementsUrn).filter(label => displayLabelList.includes(label))
 
     swappedElementDisplaylabled.forEach(label => {
         status[label] = false;
