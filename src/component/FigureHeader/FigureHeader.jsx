@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
-import { checkHTMLdataInsideString } from '../../constants/utility';
+import { checkHTMLdataInsideString, hasReviewerRole } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, LABEL_DROPDOWN_VALUES } from './AutoNumberConstants';
 import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -165,6 +165,7 @@ export const FigureHeader = (props) => {
             setInitiateBlurCall(true)
             if (newSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && document.getElementById(`cypress-${props.index}-0`)) {
                 document.getElementById(`cypress-${props.index}-0`).innerHTML = `${props?.model?.displayedlabel || props?.model?.manualoverride?.overridelabelvalue || ''}`;
+                setCurrentLabelValue(props.model?.displayedlabel);
             }
             if (newSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 setShowLabelField(false)
@@ -268,7 +269,7 @@ export const FigureHeader = (props) => {
             <header className="figure-header new-figure-image-header">
                 <div className='figure-label-number-field'>
                     <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number Settings</span>
-                    <div className="figure-label-number" onClick={handleSettingsDropdown}>
+                    <div className="figure-label-number" onClick={!hasReviewerRole() && handleSettingsDropdown}>
                         <span>{labelNumberSetting}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                     </div>
@@ -286,7 +287,7 @@ export const FigureHeader = (props) => {
                 }
                 {removeLabelCondition && showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && <div className='figure-label-field'>
                     <span className={`label ${labelDropDown ? 'active' : ''}`}>Label</span>
-                    <div className="figure-label" onClick={handleLabelDropdown}>
+                    <div className="figure-label" onClick={!hasReviewerRole() && handleLabelDropdown}>
                         <span className='canvas-dropdown' >{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                         {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
