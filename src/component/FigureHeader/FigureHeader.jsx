@@ -211,7 +211,7 @@ export const FigureHeader = (props) => {
         } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
             labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
-        const imagetypes = ['image','table','mathImage']
+        const imagetypes = ["image", "table", "mathImage", "tableasmarkup", "authoredtext", "codelisting"];
         if (imagetypes.indexOf(props?.model?.figuretype) > -1) {
             props.updateFigureImageDataForCompare(props.model.figuredata);
         } else if (props?.model?.figuretype == 'audio' || props?.model?.figuretype == 'video') {
