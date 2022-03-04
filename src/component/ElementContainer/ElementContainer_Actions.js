@@ -888,6 +888,8 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             displayedlabel = dataArr[0];
         } else if (!(previousData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
             displayedlabel = getValueOfLabel(previousData?.subtype);
+        } else {
+            displayedlabel = previousData?.displayedlabel;
         }
         updatedElement = {
             ...updatedElement,

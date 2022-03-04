@@ -794,7 +794,7 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorOnClick = (e) => {
-        let asideNumberingPlaceholders=['Label','Number','Title']
+        let asideNumberingPlaceholders = ['Label Name', 'Number', 'Title'];
         if (this.props?.element?.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
             this.props.onFigureImageFieldFocus(this.props.index);
         }

@@ -414,21 +414,10 @@ class ElementContainer extends Component {
             }
             titleHTML = titleHTML.match(/<p>/g) ? titleHTML : `<p>${titleHTML}</p>`;
             const validDropdownOptions = generateDropdownDataForContainers(previousElementData);
-            /* Checking that if label & number are different for api trigger */
-            if (previousElementData?.hasOwnProperty('displayedlabel') && validDropdownOptions.includes(labeleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER)) {
-                isLabelDifferent = labeleHTML !== previousElementData?.displayedlabel;
-            } else if ((!(previousElementData?.hasOwnProperty('displayedlabel')) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER))) {
-                isLabelDifferent = false;
-            } else if (previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) {
-                isLabelDifferent = labeleHTML !== previousElementData?.manualoverride?.overridelabelvalue;
-                /* case for remove label to override label */
-            } else if (!(previousElementData?.hasOwnProperty('displayedlabel')) && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
-                let oldLabel = '';
-                isLabelDifferent = labeleHTML !== oldLabel;
-                /* case for numberedandlabel: true to override label */
-            } else if (previousElementData?.hasOwnProperty('displayedlabel') && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
-                isLabelDifferent = labeleHTML !== previousElementData?.displayedlabel;
+            if (!labeleHTML || labeleHTML === '' || (!validDropdownOptions.includes(labeleHTML) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
+                labeleHTML = previousElementData.displayedlabel;
             }
+            isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? labeleHTML !== previousElementData?.manualoverride?.overridelabelvalue : labeleHTML !== previousElementData.displayedlabel;
             const isTitleDifferent = previousElementData?.html?.title ? this.removeClassesFromHtml(titleHTML) !== previousElementData?.html?.title : checkHTMLdataInsideString(titleHTML) ? true : false;
             return (isLabelDifferent || isNumberDifferent || isTitleDifferent);
         }
@@ -461,8 +450,8 @@ class ElementContainer extends Component {
 
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
-        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
         if (!this.props.isAutoNumberingEnabled) {
             titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         }
@@ -557,8 +546,8 @@ class ElementContainer extends Component {
         }
         captionHTML = captionHTML.match(/<p>/g) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = creditsHTML.match(/<p>/g) ? creditsHTML : `<p>${creditsHTML}</p>`
-        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
-        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
         if (!this.props.isAutoNumberingEnabled) {
             titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         }
@@ -646,8 +635,8 @@ class ElementContainer extends Component {
             creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
-        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
         if (!this.props.isAutoNumberingEnabled) {
             titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         }
@@ -709,8 +698,8 @@ class ElementContainer extends Component {
 
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
-        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
         if (!this.props.isAutoNumberingEnabled) {
             titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         }
@@ -793,8 +782,8 @@ class ElementContainer extends Component {
 
         captionHTML = matchHTMLwithRegex(captionHTML) ? captionHTML : `<p>${captionHTML}</p>`
         creditsHTML = matchHTMLwithRegex(creditsHTML) ? creditsHTML : `<p>${creditsHTML}</p>`
-        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '');
-        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+        numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
         if (!this.props.isAutoNumberingEnabled) {
             titleHTML = createLabelNumberTitleModel(titleHTML, numberHTML, subtitleHTML);
         }
@@ -1012,6 +1001,8 @@ class ElementContainer extends Component {
                             displayedlabel = dataArr[0];
                         } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                             displayedlabel = getValueOfLabel(previousElementData?.subtype);
+                        } else {
+                            displayedlabel = previousElementData?.displayedlabel;
                         }
                         updatedElement = {
                             ...updatedElement,
