@@ -527,13 +527,12 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         const slateAncestorData = getState().appStore?.currentSlateAncestorData;
         const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
         const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
-        let bodyMatter = getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter;
         let elementsList = {};
         if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
             let slateFigures = [];
             let elementObj = {};
             if (type2BAdded === 'CONTAINER' || type2BAdded === 'WORKED_EXAMPLE') {
-                slateFigures = await getAsideElementsWrtKey(bodyMatter, 'element-aside', slateFigures);
+                slateFigures = await getAsideElementsWrtKey(newParentData[slateManifestUrn].contents.bodymatter, 'element-aside', slateFigures);
             } else {
                 slateFigures = await getAutoNumberedElementsOnSlate(newParentData[slateManifestUrn], { dispatch });
             }
@@ -543,35 +542,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             elementsList = autoNumberedElementsObj[listType];
             handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
         }
-        /* let condition;
-        if (newIndex.length == 4) {
-            condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
-            if (condition.versionUrn == elementId) {
-                    newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } else if (newIndex.length == 5) {
-            condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
-            if (condition.versionUrn == elementId) {
-                    newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } else if (newIndex.length == 6) {
-            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]];
-            //condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
-            if (condition.versionUrn == elementId) {
-                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } else if (newIndex.length == 7) {
-            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
-            if (condition.versionUrn == elementId) {
-                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        }
-        else{
-            condition =  newBodymatter[newIndex[0]]
-            if(condition.versionUrn == elementId){
-                newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } */
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
 
         if (config.tcmStatus) {
