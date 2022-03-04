@@ -70,9 +70,7 @@ const KeyboardUpDown = (props) => {
                     // }
                     //To avoid save call error
                     tinymceChild.focus();
-                    setTimeout(() => {
-                        tinymceChild.click();
-                    }, 0)
+                    tinymceChild.click();
                 }
             }
             else {
