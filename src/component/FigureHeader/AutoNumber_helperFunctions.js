@@ -180,7 +180,7 @@ export const getValueOfLabel = (figuretype) => {
 export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber, currentLabelValue, labelNumberSetting, currentNumberValue }) => {
     let labelValue = imgLabelValue
     let numberValue = imgNumberValue
-    if (labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
+    if (labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && imgLabelValue === currentLabelValue) {
         labelValue = currentLabelValue
     }
     if (labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER || labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER || labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER) {

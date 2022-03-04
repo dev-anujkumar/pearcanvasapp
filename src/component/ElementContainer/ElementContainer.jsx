@@ -2065,6 +2065,9 @@ class ElementContainer extends Component {
                         openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp}
                         handleAudioPopupLocation={this.handleAudioPopupLocation}
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
+                        assetsPopupStatus = {this.state.assetsPopupStatus}
+                        closeAssetsPopup = {this.handleAssetsPopupLocation}
+                        position={this.state.position}
                     />;
                     labelText = 'PS'
                     break;
@@ -2190,7 +2193,7 @@ class ElementContainer extends Component {
                     <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" + labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick={(e) => this.handleFocus("", "", e, labelText)} spellcheck={`${spellCheckToggle}`}>
                         {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
                         {/* {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>} */}
-                        {this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} />}
+                        {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         {permissions && permissions.includes('notes_adding') && !anyOpenComment && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          

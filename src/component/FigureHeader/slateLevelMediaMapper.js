@@ -156,7 +156,7 @@ export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElemen
                 if (parentIndex?.length) element.parentDetails = parentIndex;
                 switch (element.type) {
                     case containerElements.SHOW_HIDE:
-                        getContainerInShowhide(element, numberedElements, typeKey);
+                        await getContainerInShowhide(element, numberedElements, typeKey);
                         break;
                     case containerElements.MULTI_COLUMN:
                         await getContainerInMultiColumn(element, numberedElements, [...element.indexPos], typeKey);
@@ -404,8 +404,8 @@ export const getContainerInMultiColumn = async (containerData, numberedElements,
  * @param {*} imagesList 
  * @returns 
  */
-export const getContainerInShowhide = (containerData, numberedElements, elementType) => {
-    const showHideContent = containerBodyMatter(containerData)
+export const getContainerInShowhide = async (containerData, numberedElements, elementType) => {
+    const showHideContent = await containerBodyMatter(containerData)
     if (showHideContent?.length > 0) {
         showHideContent.forEach((element, index) => {
             element.indexPos = [...containerData.indexPos]
