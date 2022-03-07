@@ -62,7 +62,8 @@ export const ContainerHeader = (props) => {
             showLabelField: true,
             showNumberField: true,
             currentLabelValue: getLabelNumberFieldValue(props.model, elementLabelValue, labelNumberSetting),
-            currentNumberValue: ''
+            currentNumberValue: '',
+            initiateBlurCall: false
         }
     );
 
@@ -98,7 +99,7 @@ export const ContainerHeader = (props) => {
         }
     }, [])
     useEffect(() => {
-        if (props.activeElement.elementId === props.model.id && props?.autoNumberOption?.entityUrn === props?.model?.contentUrn) {
+        if ((props.activeElement.elementId === props.model.id && props?.autoNumberOption?.entityUrn === props?.model?.contentUrn) || (props.activeElement.elementId === props.model.id && state.initiateBlurCall)) {
             props.handleBlur();
         }
     }, [props.autoNumberOption]);
@@ -137,7 +138,7 @@ export const ContainerHeader = (props) => {
         if (oldSettings !== newSettings) {
             setState({ labelNumberSetting: newSettings });
             props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: newSettings});
-            if (newSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && document.getElementById(`cypress-${props.index}-t1`).innerHTML) {
+            if (newSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
                 setState({ elementLabelValue: props.model?.displayedlabel, currentLabelValue: props.model?.displayedlabel });
             }
             if (newSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
@@ -160,20 +161,28 @@ export const ContainerHeader = (props) => {
     const changeLabelValue = (oldValue, newValue) => {
         handleCloseDropDrown();
         if (oldValue !== newValue) {
+            props.updateAutoNumberingDropdownForCompare({ entityUrn: props.model.contentUrn, option: state.labelNumberSetting });
             setState({ elementLabelValue: newValue });
             document.getElementById(`cypress-${props.index}-t1`).innerHTML = `${newValue}`;
-            props.handleBlur();
+            setState({ initiateBlurCall: true });
         }
     }
 
     const onFigureHeaderFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
+        let lastIndex = id && id.toString().split('-');
         if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
         } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
             labelElement?.nextElementSibling?.classList?.add('transition-none');
+            if (lastIndex[lastIndex.length - 1] == 't1') {
+                labelElement?.nextElementSibling?.classList?.remove('floating-label');
+            } else if (lastIndex[lastIndex.length - 1] == 't2') {
+                labelElement?.nextElementSibling?.classList?.remove('floating-number');
+            }
+        } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
+            labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
-
         props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: state.labelNumberSetting});
     }
 
@@ -182,19 +191,14 @@ export const ContainerHeader = (props) => {
         if (labelElement?.nextElementSibling) {
             labelElement?.nextElementSibling?.classList?.remove('label-color-change');
         }
-        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
-            labelElement?.nextElementSibling?.classList?.remove('transition-none');
-            if (id === '0-0') {
-                labelElement?.nextElementSibling?.classList?.add('floating-label');
-            }
-        }
         let lastIndex = id && id.toString().split('-');
-        if (!labelHtmlData.includes(checkHTMLdataInsideString(`<p>${labelElement?.innerHTML}</p>`)) && lastIndex[lastIndex.length - 1] == 't2') {
-            labelElement?.nextElementSibling?.classList?.remove('floating-number');
-            labelElement?.nextElementSibling?.classList?.add('transition-none');
-        } else if (labelHtmlData.includes(checkHTMLdataInsideString(`<p>${labelElement?.innerHTML}</p>`)) && lastIndex[lastIndex.length - 1] == 't2') {
+        if (labelHtmlData.includes(labelElement?.innerHTML)) {
             labelElement?.nextElementSibling?.classList?.remove('transition-none');
-            labelElement?.nextElementSibling?.classList?.add('floating-number');
+            if (lastIndex[lastIndex.length - 1] == 't1') {
+                labelElement?.nextElementSibling?.classList?.add('floating-label');
+            } else if (lastIndex[lastIndex.length - 1] == 't2') {
+                labelElement?.nextElementSibling?.classList?.add('floating-number');
+            } 
         }
     }
 

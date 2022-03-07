@@ -376,27 +376,29 @@ const getContentUrnFromPopUp = async (bodymatter, data) => {
 }
 
 const getNearestElement = (swappedElementsUrn, elementsList, nearestElement, getState) => {
-    let status = {}
-    let displayLabelList = Object.keys(getState().autoNumberReducer.autoNumber_KeyMapper)
-    let swappedElementDisplaylabled = Object.keys(swappedElementsUrn).filter(label => displayLabelList.includes(label))
-
-    swappedElementDisplaylabled.forEach(label => {
-        status[label] = false;
-        nearestElement[label] = {
-            urn: "",
-            pos: ""
-        }
-    });
-
-    elementsList.forEach(element => {
-        let label = element?.displayedlabel; 
-        if(swappedElementDisplaylabled.includes(label)){
-            if(swappedElementsUrn[label].includes(element?.contentUrn)){
-                status[label] = true;
-            } else if(!status[label] || !nearestElement[label].urn) {
-                nearestElement[label].urn = element?.contentUrn;
-                nearestElement[label].pos = status[label] ? 'above' : 'below';
+    if(elementsList?.length > 0){
+        let status = {}
+        let displayLabelList = Object.keys(getState().autoNumberReducer.autoNumber_KeyMapper)
+        let swappedElementDisplaylabled = Object.keys(swappedElementsUrn).filter(label => displayLabelList.includes(label))
+    
+        swappedElementDisplaylabled.forEach(label => {
+            status[label] = false;
+            nearestElement[label] = {
+                urn: "",
+                pos: ""
             }
-        }
-    });
+        });
+    
+        elementsList.forEach(element => {
+            let label = element?.displayedlabel; 
+            if(swappedElementDisplaylabled.includes(label)){
+                if(swappedElementsUrn[label].includes(element?.contentUrn)){
+                    status[label] = true;
+                } else if(!status[label] || !nearestElement[label].urn) {
+                    nearestElement[label].urn = element?.contentUrn;
+                    nearestElement[label].pos = status[label] ? 'above' : 'below';
+                }
+            }
+        });
+    }
 }
