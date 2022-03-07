@@ -58,6 +58,9 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+
     let titleText = titleDOM ? titleDOM.innerText : "",
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
@@ -208,6 +211,9 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+    
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
 
     let titleText = titleDOM ? titleDOM.innerText : "",
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
@@ -375,6 +381,9 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+
     let titleText = titleDOM ? titleDOM.innerText : "",
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
@@ -489,6 +498,9 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
         textHTML = textDOM ? textDOM.innerHTML : ""
+    
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
 
     let titleText = titleDOM ? titleDOM.innerText : "",
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
