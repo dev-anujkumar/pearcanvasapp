@@ -33,6 +33,9 @@ describe('ListElement', () => {
       editor: true,
       Permission: false
     },
+    keyboardReducer: {
+      selectedElement: []
+    },
     appStore: {
       slateLevelData: {}
     },

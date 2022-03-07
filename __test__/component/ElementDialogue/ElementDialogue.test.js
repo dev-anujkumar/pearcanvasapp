@@ -82,7 +82,10 @@ let initialState = {
 		asideData: {},
 		parentUrn: {},
 		activeElement: {}
-	}
+	},
+	keyboardReducer: {
+        selectedElement: []
+    }
 };
 const event = {
 	stopPropagation: jest.fn(),
