@@ -190,9 +190,10 @@ export const FigureHeader = (props) => {
     const changeLabelValue = (oldValue, newValue) => {
         handleCloseDropDrown();
         if (oldValue !== newValue) {
+            props.updateAutoNumberingDropdownForCompare({ entityUrn: props.model.contentUrn, option: labelNumberSetting });
             setFigureLabelValue(newValue);
             document.getElementById(`cypress-${props.index}-0`).innerHTML = `${newValue}`;
-            props.handleBlur();
+            setInitiateBlurCall(true);
         }
     }
 
