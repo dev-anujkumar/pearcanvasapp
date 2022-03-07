@@ -1483,7 +1483,8 @@ describe("Testing methods", () => {
                 }
             },
             showBlocker: function () { },
-            updateFigureData : function() {}
+            updateFigureData : function() {},
+            currentSingleAssessmentSelected: {}
         };
         let tempComponent = mount(<Provider store={store}><Interactive {...tempProps} /></Provider>);
         let elementInteractiveInstance = tempComponent.find('Interactive').instance();
