@@ -146,7 +146,7 @@ export class TinyMceEditor extends Component {
 
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
-                const isAutoNumberField = (this.props.isAutoNumberingEnabled && this.props?.element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn)
+                const isAutoNumberField = (this.props.isAutoNumberingEnabled && (this.props?.element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn)
                 if (isAutoNumberField || config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                     editor.shortcuts.remove('meta+u', '', '');
                     editor.shortcuts.remove('meta+b', '', '');
@@ -1274,6 +1274,11 @@ export class TinyMceEditor extends Component {
                         e.preventDefault();
                         e.stopPropagation();
                         return false;
+                    }
+                    if (tinymce?.activeEditor?.getContent()?.length < 1) {
+                        if (!e.ctrlKey && keyCode == 48) {
+                            tinymce.dom.Event.cancel(e);
+                        }
                     }
                 }
                 // disable keyboard events in Label & Number fields of Autonumbered Elements
