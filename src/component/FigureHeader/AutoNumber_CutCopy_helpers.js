@@ -7,6 +7,8 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
+import { checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
+import config from '../../config/config';
 
 /**
  * Handle AUTO-NUMBERING on Delete
@@ -70,7 +72,7 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
  */
 export const updateAutoNumberSequenceOnCopyElements = (params) => {
     const {
-        // getState,
+        getState,
         dispatch,
         slateFigures,
         slateAncestors,
@@ -117,6 +119,21 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
                 });
                 getAutoNumberSequence(numberedElements, dispatch)
             }
+        } else if (activeLabelFigures?.length === 1) { // when same label elements are not on current slate
+            if (operationType == 'cut') {
+                if (figureParentEntityUrn && numberedElements) {
+                    numberedElements[labelType][figureParentEntityUrn] = numberedElements[labelType][figureParentEntityUrn]?.filter(ele => ele.contentUrn !== selectedElement.contentUrn);
+                    dispatch({
+                        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+                        payload: {
+                            numberedElements
+                        }
+                    });
+                    getAutoNumberSequence(numberedElements, dispatch);
+                }
+            }
+            // This function will insert the selectedElement in numbered element
+            checkElementExistenceInOtherSlates(selectedElement, config.slateEntityURN, getState, dispatch);
         }
     }
 }

@@ -163,8 +163,8 @@ export const FigureHeader = (props) => {
             setLabelNumberSetting(newSettings);
             props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: newSettings});
             setInitiateBlurCall(true)
-            if (newSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && document.getElementById(`cypress-${props.index}-0`)) {
-                document.getElementById(`cypress-${props.index}-0`).innerHTML = `${props?.model?.displayedlabel || props?.model?.manualoverride?.overridelabelvalue || ''}`;
+            if (newSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
+                setFigureLabelValue(props.model?.displayedlabel);
                 setCurrentLabelValue(props.model?.displayedlabel);
             }
             if (newSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
@@ -198,12 +198,20 @@ export const FigureHeader = (props) => {
 
     const onFigureHeaderFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
+        let lastIndex = id && id.toString().split('-');
         if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
         } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
             labelElement?.nextElementSibling?.classList?.add('transition-none');
+            if (lastIndex[lastIndex.length - 1] == '0') {
+                labelElement?.nextElementSibling?.classList?.remove('floating-label');
+            } else if (lastIndex[lastIndex.length - 1] == '1') {
+                labelElement?.nextElementSibling?.classList?.remove('floating-number');
+            } 
+        } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
+            labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
-        const imagetypes = ['image','table','mathImage']
+        const imagetypes = ["image", "table", "mathImage", "tableasmarkup", "authoredtext", "codelisting"];
         if (imagetypes.indexOf(props?.model?.figuretype) > -1) {
             props.updateFigureImageDataForCompare(props.model.figuredata);
         } else if (props?.model?.figuretype == 'audio' || props?.model?.figuretype == 'video') {
@@ -219,19 +227,14 @@ export const FigureHeader = (props) => {
         if (labelElement?.nextElementSibling) {
             labelElement?.nextElementSibling?.classList?.remove('label-color-change');
         }
-        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
-            labelElement?.nextElementSibling?.classList?.remove('transition-none');
-            if (id == '0-0') {
-                labelElement?.nextElementSibling?.classList?.add('floating-label');
-            }
-        }
         let lastIndex = id && id.toString().split('-');
-        if (!labelHtmlData.includes(checkHTMLdataInsideString(`<p>${labelElement?.innerHTML}</p>`)) && lastIndex[lastIndex.length - 1] == '1') {
-            labelElement?.nextElementSibling?.classList?.remove('floating-number');
-            labelElement?.nextElementSibling?.classList?.add('transition-none');
-        } else if (labelHtmlData.includes(checkHTMLdataInsideString(`<p>${labelElement?.innerHTML}</p>`)) && lastIndex[lastIndex.length - 1] == '1') {
+        if (labelHtmlData.includes(labelElement?.innerHTML)) {
             labelElement?.nextElementSibling?.classList?.remove('transition-none');
-            labelElement?.nextElementSibling?.classList?.add('floating-number');
+            if (lastIndex[lastIndex.length - 1] == '0') {
+                labelElement?.nextElementSibling?.classList?.add('floating-label');
+            } else if (lastIndex[lastIndex.length - 1] == '1') {
+                labelElement?.nextElementSibling?.classList?.add('floating-number');
+            } 
         }
     }
 
