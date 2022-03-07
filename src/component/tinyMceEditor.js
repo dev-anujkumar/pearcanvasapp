@@ -1275,8 +1275,9 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                         return false;
                     }
+                    // Restrict first digit 0 in Number Field
                     if (tinymce?.activeEditor?.getContent()?.length < 1) {
-                        if (!e.ctrlKey && keyCode == 48) {
+                        if (!(e.ctrlKey || e.metaKey) && keyCode == 48) {
                             tinymce.dom.Event.cancel(e);
                         }
                     }
