@@ -62,7 +62,8 @@ export const ContainerHeader = (props) => {
             showLabelField: true,
             showNumberField: true,
             currentLabelValue: getLabelNumberFieldValue(props.model, elementLabelValue, labelNumberSetting),
-            currentNumberValue: ''
+            currentNumberValue: '',
+            initiateBlurCall: false
         }
     );
 
@@ -98,7 +99,7 @@ export const ContainerHeader = (props) => {
         }
     }, [])
     useEffect(() => {
-        if (props.activeElement.elementId === props.model.id && props?.autoNumberOption?.entityUrn === props?.model?.contentUrn) {
+        if ((props.activeElement.elementId === props.model.id && props?.autoNumberOption?.entityUrn === props?.model?.contentUrn) || (props.activeElement.elementId === props.model.id && state.initiateBlurCall)) {
             props.handleBlur();
         }
     }, [props.autoNumberOption]);
@@ -160,9 +161,10 @@ export const ContainerHeader = (props) => {
     const changeLabelValue = (oldValue, newValue) => {
         handleCloseDropDrown();
         if (oldValue !== newValue) {
+            props.updateAutoNumberingDropdownForCompare({ entityUrn: props.model.contentUrn, option: state.labelNumberSetting });
             setState({ elementLabelValue: newValue });
             document.getElementById(`cypress-${props.index}-t1`).innerHTML = `${newValue}`;
-            props.handleBlur();
+            setState({ initiateBlurCall: true });
         }
     }
 
