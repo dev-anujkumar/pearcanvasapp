@@ -156,19 +156,11 @@ export const FigureHeader = (props) => {
     }, [props.model.figuretype]);
 
     useEffect(() => {
-        // this.setState({showingListIndex: 0});
-        console.log("auto numbering - console inside useEffect");
-        console.log("autonumbering - labelListRef - inside useEffect ", labelListRef);
-        console.log("auto numbering - childNode value", labelListRef?.current?.childNodes[0]);
-        console.log("auto numbering - li array ", labelListRef?.current?.childNodes);
-        console.log("auto numbering - labelNumberSettingDropdown value ", labelNumberSettingDropDown);
-       // setShowingAutoListIndex(0);
-        console.log("AN-show",showingAutoListIndex);
+        //setShowingAutoListIndex(0);
+        console.log("AN-showingAutoListIndex",showingAutoListIndex);
         labelListRef?.current?.childNodes[0].focus();
-        // labelListRef?.current?.addEventListener('keydown', handleAutoLabelKeyDown)
         labelListRef?.current?.addEventListener('keydown', handleAutoLabelKeyDown);
-        console.log("labelListRef after adding even listener", labelListRef.current);
-    })
+    },[labelNumberSettingDropDown,showingAutoListIndex])
 
     /**---------------------------------------- */
     const handleCloseDropDrown = () => {
@@ -207,31 +199,22 @@ export const FigureHeader = (props) => {
         console.log("outside of every loop in handleLabelKeyDropdown");
         if(true) {
              if(event.keyCode === 13) {
-                 console.log("pressed 13");
+                 console.log("pressed 13",showingAutoListIndex);
                  labelListRef?.current?.childNodes[showingAutoListIndex].click();
                  labelRef?.current.focus();
              }
- 
              else if (event.keyCode === 40) {
-                 //console.log("outside 40",labelListRef?.current?.childNodes);
-                 console.log("Auto-40-out", showingAutoListIndex);
                  if(labelListRef?.current?.childNodes[showingAutoListIndex + 1]) {
-                     console.log("pressed 40",showingAutoListIndex,labelListRef?.current?.childNodes[showingAutoListIndex + 1]);
                      labelListRef?.current?.childNodes[showingAutoListIndex + 1].focus();
                      setShowingAutoListIndex(showingAutoListIndex + 1);
-                     console.log("Auto-40-in", showingAutoListIndex);
+                     //console.log("Auto-40-in", showingAutoListIndex);
                  }
-                 console.log("out of focus");
              } else if (event.keyCode === 38) {
-                 console.log("outside 38");
-                 if(labelListRef?.current?.childNodes[showingAutoListIndex + 1]) {
-                     console.log("pressed 38");
-                     labelListRef?.current?.childNodes[showingAutoListIndex + 1].focus();
-                     setShowingAutoListIndex(showingAutoListIndex + 1);
-                 
+                 if(labelListRef?.current?.childNodes[showingAutoListIndex - 1]) {
+                     labelListRef?.current?.childNodes[showingAutoListIndex - 1].focus();
+                     setShowingAutoListIndex(showingAutoListIndex - 1);
                  }
              }
-             console.log("11111111",showingAutoListIndex);
              event.stopPropagation();
              event.preventDefault();
          }
