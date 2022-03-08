@@ -136,8 +136,8 @@ export const checkInteractive = (element) => {
 }
 
 export const checkFigureMetadata = (element, buttonType = null) => {
-    const figureImageTypes = ["image", "mathImage", "table"];
-    const smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
+    const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup"];
+    const smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table', "tableasmarkup"];
     const hasElements = [ELEMENT_FIGURE, AUDIO, VIDEO];
     let elementAssetId = element?.figuredata?.audioid ?? element?.figuredata?.videoid;
     if (hasElements.includes(element?.type) && figureImageTypes.includes(element?.figuretype) &&
@@ -150,6 +150,20 @@ export const checkFigureMetadata = (element, buttonType = null) => {
         return true;
     }
     return false;
+}
+
+
+export const checkFigureInsideTableElement = (element, buttonType = null) => {
+    let tableasHTMLValue = String(element?.figuredata?.tableasHTML)
+    // console.log('tableasHTMLValue : ',tableasHTMLValue)
+    
+
+    if(element.figuretype === 'tableasmarkup' && tableasHTMLValue.includes("src=")){
+        return true;
+    }else{
+        return false;
+    }
+
 }
 
 /*** @description - This is the function to check if an elm embedded assessment has update available */

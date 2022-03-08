@@ -22,7 +22,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment } from '../../constants/IFrameMessageTypes.js';
@@ -52,7 +52,7 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -93,6 +93,7 @@ class ElementContainer extends Component {
             borderToggle: 'showBorder',
             btnClassName: '',
             showDeleteElemPopup: false,
+            showAlfrescoExpansionPopup: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPaletteList: false,
             showColorTextList: false,
@@ -1029,6 +1030,7 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
+                            console.log('dataToSend : ',dataToSend)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
@@ -2128,8 +2130,11 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton');
-        let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton')
+        // console.log('Hii u there')
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton');
+        // console.log('showEditButton : ',showEditButton)
+        let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton');
+        // console.log('showAlfrescoExpandButton : ',showAlfrescoExpandButton)
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -2218,9 +2223,10 @@ class ElementContainer extends Component {
                         warningHeaderText={`Warning`}
                         OwnersDeleteDialogText={OWNERS_ELM_DELETE_DIALOG_TEXT}
                         showDeleteElemPopup={this.state.showDeleteElemPopup}
+                        showAlfrescoExpansionPopup={this.state.showAlfrescoExpansionPopup}
                         sectionBreak={this.state.sectionBreak}
                         deleteElement={this.deleteElement}
-                        isAddComment={true}
+                        isAddComment={this.state.showAlfrescoExpansionPopup ? false : true}
                         projectUsers={this.props.projectUsers}
                         comment={this.state.comment}
                         showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
@@ -2544,12 +2550,48 @@ class ElementContainer extends Component {
         }
     }
 
+
+    showAlfrescoExpansionPopup = (e, popup, sectionBreak) => {
+        console.log('Inside showAlfrescoExpandPopup')
+        e.stopPropagation();
+        this.props.showBlocker(true);
+        showTocBlocker();
+        this.setState({
+            popup,
+            showAlfrescoExpansionPopup: true,
+            sectionBreak: sectionBreak ? sectionBreak : null
+        });
+        
+    }
+        // console.log('Inside showAlfrescoExpandPopup')
+        // return (
+        //     <PopUp dialogText='Select an Image'
+        //         rows="1"
+        //         cols="1"
+        //         active={true}
+        //         // togglePopup={this.toggleCustomPopup}
+        //         // isLockPopup={true}
+        //         isInputDisabled={true}
+        //         // slateLockClass="lock-message"
+        //         // withInputBox={true}
+        //         lockForTOC={false}
+        //     />
+        // )
+    
+
     /**
      * @description - This function is used to open alfresco metadata in new window.
      */
 
-    handleAlfrescoMetadataWindow = () => {
-        let imageId
+    handleAlfrescoMetadataWindow = (e) => {
+        
+        // window.alert(this.props?.element?.figuretype)
+        
+        if(this.props?.element?.figuretype === TABLE_ELEMENT){
+            console.log('Inside if condition')
+            this.showAlfrescoExpansionPopup(e, true)
+        }else{
+            let imageId
         switch(this.props?.element?.figuretype){
             case IMAGE:
                 imageId=this.props?.element?.figuredata?.imageid
@@ -2568,6 +2610,8 @@ class ElementContainer extends Component {
         imageId = imageId.replace('urn:pearson:alfresco:', '');
         const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
         window.open(Url);
+        }
+        
     }
 
     /**
@@ -2577,7 +2621,7 @@ class ElementContainer extends Component {
     handleEditButton = (event) => {
         event.stopPropagation();
         const { element } = this.props;
-        const figureImageTypes = ["image", "mathImage", "table"]
+        const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup"]
         if (element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) {
             this.handleFigurePopup(true);
         }

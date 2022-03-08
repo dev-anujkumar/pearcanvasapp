@@ -122,6 +122,9 @@ class PopUp extends React.Component {
                 </div>
             )
         } else
+            if(props.showAlfrescoExpansionPopup){
+                return null;
+            }
             if (props.showDeleteElemPopup) {
                 if (props.isOwnerSlate) {
                     return (
@@ -254,7 +257,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup) {
+        if (props.showAlfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -313,6 +316,16 @@ class PopUp extends React.Component {
     */
 
     renderDialogText = (props) => {
+        console.log('props.showAlfrescoExpansionPopup : ',props.showAlfrescoExpansionPopup)
+        if(props.showAlfrescoExpansionPopup){
+            return (
+                <>
+                   <div className='loPopupHeader'>Select an image</div>
+                    <div className="delete-element-text">Please select an image to open it in alfresco for editing in a different tab on your browser</div>
+                    
+                </>
+            )
+        }
         if (props.showDeleteElemPopup) {
             if (props.sectionBreak) {
                 return (

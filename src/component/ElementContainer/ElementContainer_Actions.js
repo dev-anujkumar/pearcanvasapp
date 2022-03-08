@@ -397,6 +397,9 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
         
+        console.log('newParentData line no 392: ',newParentData)
+        // tableImagesArray = findAllImagesInTable(newParentData)
+        findAllImagesInTable(newParentData)
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
@@ -406,6 +409,58 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
     }).catch(error => {
         showError(error, dispatch, "getTableEditorData Api fail")
     })
+}
+
+const findAllImagesInTable = (newParentData) => {
+    let tableElementImagesDiv = document.createElement('div');
+    tableElementImagesDiv.innerHTML = newParentData;
+    tableElementImagesDiv.style.visibility = 'hidden';
+    document.body.appendChild(tableElementImagesDiv);
+
+    let elemBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
+    let tableImagesPerElement = {};
+    let finalImagesArray = [];
+    console.log('newParentData line no 408: ',elemBodymatter)
+    
+    for(let i=0; i<elemBodymatter.length;i++){
+        
+        console.log('Inside for loop',i)
+
+        if(elemBodymatter[i].figuretype == "tableasmarkup" && elemBodymatter[i].figuredata.tableasHTML !== undefined){
+            
+            let imagesArray = [];
+            console.log('Inside inner if statement')
+            let tableHTMLDiv = elemBodymatter[i].figuredata.tableasHTML;
+            imagesArray = document.getElementsByClassName('imageAssetContent')
+            console.log('imagesArray inside if : ',imagesArray) 
+            finalImagesArray.push(imagesArray)
+            // let arrayOfImgObj2 = imagesArray.map(function(item, index, array) {
+            //     let finalImgObj = {}
+            //     finalImgObj['imgSrc'] = item.dataset.mceSrc;
+            //     finalImgObj['imgId'] = item.dataset.id;
+            //     console.log('finalImgObj : ',finalImgObj);
+            //     arrayOfImgObj.push(finalImgObj)
+            //     return finalImgObj;
+            //   })
+            
+            // console.log('arrayOfImgObj : ',arrayOfImgObj);
+            // console.log('arrayOfImgObj2 : ',arrayOfImgObj2);
+            tableImagesPerElement[elemBodymatter[i].contentUrn] = tableHTMLDiv;
+            
+        }else if(elemBodymatter[i].figuretype == "tableasmarkup" && elemBodymatter[i].figuredata.tableasHTML === undefined){
+            tableImagesPerElement[elemBodymatter[i].contentUrn] = undefined;
+        }
+   
+    }
+
+    console.log('finalImagesArray : ',finalImagesArray) 
+    console.log('tableImagesPerElement after for loop : ',tableImagesPerElement)
+    
+    // for(let j=0; j<imagesArray.length; j++){
+    //     console.log('imagesArray dataset: ',imagesArray[j].dataset)    
+    // }
+    document.body.removeChild(tableElementImagesDiv);
+
 }
 
 const updateTableEditorData = (elementId, tableData, slateBodyMatter, sectionType) => {
