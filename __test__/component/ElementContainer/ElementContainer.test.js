@@ -934,6 +934,36 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
+        it('Render Element Container ----->PlayScript', () => {
+            let props = {
+                element: wipData.ps,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Block List', () => {
+            let props = {
+                element: wipData.bl,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->ELEMENT_DISCUSSION', () => {
+            let props = {
+                element: wipData.ds,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })        
     })
     describe('Test- Add Comment Functions', () => {
         let props = {
@@ -2274,6 +2304,17 @@ describe('Test-Other Functions', () => {
         elementContainer.find('span.element-label-clickable-button').at(0).simulate('click');
         expect(spyUpdateColumnValues).toHaveBeenCalled();
         spyUpdateColumnValues.mockClear();
+      });
+
+      it('updateColumnValues function', () => {
+        const elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        elementContainerInstance.updateColumnValues();
+      });
+      it('renderCopyComponent function', () => {
+        const elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        elementContainerInstance.renderCopyComponent();
       });
       
       it('setElementDetails method - without parentUrn', () => {

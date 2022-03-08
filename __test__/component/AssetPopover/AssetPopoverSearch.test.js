@@ -11,6 +11,11 @@ jest.mock('../../../src/component/AssetPopover/openApoFunction.js', () => {
         clearAssetPopoverLink: jest.fn()
     }
 });
+
+jest.mock('../../../src/js/toggleLoader.js', () => ({
+    hideToc: jest.fn(),
+    disableHeader: jest.fn()
+}))
 import tinymce from 'tinymce/tinymce';
 
 jest.mock('../../../src/component/AssetPopover/AssetPopover_Actions.js',() => ({
@@ -32,7 +37,18 @@ const store = mockStore({
             imageData : [],
             searchTerm : '' ,                        //Figure name to be find
             currentlyLinkedImageData : {},
-            assetID: ""
+            assetID: "",
+            figures:[],
+        audios: [],
+        videos: [],
+        interactives: [],
+        smartLinkInteractives: [],
+        asides: [],
+        tables:[],
+        workedExamples: [],
+        currentlyLinkedImageData: {
+            title: "chgsvd"
+        },
     }
 });
 
@@ -43,7 +59,8 @@ let props = {
     apoSearchClose: jest.fn(),
     selectedFigure:jest.fn(),
     saveAssetLinkedMedia : jest.fn(),
-    assetIdForSnapshot: jest.fn()
+    assetIdForSnapshot: jest.fn(),
+    showBlocker:jest.fn()
 }
 
 beforeEach(() => {
@@ -56,14 +73,14 @@ global.fetch = jest.fn().mockImplementation(() => {
    });
  });
 //Rendering test cases
-xdescribe('Test Rendering of AssetPopover', () => {
+describe('Test Rendering of AssetPopover', () => {
     it('Have 1 input Box', () => {
         expect(wrapper.find('.modal__close')).toHaveLength(1);
     })
 });
 
 //Interaction function test cases
-xdescribe('Interaction functions test cases', () => {
+describe('Interaction functions test cases', () => {
     it('Testing currentlyLinkedJsx function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
         let returnedValue = instance.currentlyLinkedJsx();
@@ -100,7 +117,7 @@ xdescribe('Interaction functions test cases', () => {
         shouldOpenCurrentlyLinked = true, 
         shouldShowApoBody, 
         isSearchResultFound = true;
-        let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch searchForFigures ={searchForFigures}/> </Provider>)
+        let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch searchForFigures ={searchForFigures} {...props}/> </Provider>)
         const instance = tempWrapper.find('AssetPopoverSearch').instance();
         tempWrapper.update();
         instance.apoFooterJsx(isFigureSelected, shouldOpenCurrentlyLinked, shouldShowApoBody, isSearchResultFound);
