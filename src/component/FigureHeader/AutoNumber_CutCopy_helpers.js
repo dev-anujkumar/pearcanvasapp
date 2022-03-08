@@ -82,6 +82,7 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
         autoNumber_ElementTypeKey
     } = params
     if (slateFigures || slateFigures?.length > 0) {
+        const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
         const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === selectedElement.displayedlabel)
         const figureIndexOnSlate = activeLabelFigures.findIndex(ele => ele.contentUrn === selectedElement.contentUrn)
         if (activeLabelFigures?.length > 1) {
@@ -96,7 +97,6 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
             }
             //find the closest image now and then add the new img at that index
             const referenceFigure = activeLabelFigures[refIndex].contentUrn
-            const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
             const labelType = autoNumber_ElementTypeKey[selectedElement.displayedlabel]
             if (operationType == 'cut') {
                 if (figureParentEntityUrn && numberedElements) {
