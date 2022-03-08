@@ -12,7 +12,9 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 let initialState={
-    
+    keyboardReducer: {
+        selectedElement: [],
+      },
 }
 describe('Testing ElementPoetryStanza component', () => {
     let store = mockStore(initialState);
