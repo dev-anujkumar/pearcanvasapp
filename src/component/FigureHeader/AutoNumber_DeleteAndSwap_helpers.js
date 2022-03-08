@@ -1,7 +1,7 @@
 import config from '../../config/config';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering, displayLabelsForContainer, autoNumberFigureTypesAllowed, SHOWHIDE_SECTION, autoNumberContainerTypeForDelete } from './AutoNumberConstants';
-import { getImagesInsideSlates, getAsideElementsWrtKey } from './slateLevelMediaMapper';
+import { getImagesInsideSlates, getAsideElementsWrtKey, getAutoNumberedElementsOnSlate } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS
@@ -92,7 +92,8 @@ export const updateAutoNumberSequenceOnDeleteInContainers = async (parentIndex, 
                 if (autoNumberContainerTypeForDelete.includes(autoNumberedElements[labelType][parentIndex][0].type)) {
                     slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
                 } else {
-                    slateElements = getState().autoNumberReducer.slateFigureList;
+                    let slateLevelData = getState().appStore.slateLevelData;
+                    slateElements = await getAutoNumberedElementsOnSlate(slateLevelData[config.slateManifestURN], { dispatch });
                 }
                 if (slateElements?.length > 0) {
                     for (let [index, element] of elementsInTocContainer.entries()) {
