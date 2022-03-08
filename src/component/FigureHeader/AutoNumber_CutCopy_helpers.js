@@ -81,7 +81,7 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
         operationType,
         autoNumber_ElementTypeKey
     } = params
-    if (slateFigures || slateFigures?.length > 0) {
+    if ((slateFigures || slateFigures?.length > 0) && selectedElement?.displayedlabel) {
         const activeLabelFigures = slateFigures?.filter(img => img.displayedlabel === selectedElement.displayedlabel)
         const figureIndexOnSlate = activeLabelFigures.findIndex(ele => ele.contentUrn === selectedElement.contentUrn)
         if (activeLabelFigures?.length > 1) {
