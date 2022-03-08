@@ -10,8 +10,8 @@ import { createStore } from "redux";
 describe("KeyboardWrapper Testing", () => {
   it("", () => {
     const store = createStore(() => ({
-      keyboardReducer: {
-        selectedElement: {},
+       keyboardReducer: {
+        selectedElement: [],
       },
     }));
     const keyboardWrapper = mount(
@@ -21,6 +21,7 @@ describe("KeyboardWrapper Testing", () => {
         </KeyboardWrapper>
       </Provider>
     );
+    expect(keyboardWrapper).toHaveLength(1);
 
     // keyboardWrapper.find('#focus').node.focus();
   });
@@ -37,6 +38,9 @@ describe("KeyboardWrapper Testing", () => {
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          classList:  {
+            contains: () => "figureCredit"
+          },
           querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
         },
       },
@@ -156,6 +160,9 @@ describe("KeyboardWrapper Testing", () => {
         // },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          classList:  {
+            contains: () => "figureCredit"
+          },
           querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
         },
       },
@@ -176,6 +183,9 @@ describe("KeyboardWrapper Testing", () => {
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          classList:  {
+            contains: () => "figureCredit"
+          },
           querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           parentNode: {
             id: QUERY_SELECTOR + "-1",

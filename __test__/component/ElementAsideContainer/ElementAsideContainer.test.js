@@ -23,6 +23,26 @@ jest.mock('../../../src/component/tinyMceEditor.js',()=>{
         return (<div>null</div>)
     }
 })
+const autoNumberReducer = {
+    isAutoNumberingEnabled: false,
+    autoNumberedElements: {
+        imagesList: [],
+        tablesList: [],
+        equationsList: [],
+        audiosList: [],
+        videosList: []
+    },
+    autoNumberingDetails: {},
+    autoNumberElementsIndex: {
+        figureImageIndex: {},
+        tableIndex: {},
+        equationsIndex: {},
+        audioIndex: {},
+        videoIndex: {}
+    },
+    slateFigureList: [],
+    autoNumberOption: ''
+}
 config.asideToolbar = ['bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','assetpopover','slatetag']
 const mockStore = configureMockStore(middlewares);
 let initialState = {
@@ -90,7 +110,8 @@ let initialState = {
             sourceElementIndex: 2,
             sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
             sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
-        }
+        },
+        autoNumberReducer
     }
 };
 jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {

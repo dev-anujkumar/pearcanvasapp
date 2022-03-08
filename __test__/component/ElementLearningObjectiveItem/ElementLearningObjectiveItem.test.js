@@ -12,16 +12,21 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
     }
 })
 const mockStore = configureMockStore(middlewares);
-const store = mockStore({});
+let initialState={
+    keyboardReducer: {
+        selectedElement: []
+      }
+}
 let props = {
     slateLockInfo: {
         isLocked: false
     }
 }
-let wrapper = mount(<Provider store={store}><ElementLearningObjectiveItem  {...props} /> </Provider>)
 
 //Rendering component
 describe('Test Rendering of metadaanchor on slate', () => {
+    let store = mockStore(initialState);
+    const wrapper = mount(<Provider store={store}><ElementLearningObjectiveItem  {...props} /> </Provider>)
 
     it('render component', () => {
         expect(wrapper.find('ElementLearningObjectiveItem')).toHaveLength(1);
