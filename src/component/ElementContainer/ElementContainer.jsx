@@ -373,7 +373,6 @@ class ElementContainer extends Component {
 
 
     asideDifference = (index, previousElementData) => {
-        console.log(index,"previousElementData", previousElementData)
         let labelDOM = document.getElementById(`cypress-${index}-t1`),
             numberDOM = document.getElementById(`cypress-${index}-t2`),
             titleDOM = document.getElementById(`cypress-${index}-t3`),
