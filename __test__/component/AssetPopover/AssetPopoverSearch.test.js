@@ -39,16 +39,16 @@ const store = mockStore({
             currentlyLinkedImageData : {},
             assetID: "",
             figures:[],
-        audios: [],
-        videos: [],
-        interactives: [],
-        smartLinkInteractives: [],
-        asides: [],
-        tables:[],
-        workedExamples: [],
-        currentlyLinkedImageData: {
-            title: "chgsvd"
-        },
+            audios: [],
+            videos: [],
+            interactives: [],
+            smartLinkInteractives: [],
+            asides: [],
+            tables: [],
+            workedExamples: [],
+            currentlyLinkedImageData: {
+             title: "test"
+            },
     }
 });
 
