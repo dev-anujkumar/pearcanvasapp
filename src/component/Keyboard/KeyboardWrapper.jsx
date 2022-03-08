@@ -81,7 +81,18 @@ const isFirtstChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const firstTextNode = getFirstTextNode(tinymceNode);
         const uniCode = '\uFEFF';
-        if(tinymceOffset == 0) {
+        //for bce when code have blank lines
+        if (node?.className === 'codeNoHighlightLine' || node?.parentNode?.className === 'codeNoHighlightLine' ) {
+            if(node?.parentNode?.className === 'codeNoHighlightLine'){
+                //when line is not empty
+                return !node?.parentNode?.previousSibling && tinymceOffset === 0
+            }
+            //for empty line
+            else return !node?.previousSibling
+        }
+        if(tinymceOffset == 0 && (node?.parentNode?.classList.contains("figureCredit") 
+        || node?.classList?.contains("figureCaption")
+        || node?.classList?.contains("figureTitle") || node?.classList?.contains("figureLabel") || node?.classList?.contains('figureNumber'))) {
             return true;
         }
         if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
@@ -161,16 +172,33 @@ const isLastChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const lastTextNode = getLastTextNode(tinymceNode);
         const uniCode = '\uFEFF';
+        //for bce when code have blank lines
+        if (node?.className === 'codeNoHighlightLine' || node?.parentNode?.className === 'codeNoHighlightLine') {
+            if (node?.parentNode?.className === 'codeNoHighlightLine') {
+                //when line is not empty
+                return !node?.parentNode?.nextSibling && tinymceOffset === node?.length
+            }
+            //for empty line
+            else return !node?.nextSibling
+        }
         if(lastTextNode.className == "Wirisformula") {
             if(tinymceOffset != 0 && node.lastChild != null) {
              return true;
             }
         }
         if (lastTextNode === node) {
+            if(lastTextNode?.previousSibling?.className == "answerLineContent") {
+                if(tinymceOffset != 0 && lastTextNode.lastChild == null) {
+                    return true;
+                   }
+            }
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
                 if(lastTextNode?.parentNode?.id === "_mce_caret") {
                     // unicode inside footnote
                     return true;
+                } else if( lastTextNode?.nodeName == "#text" && lastTextNode?.previousSibling?.nodeName === "SUP" 
+                && tinymceOffset == 2 && lastTextNode === node){
+                    return true
                 }
                 else {
                     // unicode inside inline code

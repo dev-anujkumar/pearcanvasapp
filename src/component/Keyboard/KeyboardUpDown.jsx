@@ -15,6 +15,10 @@ const KeyboardUpDown = (props) => {
 
     const getLastChild = (element) => {
         if(element && element.lastChild) {
+            if(element.lastChild?.nodeName === "A" 
+            && element.lastChild?.classList?.contains('paragraphNumeroUnoFootnote')){
+                return element.lastChild
+            }
             return getLastChild(element.lastChild);
         } else {
             return element;

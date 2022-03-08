@@ -146,7 +146,7 @@ export class TinyMceEditor extends Component {
 
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
-                const isAutoNumberField = (this.props.isAutoNumberingEnabled && this.props?.element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn)
+                const isAutoNumberField = (this.props.isAutoNumberingEnabled && (this.props?.element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn)
                 if (isAutoNumberField || config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                     editor.shortcuts.remove('meta+u', '', '');
                     editor.shortcuts.remove('meta+b', '', '');
@@ -794,7 +794,7 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorOnClick = (e) => {
-        let asideNumberingPlaceholders=['Label','Number','Title']
+        let asideNumberingPlaceholders = ['Label Name', 'Number', 'Title'];
         if (this.props?.element?.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
             this.props.onFigureImageFieldFocus(this.props.index);
         }
@@ -878,16 +878,22 @@ export class TinyMceEditor extends Component {
                     const yOffSet = 10
                     let copyClickedX = e.clientX - parentPosition.x + xOffSet;
                     const copyClickedY = e.clientY - parentPosition.y + scrollTop + yOffSet;
-                    if(copyClickedX > 350){
-                        copyClickedX = 380
+                    if(copyClickedX >= 350 && copyClickedX < 415 ){
+                        copyClickedX = 300
+                    }
+                    if(copyClickedX >= 415 && copyClickedX < 560){
+                        copyClickedX = 350
+                    }
+                    if(copyClickedX >= 560){
+                        copyClickedX = 370
                     }
                     let audioPopupPosition = {
                         left: `${(copyClickedX)}px`,
                         top: `${(copyClickedY)}px`
                     }
-                    if(parentPosition.x +325 >800){
+                   /* if(parentPosition.x +325 >800){
                         audioPopupPosition.left = '0'
-                    }
+                    } */
                     // this.props.handleAudioPopupLocation(true, audioPopupPosition);
                     this.props.handleAssetsPopupLocation(true, audioPopupPosition);
                 }
@@ -1268,6 +1274,12 @@ export class TinyMceEditor extends Component {
                         e.preventDefault();
                         e.stopPropagation();
                         return false;
+                    }
+                    // Restrict first digit 0 in Number Field
+                    if (tinymce?.activeEditor?.getContent()?.length < 1) {
+                        if (!(e.ctrlKey || e.metaKey) && keyCode == 48) {
+                            tinymce.dom.Event.cancel(e);
+                        }
                     }
                 }
                 // disable keyboard events in Label & Number fields of Autonumbered Elements

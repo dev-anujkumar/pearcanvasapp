@@ -12,7 +12,7 @@ import { deleteBlockListElement } from '../ElementContainer/ElementContainerDele
 import { AUTHORING_ELEMENT_UPDATE, ERROR_POPUP } from "./../../constants/Action_Constants";
 import tinymce from 'tinymce';
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
-import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper'
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 
 export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
     const elementIndex = eleIndex?.toString()?.split('-')

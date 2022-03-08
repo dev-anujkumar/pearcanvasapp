@@ -39,7 +39,7 @@ const { SHOW_HIDE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
-import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
@@ -94,7 +94,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         const newParentData = JSON.parse(JSON.stringify(parentData));
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         let currentSlateData = newParentData[config.slateManifestURN];
-
+        const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
         /**This will be removed when BL supports TCM */
         const tempSlateWrapperConstants = [...slateWrapperConstants.elementType].filter( item => item !== "MANIFEST_LIST")
@@ -109,7 +109,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             let slateData = {
                 currentParentData: newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
-                response: createdElemData.data
+                response: createdElemData.data,
+                cypressPlusProjectStatus: cypressPlusProjectStatus
             };
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch);
@@ -391,7 +392,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         }
         if (config.tcmStatus) {
             //This check is for the TEXT element which gets created inside BL on Shift+Enter
-            if(!blockListDetails) {
+            if(!blockListDetails && !(cypressPlusProjectStatus && createdElementData?.type === 'element-pdf')) {
                 //This check will be removed once BlockList will support TCM
                 if(type !== "MANIFEST_LIST") {
                 if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
@@ -507,7 +508,8 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
                 const slateData = {
                     currentParentData: newParentData,
                     bodymatter: currentSlateData.contents.bodymatter,
-                    response: response.data[indexOfElement]
+                    response: response.data[indexOfElement],
+                    cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
                 };
                 if (currentSlateData.status === 'approved') {
                     await tcmSnapshotsForCreate(slateData, "TEXT", containerElement, dispatch);

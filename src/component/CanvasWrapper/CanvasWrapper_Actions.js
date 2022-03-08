@@ -56,7 +56,7 @@ import ElementConstants from "../ElementContainer/ElementConstants.js";
 import { isAutoNumberEnabled, fetchProjectFigures, setAutoNumberinBrowser } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
 import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
-import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
+import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 export const findElementType = (element, index) => {
@@ -922,18 +922,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(getContainerData(searchTerm));
         }
         /** Get List of Figures on a Slate for Auto-Numbering */
-        // const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
-        // const slateFigures = getImagesInsideSlates(bodyMatter)
         const slateFigures = getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
-        /* if (slateFigures) {
-            console.log('slateFigures',slateFigures)
-            dispatch({
-                type: SLATE_FIGURE_ELEMENTS,
-                payload: {
-                    slateFigures :slateFigures
-                }
-            });
-        }*/
     })
     .catch(err => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -1152,11 +1141,6 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
     return oldPath || ""
 }
 export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},asideData={} , updateFromC2Flag = false, showHideObj = undefined) => (dispatch, getState) => {
-    if(activeElement.type === "manifestlist" && typeof index === 'string'){
-        let {fontstyle, iconcolor} = setParentFontIconDataToChild(index, getState);
-        activeElement.fontstyle = fontstyle;
-        activeElement.iconcolor = iconcolor
-    }
     dispatch({
         type: SET_ACTIVE_ELEMENT,
         payload: findElementType(activeElement, index)
@@ -1240,9 +1224,9 @@ export const fetchAuthUser = () => dispatch => {
         sendDataToIframe({
             type: 'updateUserDetail',
             message : {
-                userId : userInfo.userId,
-                firstName : userInfo.firstName,
-                lastName: userInfo.lastName
+                userId: userInfo.userId ? userInfo.userId : '',
+                firstName: userInfo.firstName ? userInfo.firstName : '',
+                lastName: userInfo.lastName ? userInfo.lastName : ''
             }
             
         });
@@ -1485,9 +1469,11 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             let slateData = {
                 currentParentData:newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
-                response: response.data
+                response: response.data,
+                cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             };
-            if(config.tcmStatus){
+            // disable TCM for all PDF slates in Cypress+ Enabled Projects
+            if(config.tcmStatus && !(slateData?.cypressPlusProjectStatus && slateData?.response?.type === 'element-pdf')){
                 prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
             }
             tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
@@ -1787,35 +1773,4 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
         type: OWNERS_SUBSCRIBED_SLATE,
         payload: showPopup
     })
-}
-
-/**
- * For Child block list, this function will retrive "fontStyle" & "iconcolor" value from parent
- * and return that value
- * @param {*} index 
- * @param {*} getState 
- * @returns 
- */
-const setParentFontIconDataToChild = (index, getState) => {
-    let indexArr = index.split('-');
-    let parentData = getState().appStore.slateLevelData;
-    let slateLevelData = JSON.parse(JSON.stringify(parentData));
-    let bodyMatter =   slateLevelData[config.slateManifestURN].contents.bodymatter;
-    let element = bodyMatter[indexArr[0]];
-    
-    if(element?.type === 'showhide'){
-        let blockList = {}
-        if(indexArr[1] === "2" && element.interactivedata.hide) {
-            blockList = element.interactivedata.hide[indexArr[2]]
-        } else if(indexArr[1] === "0" && element.interactivedata.show) {
-            blockList = element.interactivedata.show[indexArr[2]]
-        }
-        if(blockList?.type === "manifestlist"){
-            return {fontstyle: blockList.fontstyle, iconcolor: blockList.iconcolor}
-        }
-    } else if(element?.type === "manifestlist") {
-        return {fontstyle: element.fontstyle, iconcolor: element.iconcolor}
-    }
-
-    return {fontstyle: 'font-style-1' , iconcolor: 'bullet-color-1'}
 }

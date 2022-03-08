@@ -385,7 +385,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: FETCH_SLATE_DATA,
             payload: store
         });
-        if (isAutoNumberingEnabled && autoNumberFigureTypesForConverion.includes(outputPrimaryOptionEnum)) {
+        const isBCE_Element = res.data?.type === 'figure' && res.data?.figuretype === 'codelisting' ?  true : false
+        if (isAutoNumberingEnabled && autoNumberFigureTypesForConverion.includes(outputPrimaryOptionEnum) && !isBCE_Element ) {
             const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
             const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
             dispatch(updateAutonumberingOnElementTypeUpdate(res.data, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
@@ -861,6 +862,12 @@ export const updateBLMetaData = (elementId, elementData, metaData) => {
                     }
                     if(metaData.columnnumber){
                         elementData.listitemdata.bodymatter[index].columnnumber = metaData.columnnumber;
+                    }
+                    if(metaData.fontstyle){
+                        elementData.listitemdata.bodymatter[index].fontstyle = metaData.fontstyle;
+                    }
+                    if(metaData.iconcolor){
+                        elementData.listitemdata.bodymatter[index].iconcolor = metaData.iconcolor;
                     }
                     return;
                 }
