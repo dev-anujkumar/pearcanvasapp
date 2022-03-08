@@ -22,11 +22,20 @@ export const handleC2MediaClick = (props) => {
                 const alfrescoSiteName = alfrescoPath?.alfresco.repositoryFolder ? alfrescoPath.alfresco.repositoryFolder : alfrescoPath.alfresco.name
                 const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                 const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
-                let messageObj = { citeName: citeName, 
-                    citeNodeRef: alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef , 
-                    elementId: props.element.id }
-                    sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
-         }
+                const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
+                let messageObj = {
+                    citeName: citeName,
+                    citeNodeRef: citeNodeRef,
+                    elementId: props.element.id
+                }
+                sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
+                const messageDataToSave = {
+                    id: props.element.id,
+                    editor: undefined,
+                    citeNodeRef: citeNodeRef
+                }
+                props.saveSelectedAlfrescoElement(messageDataToSave);
+            }
         else{
             props.accessDenied(true)
         }

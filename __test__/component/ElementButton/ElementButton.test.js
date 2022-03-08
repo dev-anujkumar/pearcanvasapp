@@ -16,7 +16,7 @@ describe('Testing Button component with props', () => {
     })
   it('render Edit Button Component to open Cypress Plus', () => {
     const component = mount(<Button type={buttonTypes.EDIT_BUTTON_CYPRESSSPLUS} labelText='UL' />)
-    expect(component.find('span.btn-element').hasClass('edit-in-cypressPlus')).toBe(true)
+    expect(component.find('span.btn-element').hasClass('edit-in-cypressPlus')).toBe(false)
   })
     it('render comment-flag Button component  ', () => {
         const component = mount(<Button type={buttonTypes.COMMENT_FLAG} labelText="UL" />);

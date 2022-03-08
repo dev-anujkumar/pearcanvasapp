@@ -16,12 +16,10 @@ jest.mock('../../../src/js/utils', () => {
 })
 jest.mock('../../../src/component/GlossaryFootnotePopup/GlossaryFootnote_Actions', () => {
     return {
+        saveGlossaryAndFootnote: () => {
+            return;
+        },
         setFormattingToolbar: () => { return; }
-    }
-})
-jest.mock('../../../src/component/GlossaryFootnotePopup/GlossaryFootnote_Actions', () => {
-    return {
-        saveGlossaryAndFootnote: () => { return; }
     }
 })
 

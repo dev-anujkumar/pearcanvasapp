@@ -16,14 +16,14 @@ import {
     SET_PARENT_NODE,
     ERROR_POPUP,
     PAGE_NUMBER_LOADER,
-    WIRIS_ALT_TEXT_POPUP
-
+    WIRIS_ALT_TEXT_POPUP,
+    SLATE_FIGURE_ELEMENTS
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshots_Utility.js';
+import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
@@ -37,13 +37,22 @@ const { SHOW_HIDE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
+import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
+import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
+import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
+const {
+    MANUAL_OVERRIDE,
+    NUMBERED_AND_LABEL
+} = AUTO_NUMBER_PROPERTIES;
 Array.prototype.move = function (from, to) {
     this.splice(to, 0, this.splice(from, 1)[0]);
 };
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData,blockListDetails) => (dispatch, getState) => {
     config.currentInsertedIndex = index;
-    let  popupSlateData = getState().appStore.popupSlateData
+    let  popupSlateData = getState().appStore.popupSlateData;
+    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
     let _requestData = {
@@ -64,6 +73,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     else if (parentUrn && parentUrn.elementType === 'group') {
         _requestData["parentType"] = "groupedcontent"
         _requestData["columnName"] = parentUrn.columnName
+    }
+    if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
+        _requestData["isAutoNumberingEnabled"] = true;
     }
 
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
@@ -392,7 +404,22 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 slateLevelData: newParentData
             }
         })
-        
+        /** ---------------------------- Auto-Numbering handling ------------------------------*/
+        if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
+            const bodyMatter = newParentData[config.slateManifestURN].contents.bodymatter;
+            let slateFigures = getImagesInsideSlates(bodyMatter);
+            if (slateFigures) {
+                dispatch({
+                    type: SLATE_FIGURE_ELEMENTS,
+                    payload: {
+                        slateFigures
+                    }
+                });
+            }
+
+            dispatch(handleAutonumberingOnCreate(type, createdElementData));
+        }
+        /**------------------------------------------------------------------------------------------------*/
         if (cb) {
             cb();
         }   
@@ -718,8 +745,16 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                         slateLevelData: newParentData,
                     }
                 })
-
-
+                /** ---------------------------- Auto-Numbering handling ------------------------------*/
+                const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+                const params = {
+                    getState,
+                    dispatch,
+                    currentSlateData: newParentData[slateId],
+                    swappedElementData
+                }
+                handleAutoNumberingOnSwapping(isAutoNumberingEnabled, params)
+                /**-----------------------------------------------------------------------------------*/
                 cb(newParentData)
             }
 
@@ -1106,6 +1141,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         } = params
         config.currentInsertedIndex = index;
         localStorage.setItem('newElement', 1);
+        const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
 
         let slateEntityUrn = config.slateEntityURN;
         if(parentUrn && 'contentUrn' in parentUrn) { //sectionType && 
@@ -1204,12 +1240,33 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             }
         }
 
-        if(selection.element.type === "figure") {
+        if (selection.element.type === "figure") {
             _requestData = {
                 "content": [{
                     ..._requestData.content[0],
                     "figuredata": selection.element.figuredata
                 }]
+            }
+            // Check for autonumbering parameters needs to send or not in request
+            if (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(selection?.element?.figuretype)) {
+                if (selection?.element.hasOwnProperty(MANUAL_OVERRIDE) && selection?.element[MANUAL_OVERRIDE] !== undefined && Object.keys(selection?.element[MANUAL_OVERRIDE])?.length > 0) {
+                    _requestData = {
+                        "content": [{
+                            ..._requestData.content[0],
+                            'displayedlabel': selection?.element?.displayedlabel,
+                            'manualoverride': selection?.element[MANUAL_OVERRIDE],
+                            'numberedandlabel': selection?.element[NUMBERED_AND_LABEL]
+                        }]
+                    }
+                } else {
+                    _requestData = {
+                        "content": [{
+                            ..._requestData.content[0],
+                            'displayedlabel': selection?.element?.displayedlabel,
+                            'numberedandlabel': selection?.element[NUMBERED_AND_LABEL]
+                        }]
+                    }
+                }
             }
         }
 

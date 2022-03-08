@@ -53,6 +53,7 @@ export const UPDATE_CROSS_REFERENCE_VALUES = "UPDATE_CROSS_REFERENCE_VALUES"
 /*-----------------Toolbar----------------------------*/
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
 export const TOGGLE_PAGE_NUMBER = 'TOGGLE_PAGE_NUMBER'
+export const TOGGLE_SPELL_CHECK = 'TOGGLE_SPELL_CHECK'
 
 
 /*---------------Slate Lock -------------------*/
@@ -165,6 +166,7 @@ export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
 export const SET_ALFRESCO_POPUP = "SET_ALFRESCO_POPUP"
 export const SAVE_ALFRESCO_ASSET_DATA = "SAVE_ALFRESCO_ASSET_DATA"
 export const SAVE_INLINE_IMAGE_DATA = "SAVE_INLINE_IMAGE_DATA"
+export const SAVE_ALFRESCO_ELEMENT = "SAVE_ALFRESCO_ELEMENT"
 
 /* ---------------  Figure Glossary ------------------------*/
 export const SET_FIGURE_GLOSSARY = "SET_FIGURE_GLOSSARY";
@@ -195,6 +197,23 @@ export const UPDATE_OLD_FIGUREIMAGE_INFO = 'UPDATE_OLD_FIGUREIMAGE_INFO';
 export const UPDATE_OLD_SMARTLINK_INFO = 'UPDATE_OLD_SMARTLINK_INFO';
 export const UPDATE_OLD_AUDIOVIDEO_INFO = 'UPDATE_OLD_AUDIOVIDEO_INFO';
 export const UPDATE_FIGURE_DROPDOWN_OPTIONS = 'UPDATE_FIGURE_DROPDOWN_OPTIONS';
+export const UPDATE_AUTONUMBERING_DROPDOWN_VALUE = 'UPDATE_AUTONUMBERING_DROPDOWN_VALUE';
 
 /*--------------Aside Label, Number, Title fields------------------ */
 export const CHECK_ASIDE_NUMBER = 'CHECK_ASIDE_NUMBER';
+
+/*--------------Cypress Puls Constants------------------ */
+export const COMPLETED = 'COMPLETED';
+export const FAILED = 'FAILED';
+export const ABORTED = 'ABORTED'
+
+/*---------------- AutoNumbering Media Elements ------------------------*/
+export const SET_AUTO_NUMBER_TOGGLE = 'SET_AUTO_NUMBER_TOGGLE';
+export const GET_ALL_AUTO_NUMBER_ELEMENTS = 'GET_ALL_AUTO_NUMBER_ELEMENTS';
+export const GET_TOC_AUTO_NUMBERING_LIST = 'GET_TOC_AUTO_NUMBERING_LIST';
+export const UPDATE_AUTO_NUMBER_SEQUENCE = 'UPDATE_AUTO_NUMBER_SEQUENCE';
+export const UPDATE_AUTO_NUMBER_ELEMENTS_LIST = 'UPDATE_AUTO_NUMBER_ELEMENTS_LIST';
+export const SET_AUTO_NUMBER_SEQUENCE = 'SET_AUTO_NUMBER_SEQUENCE';
+export const SLATE_FIGURE_ELEMENTS = 'SLATE_FIGURE_ELEMENTS';
+export const UPDATE_POPUP_PARENT_SLATE = 'UPDATE_POPUP_PARENT_SLATE';
+

@@ -1,10 +1,6 @@
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { 
     prepareTcmSnapshots,
-    fetchElementWipData,
-    checkContainerElementVersion,
-    fetchManifestStatus, 
-    prepareSnapshots_ShowHide
 } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 //Constants
 import { 
@@ -18,8 +14,10 @@ import tinymce from 'tinymce'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper.js';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
+import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
-
+import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper'; 
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -44,6 +42,22 @@ export const onDeleteSuccess = (params) => {
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
+    
+    /** ---------------------------- Auto-Numbering handling ------------------------------*/
+    const slateLevelData = newParentData[config.slateManifestURN];
+    getAutoNumberedElementsOnSlate(slateLevelData, {dispatch});
+
+    const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
+    const autoNumberParams = {
+        type,
+        getState,
+        dispatch,
+        contentUrn,
+        isAutoNumberingEnabled,
+        asideData
+    }
+    handleAutoNumberingOnDelete(autoNumberParams)
+    /**-----------------------------------------------------------------------------------*/
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     const tcmDeleteArgs = {
         deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
@@ -295,7 +309,7 @@ export const deleteBlockListElement = (elementId, elementData) => {
 }
 
 /* Delete Element inside WE and aside */
-const delInsideWE = (item, asideData, parentUrn, elmId) => {
+export const delInsideWE = (item, asideData, parentUrn, elmId) => {
     /* Delete elements inside 2C:WE/AS */
     if (item.id === asideData?.id) {
         item?.elementdata?.bodymatter?.forEach((ele,index) => {

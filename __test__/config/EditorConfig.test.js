@@ -54,10 +54,50 @@ describe('Testing TinyMceEditor - EditorConfig', () => {
             permissions:{},
             element:{
                 type:"element-authoredtext"
-            }
+            },
+            props:{}
         }
         const dropdownMenu = insertMediaSelectors(params);
         dropdownMenu[0].onAction();
         expect(dropdownMenu[0].text).toBe('Image');
+    });
+    it('Test - insertImageHandler - Block List Element-Else Part',()=>{
+        let params = {
+            editor:{},
+            permissions:{},
+            element:{
+                type:""
+            },
+            props:{}
+        }
+        const dropdownMenu = insertMediaSelectors(params);
+         dropdownMenu[0].onAction();
+         expect(dropdownMenu[0].text).toBe('Image');
+    });
+    it('Test - insertImageHandler - for ',()=>{
+        let params = {
+            editor:{},
+            permissions:{},
+            element:{
+                type:"LEARNING_OBJECTIVE_ITEM"
+            },
+            props:{}
+        }
+        const dropdownMenu = insertMediaSelectors(params);
+        dropdownMenu[0].onAction();
+        expect(dropdownMenu[0].text).toBe('Image');
+    });
+    it('Test - insertImageHandler - Else ',()=>{
+        let params = {
+            editor:{},
+            permissions:{},
+            element:{
+                type:""
+            },
+            props:{}
+        }
+        const dropdownMenu = insertMediaSelectors(params);
+         dropdownMenu[0].onAction();
+         expect(dropdownMenu[0].text).toBe('Image');
     });
 })

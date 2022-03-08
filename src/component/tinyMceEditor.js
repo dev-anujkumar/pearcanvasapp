@@ -10,6 +10,8 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists/plugin.min.js";
 import "tinymce/plugins/advlist/plugin.min.js";
 import "tinymce/plugins/paste/plugin.min.js";
+// Commenting icons import related to latest tinymce version
+// import 'tinymce/icons/default/icons.min.js';
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
@@ -31,13 +33,19 @@ import { deleteElement } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist }  from '../js/TinyMceUtility.js';
-import { saveInlineImageData } from "../component/AlfrescoPopup/Alfresco_Action.js"
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, restrictSpellCheck, checkActiveElement }  from '../js/TinyMceUtility.js';
+import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
+import { getDataFromLastTag, isKWChild, isLastChild, moveCursor, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
+import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
+import cypressConfig from '../config/cypressConfig';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
+const {
+    AUTO_NUMBER_SETTING_RESUME_NUMBER
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -62,7 +70,9 @@ export class TinyMceEditor extends Component {
         this.wirisClick = 0;
         this.activeGlossaryFootnoteId="";
         this.editorConfig = {
-            plugins: EditorConfig.plugins,
+            // spellchecker_rpc_url: cypressConfig.TINYMCE_SPELL_CHECKER_URL,
+            plugins: this.handleTinymcePlugins(),
+            browser_spellcheck: this.tinymceSpellCheckStatus(),
             selector: '#cypress-0',
             inline: true,
             formats: EditorConfig.formats,
@@ -134,8 +144,8 @@ export class TinyMceEditor extends Component {
 
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
-
-                if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
+                const isAutoNumberField = (this.props.isAutoNumberingEnabled && this.props?.element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn)
+                if (isAutoNumberField || config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                     editor.shortcuts.remove('meta+u', '', '');
                     editor.shortcuts.remove('meta+b', '', '');
                     editor.shortcuts.remove('meta+i', '', '');
@@ -206,6 +216,10 @@ export class TinyMceEditor extends Component {
                         editor.selection.placeCaretAt(clickedX, clickedY);
                     }
 
+                    if(e.level && e.level.content.match(/<blockquote/)?.input.includes('class="blockquoteMarginalia') && e.level.content.match(/<img/)?.input.includes('class="imageAssetContent')){
+                        this.props.handleBlur(null, this.props.currentElement, this.props.index, null, eventTarget)
+                    }
+
                     let content = e.target.getContent({ format: 'text' }),
                         contentHTML = e.target.getContent(),
                         activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
@@ -248,7 +262,7 @@ export class TinyMceEditor extends Component {
                             var MLtext = document.querySelector('#' + tinymce.activeEditor.id + ' > p > img') || document.querySelector('#' + tinymce.activeEditor.id + ' > img')
                             if (MLtext) {
                                 tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
-                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(MLtext)
+                                document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins')?.append(MLtext)
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
                                 tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
@@ -307,6 +321,27 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * function to provide tinymce plugins
+     * @returns {String} Tinymce plugins list
+     */
+    handleTinymcePlugins = () => {
+        const { spellCheckToggle } = this.props;
+        let plugins = EditorConfig.plugins;
+        // adding tinymce spellchecker plugin if spell checker option is active from project settings
+        if (this.tinymceSpellCheckStatus()) plugins = `${plugins} spellchecker`;
+        return plugins;
+    }
+
+    /**
+     * function to provide the status of tinymce spell check option
+     * @returns {Boolean} tinymce spell check status
+     */
+     tinymceSpellCheckStatus = () => {
+        const { spellCheckToggle } = this.props;
+        return spellCheckToggle;
+    }
+
+    /**
      * Adds custon list button to the editor toolbar
      * @param {*} editor  editor instance
      */
@@ -328,7 +363,7 @@ export class TinyMceEditor extends Component {
                 if (innerNode.childNodes.length) {
                     this.innerTextWithMathMl(innerNode)
                 } else {
-                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula'))) {
+                    if (innerNode.classList && (innerNode.classList.contains('Wirisformula') || innerNode.classList.contains('temp_Wirisformula') || innerNode.classList.contains('imageAssetContent'))) {
                         this.clearFormateText = this.clearFormateText + innerNode.outerHTML;
                     } else {
                         this.clearFormateText = this.clearFormateText + innerNode.textContent
@@ -340,6 +375,9 @@ export class TinyMceEditor extends Component {
     }
 
     onListButtonClick = (type, subType) => {
+        if(type === 'unordered' && checkActiveElement(['manifestlist'])) {
+            return;
+        }
         this.elementConverted = true;
         let blockListData = isElementInsideBlocklist({index:this.props.index,data:this.props}, this.props.slateLevelData);
         removeListHighliting();
@@ -490,9 +528,8 @@ export class TinyMceEditor extends Component {
                         e.stopPropagation();
                         let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
                         let textToReplace = window.getSelection().toString()
-
                         if (isWirisIncluded) {
-                            if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula')) {
+                            if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula') || isWirisIncluded.classList.contains('imageAssetContent')) {
                                 textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`), '')
                                 this.clearFormateText = '';
                             }
@@ -715,11 +752,20 @@ export class TinyMceEditor extends Component {
                 }
             }
             /** Open Alfresco Picker to update inline image in list on double-click*/
-            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT && blockListData && Object.keys(blockListData).length))) {
+            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT ) || (this?.props?.element?.type === "element-blockfeature") || (this?.props?.element?.type === "element-learningobjectives"))) {
                 const imageArgs = {
                     id: e.target?.dataset?.id,
                     handleBlur:this.handleBlur
                 }
+
+                let temp = document.createElement("div");
+                temp.innerHTML = e.target?.outerHTML;
+                temp = temp.firstElementChild; 
+                let imageId =  temp.getAttribute("imageid")
+                if(!imageArgs.id && imageId){
+                    imageArgs.id = imageId;
+                }
+
                 let params = {
                     element: this.props.element,
                     permissions: this.props.permissions,
@@ -727,7 +773,7 @@ export class TinyMceEditor extends Component {
                     imageArgs
                 }
                 this.props.saveInlineImageData(params)
-                handleC2MediaClick(this.props.permissions, editor, this.props.element);
+                handleC2MediaClick(this.props.permissions, editor, this.props.element, this.props.saveSelectedAlfrescoElement);
             }
             let selectedText = editor.selection.getContent({ format: "text" });
             let elemClassList = editor.targetElm.classList;
@@ -965,6 +1011,10 @@ export class TinyMceEditor extends Component {
      */
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
+            /** Update the PREVIEW field with Label Value immediately */
+            if (this.props.isAutoNumberingEnabled && this.props?.element?.type === 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder)) {
+                this.props.onFigureLabelChange(e, this.props?.placeholder);
+            }
             this.isctrlPlusV = false;
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             let isMediaElement = tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;
@@ -1187,6 +1237,40 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
+            const currentSelection = tinymce?.activeEditor?.selection;
+            const selectionNode = window.getSelection().anchorNode;
+            const tinymceOffset = currentSelection.getRng().endOffset;
+            /**
+             * get node vs window selection node
+             * window selection is accurate and gives 
+             * inner most node as compared to currentSelecction.getNode()
+             */
+            moveCursor(e, selectionNode, tinymceOffset);
+            /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering START xxxxxxxxxxxxxxxxxxx */
+            if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn) {
+                const keyCode = e.keyCode || e.which;
+                const allowedKeys = [8, 37, 38, 39, 40, 46]
+                const allowedFormattingKeys = [66, 73, 85]
+                // Restrict limit to Numbers only in Number Field for Resume Number option
+                if (this.props.placeholder === 'Number' && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
+                    if (e.ctrlKey || e.shiftKey || ((keyCode < 48 || keyCode > 57) && (keyCode < 96 || keyCode > 105)) && keyCode !== 8 && keyCode !== 37 && keyCode !== 39 && keyCode !== 46) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                    // Restrict limit to 9 digits only in Number Field for Resume Number option
+                    if ((tinymce?.activeEditor?.getContent()?.length + 1 > 9) && !(allowedKeys.includes(keyCode))) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                }
+                // disable keyboard events in Label & Number fields of Autonumbered Elements
+                if ((e.ctrlKey || e.metaKey) && (allowedFormattingKeys.includes(keyCode))) {
+                    tinymce.dom.Event.cancel(e);
+                }
+            }
+            /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering STOP xxxxxxxxxxxxxxxxxxxx */
 
             /* xxxxxxxxxxxxxxxxx Prevent CTA button keyboard formatting START xxxxxxxxxxxxxxxxx */
             if (config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
@@ -3055,9 +3139,22 @@ export class TinyMceEditor extends Component {
     }
 
     /**
+     * function to remove tinymce editors
+     */
+    removeTinymceEditors = () => {
+        for (let i = tinymce?.editors?.length - 1; i > -1; i--) {
+            let ed_id = tinymce?.editors[i]?.id;
+            tinymce.remove(`#${ed_id}`)
+        }
+    }
+
+    /**
      * React's lifecycle method. Called immediately after a component is mounted. Setting state here will trigger re-rendering. 
      */
     componentDidMount() {
+        // const { spellCheckToggle } = this.props;
+        // removing the tinymce editors when spellcheck toggle is turned off to prevent incorrect text highlighting
+        // if (!spellCheckToggle) this.removeTinymceEditors();
         let currentNode = document.getElementById('cypress-' + this.props.index);
         if (currentNode && currentNode.getElementsByTagName("IMG").length) {
             currentNode.innerHTML = this.getNodeContent();
@@ -3351,15 +3448,20 @@ export class TinyMceEditor extends Component {
         let toolbar;
         switch (placeholder) {
             case "Number":
-                toolbar = config.figureNumberToolbar;
+                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.numberToolbarAutonumberMode : config.figureNumberToolbar;
                 break;
+            case "Label":
             case "Label Name":
-                toolbar = config.figureImageLabelToolbar;
+                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelToolbarAutonumberMode : config.figureImageLabelToolbar;
                 break;
             case "Title":
             case "Caption":
             case "Credit":
+            case "Math Block Content":
                 toolbar = config.figurImageCommonToolbar;
+                break;
+            case "Code Block Content":
+                toolbar = this.setCodeBlockContentToolbar();
                 break;
             case "Enter Button Label":
                 toolbar = config.smartlinkActionButtonToolbar;
@@ -3382,12 +3484,25 @@ export class TinyMceEditor extends Component {
         return toolbar;
     }
 
+    setCodeBlockContentToolbar = () => {
+        let toolbar;
+        let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
+        if (syntaxEnabled && syntaxEnabled.checked) {
+            toolbar = config.codeListingToolbarDisabled;
+        }
+        else {
+            toolbar = config.codeListingToolbarEnabled;
+        }
+        return toolbar;
+    }
+
     setInstanceToolbar = () => {
         let toolbar = [];
+        let figureTypes = ['image', 'table', 'mathImage', 'audio', 'video', 'tableasmarkup', 'authoredtext', 'codelisting'];
         let blockListData = checkBlockListElement(this.props, "TAB");
         if (this.props?.element?.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
             toolbar = config.popupCallToActionToolbar
-        } else if ((this.props?.element?.type === 'figure' && ['image', 'table', 'mathImage', 'audio', 'video'].includes(this.props?.element?.figuretype)) || (this.props?.element?.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
+        } else if ((this.props?.element?.type === 'figure' && figureTypes.includes(this.props?.element?.figuretype)) || (this.props?.element?.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
             toolbar = this.setFigureToolbar(this.props.placeholder);
         }else if(this.props?.element?.type === 'element-aside'){
             toolbar = this.setAsideNumberingToolbar(this.props.placeholder);
@@ -3399,15 +3514,10 @@ export class TinyMceEditor extends Component {
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
                 toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-        } else if (this.props.placeholder === "Enter block code...") {
-            let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
-            if (syntaxEnabled && syntaxEnabled.checked) {
-                toolbar = config.codeListingToolbarDisabled;
-            }
-            else {
-                toolbar = config.codeListingToolbarEnabled;
-            }
         } 
+        // else if (this.props.placeholder === "Code Block Content") {
+        //     toolbar = this.setCodeBlockContentToolbar()
+        // }
         // else if (this.props.placeholder === "Enter Show text" || (this.props.placeholder === "Enter Hide text")) {
         //     toolbar = config.showHideToolbar
         // } 
@@ -3882,7 +3992,6 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
-
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
@@ -3904,7 +4013,8 @@ export class TinyMceEditor extends Component {
             let currentId = this.props.index;
             let node = document.getElementById('cypress-' + currentId);
             tempdiv.innerHTML = node ? node.innerHTML : '';
-            if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length) {
+
+            if (!tinymce.$(tempdiv).find('.paragraphNummerEins').length || !tinymce.$(tempdiv).find('.paragraphNummerEins').text().length && !document.querySelector(`div#cypress-${this.props.index} .paragraphNummerEins`)?.innerHTML?.match(/<img/)?.input?.includes('class="imageAssetContent')) {
                 if (!tinymce.$(tempdiv).find('.blockquoteTextCredit') || !tinymce.$(tempdiv).find('.blockquoteTextCredit').text().length) {
                     node.innerHTML = this.lastContent;
                 }
@@ -3939,6 +4049,7 @@ export class TinyMceEditor extends Component {
                 this.outerHTML = innerHtml;
             })
         }
+        /*It will reopen data paste issue in blockquote marginalia*/
         while (tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').length) {
             tinymce.$('[data-mce-bogus]:not(#sel-mce_0)').each(function () {
                 let innerHtml = this.innerHTML;
@@ -4016,8 +4127,8 @@ export class TinyMceEditor extends Component {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
                 let cgTitleFieldData = {};
-                if (this.props?.asideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" && this.props?.currentElement?.type === "element-authoredtext") {
-                    cgTitleFieldData.asideData = this.props.asideData;
+                if (this.props?.citationAsideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" && this.props?.currentElement?.type === "element-authoredtext") {
+                    cgTitleFieldData.asideData = this.props.citationAsideData;
                     cgTitleFieldData.parentElement = this.props.parentElement;
                 }
                 setTimeout(() => {
@@ -4086,7 +4197,6 @@ export class TinyMceEditor extends Component {
             tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
         }
         temDiv.innerHTML = removeBOM(temDiv.innerHTML)
-
         return temDiv;
 
     }
@@ -4098,7 +4208,11 @@ export class TinyMceEditor extends Component {
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
         let id = 'cypress-' + this.props.index;
-        classes += ' ' + this.placeHolderClass;
+        let isContainsImage =  this.props?.model?.text?.match(/<img/)?.input.includes('class="imageAssetContent');
+        if(!isContainsImage){
+            classes += ' ' + this.placeHolderClass;
+        }
+        
         /**Render editable tag based on tagName*/
         switch (this.props.tagName) {
             case 'p':
@@ -4121,6 +4235,7 @@ export class TinyMceEditor extends Component {
                     model = tempDiv.children[0].innerHTML;
                 }
                 model = removeBOM(model)
+
                 if (this.props.poetryField && this.props.poetryField === 'formatted-title') {
                     if (!classes.includes('poetryHideLabel')) {
                         classes = classes + ' poetryHideLabel';
@@ -4230,11 +4345,15 @@ const mapStateToProps = (state) => {
         launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
         isInlineEditor: state.alfrescoReducer.isInlineEditor,
         imageArgs: state.alfrescoReducer.imageArgs,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        asideData: state.appStore.asideData,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
+        autoNumberOption: state.autoNumberReducer.autoNumberOption,
+        spellCheckToggle: state.toolbarReducer.spellCheckToggle
     }
 }
 
 export default connect(
     mapStateToProps,
-    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement }
+    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement, saveSelectedAlfrescoElement }
 )(TinyMceEditor);

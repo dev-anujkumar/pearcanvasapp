@@ -47,7 +47,7 @@ class SlateTagDropdown extends React.Component {
     }
     closestByClass = function(el, clazz) {
     // Traverse the DOM up with a while loop
-    while (el.className != clazz) {
+    while (el.className != clazz && el.className !== undefined) {
         // Increment the loop to the parent node
         el = el.parentNode;
         if (!el) {
@@ -65,6 +65,7 @@ class SlateTagDropdown extends React.Component {
         let assessmentuRN="";
         let assessmentType="";
         let assessmentTypeLO="";
+        let isSubscribed=this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed ?? false
         if(config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length){
         assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
         assessmentType = document.getElementsByClassName("slate_assessment_data_format_lo")[0].innerText;
@@ -101,7 +102,7 @@ class SlateTagDropdown extends React.Component {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': isLOExist, 'editAction': '' } });
         }
         else if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys_LO,'assessmentUrn':assessmentuRN,'previewData': previewData } });
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys_LO,'assessmentUrn':assessmentuRN,'previewData': previewData,'isSubscribed':isSubscribed } });
         }
         else if(checkSlateLock(this.props.slateLockInfo)){
             this.props.showSlateLockPopup(true);
@@ -151,6 +152,7 @@ class SlateTagDropdown extends React.Component {
   prepareExtFrameworkData = () => {
     let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
     let currentSlateLOData = this.props.currentSlateLOData;
+    let lastAlignedLo = this.props.lastAlignedExternalLO;
     let apiKeys_LO = {
       'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
       'strApiKey': config.STRUCTURE_APIKEY,
@@ -164,17 +166,19 @@ class SlateTagDropdown extends React.Component {
       externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
     }
     return {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     }
   }
 
   /** Launch External LO Popup from Canvas*/
   launchExternalFrameworkPopup = (e) => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     } = this.prepareExtFrameworkData();
 
     const currentSlateLF=this.props.currentSlateLF;
+    const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
+    const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
    if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
       this.props.toggleLOWarningPopup(true,e.target.innerText);
     } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
@@ -185,6 +189,7 @@ class SlateTagDropdown extends React.Component {
         'message': {
           'text': AlignToExternalFramework,
           'data': currentSlateLOData,
+          'lastAlignedLo':lastAlignedLo,
           'isLOExist': true,
           'editAction': '',
           'selectedLOs': selectedLOs,
@@ -192,9 +197,13 @@ class SlateTagDropdown extends React.Component {
           'externalLFUrn': externalLFUrn,
           'currentSlateId': slateManifestURN,
           'chapterContainerUrn': '',
-          'currentSlateLF': currentSlateLF
+          'currentSlateLF': currentSlateLF,
+          'projectSharingRole': projectSharingRole,
+          'isSubscribed': isSubscribed
         }
       })
+
+
       this.props.closeLODropdown();
     }
 
@@ -255,6 +264,8 @@ class SlateTagDropdown extends React.Component {
     const {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
     } = this.prepareExtFrameworkData();
+    const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
+    const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
     const currentSlateLF=this.props.currentSlateLF;
     let assessmentuRN="";
     let assessmentType="";
@@ -317,20 +328,22 @@ class SlateTagDropdown extends React.Component {
             'chapterContainerUrn': '',
             'currentSlateLF': currentSlateLF,
             'assessmentUrn': assessmentuRN,
-            'previewData': previewData
+            'previewData': previewData,
+            'projectSharingRole': projectSharingRole,
+            'isSubscribed': isSubscribed
         }
       })
     }
     this.props.closeLODropdown();
   }
-
     render = () => {
       const enableExtLO =this.checkExternalFramework();
       const liOptionStatus = this.handleCypressLODropdownOptions()
       /* @-isLoOption4Slate-@ - TO check is LO dropdown options allowed for current slate or not */
       const isLoOption4Slate = [SLATE_TYPE_SECTION, SLATE_TYPE_PDF].includes(config.slateType);
-      const isExternalLoInAssessment = this.checkExternalFrameworkAS()
-        return (
+      const isExternalLoInAssessment = this.checkExternalFrameworkAS();
+      const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' && this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? "disable-buttton" : "";
+      return (
         <div>
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
               <ul>
@@ -350,19 +363,20 @@ class SlateTagDropdown extends React.Component {
               <div className="learningobjectivedropdown2" ref={node2 => this.node2 = node2}>
                 <ul>
                     {this.props.permissions.includes('lo_edit_metadata') && isLoOption4Slate &&
-                        <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}> {AddLearningObjectiveSlateDropdown}</li>}
+                        <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown} className= {`${subscriberContent}`}> {AddLearningObjectiveSlateDropdown}</li>}
                     {this.props.permissions.includes('lo_edit_metadata') && isLoOption4Slate &&
-                        <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown}>{AddEditLearningObjectiveDropdown}</li>}
+                        <li onClick={(this.props.currentSlateLF === EXTERNAL_LF) ? this.handleWarningPopup :this.learningObjectiveDropdown} className= {`${subscriberContent}`}>{AddEditLearningObjectiveDropdown}</li>}
                     {this.props.permissions.includes('lo_edit_metadata') && config.slateType === 'assessment' &&
                         <li onClick={this.learningObjectiveDropdown}>{AddLearningObjectiveAssessmentDropdown}</li>}
                     <li className={liOptionStatus.viewLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{ViewLearningObjectiveSlateDropdown}</li>
                     {isLoOption4Slate && !hasReviewerRole() &&
-                        <li className={liOptionStatus.unlinkLOStatus ? '' : 'disabled'} style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
+                        <li className={`${liOptionStatus.unlinkLOStatus ? '' : 'disabled' } ${subscriberContent}`} 
+                        style={{ cursor: 'not-allowed !important' }} onClick={this.learningObjectiveDropdown}>{UnlinkSlateDropdown}</li>}
                 </ul>
             </div> 
             <div className="learningobjectivedropdown2" ref={node3 => this.node3 = node3}>
                 <ul>
-                      <li onClick={() =>this.openAssessmentExternalPopup('add')}>{AddEditLOsAssessmentSlate}</li>
+                      <li className= {`${subscriberContent}`} onClick={() =>this.openAssessmentExternalPopup('add')}>{AddEditLOsAssessmentSlate}</li>
                       <li className={this.props.isLOExist ? '' : 'disabled'} onClick={() =>this.openAssessmentExternalPopup('view')}>{ViewLOsAssessmentSlate}</li>
                 </ul>
             </div> 
@@ -375,7 +389,8 @@ const mapStateToProps = (state) => {
         isLOExist: state.metadataReducer.slateTagEnable,
         currentSlateLF:state.metadataReducer.currentSlateLF,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
+        lastAlignedExternalLO:state.metadataReducer.lastAlignedExternalLO
     }
 }
 const mapActionToProps = {

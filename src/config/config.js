@@ -54,7 +54,15 @@ let config = {
     ALFRESCO_EDIT_METADATA:"https://staging.api.pearson.com/content/cmis/uswip-aws/",
     CYPRESS_PLUS_URL:"http://localhost:3000/cypress-plus",
     PROACTIVE_SLATE_PREVIEW_STATUS: "false",
-    SHOW_CYPRESS_PLUS:true
+    SHOW_CYPRESS_PLUS:true,
+    ENABLE_AUTO_NUMBER_CONTENT: false,
+    SLATE_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-dev-publishSlate',
+    PROJECT_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-dev-publishTitleInterimNonBroker',
+    AWS_RESOURCE : 'lambda',
+    PROJECT_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
+    SLATE_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/'
+
+    
 };
 
 if (process.env.NODE_ENV === "development") {

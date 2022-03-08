@@ -48,9 +48,12 @@
   }
   
   .modal__close {
+    width: 24px;
+    height: 24px;
     position: absolute;
-    right: 3em;
+    top: 1em;
     cursor: pointer;
+    left: 57em;
   }
   
   .modal__close:after,
@@ -134,7 +137,7 @@
    */
   /* start */
   .containerApo {
-      position: fixed;
+      /* position: absolute; */
       width: 716px;
       top: 10.4%;
       right: 0;
@@ -203,7 +206,7 @@
   }
 
   .figureCount {
-    font-size: 14px;
+    font-size: 12px;
     font-family: sans-serif;
     font-weight: 600;
     margin-top: 24px;
@@ -247,12 +250,9 @@
     height: 36px;
     font-family: sans-serif;
     font-size: 14px;
-    font-weight: 600;
     text-align: center;
     justify-content: center;
     padding: 8px 20px;
-    border: solid 1px #dcdcdc;
-    background: #fff;
     display:inline-block;
     cursor:pointer;
     color:#005a70;
@@ -260,7 +260,9 @@
     text-decoration:none;
     margin-left: 10px;
   }
-
+  .modalFooter .myButton{
+    font-weight: 600;
+  }
   .myButton:hover {
     border: 1px solid #005a70;
 }

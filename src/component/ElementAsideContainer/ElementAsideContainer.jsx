@@ -565,25 +565,12 @@ class ElementAsideContainer extends Component {
         }
     }
 
-
-
-    
     onFigureElementFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
         if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
         } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) {
             labelElement?.nextElementSibling?.classList?.add('transition-none');
-        }
-    }
-
-    onFigureElementFieldBlur = (id) => {
-        let labelElement = document.getElementById(`cypress-${id}`);
-        if (labelElement?.nextElementSibling) {
-            labelElement?.nextElementSibling?.classList?.remove('label-color-change');
-        }
-        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
-            labelElement?.nextElementSibling?.classList?.remove('transition-none');
         }
     }
 
@@ -676,7 +663,7 @@ class ElementAsideContainer extends Component {
     handleAsideBlur = (evt) => {
         this.props.handleBlur();
         const { element, index } = this.props;
-        console.log("props",this.props);
+
         let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false; 
         const newToggleValue = hasAsideTitleData ? true : false;
         let labelElement = document.getElementById(`cypress-${index}-t1`);

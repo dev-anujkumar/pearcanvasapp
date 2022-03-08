@@ -81,6 +81,13 @@ const pdfSlateInstance = (props, initialSt = initialState) => {
     return component.find('PdfSlate').instance();
 }
 
+/**config constants */
+config.isCypressPlusEnabled = true;
+config.SHOW_CYPRESS_PLUS = true;
+config.slateManifestURN = "urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee";
+config.slateEntityURN = "urn:pearson:entity:937f01cc-b1f5-4e0b-a84e-43562d4e4b72";
+config.projectUrn = "urn:pearson:distributable:fc5a0834-c117-4629-95bc-270d413c0ba9";
+
 describe('1. PDF Slate test cases', () => {
     let props = {
 		index:0,
@@ -114,7 +121,7 @@ describe('1. PDF Slate test cases', () => {
         const compInstance = pdfSlateInstance(props);
         expect(compInstance).toBeDefined();
     });
-	describe('1.2 Test sumbitElement Function', () => {
+	xdescribe('1.2 Test sumbitElement Function', () => {
 		it('1.2.1 Test sumbitElement Function', () => {
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
@@ -162,6 +169,16 @@ describe('1. PDF Slate test cases', () => {
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'componentDidMount')
 			compInstance.componentDidMount();
+			expect(spy).toHaveBeenCalled();
+			spy.mockClear()
+		});
+	});
+	describe('1.3 Test componentWillUnmount Function', () => { 
+		it('1.2.1 Test If Case', () => { 
+			const compInstance = pdfSlateInstance(props);
+			expect(compInstance).toBeDefined();
+			const spy = jest.spyOn(compInstance, 'componentWillUnmount')
+			compInstance.componentWillUnmount();
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear()
 		});
@@ -241,21 +258,18 @@ describe('1. PDF Slate test cases', () => {
     });
 	describe('1.6 Test getAlfrescoData Function', () => {
 		const pdfData = {
-			body:{
-				results: [{
-					properties:{
-						"s.avs:jsonString":{},
-						"s.avs:url": {
-							value: ["https://www.pearsonhighered.com"]
-						}
-					}
-				}]
+			content: {
+				mimeType: 'media/pdf'
 			},
-			uniqueID:"urn:pearson:alfresco:c771a9fa-ef29-497c-bb6d-8dcfbb083101",
-			displayName: "PDF",
-			desc: `{"smartLinkType":"PDF"}`
-		}
-		it('1.6.1 If Conditions - IsPDF == true', () => {
+			properties: {
+				"cm:description": "eps media",
+				"avs:url": "https://www.pearsonhighered.com"
+			},
+			"institution-urls": [{
+				publicationUrl: "https://www.pearsonhighered.com"
+			}]
+		};
+		it('1.6.1 If Conditions - IsPDF == true & eps media', () => {
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
@@ -263,8 +277,10 @@ describe('1. PDF Slate test cases', () => {
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});
-		it('1.6.2 Else Condition - IsPDF !== true', () => {
-			const newPdfData =  {...pdfData, desc: "Eps Media"}
+		it('1.6.2 If Conditions - IsPDF == true & non eps media', () => {
+			const newPdfData =  {...pdfData, properties: {
+				"cm:description": "non eps media"
+			}};
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
@@ -272,8 +288,10 @@ describe('1. PDF Slate test cases', () => {
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});
-		it('1.6.3 Else Condition - pdfData?.uniqueID && pdfData.displayName == False', () => {
-			const newPdfData =  {...pdfData, uniqueID: undefined, displayName: undefined}
+		it('1.6.3 Else Condition - IsPDF !== true', () => {
+			const newPdfData =  {...pdfData, content: {
+				mimeType: 'media/mp3'
+			}};
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
@@ -281,12 +299,54 @@ describe('1. PDF Slate test cases', () => {
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});
-		it('1.6.3 Else Condition - PDF == True; results = []', () => {
-			const newPdfData =  {...pdfData, body:{ results: [] }}
+		it('1.6.4 If Condition - pdfData?.id ', () => {
+			const newPdfData =  {...pdfData, properties: {
+				"cm:description": "pdf"
+			}, id: '007'};
 			const compInstance = pdfSlateInstance(props);
 			expect(compInstance).toBeDefined();
 			const spy = jest.spyOn(compInstance, 'getAlfrescoData');
 			compInstance.getAlfrescoData(newPdfData);
+			expect(spy).toHaveBeenCalled();
+			spy.mockClear();
+		});
+	});
+	describe('1.7 Testing componentDidUpdate', () => {
+		it('1.7.1 If Conditon - this.props.element.id === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ', () => {
+			let props2 = {
+				element: {
+					id: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083180",
+					html: {},
+					elementdata: { 
+						"assetid": "urn:pearson:alfresco:c771a9fa-ef29-497c-bb6d-8dcfbb083101",
+						"path": "",
+						"title": "PDF"
+					},
+					"versionUrn": "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083102",
+					"contentUrn": "urn:pearson:entity:c771a9fa-ef29-497c-bb6d-8dcfbb083103",
+					schema:"http://schemas.pearson.com/wip-authoring/element/1"
+				},
+				alfrescoAssetData: {},
+				alfrescoElementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083180"
+			};
+			let prevProps = {
+				alfrescoElementId: "urn:pearson:work:4ba8a189-097d-44b6-9cd6-e8ac18637921"
+			};
+			let initialState2 = {
+				alfrescoReducer: {
+				alfrescoAssetData: {},
+				elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083180",
+				alfrescoListOption: [],
+				launchAlfrescoPopup: false,
+				editor: true,
+				Permission: false
+			}};
+			const store = mockStore(initialState2);
+    		const component = mount(<Provider store={store}><PdfSlate {...props2} /></Provider>);
+			const compInstance = component.find('PdfSlate').instance();
+			expect(compInstance).toBeDefined();
+			const spy = jest.spyOn(compInstance, 'componentDidUpdate');
+			compInstance.componentDidUpdate(prevProps);
 			expect(spy).toHaveBeenCalled();
 			spy.mockClear();
 		});
