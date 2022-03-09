@@ -323,6 +323,7 @@ class PopUp extends React.Component {
                    <div className='loPopupHeader'>Select an image</div>
                     <div className="delete-element-text">Please select an image to open it in alfresco for editing in a different tab on your browser</div>
                     
+                    
                 </>
             )
         }
