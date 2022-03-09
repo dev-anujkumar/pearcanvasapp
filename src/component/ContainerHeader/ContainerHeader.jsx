@@ -99,7 +99,8 @@ export const ContainerHeader = (props) => {
         }
     }, [])
     useEffect(() => {
-        if ((props.activeElement.elementId === props.model.id && props?.autoNumberOption?.entityUrn === props?.model?.contentUrn) || (props.activeElement.elementId === props.model.id && state.initiateBlurCall)) {
+        if (((props.activeElement.elementId === props.model.id && props?.autoNumberOption?.entityUrn === props?.model?.contentUrn ) || (props.activeElement.elementId === props.model.id && state.initiateBlurCall)) && state.initiateBlurCall) {
+            setState({ initiateBlurCall: false });
             props.handleBlur();
         }
     }, [props.autoNumberOption]);
@@ -136,7 +137,7 @@ export const ContainerHeader = (props) => {
     const changeAutoNumberSettings = (oldSettings, newSettings) => {
         handleCloseDropDrown();
         if (oldSettings !== newSettings) {
-            setState({ labelNumberSetting: newSettings });
+            setState({ labelNumberSetting: newSettings, initiateBlurCall: true });
             props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: newSettings});
             if (newSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
                 setState({ elementLabelValue: props.model?.displayedlabel, currentLabelValue: props.model?.displayedlabel });
