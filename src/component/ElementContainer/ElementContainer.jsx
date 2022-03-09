@@ -419,7 +419,7 @@ class ElementContainer extends Component {
                 labeleHTML = previousElementData.displayedlabel;
             }
             isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? labeleHTML !== previousElementData?.manualoverride?.overridelabelvalue : labeleHTML !== previousElementData.displayedlabel;
-            const isTitleDifferent = previousElementData?.html?.title ? this.removeClassesFromHtml(titleHTML) !== previousElementData?.html?.title : checkHTMLdataInsideString(titleHTML) ? true : false;
+            const isTitleDifferent = previousElementData?.html?.title ? this.removeClassesFromHtml(titleHTML) !== this.removeClassesFromHtml(previousElementData?.html?.title) : checkHTMLdataInsideString(titleHTML) ? true : false;
             return (isLabelDifferent || isNumberDifferent || isTitleDifferent);
         }
         if (!(previousElementData?.html?.title)) {
