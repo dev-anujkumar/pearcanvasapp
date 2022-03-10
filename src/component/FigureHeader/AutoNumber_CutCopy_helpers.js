@@ -9,6 +9,34 @@ import { getAutoNumberSequence } from './AutoNumberActions';
 import { checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
 import config from '../../config/config';
 
+
+export const handleCutPasteInDiffSlate = (parentEntityUrn, elements, getState, dispatch) => {
+    let { autoNumberedElements } = getState().autoNumberReducer;
+    if (autoNumberedElements) {
+        for (let labelType in autoNumberedElements) {
+            let removeValFromIndex = [];
+            if (autoNumberedElements[labelType]?.hasOwnProperty(parentEntityUrn) && autoNumberedElements[labelType][parentEntityUrn]?.length > 0) {
+                let elementsInTocContainer = autoNumberedElements[labelType][parentEntityUrn];
+                for (let [index, element] of elementsInTocContainer.entries()) {
+                    const eleIndex = elements?.findIndex(elm => (elm.contentUrn === element.contentUrn))
+                    if (eleIndex > -1) removeValFromIndex.push(index);
+                }
+                if (removeValFromIndex.length) {
+                    for (let i = removeValFromIndex.length - 1; i >= 0; i--)
+                        autoNumberedElements[labelType][parentEntityUrn].splice(removeValFromIndex[i], 1);
+                }
+            }
+        }
+    }
+    dispatch({
+        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
+        payload: {
+            numberedElements: autoNumberedElements
+        }
+    });
+    getAutoNumberSequence(autoNumberedElements, dispatch);
+}
+
 /**
  * Handle AUTO-NUMBERING on Delete
  * @param {*} params 
@@ -23,7 +51,8 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
         currentSlateData,
         oldSlateFigureList,
         tocContainerSlateList,
-        slateOldNumberedContainerElements
+        slateOldNumberedContainerElements,
+        cutSelection
     } = params
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
@@ -44,6 +73,19 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
         }
         if (operationType == 'copy' || operationType == 'cut') {
             if (containerElementTypes.indexOf(selectedElement?.type) > -1) {
+                if (operationType == 'cut' && Object.keys(cutSelection).length > 0) {
+                    /* check that cut element slate and paste element slates are different */
+                    if (cutSelection?.sourceSlateEntityUrn !== getSlateEntityUrn()) {
+                        const slateAncestors = getState().appStore.currentSlateAncestorData;
+                        const parentEntityUrn = getContainerEntityUrn(slateAncestors);
+                        let containerElement = [];
+                        let nonContainerElement = [];
+                        containerElement = await getAsideElementsWrtKey([cutSelection?.element], containerElements.ASIDE, containerElement);
+                        nonContainerElement = await getImagesInsideSlates([cutSelection?.element], nonContainerElement);
+                        if (containerElement.length) handleCutPasteInDiffSlate(parentEntityUrn, containerElement, getState, dispatch);
+                        if (nonContainerElement.length) handleCutPasteInDiffSlate(parentEntityUrn, nonContainerElement, getState, dispatch);
+                    }
+                }
                 switch (selectedElement?.type) {
                     case containerElements.MULTI_COLUMN:
                     case containerElements.SHOW_HIDE:

@@ -13,6 +13,7 @@ import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
 import { handleAutoNumberingOnCopyPaste } from '../FigureHeader/AutoNumber_CutCopy_helpers';
 import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
+import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP, POETRY_ELEMENT } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
@@ -41,6 +42,12 @@ export const onPasteSuccess = async (params) => {
         operationType = elmSelection.operationType;
         sourceElementIndex = elmSelection?.sourceElementIndex;
         selectedElem = Object.freeze({...elmSelection})
+    }
+
+    /** Check if operation is cut then get data of element for autonumber store update on diff slate */
+    let cutSelection = {};
+    if (operationType === 'cut') {
+        cutSelection = Object.assign({}, getState().selectionReducer.selection);
     }
 
     /** Create Snapshot for cut action on different slate */
@@ -93,6 +100,7 @@ export const onPasteSuccess = async (params) => {
             type: deleteElm.type,
         }
         deleteFromStore(deleteParams)
+
     }
 
     let feedback = null;
@@ -355,7 +363,8 @@ export const onPasteSuccess = async (params) => {
         currentSlateData: newParentData[config.slateManifestURN],
         oldSlateFigureList,
         tocContainerSlateList,
-        slateOldNumberedContainerElements
+        slateOldNumberedContainerElements,
+        cutSelection
     }
     handleAutoNumberingOnCopyPaste(autoNumberParams)
     /**-----------------------------------------------------------------------------------*/
