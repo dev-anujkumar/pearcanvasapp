@@ -4,10 +4,9 @@ import {
     UPDATE_POPUP_PARENT_SLATE
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
-import { containerBodyMatter } from './slateLevelMediaMapper';
 import { containerElements, autoNumber_ElementTypeToStoreKeysMapper, displayLabelsForContainer } from './AutoNumberConstants';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
-import { getImagesInsideSlates, getAutoNumberedElementsOnSlate, getAsideElementsWrtKey, getPopupDataInsideContainer } from './slateLevelMediaMapper';
+import { getImagesInsideSlates, getAutoNumberedElementsOnSlate, getAsideElementsWrtKey, getPopupDataInsideContainer, containerBodyMatter } from './slateLevelMediaMapper';
 
 export const updateCreatedElementInAutonumberList = (mediaType, mediaList, autoNumberedElementsObj, dispatch) => {
     dispatch({

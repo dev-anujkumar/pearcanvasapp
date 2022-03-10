@@ -5,10 +5,10 @@ import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
-import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
+import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
 import { tcmSnapshotsForCreate, prepareSnapshots_ShowHide} from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowHide/ShowHide_Helper';
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
@@ -452,7 +452,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
     let newShowhideIndex = parseInt(newIndex[newIndex.length-1]); //+1
-    //const { asideData, parentUrn ,showHideObj } = getState().appStore
     const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
     let _requestData = {
         "projectUrn": config.projectUrn,
@@ -482,11 +481,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-        /* let containerElement = {
-            asideData,
-            parentUrn,
-            showHideObj
-        }; */
         const containerElement = prepareSnapshots_ShowHide({ asideData: {...parentElement}}, createdElemData.data, index);
         let slateData = {
             currentParentData: newParentData,
@@ -979,10 +973,6 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         if (res?.data?.versionUrn && (res?.data?.versionUrn.trim() !== "")) {
             activeElementObject.elementId = res.data.versionUrn
         }
-        // dispatch({  // commented for future reference
-        //     type: 'SET_ACTIVE_ELEMENT',
-        //     payload: activeElementObject
-        // });
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
         config.savingInProgress = false

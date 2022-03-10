@@ -2,7 +2,6 @@
 * Search and Filter Assessments Component of Learnosity Assessment
 */
 import React from 'react'
-import config from '../../../config/config';
 import { hasReviewerRole } from '../../../constants/utility';
 import '../../../styles/AssessmentSlateCanvas/usageTypeDropdown.css';
 export const UsageTypeDropdown = (props) => {

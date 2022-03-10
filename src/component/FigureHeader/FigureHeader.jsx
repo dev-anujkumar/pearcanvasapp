@@ -3,7 +3,6 @@
 */
 import React, { useRef, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import config from '../../config/config';
 import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';

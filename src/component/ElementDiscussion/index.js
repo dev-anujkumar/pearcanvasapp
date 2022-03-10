@@ -3,11 +3,10 @@ import TinyMceEditor from "../tinyMceEditor";
 import { dropdownArrow } from "../../images/ElementButtons/ElementButtons.jsx";
 import { UsageTypeDropdown } from "../AssessmentSlateCanvas/UsageTypeDropdown/UsageTypeDropdown.jsx";
 import "../../styles/ElementDiscussion/ElementDiscussion.css";
-import { useSelector } from "react-redux";
+import { useSelector,connect } from "react-redux";
 import DiscussionDialog from "./DiscussionDialog";
 import { createDiscussionForUpdateAPI, clearElement, removeLabel } from "./Utils";
 import { updateElement } from "../ElementContainer/ElementContainer_Actions";
-import { connect } from "react-redux";
 import {
   disableHeader,
   hideBlocker,
@@ -102,7 +101,6 @@ const ElementDiscussion = (props) => {
                     newTitle = matchHTMLwithRegex(newTitle)
                       ? newTitle
                       : `<p><label>${newTitle}</label></p>`;
-                    // newPSData.html[field] = tempCredit;
                     const html = {
                       title: newTitle,
                     };

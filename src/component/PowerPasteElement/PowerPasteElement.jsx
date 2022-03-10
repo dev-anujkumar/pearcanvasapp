@@ -9,7 +9,6 @@ import "tinymce/plugins/lists/plugin.min.js";
 import "tinymce/plugins/advlist/plugin.min.js";
 import "tinymce/plugins/powerpaste/plugin.min.js"
 import "tinymce/plugins/powerpaste/js/wordimport.js"
-// import "tinymce/plugins/paste";
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import { powerpaste_list_content_style } from '../../config/PowerPasteListElementCss';
 
@@ -91,18 +90,6 @@ export const pastePostProcess = (data, props) => {
     const childNodes = data.node.children;
     const elements = [];
     createPastedElements(childNodes, elements);
-    /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
-      const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
-      createPastedElements(childElements, elements);
-    } else if (childNodes.length >= 1) {
-      let childElements;
-      if (data.source === 'googledocs' && childNodes.length === 2 && childNodes[1].tagName === 'BR') {
-        childElements = childNodes[0].children;
-      } else {
-        childElements = childNodes;
-      }
-      createPastedElements(childElements, elements);
-    } */
     const parentIndex = props.index;
     elements.length && props.toggleWordPasteProceed(true)
     props.onPowerPaste(elements, parentIndex);

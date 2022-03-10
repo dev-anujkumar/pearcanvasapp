@@ -4,11 +4,9 @@
 
 import React, { useContext } from 'react';
 import TinyMceEditor from "../tinyMceEditor";
-// import { showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import { CitationGroupContext } from '../ElementContainer/ElementCitationContext'
-import { sendDataToIframe } from '../../constants/utility.js';
 import config from '../../config/config.js';
-import { getTitleSubtitleModel } from "../../constants/utility.js"
+import { getTitleSubtitleModel, sendDataToIframe } from "../../constants/utility.js"
 
 const CGTinyMCE = (props) => {
     const context = useContext(CitationGroupContext)

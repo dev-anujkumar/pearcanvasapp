@@ -919,8 +919,6 @@ function CommunicationChannel(WrappedComponent) {
                     slateEntityUrn: config.slateEntityURN
                 }
                 /* Message from TOC is current Slate is Joined PDF */
-                // const joinedPdfStatus = message.node && message.node.hasOwnProperty('isMergedPdf') ? message.node.isMergedPdf : false
-                // this.props.getJoinedPdfStatus(joinedPdfStatus)
                 /** ---------------------------------------------- */
                 if (message?.node) {
                     let matterType = 'bodymatter'

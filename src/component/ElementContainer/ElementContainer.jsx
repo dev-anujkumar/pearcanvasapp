@@ -4,7 +4,6 @@ import PropTypes, { element } from 'prop-types';
 import ElementSingleAssessment from './../ElementSingleAssessment';
 import ElementAuthoring from './../ElementAuthoring';
 import ElementAudioVideo from './../ElementAudioVideo';
-import ElementFigure from './../ElementFigure';
 import FigureImage from './../ElementFigure/FigureImage.jsx'
 import ElementInteractive from '../ElementInteractive';
 import ElementAsideContainer from '../ElementAsideContainer';
@@ -22,9 +21,9 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -33,18 +32,16 @@ import PageNumberContext from '../CanvasWrapper/PageNumberContext.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
 import { LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
-import { createUpdatedData, createOpenerElementData, handleBlankLineDom, updateAutoNumberedElement } from './UpdateElements.js';
+import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from './UpdateElements.js';
 import ElementPopup from '../ElementPopup'
 import { updatePageNumber, accessDenied } from '../SlateWrapper/SlateWrapper_Actions';
 import { releaseSlateLock } from '../CanvasWrapper/SlateLock_Actions.js';
-import ElementContainerContext from './ElementContainerContext'
 import { CitationGroupContext } from './ElementCitationContext'
 import CitationGroup from '../CitationGroup'
 import CitationElement from '../CitationElement'
 import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 import MultiColumnContext from "./MultiColumnContext.js"
-import MultiColumnContainer from "../MultiColumnElement"
 import MultipleColumnContainer from "../MultipleColumnElement/MultipleColumnContainer.jsx";
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CutCopyDialog from '../CutCopyDialog';
@@ -55,10 +52,9 @@ import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementConta
 import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
-import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
@@ -649,10 +645,7 @@ class ElementContainer extends Component {
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
         let podwidth = this.props?.activeElement?.podwidth;
         let oldImage = this.props.oldImage;
-        // if (smartlinkContexts.includes(previousElementData.figuredata.interactivetype)) {
              oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
-        // }
-
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel') && (previousElementData.figuretype !== 'tableasmarkup')) {
             let isValid = validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth);
             return isValid;
@@ -834,7 +827,6 @@ class ElementContainer extends Component {
                 || podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : undefined) && (podwidth !== null && podwidth !== undefined)
             );
         }
-        // let defaultImageUrl =  "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png";
         return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
             captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
@@ -894,7 +886,6 @@ class ElementContainer extends Component {
                 let html = currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
-                //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
                 html = tempDiv.innerHTML;
                 /** [BG-2293 - mathML/chemML is not captured in postertextobject field in show-hide */
                 if (parentElement.type == "showhide" && index && showHideType == 'postertextobject' && html.match(/<img/)) {
@@ -1232,7 +1223,6 @@ class ElementContainer extends Component {
      * Will e called on assessment element's blur
      */
     handleBlurAssessmentSlate = (assessmentData) => {
-        // const { elementType, primaryOption, secondaryOption } = this.props.activeElement;
         const oldAssessmentData = JSON.parse(JSON.stringify(this.props.element));
         this.props.storeOldAssetForTCM(oldAssessmentData.elementdata);
         let dataToSend = { ...this.props.element }
@@ -1749,12 +1739,10 @@ class ElementContainer extends Component {
                         case elementTypeConstant.FIGURE_AUTHORED_TEXT:
                         case elementTypeConstant.FIGURE_CODELISTING:
                             editor = <FigureImage model={element} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
-                            //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_AUDIO:
                         case elementTypeConstant.FIGURE_VIDEO:
                             editor = <ElementAudioVideo model={element} showBlocker={this.props.showBlocker} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
-                            //labelText = LABELS[element.figuretype];
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
                             editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} parentElement={this.props?.parentElement} />;
@@ -2485,7 +2473,6 @@ class ElementContainer extends Component {
      * @param newComment
      */
     handleCommentChange = (newComment) => {
-        // const commentAdded = newComment.replace(/[\[\]']+/g,'')
         this.setState({
             comment: newComment
         })

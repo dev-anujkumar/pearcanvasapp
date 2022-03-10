@@ -1,11 +1,4 @@
-// IMPORT - plugins
-// IMPORT - constants
-// import {
-//     FETCH_SLATE_DATA,
-//     SET_ACTIVE_ELEMENT
-// } from './../../constants/Action_Constants';
 import { LIST_TYPE_MAPPINGS } from '../../constants/Element_Constants';
-import { checkBlockListElement } from '../../js/TinyMceUtility';
 // IMPORT - other dependencies
 import elementList from '../Sidebar/elementTypes.js';
 import { conversionElement, updateBlockListMetadata } from '../Sidebar/Sidebar_Action.js';
@@ -89,8 +82,6 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
     //     }
     // });
     if(asideData.type==="manifestlist"){
-        // let blockListData = checkBlockListElement({slateLevelData:slateLevelData,index:activeElement.index}, 'ENTER');
-        // if (blockListData && Object.keys(blockListData).length && activeElement.elementType !== "manifestlist") {
            let data = {
             blockListData: asideData.element,
             blockListElement:true,

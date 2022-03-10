@@ -330,7 +330,6 @@ ajax.send = function (url, callback, method, data, contentType, sessionCookieNam
         }
     };
     x.setRequestHeader('Content-type', contentType);
-    //x.setRequestHeader('Access-Control-Allow-Origin', '*');
     if (tokenId && sessionCookieName) {
         x.setRequestHeader(sessionCookieName, tokenId);
     }
@@ -908,7 +907,6 @@ openamConfig.prototype.authenticateWithModernOpenAM = function (options) {
     if (tokenId && tokenId.length !== 0) {
         createCookie(this.sessionCookieName(), tokenId, 3, this.domainName());
         debug("authenticateWithModernOpenAM: RESPONSE: " + response);
-        // authentication.tokenid = tokenId;
     } else {
         debug("authenticateWithModernOpenAM: RESPONSE: " + response);
         if (JSON.parse(response).authId) {
@@ -1163,19 +1161,15 @@ openamConfig.prototype.logout = function (options) {
             }
             if (!this.legacyEnabled) {
                 if (this.logoutWithModernOpenAM()) {
-                    // window.location = gotoURL;
                     urlToBeRedirected = gotoURL;
                 } else {
-                    // window.location = gotoOnFail;
                     urlToBeRedirected = gotoOnFail;
                 }
 
             } else {
                 if (this.logoutWithLegacyOpenAM()) {
-                    // window.location = gotoURL;
                     urlToBeRedirected = gotoURL;
                 } else {
-                    // window.location = gotoOnFail;
                     urlToBeRedirected = gotoOnFail;
                 }
             }
@@ -1192,19 +1186,15 @@ openamConfig.prototype.logout = function (options) {
         }
         if (!this.legacyEnabled) {
             if (this.logoutWithModernOpenAM()) {
-                // window.location = gotoURL;
                 urlToBeRedirected = gotoURL;
             } else {
-                // window.location = gotoOnFail;
                 urlToBeRedirected = gotoOnFail;
             }
 
         } else {
             if (this.logoutWithLegacyOpenAM()) {
-                // window.location = gotoURL;
                 urlToBeRedirected = gotoURL;
             } else {
-                // window.location = gotoOnFail;
                 urlToBeRedirected = gotoOnFail;
             }
         }
@@ -1225,7 +1215,6 @@ openamConfig.prototype.handleSessionExpire = function () {
         'type': 'autoLogOut',
         'message': { url: encodedURL }
     })
-    // window.location = encodedURL;
 };
 /*
  * Logs out a user from a modern OpenAM
