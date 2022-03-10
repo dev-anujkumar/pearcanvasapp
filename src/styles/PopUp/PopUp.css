@@ -170,6 +170,16 @@
   border: 1px solid #005a70;
 }
 
+.cancel-button.disable {
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  border: 1px solid #b3d8e1 !important;
+  background: #ffffff;
+  color: #005a70;
+}
+
+
+
 .save-button,
 .metadata-import-button {
   border-radius: 2px;

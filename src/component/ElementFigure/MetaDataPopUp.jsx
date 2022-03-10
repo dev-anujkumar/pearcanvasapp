@@ -96,6 +96,27 @@ class MetaDataPopUp extends React.Component {
 		})
 	}
 
+	renderButtonsForEdit = (props) => {
+		
+		if(!props.showAlfrescoEditPopupforTE){
+			return (
+                        <div className="metadata-button">
+						   <span className={`metadata-import-button ${this.state.disabledButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
+						   <span className="cancel-button" id='close-container' onClick={(e) => this.props.togglePopup(false, e)}>Cancel</span>
+						</div>
+			)
+		}else if(props.showAlfrescoEditPopupforTE){
+            return(
+				<div className="metadata-button">
+					<span className={`metadata-import-button ${this.state.disabledButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Save All and Import</span>
+					<span className={`metadata-import-button ${this.state.disabledButton ? '' : "disabled"}`}>Save</span>
+					<span className="cancel-button disable" id='close-container'>Reset</span>
+					<span className="cancel-button" id='close-container' onClick={(e) => this.props.togglePopup(false, e)}>Cancel</span>
+				</div>
+			)
+		}
+	}
+
     render() {
         const { togglePopup, showAlfrescoEditPopupforTE } = this.props;
 		const { altText, longDescription, active } = this.state;
@@ -134,10 +155,8 @@ class MetaDataPopUp extends React.Component {
 								</textarea>
 							</div>
 						</div>
-						<div className="metadata-button">
-						   <span className={`metadata-import-button ${this.state.disabledButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
-						   <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
-						</div>
+						{this.renderButtonsForEdit(this.props)}
+						
 					</div>
 				</div>
                         
