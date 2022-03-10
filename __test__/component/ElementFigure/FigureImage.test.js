@@ -675,27 +675,39 @@ describe('Testing Figure image component', () => {
         keyboardReducer : {selectedElement: '' }
     }
     const store2 = mockStore(initialState2);
-
-    test('renders without crashing', () => {
-        let props = {
-            model: figureImage50TextElementWithData,
-            index: "",
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            onClick: () => { },
-            handleFocus: function () { },
-            permissions: ['add_multimedia_via_alfresco'],
-            figureData: {
-                model: {
-                    figuretype: ['image', 'table', 'mathImage', 'authoredtext']
-                }
+    let props = {
+        model: figureImage50TextElementWithData,
+        index: "",
+        slateLockInfo: {
+            isLocked: false,
+            userId: 'c5Test01'
+        },
+        onClick: () => { },
+        handleFocus: function () { },
+        permissions: ['add_multimedia_via_alfresco'],
+        figureData: {
+            model: {
+                figuretype: ['image', 'table', 'mathImage', 'authoredtext']
             }
-        }
+        },
+        showBlocker: jest.fn()
+    }
+
+    it('renders without crashing', () => {
         const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance();
         expect(instance).toBeDefined();
-    })
+    });
+
+    describe('Testing other functions of Figure Image', () => {
+        it('Testing showDeleteAssetPopup', () => {
+            const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+            const figureImageInstance = component.find('FigureImage').instance();
+            const spy = jest.spyOn(figureImageInstance, 'showDeleteAssetPopup');
+            figureImageInstance.setState({ deleteAssetPopup: true });
+            figureImageInstance.showDeleteAssetPopup();
+            expect(spy).toBeCalled();
+        });
+    });
 });
