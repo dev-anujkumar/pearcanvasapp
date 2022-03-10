@@ -94,6 +94,7 @@ class ElementContainer extends Component {
             btnClassName: '',
             showDeleteElemPopup: false,
             showAlfrescoExpansionPopup: false,
+            showAlfrescoEditPopupforTE: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPaletteList: false,
             showColorTextList: false,
@@ -1030,7 +1031,6 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
-                            console.log('dataToSend : ',dataToSend)
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
@@ -2130,11 +2130,8 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        // console.log('Hii u there')
         let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton');
-        // console.log('showEditButton : ',showEditButton)
         let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton');
-        // console.log('showAlfrescoExpandButton : ',showAlfrescoExpandButton)
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -2239,6 +2236,7 @@ class ElementContainer extends Component {
                             updateFigureData={this.updateFigureData}
                             handleFocus={this.handleFocus}
                             handleBlur={this.handleBlur}
+                            showAlfrescoEditPopupforTE = {this.props.showAlfrescoEditPopupforTE}
                             element={this.props.element}
                             index={this.props.index}
                             asideData={this.props.asideData}
@@ -2534,13 +2532,14 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
-    handleFigurePopup = (togglePopup) => {
-        let imageId = this.props?.element?.figuredata?.imageid;
+    handleFigurePopup = (togglePopup, elementType = null) => {
+        let imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
         imageId = imageId.replace('urn:pearson:alfresco:', '');
 
         this.props.showBlocker(togglePopup);
         this.setState({
             isfigurePopup: togglePopup,
+            showAlfrescoEditPopupforTE: elementType === 'TE' ? true : false,
             imageId
         })
         if (togglePopup) {
@@ -2552,7 +2551,6 @@ class ElementContainer extends Component {
 
 
     showAlfrescoExpansionPopup = (e, popup, sectionBreak) => {
-        console.log('Inside showAlfrescoExpandPopup')
         e.stopPropagation();
         this.props.showBlocker(true);
         showTocBlocker();
@@ -2563,20 +2561,7 @@ class ElementContainer extends Component {
         });
         
     }
-        // console.log('Inside showAlfrescoExpandPopup')
-        // return (
-        //     <PopUp dialogText='Select an Image'
-        //         rows="1"
-        //         cols="1"
-        //         active={true}
-        //         // togglePopup={this.toggleCustomPopup}
-        //         // isLockPopup={true}
-        //         isInputDisabled={true}
-        //         // slateLockClass="lock-message"
-        //         // withInputBox={true}
-        //         lockForTOC={false}
-        //     />
-        // )
+        
     
 
     /**
@@ -2588,7 +2573,6 @@ class ElementContainer extends Component {
         // window.alert(this.props?.element?.figuretype)
         
         if(this.props?.element?.figuretype === TABLE_ELEMENT){
-            console.log('Inside if condition')
             this.showAlfrescoExpansionPopup(e, true)
         }else{
             let imageId
@@ -2623,7 +2607,12 @@ class ElementContainer extends Component {
         const { element } = this.props;
         const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup"]
         if (element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) {
-            this.handleFigurePopup(true);
+            if(element?.figuretype === 'tableasmarkup'){
+                this.handleFigurePopup(true, 'TE');
+            }else {
+                this.handleFigurePopup(true);
+            }
+            
         }
         else {
             let fullAssessment = checkFullElmAssessment(element);

@@ -97,12 +97,12 @@ class MetaDataPopUp extends React.Component {
 	}
 
     render() {
-        const { togglePopup } = this.props;
+        const { togglePopup, showAlfrescoEditPopupforTE } = this.props;
 		const { altText, longDescription, active } = this.state;
         return (
             <div className="model">
 				<div tabIndex="0" className="model-popup">
-					<div className="figure-popup">
+					<div className={`figure-popup ${showAlfrescoEditPopupforTE ? 'editPopupforTE' : ''}`}>
 						<div className="dialog-button">
 						    <span className="edit-metadata">Edit Alfresco Metadata</span>
 						</div>
