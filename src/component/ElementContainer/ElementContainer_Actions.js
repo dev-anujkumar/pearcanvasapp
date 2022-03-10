@@ -14,8 +14,7 @@ import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowH
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
-import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
-import { getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
+import { getAutoNumberedElementsOnSlate, getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
@@ -524,53 +523,25 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 shObject.interactivedata[type] = sectionOfSH;
             }   
         }
-        let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
-        const slateAncestorData = getState().appStore.currentSlateAncestorData;
+        let autoNumberedElementsObj = getState().autoNumberReducer?.autoNumberedElements;
+        const slateAncestorData = getState().appStore?.currentSlateAncestorData;
+        const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
+        const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
         let elementsList = {};
         if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
             let slateFigures = [];
             let elementObj = {};
             if (type2BAdded === 'CONTAINER' || type2BAdded === 'WORKED_EXAMPLE') {
-                slateFigures = await getAsideElementsWrtKey(newBodymatter, 'element-aside', slateFigures);
+                slateFigures = await getAsideElementsWrtKey(newParentData[slateManifestUrn].contents.bodymatter, 'element-aside', slateFigures);
             } else {
-                slateFigures = await getAutoNumberedElementsOnSlate(newParentData[config.slateManifestURN], { dispatch });
+                slateFigures = await getAutoNumberedElementsOnSlate(newParentData[slateManifestUrn], { dispatch });
             }
-            
             elementObj = slateFigures?.find(element => element.contentUrn === createdElemData.data.contentUrn);
             const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
             const labelType = createdElemData?.data?.displayedlabel;
             elementsList = autoNumberedElementsObj[listType];
             handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
         }
-        /* let condition;
-        if (newIndex.length == 4) {
-            condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
-            if (condition.versionUrn == elementId) {
-                    newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } else if (newIndex.length == 5) {
-            condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
-            if (condition.versionUrn == elementId) {
-                    newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } else if (newIndex.length == 6) {
-            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]];
-            //condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
-            if (condition.versionUrn == elementId) {
-                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } else if (newIndex.length == 7) {
-            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
-            if (condition.versionUrn == elementId) {
-                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        }
-        else{
-            condition =  newBodymatter[newIndex[0]]
-            if(condition.versionUrn == elementId){
-                newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } */
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
 
         if (config.tcmStatus) {
@@ -887,6 +858,8 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             displayedlabel = dataArr[0];
         } else if (!(previousData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
             displayedlabel = getValueOfLabel(previousData?.subtype);
+        } else {
+            displayedlabel = previousData?.displayedlabel;
         }
         updatedElement = {
             ...updatedElement,

@@ -8,7 +8,7 @@ import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
-import { checkHTMLdataInsideString } from '../../constants/utility';
+import { checkHTMLdataInsideString, hasReviewerRole } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, SIDEBAR, WORKED_EXAMPLE } from '../FigureHeader/AutoNumberConstants';
 import { labelHtmlData } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -62,7 +62,8 @@ export const ContainerHeader = (props) => {
             showLabelField: true,
             showNumberField: true,
             currentLabelValue: getLabelNumberFieldValue(props.model, elementLabelValue, labelNumberSetting),
-            currentNumberValue: ''
+            currentNumberValue: '',
+            initiateBlurCall: false
         }
     );
 
@@ -98,7 +99,7 @@ export const ContainerHeader = (props) => {
         }
     }, [])
     useEffect(() => {
-        if (props.activeElement.elementId === props.model.id && props?.autoNumberOption?.entityUrn === props?.model?.contentUrn) {
+        if ((props.activeElement.elementId === props.model.id && props?.autoNumberOption?.entityUrn === props?.model?.contentUrn) || (props.activeElement.elementId === props.model.id && state.initiateBlurCall)) {
             props.handleBlur();
         }
     }, [props.autoNumberOption]);
@@ -137,6 +138,9 @@ export const ContainerHeader = (props) => {
         if (oldSettings !== newSettings) {
             setState({ labelNumberSetting: newSettings });
             props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: newSettings});
+            if (newSettings === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) {
+                setState({ elementLabelValue: props.model?.displayedlabel, currentLabelValue: props.model?.displayedlabel });
+            }
             if (newSettings === AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 setState({ showLabelField: false, showNumberField: false });
             } else {
@@ -157,20 +161,28 @@ export const ContainerHeader = (props) => {
     const changeLabelValue = (oldValue, newValue) => {
         handleCloseDropDrown();
         if (oldValue !== newValue) {
+            props.updateAutoNumberingDropdownForCompare({ entityUrn: props.model.contentUrn, option: state.labelNumberSetting });
             setState({ elementLabelValue: newValue });
             document.getElementById(`cypress-${props.index}-t1`).innerHTML = `${newValue}`;
-            props.handleBlur();
+            setState({ initiateBlurCall: true });
         }
     }
 
     const onFigureHeaderFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
+        let lastIndex = id && id.toString().split('-');
         if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
         } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
             labelElement?.nextElementSibling?.classList?.add('transition-none');
+            if (lastIndex[lastIndex.length - 1] == 't1') {
+                labelElement?.nextElementSibling?.classList?.remove('floating-label');
+            } else if (lastIndex[lastIndex.length - 1] == 't2') {
+                labelElement?.nextElementSibling?.classList?.remove('floating-number');
+            }
+        } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
+            labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
-
         props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: state.labelNumberSetting});
     }
 
@@ -179,13 +191,14 @@ export const ContainerHeader = (props) => {
         if (labelElement?.nextElementSibling) {
             labelElement?.nextElementSibling?.classList?.remove('label-color-change');
         }
-        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+        let lastIndex = id && id.toString().split('-');
+        if (labelHtmlData.includes(labelElement?.innerHTML)) {
             labelElement?.nextElementSibling?.classList?.remove('transition-none');
-            if (id === '0-0') {
+            if (lastIndex[lastIndex.length - 1] == 't1') {
                 labelElement?.nextElementSibling?.classList?.add('floating-label');
-            } else {
+            } else if (lastIndex[lastIndex.length - 1] == 't2') {
                 labelElement?.nextElementSibling?.classList?.add('floating-number');
-            }
+            } 
         }
     }
 
@@ -193,7 +206,7 @@ export const ContainerHeader = (props) => {
         if (fieldType == 'Label Name') {
             setState({ currentLabelValue: evt.target.innerText?.replace(/&nbsp;/g, ' ')} );
         } else {
-            if (evt?.target?.innerText?.length > 9) {
+            if (evt?.target?.innerText?.length > 9 && state.labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
                 return false;
             }
             let isnum = true;
@@ -225,8 +238,8 @@ export const ContainerHeader = (props) => {
         <div className="asideHeader">
             <header className="figure-header new-figure-image-header">
                 <div className='figure-label-number-field'>
-                    <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number1 Settings</span>
-                    <div className="figure-label-number" onClick={handleSettingsDropdown}>
+                    <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number Settings</span>
+                    <div className="figure-label-number" onClick={!hasReviewerRole() && handleSettingsDropdown}>
                         <span>{labelNumberSetting}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                     </div>
@@ -244,7 +257,7 @@ export const ContainerHeader = (props) => {
                 }
                 {removeLabelCondition && showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && <div className='figure-label-field'>
                     <span className={`label ${labelDropDown ? 'active' : ''}`}>Label</span>
-                    <div className="figure-label" onClick={handleLabelDropdown}>
+                    <div className="figure-label" onClick={!hasReviewerRole() && handleLabelDropdown}>
                         <span>{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                         {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&

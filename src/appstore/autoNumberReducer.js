@@ -9,7 +9,8 @@ import {
     UPDATE_AUTONUMBERING_DROPDOWN_VALUE,
     UPDATE_POPUP_PARENT_SLATE,
     GET_SLATE_LIST_IN_CONTAINER,
-    UPDATE_AUTONUMBER_MAPPER_KEYS
+    UPDATE_AUTONUMBER_MAPPER_KEYS,
+    UPDATE_CHAPTER_POPUP_DATA
 } from '../constants/Action_Constants.js';
 
 const INITIAL_STATE = {
@@ -85,9 +86,7 @@ const INITIAL_STATE = {
         'workedExamplesList': 'workedExampleIndex',
         'exhibitsList': 'exhibitsIndex'
     },
-    containerLists: ['asidesList', 'workedExamplesList'],
-    nonContainerLists: ['imagesList', 'tablesList', 'equationsList', 'audiosList', 'videosList', 'interactiveList', 'exhibitsList']
-
+    popupElementsData: []
 }
 
 const INITIAL_ACTION = {
@@ -169,6 +168,22 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
                 autoNumber_ElementTypeKey: action.payload.autoNumber_ElementTypeKey,
                 autoNumber_response_ElementType_mapper: action.payload.autoNumber_response_ElementType_mapper
             }
+            case UPDATE_CHAPTER_POPUP_DATA:
+                if (action.key) {
+                    let popupElementsData = state.popupElementsData;
+                    popupElementsData = popupElementsData.filter(function (data) {
+                        return data.versionUrn !== action.key
+                    })
+                    return {
+                        ...state,
+                        popupElementsData: [...popupElementsData, action.payload]
+                    }
+                } else {
+                    return {
+                        ...state,
+                        popupElementsData: []
+                    }
+                }
         default:
             return state
     }

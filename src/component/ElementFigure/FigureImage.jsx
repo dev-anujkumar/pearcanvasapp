@@ -100,8 +100,8 @@ class FigureImage extends Component {
             this.setState({showingListIndex: 0});
             console.log("figure image - childNode value", this.labelListRef.current.childNodes[0]);
             this.labelListRef.current.childNodes[0].focus();
-            this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown);
-            console.log("figure image - after adding  event listener ", this.labelListRef.current);
+            this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown)
+            this.labelListRef.current.addEventListener('click', this.handleLabelKeyDown)
         }
     }
 
@@ -111,8 +111,12 @@ class FigureImage extends Component {
             if(event.keyCode === 13) {
                 this.labelListRef.current.childNodes[this.state.showingListIndex].click();
                 this.labelRef.current.focus();
+            } else if(event.button == 0){
+                const nodeValue = (event.target?.attributes[1]?.nodeValue)
+                this.labelListRef?.current?.childNodes[nodeValue]?.click();
+                this.labelRef?.current?.focus();
+                this.setState({showingListIndex: nodeValue});
             }
-
             else if (event.keyCode === 40) {
                 console.log("40-out", this.state.showingListIndex);
                 if(this.labelListRef.current.childNodes[this.state.showingListIndex + 1]) {
@@ -127,8 +131,10 @@ class FigureImage extends Component {
                 
                 }
             }
+            if(event.button != 0){
             event.stopPropagation();
             event.preventDefault();
+            }
         }
     }
 
@@ -604,8 +610,8 @@ class FigureImage extends Component {
                                             <KeyboardWrapper index={`${this.props.index}-label-1`} enable={this.isEnableKeyboard()} focus>
                                                 <div ref={this.labelRef} tabIndex={0} onKeyDown={(e) => {
                                                     if(this.isEnableKeyboard()) {
-                                                        const key = e.which || e.keyCode;
-                                                        if(key === 13) {
+                                                        const key = e.which || e.keyCode || e.button;
+                                                        if(key === 13 || key === 0) {
                                                             this.handleFigureDropdown();
                                                         }
                                                         if(key === 38) {
@@ -626,7 +632,7 @@ class FigureImage extends Component {
                                                 <ul ref={this.labelListRef}>
                                                     {this.state.figureLabelData.map((label, i) => {
                                                         return (
-                                                            <li tabIndex={0} key={i} onClick={() => {
+                                                            <li tabIndex={0} currentIndex={i} key={i} onClick={() => {
                                                                 this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
                                                         )
                                                     })}
