@@ -317,93 +317,12 @@ class PopUp extends React.Component {
 
     renderDialogText = (props) => {
         if(props.showAlfrescoExpansionPopup){
-            let imgArray = [
-                {
-                    "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/6b860521-9132-4051-b6cc-dfa020866864/Chrysanthemum.jpg",
-                    "imgId": "imageAssetContent:6b860521-9132-4051-b6cc-dfa020866864:6550"
-                },
-                {
-                    "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg",
-                    "imgId": "imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:2680"
-                },
-                {
-                    "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/ae7bb635-be51-4729-bafe-076ed3383696/car1.jpg",
-                    "imgId": "imageAssetContent:ae7bb635-be51-4729-bafe-076ed3383696:2604"
-                },
-                {
-                    "imgSrc": 'https://cite-media-stg.pearson.com/legacy_paths/48d0bd99-0d77-45e7-9fce-0a8e19bf1390/b.m.pfi.le.bmp', 
-                    "imgId": 'imageAssetContent:48d0bd99-0d77-45e7-9fce-0a8e19bf1390:7734'
-                },
-                // {
-                //     "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg",
-                //     "imgId": "imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:2680"
-                // },
-                // {
-                //     "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/ae7bb635-be51-4729-bafe-076ed3383696/car1.jpg",
-                //     "imgId": "imageAssetContent:ae7bb635-be51-4729-bafe-076ed3383696:2604"
-                // },
-                // {
-                //     "imgSrc": 'https://cite-media-stg.pearson.com/legacy_paths/48d0bd99-0d77-45e7-9fce-0a8e19bf1390/b.m.pfi.le.bmp', 
-                //     "imgId": 'imageAssetContent:48d0bd99-0d77-45e7-9fce-0a8e19bf1390:7734'
-                // },
-                // {
-                //     "imgSrc": 'https://cite-media-stg.pearson.com/legacy_paths/48d0bd99-0d77-45e7-9fce-0a8e19bf1390/b.m.pfi.le.bmp', 
-                //     "imgId": 'imageAssetContent:48d0bd99-0d77-45e7-9fce-0a8e19bf1390:7734'
-                // },
-                // {
-                //     "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg",
-                //     "imgId": "imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:2680"
-                // },
-                // {
-                //     "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/ae7bb635-be51-4729-bafe-076ed3383696/car1.jpg",
-                //     "imgId": "imageAssetContent:ae7bb635-be51-4729-bafe-076ed3383696:2604"
-                // },
-                // {
-                //     "imgSrc": 'https://cite-media-stg.pearson.com/legacy_paths/48d0bd99-0d77-45e7-9fce-0a8e19bf1390/b.m.pfi.le.bmp', 
-                //     "imgId": 'imageAssetContent:48d0bd99-0d77-45e7-9fce-0a8e19bf1390:7734'
-                // },
-                // {
-                //     "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg",
-                //     "imgId": "imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:2680"
-                // },
-                // {
-                //     "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/ae7bb635-be51-4729-bafe-076ed3383696/car1.jpg",
-                //     "imgId": "imageAssetContent:ae7bb635-be51-4729-bafe-076ed3383696:2604"
-                // },
-                // {
-                //     "imgSrc": 'https://cite-media-stg.pearson.com/legacy_paths/48d0bd99-0d77-45e7-9fce-0a8e19bf1390/b.m.pfi.le.bmp', 
-                //     "imgId": 'imageAssetContent:48d0bd99-0d77-45e7-9fce-0a8e19bf1390:7734'
-                // },
-                // {
-                //     "imgSrc": 'https://cite-media-stg.pearson.com/legacy_paths/48d0bd99-0d77-45e7-9fce-0a8e19bf1390/b.m.pfi.le.bmp', 
-                //     "imgId": 'imageAssetContent:48d0bd99-0d77-45e7-9fce-0a8e19bf1390:7734'
-                // },
-                // {
-                //     "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg",
-                //     "imgId": "imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:2680"
-                // },
-                // {
-                //     "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/ae7bb635-be51-4729-bafe-076ed3383696/car1.jpg",
-                //     "imgId": "imageAssetContent:ae7bb635-be51-4729-bafe-076ed3383696:2604"
-                // },
-                // {
-                //     "imgSrc": 'https://cite-media-stg.pearson.com/legacy_paths/48d0bd99-0d77-45e7-9fce-0a8e19bf1390/b.m.pfi.le.bmp', 
-                //     "imgId": 'imageAssetContent:48d0bd99-0d77-45e7-9fce-0a8e19bf1390:7734'
-                // },
-            
-            ]
-            let imgList = imgArray.map((image) => (
-                // <div className='imageContainer'>
-                    <img className='imageContainer' src={image.imgSrc} id={image.imgId} />     
-                // </div>
-                ))
-
             return (
                 <> 
-                   <div className='tableAlfrescoPopupHeader'>Select an image</div>
-                    <div className="Please-select-an-image">Please select an image to open it in alfresco for editing in a different tab on your browser</div>
+                   <div className='tableAlfrescoPopupHeader'>{props.alfrescoExpansionMetaData.headingPart}</div>
+                    <div className="Please-select-an-image">{props.alfrescoExpansionMetaData.normalTextPart}</div>
                     <div className='tableElement-img-container'>
-                        {imgList}
+                        {props.alfrescoExpansionMetaData.imgList}
                     </div>
                     
                 </>
@@ -576,13 +495,14 @@ class PopUp extends React.Component {
     }
 
     render() {
-        const { active, assessmentClass, isGlossary, isTCMCanvasPopup } = this.props;
+        const { active, assessmentClass, isGlossary, isTCMCanvasPopup, alfrescoExpansionMetaData } = this.props;
+    
         return (
             <div className="model">
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.showAlfrescoExpansionPopup ? `modal-content alfresco-popup` :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : ''}>
+                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.showAlfrescoExpansionPopup ? alfrescoExpansionMetaData.imgList.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : ''}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
