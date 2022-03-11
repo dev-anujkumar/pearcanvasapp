@@ -2132,6 +2132,11 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
+        let alfrescoExpansionData = {
+            headerText : "Select an Image",
+            normalText: "Please select an image to open it in Alfresco for editing in a different tab on your browser",
+            renderImages : this.props.tableElementAssetData
+        }
         let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton');
         let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton');
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
@@ -2223,7 +2228,7 @@ class ElementContainer extends Component {
                         OwnersDeleteDialogText={OWNERS_ELM_DELETE_DIALOG_TEXT}
                         showDeleteElemPopup={this.state.showDeleteElemPopup}
                         alfrescoExpansionPopup={this.state.showAlfrescoExpansionPopup}
-                        alfrescoExpansionMetaData={this.state.alfrescoExpansionMetaData}
+                        alfrescoExpansionMetaData={alfrescoExpansionData}
                         sectionBreak={this.state.sectionBreak}
                         deleteElement={this.deleteElement}
                         isAddComment={this.state.showAlfrescoExpansionPopup ? false : true}
@@ -2558,7 +2563,7 @@ class ElementContainer extends Component {
         this.props.prepareImageDataFromTable(element);
         this.setState({
             popup,
-            showAlfrescoExpansionPopup: true,
+            showAlfrescoExpansionPopup: true
         });
     }  
 

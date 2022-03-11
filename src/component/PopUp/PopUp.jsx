@@ -122,7 +122,7 @@ class PopUp extends React.Component {
                 </div>
             )
         } else
-            if(props.showAlfrescoExpansionPopup){
+            if(props.alfrescoExpansionPopup){
                 return null;
             }
             if (props.showDeleteElemPopup) {
@@ -257,7 +257,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showAlfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup) {
+        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -316,13 +316,20 @@ class PopUp extends React.Component {
     */
 
     renderDialogText = (props) => {
-        if(props.showAlfrescoExpansionPopup){
+        if(props.alfrescoExpansionPopup){
+            let imgList = props.alfrescoExpansionMetaData.renderImages.map((image) => (
+                    <img 
+                      className='imageContainer' 
+                      src={image.imgSrc} 
+                      id={image.imgId}
+                    />     
+                ))
             return (
                 <> 
-                   <div className='tableAlfrescoPopupHeader'>{props.alfrescoExpansionMetaData.headingPart}</div>
-                    <div className="Please-select-an-image">{props.alfrescoExpansionMetaData.normalTextPart}</div>
+                   <div className='tableAlfrescoPopupHeader'>{props.alfrescoExpansionMetaData.headerText}</div>
+                    <div className="Please-select-an-image">{props.alfrescoExpansionMetaData.normalText}</div>
                     <div className='tableElement-img-container'>
-                        {props.alfrescoExpansionMetaData.imgList}
+                        {imgList}
                     </div>
                     
                 </>
@@ -496,13 +503,12 @@ class PopUp extends React.Component {
 
     render() {
         const { active, assessmentClass, isGlossary, isTCMCanvasPopup, alfrescoExpansionMetaData } = this.props;
-    
         return (
             <div className="model">
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.showAlfrescoExpansionPopup ? alfrescoExpansionMetaData.imgList.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : ''}>
+                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : ''}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
