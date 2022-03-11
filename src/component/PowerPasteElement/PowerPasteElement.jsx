@@ -90,6 +90,7 @@ export const pastePostProcess = (data, props) => {
     const childNodes = data.node.children;
     const elements = [];
     createPastedElements(childNodes, elements);
+    
      /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
       const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
       createPastedElements(childElements, elements);
