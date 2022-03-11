@@ -330,6 +330,7 @@ ajax.send = function (url, callback, method, data, contentType, sessionCookieNam
         }
     };
     x.setRequestHeader('Content-type', contentType);
+     //x.setRequestHeader('Access-Control-Allow-Origin', '*');
     if (tokenId && sessionCookieName) {
         x.setRequestHeader(sessionCookieName, tokenId);
     }

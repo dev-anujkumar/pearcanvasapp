@@ -236,7 +236,6 @@ class Interactive extends React.Component {
             figureData.posterimage = thumbnailData?.posterImage;
             figureData.alttext = thumbnailData?.alttext;
             thumbnailImage = thumbnailData?.posterImage?.path;
-        // }
         this.setState({
             itemID: figureData.interactiveid,
             interactiveTitle: figureData.interactivetitle,
@@ -443,7 +442,6 @@ class Interactive extends React.Component {
                 figureData.posterimage = thumbnailData?.posterImage;
                 figureData.alttext = thumbnailData?.alttext;
                 thumbnailImage = thumbnailData?.posterImage?.path;
-            // }
             this.setState({
                 itemID: pufObj.id,
                 interactiveTitle: pufObj.title,

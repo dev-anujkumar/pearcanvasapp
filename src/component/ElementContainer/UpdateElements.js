@@ -624,6 +624,10 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     dataToSend.figuredata.elementdata.assessmentitemid = assessmentItemId ? assessmentItemId : "";
     dataToSend.figuredata.elementdata.assessmentitemtitle = assessmentItemTitle ? assessmentItemTitle : "";
 
+
+    // dataToSend.figuredata.id = getAsid ? getAsid : "";   //PCAT-6792 fixes
+    // dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
+
     /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
     if (previousElementData && previousElementData.figuredata && (previousElementData.figuredata.id || previousElementData.figuredata.id == "")) {
         delete previousElementData.figuredata.id;
