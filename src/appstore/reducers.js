@@ -123,7 +123,7 @@ const INITIAL_STATE = {
     asideTitleData: [],
     isCypressPlusEnabled:false,
     isJoinedPdfSlate: false,
-    tableElementAssetData: {}
+    tableElementAssetData: []
 };
 
 const INITIAL_ACTION = {

@@ -1005,7 +1005,6 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
  */
 export const prepareImageDataFromTable = element => async (dispatch) => {
     let figureData = element?.figuredata;
-    let tableImagesData = [];
     let imagesArrayOfObj = [];
     if(figureData?.tableasHTML && figureData?.tableasHTML !== ""){
         let tableHTML = figureData.tableasHTML;
@@ -1032,14 +1031,11 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
                 }
             }
         }
-        tableImagesData[element.contentUrn] = imagesArrayOfObj;        
-    }else if(!figureData.tableasHTML === undefined){
-        tableImagesData[element.contentUrn] = undefined;
     }
 
     dispatch({
         type: UPDATE_TABLE_ELEMENT_ASSET_DATA,
-        payload: tableImagesData
+        payload: imagesArrayOfObj
     })
 }
 
