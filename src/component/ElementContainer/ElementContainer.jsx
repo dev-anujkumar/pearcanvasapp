@@ -95,6 +95,7 @@ class ElementContainer extends Component {
             btnClassName: '',
             showDeleteElemPopup: false,
             showAlfrescoExpansionPopup: false,
+            alfrescoExpansionMetaData: {},
             showAlfrescoEditPopupforTE: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPaletteList: false,
@@ -2221,7 +2222,8 @@ class ElementContainer extends Component {
                         warningHeaderText={`Warning`}
                         OwnersDeleteDialogText={OWNERS_ELM_DELETE_DIALOG_TEXT}
                         showDeleteElemPopup={this.state.showDeleteElemPopup}
-                        showAlfrescoExpansionPopup={this.state.showAlfrescoExpansionPopup}
+                        alfrescoExpansionPopup={this.state.showAlfrescoExpansionPopup}
+                        alfrescoExpansionMetaData={this.state.alfrescoExpansionMetaData}
                         sectionBreak={this.state.sectionBreak}
                         deleteElement={this.deleteElement}
                         isAddComment={this.state.showAlfrescoExpansionPopup ? false : true}
@@ -2568,27 +2570,27 @@ class ElementContainer extends Component {
         if(this.props?.element?.figuretype === TABLE_ELEMENT){
             this.showAlfrescoExpansionPopup(e, true, element)
         }else{
-            let imageId
-        switch(this.props?.element?.figuretype){
-            case IMAGE:
+            let imageId;
+            switch(this.props?.element?.figuretype){
+             case IMAGE:
                 imageId=this.props?.element?.figuredata?.imageid
                 break;
-            case AUDIO :
+             case AUDIO :
                 imageId=this.props?.element?.figuredata?.audioid
                 break;
-            case VIDEO:
+             case VIDEO:
                 imageId=this.props?.element?.figuredata?.videoid
                 break;
-            case  INTERACTIVE:
+             case  INTERACTIVE:
                 imageId=this.props?.element?.figuredata?.interactiveid
                 break;
-            default: imageId=null
+             default: imageId=null
+            }
+            imageId = imageId.replace('urn:pearson:alfresco:', '');
+            const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
+            window.open(Url);
         }
-        imageId = imageId.replace('urn:pearson:alfresco:', '');
-        const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
-        window.open(Url);
-        }
-
+   
     }
 
     /**
@@ -2852,7 +2854,8 @@ const mapStateToProps = (state) => {
         spellCheckToggle: state.toolbarReducer.spellCheckToggle,
         cypressPlusProjectStatus: state.appStore.isCypressPlusEnabled,
         isJoinedPdfSlate: state.appStore.isJoinedPdfSlate,
-        figureDropdownData: state.appStore.figureDropdownData
+        figureDropdownData: state.appStore.figureDropdownData,
+        tableElementAssetData: state.appStore.tableElementAssetData
     }
 }
 

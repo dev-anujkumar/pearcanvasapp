@@ -33,12 +33,21 @@
   animation-duration: 0.8s;
 }
 
-.modal-content.alfresco-popup {
-  top: 34% !important;
+.modal-content.alfresco-short-popup {
+  top: 31% !important;
+  /* top: 51.5% !important; */
   width: 610px !important;
   min-height: 234px !important;
+
 }
 
+
+.modal-content.alfresco-long-popup {
+  top: 50% !important;
+  width: 610px !important;
+  min-height: 234px !important;
+
+}
 .tableAlfrescoPopupHeader {
   position: sticky;
   width: 121px;
@@ -509,7 +518,8 @@
   margin: 0;
   padding: 0;
   overflow-y: auto;
-  max-height: 340px;
+  /* height: 540px; */
+  max-height: 400px;
   overflow-x: hidden;
 
 }
@@ -523,7 +533,7 @@
 }
 
 .imageContainer:hover {
-  border: 2px solid green;
+  border: 2px solid #427ef5;
 }
 
 .figure-popup {
