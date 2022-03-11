@@ -5,7 +5,8 @@ import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS,
+         UPDATE_TABLE_ELEMENT_ASSET_DATA } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
@@ -14,7 +15,7 @@ import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowH
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
-import { getAutoNumberedElementsOnSlate, getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
+import { getAutoNumberedElementsOnSlate, getAsideElementsWrtKey, getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
@@ -396,10 +397,6 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         } else if (newParentData[config.slateManifestURN].status === 'approved') {
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
-        
-        console.log('newParentData line no 392: ',newParentData)
-        // tableImagesArray = findAllImagesInTable(newParentData)
-        findAllImagesInTable(newParentData)
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
@@ -410,61 +407,6 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         showError(error, dispatch, "getTableEditorData Api fail")
     })
 }
-
-
-const findAllImagesInTable = (newParentData) => {
-   
-
-    let elemBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-    let tableImagesPerElement = {};
-    let finalImagesArray = [];
-    console.log('newParentData line no 408: ',elemBodymatter)
-    
-    for(let i=0; i<elemBodymatter.length;i++){
-        
-        console.log('Inside for loop',i)
-
-        if(elemBodymatter[i].figuretype == "tableasmarkup" && elemBodymatter[i].figuredata.tableasHTML !== undefined){
-            
-            let imagesArrayOfObj = [];
-            let tableHTMLDiv = elemBodymatter[i].figuredata.tableasHTML;
-            let tableElementImagesDiv = document.createElement('div');
-            tableElementImagesDiv.innerHTML = tableHTMLDiv;
-            let spanList = tableElementImagesDiv.children[0].childNodes;
-            document.body.appendChild(tableElementImagesDiv);
-            
-            for(let i=0;i<spanList[0].childNodes.length;i++){
-                console.log(`Getting images from ${i+1}st row`)
-                for(let j=0; j<spanList[0].childNodes[i].cells.length; j++){
-                   console.log(`Getting images from ${j+1}st column inside ${i+1}st row`)
-                   
-                   if(Object.keys(spanList[0].childNodes[i].cells[j].childNodes[0].dataset).length !== 0){
-                       console.log('complete img element : ',spanList[0].childNodes[i].cells[j].childNodes[0])
-                       let tempImgObj = {};
-                       console.log('dataset for img : ',spanList[0].childNodes[i].cells[j].childNodes[0].dataset)
-                       tempImgObj['imgSrc'] = spanList[0].childNodes[i].cells[j].childNodes[0].dataset.mceSrc;
-                       tempImgObj['imgId'] = spanList[0].childNodes[i].cells[j].childNodes[0].dataset.id;
-                       imagesArrayOfObj.push(tempImgObj)
-                   }
-                   
-                   
-                }
-            }
-           
-            tableImagesPerElement[elemBodymatter[i].contentUrn] = imagesArrayOfObj;
-            document.body.removeChild(tableElementImagesDiv);
-            
-        }else if(elemBodymatter[i].figuretype == "tableasmarkup" && elemBodymatter[i].figuredata.tableasHTML === undefined){
-            tableImagesPerElement[elemBodymatter[i].contentUrn] = undefined;
-        }
-   
-    }
-
-    console.log('tableImagesPerElement : ',tableImagesPerElement)
-    
-
-}
-
 const updateTableEditorData = (elementId, tableData, slateBodyMatter, sectionType) => {
 
     return slateBodyMatter = slateBodyMatter.map(elm => {
@@ -1048,4 +990,82 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         config.isSavingElement = false
         console.error(" Error >> ", err)
     })
+}
+
+/**
+ * This function will prepare data for "Expand in alfresco POP-UP" and update the redux store
+ * Format: 
+ * {
+ *   imgSrc: "",
+ *   imgId : "",
+ *   alttext : "",
+ *    longdescription : ""   
+ * }
+ * @param {*} element Table element Object
+ */
+export const prepareImageDataFromTable = element => async (dispatch) => {
+    let figureData = element?.figuredata;
+    let tableImagesData = [];
+    let imagesArrayOfObj = [];
+    if(figureData?.tableasHTML && figureData?.tableasHTML !== ""){
+        let tableHTML = figureData.tableasHTML;
+        let dummyDiv = document.createElement('div');
+        dummyDiv.innerHTML = tableHTML;
+        let spanList = dummyDiv.children[0].childNodes;
+        let tableRow = spanList[0].childNodes;
+        for(let i=0;i<tableRow.length;i++){
+            let cells = tableRow[i].childNodes;
+            for(let j=0; j<cells.length; j++){
+                let dataSet = cells[j].childNodes[0].dataset;
+                if(Object.keys(dataSet).length > 0){
+                   let tempImgObj = {};
+                   if(!dataSet.alttext || !dataSet.longdescription){
+                       let data = await getAltTextLongDesc(dataSet.id);
+                       tempImgObj = { ...data }
+                   } else {
+                        tempImgObj.alttext = dataSet.alttext;
+                        tempImgObj.longdescription = dataSet.longdescription;
+                   }
+                   tempImgObj['imgSrc'] = dataSet.mceSrc;
+                   tempImgObj['imgId'] = dataSet.id;
+                   imagesArrayOfObj.push(tempImgObj);
+                }
+            }
+        }
+        tableImagesData[element.contentUrn] = imagesArrayOfObj;        
+    }else if(!figureData.tableasHTML === undefined){
+        tableImagesData[element.contentUrn] = undefined;
+    }
+
+    dispatch({
+        type: UPDATE_TABLE_ELEMENT_ASSET_DATA,
+        payload: tableImagesData
+    })
+}
+
+const getAltTextLongDesc = async (id) => {
+    let imgId = id.substring(id.indexOf(":") + 1, id.lastIndexOf(":"));
+    try{
+        let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${imgId}`;
+        let response = await axios.get(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'ApiKey': config.CMDS_APIKEY,
+                    'Content-Type': 'application/json',
+                    'myCloudProxySession': config.myCloudProxySession
+                }
+            });
+        const {properties} = response.data.entry;
+        return { 
+            altText : properties["cplg:longDescription"],
+            longdescription: properties["cplg:altText"]
+        }
+    } catch(error){
+        console.log(" error: ", error)
+        return { 
+            altText : "",
+            longdescription: ""
+        }
+    }
 }

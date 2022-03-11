@@ -16,7 +16,8 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
+         prepareImageDataFromTable } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
@@ -2208,8 +2209,8 @@ class ElementContainer extends Component {
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
-                        {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
-                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e, this.props.element)} />}
+                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e, this.props.element)} />}
                         {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
                     </div> : ''}
                     {this.state.popup && <PopUp
@@ -2550,46 +2551,24 @@ class ElementContainer extends Component {
         }
     }
 
-
-    showAlfrescoExpansionPopup = (e, popup, sectionBreak) => {
-        console.log('Inside showAlfrescoExpandPopup')
+    showAlfrescoExpansionPopup = (e, popup, element) => {
         e.stopPropagation();
         this.props.showBlocker(true);
         showTocBlocker();
+        this.props.prepareImageDataFromTable(element);
         this.setState({
             popup,
             showAlfrescoExpansionPopup: true,
-            sectionBreak: sectionBreak ? sectionBreak : null
         });
-        
-    }
-        // console.log('Inside showAlfrescoExpandPopup')
-        // return (
-        //     <PopUp dialogText='Select an Image'
-        //         rows="1"
-        //         cols="1"
-        //         active={true}
-        //         // togglePopup={this.toggleCustomPopup}
-        //         // isLockPopup={true}
-        //         isInputDisabled={true}
-        //         // slateLockClass="lock-message"
-        //         // withInputBox={true}
-        //         lockForTOC={false}
-        //     />
-        // )
-    
+    }  
 
     /**
      * @description - This function is used to open alfresco metadata in new window.
      */
 
-    handleAlfrescoMetadataWindow = (e) => {
-        
-        // window.alert(this.props?.element?.figuretype)
-        
+    handleAlfrescoMetadataWindow = (e, element) => {       
         if(this.props?.element?.figuretype === TABLE_ELEMENT){
-            console.log('Inside if condition')
-            this.showAlfrescoExpansionPopup(e, true)
+            this.showAlfrescoExpansionPopup(e, true, element)
         }else{
             let imageId
         switch(this.props?.element?.figuretype){
@@ -2611,7 +2590,7 @@ class ElementContainer extends Component {
         const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
         window.open(Url);
         }
-        
+
     }
 
     /**
@@ -2822,6 +2801,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateAutoNumberSequenceOnDelete: (parentIndex, contentUrn, numberedElements) => {
             dispatch(updateAutoNumberSequenceOnDelete(parentIndex, contentUrn, numberedElements))
+        },
+        prepareImageDataFromTable: (element) => {
+            dispatch(prepareImageDataFromTable(element));
         }
     }
 }

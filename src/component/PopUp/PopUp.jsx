@@ -316,7 +316,6 @@ class PopUp extends React.Component {
     */
 
     renderDialogText = (props) => {
-        console.log('props.showAlfrescoExpansionPopup : ',props.showAlfrescoExpansionPopup)
         if(props.showAlfrescoExpansionPopup){
             return (
                 <>
