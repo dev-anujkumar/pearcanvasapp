@@ -2229,6 +2229,7 @@ class ElementContainer extends Component {
                         showDeleteElemPopup={this.state.showDeleteElemPopup}
                         alfrescoExpansionPopup={this.state.showAlfrescoExpansionPopup}
                         alfrescoExpansionMetaData={alfrescoExpansionData}
+                        openInNewWindow={this.openInNewWindow}
                         sectionBreak={this.state.sectionBreak}
                         deleteElement={this.deleteElement}
                         isAddComment={this.state.showAlfrescoExpansionPopup ? false : true}
@@ -2565,7 +2566,15 @@ class ElementContainer extends Component {
             popup,
             showAlfrescoExpansionPopup: true
         });
-    }  
+    } 
+    /**
+     * This function will take image id and open it in the Alfresco
+     * @param {*} id 
+     */
+    openInNewWindow(id){
+        const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${id}`
+        window.open(Url);
+    }
 
     /**
      * @description - This function is used to open alfresco metadata in new window.
@@ -2592,8 +2601,7 @@ class ElementContainer extends Component {
              default: imageId=null
             }
             imageId = imageId.replace('urn:pearson:alfresco:', '');
-            const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
-            window.open(Url);
+            this.openInNewWindow(imageId)
         }
    
     }

@@ -109,6 +109,10 @@ class PopUp extends React.Component {
         })
     }
 
+    processImageID = (imgId) => {
+        let id = imgId.substring(imgId.indexOf(":") + 1, imgId.lastIndexOf(":"));
+        this.props.openInNewWindow(id)
+    }
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
     * @param {event} 
@@ -322,6 +326,7 @@ class PopUp extends React.Component {
                       className='imageContainer' 
                       src={image.imgSrc} 
                       id={image.imgId}
+                      onClick={() => this.processImageID(image.imgId)}
                     />     
                 ))
             return (
