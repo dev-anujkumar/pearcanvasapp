@@ -188,6 +188,83 @@ describe('Testing Figure image component', () => {
             expect(component.find('.divImage50TextMathImage .figureImage50TextMathImage .image50TextMathImage')).toHaveLength(1)
         })
     });
+    it('changeFigureLabel case if', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: 'test'
+            }
+        }
+        let props = {
+            model:figureImage50TextElementWithData,
+            index: 1,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            handleBlur: function () { },
+            permissions: ['add_multimedia_via_alfresco'],
+            element: {
+                figuretype:['image','table','mathImage','authoredtext'],
+                figuredata: {
+                    hasOwnProperty: jest.fn(()=> true),
+                    path:'test path',
+                    interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                    interactivetype:'3rd-party',
+                    posterimage:{
+                        imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                        path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                     },
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+            }
+        }
+        const component1 = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
+        const FigureImage1 = component1.find('FigureImage').instance();
+        FigureImage1.changeFigureLabel('Table', 'Figure');
+        let instance1 = component1.instance();
+        expect(instance1).toBeDefined();
+        component1.find('.figure-label').simulate('click');
+    });
+    it('changeFigureLabel case else', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: ''
+            }
+        }
+        let props = {
+            model:figureImage50TextElementWithData,
+            handleBlur:jest.fn(),
+            index: 1,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            permissions: ['add_multimedia_via_alfresco'],
+            element: {
+                figuretype:['image','table','mathImage','authoredtext'],
+                figuredata: {
+                    hasOwnProperty: jest.fn(()=> true),
+                    path:'test path',
+                    interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                    interactivetype:'3rd-party',
+                    posterimage:{
+                        imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                        path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                     },
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+            }
+        }
+        const component = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
+        const FigureImage1 = component.find('FigureImage').instance();
+        FigureImage1.changeFigureLabel('');
+        let instance = component.instance();
+        expect(instance).toBeDefined();
+    });
     describe('Testing Element figure - handleC2MediaClick Functions', () => {
         let type = "figure";
         let props = {
@@ -420,9 +497,9 @@ describe('Testing Figure image component', () => {
             jest.spyOn(elementFigureInstance, 'deleteFigureResource')
             elementFigureInstance.deleteFigureResource();
         })
-        xit('Test handleFigureDropdown', () => {
+        it('Test handleFigureDropdown', () => {
             jest.spyOn(elementFigureInstance, 'handleFigureDropdown')
-            elementFigureInstance.handleFigureDropdown();
+            elementFigureInstance.handleFigureDropdown('active');
         })
         it('Test onFigureImageFieldFocus', () => {
             jest.spyOn(elementFigureInstance, 'onFigureImageFieldFocus')

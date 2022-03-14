@@ -83,6 +83,9 @@ export const getImagesInsideSlates = async (bodyMatter, numberedElements = [], p
                     case containerElements.MANIFEST:
                         await getImagesInsideSlates(element?.contents?.bodymatter, numberedElements, [...element.indexPos]);
                         break;
+                    case containerElements.GROUP:
+                        await getImagesInsideSlates(element?.groupdata?.bodymatter, numberedElements, [...element.indexPos]);
+                        break;
                 }
             }
         }
@@ -194,8 +197,8 @@ export const containerBodyMatter = async (container) => {
             }
             dataToReturn = showHideData;
             break;
-        case containerElements.GROUP:
-            dataToReturn = container?.groupdata?.bodymatter ?? []
+        case containerElements.MULTI_COLUMN:
+            dataToReturn = container?.groupeddata?.bodymatter ?? []
             break;
         case containerElements.ASIDE:
             dataToReturn = container?.elementdata?.bodymatter ?? []

@@ -75,6 +75,7 @@ import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants"
 import { getOverridedNumberValue, getContainerEntityUrn, getNumberData, updateAutonumberingOnElementTypeUpdate, updateAutonumberingKeysInStore, setAutonumberingValuesForPayload, updateAutonumberingOnOverridedCase, validateLabelNumberSetting, generateDropdownDataForFigures, generateDropdownDataForContainers, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
+import { getSlateLevelData, updateChapterPopupData } from '../FigureHeader/AutoNumberActions';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumber_ElementSubTypeToCeateKeysMapper, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes';
 import { checkHTMLdataInsideString } from '../../constants/utility';
@@ -418,7 +419,7 @@ class ElementContainer extends Component {
                 labeleHTML = previousElementData.displayedlabel;
             }
             isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? labeleHTML !== previousElementData?.manualoverride?.overridelabelvalue : labeleHTML !== previousElementData.displayedlabel;
-            const isTitleDifferent = previousElementData?.html?.title ? this.removeClassesFromHtml(titleHTML) !== previousElementData?.html?.title : checkHTMLdataInsideString(titleHTML) ? true : false;
+            const isTitleDifferent = previousElementData?.html?.title ? this.removeClassesFromHtml(titleHTML) !== this.removeClassesFromHtml(previousElementData?.html?.title) : checkHTMLdataInsideString(titleHTML) ? true : false;
             return (isLabelDifferent || isNumberDifferent || isTitleDifferent);
         }
         if (!(previousElementData?.html?.title)) {
@@ -1148,9 +1149,12 @@ class ElementContainer extends Component {
         }
     }
     
-    handleAutonumberAfterUpdate = (previousElementData, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
+    handleAutonumberAfterUpdate = async (previousElementData, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
+        if (this.props?.popupParentSlateData?.isPopupSlate) {
+            const popupContent = await getSlateLevelData(this.props?.popupParentSlateData?.versionUrn, this.props?.popupParentSlateData.contentUrn);
+            updateChapterPopupData(popupContent, this.props?.popupParentSlateData?.versionUrn);
+        }
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
-        const  labelNumberSetting = this.props?.autoNumberOption?.option
         // remove/override to default means gets added to numbering system
         if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
             if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride.hasOwnProperty('resumenumbervalue')) {
@@ -2823,7 +2827,8 @@ const mapStateToProps = (state) => {
         spellCheckToggle: state.toolbarReducer.spellCheckToggle,
         cypressPlusProjectStatus: state.appStore.isCypressPlusEnabled,
         isJoinedPdfSlate: state.appStore.isJoinedPdfSlate,
-        figureDropdownData: state.appStore.figureDropdownData
+        figureDropdownData: state.appStore.figureDropdownData,
+        popupParentSlateData: state.autoNumberReducer.popupParentSlateData
     }
 }
 

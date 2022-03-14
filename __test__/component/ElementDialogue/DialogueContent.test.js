@@ -74,7 +74,11 @@ const event = {
 	stopPropagation: jest.fn(),
 	preventDefault: jest.fn()
 }
-let initialState = {};
+let initialState={
+    keyboardReducer: {
+        selectedElement: []
+      }
+}
 let store = mockStore(initialState);
 const dialogueInstance = (props) => {
     const component = mount(<Provider store={store}><DialogueContent {...props} /></Provider>);
