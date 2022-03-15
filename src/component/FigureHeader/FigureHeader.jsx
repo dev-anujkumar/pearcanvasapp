@@ -70,6 +70,7 @@ export const FigureHeader = (props) => {
     const settingDropdownWrapperRef = useRef(null);
     const labelRef = useRef(null);
     const labelListRef = useRef(null);
+    let indexValue = 0
     useOutsideAlerter(settingDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
     const labelDropdownWrapperRef = useRef(null);
     useOutsideAlerter(labelDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
@@ -156,11 +157,9 @@ export const FigureHeader = (props) => {
     }, [props.model.figuretype]);
 
     useEffect(() => {
-        //setShowingAutoListIndex(0);
-        console.log("AN-showingAutoListIndex",showingAutoListIndex);
         labelListRef?.current?.childNodes[0].focus();
         labelListRef?.current?.addEventListener('keydown', handleAutoLabelKeyDown);
-    },[labelNumberSettingDropDown,showingAutoListIndex])
+    },[labelNumberSettingDropDown])
 
     /**---------------------------------------- */
     const handleCloseDropDrown = () => {
@@ -198,29 +197,25 @@ export const FigureHeader = (props) => {
     }
     /**---------------------------------------- */
     const handleAutoLabelKeyDown = (event) => {
-        console.log("outside of every loop in handleLabelKeyDropdown");
         if(true) {
              if(event.keyCode === 13) {
-                 console.log("pressed 13",showingAutoListIndex);
-                 labelListRef?.current?.childNodes[showingAutoListIndex].click();
+                 labelListRef?.current?.childNodes[indexValue].click();
                  labelRef?.current.focus();
              }
              else if (event.keyCode === 40) {
-                 if(labelListRef?.current?.childNodes[showingAutoListIndex + 1]) {
-                     labelListRef?.current?.childNodes[showingAutoListIndex + 1].focus();
-                     setShowingAutoListIndex(showingAutoListIndex + 1);
-                     //console.log("Auto-40-in", showingAutoListIndex);
+                 if(labelListRef?.current?.childNodes[indexValue + 1]) {
+                    labelListRef?.current?.childNodes[indexValue + 1].focus();
+                    indexValue = indexValue + 1
                  }
              } else if (event.keyCode === 38) {
-                 if(labelListRef?.current?.childNodes[showingAutoListIndex - 1]) {
-                     labelListRef?.current?.childNodes[showingAutoListIndex - 1].focus();
-                     setShowingAutoListIndex(showingAutoListIndex - 1);
+                 if(labelListRef?.current?.childNodes[indexValue - 1]) {
+                    labelListRef?.current?.childNodes[indexValue - 1].focus();
+                    indexValue = indexValue + 1
                  }
              }
              event.stopPropagation();
              event.preventDefault();
          }
-         console.log("outside handleLabelKeyDropdown");
      }
 
     const handleLabelDropdown = () => {
@@ -320,7 +315,6 @@ export const FigureHeader = (props) => {
                 <div className='figure-label-number-field'>
                     <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number2 Settings</span>
                     <KeyboardWrapper index={`${props.index}-labelautonumber-1`} enable focus>
-                    {console.log("auto numbering - labelRef - inside return ", labelRef)}
                     <div ref={labelRef} tabIndex={0} onKeyDown={(e) => {
                         if(true) {
                             const key = e.which || e.keyCode;
@@ -333,7 +327,6 @@ export const FigureHeader = (props) => {
                             }
                         }
                     }}>
-                    {/* {console.log("selected element ", props.selectedElement)} */}
                     <div className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-labelautonumber-1` ? "figure-label-number-highlight" : "figure-label-number"} onClick={!hasReviewerRole() && handleSettingsDropdown}>
                         <span>{labelNumberSetting}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
@@ -354,6 +347,7 @@ export const FigureHeader = (props) => {
                 }
                 {removeLabelCondition && showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && <div className='figure-label-field'>
                     <span className={`label ${labelDropDown ? 'active' : ''}`}>Label</span>
+                    <KeyboardWrapper index={`${props.index}-label-1`} enable focus>
                     <div className="figure-label" onClick={!hasReviewerRole() && handleLabelDropdown}>
                         <span className='canvas-dropdown' >{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
@@ -369,30 +363,16 @@ export const FigureHeader = (props) => {
                                 </ul>
                             </div>
                         }
-                    <span className='canvas-dropdown' >{imgLabelValue}</span>
-                    <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
-                    {/* </div> */}
-                    {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
-                        <div className="figure-dropdown" style={{top: '9px', left: 0}} ref={labelDropdownWrapperRef} >
-                            <ul>
-                                {figureLabelData.map((label, i) => {
-                                    return (
-                                        <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>
-                                            {label}</li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
-                    }
                     </div>
-                    {/* </KeyboardWrapper> */}
+                    </KeyboardWrapper>
                 </div>}
                 {
                    removeLabelCondition &&  (showLabelField && labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ?
+                    <KeyboardWrapper index={`${props.index}-0`}  enable>                                             
                         <div className='image-label'>
                             <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-0`} placeholder="Label" tagName={'h4'} className={figLabelClass + " figureLabel "} model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
                             <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? "transition-none" : "floating-label"}>Label</label>
-                        </div>
+                        </div> </KeyboardWrapper>
                         :
                         <div className='image-label hide-field'>
                             <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-0`} placeholder="Label" tagName={'h4'} className={figLabelClass + " figureLabel "} model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
@@ -400,7 +380,7 @@ export const FigureHeader = (props) => {
                         </div>)
                 }
                 {removeLabelCondition && showNumberField && <div className="floating-number-group">
-                    <KeyboardWrapper enable index={`${props.index}-51`}>
+                    <KeyboardWrapper enable index={`${props.index}-1`}>
                     <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} labelNumberSetting={labelNumberSetting} contenteditable={labelNumberSetting !== AUTO_NUMBER_SETTING_DEFAULT} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber " + newClass} model={imgNumberValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
                     </KeyboardWrapper>
                     <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? "transition-none" : "floating-number"}>Number</label>
