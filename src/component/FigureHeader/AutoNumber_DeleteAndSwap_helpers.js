@@ -1,7 +1,7 @@
 import config from '../../config/config';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
-import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, displayLabelsForAutonumbering, displayLabelsForContainer, autoNumberFigureTypesAllowed, SHOWHIDE_SECTION, autoNumberContainerTypeForDelete } from './AutoNumberConstants';
-import { getImagesInsideSlates, getAsideElementsWrtKey } from './slateLevelMediaMapper';
+import { autoNumber_ElementTypeKey, containerElementTypes, containerElements, autoNumberFigureTypesAllowed, SHOWHIDE_SECTION, autoNumberContainerTypeForDelete } from './AutoNumberConstants';
+import { getImagesInsideSlates, getAsideElementsWrtKey, getAutoNumberedElementsOnSlate } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS
@@ -92,7 +92,8 @@ export const updateAutoNumberSequenceOnDeleteInContainers = async (parentIndex, 
                 if (autoNumberContainerTypeForDelete.includes(autoNumberedElements[labelType][parentIndex][0].type)) {
                     slateElements = await getAsideElementsWrtKey(getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter, containerElements.ASIDE, slateElements);
                 } else {
-                    slateElements = getState().autoNumberReducer.slateFigureList;
+                    let slateLevelData = getState().appStore.slateLevelData;
+                    slateElements = await getAutoNumberedElementsOnSlate(slateLevelData[slateManifestUrn], { dispatch });
                 }
                 if (slateElements?.length > 0) {
                     for (let [index, element] of elementsInTocContainer.entries()) {
@@ -253,8 +254,7 @@ export const updateAutoNumberSequenceOnSwappingContainers = async (params) => {
     let swappedElementDisplaylabled = Object.keys(swappedElementsUrn);
 
     containerElementsOnSlate = await getAsideElementsWrtKey(bodyMatter, containerElements.ASIDE, containerElementsOnSlate, [], [], [popupElementsList]);
-    getNearestElement(swappedElementsUrn, slateFigures, nearestElement, getState);
-    getNearestElement(swappedElementsUrn, containerElementsOnSlate, nearestElement, getState);
+    getNearestElement(swappedElementsUrn, containerElementsOnSlate, slateFigures, nearestElement, getState);
     swappedElementDisplaylabled.forEach(label => {
         let swappedElementList = [];
         let nearestElementIndex;
@@ -375,8 +375,7 @@ const getContentUrnFromPopUp = async (bodymatter, data) => {
     }
 }
 
-const getNearestElement = (swappedElementsUrn, elementsList, nearestElement, getState) => {
-    if(elementsList?.length > 0){
+const getNearestElement = (swappedElementsUrn, containerElementsOnSlate, slateFigures, nearestElement, getState) => {
         let status = {}
         let displayLabelList = Object.keys(getState().autoNumberReducer.autoNumber_KeyMapper)
         let swappedElementDisplaylabled = Object.keys(swappedElementsUrn).filter(label => displayLabelList.includes(label))
@@ -389,6 +388,12 @@ const getNearestElement = (swappedElementsUrn, elementsList, nearestElement, get
             }
         });
     
+        addNearestElement(slateFigures, status, nearestElement, swappedElementDisplaylabled, swappedElementsUrn);
+        addNearestElement(containerElementsOnSlate, status, nearestElement, swappedElementDisplaylabled, swappedElementsUrn);
+}
+
+const addNearestElement = (elementsList, status, nearestElement, swappedElementDisplaylabled, swappedElementsUrn) => {
+    if(elementsList?.length > 0){
         elementsList.forEach(element => {
             let label = element?.displayedlabel; 
             if(swappedElementDisplaylabled.includes(label)){

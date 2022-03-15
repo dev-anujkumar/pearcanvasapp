@@ -17,11 +17,12 @@ const initialState = {
         imagesList: [],
         tablesList: [],
         equationsList: [],
-        audiosList:[],
-        videosList:[],
+        audiosList: [],
+        videosList: [],
+        asidesList: [],
+        workedExamplesList: [],
         interactiveList: [],
-        asidesList:[],
-        workedExamplesList:[]
+        exhibitsList: []
     },
     autoNumberingDetails: {},
     autoNumberElementsIndex: {
@@ -30,13 +31,60 @@ const initialState = {
         equationsIndex: {},
         audioIndex: {},
         videoIndex: {},
+        asideIndex: {},
+        workedExampleIndex: {},
         interactiveIndex: {},
-        workedExampleIndex:{},
-        asideIndex:{}
+        exhibitsIndex: {}
     },
     slateFigureList:[],
     autoNumberOption: '',
-    popupParentSlateData: {}
+    popupParentSlateData: {},
+    tocContainerSlateList:[],
+    autoNumber_KeyMapper: {
+        'Figure': 'figureImageIndex',
+        'Table': 'tableIndex',
+        'Equation': 'equationsIndex',
+        'Audio': 'audioIndex',
+        'Video': 'videoIndex',
+        "Interactive": 'interactiveIndex',
+        "Aside": "asideIndex",
+        "Worked Example": "workedExampleIndex",
+        'Exhibit': 'exhibitsIndex'
+    },
+    autoNumber_ElementTypeKey: {
+        'Figure': 'imagesList',
+        'Table': 'tablesList',
+        'Equation': 'equationsList',
+        'Audio': 'audiosList',
+        'Video': 'videosList',
+        'Interactive': 'interactiveList',
+        "Aside": "asidesList",
+        "Worked Example": "workedExamplesList",
+        'Exhibit': 'exhibitsList'
+    },
+    autoNumber_response_ElementType_mapper: {
+        "figures": "imagesList",
+        "tables": "tablesList",
+        "equations": "equationsList",
+        "audios": "audiosList",
+        "videos": "videosList",
+        "interactives": "interactiveList",
+        "asides": "asidesList",
+        "workedexamples": "workedExamplesList",
+        'exhibits': 'exhibitsList'
+    },
+    autoNumber_IndexMapper: {
+        'imagesList': 'figureImageIndex',
+        'tablesList': 'tableIndex',
+        'equationsList': 'equationsIndex',
+        'audiosList': 'audioIndex',
+        'videosList': 'videoIndex',
+        'interactiveList': 'interactiveIndex',
+        'asidesList': 'asideIndex',
+        'workedExamplesList': 'workedExampleIndex',
+        'exhibitsList': 'exhibitsIndex'
+    },
+    popupElementsData: []
 }
 
 const INITIAL_ACTION = {
@@ -61,7 +109,8 @@ describe('testing for autoNumberReducer file --->', () => {
                 videosList:[],
                 interactiveList: [],
                 asidesList:[],
-                workedExamplesList:[]
+                workedExamplesList:[],
+                exhibitsList: [],
             }
         };
         let mockData = {
@@ -116,7 +165,8 @@ describe('testing for autoNumberReducer file --->', () => {
                 videoIndex: {},
                 interactiveIndex: {},
                 workedExampleIndex:{},
-                asideIndex:{}
+                asideIndex:{},
+                exhibitsIndex: {}
             }
         };
         let mockData = {
@@ -141,7 +191,8 @@ describe('testing for autoNumberReducer file --->', () => {
                 videosList:[5],
                 interactiveList: [],
                 asidesList:[],
-                workedExamplesList:[]
+                workedExamplesList:[],
+                exhibitsList:[]
             }, 
         };
 

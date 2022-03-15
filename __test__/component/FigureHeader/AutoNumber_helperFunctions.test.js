@@ -2,7 +2,7 @@
 import config from '../../../src/config/config';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../../../src/component/FigureHeader/AutoNumberConstants';
 import * as autonumber_helperFunctions from '../../../src/component/FigureHeader/AutoNumber_helperFunctions';
-import * as NestedFigureDataMapper from '../../../src/component/FigureHeader/NestedFigureDataMapper';
+import * as NestedFigureDataMapper from '../../../src/component/FigureHeader/slateLevelMediaMapper';
 import * as AutoNumberActions from '../../../src/component/FigureHeader/AutoNumberActions';
 import {GET_ALL_AUTO_NUMBER_ELEMENTS} from '../../../src/constants/Action_Constants'
 /*************************Import Constants*************************/

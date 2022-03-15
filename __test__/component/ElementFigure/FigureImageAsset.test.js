@@ -7,7 +7,12 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-const store = mockStore({});
+let initialState={
+    keyboardReducer: {
+        selectedElement: []
+      }
+}
+const store = mockStore(initialState);
 describe('Testing Coponent FigureImageAsset', () => {
     describe('FigureImageAsset when Image is not added', () => {
         let props = {

@@ -687,6 +687,15 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
+        it('Render Element Container ----->showBlockCodeElemWarningPopup', () => {
+            let event= {
+                stopPropagation:()=>{}
+            }
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'showBlockCodeElemWarningPopup') 
+            elementContainerInstance.showBlockCodeElemWarningPopup(event);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
         it('Render Element Container ----->updateFigureData', () => {
             let props = {
                 element: wipData.figure,
@@ -934,6 +943,36 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
+        it('Render Element Container ----->PlayScript', () => {
+            let props = {
+                element: wipData.ps,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Block List', () => {
+            let props = {
+                element: wipData.bl,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->ELEMENT_DISCUSSION', () => {
+            let props = {
+                element: wipData.ds,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })        
     })
     describe('Test- Add Comment Functions', () => {
         let props = {
@@ -2065,6 +2104,19 @@ describe('Test-Other Functions', () => {
         expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
         spyfigureDifferenceBlockCode.mockClear()
     })
+    it("Test - aside: difference in content", () => {
+        const previousElementData = {
+            html: {
+                text: '<p></p>'
+            },
+            "numberedandlabel":true
+         }
+        const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'asideDifference')
+        elementContainerInstance.asideDifference(0, previousElementData);
+        expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
+        expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
+        spyfigureDifferenceBlockCode.mockClear()
+    })
     it("Test - figureDifferenceInteractive - pdf interactive type: difference in content", () => {
         const previousElementData = {
             html: {
@@ -2274,6 +2326,17 @@ describe('Test-Other Functions', () => {
         elementContainer.find('span.element-label-clickable-button').at(0).simulate('click');
         expect(spyUpdateColumnValues).toHaveBeenCalled();
         spyUpdateColumnValues.mockClear();
+      });
+
+      it('updateColumnValues function', () => {
+        const elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        elementContainerInstance.updateColumnValues();
+      });
+      it('renderCopyComponent function', () => {
+        const elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        elementContainerInstance.renderCopyComponent();
       });
       
       it('setElementDetails method - without parentUrn', () => {
@@ -2787,5 +2850,24 @@ describe('Test-Other Functions', () => {
         elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
         expect(spyhandleContentChange).toHaveBeenCalled();
         spyhandleContentChange.mockClear()
+    })
+    it("changeInPodwidth function", () => {
+        const newPodwidth = "print100"
+        const spychangeInPodwidth = jest.spyOn(elementContainerInstance, 'changeInPodwidth')
+        elementContainerInstance.changeInPodwidth(newPodwidth, '');
+        expect(spychangeInPodwidth).toHaveBeenCalled();
+        spychangeInPodwidth.mockClear()
+    })
+    it("changeInPodwidth function else case", () => {
+        const spychangeInPodwidth = jest.spyOn(elementContainerInstance, 'changeInPodwidth')
+        elementContainerInstance.changeInPodwidth('', '');
+        expect(spychangeInPodwidth).toHaveBeenCalled();
+        spychangeInPodwidth.mockClear()
+    })
+    it("handleAssetsPopupLocation function", () => {
+        const spyhandleAssetsPopupLocation = jest.spyOn(elementContainerInstance, 'handleAssetsPopupLocation')
+        elementContainerInstance.handleAssetsPopupLocation(true, {});
+        expect(spyhandleAssetsPopupLocation).toHaveBeenCalled();
+        spyhandleAssetsPopupLocation.mockClear()
     })
 })

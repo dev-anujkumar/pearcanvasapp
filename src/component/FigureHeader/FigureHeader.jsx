@@ -309,7 +309,7 @@ export const FigureHeader = (props) => {
     const figIndexParent = getContainerEntityUrn(slateAncestors);
     let imgLabelValue = getLabelNumberFieldValue(props.model, figureLabelValue, labelNumberSetting);
     let imgNumberValue = getNumberData(figIndexParent, props.model, props.autoNumberElementsIndex || {})
-    imgNumberValue = props?.model?.manualoverride?.hasOwnProperty('overridelabelvalue') && labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER ? '' : imgNumberValue;
+    imgNumberValue = props?.model?.manualoverride?.hasOwnProperty('overridenumbervalue') && labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER ? '' : imgNumberValue;
     const previewData = getLabelNumberPreview(props.model, { imgLabelValue, imgNumberValue, parentNumber:containerNumber, currentLabelValue,labelNumberSetting, currentNumberValue })
     imgNumberValue = `${imgNumberValue?.toString()}`
     const newClass = labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? 'disable-number-field': '';
