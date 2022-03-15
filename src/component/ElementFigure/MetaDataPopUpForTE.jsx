@@ -5,20 +5,46 @@ import '../../styles/PopUp/PopUp.css';
 
 const MetaDataPopUpForTE = (props) => {
 
-    const { togglePopup, showAlfrescoEditPopupforTE } = props
+    // const { togglePopup, showAlfrescoEditPopupforTE } = props
     const [active, setActive] = useState('');
     const [altText, setAltText] = useState('');
     const [longDescription, setLongDescription] = useState('');
     const [disabledButton, setDisabledButton] = useState(false);
+
+    let imageArrayForRender = [
+      {
+        "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/4819307d-7857-44f6-809a-24cae6836ff6/carimageNew01-QA.jpg",
+        "imgId": "imageAssetContent:4819307d-7857-44f6-809a-24cae6836ff6:7553"
+      },
+     {
+        "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/31189d68-e07d-42f6-923e-a78955387c6f/galaxy_assesttest%20%281%29.jpg",
+        "imgId": "imageAssetContent:31189d68-e07d-42f6-923e-a78955387c6f:8340"
+     },
+     {
+        "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/d8f28a48-63c1-42de-9ea6-0fcb6685ea54/flower.jpg",
+        "imgId": "imageAssetContent:d8f28a48-63c1-42de-9ea6-0fcb6685ea54:3837"
+     },
+     {
+        "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/2c421154-bd89-405e-a9b5-47ce596b80a4/ducati%20panigale.jpg",
+        "imgId": "imageAssetContent:2c421154-bd89-405e-a9b5-47ce596b80a4:1984"
+     }
+  ]
+
+  let renderedImages = imageArrayForRender.map((image) => (
+    <img 
+      className='img-inside-array' 
+      src={image.imgSrc} 
+      id={image.imgId}
+      // onClick={() => this.processImageID(image.imgId)}
+    />     
+  ))
     
+
+
     return(
         <div className="model">
             <div tabIndex="0" className="model-popup">
-              <div
-                className={`figure-popup ${
-                  showAlfrescoEditPopupforTE ? "editPopupforTE" : ""
-                }`}
-              >
+              <div className='figure-popup editPopupforTE'>
                 <div className="dialog-button1">
                   <span className="edit-metadata">Edit Alfresco Metadata</span>
                 </div>
@@ -30,6 +56,13 @@ const MetaDataPopUpForTE = (props) => {
                       src='https://cite-media-stg.pearson.com/legacy_paths/6b860521-9132-4051-b6cc-dfa020866864/Chrysanthemum.jpg' 
                       id='imageAssetContent:6b860521-9132-4051-b6cc-dfa020866864:6550'
                      /> 
+                  </div>
+                  <div className='outer-img-array-container'>
+                    <span className='left-arrow'> &lt;</span>
+                    <span className='inner-img-array'>
+                       {renderedImages}
+                    </span>
+                    <span className='right-arrow'> &gt;</span>
                   </div>
                 </div>
                 <div className="right-container">
@@ -91,7 +124,7 @@ const MetaDataPopUpForTE = (props) => {
 					           <span className={`metadata-import-button ${disabledButton ? '' : "disabled"}`}>Import in Cypress</span>
 					           <span className={`metadata-import-button ${disabledButton ? '' : "disabled"}`}>Save All</span>
 					           <span className="cancel-button disable" id='close-container'>Reset</span>
-					           <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
+					           <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, 'TE')}>Cancel</span>
 				          </div>
                 </div>
 				       </div>

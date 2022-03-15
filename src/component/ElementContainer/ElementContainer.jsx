@@ -2556,12 +2556,13 @@ class ElementContainer extends Component {
     }
 
     handleFigurePopup = (togglePopup, elementType = null) => {
+
         let imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
         imageId = imageId.replace('urn:pearson:alfresco:', '');
         this.props.showBlocker(togglePopup);
         if(elementType === 'TE'){
             this.setState({
-                showAlfrescoEditPopupforTE: true
+                showAlfrescoEditPopupforTE: togglePopup
             })  
         }else{
             this.setState({
