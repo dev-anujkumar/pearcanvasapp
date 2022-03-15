@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import '../../styles/PopUp/PopUp.css';
 
 const MetaDataPopUpForTE = (props) => {
-    const { togglePopup, showAlfrescoEditPopupforTE } = props
     const [active, setActive] = useState('');
     const [index, setIndex] = useState(0);
     const [altText, setAltText] = useState('');
@@ -44,15 +43,20 @@ const MetaDataPopUpForTE = (props) => {
       setimageID(imgId);
       setimageSrc(imgSrc);
     }
-    
+
+    let renderedImages = imageArrayForRender.map((image) => (
+      <img 
+        className='img-inside-array' 
+        src={image.imgSrc} 
+        id={image.imgId}
+        // onClick={() => this.processImageID(image.imgId)}
+      />     
+    ))
+
     return(
         <div className="model">
             <div tabIndex="0" className="model-popup">
-              <div
-                className={`figure-popup ${
-                  showAlfrescoEditPopupforTE ? "editPopupforTE" : ""
-                }`}
-              >
+              <div className='figure-popup editPopupforTE'>
                 <div className="dialog-button1">
                   <span className="edit-metadata">Edit Alfresco Metadata</span>
                 </div>
@@ -64,6 +68,13 @@ const MetaDataPopUpForTE = (props) => {
                       src={imageSrc}
                       id={imageID}
                      /> 
+                  </div>
+                  <div className='outer-img-array-container'>
+                    <span className='left-arrow'> &lt;</span>
+                    <span className='inner-img-array'>
+                       {renderedImages}
+                    </span>
+                    <span className='right-arrow'> &gt;</span>
                   </div>
                 </div>
                 <div className="right-container">
@@ -125,7 +136,7 @@ const MetaDataPopUpForTE = (props) => {
 					           <span className={`metadata-import-button ${disabledButton ? '' : "disabled"}`}>Import in Cypress</span>
 					           <span className={`metadata-import-button ${disabledButton ? '' : "disabled"}`}>Save All</span>
 					           <span className="cancel-button disable" id='close-container'>Reset</span>
-					           <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
+					           <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, 'TE')}>Cancel</span>
 				          </div>
                 </div>
 				       </div>
