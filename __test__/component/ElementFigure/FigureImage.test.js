@@ -509,6 +509,72 @@ describe('Testing Figure image component', () => {
             jest.spyOn(elementFigureInstance, 'onFigureImageFieldBlur')
             elementFigureInstance.onFigureImageFieldBlur("test");
         })
+        describe("Branch coverage for dataFromAlfresco", () => {
+            it('when figureType=table', () => {
+                let modelForTable = {
+                    ...figureImage50TextElementDefault
+                }
+                modelForTable["figuretype"] = "table";
+                let tableDataFromNewAlfresco = {
+                    ...testDataFromNewAlfresco
+                }
+                tableDataFromNewAlfresco["content"]["mimeType"] = "table";
+                const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={modelForTable} index="30" {...props}/></Provider>);
+                let elementFigureInstance = elementFigure.find('FigureImage').instance();
+                const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco');
+                elementFigureInstance.dataFromNewAlfresco(tableDataFromNewAlfresco);
+                elementFigureInstance.forceUpdate();
+                elementFigure.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled();
+            })
+            it('when figureType=mathImage', () => {
+                let modelForMathImage = {
+                    ...figureImage50TextElementDefault
+                }
+                modelForMathImage["figuretype"] = "mathImage";
+                let mathImageDataFromNewAlfresco = {
+                    ...testDataFromNewAlfresco
+                }
+                mathImageDataFromNewAlfresco["content"]["mimeType"] = "mathImage";
+                const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={modelForMathImage} index="30" {...props}/></Provider>);
+                let elementFigureInstance = elementFigure.find('FigureImage').instance();
+                const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco');
+                elementFigureInstance.dataFromNewAlfresco(mathImageDataFromNewAlfresco);
+                elementFigureInstance.forceUpdate();
+                elementFigure.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled();
+            })
+            it('when figureType=authoredtext', () => {
+                let authoredtextDataFromNewAlfresco = {
+                    ...testDataFromNewAlfresco
+                }
+                authoredtextDataFromNewAlfresco["content"]["mimeType"] = "authoredtext";
+                const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
+                let elementFigureInstance = elementFigure.find('FigureImage').instance();
+                const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco');
+                elementFigureInstance.dataFromNewAlfresco(authoredtextDataFromNewAlfresco);
+                elementFigureInstance.forceUpdate();
+                elementFigure.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled();
+            })
+            it('when figureType=codelisting', () => {
+                let modelForCodelisting = {
+                    ...figureImage50TextElementDefault
+                }
+                modelForCodelisting["figuretype"] = "codelisting";
+                let codelistingDataFromNewAlfresco = {
+                    ...testDataFromNewAlfresco
+                }
+                codelistingDataFromNewAlfresco["content"]["mimeType"] = "codelisting";
+                const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={modelForCodelisting} index="30" {...props}/></Provider>);
+                let elementFigureInstance = elementFigure.find('FigureImage').instance();
+                const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco');
+                elementFigureInstance.dataFromNewAlfresco(codelistingDataFromNewAlfresco);
+                elementFigureInstance.forceUpdate();
+                elementFigure.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled();
+            })
+        })
     })
     describe("Testing changeFigureLabel()", () => {
         let props = {
@@ -785,6 +851,43 @@ describe('Testing Figure image component', () => {
             figureImageInstance.setState({ deleteAssetPopup: true });
             figureImageInstance.showDeleteAssetPopup();
             expect(spy).toBeCalled();
+        });
+
+        describe('Testing onFigureImageFieldFocus', () => {
+            it('Testing onFigureImageFieldFocus - IF Condition', () => {
+                const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+                document.getElementById = () => {
+                    return {
+                        nextElementSibling: {
+                            classList: {
+                                contains: () => true,
+                                add: jest.fn()
+                            }
+                        }
+                    }
+                }
+                const figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldFocus');
+                figureImageInstance.onFigureImageFieldFocus("urn:");
+                expect(spy).toBeCalled();
+            });
+            it('Testing onFigureImageFieldFocus - ELSE Condition', () => {
+                const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+                document.getElementById = () => {
+                    return {
+                        nextElementSibling: {
+                            classList: {
+                                contains: () => false,
+                                add: jest.fn()
+                            }
+                        }
+                    }
+                }
+                const figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldFocus');
+                figureImageInstance.onFigureImageFieldFocus("urn:");
+                expect(spy).toBeCalled();
+            });
         });
     });
 });
