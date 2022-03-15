@@ -589,7 +589,7 @@
 }
 
 .left-arrow{
-  border: 2px solid gray;
+  /* border: 2px solid gray; */
   margin: 24px 0px 20px 0px;
   height: 28px;
   width: 18px;
@@ -623,7 +623,7 @@
 
 
 .right-arrow{
-  border: 2px solid gray;
+  /* border: 2px solid gray; */
   margin: 24px 0px 20px 0px;
   height: 28px;
   width: 18px;

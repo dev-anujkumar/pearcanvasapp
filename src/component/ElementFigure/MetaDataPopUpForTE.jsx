@@ -5,6 +5,8 @@ const MetaDataPopUpForTE = (props) => {
   const {imageList} = props
     const [active, setActive] = useState('');
     const [index, setIndex] = useState(0);
+    const [lowerIndex, setLowerIndex] = useState(0);
+    const [upperIndex, setUpperIndex] = useState(2);
     const [altText, setAltText] = useState('');
     const [longDescription, setLongDescription] = useState('');
     const [imageID, setimageID] = useState('');
@@ -27,6 +29,7 @@ const MetaDataPopUpForTE = (props) => {
         updateCurrentImage(newIndex);
         setIndex(newIndex);
       }
+      updateRangeForImages();
     }
 
     const traverseRight = () => {
@@ -35,9 +38,22 @@ const MetaDataPopUpForTE = (props) => {
         updateCurrentImage(newIndex);
         setIndex(newIndex);
       }
+      updateRangeForImages();
     }
 
-    const updateCurrentImage = () => {
+    const updateRangeForImages = () => {
+      if(index > upperIndex && index > lowerIndex)  {
+          setUpperIndex(upperIndex+1);
+          setLowerIndex(lowerIndex+1);
+      }else if(index < lowerIndex && index < upperIndex ){
+          setLowerIndex(lowerIndex-1);
+          setUpperIndex(upperIndex-1);
+      }else if(lowerIndex <= index <= upperIndex){
+          return
+      }
+    }
+
+    const updateCurrentImage = (newIndex) => {
       let { altText, imgId, imgSrc, longdescription } = imageList[newIndex];
       setAltText(altText);
       setLongDescription(longdescription);
@@ -45,7 +61,9 @@ const MetaDataPopUpForTE = (props) => {
       setimageSrc(imgSrc);
     }
 
-    let renderedImages = imageList && imageList.map((image) => (
+    let updatedImageList = imageList.slice(lowerIndex,upperIndex+1)
+
+    let renderedImages = updatedImageList && updatedImageList.map((image) => (
       <img 
         className='img-inside-array' 
         src={image.imgSrc} 
@@ -71,11 +89,11 @@ const MetaDataPopUpForTE = (props) => {
                      /> 
                   </div>
                   <div className='outer-img-array-container'>
-                    <span className='left-arrow'> &lt;</span>
+                    <span className='left-arrow' onClick={traverseLeft}> &lt;</span>
                     <span className='inner-img-array'>
                        {renderedImages}
                     </span>
-                    <span className='right-arrow'> &gt;</span>
+                    <span className='right-arrow' onClick={traverseRight}> &gt;</span>
                   </div>
                 </div>
                 <div className="right-container">
