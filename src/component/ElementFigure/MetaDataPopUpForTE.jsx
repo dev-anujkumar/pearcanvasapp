@@ -7,6 +7,8 @@ const MetaDataPopUpForTE = (props) => {
   const {imageList, editedImageList, updateEditedData} = props
   const [active, setActive] = useState('');
   const [index, setIndex] = useState(0);
+  const [lowerIndex, setLowerIndex] = useState(0);
+  const [upperIndex, setUpperIndex] = useState(2);
   const [altText, setAltText] = useState('');
   const [longDescription, setLongDescription] = useState('');
   const [imageID, setimageID] = useState('');
@@ -30,6 +32,7 @@ const MetaDataPopUpForTE = (props) => {
         updateCurrentImage(newIndex);
         setIndex(newIndex);
       }
+      updateRangeForImages();
     }
 
     const traverseRight = () => {
@@ -39,6 +42,7 @@ const MetaDataPopUpForTE = (props) => {
         updateCurrentImage(newIndex);
         setIndex(newIndex);
       }
+      updateRangeForImages();
     }
 
     const updateCurrentImage = (newIndex) => {
@@ -55,6 +59,18 @@ const MetaDataPopUpForTE = (props) => {
       setLongDescription(longdescription);
       setimageID(imgId);
       setimageSrc(imgSrc);
+    }
+
+    const updateRangeForImages = () => {
+      if(index > upperIndex && index > lowerIndex)  {
+          setUpperIndex(upperIndex+1);
+          setLowerIndex(lowerIndex+1);
+      }else if(index < lowerIndex && index < upperIndex ){
+          setLowerIndex(lowerIndex-1);
+          setUpperIndex(upperIndex-1);
+      }else if(lowerIndex <= index <= upperIndex){
+          return
+      }
     }
 
     const updateImageInStore = () => {
@@ -74,7 +90,8 @@ const MetaDataPopUpForTE = (props) => {
       }
     }
 
-    let renderedImages = imageList && imageList.map((image) => (
+    let updatedImageList = imageList.slice(lowerIndex,upperIndex+1)
+    let renderedImages = updatedImageList && updatedImageList.map((image) => (
       <img 
         className='img-inside-array' 
         src={image.imgSrc} 
