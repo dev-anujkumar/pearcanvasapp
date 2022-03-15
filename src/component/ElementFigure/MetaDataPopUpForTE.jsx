@@ -1,15 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/PopUp/PopUp.css';
 
-
-
 const MetaDataPopUpForTE = (props) => {
-
     const { togglePopup, showAlfrescoEditPopupforTE } = props
     const [active, setActive] = useState('');
+    const [index, setIndex] = useState(0);
     const [altText, setAltText] = useState('');
     const [longDescription, setLongDescription] = useState('');
+    const [imageID, setimageID] = useState('');
+    const [imageSrc, setimageSrc] = useState('');
     const [disabledButton, setDisabledButton] = useState(false);
+
+    useEffect(() => {
+      if(props.imageList?.length > 0){
+        let { altText, imgId, imgSrc, longdescription } = props.imageList[0];
+        setAltText(altText);
+        setLongDescription(longdescription);
+        setimageID(imgId);
+        setimageSrc(imgSrc);
+      }
+    }, [props.imageList]);
+
+    const traverseLeft = () => {
+      if(index > 0){
+        let newIndex = index - 1;
+        updateCurrentImage(newIndex);
+        setIndex(newIndex);
+      }
+    }
+
+    const traverseRight = () => {
+      if(index < props.imageList?.length-1){
+        let newIndex = index + 1;
+        updateCurrentImage(newIndex);
+        setIndex(newIndex);
+      }
+    }
+
+    const updateCurrentImage = () => {
+      let { altText, imgId, imgSrc, longdescription } = props.imageList[newIndex];
+      setAltText(altText);
+      setLongDescription(longdescription);
+      setimageID(imgId);
+      setimageSrc(imgSrc);
+    }
     
     return(
         <div className="model">
@@ -27,8 +61,8 @@ const MetaDataPopUpForTE = (props) => {
                   <div className='outer-img-container'>
                      <img 
                       className='inner-img-container' 
-                      src='https://cite-media-stg.pearson.com/legacy_paths/6b860521-9132-4051-b6cc-dfa020866864/Chrysanthemum.jpg' 
-                      id='imageAssetContent:6b860521-9132-4051-b6cc-dfa020866864:6550'
+                      src={imageSrc}
+                      id={imageID}
                      /> 
                   </div>
                 </div>
@@ -54,7 +88,7 @@ const MetaDataPopUpForTE = (props) => {
                         type="text"
                         placeholder="Enter your text here"
                         value={altText}
-                        disabled={disabledButton ? false : true}
+                        // disabled={disabledButton ? false : true}
                         onChange={(e) =>
                           setAltText(e.target.value)
                         }
@@ -80,7 +114,7 @@ const MetaDataPopUpForTE = (props) => {
                         cols="50"
                         placeholder="Enter your text here"
                         value={longDescription}
-                        disabled={disabledButton ? false : true}
+                        // disabled={disabledButton ? false : true}
                         onChange={(e) =>
                           setLongDescription(e.target.value)
                         }
