@@ -65,6 +65,7 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
+import MetaDataPopUpForTE from '../ElementFigure/MetaDataPopUpForTE.jsx'
 import { closeTcmPopup, handleTCM } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
@@ -2249,6 +2250,19 @@ class ElementContainer extends Component {
                             index={this.props.index}
                             asideData={this.props.asideData}
                         />}
+                    {this.state.showAlfrescoEditPopupforTE &&
+                        <MetaDataPopUpForTE
+                            figureUrl={this.state.figureUrl}
+                            togglePopup={this.handleFigurePopup}
+                            imageId={this.state.imageId}
+                            updateFigureData={this.updateFigureData}
+                            handleFocus={this.handleFocus}
+                            handleBlur={this.handleBlur}
+                            showAlfrescoEditPopupforTE = {this.state.showAlfrescoEditPopupforTE}
+                            element={this.props.element}
+                            index={this.props.index}
+                            asideData={this.props.asideData}
+                        />}    
                     {this.props.children &&
                         <PageNumberContext.Consumer>
                             {
@@ -2544,11 +2558,17 @@ class ElementContainer extends Component {
         let imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
         imageId = imageId.replace('urn:pearson:alfresco:', '');
         this.props.showBlocker(togglePopup);
-        this.setState({
-            isfigurePopup: togglePopup,
-            showAlfrescoEditPopupforTE: elementType === 'TE' ? true : false,
-            imageId
-        })
+        if(elementType === 'TE'){
+            this.setState({
+                showAlfrescoEditPopupforTE: true
+            })  
+        }else{
+            this.setState({
+                isfigurePopup: togglePopup,
+                imageId
+            })
+        }
+        
         if (togglePopup) {
             showTocBlocker();
         } else {

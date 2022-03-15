@@ -96,34 +96,14 @@ class MetaDataPopUp extends React.Component {
 		})
 	}
 
-	renderButtonsForEdit = (props) => {
-		
-		if(!props.showAlfrescoEditPopupforTE){
-			return (
-                        <div className="metadata-button">
-						   <span className={`metadata-import-button ${this.state.disabledButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
-						   <span className="cancel-button" id='close-container' onClick={(e) => this.props.togglePopup(false, e)}>Cancel</span>
-						</div>
-			)
-		}else if(props.showAlfrescoEditPopupforTE){
-            return(
-				<div className="metadata-button">
-					<span className={`metadata-import-button ${this.state.disabledButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Save All and Import</span>
-					<span className={`metadata-import-button ${this.state.disabledButton ? '' : "disabled"}`}>Save</span>
-					<span className="cancel-button disable" id='close-container'>Reset</span>
-					<span className="cancel-button" id='close-container' onClick={(e) => this.props.togglePopup(false, e)}>Cancel</span>
-				</div>
-			)
-		}
-	}
 
     render() {
-        const { togglePopup, showAlfrescoEditPopupforTE } = this.props;
+        const { togglePopup } = this.props;
 		const { altText, longDescription, active } = this.state;
         return (
             <div className="model">
 				<div tabIndex="0" className="model-popup">
-					<div className={`figure-popup ${showAlfrescoEditPopupforTE ? 'editPopupforTE' : ''}`}>
+					<div className={`figure-popup`}>
 						<div className="dialog-button">
 						    <span className="edit-metadata">Edit Alfresco Metadata</span>
 						</div>
@@ -155,7 +135,10 @@ class MetaDataPopUp extends React.Component {
 								</textarea>
 							</div>
 						</div>
-						{this.renderButtonsForEdit(this.props)}
+						<div className="metadata-button">
+						   <span className={`metadata-import-button ${this.state.disabledButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Import in Cypress</span>
+						   <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
+						</div>
 						
 					</div>
 				</div>

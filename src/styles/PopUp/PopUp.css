@@ -235,6 +235,12 @@
   /* padding: 17px 8px 28px; */
   height: 36px;
   margin-top: 24px;
+  /* border: 2px solid red; */
+}
+
+.dialog-button1{
+  /* border: 2px solid red; */
+  height: 28px;  
 }
 
 .subscriberSlate-buttons {
@@ -548,7 +554,42 @@
 }
 
 .figure-popup.editPopupforTE{
-  width: 1175px !important;
+  width: 1000px !important;
+  height: 528px;
+}
+
+
+.left-container{
+  /* border: 2px solid yellowgreen; */
+  display: inline-block;
+  /* height: 364px; */
+  width: 350px;
+}
+
+.outer-img-container{
+  margin: 47px 44px 47px 44px;
+  height: 315px;
+  width: 265px;
+  /* border: 2px solid red; */
+  padding: 0 22px 0 22px;
+  background-color: #eee;
+}
+
+.inner-img-container{
+  height: 313px;
+  width: 206px;
+  /* border: 2px solid black; */
+}
+
+.right-container{
+  /* border: 2px solid black; */
+  display: inline-block;
+  width: 64.5%;
+}
+
+.left-right-container{
+  display: flex;
+
 }
 
 .edit-metadata {
