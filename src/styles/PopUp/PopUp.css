@@ -600,11 +600,11 @@
   display: flex;
   flex-direction: row;
   height: 78px;
-  /* width: 295px; */
-  overflow-x: auto;
   max-width: 295px;
-  overflow-y: hidden;
-  scrollbar-width: thin;
+  /* width: 295px; */
+  /* overflow-x: auto; */
+  /* overflow-y: hidden;
+  scrollbar-width: thin; */
 }
 
 .img-inside-array{

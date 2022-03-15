@@ -96,7 +96,6 @@ class ElementContainer extends Component {
             btnClassName: '',
             showDeleteElemPopup: false,
             showAlfrescoExpansionPopup: false,
-            alfrescoExpansionMetaData: {},
             showAlfrescoEditPopupforTE: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPaletteList: false,
@@ -2246,7 +2245,6 @@ class ElementContainer extends Component {
                             updateFigureData={this.updateFigureData}
                             handleFocus={this.handleFocus}
                             handleBlur={this.handleBlur}
-                            showAlfrescoEditPopupforTE = {this.state.showAlfrescoEditPopupforTE}
                             element={this.props.element}
                             index={this.props.index}
                             asideData={this.props.asideData}
