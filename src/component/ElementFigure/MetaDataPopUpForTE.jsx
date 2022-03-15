@@ -68,7 +68,7 @@ const MetaDataPopUpForTE = (props) => {
       }else if(index < lowerIndex && index < upperIndex ){
           setLowerIndex(lowerIndex-1);
           setUpperIndex(upperIndex-1);
-      }else if(lowerIndex <= index <= upperIndex){
+      }else if(lowerIndex <= index && index <= upperIndex){
           return
       }
     }
