@@ -1701,6 +1701,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         })
     })
     describe('updateShowhideElements testCases',()=>{
+        const autoNumberDetails = {isAutoNumberingEnabled: true,autoNumberSettingsOption:'Default AutoNumber', updatedSH_Object:{}}
         it('updateShowhideElements for authoredText',()=>{
             let sh_Obj = {
                 "id": "urn:pearson:manifest:f8153499-14c4-4d0e-a9ef-aadf2aaacc13",
@@ -1750,7 +1751,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             }
             let iList=["0","0","1","2","0"]
             const spyupdateShowhideElements = jest.spyOn(updateHelpers, "updateShowhideElements")
-            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList)
+            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList,autoNumberDetails)
             expect(spyupdateShowhideElements).toHaveBeenCalled()
             spyupdateShowhideElements.mockClear()  
         });
@@ -1832,7 +1833,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             }
             let iList=["0","0","1","0","0"]
             const spyupdateShowhideElements = jest.spyOn(updateHelpers, "updateShowhideElements")
-            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList)
+            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList,autoNumberDetails)
             expect(spyupdateShowhideElements).toHaveBeenCalled()
             spyupdateShowhideElements.mockClear()  
         });
@@ -1907,7 +1908,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             }
             let iList=["0","0","1","0","0"]
             const spyupdateShowhideElements = jest.spyOn(updateHelpers, "updateShowhideElements")
-            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList)
+            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList,autoNumberDetails)
             expect(spyupdateShowhideElements).toHaveBeenCalled()
             spyupdateShowhideElements.mockClear()  
         })

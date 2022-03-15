@@ -40,6 +40,9 @@ describe('Testing BlockMathCode Component', () => {
             editor: true,
             Permission: false
         },
+        keyboardReducer: {
+            selectedElement: []
+        },
         appStore: {
             figureDropdownData: {
                 audio: ["No Label", "Custom"],

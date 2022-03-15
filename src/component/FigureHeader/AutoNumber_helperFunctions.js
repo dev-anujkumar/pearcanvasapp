@@ -1,6 +1,6 @@
 import config from '../../config/config'
 import { moduleTypes, slateTypes, MATTER_TYPES, CONTAINER_LABELS, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, AUTO_NUMBER_PROPERTIES, autoNumber_FigureTypeKeyMapper,
-    displayLabelsForAutonumbering, displayLabelsForContainer, SIDEBAR, WORKED_EXAMPLE, ELEMENT_TYPES } from './AutoNumberConstants';
+    displayLabelsForAutonumbering, displayLabelsForContainer, SIDEBAR, TACTIC, WORKED_EXAMPLE, ELEMENT_TYPES } from './AutoNumberConstants';
 import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
@@ -150,6 +150,7 @@ export const getValueOfLabel = (figuretype) => {
             label = 'Interactive';
             break;
         case SIDEBAR:
+        case TACTIC:
             label = 'Aside';
             break;
         case WORKED_EXAMPLE:

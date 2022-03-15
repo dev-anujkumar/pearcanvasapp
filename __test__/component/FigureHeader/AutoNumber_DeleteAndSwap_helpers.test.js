@@ -19,7 +19,51 @@ describe('-----------------Testing AutoNumber_DeleteAndSwap_helpers-------------
                 autoNumberingDetails: mockAutoNumberingDetails,
                 autoNumberElementsIndex: mockIndexedElements,
                 slateFigureList: slateFigures2.splice(4,1),
-                autoNumberOption: ''
+                autoNumberOption: '',
+                autoNumber_KeyMapper: {
+                    'Figure': 'figureImageIndex',
+                    'Table': 'tableIndex',
+                    'Equation': 'equationsIndex',
+                    'Audio': 'audioIndex',
+                    'Video': 'videoIndex',
+                    "Interactive": 'interactiveIndex',
+                    "Aside": "asideIndex",
+                    "Worked Example": "workedExampleIndex",
+                    'Exhibit': 'exhibitsIndex'
+                },
+                autoNumber_ElementTypeKey: {
+                    'Figure': 'imagesList',
+                    'Table': 'tablesList',
+                    'Equation': 'equationsList',
+                    'Audio': 'audiosList',
+                    'Video': 'videosList',
+                    'Interactive': 'interactiveList',
+                    "Aside": "asidesList",
+                    "Worked Example": "workedExamplesList",
+                    'Exhibit': 'exhibitsList'
+                },
+                autoNumber_response_ElementType_mapper: {
+                    "figures": "imagesList",
+                    "tables": "tablesList",
+                    "equations": "equationsList",
+                    "audios": "audiosList",
+                    "videos": "videosList",
+                    "interactives": "interactiveList",
+                    "asides": "asidesList",
+                    "workedexamples": "workedExamplesList",
+                    'exhibits': 'exhibitsList'
+                },
+                autoNumber_IndexMapper: {
+                    'imagesList': 'figureImageIndex',
+                    'tablesList': 'tableIndex',
+                    'equationsList': 'equationsIndex',
+                    'audiosList': 'audioIndex',
+                    'videosList': 'videoIndex',
+                    'interactiveList': 'interactiveIndex',
+                    'asidesList': 'asideIndex',
+                    'workedExamplesList': 'workedExampleIndex',
+                    'exhibitsList': 'exhibitsIndex'
+                }
             },
             appStore: {
                 currentSlateAncestorData: slateAncestorChapter
@@ -53,7 +97,23 @@ describe('-----------------Testing AutoNumber_DeleteAndSwap_helpers-------------
         currentSlateData,
         swappedElementData: currentSlateData.contents.bodymatter[0]
     }
-    const swapParams2 = { ...swapParams, numberedElements: mockNumberedElements, slateFigures: mockSlateFigures, slateAncestors: slateAncestorChapter }
+    const swapParams2 = {
+        ...swapParams,
+        numberedElements: mockNumberedElements,
+        slateFigures: mockSlateFigures,
+        slateAncestors: slateAncestorChapter,
+        autoNumber_ElementTypeKey: {
+            'Figure': 'imagesList',
+            'Table': 'tablesList',
+            'Equation': 'equationsList',
+            'Audio': 'audiosList',
+            'Video': 'videosList',
+            'Interactive': 'interactiveList',
+            "Aside": "asidesList",
+            "Worked Example": "workedExamplesList",
+            'Exhibit': 'exhibitsList'
+        }
+    }
     it('Test-3---updateAutoNumberSequenceOnSwappingElements---', () => {
         const spyFunction = jest.spyOn(autoNumber_deleteFunctions, 'updateAutoNumberSequenceOnSwappingElements');
         autoNumber_deleteFunctions.updateAutoNumberSequenceOnSwappingElements(swapParams2);

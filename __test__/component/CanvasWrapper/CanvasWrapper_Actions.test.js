@@ -390,6 +390,96 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveReturnedWith('P');
             spyFunction.mockClear()
         })
+        it('Test-1.28-fetchElementTag - elementType - manifestlist - style', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({ ...activeElement, type: 'manifestlist', fontstyle: [], iconcolor: [], index: '0-0-0' });
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-1.29-fetchElementTag - elementType - figure and figuretype - image', () => {
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({ ...activeElement, type: 'figure', figuretype: 'image', index: '0-0-0' });
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-1.30-fetchElementTag - elementType - figure and figuretype - interactive', () => {
+            const elementData = {
+                ...activeElement, 
+                type: 'figure', 
+                figuretype: 'interactive',
+                figuredata: {
+                    alttext: 'alttext',
+                    longdescription: 'longdescription '
+                }
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({ ...elementData, index: '0-0-0' });
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-1.31-fetchElementTag - elementType - figure and figuretype - video', () => {
+            const elementData = {
+                ...activeElement, 
+                type: 'figure', 
+                figuretype: 'video',
+                figuredata: {
+                    srctype: 'internal'
+                }
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({ ...elementData, index: '0-0-0' });
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-1.32-fetchElementTag - elementType - figure and figuretype - video - srctype - empty', () => {
+            const elementData = {
+                ...activeElement, 
+                type: 'figure', 
+                figuretype: 'video',
+                figuredata: {
+                    srctype: ''
+                }
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({ ...elementData, index: '0-0-0' });
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-1.34-fetchElementTag - elementType - figure and figuretype - interactive', () => {
+            const elementData = {
+                ...activeElement, 
+                type: 'figure', 
+                figuretype: 'interactive',
+                figuredata: {
+                    alttext: '',
+                    longdescription: '',
+                    interactiveformat: 'mmi'
+                }
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({ ...elementData, index: '0-0-0' });
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-1.35-fetchElementTag - Aside - no Subtype', () => {
+            let activeElement = { type: 'element-aside', subtype: '', designtype: "", html: {title: '<p>Element Aside</p>'}};
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 8);
+            expect(spyFunction).toHaveBeenCalled();
+        })
+        it('Test-1.36-fetchElementTag - element-list - elementdata - subtype', () => {
+            let activeElement = { type: 'element-list', subtype: '', designtype: "", elementdata: {subtype:''}};
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag(activeElement, 8);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
     });
     describe('Test-2- fetchAuthUser', () => {
         it('Test-2.1-fetchAuthUser', () => {
@@ -2815,7 +2905,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(dispatch).toHaveBeenCalled();
         })
 
-        it('Test-14.2 fetchFigureDropdownOptions - then Block with empty obj', async () => {
+        xit('Test-14.2 fetchFigureDropdownOptions - then Block with empty obj', async () => {
             let firstResponseData = {
                 "data": {}
             }

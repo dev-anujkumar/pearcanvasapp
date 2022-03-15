@@ -158,6 +158,7 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
   'CODELISTING': 'exhibitsList'
 }
 export const SIDEBAR = "sidebar"
+export const TACTIC = "Tactic"
 export const WORKED_EXAMPLE = "workedexample"
 export const autoNumberContainerTypesAllowed = ['element-aside']
 export const containerElementTypes = ['popup', 'showhide', 'groupedcontent', 'element-aside'];

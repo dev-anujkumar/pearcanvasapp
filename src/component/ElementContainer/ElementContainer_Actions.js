@@ -15,8 +15,8 @@ import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowH
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
-import { getAutoNumberedElementsOnSlate, getAsideElementsWrtKey, getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
-import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
+import { getAutoNumberedElementsOnSlate, getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
+import { handleAutonumberingOnCreate, handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberedElement } from './UpdateElements';
@@ -522,25 +522,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 shObject.interactivedata[type] = sectionOfSH;
             }   
         }
-        let autoNumberedElementsObj = getState().autoNumberReducer?.autoNumberedElements;
-        const slateAncestorData = getState().appStore?.currentSlateAncestorData;
-        const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
-        const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
-        let elementsList = {};
-        if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
-            let slateFigures = [];
-            let elementObj = {};
-            if (type2BAdded === 'CONTAINER' || type2BAdded === 'WORKED_EXAMPLE') {
-                slateFigures = await getAsideElementsWrtKey(newParentData[slateManifestUrn].contents.bodymatter, 'element-aside', slateFigures);
-            } else {
-                slateFigures = await getAutoNumberedElementsOnSlate(newParentData[slateManifestUrn], { dispatch });
-            }
-            elementObj = slateFigures?.find(element => element.contentUrn === createdElemData.data.contentUrn);
-            const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
-            const labelType = createdElemData?.data?.displayedlabel;
-            elementsList = autoNumberedElementsObj[listType];
-            handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
-        }
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
 
         if (config.tcmStatus) {
@@ -561,6 +542,29 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 showHideId: createdElemData.data.id
             }
         })
+        let autoNumberedElementsObj = getState().autoNumberReducer?.autoNumberedElements;
+        const slateAncestorData = getState().appStore?.currentSlateAncestorData;
+        const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
+        const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
+        let elementsList = {};
+        if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
+            if (popupParentSlateData?.isPopupSlate) {
+                dispatch(handleAutonumberingOnCreate(type2BAdded, createdElemData.data));
+            } else {
+                let slateFigures = [];
+                let elementObj = {};
+                if (type2BAdded === 'CONTAINER' || type2BAdded === 'WORKED_EXAMPLE') {
+                    slateFigures = await getAsideElementsWrtKey(newParentData[slateManifestUrn].contents.bodymatter, 'element-aside', slateFigures);
+                } else {
+                    slateFigures = await getAutoNumberedElementsOnSlate(newParentData[slateManifestUrn], { dispatch });
+                }
+                elementObj = slateFigures?.find(element => element.contentUrn === createdElemData.data.contentUrn);
+                const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
+                const labelType = createdElemData?.data?.displayedlabel;
+                elementsList = autoNumberedElementsObj[listType];
+                handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
+            }
+        }
         if(cb){
             cb("create",index);
         }
