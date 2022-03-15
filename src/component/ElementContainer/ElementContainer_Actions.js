@@ -1015,8 +1015,8 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
         for(let i=0;i<tableRow.length;i++){
             let cells = tableRow[i].childNodes;
             for(let j=0; j<cells.length; j++){
-                let dataSet = cells[j].childNodes[0].dataset;
-                if(Object.keys(dataSet).length > 0){
+                let dataSet = cells[j].childNodes[0]?.dataset;
+                if(dataSet && Object.keys(dataSet).length > 0){
                    let tempImgObj = {};
                    if(!dataSet.alttext || !dataSet.longdescription){
                        let data = await getAltTextLongDesc(dataSet.id);

@@ -125,7 +125,7 @@ const INITIAL_STATE = {
     isCypressPlusEnabled:false,
     isJoinedPdfSlate: false,
     tableElementAssetData: [],
-    tableElementEditedData: []
+    tableElementEditedData: {}
 };
 
 const INITIAL_ACTION = {
@@ -407,7 +407,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case UPDATE_TABLE_ELEMENT_EDITED_DATA:
             return {
                 ...state,
-                tableElementEditedData: [ ...state.tableElementEditedData, action.payload]
+                tableElementEditedData: { ...state.tableElementEditedData, ...action.payload}
             }
         default:
             return state;

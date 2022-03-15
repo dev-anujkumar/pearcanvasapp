@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import '../../styles/PopUp/PopUp.css';
+import { updateEditedData } from '../ElementContainer/ElementContainer_Actions';
 
 const MetaDataPopUpForTE = (props) => {
-  const {imageList} = props
-    const [active, setActive] = useState('');
-    const [index, setIndex] = useState(0);
-    const [altText, setAltText] = useState('');
-    const [longDescription, setLongDescription] = useState('');
-    const [imageID, setimageID] = useState('');
-    const [imageSrc, setimageSrc] = useState('');
-    const [disabledButton, setDisabledButton] = useState(false);
+  const {imageList, editedImageList, updateEditedData} = props
+  const [active, setActive] = useState('');
+  const [index, setIndex] = useState(0);
+  const [altText, setAltText] = useState('');
+  const [longDescription, setLongDescription] = useState('');
+  const [imageID, setimageID] = useState('');
+  const [imageSrc, setimageSrc] = useState('');
+  const [disabledButton, setDisabledButton] = useState(false);
 
     useEffect(() => {
       if(imageList?.length > 0){
@@ -24,6 +26,7 @@ const MetaDataPopUpForTE = (props) => {
     const traverseLeft = () => {
       if(index > 0){
         let newIndex = index - 1;
+        updateImageInStore();
         updateCurrentImage(newIndex);
         setIndex(newIndex);
       }
@@ -32,17 +35,43 @@ const MetaDataPopUpForTE = (props) => {
     const traverseRight = () => {
       if(index < imageList?.length-1){
         let newIndex = index + 1;
+        updateImageInStore();
         updateCurrentImage(newIndex);
         setIndex(newIndex);
       }
     }
 
-    const updateCurrentImage = () => {
-      let { altText, imgId, imgSrc, longdescription } = imageList[newIndex];
+    const updateCurrentImage = (newIndex) => {
+      let { imgId, imgSrc } = imageList[newIndex];
+      let altText = "", longdescription = "";
+      if(editedImageList[imgId]){
+        altText = editedImageList[imgId].altText;
+        longdescription = editedImageList[imgId].longdescription;
+      } else {
+        altText = imageList[newIndex].altText;
+        longdescription = imageList[newIndex].longdescription;
+      }
       setAltText(altText);
       setLongDescription(longdescription);
       setimageID(imgId);
       setimageSrc(imgSrc);
+    }
+
+    const updateImageInStore = () => {
+      let altTxt = imageList[index].altText;
+      let {longdescription} = imageList[index];
+
+      if(altTxt !== altText || longdescription !== longDescription){
+        let editedData = {}
+        editedData[imageID] = {
+          altText,
+          longdescription: longDescription,
+          imgSrc: imageSrc,
+          imgId: imageID
+        }
+  
+        updateEditedData(editedData);
+      }
     }
 
     let renderedImages = imageList && imageList.map((image) => (
@@ -51,8 +80,8 @@ const MetaDataPopUpForTE = (props) => {
         src={image.imgSrc} 
         id={image.imgId}
         // onClick={() => this.processImageID(image.imgId)}
-      />     
-    ))
+      />
+    ));
 
     return(
         <div className="model">
@@ -71,11 +100,11 @@ const MetaDataPopUpForTE = (props) => {
                      /> 
                   </div>
                   <div className='outer-img-array-container'>
-                    <span className='left-arrow'> &lt;</span>
+                    <span className='left-arrow' onClick={traverseLeft}> &lt;</span>
                     <span className='inner-img-array'>
                        {renderedImages}
                     </span>
-                    <span className='right-arrow'> &gt;</span>
+                    <span className='right-arrow' onClick={traverseRight}> &gt;</span>
                   </div>
                 </div>
                 <div className="right-container">
@@ -147,4 +176,17 @@ const MetaDataPopUpForTE = (props) => {
     )
 }
 
-export default MetaDataPopUpForTE;
+const mapDispatchToProps = dispatch => {
+  return { 
+    updateEditedData: (editedData) => {
+      dispatch(updateEditedData(editedData))
+    }
+  }
+}
+
+const mapStateToPros = state => {
+  return {
+    editedImageList: state.appStore.tableElementEditedData
+  }
+}
+export default connect(mapStateToPros, mapDispatchToProps)(MetaDataPopUpForTE);
