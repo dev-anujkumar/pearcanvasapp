@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../../styles/PopUp/PopUp.css';
 
 const MetaDataPopUpForTE = (props) => {
+  const {imageList} = props
     const [active, setActive] = useState('');
     const [index, setIndex] = useState(0);
     const [altText, setAltText] = useState('');
@@ -11,8 +12,8 @@ const MetaDataPopUpForTE = (props) => {
     const [disabledButton, setDisabledButton] = useState(false);
 
     useEffect(() => {
-      if(props.imageList?.length > 0){
-        let { altText, imgId, imgSrc, longdescription } = props.imageList[0];
+      if(imageList?.length > 0){
+        let { altText, imgId, imgSrc, longdescription } = imageList[0];
         setAltText(altText);
         setLongDescription(longdescription);
         setimageID(imgId);
@@ -29,7 +30,7 @@ const MetaDataPopUpForTE = (props) => {
     }
 
     const traverseRight = () => {
-      if(index < props.imageList?.length-1){
+      if(index < imageList?.length-1){
         let newIndex = index + 1;
         updateCurrentImage(newIndex);
         setIndex(newIndex);
@@ -37,14 +38,14 @@ const MetaDataPopUpForTE = (props) => {
     }
 
     const updateCurrentImage = () => {
-      let { altText, imgId, imgSrc, longdescription } = props.imageList[newIndex];
+      let { altText, imgId, imgSrc, longdescription } = imageList[newIndex];
       setAltText(altText);
       setLongDescription(longdescription);
       setimageID(imgId);
       setimageSrc(imgSrc);
     }
 
-    let renderedImages = imageArrayForRender.map((image) => (
+    let renderedImages = imageList && imageList.map((image) => (
       <img 
         className='img-inside-array' 
         src={image.imgSrc} 
