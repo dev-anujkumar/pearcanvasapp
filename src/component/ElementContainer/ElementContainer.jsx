@@ -2251,16 +2251,12 @@ class ElementContainer extends Component {
                         />}
                     {this.state.showAlfrescoEditPopupforTE &&
                         <MetaDataPopUpForTE
-                            figureUrl={this.state.figureUrl}
                             togglePopup={this.handleFigurePopup}
-                            imageId={this.state.imageId}
                             updateFigureData={this.updateFigureData}
                             handleFocus={this.handleFocus}
                             handleBlur={this.handleBlur}
                             showAlfrescoEditPopupforTE = {this.state.showAlfrescoEditPopupforTE}
-                            element={this.props.element}
-                            index={this.props.index}
-                            asideData={this.props.asideData}
+                            imageList={this.props.tableElementAssetData}
                         />}    
                     {this.props.children &&
                         <PageNumberContext.Consumer>
@@ -2635,6 +2631,7 @@ class ElementContainer extends Component {
         const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup"]
         if (element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) {
             if(element?.figuretype === 'tableasmarkup'){
+                this.props.prepareImageDataFromTable(element);
                 this.handleFigurePopup(true, 'TE');
             }else {
                 this.handleFigurePopup(true);

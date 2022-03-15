@@ -1,45 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/PopUp/PopUp.css';
 
-
-
 const MetaDataPopUpForTE = (props) => {
-
-    // const { togglePopup, showAlfrescoEditPopupforTE } = props
     const [active, setActive] = useState('');
+    const [index, setIndex] = useState(0);
     const [altText, setAltText] = useState('');
     const [longDescription, setLongDescription] = useState('');
+    const [imageID, setimageID] = useState('');
+    const [imageSrc, setimageSrc] = useState('');
     const [disabledButton, setDisabledButton] = useState(false);
 
-    let imageArrayForRender = [
-      {
-        "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/4819307d-7857-44f6-809a-24cae6836ff6/carimageNew01-QA.jpg",
-        "imgId": "imageAssetContent:4819307d-7857-44f6-809a-24cae6836ff6:7553"
-      },
-     {
-        "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/31189d68-e07d-42f6-923e-a78955387c6f/galaxy_assesttest%20%281%29.jpg",
-        "imgId": "imageAssetContent:31189d68-e07d-42f6-923e-a78955387c6f:8340"
-     },
-     {
-        "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/d8f28a48-63c1-42de-9ea6-0fcb6685ea54/flower.jpg",
-        "imgId": "imageAssetContent:d8f28a48-63c1-42de-9ea6-0fcb6685ea54:3837"
-     },
-     {
-        "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/2c421154-bd89-405e-a9b5-47ce596b80a4/ducati%20panigale.jpg",
-        "imgId": "imageAssetContent:2c421154-bd89-405e-a9b5-47ce596b80a4:1984"
-     }
-  ]
+    useEffect(() => {
+      if(props.imageList?.length > 0){
+        let { altText, imgId, imgSrc, longdescription } = props.imageList[0];
+        setAltText(altText);
+        setLongDescription(longdescription);
+        setimageID(imgId);
+        setimageSrc(imgSrc);
+      }
+    }, [props.imageList]);
 
-  let renderedImages = imageArrayForRender.map((image) => (
-    <img 
-      className='img-inside-array' 
-      src={image.imgSrc} 
-      id={image.imgId}
-      // onClick={() => this.processImageID(image.imgId)}
-    />     
-  ))
-    
+    const traverseLeft = () => {
+      if(index > 0){
+        let newIndex = index - 1;
+        updateCurrentImage(newIndex);
+        setIndex(newIndex);
+      }
+    }
 
+    const traverseRight = () => {
+      if(index < props.imageList?.length-1){
+        let newIndex = index + 1;
+        updateCurrentImage(newIndex);
+        setIndex(newIndex);
+      }
+    }
+
+    const updateCurrentImage = () => {
+      let { altText, imgId, imgSrc, longdescription } = props.imageList[newIndex];
+      setAltText(altText);
+      setLongDescription(longdescription);
+      setimageID(imgId);
+      setimageSrc(imgSrc);
+    }
+
+    let renderedImages = imageArrayForRender.map((image) => (
+      <img 
+        className='img-inside-array' 
+        src={image.imgSrc} 
+        id={image.imgId}
+        // onClick={() => this.processImageID(image.imgId)}
+      />     
+    ))
 
     return(
         <div className="model">
@@ -53,8 +65,8 @@ const MetaDataPopUpForTE = (props) => {
                   <div className='outer-img-container'>
                      <img 
                       className='inner-img-container' 
-                      src='https://cite-media-stg.pearson.com/legacy_paths/6b860521-9132-4051-b6cc-dfa020866864/Chrysanthemum.jpg' 
-                      id='imageAssetContent:6b860521-9132-4051-b6cc-dfa020866864:6550'
+                      src={imageSrc}
+                      id={imageID}
                      /> 
                   </div>
                   <div className='outer-img-array-container'>
@@ -87,7 +99,7 @@ const MetaDataPopUpForTE = (props) => {
                         type="text"
                         placeholder="Enter your text here"
                         value={altText}
-                        disabled={disabledButton ? false : true}
+                        // disabled={disabledButton ? false : true}
                         onChange={(e) =>
                           setAltText(e.target.value)
                         }
@@ -113,7 +125,7 @@ const MetaDataPopUpForTE = (props) => {
                         cols="50"
                         placeholder="Enter your text here"
                         value={longDescription}
-                        disabled={disabledButton ? false : true}
+                        // disabled={disabledButton ? false : true}
                         onChange={(e) =>
                           setLongDescription(e.target.value)
                         }
