@@ -1058,8 +1058,8 @@ const getAltTextLongDesc = async (id) => {
             });
         const {properties} = response.data.entry;
         return { 
-            altText : properties["cplg:longDescription"],
-            longdescription: properties["cplg:altText"]
+            altText : properties["cplg:altText"],
+            longdescription: properties["cplg:longDescription"]
         }
     } catch(error){
         console.log(" error: ", error)
@@ -1075,4 +1075,38 @@ export const updateEditedData = (imageObject) => (dispatch) => {
         type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
         payload: imageObject
     })
+}
+
+export const saveTEMetadata = async (editedImageList) => {
+    try{
+        let url = "";
+        const editedImagesArray = Object.values(editedImageList);
+        if(editedImagesArray?.length > 0){
+            let promiseArray = [];
+            for(let i=0; i< editedImagesArray.length; i++){
+                let { altText, imgId, longdescription} = editedImagesArray[i];
+                let id = imgId.substring(imgId.indexOf(":") + 1, imgId.lastIndexOf(":"));
+                url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${id}`;
+                const body = {
+                    properties: { 
+                        "cplg:altText": altText,
+                        "cplg:longDescription": longdescription
+                    }
+                }
+                const response = axios.put(url, body, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "apikey": config.CMDS_APIKEY,
+                        'myCloudProxySession': config.myCloudProxySession
+                    }
+                });
+    
+                promiseArray.push(response);
+            }
+    console.log("promiseArray: ", promiseArray)
+            await Promise.all(promiseArray);
+    
+        }
+    } catch(error){
+    }
 }
