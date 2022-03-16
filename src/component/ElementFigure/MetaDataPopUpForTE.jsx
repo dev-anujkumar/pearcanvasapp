@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import '../../styles/PopUp/PopUp.css';
-import { updateEditedData } from '../ElementContainer/ElementContainer_Actions';
+import { updateEditedData, saveTEMetadata } from '../ElementContainer/ElementContainer_Actions';
 
 const MetaDataPopUpForTE = (props) => {
   const {imageList, editedImageList, updateEditedData} = props
@@ -13,7 +13,7 @@ const MetaDataPopUpForTE = (props) => {
   const [longDescription, setLongDescription] = useState('');
   const [imageID, setimageID] = useState('');
   const [imageSrc, setimageSrc] = useState('');
-  const [disabledButton, setDisabledButton] = useState(false);
+  const [disableButton, setDisableButton] = useState(true);
 
     useEffect(() => {
       if(imageList?.length > 0){
@@ -73,6 +73,12 @@ const MetaDataPopUpForTE = (props) => {
       }
     }
 
+  const handleButtonDisable = () => {
+    if(disableButton){
+      setDisableButton(false);
+    }
+  }
+
     const updateImageInStore = () => {
       let altTxt = imageList[index].altText;
       let {longdescription} = imageList[index];
@@ -90,13 +96,22 @@ const MetaDataPopUpForTE = (props) => {
       }
     }
 
+  const handleSave = () => {
+    updateImageInStore();
+    saveTEMetadata(editedImageList)
+        .then(() => {
+          props.togglePopup(false, 'TE');
+        })
+        .catch(error => {   
+        });
+  }
+
     let updatedImageList = imageList.slice(lowerIndex,upperIndex+1)
     let renderedImages = updatedImageList && updatedImageList.map((image) => (
       <img 
         className='img-inside-array' 
         src={image.imgSrc} 
         id={image.imgId}
-        // onClick={() => this.processImageID(image.imgId)}
       />
     ));
 
@@ -147,8 +162,10 @@ const MetaDataPopUpForTE = (props) => {
                         placeholder="Enter your text here"
                         value={altText}
                         // disabled={disabledButton ? false : true}
-                        onChange={(e) =>
-                          setAltText(e.target.value)
+                        onChange={(e) => {
+                            setAltText(e.target.value)
+                            handleButtonDisable()
+                          }
                         }
                       />
                     </div>
@@ -173,16 +190,18 @@ const MetaDataPopUpForTE = (props) => {
                         placeholder="Enter your text here"
                         value={longDescription}
                         // disabled={disabledButton ? false : true}
-                        onChange={(e) =>
-                          setLongDescription(e.target.value)
+                        onChange={(e) =>{
+                            setLongDescription(e.target.value)
+                            handleButtonDisable()
+                          }
                         }
                       ></textarea>
                     </div>
                   </div>
                   <div className="metadata-button">
-					           <span className={`metadata-import-button ${disabledButton ? '' : "disabled"}`}>Import in Cypress</span>
-					           <span className={`metadata-import-button ${disabledButton ? '' : "disabled"}`}>Save All</span>
-					           <span className="cancel-button disable" id='close-container'>Reset</span>
+					           <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`}>Import in Cypress</span>
+					           <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleSave}>Save All</span>
+					           <span className={`cancel-button ${disableButton ? '' : "disabled"}`} id='close-container'>Reset</span>
 					           <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, 'TE')}>Cancel</span>
 				          </div>
                 </div>
