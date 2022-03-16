@@ -357,7 +357,7 @@ export const FigureHeader = (props) => {
         <>
             <header className="figure-header new-figure-image-header">
                 <div className='figure-label-number-field'>
-                    <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number2 Settings</span>
+                    <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number Settings</span>
                     <KeyboardWrapper index={`${props.index}-labelautonumber-1`} enable focus>
                     <div ref={labelRef} tabIndex={0} onKeyDown={(e) => {
                         if(true) {
