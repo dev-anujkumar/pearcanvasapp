@@ -70,7 +70,10 @@ export const FigureHeader = (props) => {
     const settingDropdownWrapperRef = useRef(null);
     const labelRef = useRef(null);
     const labelListRef = useRef(null);
+    const nonAutoLabelRef = useRef(null);
+    const nonAutoLabelListRef = useRef(null);
     let indexValue = 0
+    let indexLabelValue = 0
     useOutsideAlerter(settingDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
     const labelDropdownWrapperRef = useRef(null);
     useOutsideAlerter(labelDropdownWrapperRef, setLabelNumberSettingDropDown, setLabelDropDown);
@@ -159,7 +162,14 @@ export const FigureHeader = (props) => {
     useEffect(() => {
         labelListRef?.current?.childNodes[0].focus();
         labelListRef?.current?.addEventListener('keydown', handleAutoLabelKeyDown);
+        labelListRef?.current?.addEventListener('click', handleAutoLabelKeyDown);
     },[labelNumberSettingDropDown])
+
+    useEffect(() => {
+        nonAutoLabelListRef?.current?.childNodes[0].focus();
+        nonAutoLabelListRef?.current?.addEventListener('keydown', handleLabelKeyDown);
+        nonAutoLabelListRef?.current?.addEventListener('click', handleLabelKeyDown);
+    },[labelDropDown])
 
     /**---------------------------------------- */
     const handleCloseDropDrown = () => {
@@ -201,7 +211,11 @@ export const FigureHeader = (props) => {
              if(event.keyCode === 13) {
                  labelListRef?.current?.childNodes[indexValue].click();
                  labelRef?.current.focus();
-             }
+             } else if(event.button == 0){
+                const nodeValue = (event.target?.attributes[1]?.nodeValue)
+                labelListRef?.current?.childNodes[nodeValue]?.click();
+                labelRef?.current?.focus();
+            }
              else if (event.keyCode === 40) {
                  if(labelListRef?.current?.childNodes[indexValue + 1]) {
                     labelListRef?.current?.childNodes[indexValue + 1].focus();
@@ -210,11 +224,41 @@ export const FigureHeader = (props) => {
              } else if (event.keyCode === 38) {
                  if(labelListRef?.current?.childNodes[indexValue - 1]) {
                     labelListRef?.current?.childNodes[indexValue - 1].focus();
-                    indexValue = indexValue + 1
+                    indexValue = indexValue - 1
                  }
              }
+             if(event.button != 0){
              event.stopPropagation();
              event.preventDefault();
+             }
+         }
+     }
+
+     const handleLabelKeyDown = (event) => {
+        if(true) {
+             if(event.keyCode === 13) {
+                 nonAutoLabelListRef?.current?.childNodes[indexLabelValue].click();
+                 nonAutoLabelRef?.current.focus();
+             } else if(event.button == 0){
+                const nodeLabelValue = (event.target?.attributes[1]?.nodeValue)
+                nonAutoLabelListRef?.current?.childNodes[nodeLabelValue]?.click();
+                nonAutoLabelRef?.current?.focus();
+            }
+             else if (event.keyCode === 40) {
+                 if(nonAutoLabelListRef?.current?.childNodes[indexLabelValue + 1]) {
+                    nonAutoLabelListRef?.current?.childNodes[indexLabelValue + 1].focus();
+                    indexLabelValue = indexLabelValue + 1
+                 }
+             } else if (event.keyCode === 38) {
+                 if(nonAutoLabelListRef?.current?.childNodes[indexLabelValue - 1]) {
+                    nonAutoLabelListRef?.current?.childNodes[indexLabelValue - 1].focus();
+                    indexLabelValue = indexLabelValue - 1
+                 }
+             }
+             if(event.button != 0){
+                event.stopPropagation();
+                event.preventDefault();
+             }
          }
      }
 
@@ -348,21 +392,34 @@ export const FigureHeader = (props) => {
                 {removeLabelCondition && showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && <div className='figure-label-field'>
                     <span className={`label ${labelDropDown ? 'active' : ''}`}>Label</span>
                     <KeyboardWrapper index={`${props.index}-label-1`} enable focus>
-                    <div className="figure-label" onClick={!hasReviewerRole() && handleLabelDropdown}>
+                    <div ref={nonAutoLabelRef} tabIndex={0} onKeyDown={(e) => {
+                        if(true) {
+                            const key = e.which || e.keyCode;
+                            if(key === 13) {
+                                handleLabelDropdown();
+                            }
+                            if(key === 38) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                            }
+                        }
+                    }}>
+                    <div className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-label-1` ? "figure-label-highlight" : "figure-label"} onClick={!hasReviewerRole() && handleLabelDropdown}>
                         <span className='canvas-dropdown' >{imgLabelValue}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                         {showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && labelDropDown &&
                             <div className="figure-dropdown" style={{top: '9px', left: 0}} ref={labelDropdownWrapperRef} >
-                                <ul>
+                                <ul ref={nonAutoLabelListRef}>
                                     {figureLabelData.map((label, i) => {
                                         return (
-                                            <li key={i} onClick={() => { changeLabelValue(figureLabelValue, label) }}>
+                                            <li key={i} tabIndex={0} onClick={() => { changeLabelValue(figureLabelValue, label) }}>
                                                 {label}</li>
                                         )
                                     })}
                                 </ul>
                             </div>
                         }
+                    </div>
                     </div>
                     </KeyboardWrapper>
                 </div>}
