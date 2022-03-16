@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import '../../styles/PopUp/PopUp.css';
 import { updateEditedData, saveTEMetadata } from '../ElementContainer/ElementContainer_Actions';
+import moveArrow from './Assets/down-arrow.svg';
+
 
 const MetaDataPopUpForTE = (props) => {
   const {imageList, editedImageList, updateEditedData} = props
-  const [active, setActive] = useState('');
+  const [longDescErr, setLongDescErr] = useState(false);
   const [index, setIndex] = useState(0);
   const [lowerIndex, setLowerIndex] = useState(0);
   const [upperIndex, setUpperIndex] = useState(2);
@@ -22,7 +24,12 @@ const MetaDataPopUpForTE = (props) => {
         setLongDescription(longdescription);
         setimageID(imgId);
         setimageSrc(imgSrc);
-      }
+        let longdescDiv = String(longdescription)
+        // if(/<\/?[a-z][\s\S]*>/i.test(longdescDiv)){
+        //   setLongDescErr(true);
+        // }
+        
+      }    
     }, [props.imageList]);
 
     const traverseLeft = () => {
@@ -68,7 +75,7 @@ const MetaDataPopUpForTE = (props) => {
       }else if(index < lowerIndex && index < upperIndex ){
           setLowerIndex(lowerIndex-1);
           setUpperIndex(upperIndex-1);
-      }else if(lowerIndex <= index <= upperIndex){
+      }else if(lowerIndex <= index && index <= upperIndex){  
           return
       }
     }
@@ -106,15 +113,30 @@ const MetaDataPopUpForTE = (props) => {
         });
   }
 
-    let updatedImageList = imageList.slice(lowerIndex,upperIndex+1)
-    let renderedImages = updatedImageList && updatedImageList.map((image) => (
-      <img 
-        className='img-inside-array' 
-        src={image.imgSrc} 
-        id={image.imgId}
-      />
-    ));
+    const renderImages = () => {
+      
+      let updatedImageList;
+    
+      if(index>upperIndex){
+        updatedImageList = imageList.slice(lowerIndex+1,upperIndex+2)
+      }else if(index<lowerIndex){
+        updatedImageList = imageList.slice(lowerIndex-1,upperIndex)
+      }else{
+        updatedImageList = imageList.slice(lowerIndex,upperIndex+1)
+      }
+  
+      let renderedImagesList = updatedImageList && updatedImageList.map((image, imgIndex) => (
+        <img 
+          className='img-inside-array' 
+          src={image.imgSrc} 
+          id={image.imgId}
+          style={ image.imgSrc === imageSrc ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
+        />
+      ));
 
+      return renderedImagesList;
+    }
+    
     return(
         <div className="model">
             <div tabIndex="0" className="model-popup">
@@ -132,36 +154,31 @@ const MetaDataPopUpForTE = (props) => {
                      /> 
                   </div>
                   <div className='outer-img-array-container'>
-                    <span className='left-arrow' onClick={traverseLeft}> &lt;</span>
+                    <span className='left-arrow' onClick={traverseLeft}><div className='left-arrow-icon'><img width="12px" height="12px" src={moveArrow} /></div></span>
                     <span className='inner-img-array'>
-                       {renderedImages}
+                       {renderImages()}
                     </span>
-                    <span className='right-arrow' onClick={traverseRight}> &gt;</span>
+                    <span className='right-arrow' onClick={traverseRight}><div className='right-arrow-icon'><img width="12px" height="12px" src={moveArrow} /></div></span>
                   </div>
                 </div>
                 <div className="right-container">
                   <div className="figuremetadata-field">
                     <div
-                      className={`alt-text-body ${
-                        active === "altBody" ? "active" : ""
-                      }`}
+                      className={'alt-text-body'}
                       // onClick={() => this.handleActiveState("altBody")}
                     >
                       <p
-                        className={`alt-text ${
-                          active === "altBody" ? "active" : ""
-                        }`}
+                        className={'alt-text'}
                       >
                         Alt Text
                       </p>
                       <input
                         autocomplete="off"
-                        id="altText_AM"
-                        name="altText_AM"
+                        id="altText"
+                        name="altText"
                         type="text"
                         placeholder="Enter your text here"
                         value={altText}
-                        // disabled={disabledButton ? false : true}
                         onChange={(e) => {
                             setAltText(e.target.value)
                             handleButtonDisable()
@@ -171,20 +188,17 @@ const MetaDataPopUpForTE = (props) => {
                     </div>
                     <div
                       className={`long-description-body ${
-                        active === "longBody" ? "active" : ""
+                        longDescErr === true ? "invalid" : ""
                       }`}
-                      // onClick={() => this.handleActiveState("longBody")}
                     >
                       <p
-                        className={`long-text ${
-                          active === "longBody" ? "active" : ""
-                        }`}
+                        className={'long-text'}
                       >
                         Long Description
                       </p>
                       <textarea
-                        id="longDescription_AM"
-                        name="longDescription_AM"
+                        id="longDescription"
+                        name="longDescription"
                         rows="9"
                         cols="50"
                         placeholder="Enter your text here"

@@ -542,6 +542,20 @@
   border: 2px solid #427ef5;
 }
 
+.right-arrow-icon {
+  padding-top: 2px;
+  padding-right: 4px;
+  transform: rotateZ(-90deg);
+  cursor: pointer;
+}
+
+.left-arrow-icon {
+  padding-top: 2px;
+  padding-right: 4px;
+  transform: rotateZ(+90deg);
+  cursor: pointer;
+}
+
 .figure-popup {
   width: 640px;
   height: 476px;
@@ -624,7 +638,7 @@
 
 .right-arrow{
   /* border: 2px solid gray; */
-  margin: 24px 0px 20px 0px;
+  margin: 18px 0px 20px 0px;
   height: 28px;
   width: 18px;
   font-size: large;
@@ -662,6 +676,10 @@
   border-bottom: 1px solid #cccccc;
   padding: 8px 12px;
   height: 230px;
+}
+
+.long-description-body.invalid{
+  border-bottom: 2px solid #f31212;
 }
 .alt-text-body .alt-text {
   font-size: 12px;
