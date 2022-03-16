@@ -3,7 +3,6 @@
 */
 import React, { useRef, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import config from '../../config/config';
 import TextField from "@material-ui/core/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
@@ -14,8 +13,6 @@ import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TAB
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx';
-import Tooltip from '../Tooltip/Tooltip.jsx';
-import { createRef } from 'react';
 
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -24,8 +21,6 @@ const {
     AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
-
-// const KEYBOARD_ENABLE = [TABLE, MATH_IMAGE, BLOCK_CODE, IMAGE];
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -338,10 +333,6 @@ export const FigureHeader = (props) => {
             }
         }
     }
-
-    // const isEnableKeyboard = () => {
-    //     return KEYBOARD_ENABLE.indexOf(props.model.figuretype) > -1
-    // }
 
     const { figureHtmlData, figLabelClass, figTitleClass } = props
     const containerNumber = getContainerNumber(slateAncestors, props.autoNumberingDetails) //F,B,P1,23
