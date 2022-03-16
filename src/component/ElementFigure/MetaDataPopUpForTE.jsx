@@ -149,7 +149,6 @@ const MetaDataPopUpForTE = (props) => {
                   <div className="figuremetadata-field">
                     <div
                       className={'alt-text-body'}
-                      // onClick={() => this.handleActiveState("altBody")}
                     >
                       <p
                         className={'alt-text'}
@@ -185,7 +184,6 @@ const MetaDataPopUpForTE = (props) => {
                         cols="50"
                         placeholder="Enter your text here"
                         value={longDescription}
-                        // disabled={disabledButton ? false : true}
                         onChange={(e) =>
                           setLongDescription(e.target.value)
                         }
