@@ -673,6 +673,12 @@
 
 .alt-text-body.invalid{
   border-bottom: 2px solid #f31212;
+  margin-bottom: 0px !important;
+ }
+
+ .alt-text-span{
+   color: red;
+   margin-bottom: 20px;
  }
 
  .long-description-body {

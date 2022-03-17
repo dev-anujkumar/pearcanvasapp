@@ -36,6 +36,9 @@ const MetaDataPopUpForTE = (props) => {
       }    
     }, [props.imageList]);
 
+
+    // useEffect()
+
     const checkHTMLInString = (str) => {
       return /<\/?[a-z][\s\S]*>/i.test(str)
     }
@@ -61,6 +64,7 @@ const MetaDataPopUpForTE = (props) => {
     }
 
     const checkingForInputErr = (shiftType=null) => {
+      console.log('Inside checkingForInputErr index value : ',index)
       let altText;
       let longdescription;
       if(shiftType === 'rightShift'){
@@ -150,8 +154,23 @@ const MetaDataPopUpForTE = (props) => {
     console.log("===========> figureData: ", figureData.tableasHTML)
     let dummyDiv = document.createElement('div');
     dummyDiv.innerHTML = figureData.tableasHTML;
-    console.log("==========> dummyDiv: ", dummyDiv.querySelector(`img data-id=imageAssetContent:4819307d-7857-44f6-809a-24cae6836ff6:2648`))
+    // console.log("==========> dummyDiv: ", dummyDiv.querySelector(`img data-id=imageAssetContent:4819307d-7857-44f6-809a-24cae6836ff6:2648`))
     console.log("stringify: ", JSON.stringify(dummyDiv.innerHTML))
+    let imgElementArray = [];
+    let sources = dummyDiv.innerHTML.match(/<img [^>]*src="[^"]*"[^>]*>/gm).forEach(x=> {
+      imgElementArray.push(x);
+      console.log('x => ',x)})
+                          
+    console.log('imgElementArray : ',imgElementArray)
+
+    const substring = 'imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:3730';
+    let requiredImgElement = imgElementArray.find(element => {
+      if (element.includes(substring)) {
+        return true;
+      }
+    })
+
+    console.log('requiredImgElement : ',requiredImgElement)
     // saveTEMetadata(editedImageList)
     //     .then(() => {
 		//       /*-- Updata the image metadata in wip */
@@ -226,7 +245,7 @@ const MetaDataPopUpForTE = (props) => {
                         onBlur={updateImageInStore}
                       />
                     </div>
-                    {altTextErr && <span style={ {  color: 'red' } }><i class="fa-solid fa-triangle-exclamation"></i>Special characters are not supported in the Alt Text input field</span>}
+                    {altTextErr && <span className='alt-text-span'><i class="fa-solid fa-triangle-exclamation"></i>Special characters are not supported in the Alt Text input field</span>}
                     <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
                       <p className={'long-text'}> Long Description </p>
                       <textarea
