@@ -264,7 +264,7 @@ const initialState20 = {
     }
 }
 
-xdescribe('Test - Sidebar_Actions',()=>{
+describe('Test - Sidebar_Actions',()=>{
     describe('Test convertElement- paragraph', () => {
         let store = mockStore(() => initialState);
         it('Test Convert Element', () => {
@@ -1063,7 +1063,7 @@ describe('Test handleElementConversion- ShowHide in WE-Paragraph to List', () =>
         spyconversionElement.mockClear()
     });
 });
-xdescribe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
+describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
 
     it('Test convertElement  -we MOCK API CALL', async () => {
         let expectedRes = {
@@ -1144,7 +1144,7 @@ xdescribe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
         await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
     });
 });
-xdescribe('1 Test convertElement ', () => {
+describe('1 Test convertElement ', () => {
     const showHideObj = { index: "0-0",
         element: { contentUrn: "urn:pearson:entity:808c0c76-1786-455a-8410-4f250384b142" }
     };
@@ -1367,7 +1367,7 @@ xdescribe('1 Test convertElement ', () => {
             expect(spyconversionElement).toHaveBeenCalled()
             spyconversionElement.mockClear()
         });
-        xdescribe('1.10.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
+        describe('1.10.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
             it('1.10.3.1 indexes.length === 4 ', async () => {
                 const { initState, store, showHideObj } = testData?.testcase2;
                 const { oldElementData, newElementData, oldElementInfo } = testData?.testcase17;
