@@ -2261,6 +2261,10 @@ class ElementContainer extends Component {
                             handleBlur={this.handleBlur}
                             showAlfrescoEditPopupforTE = {this.state.showAlfrescoEditPopupforTE}
                             imageList={this.props.tableElementAssetData}
+                            handleBlur={this.handleBlur}
+                            element={this.props.element}
+                            index={this.props.index}
+                            asideData={this.props.asideData}
                         />}    
                     {this.props.children &&
                         <PageNumberContext.Consumer>

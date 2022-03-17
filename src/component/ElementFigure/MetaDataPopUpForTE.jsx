@@ -32,10 +32,13 @@ const MetaDataPopUpForTE = (props) => {
       }    
     }, [props.imageList]);
 
+    const checkHTMLInString = (str) => {
+      return /<\/?[a-z][\s\S]*>/i.test(str)
+    }
+
     const traverseLeft = () => {
       if(index > 0){
         let newIndex = index - 1;
-        updateImageInStore();
         updateCurrentImage(newIndex);
         setIndex(newIndex);
       }
@@ -45,7 +48,6 @@ const MetaDataPopUpForTE = (props) => {
     const traverseRight = () => {
       if(index < imageList?.length-1){
         let newIndex = index + 1;
-        updateImageInStore();
         updateCurrentImage(newIndex);
         setIndex(newIndex);
       }
@@ -89,28 +91,43 @@ const MetaDataPopUpForTE = (props) => {
     const updateImageInStore = () => {
       let altTxt = imageList[index].altText;
       let {longdescription} = imageList[index];
+      if((!checkHTMLInString(altTxt) && !checkHTMLInString(longdescription)) && (altTxt !== altText || longdescription !== longDescription)){
+          let editedData = {}
+          editedData[imageID] = {
+            altText,
+            longdescription: longDescription,
+            imgSrc: imageSrc,
+            imgId: imageID
+          }
 
-      if(altTxt !== altText || longdescription !== longDescription){
-        let editedData = {}
-        editedData[imageID] = {
-          altText,
-          longdescription: longDescription,
-          imgSrc: imageSrc,
-          imgId: imageID
-        }
-  
-        updateEditedData(editedData);
+          updateEditedData(editedData);
       }
     }
 
   const handleSave = () => {
-    updateImageInStore();
     saveTEMetadata(editedImageList)
         .then(() => {
           props.togglePopup(false, 'TE');
-        })
-        .catch(error => {   
         });
+  }
+
+  const handleImport = () => {
+    const { index, element, asideData } = props;
+    /*-- Form data to send to wip */
+    let figureData = { ...element.figuredata };
+    console.log("===========> figureData: ", figureData.tableasHTML)
+    let dummyDiv = document.createElement('div');
+    dummyDiv.innerHTML = figureData.tableasHTML;
+    console.log("==========> dummyDiv: ", dummyDiv.querySelector(`img data-id=imageAssetContent:4819307d-7857-44f6-809a-24cae6836ff6:2648`))
+    console.log("stringify: ", JSON.stringify(dummyDiv.innerHTML))
+    // saveTEMetadata(editedImageList)
+    //     .then(() => {
+		//       /*-- Updata the image metadata in wip */
+		//       // this.props.updateFigureData(figureData, index, element.id, asideData, () => {
+		//       // 	// this.props.handleFocus("updateFromC2")
+		//       // 	this.props.handleBlur()
+		//       // })
+    //     });
   }
 
     const renderImages = () => {
@@ -147,11 +164,7 @@ const MetaDataPopUpForTE = (props) => {
                 <div className='left-right-container'>
                 <div className="left-container">
                   <div className='outer-img-container'>
-                     <img 
-                      className='inner-img-container' 
-                      src={imageSrc}
-                      id={imageID}
-                     /> 
+                     <img className='inner-img-container' src={imageSrc} id={imageID} /> 
                   </div>
                   <div className='outer-img-array-container'>
                     <span className='left-arrow' onClick={traverseLeft}><div className='left-arrow-icon'><img width="12px" height="12px" src={moveArrow} /></div></span>
@@ -163,17 +176,11 @@ const MetaDataPopUpForTE = (props) => {
                 </div>
                 <div className="right-container">
                   <div className="figuremetadata-field">
-                    <div
-                      className={'alt-text-body'}
-                    >
-                      <p
-                        className={'alt-text'}
-                      >
-                        Alt Text
-                      </p>
+                    <div className="alt-text-body">
+                      <p className="alt-text"> Alt Text </p>
                       <input
                         autocomplete="off"
-                        id="altText"
+                        id="altText_AM"
                         name="altText"
                         type="text"
                         placeholder="Enter your text here"
@@ -183,36 +190,29 @@ const MetaDataPopUpForTE = (props) => {
                             handleButtonDisable()
                           }
                         }
+                        onBlur={updateImageInStore}
                       />
                     </div>
-                    <div
-                      className={`long-description-body ${
-                        longDescErr === true ? "invalid" : ""
-                      }`}
-                    >
-                      <p
-                        className={'long-text'}
-                      >
-                        Long Description
-                      </p>
+                    <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
+                      <p className="long-text"> Long Description </p>
                       <textarea
-                        id="longDescription"
+                        id="longDescription_AM"
                         name="longDescription"
                         rows="9"
                         cols="50"
                         placeholder="Enter your text here"
                         value={longDescription}
-                        // disabled={disabledButton ? false : true}
                         onChange={(e) =>{
                             setLongDescription(e.target.value)
                             handleButtonDisable()
                           }
                         }
+                        onBlur={updateImageInStore}
                       ></textarea>
                     </div>
                   </div>
                   <div className="metadata-button">
-					           <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`}>Import in Cypress</span>
+					           <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleImport}>Import in Cypress</span>
 					           <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleSave}>Save All</span>
 					           <span className={`cancel-button ${disableButton ? '' : "disabled"}`} id='close-container'>Reset</span>
 					           <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, 'TE')}>Cancel</span>
