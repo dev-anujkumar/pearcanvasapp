@@ -861,6 +861,35 @@ describe('Testing Figure image component', () => {
             const instance = component.instance();
             expect(instance).toBeDefined();
         });
+        it('Testing rendering of image with alignment=`actual-size` having width & height', () => {
+            let imageProps = {...props}
+            imageProps['model']['alignment'] = 'actual-size';
+            imageProps['model']['figuredata'] = {
+                width: 50,
+                height: 50
+            }
+            const component = mount(<Provider store={store2}><FigureImage {...imageProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of image with alignment=`actual-size` not having width & height', () => {
+            let imageProps = {...props}
+            imageProps['model']['alignment'] = 'actual-size';
+            imageProps['model']['figuredata'] = { }
+            const component = mount(<Provider store={store2}><FigureImage {...imageProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of image with width > 600', () => {
+            let imageProps = {...props}
+            imageProps['model']['figuredata'] = { width: 700 }
+            const component = mount(<Provider store={store2}><FigureImage {...imageProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
         it('Testing rendering of tableasmarkup with alignment', () => {
             let tableasmarupProps = {...props}
             tableasmarupProps['model'] = tableasmarkupWithData;
@@ -924,6 +953,62 @@ describe('Testing Figure image component', () => {
                 const figureImageInstance = component.find('FigureImage').instance();
                 const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldFocus');
                 figureImageInstance.onFigureImageFieldFocus("urn:");
+                expect(spy).toBeCalled();
+            });
+        });
+
+        describe('Testing onFigureImageFieldBlur', () => {
+            it('Testing onFigureImageFieldBlur - First IF', () => {
+                const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+                document.getElementById = () => {
+                    return {
+                        nextElementSibling: {
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                }
+                const figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldBlur');
+                figureImageInstance.onFigureImageFieldBlur("urn:");
+                expect(spy).toBeCalled();
+            });
+            it('Testing onFigureImageFieldBlur - Second IF', () => {
+                const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+                document.getElementById = () => {
+                    return {
+                        nextElementSibling: {
+                            classList: {
+                                contains: () => true,
+                                remove: jest.fn()
+                            }
+                        },
+                        innerHTML: '<p><br></p>'
+                    }
+                }
+                const figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldBlur');
+                figureImageInstance.onFigureImageFieldBlur("urn:");
+                expect(spy).toBeCalled();
+            });
+            it('Testing onFigureImageFieldBlur - Third IF', () => {
+                const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+                document.getElementById = () => {
+                    return {
+                        nextElementSibling: {
+                            classList: {
+                                contains: () => true,
+                                remove: jest.fn()
+                            }
+                        },
+                        innerHTML: '<p><br></p>'
+                    }
+                }
+                const figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldBlur');
+                figureImageInstance.setState({figureLabelData: ['<p><br></p>']})
+                figureImageInstance.onFigureImageFieldBlur('0-0');
                 expect(spy).toBeCalled();
             });
         });
