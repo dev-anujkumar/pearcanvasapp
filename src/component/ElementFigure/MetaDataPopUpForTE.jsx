@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import '../../styles/PopUp/PopUp.css';
-import { updateEditedData, saveTEMetadata } from '../ElementContainer/ElementContainer_Actions';
+import { updateEditedData, saveTEMetadata, prepareImageDataFromTable } from '../ElementContainer/ElementContainer_Actions';
 import moveArrow from './Assets/down-arrow.svg';
 
 const MetaDataPopUpForTE = (props) => {
@@ -78,10 +78,10 @@ const MetaDataPopUpForTE = (props) => {
       }
     }
 
-  const updateCurrentImage = (newIndex) => {
+  const updateCurrentImage = (newIndex, reset = false) => {
     let { imgId, imgSrc } = imageList[newIndex];
     let altText = "", longdescription = "";
-    if(Object.keys(editedImageList).length > 0 && editedImageList[imgId]){
+    if(Object.keys(editedImageList).length > 0 && editedImageList[imgId] && !reset){
       altText = editedImageList[imgId].altText;
       longdescription = editedImageList[imgId].longdescription;
     } else {
@@ -133,32 +133,40 @@ const MetaDataPopUpForTE = (props) => {
   }
 
   const handleImport = () => {
-    const { index, element, asideData } = props;
-    /*-- Form data to send to wip */
-    let figureData = { ...element.figuredata };
-    console.log("===========> figureData: ", figureData.tableasHTML)
-    let dummyDiv = document.createElement('div');
-    dummyDiv.innerHTML = figureData.tableasHTML;
-    console.log("==========> dummyDiv: ", dummyDiv.querySelector(`img data-id=imageAssetContent:4819307d-7857-44f6-809a-24cae6836ff6:2648`))
-    console.log("stringify: ", JSON.stringify(dummyDiv.innerHTML))
-    // saveTEMetadata(editedImageList)
-    //     .then(() => {
-		//       /*-- Updata the image metadata in wip */
-		//       // this.props.updateFigureData(figureData, index, element.id, asideData, () => {
-		//       // 	// this.props.handleFocus("updateFromC2")
-		//       // 	this.props.handleBlur()
-		//       // })
-    //     });
+    saveTEMetadata(editedImageList)
+      .then(() => {
+        const { index, element, asideData, updateFigureData, handleFocus, handleBlur } = props;
+        /*-- Form data to send to wip */
+        let figureData = { ...element.figuredata };
+        let dummyDiv = document.createElement('div');
+        dummyDiv.innerHTML = figureData.tableasHTML;
+        dummyDiv.querySelectorAll('img').forEach(img => {
+          let imgId = img.getAttribute('data-id');
+          if(Object.keys(editedImageList).length > 0 && editedImageList[imgId]){
+            let {altText, longdescription} = editedImageList[imgId];
+            img.setAttribute('alttext', altText);
+            img.setAttribute('longdescription', longdescription);
+          }     
+        });
+        figureData.tableasHTML = dummyDiv.innerHTML;
+		    /*-- Updata the image metadata in wip */
+		    updateFigureData(figureData, index, element.id, asideData, () => {
+		    	handleFocus("updateFromC2");
+		    	handleBlur();
+          handleCancel()
+		    });
+      });
   }
 
   const handleCancel = () => {
     updateEditedData({});
     togglePopup(false, 'TE');
+    props.prepareImageDataFromTable({}); // this will delete the TE data from store
   }
 
   const handleReset = () => {
     updateEditedData({});
-    updateCurrentImage(index);
+    updateCurrentImage(index, true);
   }
 
   return(
@@ -249,6 +257,9 @@ const mapDispatchToProps = dispatch => {
   return { 
     updateEditedData: (editedData) => {
       dispatch(updateEditedData(editedData))
+    },
+    prepareImageDataFromTable: (element) => {
+      dispatch(prepareImageDataFromTable(element))
     }
   }
 }

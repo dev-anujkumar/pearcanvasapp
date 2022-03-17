@@ -471,8 +471,13 @@ class ElementContainer extends Component {
             || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
         let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
         let oldImage = this.props.oldImage;
+        let isAltTextLongDescModified = false;
         if (previousElementData.figuretype !== 'tableasmarkup') {
             oldImage = this.props.oldFigureDataForCompare.path;
+        }
+
+        if(previousElementData.figuretype === 'tableasmarkup'){
+            isAltTextLongDescModified = this.props.oldFigureDataForCompare.tableasHTML !== previousElementData.figuredata.tableasHTML
         }
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             // Not selecting remove label and number
@@ -511,7 +516,7 @@ class ElementContainer extends Component {
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
                 || podwidth !== (previousElementData.figuredata.podwidth ?
-                    previousElementData.figuredata.podwidth : '') && podwidth !== null
+                    previousElementData.figuredata.podwidth : '') && podwidth !== null|| isAltTextLongDescModified
             );
         }
 
@@ -520,7 +525,7 @@ class ElementContainer extends Component {
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
             || podwidth !== (previousElementData.figuredata.podwidth ?
-                previousElementData.figuredata.podwidth : '') && podwidth !== null
+                previousElementData.figuredata.podwidth : '') && podwidth !== null|| isAltTextLongDescModified
         );
     }
 
