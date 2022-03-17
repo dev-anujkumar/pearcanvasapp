@@ -843,6 +843,44 @@ describe('Testing Figure image component', () => {
         expect(instance).toBeDefined();
     });
 
+    describe('Testing rendering of Other Figure Image type', () => {
+        it('Testing rendering of mathImage without alignment', () => {
+            let mathImage = {...props}
+            mathImage['model'] = mathImage50TextElementDefault;
+            mathImage['model']['alignment'] = null;
+            const component = mount(<Provider store={store2}><FigureImage {...mathImage} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of image without alignment', () => {
+            let imageProps = {...props}
+            imageProps['model']['alignment'] = null;
+            const component = mount(<Provider store={store2}><FigureImage {...imageProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of tableasmarkup with alignment', () => {
+            let tableasmarupProps = {...props}
+            tableasmarupProps['model'] = tableasmarkupWithData;
+            tableasmarupProps['model']['alignment'] = 'table-editor';
+            const component = mount(<Provider store={store2}><FigureImage {...tableasmarupProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of mathml with alignment', () => {
+            let mathmlProps = {...props}
+            mathmlProps['model'] = blockmathWithData;
+            mathmlProps['model']['alignment'] = 'mathml';
+            const component = mount(<Provider store={store2}><FigureImage {...mathmlProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+    });
+
     describe('Testing other functions of Figure Image', () => {
         it('Testing showDeleteAssetPopup', () => {
             const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
