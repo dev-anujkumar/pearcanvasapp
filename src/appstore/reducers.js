@@ -405,6 +405,12 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 tableElementAssetData: action.payload
             }
         case UPDATE_TABLE_ELEMENT_EDITED_DATA:
+            if(Object.keys(action.payload).length === 0){
+                return {
+                    ...state,
+                    tableElementEditedData: {...action.payload}
+                }
+            }
             return {
                 ...state,
                 tableElementEditedData: { ...state.tableElementEditedData, ...action.payload}
