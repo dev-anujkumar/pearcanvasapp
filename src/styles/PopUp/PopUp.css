@@ -637,7 +637,6 @@
 
 
 .right-arrow{
-  /* border: 2px solid gray; */
   margin: 18px 0px 20px 0px;
   height: 28px;
   width: 18px;
@@ -645,14 +644,12 @@
  }
 
 .right-container{
-  /* border: 2px solid black; */
   display: inline-block;
   width: 64.5%;
 }
 
 .left-right-container{
   display: flex;
-
 }
 
 .edit-metadata {
@@ -677,8 +674,10 @@
  }
 
  .alt-text-span{
-   color: red;
-   margin-bottom: 20px;
+  color: red;
+  font-size: 13px;
+  font-family: OpenSans;
+  margin-bottom: 6px !important
  }
 
  .long-description-body {

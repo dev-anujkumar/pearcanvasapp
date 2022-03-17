@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import '../../styles/PopUp/PopUp.css';
 import { updateEditedData, saveTEMetadata } from '../ElementContainer/ElementContainer_Actions';
 import moveArrow from './Assets/down-arrow.svg';
+import errorMark from './Assets/shape.svg';
+
 
 const MetaDataPopUpForTE = (props) => {
   const {imageList, editedImageList, updateEditedData, togglePopup} = props
@@ -143,10 +145,8 @@ const MetaDataPopUpForTE = (props) => {
     console.log("stringify: ", JSON.stringify(dummyDiv.innerHTML))
     let imgElementArray = [];
     let sources = dummyDiv.innerHTML.match(/<img [^>]*src="[^"]*"[^>]*>/gm).forEach(x=> {
-      imgElementArray.push(x);
-      console.log('x => ',x)})
-                          
-    console.log('imgElementArray : ',imgElementArray)
+      imgElementArray.push(x);})
+                        
 
     const substring = 'imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:3730';
     let requiredImgElement = imgElementArray.find(element => {
@@ -155,7 +155,7 @@ const MetaDataPopUpForTE = (props) => {
       }
     })
 
-    console.log('requiredImgElement : ',requiredImgElement)
+    
     // saveTEMetadata(editedImageList)
     //     .then(() => {
 		//       /*-- Updata the image metadata in wip */
@@ -176,84 +176,88 @@ const MetaDataPopUpForTE = (props) => {
     updateCurrentImage(index);
   }
 
+  let htmlErrMsg = ' HTML is not supported in this input field';
+
   return(
       <div className="model">
         <div tabIndex="0" className="model-popup">
           <div className='figure-popup editPopupforTE'>
-            <div className="dialog-button1">
-              <span className="edit-metadata">Edit Alfresco Metadata</span>
-            </div>
-            <div className='left-right-container'>
-            <div className="left-container">
-              <div className='outer-img-container'>
-                 <img className='inner-img-container' src={imageSrc} id={imageID} /> 
+             <div className="dialog-button1">
+                <span className="edit-metadata">Edit Alfresco Metadata</span>
               </div>
-              <div className='outer-img-array-container'>
-                <span className='left-arrow' onClick={traverseLeft}><div className='left-arrow-icon'><img width="12px" height="12px" src={moveArrow} /></div></span>
-                <span className='inner-img-array'>
-                {imageList && imageList.map((image, imgIndex) => {
-                  if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
-                      return (<img 
-                      className='img-inside-array' 
-                      src={image.imgSrc} 
-                      id={image.imgId}
-                      style={ image.imgSrc === imageSrc ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
-                    />)
-                  }
-                })}
-                </span>
-                <span className='right-arrow' onClick={traverseRight}><div className='right-arrow-icon'><img width="12px" height="12px" src={moveArrow} /></div></span>
-              </div>
-            </div>
-            <div className="right-container">
-              <div className="figuremetadata-field">
-                <div className={`alt-text-body ${altTextErr === true ? "invalid" : "" }`}>
-                  <p className="alt-text"> Alt Text </p>
-                  <input
-                    autocomplete="off"
-                    id="altText_AM"
-                    name="altText"
-                    type="text"
-                    placeholder="Enter your text here"
-                    value={altText}
-                    onChange={(e) => {
-                        setAltText(e.target.value);
-                        handleButtonDisable();
-                        checkingForInputErr();
-                    }
-                    }
-                    onBlur={updateImageInStore}
-                  />
+              <div className='left-right-container'>
+              <div className="left-container">
+                <div className='outer-img-container'>
+                   <img className='inner-img-container' src={imageSrc} id={imageID} /> 
                 </div>
-                {altTextErr && <span style={ {  color: 'red' } }><i class="fa-solid fa-triangle-exclamation"></i>Special characters are not supported in the Alt Text input field</span>}
-                <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
-                  <p className={'long-text'}> Long Description </p>
-                  <textarea
-                    id="longDescription_AM"
-                    name="longDescription"
-                    rows="9"
-                    cols="50"
-                    placeholder="Enter your text here"
-                    value={longDescription}
-                    onChange={(e) =>{
-                        setLongDescription(e.target.value);
-                        handleButtonDisable();
-                        checkingForInputErr();
+                <div className='outer-img-array-container'>
+                  <span className='left-arrow' onClick={traverseLeft}><div className='left-arrow-icon'><img width="12px" height="12px" src={moveArrow} /></div></span>
+                  <span className='inner-img-array'>
+                  {imageList && imageList.map((image, imgIndex) => {
+                    if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
+                        return (<img 
+                        className='img-inside-array' 
+                        src={image.imgSrc} 
+                        id={image.imgId}
+                        style={ image.imgSrc === imageSrc ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
+                      />)
+                    }
+                  })}
+                  </span>
+                  <span className='right-arrow' onClick={traverseRight}><div className='right-arrow-icon'><img width="12px" height="12px" src={moveArrow} /></div></span>
+                </div>
+              </div>
+              <div className="right-container">
+                <div className="figuremetadata-field">
+                  <div className={`alt-text-body ${altTextErr === true ? "invalid" : "" }`}>
+                    <p className="alt-text"> Alt Text </p>
+                    <input
+                      autocomplete="off"
+                      id="altText_AM"
+                      name="altText"
+                      type="text"
+                      placeholder="Enter your text here"
+                      value={altText}
+                      onChange={(e) => {
+                          setAltText(e.target.value);
+                          handleButtonDisable();
+                          checkingForInputErr();
                       }
-                    }
-                    onBlur={updateImageInStore}
-                  ></textarea>
+                      }
+                      onBlur={updateImageInStore}
+                    />
+                  </div>
+                  {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
+                  
+                  <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
+                    <p className={'long-text'}> Long Description </p>
+                    <textarea
+                      id="longDescription_AM"
+                      name="longDescription"
+                      rows="9"
+                      cols="50"
+                      placeholder="Enter your text here"
+                      value={longDescription}
+                      onChange={(e) =>{
+                          setLongDescription(e.target.value);
+                          handleButtonDisable();
+                          checkingForInputErr();
+                        }
+                      }
+                      onBlur={updateImageInStore}
+                    ></textarea>
+                  </div>
+                  {longDescErr && <div className='alt-text-span' ><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}
+                  </div>}
                 </div>
-                {longDescErr && <span style={ {  color: 'red' } }><i class="fa-solid fa-triangle-exclamation"></i>Special characters are not supported in the Long Description input field</span>}
+                <div className="metadata-button">
+                   <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleImport}>Import in Cypress</span>
+                   <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleSave}>Save All</span>
+                   <span className={`cancel-button ${disableButton ? '' : "disabled"}`} id='close-container' onClick={handleReset}>Reset</span>
+                   <span className="cancel-button" id='close-container' onClick={handleCancel}>Cancel</span>
+                </div>
               </div>
-              <div className="metadata-button">
-				         <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleImport}>Import in Cypress</span>
-				         <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleSave}>Save All</span>
-				         <span className={`cancel-button ${disableButton ? '' : "disabled"}`} id='close-container' onClick={handleReset}>Reset</span>
-				         <span className="cancel-button" id='close-container' onClick={handleCancel}>Cancel</span>
-			        </div>
-            </div>
-			     </div>
+             </div>
           </div>
         </div>
       </div>
