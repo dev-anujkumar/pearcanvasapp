@@ -7,6 +7,7 @@ import moveArrow from './Assets/down-arrow.svg';
 
 const MetaDataPopUpForTE = (props) => {
   const {imageList, editedImageList, updateEditedData} = props
+  const [altTextErr, setAltTextErr] = useState(false);
   const [longDescErr, setLongDescErr] = useState(false);
   const [index, setIndex] = useState(0);
   const [lowerIndex, setLowerIndex] = useState(0);
@@ -24,10 +25,13 @@ const MetaDataPopUpForTE = (props) => {
         setLongDescription(longdescription);
         setimageID(imgId);
         setimageSrc(imgSrc);
-        let longdescDiv = String(longdescription)
-        // if(/<\/?[a-z][\s\S]*>/i.test(longdescDiv)){
-        //   setLongDescErr(true);
-        // }
+      
+        
+        if(/<\/?[a-z][\s\S]*>/i.test(altText)){
+          setAltTextErr(true);
+        }else if(/<\/?[a-z][\s\S]*>/i.test(longdescription)){
+          setLongDescErr(true);
+        }
         
       }    
     }, [props.imageList]);
@@ -40,6 +44,7 @@ const MetaDataPopUpForTE = (props) => {
         setIndex(newIndex);
       }
       updateRangeForImages();
+      checkingForInputErr('leftShift');
     }
 
     const traverseRight = () => {
@@ -50,7 +55,34 @@ const MetaDataPopUpForTE = (props) => {
         setIndex(newIndex);
       }
       updateRangeForImages();
+      checkingForInputErr('rightShift');
     }
+
+    const checkingForInputErr = (shiftType=null) => {
+      let altText;
+      let longdescription;
+      if(shiftType === 'rightShift'){
+        ({ altText, longdescription } = imageList[index+1]);
+      }else if(shiftType === 'leftShift'){
+        ({ altText, longdescription } = imageList[index-1]);
+      }
+    
+      
+      if(/<\/?[a-z][\s\S]*>/i.test(altText)){
+        setAltTextErr(true);
+        setLongDescErr(false);
+      }else if(/<\/?[a-z][\s\S]*>/i.test(longdescription)){
+        setAltTextErr(false);
+        setLongDescErr(true);
+      }else{
+        setAltTextErr(false);
+        setLongDescErr(false);
+
+      }
+
+
+    }
+
 
     const updateCurrentImage = (newIndex) => {
       let { imgId, imgSrc } = imageList[newIndex];
@@ -164,7 +196,9 @@ const MetaDataPopUpForTE = (props) => {
                 <div className="right-container">
                   <div className="figuremetadata-field">
                     <div
-                      className={'alt-text-body'}
+                      className={`alt-text-body ${
+                        altTextErr === true ? "invalid" : ""
+                      }`}
                     >
                       <p
                         className={'alt-text'}
@@ -173,18 +207,22 @@ const MetaDataPopUpForTE = (props) => {
                       </p>
                       <input
                         autocomplete="off"
-                        id="altText"
+                        id="altText_AM"
                         name="altText"
                         type="text"
                         placeholder="Enter your text here"
                         value={altText}
+                        onBlur={(e) => setAltText(e.target.value)}
                         onChange={(e) => {
-                            setAltText(e.target.value)
-                            handleButtonDisable()
-                          }
+                            setAltText(e.target.value);
+                            handleButtonDisable();
+                            checkingForInputErr();
+                        }
+                        
                         }
                       />
                     </div>
+                    {altTextErr && <span style={ {  color: 'red' } }><i class="fa-solid fa-triangle-exclamation"></i>Special characters are not supported in the Alt Text input field</span>}
                     <div
                       className={`long-description-body ${
                         longDescErr === true ? "invalid" : ""
@@ -196,7 +234,7 @@ const MetaDataPopUpForTE = (props) => {
                         Long Description
                       </p>
                       <textarea
-                        id="longDescription"
+                        id="longDescription_AM"
                         name="longDescription"
                         rows="9"
                         cols="50"
@@ -204,12 +242,14 @@ const MetaDataPopUpForTE = (props) => {
                         value={longDescription}
                         // disabled={disabledButton ? false : true}
                         onChange={(e) =>{
-                            setLongDescription(e.target.value)
-                            handleButtonDisable()
+                            setLongDescription(e.target.value);
+                            handleButtonDisable();
+                            checkingForInputErr();
                           }
                         }
                       ></textarea>
                     </div>
+                    {longDescErr && <span style={ {  color: 'red' } }><i class="fa-solid fa-triangle-exclamation"></i>Special characters are not supported in the Long Description input field</span>}
                   </div>
                   <div className="metadata-button">
 					           <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`}>Import in Cypress</span>

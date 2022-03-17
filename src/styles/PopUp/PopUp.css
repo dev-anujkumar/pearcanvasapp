@@ -670,7 +670,12 @@
   margin-bottom: 20px;
   height: 70px;
 }
-.long-description-body {
+
+.alt-text-body.invalid{
+  border-bottom: 2px solid #f31212;
+ }
+
+ .long-description-body {
   background-color: #f7f7f7;
   overflow: auto;
   border-bottom: 1px solid #cccccc;
