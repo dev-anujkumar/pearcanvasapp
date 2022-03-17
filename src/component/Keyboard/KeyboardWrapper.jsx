@@ -91,8 +91,10 @@ const isFirtstChild = (node, tinymceOffset) => {
             else return !node?.previousSibling
         }
         if(tinymceOffset == 0 && (node?.parentNode?.classList.contains("figureCredit") 
-        || node?.classList?.contains("figureCaption")
-        || node?.classList?.contains("figureTitle") || node?.classList?.contains("figureLabel") || node?.classList?.contains('figureNumber'))) {
+        || node?.classList?.contains("figureCaption") || node?.classList?.contains("figureMathContent")
+        || node?.classList?.contains("figureTitle") || node?.classList?.contains("figureCodeContent") 
+        || node?.classList?.contains('figureNumber') || node?.classList?.contains("figureLabel")
+        )) {
             return true;
         }
         if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
