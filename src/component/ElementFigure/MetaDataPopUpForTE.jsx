@@ -212,13 +212,11 @@ const MetaDataPopUpForTE = (props) => {
                         type="text"
                         placeholder="Enter your text here"
                         value={altText}
-                        onBlur={(e) => setAltText(e.target.value)}
                         onChange={(e) => {
                             setAltText(e.target.value);
                             handleButtonDisable();
                             checkingForInputErr();
-                        }
-                        
+                          }
                         }
                       />
                     </div>
