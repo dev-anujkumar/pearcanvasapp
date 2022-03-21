@@ -1012,5 +1012,119 @@ describe('Testing Figure image component', () => {
                 expect(spy).toBeCalled();
             });
         });
+
+        describe('Testing handleLabelKeyDown', () => {
+            const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+            const figureImageInstance = component.find('FigureImage').instance();
+            const spy = jest.spyOn(figureImageInstance, "handleLabelKeyDown");
+            it('Testing handleLabelKeyDown - First IF', () => {
+                const labelListRef = {
+                    current: {
+                        childNodes: {
+                            0: {
+                                click: jest.fn()
+                            }
+                        }
+                    }
+                };
+                const labelRef = {
+                    current: {
+                        focus: jest.fn()
+                    }
+                };
+                figureImageInstance.labelListRef = { ...labelListRef };
+                figureImageInstance.labelRef = { ...labelRef };
+                const event = {
+                    keyCode: 13,
+                    stopPropagation: jest.fn(),
+                    preventDefault: jest.fn()
+                };
+                figureImageInstance.setState({showingListIndex: 0});
+                figureImageInstance.handleLabelKeyDown(event);
+                expect(spy).toBeCalled();
+            });
+            it('Testing handleLabelKeyDown - Second IF', () => {
+                const labelListRef = {
+                    current: {
+                        childNodes: {
+                            3: {
+                                click: jest.fn()
+                            }
+                        }
+                    }
+                };
+                const labelRef = {
+                    current: {
+                        focus: jest.fn()
+                    }
+                };
+                figureImageInstance.labelListRef = { ...labelListRef };
+                figureImageInstance.labelRef = { ...labelRef };
+                const event = {
+                    button: 0,
+                    target: {
+                        attributes: {
+                            1: {
+                                nodeValue: 3
+                            }
+                        }
+                    }
+                };
+                figureImageInstance.handleLabelKeyDown(event);
+                expect(spy).toBeCalled();
+            });
+            it('Testing handleLabelKeyDown - Third IF', () => {
+                const labelListRef = {
+                    current: {
+                        childNodes: {
+                            1: {
+                                focus: jest.fn()
+                            }
+                        }
+                    }
+                };
+                const labelRef = {
+                    current: {
+                        focus: jest.fn()
+                    }
+                };
+                figureImageInstance.labelListRef = { ...labelListRef };
+                figureImageInstance.labelRef = { ...labelRef };
+                const event = {
+                    keyCode: 40,
+                    stopPropagation: jest.fn(),
+                    preventDefault: jest.fn()
+                };
+                figureImageInstance.setState({showingListIndex: 0});
+                figureImageInstance.handleLabelKeyDown(event);
+                expect(spy).toBeCalled();
+            });
+            it('Testing handleLabelKeyDown - Fourth IF', () => {
+                const labelListRef = {
+                    current: {
+                        childNodes: {
+                            0: {
+                                focus: jest.fn()
+                            }
+                        }
+                    }
+                };
+                const labelRef = {
+                    current: {
+                        focus: jest.fn()
+                    }
+                };
+                figureImageInstance.labelListRef = { ...labelListRef };
+                figureImageInstance.labelRef = { ...labelRef };
+                const event = {
+                    keyCode: 38,
+                    stopPropagation: jest.fn(),
+                    preventDefault: jest.fn()
+                };
+                figureImageInstance.setState({showingListIndex: 1});
+                figureImageInstance.handleLabelKeyDown(event);
+                expect(spy).toBeCalled();
+            });
+        });
     });
 });
