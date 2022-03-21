@@ -1022,17 +1022,10 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
                 let attributes = cells[j].childNodes[0]?.attributes;
                 let id = attributes['data-id'].nodeValue;
                 let src = attributes['data-mce-src'].nodeValue;
-                let altText = attributes?.alttext?.nodeValue;
-                let longdescription = attributes?.longdescription?.nodeValue;
-
                 let tempImgObj = {};
-                if(!altText || !longdescription){
-                    let data = await getAltTextLongDesc(id);
-                    tempImgObj = { ...data }
-                } else {
-                     tempImgObj.altText = altText;
-                     tempImgObj.longdescription = longdescription;
-                }
+                let data = await getAltTextLongDesc(id);
+                tempImgObj = { ...data }
+               
                 tempImgObj['imgSrc'] = src;
                 tempImgObj['imgId'] = id;
                 imagesArrayOfObj.push(tempImgObj);

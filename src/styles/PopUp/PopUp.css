@@ -494,6 +494,12 @@
   border: 1px solid #b3d8e1;
 }
 
+.cancel-button.disabled{
+  cursor: not-allowed;
+  pointer-events: none;
+  color:#b3d8e1
+}
+
 .dialog-input-poc {
   border: 1px solid #043a47;
   border-radius: 4px;
