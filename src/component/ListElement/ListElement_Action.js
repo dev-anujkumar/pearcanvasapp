@@ -5,7 +5,6 @@
 //     SET_ACTIVE_ELEMENT
 // } from './../../constants/Action_Constants';
 import { LIST_TYPE_MAPPINGS } from '../../constants/Element_Constants';
-import { checkBlockListElement } from '../../js/TinyMceUtility';
 // IMPORT - other dependencies
 import elementList from '../Sidebar/elementTypes.js';
 import { conversionElement, updateBlockListMetadata } from '../Sidebar/Sidebar_Action.js';
@@ -61,7 +60,7 @@ let _ullistObjectTemplate_ = {
 // ************************************************************************
 
 export const convertToListElement = (type, startvalue, fromToolbar=true) => (dispatch, getState) => {
-    const { activeElement, asideData,slateLevelData } = getState().appStore;
+    const { activeElement, asideData } = getState().appStore;
     // const newParentData = JSON.parse(JSON.stringify(parentData));
     // const slateObject = Object.values(newParentData)[0];
     // const { contents } = slateObject;

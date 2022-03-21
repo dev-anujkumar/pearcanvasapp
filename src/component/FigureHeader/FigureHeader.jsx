@@ -10,6 +10,8 @@ import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, g
 import { checkHTMLdataInsideString, hasReviewerRole } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, LABEL_DROPDOWN_VALUES } from './AutoNumberConstants';
 import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
+import { MATH_ML, BLOCK_CODE } from '../../component/ElementFigure/ElementFigure_Constants'
+
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx';
@@ -21,6 +23,8 @@ const {
     AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
+
+const KEYBOARD_ENABLE = [TABLE, MATH_IMAGE, MATH_ML, BLOCK_CODE, IMAGE, AUDIO, VIDEO];
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -43,7 +47,6 @@ function useOutsideAlerter(ref, setLabelNumberSettingDropDown, setLabelDropDown)
         return () => {
             // Unbind the event listener on clean up
             document.removeEventListener("mousedown", handleClickOutside);
-            // settingDropdownWrapperRef?.current?.removeEventListener('keydown', settingDropdownWrapperRef);
         };
     }, [ref]);
 }
@@ -61,7 +64,6 @@ export const FigureHeader = (props) => {
     const [currentLabelValue, setCurrentLabelValue] = useState(getLabelNumberFieldValue(props.model, figureLabelValue, labelNumberSetting));
     const [currentNumberValue, setCurrentNumberValue] = useState("");
     const [initiateBlurCall, setInitiateBlurCall] = useState(false);
-    const [showingAutoListIndex, setShowingAutoListIndex] = useState(0);
     const settingDropdownWrapperRef = useRef(null);
     const labelRef = useRef(null);
     const labelListRef = useRef(null);
@@ -257,6 +259,15 @@ export const FigureHeader = (props) => {
          }
      }
 
+    const isEnableKeyboard = () => { 
+        if (props.model?.figuredata?.programlanguage === "Select" || labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT) {
+                return false
+            }
+            else {
+            return KEYBOARD_ENABLE.indexOf(props.model.figuretype) > -1
+            }
+    }
+
     const handleLabelDropdown = () => {
         setLabelDropDown(!labelDropDown)
         setLabelNumberSettingDropDown(false)
@@ -349,11 +360,11 @@ export const FigureHeader = (props) => {
             <header className="figure-header new-figure-image-header">
                 <div className='figure-label-number-field'>
                     <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number Settings</span>
-                    <KeyboardWrapper index={`${props.index}-labelautonumber-1`} enable focus>
+                    <KeyboardWrapper index={`${props.index}-labelautonumber-1`} enable={isEnableKeyboard()} focus>
                     <div ref={labelRef} tabIndex={0} onKeyDown={(e) => {
                         if(true) {
                             const key = e.which || e.keyCode;
-                            if(key === 13) {
+                            if(key === 13 && !hasReviewerRole()) {
                                 handleSettingsDropdown();
                             }
                             if(key === 38) {
@@ -382,11 +393,11 @@ export const FigureHeader = (props) => {
                 }
                 {removeLabelCondition && showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && <div className='figure-label-field'>
                     <span className={`label ${labelDropDown ? 'active' : ''}`}>Label</span>
-                    <KeyboardWrapper index={`${props.index}-label-1`} enable focus>
+                    <KeyboardWrapper index={`${props.index}-label-1`} enable={isEnableKeyboard()} focus>
                     <div ref={nonAutoLabelRef} tabIndex={0} onKeyDown={(e) => {
                         if(true) {
                             const key = e.which || e.keyCode;
-                            if(key === 13) {
+                            if(key === 13 && !hasReviewerRole()) {
                                 handleLabelDropdown();
                             }
                             if(key === 38) {
@@ -416,7 +427,7 @@ export const FigureHeader = (props) => {
                 </div>}
                 {
                    removeLabelCondition &&  (showLabelField && labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ?
-                    <KeyboardWrapper index={`${props.index}-0`}  enable>                                             
+                    <KeyboardWrapper index={`${props.index}-0`}  enable={isEnableKeyboard()}>                                             
                         <div className='image-label'>
                             <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-0`} placeholder="Label" tagName={'h4'} className={figLabelClass + " figureLabel "} model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
                             <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? "transition-none" : "floating-label"}>Label</label>
@@ -428,7 +439,7 @@ export const FigureHeader = (props) => {
                         </div>)
                 }
                 {removeLabelCondition && showNumberField && <div className="floating-number-group">
-                    <KeyboardWrapper enable = {labelNumberSetting !== AUTO_NUMBER_SETTING_DEFAULT} index={`${props.index}-1`}>
+                    <KeyboardWrapper enable={isEnableKeyboard()} index={`${props.index}-1`}>
                     <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} labelNumberSetting={labelNumberSetting} contenteditable={labelNumberSetting !== AUTO_NUMBER_SETTING_DEFAULT} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber " + newClass} model={imgNumberValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
                     </KeyboardWrapper>
                     <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? "transition-none" : "floating-number"}>Number</label>
@@ -439,7 +450,7 @@ export const FigureHeader = (props) => {
                 <label className={"transition-none"}>Preview</label>
                 <TextField disabled id="filled-disabled" className={"figure-preview"} variant="filled" placeholder="" defaultValue="" multiline value={previewData} fullWidth />
             </div>
-            <KeyboardWrapper enable index={`${props.index}-2`}>
+            <KeyboardWrapper enable={isEnableKeyboard()} index={`${props.index}-2`}>
                 <div className="floating-title-group">
                     <TinyMceEditor onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
                     <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
