@@ -10,11 +10,15 @@ export class ElementBlockquote extends Component {
     render() {
         const { element, className, model, openGlossaryFootnotePopUp, slateLockInfo, openAssetPopoverPopUp, glossaryFootnoteValue, openMarkedIndexPopUp, markedIndexValue } = this.props
         let blockquoteClass = "blockquoteMarginalia"
-        let xyz = "<p class=paragraphNummerEins contenteditable=true><br></p>"
-        let abc = "<p class=\"blockquoteTextCredit\" contenteditable=\"true\" data-placeholder=\"Attribution Text\">aa</p>"
-        console.log('INSIDE BLOCKQUOTE', model)
-        let blockquoteElement = <blockquote className={blockquoteClass} contentEditable={false}>
-            <KeyboardWrapper enable index={`${this.props.index}-0`}>
+        let firstClass = "paragraphNummerEins"
+        let secondClass = "blockquoteTextCredit"
+        let xyz = "<br>"
+        let abc = "<br>"
+        let parentClassName = "cypress-editable blockquote-editor with-attr mce-content-body mce-edit-focus"
+        let blockquoteElement = 
+      <div id={`'cypress-${this.props.index}`} className={parentClassName}>
+         <blockquote className={blockquoteClass}>
+         <KeyboardWrapper enable index={`${this.props.index}-0`}>
                 <TinyMceEditor
                     isBlockList={this.props.isBlockList}
                     openAssetPopoverPopUp={openAssetPopoverPopUp}
@@ -23,9 +27,9 @@ export class ElementBlockquote extends Component {
                     elementId={this.props.elementId}
                     element={this.props.element}
                     placeholder={this.props.placeholder !== undefined ? this.props.placeholder : "Type Something..."}
-                    className={className}
+                    className={firstClass}
                     model={xyz}
-                    tagName={this.props.tagName}
+                    tagName="blockquote"
                     handleEditorFocus={this.props.handleFocus}
                     handleBlur={this.props.handleBlur}
                     slateLockInfo={slateLockInfo}
@@ -50,10 +54,10 @@ export class ElementBlockquote extends Component {
                     index={`${this.props.index}-1`}
                     elementId={this.props.elementId}
                     element={this.props.element}
-                    placeholder={this.props.placeholder !== undefined ? this.props.placeholder : "Type Something..."}
-                    className={className}
+                    placeholder={this.props.placeholder !== undefined ? this.props.placeholder : "Attribution Text"}
+                    className={secondClass}
                     model={abc}
-                    tagName={this.props.tagName}
+                    tagName="blockquote"
                     handleEditorFocus={this.props.handleFocus}
                     handleBlur={this.props.handleBlur}
                     slateLockInfo={slateLockInfo}
@@ -71,6 +75,7 @@ export class ElementBlockquote extends Component {
                 />
             </KeyboardWrapper>
         </blockquote>
+    </div>
         return blockquoteElement
     }
 }
