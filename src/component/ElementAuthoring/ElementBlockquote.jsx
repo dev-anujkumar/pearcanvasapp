@@ -12,8 +12,8 @@ export class ElementBlockquote extends Component {
         let blockquoteClass = "blockquoteMarginalia"
         let firstClass = "paragraphNummerEins"
         let secondClass = "blockquoteTextCredit"
-        let xyz = "<p class=\"paragraphNummerEins\"></p>"
-        let abc = "<p class=\"blockquoteTextCredit\"></p>"
+        let xyz = '<p class="paragraphNummerEins" contenteditable="true"></p>'
+        let abc = '<p class=\"blockquoteTextCredit\" contenteditable=\"true\"></p>'
         let parentClassName = "cypress-editable blockquote-editor with-attr mce-content-body mce-edit-focus"
         let blockquoteElement = 
       <div>
@@ -26,10 +26,10 @@ export class ElementBlockquote extends Component {
                     index={`${this.props.index}-0`}
                     elementId={this.props.elementId}
                     element={this.props.element}
-                    placeholder={this.props.placeholder !== undefined ? this.props.placeholder : "Type Something..."}
+                    placeholder={"Type Something..."}
                     className={firstClass}
                     model={xyz}
-                    tagName="blockquote"
+                    tagName="p"
                     handleEditorFocus={this.props.handleFocus}
                     handleBlur={this.props.handleBlur}
                     slateLockInfo={slateLockInfo}
@@ -54,10 +54,10 @@ export class ElementBlockquote extends Component {
                     index={`${this.props.index}-1`}
                     elementId={this.props.elementId}
                     element={this.props.element}
-                    placeholder={this.props.placeholder !== undefined ? this.props.placeholder : "Attribution Text"}
+                    placeholder={"Attribution Text"}
                     className={secondClass}
                     model={abc}
-                    tagName="blockquote"
+                    tagName="p"
                     handleEditorFocus={this.props.handleFocus}
                     handleBlur={this.props.handleBlur}
                     slateLockInfo={slateLockInfo}
@@ -74,7 +74,7 @@ export class ElementBlockquote extends Component {
                     parentManifestListItem={this?.props?.parentManifestListItem}
                 />
             </KeyboardWrapper>
-        </blockquote>
+            </blockquote>
     </div>
         return blockquoteElement
     }
