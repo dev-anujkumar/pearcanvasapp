@@ -12,11 +12,11 @@ export class ElementBlockquote extends Component {
         let blockquoteClass = "blockquoteMarginalia"
         let firstClass = "paragraphNummerEins"
         let secondClass = "blockquoteTextCredit"
-        let xyz = "<br>"
-        let abc = "<br>"
+        let xyz = "<p class=\"paragraphNummerEins\"></p>"
+        let abc = "<p class=\"blockquoteTextCredit\"></p>"
         let parentClassName = "cypress-editable blockquote-editor with-attr mce-content-body mce-edit-focus"
         let blockquoteElement = 
-      <div id={`'cypress-${this.props.index}`} className={parentClassName}>
+      <div>
          <blockquote className={blockquoteClass}>
          <KeyboardWrapper enable index={`${this.props.index}-0`}>
                 <TinyMceEditor
