@@ -911,13 +911,21 @@ describe('Testing Figure image component', () => {
     });
 
     describe('Testing other functions of Figure Image', () => {
-        it('Testing showDeleteAssetPopup', () => {
+
+        describe("Testing showDeleteAssetPopup", () => {
             const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
             const figureImageInstance = component.find('FigureImage').instance();
             const spy = jest.spyOn(figureImageInstance, 'showDeleteAssetPopup');
-            figureImageInstance.setState({ deleteAssetPopup: true });
-            figureImageInstance.showDeleteAssetPopup();
-            expect(spy).toBeCalled();
+            it('Testing showDeleteAssetPopup - IF Condition', () => {
+                figureImageInstance.setState({ deleteAssetPopup: true });
+                figureImageInstance.showDeleteAssetPopup();
+                expect(spy).toBeCalled();
+            });
+            it('Testing showDeleteAssetPopup - ELSE Condition', () => {
+                figureImageInstance.setState({ deleteAssetPopup: false });
+                figureImageInstance.showDeleteAssetPopup();
+                expect(spy).toBeCalled();
+            });
         });
 
         describe('Testing onFigureImageFieldFocus', () => {
@@ -1125,6 +1133,28 @@ describe('Testing Figure image component', () => {
                 figureImageInstance.handleLabelKeyDown(event);
                 expect(spy).toBeCalled();
             });
+        });
+
+        it("Testing isEnableKeyboard", () => {
+            let props2 = { ...props };
+            props2["model"]["figuredata"]["programlanguage"] = "Select";
+            const component = mount(<Provider store={store2}><FigureImage {...props2} /></Provider>);
+            const figureImageInstance = component.find('FigureImage').instance();
+            const spy = jest.spyOn(figureImageInstance, "isEnableKeyboard");
+            const result = figureImageInstance.isEnableKeyboard();
+            expect(spy).toBeCalled();
+            expect(result).toBe(false);
+        });
+
+        it("Testing toggleDeletePopup", () => {
+            const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+            const figureImageInstance = component.find('FigureImage').instance();
+            const spy = jest.spyOn(figureImageInstance, "toggleDeletePopup");
+            const event = {
+                preventDefault: jest.fn()
+            };
+            figureImageInstance.toggleDeletePopup(null, event);
+            expect(spy).toBeCalled();
         });
     });
 });
