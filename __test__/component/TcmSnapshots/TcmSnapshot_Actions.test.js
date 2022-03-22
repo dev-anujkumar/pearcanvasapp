@@ -31,15 +31,6 @@ describe('TCM snapshot Action test case', () => {
                                 "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
                                 "type": "popup",
                                 "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
-                            },
-                            {
-                                "contentUrn": "urn:pearson:entity:9d7acf56-22f0-4983-b6d1-eccd15d6fefc",
-                                "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
-                                "id": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595",
-                                "popupdata": { bodymatter: [] },
-                                "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
-                                "type": "popup",
-                                "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
                             }]
                         },
                         "id": "urn:pearson:manifest:145f099e-bc9a-4525-9f0a-db58425a2403",
@@ -188,7 +179,52 @@ describe('TCM snapshot Action test case', () => {
             "type": "popup",
             "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
         }
-        store = mockStore(() => initialState);
+
+        let initialState2 = {
+            tcmSnapshot: [],
+            tcmActivatedOnProjectLevel: false,
+            appStore: {
+                slateLength: 25,
+                slateLevelData:{
+                    "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585": {
+                        "contentUrn": "urn:pearson:entity:3e58848c-415e-4681-b7c1-600a69a88c4b",
+                        "contents": {
+                            "bodymatter": {
+                                "0" : {
+                                "contentUrn": "urn:pearson:entity:9d7acf56-22f0-4983-b6d1-eccd15d6fefc",
+                                "elementdata": { 
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", 
+                                    "text": "",
+                                    "bodymatter": {
+                                        "1" : {
+                                        "contentUrn": "urn:pearson:entity:9d7acf56-22f0-4983-b6d1-eccd15d6fefc",
+                                        "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                                        "id": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595",
+                                        "popupdata": { bodymatter: [] },
+                                        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+                                        "type": "popup",
+                                        "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
+                                    } },
+                                "id": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595",
+                                "popupdata": { bodymatter: [] },
+                                "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+                                "type": "popup",
+                                "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
+                            }
+                        }
+                        },
+                        "id": "urn:pearson:manifest:145f099e-bc9a-4525-9f0a-db58425a2403",
+                        "pageCount": 1,
+                        "pageLimit": 25,
+                        "pageNo": 0,
+                        "type": "manifest",
+                        "versionUrn": "urn:pearson:manifest:145f099e-bc9a-4525-9f0a-db58425a2403"
+
+                    }
+                }
+            }
+        };
+        store = mockStore(() => initialState2);
         let response = {
             "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585": {
                 "contentUrn": "urn:pearson:entity:5dfc0e5d-b2e0-4aee-9aca-da35af6304fc",
