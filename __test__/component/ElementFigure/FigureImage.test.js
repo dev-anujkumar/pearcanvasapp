@@ -462,7 +462,42 @@ describe('Testing Figure image component', () => {
             expect(elementFigureInstance.state.imgSrc).toBe(testDataFromNewAlfresco.epsUrl)
             spydataFromAlfresco.mockClear()
         })
-        xit('Test- if case workflow when scaleMarkerData present', () => {
+        it('Test- if case workflow when scaleMarkerData present', () => {
+            let testDatascaleMarker = { ...testDataFromNewAlfresco }
+            testDatascaleMarker["scalemarker"] = {
+                id: "c332dee9-f62a-4d6b-9fe6-4148ab5603a6",
+                name: "urry0679_03_c02-30_prf.png",
+                epsUrl: "www.xyz.com",
+                properties: {
+                    "exif:pixelYDimension": 600,
+                    "exif:pixelXDimension": 700
+                }
+            }
+            elementFigureInstance.dataFromNewAlfresco(testDatascaleMarker)
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear();
+        })
+        it('Test- if case workflow when some scaleMarkerData present', () => {
+            let testDatascaleMarker = { ...testDataFromNewAlfresco }
+            testDatascaleMarker["scalemarker"] = {
+                "institution-urls": {
+                    0: {
+                        publicationUrl: "www.xyz.com"
+                    }
+                }
+            }
+            elementFigureInstance.dataFromNewAlfresco(testDatascaleMarker)
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear();
+        })
+        it('Test- if case workflow when scaleMarkerData not present', () => {
+            let testDatascaleMarker = { ...testDataFromNewAlfresco }
+            testDatascaleMarker["id"] = null;
+            testDatascaleMarker["scalemarker"] = { }
             elementFigureInstance.dataFromNewAlfresco(testDatascaleMarker)
             elementFigureInstance.forceUpdate();
             elementFigure.update();
@@ -471,13 +506,26 @@ describe('Testing Figure image component', () => {
         })
         it('Test- else case workflow when epsURL is not given', () => {
             let data = testDataFromNewAlfresco;
-            data["epsUrl"] = '',
-            data['id'] = '',
-            data.properties["exif:pixelXDimension"] = '',
-            data.properties["exif:pixelYDimension"] = '',
-            data.properties["cplg:altText"] = '',
-            data.properties['cplg:longDescription'] = ''
+            data["epsUrl"] = "";
+            data['id'] = "";
+            data.properties["exif:pixelXDimension"] = "";
+            data.properties["exif:pixelYDimension"] = "";
+            data.properties["cplg:altText"] = "";
+            data.properties['cplg:longDescription'] = "";
             let DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/9b39bfd7-b73c-4b0f-b2c5-60e77ed17ce7/Page097a.jpg"
+            elementFigureInstance.dataFromNewAlfresco(data)
+            expect(elementFigureInstance.state.imgSrc).toBe(DEFAULT_IMAGE_SOURCE)
+        })
+        it('Test- else case workflow when epsURL becomes ``', () => {
+            let data = testDataFromNewAlfresco;
+            data["institution-urls"] = { };
+            data["epsUrl"] = "";
+            data['id'] = "";
+            data.properties["exif:pixelXDimension"] = "";
+            data.properties["exif:pixelYDimension"] = "";
+            data.properties["cplg:altText"] = "";
+            data.properties['cplg:longDescription'] = "";
+            let DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
             elementFigureInstance.dataFromNewAlfresco(data)
             expect(elementFigureInstance.state.imgSrc).toBe(DEFAULT_IMAGE_SOURCE)
         })
@@ -508,6 +556,37 @@ describe('Testing Figure image component', () => {
         it('Test onFigureImageFieldBlur', () => {
             jest.spyOn(elementFigureInstance, 'onFigureImageFieldBlur')
             elementFigureInstance.onFigureImageFieldBlur("test");
+        })
+        describe("Test isCiteChanged", () => {
+            it("Test isCiteChanged - IF Condition", () => {
+                let initialState2 = { ...initialState }
+                initialState2["alfrescoReducer"]["isCiteChanged"] = true;
+                initialState2["alfrescoReducer"]["changedSiteData"] = {
+                    guid: "78338-88-9990",
+                    title: "Image_Title",
+                    id: "urn:4766647-746646-98484884",
+                    visibility: ""
+                };
+                const store2 = mockStore(initialState2);
+                const elementFigure2 = mount(<Provider store={store2}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" { ...props }/></Provider>);
+                const elementFigureInstance2 = elementFigure2.find('FigureImage').instance();
+                const spydataFromAlfresco2 = jest.spyOn(elementFigureInstance2, 'dataFromNewAlfresco');
+                elementFigureInstance2.dataFromNewAlfresco(testDataFromNewAlfresco);
+                expect(spydataFromAlfresco2).toHaveBeenCalled();
+            })
+            it("Test isCiteChanged - ELSE Condition", () => {
+                let initialState2 = { ...initialState }
+                initialState2["alfrescoReducer"]["isCiteChanged"] = false;
+                const store2 = mockStore(initialState2);
+                const elementFigure2 = mount(<Provider store={store2}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" { ...props }/></Provider>);
+                const elementFigureInstance2 = elementFigure2.find('FigureImage').instance();
+                elementFigureInstance2.setState({alfrescoSiteData: {
+                    nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a"
+                }});
+                const spydataFromAlfresco2 = jest.spyOn(elementFigureInstance2, 'dataFromNewAlfresco');
+                elementFigureInstance2.dataFromNewAlfresco(testDataFromNewAlfresco);
+                expect(spydataFromAlfresco2).toHaveBeenCalled();
+            })
         })
         describe("Branch coverage for dataFromAlfresco", () => {
             it('when figureType=table', () => {
