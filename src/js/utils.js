@@ -572,3 +572,13 @@ export const fetchUpdatedImageUrl = (url) => {
     // Updated url for .png images.
     return `${url.split('.png')[0]}.png?${(new Date()).getTime()}`;
 }
+
+export const prepareBqHtml = (node) => {
+    const firstClassname = node?.parentNode?.parentNode?.firstChild?.firstElementChild?.classList[0]
+    const lastClassname = node?.parentNode?.parentNode?.lastChild?.firstElementChild?.classList[0]
+    const firstInnerText = node?.parentNode?.parentNode?.firstChild?.firstElementChild?.innerText
+    const lasttInnerText = node?.parentNode?.parentNode?.lastChild?.firstElementChild?.innerText
+    const firstPtag = `<p class=\"${firstClassname}\" contenteditable=\"true\">${firstInnerText}</p>`;
+    const lastPtag = `<p class=\"${lastClassname}" contenteditable=\"true\" data-placeholder=\"Attribution Text\">${lasttInnerText}</p>`;
+    return `<blockquote class=\"blockquoteMarginalia\" contenteditable=\"false\">${firstPtag}${lastPtag}</blockquote>`
+}
