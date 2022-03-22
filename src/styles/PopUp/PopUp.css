@@ -562,6 +562,14 @@
   cursor: pointer;
 }
 
+
+.left-arrow-icon.disable
+.right-arrow-icon.disable{
+  cursor: not-allowed;
+  pointer-events: none;
+  color: white
+}
+
 .figure-popup {
   width: 640px;
   height: 476px;

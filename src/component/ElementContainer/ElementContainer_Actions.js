@@ -1019,16 +1019,22 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
         for(let i=0;i<tableRow.length;i++){
             let cells = tableRow[i].childNodes;
             for(let j=0; j<cells.length; j++){
-                let attributes = cells[j].childNodes[0]?.attributes;
-                let id = attributes['data-id'].nodeValue;
-                let src = attributes['data-mce-src'].nodeValue;
-                let tempImgObj = {};
-                let data = await getAltTextLongDesc(id);
-                tempImgObj = { ...data }
-               
-                tempImgObj['imgSrc'] = src;
-                tempImgObj['imgId'] = id;
-                imagesArrayOfObj.push(tempImgObj);
+                for(let k=0; k<cells[j].childNodes.length; k++){
+                    if(cells[j].childNodes[k].nodeName === 'IMG'){
+                        let attributes = cells[j].childNodes[k].attributes;
+                        let id = attributes['data-id'].nodeValue;
+                        let src = attributes['data-mce-src'].nodeValue;
+                        let tempImgObj = {};
+                        let data = await getAltTextLongDesc(id);
+                        tempImgObj = { ...data }
+                       
+                        tempImgObj['imgSrc'] = src;
+                        tempImgObj['imgId'] = id;
+                        imagesArrayOfObj.push(tempImgObj);
+                    }
+
+                }
+
             }
         }
     }
@@ -1099,7 +1105,6 @@ export const saveTEMetadata = async (editedImageList) => {
     
                 promiseArray.push(response);
             }
-    console.log("promiseArray: ", promiseArray)
             await Promise.all(promiseArray);
     
         }

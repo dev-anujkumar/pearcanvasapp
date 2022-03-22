@@ -4,6 +4,7 @@ import '../../styles/PopUp/PopUp.css';
 import { updateEditedData, saveTEMetadata, prepareImageDataFromTable } from '../ElementContainer/ElementContainer_Actions';
 import moveArrow from './Assets/down-arrow.svg';
 import errorMark from './Assets/shape.svg';
+import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 
 
 const MetaDataPopUpForTE = (props) => {
@@ -33,16 +34,32 @@ const MetaDataPopUpForTE = (props) => {
       if(checkHTMLInString(longdescription)){
         setLongDescErr(true);
       }
-      
     } 
   }, [props.imageList]);
 
   useEffect(()=> {
     checkingForInputErr();
+    disableButtonForHTML()
   }, [index]);
+
+  useEffect(()=> {
+    checkingForInputErr();
+  }, [altText, longDescription]);
 
   const checkHTMLInString = (str) => {
     return /<\/?[a-z][\s\S]*>/i.test(str)
+  }
+
+  const disableButtonForHTML = () => {
+    if(Object.keys(editedImageList).length > 0){
+      if(checkHTMLInString(altText) || checkHTMLInString(longDescription)){
+        setDisableButton(true);
+      } else {
+        setDisableButton(false);
+      }
+    } else {
+      setDisableButton(true);
+    }
   }
 
   const traverseLeft = () => {
@@ -65,14 +82,12 @@ const MetaDataPopUpForTE = (props) => {
 
     const checkingForInputErr = () => {
       if(Array.isArray(imageList) && imageList.length > 0){
-        let { altText, longdescription } = imageList[index];
-    
         if(checkHTMLInString(altText)){
           setAltTextErr(true);
         } else {
           setAltTextErr(false);
         }
-        if(checkHTMLInString(longdescription)){
+        if(checkHTMLInString(longDescription)){
           setLongDescErr(true);
         }else{
           setLongDescErr(false);
@@ -106,8 +121,12 @@ const MetaDataPopUpForTE = (props) => {
     }
   }
 
-  const handleButtonDisable = () => {
-    if(disableButton){
+  const handleButtonDisable = (alt, long) => {
+    let aText = alt || altText;
+    let longDesc = long || longDescription;
+    if(checkHTMLInString(aText) || checkHTMLInString(longDesc)){
+      setDisableButton(true);
+    } else {
       setDisableButton(false);
     }
   }
@@ -115,7 +134,7 @@ const MetaDataPopUpForTE = (props) => {
   const updateImageInStore = () => {
     let altTxt = imageList[index].altText;
     let {longdescription} = imageList[index];
-    if((!checkHTMLInString(altTxt) && !checkHTMLInString(longdescription)) && (altTxt !== altText || longdescription !== longDescription)){
+    if((!checkHTMLInString(altText) && !checkHTMLInString(longDescription)) && (altTxt !== altText || longdescription !== longDescription)){
         let editedData = {}
         editedData[imageID] = {
           altText,
@@ -177,82 +196,83 @@ const MetaDataPopUpForTE = (props) => {
       <div className="model">
         <div tabIndex="0" className="model-popup">
           <div className='figure-popup editPopupforTE'>
-             <div className="dialog-button1">
-                <span className="edit-metadata">Edit Alfresco Metadata</span>
-              </div>
-              <div className='left-right-container'>
-              <div className="left-container">
-                <div className='outer-img-container'>
-                   <img className='inner-img-container' src={imageSrc} id={imageID} /> 
+          {imageList.length > 0 ? 
+            <React.Fragment>
+              <div className="dialog-button1">
+                  <span className="edit-metadata">Edit Alfresco Metadata</span>
                 </div>
-                <div className='outer-img-array-container'>
-                  <span className='left-arrow' onClick={traverseLeft}><div className='left-arrow-icon'><img width="12px" height="12px" src={moveArrow} /></div></span>
-                  <span className='inner-img-array'>
-                  {imageList && imageList.map((image, imgIndex) => {
-                    if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
-                        return (<img 
-                        className='img-inside-array' 
-                        src={image.imgSrc} 
-                        id={image.imgId}
-                        style={ image.imgSrc === imageSrc ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
-                      />)
-                    }
-                  })}
-                  </span>
-                  <span className='right-arrow' onClick={traverseRight}><div className='right-arrow-icon'><img width="12px" height="12px" src={moveArrow} /></div></span>
-                </div>
-              </div>
-              <div className="right-container">
-                <div className="figuremetadata-field">
-                  <div className={`alt-text-body ${altTextErr === true ? "invalid" : "" }`}>
-                    <p className="alt-text"> Alt Text </p>
-                    <input
-                      autocomplete="off"
-                      id="altText_AM"
-                      name="altText"
-                      type="text"
-                      placeholder="Enter your text here"
-                      value={altText}
-                      onChange={(e) => {
-                          setAltText(e.target.value);
-                          handleButtonDisable();
-                          checkingForInputErr();
-                      }
-                      }
-                      onBlur={updateImageInStore}
-                    />
+                <div className='left-right-container'>
+                <div className="left-container">
+                  <div className='outer-img-container'>
+                    <img className='inner-img-container' src={imageSrc} id={imageID} /> 
                   </div>
-                  {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
-                  
-                  <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
-                    <p className={'long-text'}> Long Description </p>
-                    <textarea
-                      id="longDescription_AM"
-                      name="longDescription"
-                      rows="9"
-                      cols="50"
-                      placeholder="Enter your text here"
-                      value={longDescription}
-                      onChange={(e) =>{
-                          setLongDescription(e.target.value);
-                          handleButtonDisable();
-                          checkingForInputErr();
+                  <div className='outer-img-array-container'>
+                    <span className='left-arrow' onClick={traverseLeft}><div className={`left-arrow-icon ${index === 0 ? 'disable' : ""}`}><img width="12px" height="12px" src={moveArrow} /></div></span>
+                    <span className='inner-img-array'>
+                    {imageList && imageList.map((image, imgIndex) => {
+                      if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
+                          return (<img 
+                          className='img-inside-array' 
+                          src={image.imgSrc} 
+                          id={image.imgId}
+                          style={ image.imgSrc === imageSrc ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
+                        />)
+                      }
+                    })}
+                    </span>
+                    <span className='right-arrow' onClick={traverseRight}><div className={`right-arrow-icon ${index === (imageList.length - 1) ? 'disable' : "" }`}><img width="12px" height="12px" src={moveArrow} /></div></span>
+                  </div>
+                </div>
+                <div className="right-container">
+                  <div className="figuremetadata-field">
+                    <div className={`alt-text-body ${altTextErr === true ? "invalid" : "" }`}>
+                      <p className="alt-text"> Alt Text </p>
+                      <input
+                        autocomplete="off"
+                        id="altText_AM"
+                        name="altText"
+                        type="text"
+                        placeholder="Enter your text here"
+                        value={altText}
+                        onChange={(e) => {
+                            setAltText(e.target.value);
+                            handleButtonDisable(e.target.value);
                         }
-                      }
-                      onBlur={updateImageInStore}
-                    ></textarea>
+                        }
+                        onBlur={updateImageInStore}
+                      />
+                    </div>
+                    {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
+                    <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
+                      <p className={'long-text'}> Long Description </p>
+                      <textarea
+                        id="longDescription_AM"
+                        name="longDescription"
+                        rows="9"
+                        cols="50"
+                        placeholder="Enter your text here"
+                        value={longDescription}
+                        onChange={(e) =>{
+                            setLongDescription(e.target.value);
+                            handleButtonDisable(null, e.target.value);
+                          }
+                        }
+                        onBlur={updateImageInStore}
+                      ></textarea>
+                    </div>
+                    {longDescErr && <div className='alt-text-span' ><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}
+                    </div>}
                   </div>
-                  {longDescErr && <div className='alt-text-span' ><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}
-                  </div>}
-                </div>
-                <div className="metadata-button">
-                   <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleImport}>Import in Cypress</span>
-                   <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleSave}>Save All</span>
-                   <span className={`cancel-button ${disableButton ? '' : "disabled"}`} id='close-container' onClick={handleReset}>Reset</span>
-                   <span className="cancel-button" id='close-container' onClick={handleCancel}>Cancel</span>
+                  <div className="metadata-button">
+                    <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleImport}>Import in Cypress</span>
+                    <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleSave}>Save All</span>
+                    <span className={`cancel-button ${disableButton ? "disabled" : ""}`} id='close-container' onClick={handleReset}>Reset</span>
+                    <span className="cancel-button" id='close-container' onClick={handleCancel}>Cancel</span>
+                  </div>
                 </div>
               </div>
-             </div>
+            </React.Fragment>
+          : <LargeLoader />} 
           </div>
         </div>
       </div>
