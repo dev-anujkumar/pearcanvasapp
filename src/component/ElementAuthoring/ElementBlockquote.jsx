@@ -12,9 +12,10 @@ export class ElementBlockquote extends Component {
         let blockquoteClass = "blockquoteMarginalia"
         let firstClass = "paragraphNummerEins"
         let secondClass = "blockquoteTextCredit"
-        let xyz = '<p class="paragraphNummerEins" contenteditable="true"></p>'
-        let abc = '<p class=\"blockquoteTextCredit\" contenteditable=\"true\"></p>'
-        let parentClassName = "cypress-editable blockquote-editor with-attr mce-content-body mce-edit-focus"
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = model.text;
+        let xyz = tempDiv.children[0]?.children[0].outerHTML
+        let abc =  tempDiv.children[0]?.children[1].outerHTML
         let blockquoteElement = 
       <div>
          <blockquote className={blockquoteClass}>

@@ -442,7 +442,7 @@ export class TinyMceEditor extends Component {
                 spanHandlers.handleFormattingTags(editor, this.props.elementId, 'code', codeParent, 'codeNoHighlightLine', range);
             }
             if (this.props.element && this.props.element.type === 'element-blockfeature') {
-                if (node && node.className === 'blockquoteTextCredit') {
+                if (node && (node.className === 'blockquoteTextCredit' || node.className.includes('blockquoteTextCredit'))) {
                     setFormattingToolbar('disableTinymceToolbar')
                 }
             }
@@ -938,7 +938,6 @@ export class TinyMceEditor extends Component {
                 }
                 authorAssetPopOver(true, apoObject);
             }
-
             if (linkTitle == "Slate Link") {
                 sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } });
                 let linkId = (abbrElm.attributes['asset-id'] && abbrElm.attributes['asset-id'].nodeValue) || (abbrElm.parentNode.attributes['asset-id'] && abbrElm.parentNode.attributes['asset-id'].nodeValue) || (abbrElm.attributes['id'] && abbrElm.attributes['id'].nodeValue) || abbrElm.parentNode.attributes['id'].nodeValue;
@@ -1028,7 +1027,7 @@ export class TinyMceEditor extends Component {
             let isMediaElement = tinymce.$(tinymce.activeEditor.selection.getStart()).parents('.figureElement,.interactive-element').length;
             let isContainsMath = (activeElement && activeElement.innerHTML.match(/<img/)) ? (activeElement.innerHTML.match(/<img/).input.includes('class="Wirisformula') || activeElement.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) || activeElement?.innerHTML?.match(/<img/)?.input.includes('class="imageAssetContent') : false;
             let isContainsBlankLine = (activeElement && activeElement.innerHTML.match(/<span/)) ? activeElement.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
-            if(this.props.element && this.props.element.type==="element-blockfeature" && e.target &&  e.target.className==="blockquoteTextCredit"){
+            if(this.props.element && this.props.element.type==="element-blockfeature" && e.target &&  (e.target.className==="blockquoteTextCredit" || e.target.className.includes('blockquoteTextCredit'))){
                 setFormattingToolbar('disableTinymceToolbar')
             }
             if (activeElement) {
@@ -4299,13 +4298,6 @@ export class TinyMceEditor extends Component {
                 )
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote")) {
-                    // let model = this.props.model;
-                    // let tempDiv = document.createElement('div');
-                    // tempDiv.innerHTML = model;
-                    // if (tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].tagName === 'P') {
-                    //     model = tempDiv.children[0].innerHTML;
-                    // }
-                    // model = removeBOM(model)
                     // let temDiv = this.processBlockquoteHtml(this.props.model, this.props.element, lockCondition);
                     // classes = classes + ' blockquote-editor with-attr';
                     return (
