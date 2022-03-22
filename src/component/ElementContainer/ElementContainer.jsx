@@ -2581,6 +2581,8 @@ class ElementContainer extends Component {
     }
 
     showAlfrescoExpansionPopup = (e, popup, element) => {
+        console.log('popup: ',popup)
+        console.log('element inside showAlfrescoExpansionPopup: ',element)
         e.stopPropagation();
         this.props.showBlocker(true);
         showTocBlocker();

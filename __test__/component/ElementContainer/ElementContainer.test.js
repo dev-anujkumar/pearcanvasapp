@@ -274,7 +274,8 @@ describe('Test for element container component', () => {
             showBlocker: jest.fn(),
             index: 0,
             elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
-            updateElement: jest.fn()
+            updateElement: jest.fn(),
+            prepareImageDataFromTable: jest.fn(), 
         };
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -685,6 +686,52 @@ describe('Test for element container component', () => {
             const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup') 
             elementContainerInstance.showDeleteElemPopup(event);
             expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->showAlfrescoExpansionPopup', () => {
+            let event= {
+                stopPropagation:()=>{}
+            }
+            // props = {
+            //     element: {
+            //         id: "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
+            //         type: "figure",
+            //         figuretype: "tableasmarkup",
+            //         figuredata: {
+            //             schema: "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
+            //             tableasHTML: "<table style=\"border-collapse: collapse; width: 1146px; word-break: normal; outline: none; text-align: left;\" class=\"mce-item-table\" contenteditable=\"false\"><tbody><tr><td style=\"width: 573px; outline: none;\"><img class=\"imageAssetContent\" src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\" width=\"149\" height=\"112\" data-id=\"imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:8235\" data-mce-src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\"/></td><td style=\"width: 573px; outline: none;\"><br></td></tr><tr><td style=\"width: 573px; outline: none;\"><br></td><td style=\"width: 573px; outline: none;\"></td></tr></tbody></table>",
+            //             showAlfrescoExpansionPopup: {
+            //                 prepareImageDataFromTable: jest.fn()
+            //             }
+            //         }
+            //     }
+            let element = {
+                    id: "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
+                    type: "figure",
+                    figuretype: "tableasmarkup",
+                    schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+                    titlecontentintitlefield: true,
+                    figuredata: {
+                        schema: "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
+                        tableasHTML: "<table style=\"border-collapse: collapse; width: 1146px; word-break: normal; outline: none; text-align: left;\" class=\"mce-item-table\" contenteditable=\"false\"><tbody><tr><td style=\"width: 573px; outline: none;\"><img class=\"imageAssetContent\" src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\" width=\"149\" height=\"112\" data-id=\"imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:8235\" data-mce-src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\"/></td><td style=\"width: 573px; outline: none;\"><br></td></tr><tr><td style=\"width: 573px; outline: none;\"><br></td><td style=\"width: 573px; outline: none;\"></td></tr></tbody></table>",
+                    },
+                    versionUrn: "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
+                    contentUrn: "urn:pearson:entity:b12e4486-d922-4630-8b9a-bf47b157e581",
+                    displayedlabel: "Table",
+                    numberedandlabel: true,
+                    indexPos: "0",
+                    parentDetails: [],
+                    slateEntityUrn: "urn:pearson:entity:1d157ee4-6766-497a-bf8e-6fc877ff60a3"
+                }
+
+                let props = {
+                    prepareImageDataFromTable: jest.fn()
+                }
+            let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+            const spyhandle1  = jest.spyOn(elementContainerInstance5, 'showAlfrescoExpansionPopup') 
+            elementContainerInstance.showAlfrescoExpansionPopup(event,true,props.element);
+            expect(spyhandle1).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
         it('Render Element Container ----->updateFigureData', () => {
@@ -2358,6 +2405,54 @@ describe('Test-Other Functions', () => {
         const event = {stopPropagation: jest.fn()};
         elementContainerInstance3.handleEditButton(event);
     });
+
+    // it('checkFigureInsideTableElement method - element TE', () => {
+    //     let props6 = {
+    //         element: {
+    //             "id": "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
+    //             "type": "figure",
+    //             "figuretype": "tableasmarkup",
+    //             "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    //             "titlecontentintitlefield": true,
+    //             "figuredata": {
+    //                 "schema": "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
+    //                 "tableasHTML": "<table style=\"border-collapse: collapse; width: 1146px; word-break: normal; outline: none; text-align: left;\" class=\"mce-item-table\" contenteditable=\"false\"><tbody><tr><td style=\"width: 573px; outline: none;\"><img class=\"imageAssetContent\" src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\" width=\"149\" height=\"112\" data-id=\"imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:8235\" data-mce-src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\"/></td><td style=\"width: 573px; outline: none;\"><br></td></tr><tr><td style=\"width: 573px; outline: none;\"><br></td><td style=\"width: 573px; outline: none;\"></td></tr></tbody></table>"
+    //             },
+    //             "html": {
+    //                 "title": "<p><br></p>",
+    //                 "tableasHTML": "<table style=\"border-collapse: collapse; width: 1146px; word-break: normal; outline: none; text-align: left;\" class=\"mce-item-table\" contenteditable=\"false\"><tbody><tr><td style=\"width: 573px; outline: none;\"><img class=\"imageAssetContent\" src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\" width=\"149\" height=\"112\" data-id=\"imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:8235\" data-mce-src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\"/></td><td style=\"width: 573px; outline: none;\"><br></td></tr><tr><td style=\"width: 573px; outline: none;\"><br></td><td style=\"width: 573px; outline: none;\"></td></tr></tbody></table>",
+    //                 "captions": "<p><br></p>",
+    //                 "credits": "<p><br></p>",
+    //                 "footnotes": {},
+    //                 "assetsPopover": {},
+    //                 "glossaryentries": {},
+    //                 "indexEntries": {}
+    //             },
+    //             "versionUrn": "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
+    //             "contentUrn": "urn:pearson:entity:b12e4486-d922-4630-8b9a-bf47b157e581",
+    //             "displayedlabel": "Table",
+    //             "numberedandlabel": true,
+    //             "indexPos": "0",
+    //             "parentDetails": [],
+    //             "slateEntityUrn": "urn:pearson:entity:1d157ee4-6766-497a-bf8e-6fc877ff60a3"
+    //         },
+    //         permissions: [],
+    //         checkFigureInsideTableElement: jest.fn(),
+    //         index: 0,
+    //         elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+    //         updateElement: jest.fn(),
+    //         parentUrn: null
+    //     };
+
+
+    //     let elementContainer4 = mount(<Provider store={store}><ElementContainer {...props6} /></Provider>);
+    //     const elementContainerInstance4 = elementContainer4.find('ElementContainer').instance();
+    //     const spyhandle = jest.spyOn(elementContainerInstance4, 'checkFigureInsideTableElement');
+    //     elementContainerInstance4.renderElement(props6.element);
+    //     expect(spyhandle).toHaveBeenCalled();;
+    // })
+
+
 
     it('handleTCMLaunch method - if block', () => {
         config.isPopupSlate = false;
