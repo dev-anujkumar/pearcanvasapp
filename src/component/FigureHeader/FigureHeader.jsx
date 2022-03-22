@@ -259,8 +259,8 @@ export const FigureHeader = (props) => {
          }
      }
 
-    const isEnableKeyboard = () => {
-        if (props.model?.figuredata?.programlanguage === "Select") {
+    const isEnableKeyboard = () => { 
+        if (props.model?.figuredata?.programlanguage === "Select" || labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT) {
                 return false
             }
             else {
