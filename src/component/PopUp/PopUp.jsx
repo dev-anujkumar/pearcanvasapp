@@ -13,6 +13,7 @@ import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
+import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -334,7 +335,7 @@ class PopUp extends React.Component {
                    <div className='tableAlfrescoPopupHeader'>{props.alfrescoExpansionMetaData.headerText}</div>
                     <div className="Please-select-an-image">{props.alfrescoExpansionMetaData.normalText}</div>
                     <div className='tableElement-img-container'>
-                        {imgList}
+                        {props.alfrescoExpansionMetaData.renderImages.length > 0 ? imgList : <LargeLoader/>}
                     </div>
                     
                 </>
