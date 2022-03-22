@@ -1038,7 +1038,7 @@ export class TinyMceEditor extends Component {
                     lastCont = this.lastContent;
                 }
                 this.lastContent = activeElement.innerHTML;
-                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' || (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
+                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' && this.props.element.type !== "element-blockfeature"|| (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = lastCont;
@@ -3596,8 +3596,8 @@ export class TinyMceEditor extends Component {
     }
 
     removeAttributionBr = () => {
-        //let attributionNodeBr = document.querySelector(`#cypress-${this.props.index} p.blockquoteTextCredit br`)
-        //attributionNodeBr && attributionNodeBr.remove();
+        let attributionNodeBr = document.querySelector(`#cypress-${this.props.index} p.blockquoteTextCredit br`)
+        attributionNodeBr && attributionNodeBr.remove();
         return 
     }
 
@@ -3862,10 +3862,10 @@ export class TinyMceEditor extends Component {
                         }
                     })
                 }
-                // if (this.props.element && this.props.element.type === "element-blockfeature") {
-                //     this.removeBogusTagsFromDom();
-                //     this.removeAttributionBr();
-                // }
+                if (this.props.element && this.props.element.type === "element-blockfeature") {
+                    this.removeBogusTagsFromDom();
+                    this.removeAttributionBr();
+                }
             }).catch((err) => console.log(err));
             this.setToolbarByElementType(); 
         }
