@@ -11,6 +11,7 @@ import {
 } from '../../../fixtures/slateTestingData.js';
 import tinymce from 'tinymce/tinymce';
 import config from '../../../src/config/config';
+import { imageAssetData } from './mockDataComChannel';
 let tinyMceEditor = {
     undoManager: { data: [], typing: false, beforeChange: jest.fn(), add: jest.fn(), undo: jest.fn() ,transact: () =>{ }},
     windowManager: { open: jest.fn(), openUrl: jest.fn(), alert: jest.fn(), confirm: jest.fn(), close: jest.fn() }
@@ -1551,13 +1552,7 @@ describe('Testing communication channel', () => {
                     type: "selectedAlfrescoAssetData",
                     message: {
                         calledFrom: "GlossaryImage",
-                        asset: {
-                            content: {
-                                mimeType: "image"
-                            },
-                            properties: {},
-                            espUrl:'asf'
-                        }
+                        asset: imageAssetData
                     }
                 }
             }
