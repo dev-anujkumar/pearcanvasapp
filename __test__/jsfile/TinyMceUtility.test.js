@@ -228,6 +228,70 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     });
+    it('Test - dataFromAlfresco2 - no data args', () => {
+        let mockEditor2 = {
+            selection: {
+                setContent: () => { }
+            },
+            insertContent: () => { },
+            targetElm: { classList: { remove: () => { } }, querySelector:()=>{return undefined} }
+        }
+        let data = {
+                "institution-urls":[
+                    {
+                       "institutionUrl":"https://epspqa.stg-openclass.com/cite-media-stg/",
+                       "pdosUrl":"",
+                       "contentVersion":"",
+                       "instName":"https://epspqa.stg-openclass.com/cite-media-stg",
+                       "status":"",
+                       "publicationUrl":"https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/s/api/node/workspace/SpacesStore/fcf19f5f-1c1a-4625-b8b2-10031d84d4f1/content/thumbnails/doclib?c=queue&ph=true",
+                       "contentAction":true
+                    }
+                ],
+            id: "",
+            properties: {
+                "cplg:altText": "",
+                'cplg:longDescription': "",
+                content: { mimeType: "" }
+            }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'dataFromAlfresco');
+        tinyMceFn.dataFromAlfresco (data, mockEditor2, mockImageArgs);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    });
+    it('Test - dataFromAlfresco1 - no data args', () => {
+        let mockEditor2 = {
+            selection: {
+                setContent: () => { }
+            },
+            insertContent: () => { },
+            targetElm: { classList: { remove: () => { } }, querySelector:()=>{return undefined} }
+        }
+        let data = {
+                "institution-urls":[
+                    {
+                       "institutionUrl":"https://epspqa.stg-openclass.com/cite-media-stg/",
+                       "pdosUrl":"",
+                       "contentVersion":"",
+                       "instName":"https://epspqa.stg-openclass.com/cite-media-stg",
+                       "status":"",
+                       "publicationUrl":"",
+                       "contentAction":true
+                    }
+                ],
+            id: "",
+            properties: {
+                "cplg:altText": "",
+                'cplg:longDescription': "",
+                content: { mimeType: "" }
+            }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'dataFromAlfresco');
+        tinyMceFn.dataFromAlfresco (data, mockEditor2, mockImageArgs);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    });
     it('Test - dataFromAlfresco  - no getImgNode', () => {
         let mockEditor2 = {
             selection: {
@@ -352,7 +416,9 @@ describe('Testing TinyMceUtility', () => {
 
     it('Test - isNestingLimitReached - if block', () => {
         let asideData = {
-            type: 'showhide'
+            parent:{
+                type: 'showhide'
+            }
         }
         const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
         const indexes = "0"
@@ -382,6 +448,11 @@ describe('Testing TinyMceUtility', () => {
     it('Test - checkBlockListElement - if block - ENTER keypressed', () => {
         const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
         const data = {
+            asideData:{
+                parent:{
+                    type:"showhide"
+                }
+            },
             slateLevelData: {
                 'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
                     contents: {
@@ -495,22 +566,42 @@ describe('Testing TinyMceUtility', () => {
                 }
             }
         }
+        const activeElement={
+            data:{
+                asideData:{
+                    parent:{
+                        type:"showhide"
+                    }
+            }
+            },
+        index:'0-0-1'
+        }
         const spyFunc = jest.spyOn(tinyMceFn, 'isElementInsideBlocklist');
-        tinyMceFn.isElementInsideBlocklist({index:'0-0-1'}, slateLevelData);
+        tinyMceFn.isElementInsideBlocklist(activeElement, slateLevelData);
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     })
 
     it('Test - isElementInsideBlocklist - slateLevelData - bodymatter - empty', () => {
-        const slateLevelData = {
+        const data={
+            asideData:{
+                parent:{
+                    type:"showhide"
+                }
+            },
+        slateLevelData: {
             'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
                 contents: {
-                    bodymatter: []
+                    bodymatter: [{
+                        type:"manifestlist"
+                    }]
                 }
             }
-        }
+        },
+        index:'0-0-1'
+    }
         const spyFunc = jest.spyOn(tinyMceFn, 'isElementInsideBlocklist');
-        tinyMceFn.isElementInsideBlocklist({index:'0-0-1'}, slateLevelData);
+        tinyMceFn.isElementInsideBlocklist(data, 'saltelabeldata');
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     })
