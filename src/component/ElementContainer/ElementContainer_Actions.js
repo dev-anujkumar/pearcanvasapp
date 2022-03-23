@@ -1021,11 +1021,11 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
             for(let j=0; j<cells.length; j++){
                 for(let k=0; k<cells[j].childNodes.length; k++){
                     if(cells[j].childNodes[k].nodeName === 'IMG'){
-                        let attributes = cells[j].childNodes[k].attributes;
-                        let id = attributes['data-id'].nodeValue;
-                        let src = attributes['data-mce-src'].nodeValue;
+                        const attributes = cells[j].childNodes[k].attributes;
+                        const id = attributes['data-id'].nodeValue;
+                        const src = attributes['data-mce-src'].nodeValue;
                         let tempImgObj = {};
-                        let data = await getAltTextLongDesc(id);
+                        const data = await getAltTextLongDesc(id);
                         tempImgObj = { ...data }
                        
                         tempImgObj['imgSrc'] = src;
@@ -1044,7 +1044,11 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
         payload: imagesArrayOfObj
     })
 }
-
+/**
+ * This function will make an API call to fetch the metadata for an image
+ * @param {*} id Image ID
+ * @returns Returns altText & longdescription
+ */
 const getAltTextLongDesc = async (id) => {
     let imgId = id.substring(id.indexOf(":") + 1, id.lastIndexOf(":"));
     try{
@@ -1072,6 +1076,11 @@ const getAltTextLongDesc = async (id) => {
     }
 }
 
+/**
+ * This is an action, which will update the edited data in store
+ * @param {*} imageObject 
+ * @returns 
+ */
 export const updateEditedData = (imageObject) => (dispatch) => {
     dispatch({
         type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
@@ -1079,6 +1088,10 @@ export const updateEditedData = (imageObject) => (dispatch) => {
     })
 }
 
+/**
+ * This function will make an saving API call to update the altText & longDescription
+ * @param {*} editedImageList 
+ */
 export const saveTEMetadata = async (editedImageList) => {
     try{
         let url = "";

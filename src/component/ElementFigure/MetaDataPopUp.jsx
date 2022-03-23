@@ -96,7 +96,6 @@ class MetaDataPopUp extends React.Component {
 		})
 	}
 
-
     render() {
         const { togglePopup } = this.props;
 		const { altText, longDescription, active } = this.state;

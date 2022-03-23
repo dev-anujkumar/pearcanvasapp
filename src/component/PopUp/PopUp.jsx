@@ -322,7 +322,7 @@ class PopUp extends React.Component {
 
     renderDialogText = (props) => {
         if(props.alfrescoExpansionPopup){
-            let imgList = props.alfrescoExpansionMetaData.renderImages.map((image) => (
+            let imgList = props?.alfrescoExpansionMetaData?.renderImages?.map((image) => (
                     <img 
                       className='imageContainer' 
                       src={image.imgSrc} 
@@ -332,8 +332,8 @@ class PopUp extends React.Component {
                 ))
             return (
                 <> 
-                   <div className='tableAlfrescoPopupHeader'>{props.alfrescoExpansionMetaData.headerText}</div>
-                    <div className="Please-select-an-image">{props.alfrescoExpansionMetaData.normalText}</div>
+                   <div className='tableAlfrescoPopupHeader'>{props?.alfrescoExpansionMetaData?.headerText}</div>
+                    <div className="Please-select-an-image">{props?.alfrescoExpansionMetaData?.normalText}</div>
                     <div className='tableElement-img-container'>
                         {props.alfrescoExpansionMetaData.renderImages.length > 0 ? imgList : <LargeLoader/>}
                     </div>
