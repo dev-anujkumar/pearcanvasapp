@@ -12,6 +12,8 @@ import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementConta
 import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
 import { handleAutoNumberingOnCopyPaste } from '../FigureHeader/AutoNumber_CutCopy_helpers';
+import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
+import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP, POETRY_ELEMENT } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
@@ -40,6 +42,12 @@ export const onPasteSuccess = async (params) => {
         operationType = elmSelection.operationType;
         sourceElementIndex = elmSelection?.sourceElementIndex;
         selectedElem = Object.freeze({...elmSelection})
+    }
+
+    /** Check if operation is cut then get data of element for autonumber store update on diff slate */
+    let cutSelection = {};
+    if (operationType === 'cut') {
+        cutSelection = Object.assign({}, getState().selectionReducer.selection);
     }
 
     /** Create Snapshot for cut action on different slate */
@@ -83,14 +91,17 @@ export const onPasteSuccess = async (params) => {
 
         let deleteParams = {
             dispatch,
+            getState,
             elmId: deleteElm.id,
             parentUrn: deleteElm.parentUrn,
             asideData: deleteElm.asideData,
             index: deleteElm.index,
             poetryData: deleteElm.poetryData,
-            newParentData 
+            newParentData,
+            type: deleteElm.type,
         }
         deleteFromStore(deleteParams)
+
     }
 
     let feedback = null;
@@ -131,7 +142,9 @@ export const onPasteSuccess = async (params) => {
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     const currentSlateData = newParentData[config.slateManifestURN];
-
+    let slateOldNumberedContainerElements = [];
+    slateOldNumberedContainerElements = await getAsideElementsWrtKey(currentSlateData?.contents?.bodymatter, ELEMENT_ASIDE, slateOldNumberedContainerElements);
+    const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
     if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type!=='popup') {
         const snapArgs = {
@@ -144,7 +157,8 @@ export const onPasteSuccess = async (params) => {
             responseData,
             dispatch,
             index,
-            elmFeedback: feedback, index2ShowHide
+            elmFeedback: feedback, index2ShowHide,
+            cypressPlusProjectStatus: cypressPlusProjectStatus
         }
         await handleTCMSnapshotsForCreation(snapArgs, operationType)
     }
@@ -326,7 +340,7 @@ export const onPasteSuccess = async (params) => {
         newParentData[config.slateManifestURN].contents.bodymatter.splice(cutIndex, 0, responseData);
     }
 
-    if (config.tcmStatus) {
+    if (config.tcmStatus && !(cypressPlusProjectStatus && responseData?.type === ELEMENT_TYPE_PDF)) {
         if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && cutSnap) {
             await prepareDataForTcmCreate(slateWrapperConstants.checkTCM(responseData), responseData, getState, dispatch , selectedElem);
         }
@@ -340,13 +354,19 @@ export const onPasteSuccess = async (params) => {
     })
     /** ---------------------------- Auto-Numbering handling ------------------------------*/
     const isAutoNumberingEnabled = getState().autoNumberReducer?.isAutoNumberingEnabled;
+    const oldSlateFigureList = getState().autoNumberReducer?.slateFigureList || [];
+    const tocContainerSlateList = getState().autoNumberReducer?.tocContainerSlateList || []
     const autoNumberParams = {
         selectedElement: responseData,
         getState,
         dispatch,
         operationType,
         isAutoNumberingEnabled,
-        currentSlateData: newParentData[config.slateManifestURN]
+        currentSlateData: newParentData[config.slateManifestURN],
+        oldSlateFigureList,
+        tocContainerSlateList,
+        slateOldNumberedContainerElements,
+        cutSelection
     }
     handleAutoNumberingOnCopyPaste(autoNumberParams)
     /**-----------------------------------------------------------------------------------*/
@@ -386,7 +406,8 @@ export const checkElementExistence = async (slateEntityUrn = '', elementEntity =
         const axiosObject = axios.create({
             headers: {
                 'Content-Type': 'application/json',
-                'PearsonSSOSession': config.ssoToken
+                // 'PearsonSSOSession': config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         });
 
@@ -422,7 +443,7 @@ export const handleTCMSnapshotsForCreation = async (params, operationType = null
         responseData,
         dispatch,
         index,
-        elmFeedback, index2ShowHide
+        elmFeedback, index2ShowHide, cypressPlusProjectStatus
     } = params
 
     let containerElement = {
@@ -441,7 +462,8 @@ export const handleTCMSnapshotsForCreation = async (params, operationType = null
     const slateData = {
         currentParentData: newParentData,
         bodymatter: currentSlateData.contents.bodymatter,
-        response: responseData
+        response: responseData,
+        cypressPlusProjectStatus
     };
     if (currentSlateData.status === 'approved') {
         await tcmSnapshotsForCreate(slateData, type, containerElement, dispatch, index, operationType, elmFeedback);
@@ -663,7 +685,8 @@ export const fetchStatusAndPaste = async (params) => {
                         "ApiKey": config.STRUCTURE_APIKEY,
                         "Accept": "application/json",
                         "Content-Type": "application/json",
-                        "PearsonSSOSession": config.ssoToken
+                        // "PearsonSSOSession": config.ssoToken,
+                        'myCloudProxySession': config.myCloudProxySession
                     }
                 }
             )

@@ -40,6 +40,9 @@ describe('Testing BlockMathCode Component', () => {
             editor: true,
             Permission: false
         },
+        keyboardReducer: {
+            selectedElement: []
+        },
         appStore: {
             figureDropdownData: {
                 audio: ["No Label", "Custom"],
@@ -50,6 +53,9 @@ describe('Testing BlockMathCode Component', () => {
         },
         projectMetadata:{},
         autoNumberReducer: mockAutoNumberReducerEmpty,
+        toolbarReducer : {
+            spellCheckToggle : false
+        }
     }
     const store = mockStore(initialState);
     config.figureFieldsPlaceholders = cypressConfig.figureFieldsPlaceholders

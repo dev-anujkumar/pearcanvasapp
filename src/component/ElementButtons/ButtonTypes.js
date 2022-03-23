@@ -44,4 +44,5 @@ export default {
     POWERPASTE:"powerpaste",
     ALFRESCO_METADATA:'alfresco-metadata',
     ELEMENT_LABEL_CLICKABLE : "label-clickable-button",
+    COMMENT_FLAGGED: 'comment-flagged'
 }

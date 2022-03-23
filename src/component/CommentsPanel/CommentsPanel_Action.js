@@ -43,7 +43,8 @@ export const fetchComments = (contentUrn, title) => dispatch => {
     return axios.get(url, {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         dispatch({
@@ -115,7 +116,8 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
             headers: {
                 "Content-Type": "application/json",
                 ApiKey: config.STRUCTURE_APIKEY,
-                PearsonSSOSession: config.ssoToken
+                // PearsonSSOSession: config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     )
@@ -153,7 +155,8 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
             headers: {
                 "Content-Type": "application/json",
                 ApiKey: config.STRUCTURE_APIKEY,
-                PearsonSSOSession: config.ssoToken
+                // PearsonSSOSession: config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     )
@@ -186,7 +189,8 @@ export const updateComment = (commentUrn, updateCommentParams, elementId) => dis
             headers: {
                 "Content-Type": "application/json",
                 ApiKey: config.STRUCTURE_APIKEY,
-                PearsonSSOSession: config.ssoToken
+                // PearsonSSOSession: config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }
     ).then(response => {
@@ -213,7 +217,8 @@ export const getProjectUsers = () => dispatch => {
         {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken,
+                'myCloudProxySession': config.myCloudProxySession
             }
         }).then(response => {
             dispatch({
@@ -242,7 +247,8 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
         headers: {
             "Content-Type": "application/json",
             ApiKey: config.STRUCTURE_APIKEY,
-            PearsonSSOSession: config.ssoToken
+            // PearsonSSOSession: config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         dispatch({
@@ -268,7 +274,8 @@ export const updateRole = (commentUrn, newRole, elementId) => dispatch => {
         headers: {
             "Content-Type": "application/json",
             ApiKey: config.STRUCTURE_APIKEY,
-            PearsonSSOSession: config.ssoToken
+            // PearsonSSOSession: config.ssoToken
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         dispatch({

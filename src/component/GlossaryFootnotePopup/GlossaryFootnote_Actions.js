@@ -460,17 +460,17 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             innerSH_Index = elementIndex;
             innerSH_Index = innerSH_Index?.split('-')
         }
-        label = document.getElementById('cypress-' + elementIndex + '-0').innerHTML //cypress-1-0
-        number = document.getElementById('cypress-' + elementIndex + '-1').innerHTML //cypress-1-1
-        title = document.getElementById('cypress-' + elementIndex + '-2').innerHTML //cypress-1-2
+        label = document.getElementById('cypress-' + elementIndex + '-0')?.innerHTML //cypress-1-0
+        number = document.getElementById('cypress-' + elementIndex + '-1')?.innerHTML //cypress-1-1
+        title = document.getElementById('cypress-' + elementIndex + '-2')?.innerHTML //cypress-1-2
 
 
         if(elementSubType == 'image' || elementSubType === 'tableasmarkup' || elementSubType === "audio" || elementSubType === "video" || elementSubType === 'table' || elementSubType === "mathImage"){
-            captions = document.getElementById('cypress-' + elementIndex + '-3').innerHTML //cypress-1-3
-            credits = document.getElementById('cypress-' + elementIndex + '-4').innerHTML //cypress-1-4
+            captions = document.getElementById('cypress-' + elementIndex + '-3')?.innerHTML //cypress-1-3
+            credits = document.getElementById('cypress-' + elementIndex + '-4')?.innerHTML //cypress-1-4
             if (elementSubType === 'tableasmarkup') {
                 if(document.getElementById(elementIndex + '-tableData')) {
-                    tableAsHTML = document.getElementById(elementIndex + '-tableData').innerHTML;
+                    tableAsHTML = document.getElementById(elementIndex + '-tableData')?.innerHTML;
                 }
             }
         }else if (elementSubType === 'interactive' || elementSubType === "codelisting" || elementSubType === "authoredtext"){
@@ -680,7 +680,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     return axios.put(url, JSON.stringify(data), {
         headers: {
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then( async res => {
         let parentData1 = store.getState().appStore.slateLevelData;
@@ -717,7 +718,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 response: res.data,
                 updatedId:elementWorkId,
                 slateManifestUrn: config.slateManifestURN,
-                CurrentSlateStatus: currentSlateData?.status
+                CurrentSlateStatus: currentSlateData?.status,
+                cypressPlusProjectStatus: store.getState()?.appStore?.isCypressPlusEnabled
             },
                 containerElement = {
                     asideData:tcmParentData.asideData,
@@ -1148,6 +1150,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
     if (resData.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(resData.figuretype)) {
         return false
+    }
+    const cypressPlusProjectStatus = store.getState()?.appStore?.isCypressPlusEnabled
+    if (cypressPlusProjectStatus && resData?.type === 'element-pdf') {
+        return false; // disable TCM for all PDF slates in Cypress+ Enabled Projects
     }
     const tcmData = store.getState().tcmReducer.tcmSnapshot;
     let indexes = []

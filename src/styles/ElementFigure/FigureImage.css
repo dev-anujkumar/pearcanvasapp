@@ -786,7 +786,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .new-figure-image-header {
   position: relative;
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
 }
 .figure-label-number-field{
@@ -882,9 +882,11 @@ th ol li.listItemNumeroUnoNone:before {
     position: absolute;
     pointer-events: none;
     top: 22px;
-    margin-top: -7px;
     transition: all 0.1s ease;
     
+}
+.floating-number-group, .image-label {
+    display: flex;
 }
 .previewClass{
     display: flex;
@@ -935,7 +937,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 .floating-number-group .transition-none, .image-label .transition-none {
     transition: none;
-    top: -6px;
+    top: 2px;
     bottom: 0px;
     font-size: 10px;
     color: #737373;

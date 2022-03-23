@@ -38,13 +38,15 @@ import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/A
 import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
 import { getDataFromLastTag, isKWChild, isLastChild, moveCursor, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
-import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
 import cypressConfig from '../config/cypressConfig';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
 const {
-    AUTO_NUMBER_SETTING_RESUME_NUMBER
+    AUTO_NUMBER_SETTING_RESUME_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export class TinyMceEditor extends Component {
@@ -144,7 +146,7 @@ export class TinyMceEditor extends Component {
 
             init_instance_callback: (editor) => {
                 tinymce.$('.blockquote-editor').attr('contenteditable', false)
-                const isAutoNumberField = (this.props.isAutoNumberingEnabled && this.props?.element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn)
+                const isAutoNumberField = (this.props.isAutoNumberingEnabled && (this.props?.element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn)
                 if (isAutoNumberField || config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                     editor.shortcuts.remove('meta+u', '', '');
                     editor.shortcuts.remove('meta+b', '', '');
@@ -792,7 +794,7 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     editorOnClick = (e) => {
-        let asideNumberingPlaceholders=['Label','Number','Title']
+        let asideNumberingPlaceholders = ['Label Name', 'Number', 'Title'];
         if (this.props?.element?.type === 'figure' && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
             this.props.onFigureImageFieldFocus(this.props.index);
         }
@@ -876,16 +878,22 @@ export class TinyMceEditor extends Component {
                     const yOffSet = 10
                     let copyClickedX = e.clientX - parentPosition.x + xOffSet;
                     const copyClickedY = e.clientY - parentPosition.y + scrollTop + yOffSet;
-                    if(copyClickedX > 350){
-                        copyClickedX = 380
+                    if(copyClickedX >= 350 && copyClickedX < 415 ){
+                        copyClickedX = 300
+                    }
+                    if(copyClickedX >= 415 && copyClickedX < 560){
+                        copyClickedX = 350
+                    }
+                    if(copyClickedX >= 560){
+                        copyClickedX = 370
                     }
                     let audioPopupPosition = {
                         left: `${(copyClickedX)}px`,
                         top: `${(copyClickedY)}px`
                     }
-                    if(parentPosition.x +325 >800){
+                   /* if(parentPosition.x +325 >800){
                         audioPopupPosition.left = '0'
-                    }
+                    } */
                     // this.props.handleAudioPopupLocation(true, audioPopupPosition);
                     this.props.handleAssetsPopupLocation(true, audioPopupPosition);
                 }
@@ -1012,7 +1020,7 @@ export class TinyMceEditor extends Component {
     editorKeyup = (editor) => {
         editor.on('keyup', (e) => {
             /** Update the PREVIEW field with Label Value immediately */
-            if (this.props.isAutoNumberingEnabled && this.props?.element?.type === 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder)) {
+            if (this.props.isAutoNumberingEnabled && (autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder)) {
                 this.props.onFigureLabelChange(e, this.props?.placeholder);
             }
             this.isctrlPlusV = false;
@@ -1188,8 +1196,10 @@ export class TinyMceEditor extends Component {
         let currentElement = editor.selection.getNode();
         let childNodes = currentElement.childNodes;
         if (showHide) {
-            if (childNodes.length) {
+            if (childNodes.length && childNodes.length <= 1) {
                 this.setCursorOnCode(childNodes[childNodes.length - 1], editor);
+            } else if(childNodes.length > 1 && childNodes[0]?.classList?.contains('figureCodeContent')){ // keyboard navigation for block code content
+                this.setCursorOnCode(childNodes[childNodes.length - 2], editor);
             }
         } else {
             if (childNodes.length > 1) {
@@ -1247,13 +1257,14 @@ export class TinyMceEditor extends Component {
              */
             moveCursor(e, selectionNode, tinymceOffset);
             /* xxxxxxxxxxxxxxxxx handling of only number values for resume case in autonumbering START xxxxxxxxxxxxxxxxxxx */
-            if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn) {
+            if (this.props.isAutoNumberingEnabled && (autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn) {
                 const keyCode = e.keyCode || e.which;
-                const allowedKeys = [8, 37, 38, 39, 40, 46]
-                const allowedFormattingKeys = [66, 73, 85]
+                const allowedKeys = [8, 37, 38, 39, 40, 46] // Keys for Arrows, Del, BkSpc
+                const allowedFormattingKeys = [66, 73, 85] // keys for B,I,U
+                const cutPasteKeys = [67,86,88] // add support for Cut/Copy/Paste Operations
                 // Restrict limit to Numbers only in Number Field for Resume Number option
                 if (this.props.placeholder === 'Number' && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
-                    if (e.ctrlKey || e.shiftKey || ((keyCode < 48 || keyCode > 57) && (keyCode < 96 || keyCode > 105)) && keyCode !== 8 && keyCode !== 37 && keyCode !== 39 && keyCode !== 46) {
+                    if ((e.ctrlKey && (!cutPasteKeys.includes(keyCode)) || !e.ctrlKey && (keyCode == 86 || keyCode == 67 || keyCode == 88)) || e.shiftKey || ((keyCode < 48 || keyCode > 57) && (keyCode < 96 || keyCode > 105) && keyCode !== 86) && keyCode !== 8 && keyCode !== 37 && keyCode !== 39 && keyCode !== 46) {
                         e.preventDefault();
                         e.stopPropagation();
                         return false;
@@ -1263,6 +1274,12 @@ export class TinyMceEditor extends Component {
                         e.preventDefault();
                         e.stopPropagation();
                         return false;
+                    }
+                    // Restrict first digit 0 in Number Field
+                    if (tinymce?.activeEditor?.getContent()?.length < 1) {
+                        if (!(e.ctrlKey || e.metaKey) && keyCode == 48) {
+                            tinymce.dom.Event.cancel(e);
+                        }
                     }
                 }
                 // disable keyboard events in Label & Number fields of Autonumbered Elements
@@ -2329,6 +2346,22 @@ export class TinyMceEditor extends Component {
     }
     editorPaste = (editor) => {
         editor.on('paste', (e) => {
+            if (this.props.isAutoNumberingEnabled && (autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && this.props?.placeholder === 'Number' && this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
+                const currentValue = e.clipboardData.getData('Text');
+                const isNum = /^[1-9][0-9]*$/.test(currentValue);
+                let isValidPaste = true
+                const currentContent = editor?.getContent() ?? ''
+                /* Paste Valid Content in Number Field for Resume Number Case */
+                if (currentValue?.length > 9 || currentContent?.length > 8 || !(currentContent?.length < 9 && currentContent.length + currentValue.length < 10)) {
+                    isValidPaste = false
+                }
+                if (!isNum || (isNum && !isValidPaste)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
+
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             if (activeElement.nodeName === "CODE") {
                 let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
@@ -3448,7 +3481,11 @@ export class TinyMceEditor extends Component {
         let toolbar;
         switch (placeholder) {
             case "Number":
-                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.numberToolbarAutonumberMode : config.figureNumberToolbar;
+                if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) {
+                    toolbar =  (this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER || this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ) ? config.labelToolbarAutonumberMode : config.numberToolbarAutonumberMode;
+                } else {
+                    toolbar = config.figureNumberToolbar;
+                }
                 break;
             case "Label":
             case "Label Name":
@@ -3471,12 +3508,14 @@ export class TinyMceEditor extends Component {
 
     setAsideNumberingToolbar = (placeholder) => {
         let toolbar;
+        let isAutoNumberingEnabled = this.props.isAutoNumberingEnabled;
         switch (placeholder) {
             case "Number":
-                toolbar = config.AsideNumber;
+                toolbar = isAutoNumberingEnabled ? config.numberToolbarAutonumberMode : config.AsideNumber;
                 break;
             case "Label":
-                toolbar = config.AsideLabel;
+            case "Label Name":
+                toolbar = isAutoNumberingEnabled ? config.labelToolbarAutonumberMode : config.AsideLabel;
                 break;
             case "Title":
                 toolbar = config.AsideTitle;

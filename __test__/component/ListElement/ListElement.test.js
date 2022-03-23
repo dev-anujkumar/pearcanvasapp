@@ -33,10 +33,16 @@ describe('ListElement', () => {
       editor: true,
       Permission: false
     },
+    keyboardReducer: {
+      selectedElement: []
+    },
     appStore: {
       slateLevelData: {}
     },
     autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer : {
+      spellCheckToggle : false
+  }
   }
   const store = mockStore(initialState);
   const component = mount(<Provider store={store}><ListElement {...props} /></Provider>,{ attachTo: document.body })

@@ -9,6 +9,7 @@ import { slateLevelData } from "../../../fixtures/containerActionsTestingData"
 import { AUTHORING_ELEMENT_UPDATE } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import metadataTestData from '../../../fixtures/ElementMetadataAnchorTestData';
+import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 global.document = (new JSDOM()).window.Element;
@@ -78,7 +79,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 newAssessmentId: "urn:pearson:work:23454423342",
                 oldAssessmentId: "urn:pearson:work:23454424325"
             }
-        }
+        },
+        autoNumberReducer: mockAutoNumberReducerEmpty
     };
 
     let initialState2 = {
@@ -113,7 +115,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 elemURN : "urn:pearson:work:123"
             }]
         },
-        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" }
+        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" },
+        autoNumberReducer: mockAutoNumberReducerEmpty
     };
 
     let initialState3 = {
@@ -148,7 +151,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 elemURN : "urn:pearson:work:123"
             }]
         },
-        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" }
+        assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" },
+        autoNumberReducer: mockAutoNumberReducerEmpty
     };
 
     let asideData = {
@@ -247,7 +251,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
 
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
@@ -268,7 +276,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData.slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
 
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
@@ -316,7 +328,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 },
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
 
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
@@ -334,7 +350,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: updatedData,
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData.slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
 
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
@@ -353,6 +373,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -396,6 +420,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -441,6 +469,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -483,6 +515,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -525,6 +561,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -568,6 +608,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -641,7 +685,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 },
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData.slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
 
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
@@ -682,6 +730,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: { "type": "citations" },
                 dispatch: store.dispatch,
                 newslateData: slateWithCitationElement.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -728,6 +780,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: { "type": "citations" },
                 dispatch: store.dispatch,
                 newslateData: slateWithCitationElement2.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -774,6 +830,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: { "type": "citations" },
                 dispatch: store.dispatch,
                 newslateData: slateWithCitationElement.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -820,6 +880,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: multiColumnContainer,
                 dispatch: store.dispatch,
                 newslateData: slateWithCitationElement.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -862,6 +926,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -906,6 +974,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -957,6 +1029,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -1001,6 +1077,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -1045,6 +1125,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -1103,6 +1187,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: parentShowhide,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -1146,6 +1234,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -1188,6 +1280,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -1230,6 +1326,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -1272,6 +1372,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -1314,6 +1418,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: null,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -1338,6 +1446,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 dispatch: store.dispatch,
                 newslateData: slateLevelData.slateLevelData,
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const expectedAction = {
                 type: AUTHORING_ELEMENT_UPDATE,
@@ -1428,7 +1540,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
             updateHelpers.updateNewVersionElementInStore(args)
@@ -1445,7 +1561,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
             updateHelpers.updateNewVersionElementInStore(args)
@@ -1462,7 +1582,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
             updateHelpers.updateNewVersionElementInStore(args)
@@ -1479,7 +1603,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: {...parentElement, type:'popup'},
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
             updateHelpers.updateNewVersionElementInStore(args)
@@ -1505,7 +1633,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: {...parentElement, type:'showhide'},
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
             updateHelpers.updateNewVersionElementInStore(args)
@@ -1529,7 +1661,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: {...parentElement, type:'showhide'},
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
             updateHelpers.updateNewVersionElementInStore(args)
@@ -1552,7 +1688,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: {...parentElement, type:'showhide'},
                 fetchSlateData: jest.fn(),
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
             const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
             updateHelpers.updateNewVersionElementInStore(args)
@@ -1561,6 +1701,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         })
     })
     describe('updateShowhideElements testCases',()=>{
+        const autoNumberDetails = {isAutoNumberingEnabled: true,autoNumberSettingsOption:'Default AutoNumber', updatedSH_Object:{}}
         it('updateShowhideElements for authoredText',()=>{
             let sh_Obj = {
                 "id": "urn:pearson:manifest:f8153499-14c4-4d0e-a9ef-aadf2aaacc13",
@@ -1610,7 +1751,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             }
             let iList=["0","0","1","2","0"]
             const spyupdateShowhideElements = jest.spyOn(updateHelpers, "updateShowhideElements")
-            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList)
+            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList,autoNumberDetails)
             expect(spyupdateShowhideElements).toHaveBeenCalled()
             spyupdateShowhideElements.mockClear()  
         });
@@ -1692,7 +1833,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             }
             let iList=["0","0","1","0","0"]
             const spyupdateShowhideElements = jest.spyOn(updateHelpers, "updateShowhideElements")
-            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList)
+            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList,autoNumberDetails)
             expect(spyupdateShowhideElements).toHaveBeenCalled()
             spyupdateShowhideElements.mockClear()  
         });
@@ -1767,7 +1908,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             }
             let iList=["0","0","1","0","0"]
             const spyupdateShowhideElements = jest.spyOn(updateHelpers, "updateShowhideElements")
-            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList)
+            updateHelpers.updateShowhideElements(sh_Obj,updatedData,iList,autoNumberDetails)
             expect(spyupdateShowhideElements).toHaveBeenCalled()
             spyupdateShowhideElements.mockClear()  
         })
@@ -1792,7 +1933,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement,
                 fetchSlateData: null,
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
 
             const spycollectDataAndPrepareTCMSnapshot = jest.spyOn(updateHelpers, "collectDataAndPrepareTCMSnapshot")
@@ -1848,7 +1993,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: {...parentElement, type: "popup"},
                 fetchSlateData: null,
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
 
             const spycollectDataAndPrepareTCMSnapshot = jest.spyOn(updateHelpers, "collectDataAndPrepareTCMSnapshot")
@@ -1874,7 +2023,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 parentElement: {...parentElement, type: "popup"},
                 fetchSlateData: null,
                 newslateData: slateLevelData,
-                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
+                }
             }
 
             const spycollectDataAndPrepareTCMSnapshot = jest.spyOn(updateHelpers, "collectDataAndPrepareTCMSnapshot")
@@ -2085,6 +2238,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2116,6 +2273,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithCitationElement.slateLevelData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"]
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2145,6 +2306,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2178,6 +2343,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2208,6 +2377,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2243,6 +2416,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2279,6 +2456,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2314,6 +2495,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2349,6 +2534,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2382,6 +2571,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2419,6 +2612,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2455,6 +2652,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2491,6 +2692,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2528,6 +2733,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2565,6 +2774,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2603,6 +2816,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2640,6 +2857,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2678,6 +2899,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithShowhideData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
@@ -2854,6 +3079,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 dispatch: store.dispatch,
                 newslateData: {
                     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220f": slateWithPopupData
+                },
+                autoNumberDetails : {
+                    autoNumberSettingsOption: '',
+                    isAutoNumberingEnabled: true
                 }
             }
             const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")

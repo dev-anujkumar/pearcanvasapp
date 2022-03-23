@@ -23,6 +23,9 @@ let initialState = {
             toolbar: ['bold']
         }
     },
+    keyboardReducer: {
+        selectedElement: []
+      },
     toolbarReducer: {
         elemBorderToggle: "true"
     },

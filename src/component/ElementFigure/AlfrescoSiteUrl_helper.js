@@ -13,7 +13,8 @@ export const handleAlfrescoSiteUrl = (elementId, data) => {
     axios.put(url, req, {
         headers: {
             "Content-Type": "application/json",
-            PearsonSSOSession: config.ssoToken
+            // PearsonSSOSession: config.ssoToken,
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
     }).catch(error => {
@@ -28,8 +29,9 @@ export const getAlfrescositeResponse = (elementId, callback) => {
         headers: {
             "Content-Type": "application/json",
             'Accept': 'application/json',
-            "PearsonSSOSession": config.ssoToken,
-            'Cache-Control': 'no-cache'
+            // "PearsonSSOSession": config.ssoToken,
+            'Cache-Control': 'no-cache',
+            'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => response.json())
         .then(response => {
@@ -49,7 +51,8 @@ export const handleSiteOptionsDropdown = (alfrescoPath, id, locationData) => {
                     'Accept': 'application/json',
                     'ApiKey': config.CMDS_APIKEY,
                     'Content-Type': 'application/json',
-                    'PearsonSSOSession': SSOToken
+                    // 'PearsonSSOSession': SSOToken,
+                    'myCloudProxySession': config.myCloudProxySession
                 }
             })
             .then(function (response) {

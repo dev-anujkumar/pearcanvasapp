@@ -31,7 +31,9 @@ const interactReducer = {
         targetId: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
         latestVersion: {
             id: "urn:pearson:work:1c237eef-66cc-4375-8387-3f0d69da5fb7",
-            title: "item1"
+            title: "item1",
+            status:'wip',
+            latestCleanVersion: true
         },
         secondLatestVersion: {
             id: "urn:pearson:work:1c237eef-66cc-4375-8387-3f0d69da5fb7",
@@ -206,6 +208,41 @@ let alfrescoPath = {
     userCount: 0,
     'x-prsn-user-id': " ",
 }
+
+let alfrescoPath1 = {
+    alfresco: {
+        nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+        repositoryFolder: "001_C5 Media POC - AWS US ",
+        name: "AWS US",
+        title:'Title',
+        repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
+        visibility: "MODERATED",
+        guid:'1'
+    },
+    associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
+    authorName: "Krajewski",
+    citeUrn: "urn:pearson:manifestation:191e7b6c-53a3-420f-badd-a90786613ae5",
+    containerUrn: "urn:pearson:manifest:fd254701-5063-43aa-bd24-a2c2175be2b2",
+    currentOrigin: "local",
+    dateApproved: null,
+    dateCreated: "2019-02-28T19:14:32.948Z",
+    eTag: "Vy8xNTc0Mjc4NDkxMDYz",
+    entityUrn: "urn:pearson:entity:f2f656da-c167-4a5f-ab8c-e3dbbd349095",
+    gridId: [],
+    hasVersions: false,
+    id: "urn:pearson:distributable:cd9daf2a-981d-493f-bfae-71fd76109d8f",
+    name: "ELMTEST_StgEnv_Krajewski Test",
+    roleId: "admin",
+    ssoToken: "qcOerhRD_CT-ocYsh-y2fujsZ0o.*AAJTSQACMDIAAlNLABxnalBuS2VJQi9RUTFMdHVBZDZBMUxyakpUTGM9AAJTMQACMDE.*",
+    status: "wip",
+    tcm: { timeUpdated: 1553707971031, userIp: "10.50.11.104", user: "c5test01", activated: true },
+    url: null,
+    userApprover: null,
+    userApproverFullName: null,
+    userCount: 0,
+    'x-prsn-user-id': " ",
+}
+
 
 describe('Testing Interactive element component', () => {
     it('renders without crashing', () => {
@@ -599,6 +636,23 @@ describe('Testing Interactive element component', () => {
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith(e)
             spyhandleC2MediaClick.mockClear()
         })
+
+        it('onClick-if case - variable assigning conditional case', () => {
+            const e = {
+                target: {
+                    tagName: "IMG"
+                },
+                stopPropagation() { }
+            }
+            config.alfrescoMetaData = alfrescoPath1
+            const spyhandleC2MediaClick = jest.spyOn(elementInteractiveInstance, 'handleC2MediaClick')
+            elementInteractiveInstance.handleC2MediaClick(e);
+            elementInteractiveInstance.forceUpdate();
+            elementInteractive.update();
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(e)
+            spyhandleC2MediaClick.mockClear()
+        })
+
         it('Simulating alfresco click with alfresco location', () => {
             config.alfrescoMetaData = { nodeRef: {} }
             const spyhandleC2MediaClick = jest.spyOn(elementInteractiveInstance, 'handleC2MediaClick')
@@ -1381,6 +1435,31 @@ describe("Testing methods", () => {
         expect(spyaddCiteTdxAssessment).toHaveBeenCalled()
     })
 
+    it("addCiteTdxAssessment else - block - conditional coverage", () => {
+        axios.get = jest.fn(() => Promise.resolve({
+            data: {
+                thumbnail: {
+                    id: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+                    src: {
+                        'imageId': "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+                        'path': 'path',
+                        'alttext': 'Image',
+                    },
+                    alt: 'alttext'
+                },
+                title: 'Title'
+            }
+        }));
+        let citeTdxObj = {
+            slateType : "",
+            singleAssessmentID : {
+            }
+        }
+        const spyaddCiteTdxAssessment = jest.spyOn(elementInteractiveInstance, 'addCiteTdxAssessment')
+        elementInteractiveInstance.addCiteTdxAssessment(citeTdxObj, 1)
+        expect(spyaddCiteTdxAssessment).toHaveBeenCalled()
+    })
+
     it("testing handleClickElement",()=>{
         let e = {
             stopPropagation :jest.fn()
@@ -1404,7 +1483,8 @@ describe("Testing methods", () => {
                 }
             },
             showBlocker: function () { },
-            updateFigureData : function() {}
+            updateFigureData : function() {},
+            currentSingleAssessmentSelected: {}
         };
         let tempComponent = mount(<Provider store={store}><Interactive {...tempProps} /></Provider>);
         let elementInteractiveInstance = tempComponent.find('Interactive').instance();
@@ -1414,7 +1494,7 @@ describe("Testing methods", () => {
         let value = {}
         elementInteractiveInstance.togglePopup(e,value)
     })
-    it('testing togglePopup else case',()=>{
+    xit('testing togglePopup else case',()=>{
         let tempProps = {
             slateLockInfo: {
                 isLocked: false,
@@ -1438,6 +1518,11 @@ describe("Testing methods", () => {
         let e ={
             stopPropagation :jest.fn()
         }
+        elementInteractiveInstance.setState({
+            itemParentID:'urn:pearson:alfresco:970d766b-12c2-42ac-8275-1b21c05993sd',
+            itemID:'urn:pearson:alfresco:970d766b-12c2-42ac-8275-1b21c059939d',
+            interactiveTitle:'Interactive'
+        })
         let value ={}
         elementInteractiveInstance.togglePopup(e, value)
     })
@@ -1494,6 +1579,31 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
         expect(elementInteractiveInstance.state.interactiveTitle).toBe(pufObj.title)
         expect(elementInteractiveInstance.state.elementType).toBe(pufObj.interactiveType)
     })
+
+    it("Test - addElmInteractive- without interactiveType", () => {
+        let pufObj = {
+            id: "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+            // interactiveType: "simulation",
+            title: "Interative 2 -UCA",
+            callFrom: "fromEventHandling"
+        }
+        let thumbnailData = {
+            posterImage: {
+                path: 'path'
+            },
+            alttext: 'altText',
+        }
+        axios.get = jest.fn(() => Promise.resolve({
+            thumbnailData
+        }));
+        const spyaddElmInteractive = jest.spyOn(elementInteractiveInstance, 'addElmInteractive')
+        elementInteractiveInstance.addElmInteractive(pufObj, cb)
+        expect(spyaddElmInteractive).toHaveBeenCalled()
+        expect(elementInteractiveInstance.state.itemID).toBe(pufObj.id)
+        expect(elementInteractiveInstance.state.interactiveTitle).toBe(pufObj.title)
+        expect(elementInteractiveInstance.state.elementType).toBe("simulation")
+    })
+
     it("Test - togglePopup -elminteractive", () => {
         const spytogglePopup = jest.spyOn(elementInteractiveInstance, 'togglePopup')
         const e = {
@@ -1616,6 +1726,9 @@ describe("Interactive Element: Testing Elm Picker Integration Methods", () => {
     })
     it('Test - 9 - showCustomPopup', () => {
         const intInstance = interactiveInstance(props); 
+        intInstance.setState({
+            showUpdatePopup : true
+        })
         const func = jest.spyOn(intInstance, 'showCustomPopup');
         intInstance.showCustomPopup();
         expect(func).toHaveBeenCalled();
@@ -1729,6 +1842,14 @@ describe('Testing Methods', () => {
         const res = newInteractiveInstance.deleteElementAsset()
         expect(res).not.toBe(null);
     })
+    it('Testing showDeleteAssetPopup : else condition', () => {
+        newInteractiveInstance.setState({
+            deleteAssetPopup: false
+        })
+        const res = newInteractiveInstance.showDeleteAssetPopup()
+        expect(res).toBe(null);
+    })
+
     it('Testing showElmVersionStatus', () => {
         newInteractiveInstance.setState({
             itemID: "urn:pearson:work:11227eef-66cc-4375-8387-3f0d69da5fb7"

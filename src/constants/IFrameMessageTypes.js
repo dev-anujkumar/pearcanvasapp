@@ -63,3 +63,6 @@ export const REFRESH_MESSAGE='refresh on Cypress from Cypress_plus'
 
 //Audio Narration Constant
  export const deleteAudio='deletePageAudioMessage'
+
+ //Control Vocabulary constant
+ export const SET_CONTROL_VOCAB_DETAILS = 'setControlVocabDetails'

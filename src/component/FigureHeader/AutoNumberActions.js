@@ -1,14 +1,14 @@
 import config from '../../config/config.js';
 import axios from 'axios';
-import { mediaElementAPI_Handler } from './mediaElementDataMapper.js';
 import {
     SET_AUTO_NUMBER_TOGGLE,
     SET_AUTO_NUMBER_SEQUENCE,
     GET_TOC_AUTO_NUMBERING_LIST,
-    GET_ALL_AUTO_NUMBER_ELEMENTS
+    GET_ALL_AUTO_NUMBER_ELEMENTS,
+    UPDATE_CHAPTER_POPUP_DATA
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList, getNumberedElements } from './AutoNumber_helperFunctions';
-import { autoNumber_IndexMapper } from './AutoNumberConstants';
+import store from '../../appstore/store'
 /**
  * 
  */
@@ -16,7 +16,8 @@ import { autoNumber_IndexMapper } from './AutoNumberConstants';
 const commonHeaders = {
     "ApiKey": config.STRUCTURE_APIKEY,
     "Content-Type": "application/json",
-    "PearsonSSOSession": config.ssoToken
+    // "PearsonSSOSession": config.ssoToken
+    'myCloudProxySession': config.myCloudProxySession
 }
 
 /**
@@ -24,17 +25,25 @@ const commonHeaders = {
  * @param {*} currentParentUrn TOC Container EntityUrn
  * @returns 
  */
-export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) => {
-    const url = getAPIUrl(currentParentUrn);
-    axios.get(url, {
-        headers: {
+export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
+    try{
+        const headers = {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": "application/json",
-            "PearsonSSOSession": config.ssoToken
+            // "PearsonSSOSession": config.ssoToken
+            'myCloudProxySession': config.myCloudProxySession
         }
-    }).then(async response => {
-        if (response?.data) {
-            const projectContent = response.data;
+        const figureUrl = getAPIUrl(currentParentUrn);
+        const containerUrl = ['frontMatter', 'backMatter'].includes(currentParentUrn) ? `${figureUrl}?aside=true` : `${figureUrl}&aside=true`;
+        let figurePromise = axios.get(figureUrl, {headers});
+        let containerPromise = axios.get(containerUrl, {headers});
+        
+        let response = await Promise.all([figurePromise, containerPromise]);
+        let projectContent = {}
+        response.forEach(res => {
+            projectContent = { ...res.data, ...projectContent}
+        })
+        if (Object.keys(projectContent)?.length > 0) {
             let numberedElements = {}
             numberedElements = getNumberedElements(projectContent, currentParentUrn);
             console.log('numberedElements>>>>', numberedElements)
@@ -49,11 +58,10 @@ export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) =>
         } else {
             commonDispatch(dispatch, GET_ALL_AUTO_NUMBER_ELEMENTS, {})
         }
-    }).catch(error => {
+    } catch(error){
         console.error('Error in fetching list of figures in the project>>>> ', error)
-        commonDispatch(dispatch, GET_ALL_AUTO_NUMBER_ELEMENTS, {})
-    })
-
+        commonDispatch(dispatch, GET_ALL_AUTO_NUMBER_ELEMENTS, {});
+    }
 };
 
 /**
@@ -63,6 +71,7 @@ export const fetchProjectFigures = (currentParentUrn) => (dispatch, getState) =>
  * @returns 
  */
 const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIndex) => {
+    const autoNumber_IndexMapper = store.getState()?.autoNumberReducer?.autoNumber_IndexMapper
     for (let labelType in numberedElements) {
         if (Object.prototype.hasOwnProperty.call(numberedElements, labelType)) {
             const Obj = prepareAutoNumberList(numberedElements[labelType])
@@ -160,7 +169,8 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
         const response = await axios.get(apiUrl, {
             headers: {
                 "Content-Type": "application/json",
-                "PearsonSSOSession": config.ssoToken
+                // "PearsonSSOSession": config.ssoToken
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
         const slateData = Object.values(response.data)[0];
@@ -185,4 +195,12 @@ export const setAutoNumberinBrowser = (flag, configValue) => {
         [config.projectEntityUrn]: flag && configValue
     }
     localStorage.setItem('projectAutoNumberStatus', JSON.stringify({ ...projectAutoNumberStatus }));
+}
+
+export const updateChapterPopupData = (dataObj, key) => {
+    store.dispatch({
+        type: UPDATE_CHAPTER_POPUP_DATA,
+        key: key,
+        payload: dataObj
+    });
 }

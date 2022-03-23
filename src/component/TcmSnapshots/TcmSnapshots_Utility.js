@@ -851,7 +851,7 @@ const isEmpty = (obj) => {
     return false;
 }
 
-const allowedFigureTypesForAutoNumbering = ['image', 'table', 'mathImage', 'interactive', 'audio', 'video']
+const allowedFigureTypesForAutoNumbering = ['image', 'table', 'mathImage', 'interactive', 'audio', 'video', 'authoredtext', 'codelisting']
 
 export const autoNumberedElements = (element) => {
    
