@@ -467,11 +467,11 @@
 }
 
 
-.left-arrow-icon.disable
-.right-arrow-icon.disable{
+.left-arrow.disable,
+.right-arrow.disable{
   cursor: not-allowed;
   pointer-events: none;
-  color: white
+  opacity: 0.2;
 }
 
 .figure-popup{
@@ -1000,21 +1000,21 @@ ol li.listItemNumeroUnoLowerRoman {
 }
 
 .modal-content.alfresco-long-popup {
-  top: 50% !important;
-  width: 610px !important;
-  min-height: 234px !important;
+  top: 50%;
+  width: 610px;
+  min-height: 234px;
 }
 
 .modal-content.alfresco-short-popup {
-  top: 31% !important;
-  width: 610px !important;
-  min-height: 234px !important;
+  top: 31%;
+  width: 610px;
+  min-height: 234px;
 }
 
 .cancel-button.disable {
-  cursor: not-allowed !important;
-  pointer-events: none !important;
-  border: 1px solid #b3d8e1 !important;
+  cursor: not-allowed;
+  pointer-events: none;
+  border: 1px solid #b3d8e1;
   background: #ffffff;
   color: #005a70;
 }

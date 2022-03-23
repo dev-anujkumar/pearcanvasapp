@@ -32,7 +32,7 @@ import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
 import PageNumberContext from '../CanvasWrapper/PageNumberContext.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
-import { LABELS } from './ElementConstants.js';
+import { LABELS, TE_POP_UP_HEADER_TEXT, TE_POP_UP_NORMAL_TEXT } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData, handleBlankLineDom, updateAutoNumberedElement } from './UpdateElements.js';
 import ElementPopup from '../ElementPopup'
@@ -2142,8 +2142,8 @@ class ElementContainer extends Component {
         let bceOverlay = "";
         let elementOverlay = '';
         let alfrescoExpansionData = {
-            headerText : "Select an Image",
-            normalText: "Please select an image to open it in Alfresco for editing in a different tab on your browser",
+            headerText : TE_POP_UP_HEADER_TEXT,
+            normalText: TE_POP_UP_NORMAL_TEXT,
             renderImages : this.props.tableElementAssetData
         }
         let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton');

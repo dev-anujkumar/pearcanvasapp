@@ -6,7 +6,10 @@ import moveArrow from './Assets/down-arrow.svg';
 import errorMark from './Assets/shape.svg';
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 
-
+/**
+ * @description This is a functional component for "Edit in Alfresco" of Table Element.
+ * @param {*} props 
+ */
 const MetaDataPopUpForTE = (props) => {
   const {imageList, editedImageList, updateEditedData, togglePopup} = props
   const [altTextErr, setAltTextErr] = useState(false);
@@ -64,7 +67,7 @@ const MetaDataPopUpForTE = (props) => {
 
   const traverseLeft = () => {
     if(index > 0){
-      let newIndex = index - 1;
+      const newIndex = index - 1;
       updateCurrentImage(newIndex);
       updateRangeForImages(newIndex);
       setIndex(newIndex);
@@ -73,7 +76,7 @@ const MetaDataPopUpForTE = (props) => {
 
   const traverseRight = () => {
     if(index < imageList?.length-1){
-      let newIndex = index + 1;
+      const newIndex = index + 1;
       updateCurrentImage(newIndex);
       setIndex(newIndex);
       updateRangeForImages(newIndex);
@@ -149,7 +152,7 @@ const MetaDataPopUpForTE = (props) => {
   const handleSave = () => {
     saveTEMetadata(editedImageList)
         .then(() => {
-          togglePopup(false, 'TE');
+          handleCancel();
         });
   }
 
@@ -207,7 +210,7 @@ const MetaDataPopUpForTE = (props) => {
                     <img className='inner-img-container' src={imageSrc} id={imageID} /> 
                   </div>
                   <div className='outer-img-array-container'>
-                    <span className='left-arrow' onClick={traverseLeft}><div className={`left-arrow-icon ${index === 0 ? 'disable' : ""}`}><img width="12px" height="12px" src={moveArrow} /></div></span>
+                  <span className={`left-arrow ${index === 0 ? 'disable' : ''}`} onClick={traverseLeft}><div className={`left-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>
                     <span className='inner-img-array'>
                     {imageList && imageList.map((image, imgIndex) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
@@ -220,7 +223,7 @@ const MetaDataPopUpForTE = (props) => {
                       }
                     })}
                     </span>
-                    <span className='right-arrow' onClick={traverseRight}><div className={`right-arrow-icon ${index === (imageList.length - 1) ? 'disable' : "" }`}><img width="12px" height="12px" src={moveArrow} /></div></span>
+                    <span className={`right-arrow ${index === (imageList.length - 1) ? 'disable' : '' }`} onClick={traverseRight}><div className={`right-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>
                   </div>
                 </div>
                 <div className="right-container">
