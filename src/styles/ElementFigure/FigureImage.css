@@ -963,6 +963,7 @@ th ol li.listItemNumeroUnoNone:before {
     color: #737373;
     position: absolute;
     z-index:0;
+    width:74px !important;
 }
 
  .floating-title-group   .transition-none, .floating-caption-group .transition-none, .floating-credit-group .transition-none, .floating-math-content-group .transition-none {
