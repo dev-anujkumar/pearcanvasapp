@@ -157,7 +157,103 @@ describe('TCM snapshot Action test case', () => {
         });
     });
 
-    it('fetchPOPupSlateData for else if', () => {
+    
+    it('Test fetchPOPupSlateData for if condition for type of index === Array and length === 1', () => {
+        let slateManifestUrn = "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
+        config.slateManifestURN="urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
+        let element = {
+            "contentUrn": "urn:pearson:entity:9d7acf56-22f0-4983-b6d1-eccd15d6fefc",
+            "id": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595",
+            "popupdata": {
+                "bodymatter": [{
+                    "contentUrn": "urn:pearson:entity:6bbadbca-358b-4ac1-93ce-2f7f52e9af95",
+                    "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                    "html": { text: "<p class='paragraphNumeroUno'><br></p>" },
+                    "id": "urn:pearson:work:f4836dd6-393f-41cb-ac27-c1746fecf614",
+                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                    "status": "wip",
+                    "type": "element-authoredtext",
+                    "versionUrn": "urn:pearson:work:f4836dd6-393f-41cb-ac27-c1746fecf614"
+                }]
+            },
+            "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+            "type": "popup",
+            "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
+        }
+
+        let initialState4 = {
+            tcmSnapshot: [],
+            tcmActivatedOnProjectLevel: false,
+            appStore: {
+                slateLength: 25,
+                slateLevelData:{
+                    "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585": {
+                        "contentUrn": "urn:pearson:entity:3e58848c-415e-4681-b7c1-600a69a88c4b",
+                        "contents": {
+                            "bodymatter": {
+                                "0" : {
+                                    "contentUrn": "urn:pearson:entity:9d7acf56-22f0-4983-b6d1-eccd15d6fefc",
+                                    "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                                    "id": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595",
+                                    "popupdata": { bodymatter: [] },
+                                    "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+                                    "type": "popup",
+                                    "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
+                                    
+                                }
+                            
+                            }
+                        }
+                        },
+                        "id": "urn:pearson:manifest:145f099e-bc9a-4525-9f0a-db58425a2403",
+                        "pageCount": 1,
+                        "pageLimit": 25,
+                        "pageNo": 0,
+                        "type": "manifest",
+                        "versionUrn": "urn:pearson:manifest:145f099e-bc9a-4525-9f0a-db58425a2403"
+
+                    }
+                }
+        };
+        store = mockStore(() => initialState4);
+        let response = {
+            "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585": {
+                "contentUrn": "urn:pearson:entity:5dfc0e5d-b2e0-4aee-9aca-da35af6304fc",
+                "contents": {
+                    "bodymatter": [{
+                        "contentUrn": "urn:pearson:entity:ea40bcee-5fae-4e34-8f4b-e8ed0526815b",
+                        "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                        "html": { "text": "<p class='paragraphNumeroUno'><br></p>" },
+                        "id": "urn:pearson:work:0dc8459f-c96d-4268-b008-3744ba1dbc6f",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "type": "element-authoredtext",
+                        "versionUrn": "urn:pearson:work:0dc8459f-c96d-4268-b008-3744ba1dbc6f"
+                    }]
+                },
+                "id": "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585",
+                "pageNo": 0,
+                "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+                "status": "wip",
+                "type": "popup",
+                "versionUrn": "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
+            }
+        }
+        moxios.wait(() => {
+            const request1 = moxios.requests.mostRecent();
+            request1.respondWith({
+                status: 200,
+                response: response
+            });
+        });
+      
+        return store.dispatch(selectActions.fetchPOPupSlateData(slateManifestUrn,"urn:pearson:entity:5dfc0e5d-b2e0-4aee-9aca-da35af6304fc",0,element,[0])).then(() => {
+            const { type } = store.getActions()[0];
+            expect(type).toBe('AUTHORING_ELEMENT_UPDATE');
+        });
+    });
+
+
+    it('Test fetchPOPupSlateData for nested if condition inside type of index === string', () => {
         let slateManifestUrn = "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
         config.slateManifestURN="urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
         let element = {
@@ -204,7 +300,9 @@ describe('TCM snapshot Action test case', () => {
                                         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
                                         "type": "popup",
                                         "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
-                                    } },
+                                         } 
+                                    },
+                                },
                                 "id": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595",
                                 "popupdata": { bodymatter: [] },
                                 "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
@@ -256,6 +354,121 @@ describe('TCM snapshot Action test case', () => {
         });
       
         return store.dispatch(selectActions.fetchPOPupSlateData(slateManifestUrn,"urn:pearson:entity:5dfc0e5d-b2e0-4aee-9aca-da35af6304fc",0,element,"0-1")).then(() => {
+            const { type } = store.getActions()[0];
+            expect(type).toBe('AUTHORING_ELEMENT_UPDATE');
+        });
+    });
+
+
+    it('Test fetchPOPupSlateData for nested else if condition inside type of index === string', () => {
+        let slateManifestUrn = "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
+        config.slateManifestURN="urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
+        let element = {
+            "contentUrn": "urn:pearson:entity:9d7acf56-22f0-4983-b6d1-eccd15d6fefc",
+            "id": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595",
+            "popupdata": {
+                "bodymatter": {
+                    "0" : {
+                         "contentUrn": "urn:pearson:entity:6bbadbca-358b-4ac1-93ce-2f7f52e9af95",
+                         "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                         "html": { text: "<p class='paragraphNumeroUno'><br></p>" },
+                         "id": "urn:pearson:work:f4836dd6-393f-41cb-ac27-c1746fecf614",
+                         "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                         "status": "wip",
+                         "type": "element-authoredtext",
+                         "versionUrn": "urn:pearson:work:f4836dd6-393f-41cb-ac27-c1746fecf614"
+                       }
+                    }
+            },
+            "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+            "type": "popup",
+            "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
+        }
+
+        let initialState3 = {
+            tcmSnapshot: [],
+            tcmActivatedOnProjectLevel: false,
+            appStore: {
+                slateLength: 25,
+                slateLevelData:{
+                    "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585": {
+                        "contentUrn": "urn:pearson:entity:3e58848c-415e-4681-b7c1-600a69a88c4b",
+                        "contents": {
+                            "bodymatter": {
+                                "0" : {
+                                "contentUrn": "urn:pearson:entity:9d7acf56-22f0-4983-b6d1-eccd15d6fefc",
+                                "elementdata": { 
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", 
+                                    "text": "",
+                                    "bodymatter": {
+                                        "1" : {
+                                            "contents": {
+                                                "bodymatter": {
+                                                    "2" : {
+                                                        "contentUrn": "urn:pearson:entity:9d7acf56-22f0-4983-b6d1-eccd15d6fefc",
+                                                        "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                                                        "id": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595",
+                                                        "popupdata": { bodymatter: [] },
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+                                                        "type": "popup",
+                                                        "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
+                                                    }
+                                               },
+                                           } 
+                                       },
+                                   },
+                                "id": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595",
+                                "popupdata": { bodymatter: [] },
+                                "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+                                "type": "popup",
+                                "versionUrn": "urn:pearson:manifest:b4f73a39-709f-470c-a5bc-9d4d165a1595"
+                            }
+                        }
+                        },
+                        "id": "urn:pearson:manifest:145f099e-bc9a-4525-9f0a-db58425a2403",
+                        "pageCount": 1,
+                        "pageLimit": 25,
+                        "pageNo": 0,
+                        "type": "manifest",
+                        "versionUrn": "urn:pearson:manifest:145f099e-bc9a-4525-9f0a-db58425a2403"
+
+                    }
+                }
+            }
+          }
+        };
+        store = mockStore(() => initialState3);
+        let response = {
+            "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585": {
+                "contentUrn": "urn:pearson:entity:5dfc0e5d-b2e0-4aee-9aca-da35af6304fc",
+                "contents": {
+                    "bodymatter": [{
+                        "contentUrn": "urn:pearson:entity:ea40bcee-5fae-4e34-8f4b-e8ed0526815b",
+                        "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                        "html": { "text": "<p class='paragraphNumeroUno'><br></p>" },
+                        "id": "urn:pearson:work:0dc8459f-c96d-4268-b008-3744ba1dbc6f",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "type": "element-authoredtext",
+                        "versionUrn": "urn:pearson:work:0dc8459f-c96d-4268-b008-3744ba1dbc6f"
+                    }]
+                },
+                "id": "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585",
+                "pageNo": 0,
+                "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/popup",
+                "status": "wip",
+                "type": "popup",
+                "versionUrn": "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
+            }
+        }
+        moxios.wait(() => {
+            const request1 = moxios.requests.mostRecent();
+            request1.respondWith({
+                status: 200,
+                response: response
+            });
+        });
+      
+        return store.dispatch(selectActions.fetchPOPupSlateData(slateManifestUrn,"urn:pearson:entity:5dfc0e5d-b2e0-4aee-9aca-da35af6304fc",0,element,"0-1-2")).then(() => {
             const { type } = store.getActions()[0];
             expect(type).toBe('AUTHORING_ELEMENT_UPDATE');
         });

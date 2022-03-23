@@ -467,11 +467,12 @@
 }
 
 
-.left-arrow-icon.disable
-.right-arrow-icon.disable{
+.left-arrow.disable,
+.right-arrow.disable{
   cursor: not-allowed;
   pointer-events: none;
-  color: white
+  background-color: #eee;
+  opacity: 0.2;
 }
 
 .figure-popup{
@@ -486,7 +487,7 @@
 }
 
 .figure-popup.editPopupforTE{
-  width: 1000px !important;
+  width: 1000px;
   height: 528px;
 }
 
@@ -518,7 +519,7 @@
 
 .left-arrow{
   margin: 24px 0px 20px 0px;
-  height: 28px;
+  height: 24px;
   width: 18px;
   font-size: large;
 }
@@ -577,14 +578,14 @@
 
 .alt-text-body.invalid{
   border-bottom: 2px solid #f31212;
-  margin-bottom: 0px !important;
+  margin-bottom: 0px;
 }
 
 .alt-text-span{
   color: red;
   font-size: 13px;
   font-family: OpenSans;
-  margin-bottom: 6px !important
+  margin-bottom: 6px;
 }
 
 .long-description-body{
@@ -1000,15 +1001,15 @@ ol li.listItemNumeroUnoLowerRoman {
 }
 
 .modal-content.alfresco-long-popup {
-  top: 50% !important;
-  width: 610px !important;
-  min-height: 234px !important;
+  top: 50%;
+  width: 610px;
+  min-height: 234px;
 }
 
 .modal-content.alfresco-short-popup {
-  top: 31% !important;
-  width: 610px !important;
-  min-height: 234px !important;
+  top: 31%;
+  width: 610px;
+  min-height: 234px;
 }
 
 .cancel-button.disable {
