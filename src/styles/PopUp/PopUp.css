@@ -962,10 +962,6 @@ ol li.listItemNumeroUnoLowerRoman {
   font-family: OpenSans;
   font-size: 16px;
   font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
   color: #005a70;
 }
 
@@ -976,11 +972,7 @@ ol li.listItemNumeroUnoLowerRoman {
   margin: 1px 55px 13px 1px;
   font-family: OpenSans;
   font-size: 14px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
   line-height: 1.5;
-  letter-spacing: normal;
   color: #666;
 }
 
