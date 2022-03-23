@@ -572,11 +572,12 @@ describe('Testing FigureUserInterface component', () => {
         xit('changeFigureLabel case else', () => {
             document.getElementById = () => {
                 return {
-                    innerHTML: 'test'
+                    innerHTML: 'TEST'
                 }
             }
             let props = {
                 model: newSmartLinkObjWithData,
+                handleBlur:jest.fn(),
                 index: 1,
                 slateLockInfo: {
                     isLocked: false,
@@ -584,7 +585,6 @@ describe('Testing FigureUserInterface component', () => {
                 },
                 onClick: () => { },
                 handleFocus: function () { },
-                handleBlur: function () { },
                 permissions: ['add_multimedia_via_alfresco'],
                 element: {
                     figuretype: 'interactive',
@@ -607,7 +607,7 @@ describe('Testing FigureUserInterface component', () => {
             let instance = elementFigureUserInterface.instance();
             expect(instance).toBeDefined();
         });
-        xit('changeFigureLabel case if', () => {
+        it('changeFigureLabel case if', () => {
             document.getElementById = () => {
                 return {
                     innerHTML: 'test'
@@ -625,7 +625,7 @@ describe('Testing FigureUserInterface component', () => {
                 handleBlur: function () { },
                 permissions: ['add_multimedia_via_alfresco'],
                 element: {
-                    figuretype: 'interactive',
+                    figuretype: ['image','table','mathImage','authoredtext'],
                     figuredata: {
                         hasOwnProperty: jest.fn(()=> true),
                         path:'test path',
@@ -644,6 +644,7 @@ describe('Testing FigureUserInterface component', () => {
             FigureUserInterfaceInstance.changeFigureLabel('Table', 'Figure');
             let instance = elementFigureUserInterface.instance();
             expect(instance).toBeDefined();
+            elementFigureUserInterface.find('.figure-label').simulate('click')
         });
         it('toggleHyperlinkEditable case if', () => {
             const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
@@ -652,6 +653,18 @@ describe('Testing FigureUserInterface component', () => {
             let instance = elementFigureUserInterface.instance();
             expect(instance).toBeDefined();
         });
+        it('clickNode case if', () => {
+            const elementFigureUserInterface = mount(<Provider store={store}><FigureUserInterface {...props} /></Provider>)
+            const FigureUserInterfaceInstance = elementFigureUserInterface.find('FigureUserInterface').instance();
+            const spy = jest.spyOn(FigureUserInterfaceInstance, 'clickNode');
+            const ObjEvent = {
+                keyCode: 13,
+                preventDefault:jest.fn()
+            }
+            FigureUserInterfaceInstance.clickNode(ObjEvent);
+            expect(spy).toBeCalled();
+        });
+        
         it('without data element for conditional coverage', () => {
             let props = {
                 model: newSmartLinkObjWithData,
