@@ -3398,7 +3398,7 @@ export class TinyMceEditor extends Component {
             testElem.innerHTML = this.props.model;
             let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
             const isContainsBlankLine = testElem.innerHTML.match(/<span/) ? testElem.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
-            if (!testElem.innerText.trim()) {
+            if (!testElem?.innerText?.trim()) {
                 testElem.innerText = "";
             }
             if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath && !isContainsBlankLine) {
