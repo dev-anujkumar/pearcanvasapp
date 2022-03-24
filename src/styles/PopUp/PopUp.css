@@ -471,6 +471,7 @@
 .right-arrow.disable{
   cursor: not-allowed;
   pointer-events: none;
+  background-color: #eee;
   opacity: 0.2;
 }
 
@@ -486,8 +487,8 @@
 }
 
 .figure-popup.editPopupforTE{
-  width: 1000px !important;
-  height: 528px;
+  width: 1000px;
+  height: 488px;
 }
 
 
@@ -497,16 +498,16 @@
 }
 
 .outer-img-container{
-  margin: 47px 47px 16px 0px;
-  height: 315px;
+  margin: 14px 47px 16px 0px;
+  height: 319px;
   width: 300px;
-  padding: 0 20px 0 18px;
+  padding: 0 20px 0 17px;
   background-color: #eee;
 }
 
 .inner-img-container{
-  height: 313px;
-  width: 262px;
+  height: 319px;
+  width: 265px;
 }
 
 .outer-img-array-container{
@@ -518,7 +519,7 @@
 
 .left-arrow{
   margin: 24px 0px 20px 0px;
-  height: 28px;
+  height: 24px;
   width: 18px;
   font-size: large;
 }
@@ -577,14 +578,14 @@
 
 .alt-text-body.invalid{
   border-bottom: 2px solid #f31212;
-  margin-bottom: 0px !important;
+  margin-bottom: 0px;
 }
 
 .alt-text-span{
   color: red;
   font-size: 13px;
   font-family: OpenSans;
-  margin-bottom: 6px !important
+  margin-bottom: 6px;
 }
 
 .long-description-body{
@@ -617,7 +618,7 @@
   border-bottom: 1px solid #005a70;
 }
 .figuremetadata-field {
-  margin-top:42px;
+  margin-top:14px;
 }
 .metadata-button{
   margin-top: 35px;
