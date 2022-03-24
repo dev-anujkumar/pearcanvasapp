@@ -602,7 +602,7 @@ describe('Test for element container component', () => {
                 permissions: [],
                 index: 1,
                 parentElement: {
-                    type: "poetry",
+                    type: "element-blockfeature",
                     contents: {}
                 }
             };
