@@ -577,9 +577,18 @@ export const prepareBqHtml = (node) => {
     const firstInnerData = () => {
         const checkStyle = node?.parentNode?.parentNode?.firstElementChild?.firstElementChild?.firstElementChild
         if (checkStyle) {
-            return node?.parentNode?.parentNode?.firstElementChild?.firstElementChild?.innerHTML
+            const callOut = node?.parentNode?.parentNode?.firstElementChild?.firstElementChild?.firstElementChild?.firstElementChild
+            if(callOut){
+                //for callout and figure link
+                return node?.parentNode?.parentNode?.firstElementChild?.firstElementChild?.firstElementChild?.innerHTML
+            }
+            else{
+                //for formating options
+                return node?.parentNode?.parentNode?.firstElementChild?.firstElementChild?.innerHTML
+            }
         }
         else {
+            //for normal text case
             return node?.parentNode?.parentNode?.firstChild?.firstElementChild?.innerText
         }
     }
