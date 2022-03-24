@@ -471,7 +471,7 @@
 .right-arrow.disable{
   cursor: not-allowed;
   pointer-events: none;
-  background-color: #eee;
+  /* background-color: #eee; */
   opacity: 0.2;
 }
 
@@ -499,7 +499,7 @@
 
 .outer-img-container{
   margin: 14px 47px 16px 0px;
-  height: 319px;
+  height: 315px;
   width: 300px;
   padding: 0 20px 0 17px;
   background-color: #eee;
@@ -618,6 +618,9 @@
   border-bottom: 1px solid #005a70;
 }
 .figuremetadata-field {
+  margin-top:42px;
+}
+.figuremetadata-field-table {
   margin-top:14px;
 }
 .metadata-button{
@@ -1010,4 +1013,18 @@ ol li.listItemNumeroUnoLowerRoman {
   border: 1px solid #b3d8e1;
   background: #ffffff;
   color: #005a70;
+}
+
+.te-metadata-button{
+  margin-top: 26px;
+}
+
+.te-model-popup { 
+  position: fixed; 
+  z-index: 999999; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  cursor:default;
 }

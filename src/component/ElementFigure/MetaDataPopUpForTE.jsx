@@ -80,7 +80,8 @@ const MetaDataPopUpForTE = (props) => {
   }
 
   const disableButtonForHTML = () => {
-    if(Object.keys(editedImageList).length > 0){
+
+    if(editedImageList && Object.keys(editedImageList).length > 0){
       if(checkHTMLInString(altText) || checkHTMLInString(longDescription)){
         setDisableButton(true);
       } else {
@@ -223,10 +224,10 @@ const MetaDataPopUpForTE = (props) => {
 
   return(
       <div className="model">
-        <div tabIndex="0" className="model-popup">
+        <div tabIndex="0" className="te-model-popup">
           <div className='figure-popup editPopupforTE'>
           {console.log('imageList inside return : ',props.imageList)}
-          {imageList.length > 0 ? 
+          {imageList?.length > 0 ? 
             <React.Fragment>
               <div className="dialog-button1">
                   <span className="edit-metadata">Edit Alfresco Metadata</span>
@@ -256,7 +257,7 @@ const MetaDataPopUpForTE = (props) => {
                   </div>
                 </div>
                 <div className="right-container">
-                  <div className="figuremetadata-field">
+                  <div className="figuremetadata-field-table">
                     <div className={`alt-text-body ${altTextErr === true ? "invalid" : "" }`}>
                       <p className="alt-text"> Alt Text </p>
                       <input
@@ -295,7 +296,7 @@ const MetaDataPopUpForTE = (props) => {
                     {longDescErr && <div className='alt-text-span' ><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}
                     </div>}
                   </div>
-                  <div className="metadata-button">
+                  <div className="te-metadata-button">
                     <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleImport}>Import in Cypress</span>
                     <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleSave}>Save All</span>
                     <span className={`cancel-button ${disableButton ? "disabled" : ""}`} id='close-container' onClick={handleReset}>Reset</span>
