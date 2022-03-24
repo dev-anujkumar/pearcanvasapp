@@ -488,7 +488,7 @@
 
 .figure-popup.editPopupforTE{
   width: 1000px;
-  height: 528px;
+  height: 488px;
 }
 
 
@@ -498,16 +498,16 @@
 }
 
 .outer-img-container{
-  margin: 47px 47px 16px 0px;
-  height: 315px;
+  margin: 14px 47px 16px 0px;
+  height: 319px;
   width: 300px;
-  padding: 0 20px 0 18px;
+  padding: 0 20px 0 17px;
   background-color: #eee;
 }
 
 .inner-img-container{
-  height: 313px;
-  width: 262px;
+  height: 319px;
+  width: 265px;
 }
 
 .outer-img-array-container{
@@ -618,7 +618,7 @@
   border-bottom: 1px solid #005a70;
 }
 .figuremetadata-field {
-  margin-top:42px;
+  margin-top:14px;
 }
 .metadata-button{
   margin-top: 35px;
