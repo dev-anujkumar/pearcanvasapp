@@ -24,6 +24,32 @@ const MetaDataPopUpForTE = (props) => {
   const [disableButton, setDisableButton] = useState(true);
 
   useEffect(() => {
+    console.log('imageList : ',imageList)
+  //   Object.keys(null)
+  //   imageList = JSON.parse(imageList)
+  //   Object.assign(imageList, [
+  //     {   
+  //         "id": 1,
+  //         "altText": "one two three 4",
+  //         "longdescription": "one two threee <h#$",
+  //         "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/6b860521-9132-4051-b6cc-dfa020866864/Chrysanthemum.jpg",
+  //         "imgId": "imageAssetContent:6b860521-9132-4051-b6cc-dfa020866864:2703"
+  //     },
+  //     {
+  //         "id": 2,
+  //         "altText": "Alt text ",
+  //         "longdescription": "This is for testing long desc new<html>",
+  //         "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/31189d68-e07d-42f6-923e-a78955387c6f/galaxy_assesttest%20%281%29.jpg",
+  //         "imgId": "imageAssetContent:31189d68-e07d-42f6-923e-a78955387c6f:3448"
+  //     },
+  //     {
+  //         "id": 3,
+  //         "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/2e087bca-5f67-452e-9e15-96145584a12a/Qutub_Minar_in_the_monsoons_20170908115259.jpg",
+  //         "imgId": "imageAssetContent:2e087bca-5f67-452e-9e15-96145584a12a:2551"
+  //     },
+  // ])
+    // console.log('imageList : ',imageList)
+    console.log('type of imageList updated: ',typeof(imageList))
     if(imageList?.length > 0){
       let { altText, imgId, imgSrc, longdescription } = imageList[0];
       setAltText(altText);
@@ -199,6 +225,7 @@ const MetaDataPopUpForTE = (props) => {
       <div className="model">
         <div tabIndex="0" className="model-popup">
           <div className='figure-popup editPopupforTE'>
+          {console.log('imageList inside return : ',props.imageList)}
           {imageList.length > 0 ? 
             <React.Fragment>
               <div className="dialog-button1">
@@ -216,6 +243,7 @@ const MetaDataPopUpForTE = (props) => {
                     {imageList && imageList.map((image, imgIndex) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
                           return (<img 
+                          key={image.id}
                           className='img-inside-array' 
                           src={image.imgSrc} 
                           id={image.imgId}
