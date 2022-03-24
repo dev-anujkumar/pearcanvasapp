@@ -688,50 +688,13 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
-        it('Render Element Container ----->showAlfrescoExpansionPopup', () => {
+        it('Render Element Container ----->showBlockCodeElemWarningPopup', () => {
             let event= {
                 stopPropagation:()=>{}
             }
-            // props = {
-            //     element: {
-            //         id: "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
-            //         type: "figure",
-            //         figuretype: "tableasmarkup",
-            //         figuredata: {
-            //             schema: "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
-            //             tableasHTML: "<table style=\"border-collapse: collapse; width: 1146px; word-break: normal; outline: none; text-align: left;\" class=\"mce-item-table\" contenteditable=\"false\"><tbody><tr><td style=\"width: 573px; outline: none;\"><img class=\"imageAssetContent\" src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\" width=\"149\" height=\"112\" data-id=\"imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:8235\" data-mce-src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\"/></td><td style=\"width: 573px; outline: none;\"><br></td></tr><tr><td style=\"width: 573px; outline: none;\"><br></td><td style=\"width: 573px; outline: none;\"></td></tr></tbody></table>",
-            //             showAlfrescoExpansionPopup: {
-            //                 prepareImageDataFromTable: jest.fn()
-            //             }
-            //         }
-            //     }
-            let element = {
-                    id: "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
-                    type: "figure",
-                    figuretype: "tableasmarkup",
-                    schema: "http://schemas.pearson.com/wip-authoring/figure/1",
-                    titlecontentintitlefield: true,
-                    figuredata: {
-                        schema: "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
-                        tableasHTML: "<table style=\"border-collapse: collapse; width: 1146px; word-break: normal; outline: none; text-align: left;\" class=\"mce-item-table\" contenteditable=\"false\"><tbody><tr><td style=\"width: 573px; outline: none;\"><img class=\"imageAssetContent\" src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\" width=\"149\" height=\"112\" data-id=\"imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:8235\" data-mce-src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\"/></td><td style=\"width: 573px; outline: none;\"><br></td></tr><tr><td style=\"width: 573px; outline: none;\"><br></td><td style=\"width: 573px; outline: none;\"></td></tr></tbody></table>",
-                    },
-                    versionUrn: "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
-                    contentUrn: "urn:pearson:entity:b12e4486-d922-4630-8b9a-bf47b157e581",
-                    displayedlabel: "Table",
-                    numberedandlabel: true,
-                    indexPos: "0",
-                    parentDetails: [],
-                    slateEntityUrn: "urn:pearson:entity:1d157ee4-6766-497a-bf8e-6fc877ff60a3"
-                }
-
-                let props = {
-                    prepareImageDataFromTable: jest.fn()
-                }
-            let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
-            const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
-            const spyhandle1  = jest.spyOn(elementContainerInstance5, 'showAlfrescoExpansionPopup') 
-            elementContainerInstance.showAlfrescoExpansionPopup(event,true,props.element);
-            expect(spyhandle1).toHaveBeenCalled()
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'showBlockCodeElemWarningPopup') 
+            elementContainerInstance.showBlockCodeElemWarningPopup(event);
+            expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
         it('Render Element Container ----->updateFigureData', () => {
@@ -981,6 +944,36 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
+        it('Render Element Container ----->PlayScript', () => {
+            let props = {
+                element: wipData.ps,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Block List', () => {
+            let props = {
+                element: wipData.bl,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->ELEMENT_DISCUSSION', () => {
+            let props = {
+                element: wipData.ds,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })        
     })
     describe('Test- Add Comment Functions', () => {
         let props = {
@@ -2112,6 +2105,19 @@ describe('Test-Other Functions', () => {
         expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
         spyfigureDifferenceBlockCode.mockClear()
     })
+    it("Test - aside: difference in content", () => {
+        const previousElementData = {
+            html: {
+                text: '<p></p>'
+            },
+            "numberedandlabel":true
+         }
+        const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'asideDifference')
+        elementContainerInstance.asideDifference(0, previousElementData);
+        expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
+        expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
+        spyfigureDifferenceBlockCode.mockClear()
+    })
     it("Test - figureDifferenceInteractive - pdf interactive type: difference in content", () => {
         const previousElementData = {
             html: {
@@ -2321,6 +2327,17 @@ describe('Test-Other Functions', () => {
         elementContainer.find('span.element-label-clickable-button').at(0).simulate('click');
         expect(spyUpdateColumnValues).toHaveBeenCalled();
         spyUpdateColumnValues.mockClear();
+      });
+
+      it('updateColumnValues function', () => {
+        const elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        elementContainerInstance.updateColumnValues();
+      });
+      it('renderCopyComponent function', () => {
+        const elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        elementContainerInstance.renderCopyComponent();
       });
       
       it('setElementDetails method - without parentUrn', () => {
@@ -2882,5 +2899,24 @@ describe('Test-Other Functions', () => {
         elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
         expect(spyhandleContentChange).toHaveBeenCalled();
         spyhandleContentChange.mockClear()
+    })
+    it("changeInPodwidth function", () => {
+        const newPodwidth = "print100"
+        const spychangeInPodwidth = jest.spyOn(elementContainerInstance, 'changeInPodwidth')
+        elementContainerInstance.changeInPodwidth(newPodwidth, '');
+        expect(spychangeInPodwidth).toHaveBeenCalled();
+        spychangeInPodwidth.mockClear()
+    })
+    it("changeInPodwidth function else case", () => {
+        const spychangeInPodwidth = jest.spyOn(elementContainerInstance, 'changeInPodwidth')
+        elementContainerInstance.changeInPodwidth('', '');
+        expect(spychangeInPodwidth).toHaveBeenCalled();
+        spychangeInPodwidth.mockClear()
+    })
+    it("handleAssetsPopupLocation function", () => {
+        const spyhandleAssetsPopupLocation = jest.spyOn(elementContainerInstance, 'handleAssetsPopupLocation')
+        elementContainerInstance.handleAssetsPopupLocation(true, {});
+        expect(spyhandleAssetsPopupLocation).toHaveBeenCalled();
+        spyhandleAssetsPopupLocation.mockClear()
     })
 })

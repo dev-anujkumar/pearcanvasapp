@@ -354,23 +354,6 @@ export const getAutoNumberedElement = (element) =>{
     }
 }
 
-export const updateAutonumberingOnOverridedCase = (elementLabel, element, autoNumberedElements, currentSlateAncestorData) => (dispatch, getState) => {
-    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
-    const labelType = autoNumber_ElementTypeKey[elementLabel];
-    const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
-    if (autoNumberedElements[labelType]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[labelType][figureParentEntityUrn] && Object.keys(autoNumberedElements[labelType][figureParentEntityUrn]).length > 0) {
-        let index = autoNumberedElements[labelType][figureParentEntityUrn]?.findIndex(ele => ele.contentUrn === element.contentUrn);
-        if (index > -1) {
-            autoNumberedElements[labelType][figureParentEntityUrn][index] = element;
-        }
-    }
-    dispatch({
-        type: GET_ALL_AUTO_NUMBER_ELEMENTS,
-        payload: autoNumberedElements
-    });
-    getAutoNumberSequence(autoNumberedElements, dispatch);
-}
-
 export const updateAutonumberingOnElementTypeUpdate = (newElement, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => async (dispatch, getState) => {
     const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey;
     const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
