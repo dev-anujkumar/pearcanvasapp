@@ -281,8 +281,8 @@ export class TinyMceEditor extends Component {
                     //             }
                     //         }
                     //     }
-                    //     this.removeBogusTagsFromDom();
-                    //     this.removeAttributionBr();
+                        this.removeBogusTagsFromDom();
+                        this.removeAttributionBr();
                     // }
                     // if (this.props.element && this.props.element.type === "element-blockfeature") {
                     //     this.makeBqReplace();
@@ -3260,10 +3260,10 @@ export class TinyMceEditor extends Component {
                             document.getElementById(currentId).innerHTML = termText;
                         }
 
-                        // if (this.props.element && this.props.element.type === "element-blockfeature") {
-                        //     this.removeBogusTagsFromDom();
-                        //     this.removeAttributionBr();
-                        // }
+                        if (this.props.element && this.props.element.type === "element-blockfeature") {
+                            this.removeBogusTagsFromDom();
+                            this.removeAttributionBr();
+                        }
 
                         /*
                             Making blinking cursor color again to black
@@ -3943,10 +3943,10 @@ export class TinyMceEditor extends Component {
                 //---------------------------------------------------------------------------------//
 
 
-                // if (this.props.element && this.props.element.type === "element-blockfeature") {
-                //     this.removeBogusTagsFromDom();
-                //     this.removeAttributionBr();
-                // }
+                if (this.props.element && this.props.element.type === "element-blockfeature") {
+                    this.removeBogusTagsFromDom();
+                    this.removeAttributionBr();
+                }
                 if (this.footnoteGlossaryProgress && clickedX !== 0 && clickedY !== 0) {
                     this.footnoteGlossaryProgress = false;
                     const timer = setInterval(()=>{
