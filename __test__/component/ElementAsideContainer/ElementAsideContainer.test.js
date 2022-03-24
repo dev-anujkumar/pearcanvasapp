@@ -110,9 +110,9 @@ let initialState = {
             sourceElementIndex: 2,
             sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
             sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
-        },
-        autoNumberReducer
-    }
+        }
+    },
+    autoNumberReducer
 };
 jest.mock('../../../src/component/ElementContainer/ElementContainer_Actions.js', () => {
     return {

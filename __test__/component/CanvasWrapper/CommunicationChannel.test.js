@@ -11,6 +11,7 @@ import {
 } from '../../../fixtures/slateTestingData.js';
 import tinymce from 'tinymce/tinymce';
 import config from '../../../src/config/config';
+import { imageAssetData } from './mockDataComChannel';
 let tinyMceEditor = {
     undoManager: { data: [], typing: false, beforeChange: jest.fn(), add: jest.fn(), undo: jest.fn() ,transact: () =>{ }},
     windowManager: { open: jest.fn(), openUrl: jest.fn(), alert: jest.fn(), confirm: jest.fn(), close: jest.fn() }
@@ -1556,7 +1557,18 @@ describe('Testing communication channel', () => {
                                 mimeType: "image"
                             },
                             properties: {},
-                            espUrl:'asf'
+                            espUrl:'asf',
+                            "institution-urls": [
+                                {
+                                    "institutionUrl": "https://epspqa.stg-openclass.com/schoolcontent-stg/",
+                                    "pdosUrl": "https://epspqa.stg-openclass.com/schoolcontent-stg/api/item/75dcdbf1-0571-44d4-b952-da463cc02648/1/file/AAJKMFW0%20%28Working%20Copy%29.jpg",
+                                    "contentVersion": "1.0",
+                                    "instName": "SchoolContent",
+                                    "status": "Published",
+                                    "publicationUrl": "http://us-school-stg.pearsoned.com/school/e259c2c3-dd96-45a7-919c-31a55668db06/AAJKMFW0%20%28Working%20Copy%29.jpg",
+                                    "contentAction": false
+                                }
+                            ]
                         }
                     }
                 }
