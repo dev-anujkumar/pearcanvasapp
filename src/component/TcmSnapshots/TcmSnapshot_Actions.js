@@ -139,7 +139,6 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
         element.popupdata.bodymatter = popBodymatter
         let eleIndex
         if (typeof index === "number" || (Array.isArray(index) && index.length == 1)){
-            
             eleIndex = Array.isArray(index) ? index[0] : index;
             parentData[config.slateManifestURN].contents.bodymatter[eleIndex] = element
         }
