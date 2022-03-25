@@ -1114,7 +1114,6 @@ export const saveTEMetadata = async (editedImageList) => {
                         'myCloudProxySession': config.myCloudProxySession
                     }
                 });
-    console.log("=====> response: ", response)
                 promiseArray.push(response);
             }
             await Promise.all(promiseArray);

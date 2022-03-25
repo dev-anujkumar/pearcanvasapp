@@ -2026,7 +2026,6 @@ export const testDataFromNewAlfresco = {
     "contentUrn": "urn:pearson:entity:d47ed8e5-bf68-49e9-acc5-6d7ac1450f1c"
 }
 
-
 export const newVideoObjWithData = {
     "id": "urn:pearson:work:4bf11e1f-f145-44be-ad8b-1b8c2124e7b1",
     "type": "figure",

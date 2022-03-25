@@ -1067,7 +1067,7 @@ describe('Test for element container component', () => {
             elementContainerInstance.handleEditInCypressPlus(event,elementId);
             elementContainerInstance.forceUpdate();
             elementContainer.update();
-            expect(spyhandleEditInCypressPlus).showAlfrescoExpansionPopup(event,elementId)
+            expect(spyhandleEditInCypressPlus).toHaveBeenCalledWith(event,elementId)
             spyhandleEditInCypressPlus.mockClear()
         })
        

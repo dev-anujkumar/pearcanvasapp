@@ -1552,24 +1552,7 @@ describe('Testing communication channel', () => {
                     type: "selectedAlfrescoAssetData",
                     message: {
                         calledFrom: "GlossaryImage",
-                        asset: {
-                            content: {
-                                mimeType: "image"
-                            },
-                            properties: {},
-                            espUrl:'asf',
-                            "institution-urls": [
-                                {
-                                    "institutionUrl": "https://epspqa.stg-openclass.com/schoolcontent-stg/",
-                                    "pdosUrl": "https://epspqa.stg-openclass.com/schoolcontent-stg/api/item/75dcdbf1-0571-44d4-b952-da463cc02648/1/file/AAJKMFW0%20%28Working%20Copy%29.jpg",
-                                    "contentVersion": "1.0",
-                                    "instName": "SchoolContent",
-                                    "status": "Published",
-                                    "publicationUrl": "http://us-school-stg.pearsoned.com/school/e259c2c3-dd96-45a7-919c-31a55668db06/AAJKMFW0%20%28Working%20Copy%29.jpg",
-                                    "contentAction": false
-                                }
-                            ]
-                        }
+                        asset: imageAssetData
                     }
                 }
             }
