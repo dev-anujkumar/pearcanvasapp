@@ -94,6 +94,7 @@ const isFirtstChild = (node, tinymceOffset) => {
         || node?.classList?.contains("figureCaption") || node?.classList?.contains("figureMathContent")
         || node?.classList?.contains("figureTitle") || node?.classList?.contains("figureCodeContent") 
         || node?.classList?.contains('figureNumber') || node?.classList?.contains("figureLabel")
+        || node?.classList?.contains("figureCredit")
         )) {
             return true;
         }
