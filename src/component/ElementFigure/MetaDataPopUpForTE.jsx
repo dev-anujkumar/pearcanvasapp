@@ -216,7 +216,7 @@ const MetaDataPopUpForTE = (props) => {
                     {imageList && imageList.map((image, imgIndex) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
                           return (<img 
-                          key={image.id}
+                          key={image.imgId}
                           className='img-inside-array' 
                           src={image.imgSrc} 
                           id={image.imgId}
