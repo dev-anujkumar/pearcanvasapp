@@ -363,7 +363,6 @@ describe('Test---Assessment Utility Functions', () => {
         let returnedValue = assessment_UtiltyFn.checkFigureInsideTableElement(element, 'editButton');
         expect(spyFunction).toHaveBeenCalled();
         expect(returnedValue).toBe(false);
-        // expect(spyFunction).toHaveReturnedWith(true);
         spyFunction.mockClear();
     });
     xit('Test 16---checkFigureMetadata Audio/Video', () => {

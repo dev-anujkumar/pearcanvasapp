@@ -64,39 +64,16 @@ describe('Testcase for MetaDataPopUpForTE Component', () => {
         expect(instance).toBeDefined();
     });
     
-    it('onClick Event of cancel-button', () => {
-        let togglePopup = jest.fn();
-        let prepareImageDataFromTable = jest.fn();
-        // let imageList = [
-        //     {   
-        //         "id": 1,
-        //         "altText": "one two three 4",
-        //         "longdescription": "one two threee <h#$",
-        //         "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/6b860521-9132-4051-b6cc-dfa020866864/Chrysanthemum.jpg",
-        //         "imgId": "imageAssetContent:6b860521-9132-4051-b6cc-dfa020866864:2703"
-        //     },
-        //     {
-        //         "id": 2,
-        //         "altText": "Alt text ",
-        //         "longdescription": "This is for testing long desc new<html>",
-        //         "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/31189d68-e07d-42f6-923e-a78955387c6f/galaxy_assesttest%20%281%29.jpg",
-        //         "imgId": "imageAssetContent:31189d68-e07d-42f6-923e-a78955387c6f:3448"
-        //     },
-        //     {
-        //         "id": 3,
-        //         "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/2e087bca-5f67-452e-9e15-96145584a12a/Qutub_Minar_in_the_monsoons_20170908115259.jpg",
-        //         "imgId": "imageAssetContent:2e087bca-5f67-452e-9e15-96145584a12a:2551"
-        //     },
-        // ]
-        // let props1 = {
-        //     imageList
-        // }
-        const component = mount(<Provider store={store}><MetaDataPopUpForTE {...props} imageList={props.imageList} togglePopup={togglePopup} 
-            prepareImageDataFromTable={prepareImageDataFromTable}/></Provider>);
-        component.find('#close-container').simulate('click');
-        expect(component.instance().props.togglePopup).toHaveBeenCalled();
-        // expect(component.instance().props.prepareImageDataFromTable).toHaveBeenCalled();
-    })
+    // it('onClick Event of cancel-button', () => {
+    //     let togglePopup = jest.fn();
+    //     let prepareImageDataFromTable = jest.fn();
+        
+    //     const component = mount(<Provider store={store}><MetaDataPopUpForTE {...props} imageList={props.imageList} togglePopup={togglePopup} 
+    //         prepareImageDataFromTable={prepareImageDataFromTable}/></Provider>);
+    //     component.find('#close-container').simulate('click');
+    //     expect(component.instance().props.togglePopup).toHaveBeenCalled();
+    //     // expect(component.instance().props.prepareImageDataFromTable).toHaveBeenCalled();
+    // })
 
     // it('onClick Event of longDescription body', () => {
     //     const component = mount(<Provider store={store}><MetaDataPopUpForTE {...props} /></Provider>);
@@ -125,5 +102,12 @@ describe('Testcase for MetaDataPopUpForTE Component', () => {
     //     component.find('#longDescription_AM').simulate('change',event);
     // })
 
+    it('Checking for disable right arrow button when condition is met', () => {
+        const component = mount(<Provider store={store}><MetaDataPopUpForTE {...props} /></Provider>);
+        let MetaDataPopUpForTEInstance = component.find('MetaDataPopUpForTE').instance()
+        expect(component.state('index')).toBe(0)
+
+
+    })
 
 })

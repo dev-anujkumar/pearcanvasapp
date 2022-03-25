@@ -154,7 +154,6 @@ export const checkFigureMetadata = (element, buttonType = null) => {
 
 
 export const checkFigureInsideTableElement = (element, buttonType = null) => {
-    // console.log('element inside checkFigureInsideTableElement : ',element)
     let tableasHTMLValue = String(element?.figuredata?.tableasHTML)
     if(element.figuretype === 'tableasmarkup' && tableasHTMLValue.includes("src=")){
         return true;
