@@ -260,7 +260,7 @@ export const FigureHeader = (props) => {
      }
 
     const isEnableKeyboard = () => { 
-        if (props.model?.figuredata?.programlanguage === "Select" || labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT) {
+        if (props.model?.figuredata?.programlanguage === "Select" ) {
                 return false
             }
             else {
@@ -439,7 +439,7 @@ export const FigureHeader = (props) => {
                         </div>)
                 }
                 {removeLabelCondition && showNumberField && <div className="floating-number-group">
-                    <KeyboardWrapper enable={isEnableKeyboard()} index={`${props.index}-1`}>
+                    <KeyboardWrapper enable={labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? false : isEnableKeyboard()} index={`${props.index}-1`}>
                     <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} labelNumberSetting={labelNumberSetting} contenteditable={labelNumberSetting !== AUTO_NUMBER_SETTING_DEFAULT} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber " + newClass} model={imgNumberValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
                     </KeyboardWrapper>
                     <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? "transition-none" : "floating-number"}>Number</label>

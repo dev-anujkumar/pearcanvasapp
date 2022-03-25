@@ -825,7 +825,7 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
     })
-    describe("1.39 Test - accessDeniedPopup ", () => {
+    xdescribe("1.39 Test - accessDeniedPopup ", () => {
         it('1.39.1  Test - if case (this.props.accesDeniedPopup)', () => {
             const newInitialState = {...initialState, appStore: {accesDeniedPopup: true}};
             const compInstance = slateWrapInstance(props, newInitialState);

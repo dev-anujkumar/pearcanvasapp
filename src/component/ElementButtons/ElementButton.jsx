@@ -213,6 +213,11 @@ class ElementButton extends Component {
                     {editIcon}
                 </span>
                 break;
+            case ButtonTypes.EDIT_TE_BUTTON:
+                buttonJSX = <span className={`btn-element small edit-button ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="Edit Alfresco Metadata" onClick={clickHandlerFn}>
+                    {editIcon}
+                </span>
+                break;
             case ButtonTypes.APPROVE_TICK_ICON:
                 buttonJSX = <span className={`btn-element small approve-icon ${btnClassName}`} onClick={clickHandlerFn}>
                     {approvedIcon}
