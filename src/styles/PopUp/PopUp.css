@@ -471,7 +471,7 @@
 .right-arrow.disable{
   cursor: not-allowed;
   pointer-events: none;
-  /* background-color: #eee; */
+  background-color: #eee;
   opacity: 0.2;
 }
 
@@ -625,6 +625,9 @@
 }
 .metadata-button{
   margin-top: 35px;
+}
+.figuremetadata-field-table {
+  margin-top:14px;
 }
 #longDescription_AM{
   border: 0;
@@ -996,7 +999,7 @@ ol li.listItemNumeroUnoLowerRoman {
 }
 
 .modal-content.alfresco-long-popup {
-  top: 50%;
+  top: 53%;
   width: 610px;
   min-height: 234px;
 }
