@@ -123,12 +123,6 @@ export const slateLinkDetails = async (containerUrn) => {
 }
 
 export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , index) => (dispatch, getState) => {
-    console.log('Inside fetchPOPupSlateData in TcmSnapshot_Actions.js')
-    console.log('manifestURN : ',manifestURN)
-    console.log('entityURN : ',entityURN)
-    console.log('page : ',page)
-    console.log('element : ',element)
-    console.log('index : ',index)
     const elementCount = getState().appStore.slateLength
     let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
     return axios.get(apiUrl, {
@@ -144,19 +138,14 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
         let popBodymatter = newslateData[config.slateManifestURN].contents.bodymatter
         element.popupdata.bodymatter = popBodymatter
         let eleIndex
-        console.log('(Array.isArray(index) : ',(Array.isArray(index)));
-        console.log('index.length == 1 : ',index.length == 1);
-        console.log('index[0] : ',index[0]);
         if (typeof index === "number" || (Array.isArray(index) && index.length == 1)){
             
             eleIndex = Array.isArray(index) ? index[0] : index;
-            console.log('eleIndex : ',eleIndex);
             parentData[config.slateManifestURN].contents.bodymatter[eleIndex] = element
         }
         else if(typeof index === "string"){
             eleIndex =  index.split("-");
-            if (eleIndex.length == 2) { 
-                console.log('parentData[config.slateManifestURN] : ',parentData[config.slateManifestURN])         /** Inside WE-HEAD | Aside */
+            if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                 parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]] = element
             } else if (eleIndex.length == 3 && element.popupdata.bodymatter[eleIndex[0]].type !== MULTI_COLUMN ) {   /** Inside WE-BODY */
                 parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]= element
