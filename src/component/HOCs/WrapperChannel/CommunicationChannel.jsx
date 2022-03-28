@@ -442,6 +442,7 @@ function CommunicationChannel(WrappedComponent) {
          * Handle the element update action on linking a page
          */
         updatePageLink = (linkData) => {
+            console.log("linkkkkkkkkkkbutton", linkData.pageName )
             let activeElement, linkNode, linkHTML, editor;
             let linkId = "", elementId = "", pageId = "";
             let linkNotification = '';
@@ -453,6 +454,10 @@ function CommunicationChannel(WrappedComponent) {
                 elementId = linkData.elementId || "";
                 pageId = linkData.pageId || "";
 
+                var html = linkData.pageName;
+                var div = document.createElement("div");
+                div.innerHTML = html;
+                const pageLinkText = div.innerText
                 let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');              
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
@@ -472,9 +477,9 @@ function CommunicationChannel(WrappedComponent) {
                                 linkHTML = linkNode.innerHTML || '';
                                 linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm ' + elementTag + '" asset-id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
                                 if (/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
-                                    linkNotification = "Link updated to slate '" + linkData.pageName + "'.";
+                                    linkNotification = "Link updated to slate '" + pageLinkText + "'.";
                                 } else {
-                                    linkNotification = "Link added to slate '" + linkData.pageName + "'.";
+                                    linkNotification = "Link added to slate '" + pageLinkText + "'.";
                                 }
                             });
                         }
