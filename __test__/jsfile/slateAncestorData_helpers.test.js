@@ -1,5 +1,5 @@
 import * as actions from '../../src/js/slateAncestorData_helpers.js'
-import {allSlateData, allSlateData2, allSlateData3, allSlateData4, currentMatterData} from '../testData/slateAncestorMockData.js'
+import {allSlateData, allSlateData2, allSlateData3, allSlateData4, allSlateData5, currentMatterData} from '../testData/slateAncestorMockData.js'
 
 
 describe('Testing slateAncestorData_helpers function', () => {
@@ -64,6 +64,16 @@ describe('Testing slateAncestorData_helpers function', () => {
         expect(spyFunction).toHaveBeenCalled()
     })
 
+    it('Testing getCurrentSlatesList: Bodymatter: else if(container.label == TOC_CONTAINER.VOLUME && container?.contents?.length > 0) else condition', () => {
+        const spyFunction = jest.spyOn(actions,"getCurrentSlatesList");
+        let dispatch = (obj) => {
+            expect(obj.type).toBe('GET_SLATE_LIST_IN_CONTAINER')
+            expect(obj.payload.slateList).toEqual(slateList)
+        }
+        actions.getCurrentSlatesList(allSlateData5,"bodymatter","urn:pearson:entity:f07aed30-c520-430d-bc4c-e02dfb3b2554")
+        expect(spyFunction).toHaveBeenCalled()
+    })
+
     it('Testing getCurrentSlatesList: backmatter', () => {
         const spyFunction = jest.spyOn(actions,"getCurrentSlatesList");
         let dispatch = (obj) => {
@@ -74,5 +84,23 @@ describe('Testing slateAncestorData_helpers function', () => {
         expect(spyFunction).toHaveBeenCalled()
     })
 
+    it('Testing fetchCurrentContainerSlateList: backmatter', () => {
+        const spyFunction = jest.spyOn(actions,"getCurrentSlatesList");
+        let dispatch = (obj) => {
+            expect(obj.type).toBe('GET_SLATE_LIST_IN_CONTAINER')
+            expect(obj.payload.slateList).toEqual(slateList)
+        }
+        actions.getCurrentSlatesList(allSlateData4,"backmatter","backmatter")
+        expect(spyFunction).toHaveBeenCalled()
+    })
 
+    it('Testing fetchCurrentContainerSlateList: frontmatter', () => {
+        const spyFunction = jest.spyOn(actions,"getCurrentSlatesList");
+        let dispatch = (obj) => {
+            expect(obj.type).toBe('GET_SLATE_LIST_IN_CONTAINER')
+            expect(obj.payload.slateList).toEqual(slateList)
+        }
+        actions.getCurrentSlatesList(allSlateData4,"frontmatter","frontmatter")
+        expect(spyFunction).toHaveBeenCalled()
+    })
 })
