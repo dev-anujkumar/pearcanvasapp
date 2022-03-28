@@ -55,7 +55,9 @@ import {
     CHECK_ASIDE_NUMBER,
     CYPRESS_PLUS_ENABLED,
     SET_JOINED_PDF_STATUS,
-    SET_SLATE_MATTER_TYPE
+    SET_SLATE_MATTER_TYPE,
+    UPDATE_TABLE_ELEMENT_ASSET_DATA,
+    UPDATE_TABLE_ELEMENT_EDITED_DATA
 } from '../constants/Action_Constants';
 
 /**
@@ -121,7 +123,9 @@ const INITIAL_STATE = {
     },
     asideTitleData: [],
     isCypressPlusEnabled:false,
-    isJoinedPdfSlate: false
+    isJoinedPdfSlate: false,
+    tableElementAssetData: [],
+    tableElementEditedData: {}
 };
 
 const INITIAL_ACTION = {
@@ -394,6 +398,22 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 slateMatterType: action.payload
+            }
+        case UPDATE_TABLE_ELEMENT_ASSET_DATA:
+            return {
+                ...state,
+                tableElementAssetData: [...action.payload]
+            }
+        case UPDATE_TABLE_ELEMENT_EDITED_DATA:
+            if(Object.keys(action.payload).length === 0){
+                return {
+                    ...state,
+                    tableElementEditedData: {...action.payload}
+                }
+            }
+            return {
+                ...state,
+                tableElementEditedData: { ...state.tableElementEditedData, ...action.payload}
             }
         default:
             return state;

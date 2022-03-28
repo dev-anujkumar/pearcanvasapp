@@ -16,9 +16,6 @@ import {
     ADD_NEW_COMMENT
 } from '../../constants/Action_Constants';
 
-import { getCommentElements } from './../Toolbar/Search/Search_Action';
-
-
 export const addNewComment = (payload) => ({
     type: ADD_NEW_COMMENT,
     payload
