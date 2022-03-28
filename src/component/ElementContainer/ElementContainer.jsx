@@ -900,8 +900,9 @@ class ElementContainer extends Component {
                         }
                     }
                 }
+                const blockquoteCondition = (parentElement?.elementdata?.type === "marginalia" || parentElement?.elementdata?.type === "blockquote")
                 let currentNode = document.getElementById(index)
-                let html =  parentElement.type == 'element-blockfeature' ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
+                let html =  blockquoteCondition ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
@@ -1705,7 +1706,7 @@ class ElementContainer extends Component {
         tcmStatus = this.showTCMButton(tcmData, element)
         tcm = tcmStatus.tcm
         feedback = tcmStatus.feedback
-        const isBlockquote = (this.props.element?.elementdata?.type !== "blockquote"  || this.props.element?.elementdata?.type !== "marginalia")
+        const isBlockquote = (this.props.element?.elementdata?.type === "blockquote"  || this.props.element?.elementdata?.type === "marginalia")
 
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         const commonProps = {
@@ -1743,10 +1744,10 @@ class ElementContainer extends Component {
                     editor = <ElementAuthoring isBlockList={this.props.isBlockList} element={element} model={element.html} onListSelect={this.props.onListSelect} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} placeholder={this.props.placeholder}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
-                    {!isBlockquote ?
-                    editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />
+                    {isBlockquote ?
+                    editor = <ElementBlockquote tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />
                     :
-                    editor = <ElementBlockquote tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />}
+                    editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />}
                     break;
                 case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
                     editor = <ElementLearningObjectiveItem model={element.html} element={element} {...commonProps} />;

@@ -597,5 +597,5 @@ export const prepareBqHtml = (node) => {
     const lasttInnerText = node?.parentNode?.parentNode?.lastChild?.firstElementChild?.innerText
     const firstPtag = `<p class=\"${firstClassname}\" contenteditable=\"true\">${firstInnerData()}</p>`;
     const lastPtag = `<p class=\"${lastClassname}" contenteditable=\"true\" data-placeholder=\"Attribution Text\">${lasttInnerText}</p>`;
-    return `<blockquote class=\"blockquoteMarginalia\" contenteditable=\"false\" data-mce-selected=\"1\">${firstPtag}${lastPtag}</blockquote>`
+    return `<blockquote class=\"blockquoteMarginalia\" contenteditable=\"true\" data-mce-selected=\"1\">${firstPtag}${lastPtag}</blockquote>`
 }
