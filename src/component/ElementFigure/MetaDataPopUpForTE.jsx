@@ -54,7 +54,8 @@ const MetaDataPopUpForTE = (props) => {
   }
 
   const disableButtonForHTML = () => {
-    if(Object.keys(editedImageList).length > 0){
+
+    if(editedImageList && Object.keys(editedImageList).length > 0){
       if(checkHTMLInString(altText) || checkHTMLInString(longDescription)){
         setDisableButton(true);
       } else {
@@ -199,7 +200,7 @@ const MetaDataPopUpForTE = (props) => {
       <div className="model">
         <div tabIndex="0" className="te-model-popup">
           <div className='figure-popup editPopupforTE'>
-          {imageList.length > 0 ? 
+          {imageList?.length > 0 ? 
             <React.Fragment>
               <div className="dialog-button1">
                   <span className="edit-metadata">Edit Alfresco Metadata</span>
@@ -215,6 +216,7 @@ const MetaDataPopUpForTE = (props) => {
                     {imageList && imageList.map((image, imgIndex) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
                           return (<img 
+                          key={image.imgId}
                           className='img-inside-array' 
                           src={image.imgSrc} 
                           id={image.imgId}
