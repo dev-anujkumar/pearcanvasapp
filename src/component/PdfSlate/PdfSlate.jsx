@@ -95,6 +95,7 @@ class PdfSlate extends Component {
 				} 
 			} else {
 				console.info("Please import pdf");
+				hideBlocker();
 			} 
 		} catch (error){
 			console.error("Error - ",error);
