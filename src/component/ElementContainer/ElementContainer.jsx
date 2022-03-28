@@ -2458,6 +2458,7 @@ class ElementContainer extends Component {
             popup,
             showDeleteElemPopup: false,
             showBlockCodeElemPopup: false,
+            showAlfrescoExpansionPopup: false,
             comment: ""
         });
         if (this.props.isBlockerActive) {
