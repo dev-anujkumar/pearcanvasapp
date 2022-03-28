@@ -94,6 +94,9 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
         },
         storeOldAssetForTCM: () => {
             return jest.fn()
+        },
+        prepareImageDataFromTable: () => {
+            return jest.fn()
         }
     }
 })
@@ -274,7 +277,8 @@ describe('Test for element container component', () => {
             showBlocker: jest.fn(),
             index: 0,
             elementId: "urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y",
-            updateElement: jest.fn()
+            updateElement: jest.fn(),
+            prepareImageDataFromTable: jest.fn(), 
         };
         let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -2869,5 +2873,21 @@ describe('Test-Other Functions', () => {
         elementContainerInstance.handleAssetsPopupLocation(true, {});
         expect(spyhandleAssetsPopupLocation).toHaveBeenCalled();
         spyhandleAssetsPopupLocation.mockClear()
-    })
+    });
+
+    it('showAlfrescoExpansionPopup method for TE ', () => {
+        let props7 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'tableasmarkup',
+            },
+            showBlocker: jest.fn(),
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            prepareImageDataFromTable: jest.fn(),
+        };
+
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow({stopPropagation: jest.fn()});
+    });
 })
