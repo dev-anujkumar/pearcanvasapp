@@ -584,7 +584,7 @@
 .alt-text-span{
   color: red;
   font-size: 13px;
-  font-family: OpenSans;
+  font-family: Open-sans;
   margin-bottom: 6px;
 }
 
@@ -962,7 +962,7 @@ ol li.listItemNumeroUnoLowerRoman {
   position: sticky;
   width: 121px;
   height: 22px;
-  font-family: OpenSans;
+  font-family: Open-sans;
   font-size: 16px;
   font-weight: 600;
   color: #005a70;
@@ -973,7 +973,7 @@ ol li.listItemNumeroUnoLowerRoman {
   width: 501px;
   height: 18px;
   margin: 1px 55px 13px 1px;
-  font-family: OpenSans;
+  font-family: Open-sans;
   font-size: 14px;
   line-height: 1.5;
   color: #666;
