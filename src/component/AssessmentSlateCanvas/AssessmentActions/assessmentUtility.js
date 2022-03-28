@@ -152,6 +152,17 @@ export const checkFigureMetadata = (element, buttonType = null) => {
     return false;
 }
 
+
+export const checkFigureInsideTableElement = (element, buttonType = null) => {
+    let tableasHTMLValue = String(element?.figuredata?.tableasHTML)
+    if(element.figuretype === 'tableasmarkup' && tableasHTMLValue.includes("src=")){
+        return true;
+    }else{
+        return false;
+    }
+
+}
+
 /*** @description - This is the function to check if an elm embedded assessment has update available */
 export const checkElmAssessmentStatus = (assessmentId, props) => {
     if (assessmentId && props && props.assessmentReducer && props.assessmentReducer[assessmentId] && props.assessmentReducer[assessmentId].showUpdateStatus == true) {
