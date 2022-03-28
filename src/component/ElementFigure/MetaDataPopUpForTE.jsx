@@ -247,6 +247,7 @@ const MetaDataPopUpForTE = (props) => {
                         onBlur={updateImageInStore}
                       />
                     </div>
+                    {/* {console.log('altTextErr : ',altTextErr)} */}
                     {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
                     <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
                       <p className={'long-text'}> Long Description </p>

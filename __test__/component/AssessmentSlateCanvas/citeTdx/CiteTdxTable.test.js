@@ -226,6 +226,7 @@ describe('Table component', () => {
         const component = mount(<Provider store={store1}>
                                    <CiteTdxTable {...props2} />
                                 </Provider>)
+        console.log('component at 229 : ',component)
         console.log(component.debug())
         expect(component.find('.assessment-table-class')).toHaveLength(1)
     })
