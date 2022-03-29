@@ -14,9 +14,10 @@ export class ElementBlockquote extends Component {
         let secondClass = "blockquoteTextCredit"
         let tempDiv = document.createElement('div');
         tempDiv.innerHTML = model.text;
-        const length = tempDiv.children[0].children.length
-        let xyz = length > 2 ? tempDiv.children[0]?.children[1]?.outerHTML : tempDiv.children[0]?.children[0]?.outerHTML
-        let abc = length > 2 ? tempDiv.children[0]?.children[3]?.outerHTML : tempDiv.children[0]?.children[1]?.outerHTML
+        //checking no of childs in node
+        const noOfChilds = tempDiv.children[0].children.length
+        let xyz = noOfChilds > 2 ? tempDiv.children[0]?.children[1]?.outerHTML : tempDiv.children[0]?.children[0]?.outerHTML
+        let abc = noOfChilds > 2 ? tempDiv.children[0]?.children[3]?.outerHTML : tempDiv.children[0]?.children[1]?.outerHTML
         // let xyz = '<p class="paragraphNummerEins" contenteditable="true"></p>'
         // let abc = '<p class=\"blockquoteTextCredit\" contenteditable=\"true\"></p>'
         let blockquoteElement = 
