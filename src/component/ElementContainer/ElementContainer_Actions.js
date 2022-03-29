@@ -997,59 +997,11 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
 }
 
 /**
- * This function will prepare data for "Expand in alfresco POP-UP" and update the redux store
- * Format: 
- * {
- *   imgSrc: "",
- *   imgId : "",
- *   alttext : "",
- *    longdescription : ""   
- * }
- * @param {*} element Table element Object
- */
-export const prepareImageDataFromTable = element => async (dispatch) => {
-    let figureData = element?.figuredata;
-    let imagesArrayOfObj = [];
-    if(figureData?.tableasHTML && figureData?.tableasHTML !== ""){
-        let tableHTML = figureData.tableasHTML;
-        let dummyDiv = document.createElement('div');
-        dummyDiv.innerHTML = tableHTML;
-        let spanList = dummyDiv.children[0].childNodes;
-        let tableRow = spanList[0].childNodes;
-        for(let i=0;i<tableRow.length;i++){
-            let cells = tableRow[i].childNodes;
-            for(let j=0; j<cells.length; j++){
-                for(let k=0; k<cells[j].childNodes.length; k++){
-                    if(cells[j].childNodes[k].nodeName === 'IMG'){
-                        const attributes = cells[j].childNodes[k].attributes;
-                        const id = attributes['data-id'].nodeValue;
-                        const src = attributes['data-mce-src'].nodeValue;
-                        let tempImgObj = {};
-                        const data = await getAltTextLongDesc(id);
-                        tempImgObj = { ...data }
-                       
-                        tempImgObj['imgSrc'] = src;
-                        tempImgObj['imgId'] = id;
-                        imagesArrayOfObj.push(tempImgObj);
-                    }
-
-                }
-
-            }
-        }
-    }
-
-    dispatch({
-        type: UPDATE_TABLE_ELEMENT_ASSET_DATA,
-        payload: imagesArrayOfObj
-    })
-}
-/**
  * This function will make an API call to fetch the metadata for an image
  * @param {*} id Image ID
  * @returns Returns altText & longdescription
  */
-const getAltTextLongDesc = async (id) => {
+ const getAltTextLongDesc = async (id) => {
     let imgId = id.substring(id.indexOf(":") + 1, id.lastIndexOf(":"));
     try{
         let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${imgId}`;
@@ -1073,6 +1025,74 @@ const getAltTextLongDesc = async (id) => {
             longdescription: ""
         }
     }
+}
+
+/**
+ * This is a recursive function will collect image data from HTML element within a cell, such as, OL, UL & P
+ * @param {*} node 
+ * @param {*} imagesArrayOfObj 
+ */
+const getImageFromHTMLElement = async (node, imagesArrayOfObj) => {
+    console.log("========> getImageFromHTMLElement: ", node)
+    if(node.nodeName === 'IMG' && node.className === "imageAssetContent"){
+        const attributes = node.attributes;
+        const id = attributes['data-id'].nodeValue;
+        const src = attributes['data-mce-src'].nodeValue;
+        let tempImgObj = {};
+        const data = await getAltTextLongDesc(id);
+        tempImgObj = { ...data }
+       
+        tempImgObj['imgSrc'] = src;
+        tempImgObj['imgId'] = id;
+        imagesArrayOfObj.push(tempImgObj);
+    } else if(node?.childNodes?.length > 0) {
+        for(let i=0; i<node.childNodes.length; i++){
+            await getImageFromHTMLElement(node.childNodes[i], imagesArrayOfObj);
+        }
+    }
+}
+
+/**
+ * This function will prepare data for "Expand in alfresco POP-UP" and update the redux store
+ * Format: 
+ * {
+ *   imgSrc: "",
+ *   imgId : "",
+ *   alttext : "",
+ *    longdescription : ""   
+ * }
+ * @param {*} element Table element Object
+ */
+export const prepareImageDataFromTable = element => async (dispatch) => {
+    let figureData = element?.figuredata;
+    let imagesArrayOfObj = [];
+    if(figureData?.tableasHTML && figureData?.tableasHTML !== ""){
+        let tableHTML = figureData.tableasHTML;
+        let dummyDiv = document.createElement('div');
+        dummyDiv.innerHTML = tableHTML;
+        console.log("=====> dummydiv: ", dummyDiv.children)
+        let spanList = dummyDiv.children[0].childNodes;
+        console.log("======> spanList: ", spanList)
+        let tableRow = spanList[0].childNodes;
+        console.log("======> tableRow: ", tableRow)
+
+        for(let i=0;i<tableRow.length;i++){
+            let cells = tableRow[i].childNodes;
+            console.log("cells: ", cells)
+            for(let j=0; j<cells.length; j++){
+                for(let k=0; k<cells[j].childNodes.length; k++){
+                    console.log("cells[j].childNodes: ", cells[j].childNodes);
+                    await getImageFromHTMLElement(cells[j].childNodes[k], imagesArrayOfObj);
+
+                }
+            }
+        }
+    }
+
+    dispatch({
+        type: UPDATE_TABLE_ELEMENT_ASSET_DATA,
+        payload: imagesArrayOfObj
+    })
 }
 
 /**
