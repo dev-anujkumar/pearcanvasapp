@@ -2,6 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { GET_TCM_RESOURCES, AUTHORING_ELEMENT_UPDATE } from '../../constants/Action_Constants';
+import { MULTI_COLUMN } from './TcmConstants'
 
  /**
      * @description - TCM STATUS FOR ELEMENT LEVEL ON SLATE

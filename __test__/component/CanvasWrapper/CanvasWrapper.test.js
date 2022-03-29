@@ -16,7 +16,8 @@ jest.mock('../../../src/auth/openam.js', () => {
 jest.mock('axios');
 let resp = {status :200 ,data :true};
 axios.get.mockImplementation(() => Promise.resolve(resp));
-
+config.isPopupSlate = true
+config.slateManifestURN = "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i"
 jest.mock('../../../src/component/Toolbar', () => {
     return function () {
         return (<div>null</div>)
@@ -53,6 +54,7 @@ jest.mock('../../../src/component/Sidebar', () => {
         return (<div>null</div>)
     }
 })
+jest.setTimeout(2000);
 jest.mock('../../../src/component/CanvasWrapper/SlateLock_Actions', () => {
     return {
         getSlateLockStatus: function () {
@@ -118,6 +120,53 @@ const initialState = {
         permissions: []
     },
     glossaryFootnoteReducer: {
+        glossaryFootnoteValue: {
+            "type": "Glossary",
+            "popUpStatus": true
+        }
+    },
+    audioReducer : {
+        openRemovePopUp : false,
+        openSplitPopUp : false
+    },
+    slateLockReducer: SlateLockMockState,
+    assetPopOverSearch: AssetPopOverMockState,
+    metadataReducer : {
+        currentSlateLOData: {
+            id: 1,
+            loUrn: "123"
+        }
+    },
+    toolbarReducer:{
+        pageNumberToggle:false
+    },
+    alfrescoReducer: {
+        editor:{}
+    },
+    projectInfo:{
+        projectSubscriptionDetails: {
+            projectSharingRole: "SUBSCRIBER",
+            isOwnersSubscribedSlateChecked: false,
+            projectSubscriptionDetails: {
+                isSubscribed: true
+            }
+        },
+    },
+    markedIndexReducer:{
+        markedIndexValue: {
+            "type": "Markedindex",
+            "popUpStatus": false
+        },
+        markedIndexGlossary:  {popUpStatus: true,  indexEntries: {}, markedIndexEntryURN: '' },
+    }
+};
+
+const initialState1 = {
+    appStore: {
+        slateLevelData: listMockData,
+        permissions: []
+    },
+    glossaryFootnoteReducer: {
         glossaryFootnoteValue: GlossaryMockState
     },
     audioReducer : {
@@ -146,10 +195,17 @@ const initialState = {
                 isSubscribed: true
             }
         },
+    },
+    markedIndexReducer:{
+        markedIndexValue: {
+            "type": "Markedindex",
+            "popUpStatus": false
+        },
+        markedIndexGlossary:  {popUpStatus: false,  indexEntries: {}, markedIndexEntryURN: '' },
     }
 };
 
-xdescribe('Testing <CanvasWrapper> Component', () => {
+describe('Testing <CanvasWrapper> Component', () => {
     let store = mockStore(initialState);
     let props = {
         ErrorPopup : {
@@ -186,7 +242,7 @@ xdescribe('Testing <CanvasWrapper> Component', () => {
     })
     describe('With slate locked', () => {
         let store = mockStore({
-            ...initialState, slateLockReducer: {
+            ...initialState1, slateLockReducer: {
                 slateLockInfo: {
                     isLocked: true,
                     timestamp: "",
@@ -246,6 +302,10 @@ xdescribe('Testing <CanvasWrapper> Component', () => {
         it('handleNavClick next', () => {
             canvasWrapperInstance.handleNavClick('next');
             expect(canvasWrapperInstance.handleNavClick).toBeTruthy();
+        })
+        it('showingToastMessage function', () => {
+            canvasWrapperInstance.showingToastMessage(true);
+            expect(canvasWrapperInstance.showingToastMessage).toBeTruthy();
         })
     })
 })

@@ -11,8 +11,7 @@ import {
     workedExampleIcon,
     sectionBreakElement, 
     assessmentIcon, 
-    openerElement, 
-    noteFlag , 
+    openerElement,
     tcmIcon, 
     addNote,
     viewNote,
@@ -211,6 +210,11 @@ class ElementButton extends Component {
                 break;
             case ButtonTypes.EDIT_BUTTON:
                 buttonJSX = <span className={`btn-element small edit-button ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="edit" onClick={clickHandlerFn}>
+                    {editIcon}
+                </span>
+                break;
+            case ButtonTypes.EDIT_TE_BUTTON:
+                buttonJSX = <span className={`btn-element small edit-button ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="Edit Alfresco Metadata" onClick={clickHandlerFn}>
                     {editIcon}
                 </span>
                 break;

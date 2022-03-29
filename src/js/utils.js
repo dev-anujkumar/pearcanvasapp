@@ -571,3 +571,30 @@ export const fetchUpdatedImageUrl = (url) => {
     // Updated url for .png images.
     return `${url.split('.png')[0]}.png?${(new Date()).getTime()}`;
 }
+
+export const prepareBqHtml = (node) => {
+    const firstInnerData = () => {
+        const checkStyle = node?.parentNode?.parentNode?.firstElementChild?.firstElementChild?.firstElementChild
+        if (checkStyle) {
+            const callOut = node?.parentNode?.parentNode?.firstElementChild?.firstElementChild?.firstElementChild?.firstElementChild
+            if(callOut){
+                //for callout and figure link
+                return node.parentNode.parentNode.firstElementChild.firstElementChild.firstElementChild.innerHTML
+            }
+            else{
+                //for formating options
+                return node?.parentNode?.parentNode?.firstElementChild?.firstElementChild?.innerHTML
+            }
+        }
+        else {
+            //for normal text case
+            return node?.parentNode?.parentNode?.firstChild?.firstElementChild?.innerText
+        }
+    }
+    const firstClassname = node?.parentNode?.parentNode?.firstChild?.firstElementChild?.classList[0]
+    const lastClassname = node?.parentNode?.parentNode?.lastChild?.firstElementChild?.classList[0]
+    const lasttInnerText = node?.parentNode?.parentNode?.lastChild?.firstElementChild?.innerText
+    const firstPtag = `<p class=\"${firstClassname}\" contenteditable=\"true\">${firstInnerData()}</p>`;
+    const lastPtag = `<p class=\"${lastClassname}" contenteditable=\"true\" data-placeholder=\"Attribution Text\">${lasttInnerText}</p>`;
+    return `<blockquote class=\"blockquoteMarginalia\" contenteditable=\"true\" data-mce-selected=\"1\">${firstPtag}${lastPtag}</blockquote>`
+}

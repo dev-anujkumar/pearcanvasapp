@@ -54,7 +54,7 @@ let _ullistObjectTemplate_ = {
 // ************************************************************************
 
 export const convertToListElement = (type, startvalue, fromToolbar=true) => (dispatch, getState) => {
-    const { activeElement, asideData,slateLevelData } = getState().appStore;
+    const { activeElement, asideData } = getState().appStore;
     // const newParentData = JSON.parse(JSON.stringify(parentData));
     // const slateObject = Object.values(newParentData)[0];
     // const { contents } = slateObject;

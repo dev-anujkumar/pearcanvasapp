@@ -199,6 +199,11 @@ jest.mock('../../../src/component/ElementMetaDataAnchor/ExternalLO_helpers.js', 
         setCurrentSlateLOs: jest.fn(()=>[])
     }
 })
+jest.mock('../../../src/component/FigureHeader/AutoNumber_helperFunctions', () => {
+    return {
+        getContainerEntityUrn: jest.fn().mockImplementation(() => "urn:123")
+    }
+})
 describe('Testing communication channel', () => {
     let store = mockStore(initialState);
     let props = {
@@ -1556,7 +1561,18 @@ describe('Testing communication channel', () => {
                                 mimeType: "image"
                             },
                             properties: {},
-                            espUrl:'asf'
+                            espUrl:'asf',
+                            "institution-urls": [
+                                {
+                                    "institutionUrl": "https://epspqa.stg-openclass.com/schoolcontent-stg/",
+                                    "pdosUrl": "https://epspqa.stg-openclass.com/schoolcontent-stg/api/item/75dcdbf1-0571-44d4-b952-da463cc02648/1/file/AAJKMFW0%20%28Working%20Copy%29.jpg",
+                                    "contentVersion": "1.0",
+                                    "instName": "SchoolContent",
+                                    "status": "Published",
+                                    "publicationUrl": "http://us-school-stg.pearsoned.com/school/e259c2c3-dd96-45a7-919c-31a55668db06/AAJKMFW0%20%28Working%20Copy%29.jpg",
+                                    "contentAction": false
+                                }
+                            ]
                         }
                     }
                 }
@@ -2325,6 +2341,21 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spysendingPermissions.mockClear()
     });
+    test('Test for ResetAutoNumberSequence case - IF Condition', () => {
+        let event = {
+            data: {
+                type: "ResetAutoNumberSequence",
+                message:{
+                    currentTocParentContainer: "urn:123",
+                    autoNumberingDetails: {}
+                }
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
     test('Test for commentAdded case', () => {
         let event = {
             data: {
@@ -2552,5 +2583,15 @@ describe('Testing communication channel', () => {
         channelInstance.handleIncommingMessages(event);
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
+    })
+    describe("Branch Coverage", () => {
+        it('initTocCommunictionChannel - ELSE Case', () => {
+            window.addEventListener = null;
+            window.attachEvent = jest.fn();
+            const spyinitTocCommunictionChannel = jest.spyOn(channelInstance, 'initTocCommunictionChannel')
+            channelInstance.initTocCommunictionChannel();
+            expect(spyinitTocCommunictionChannel).toHaveBeenCalled()
+            spyinitTocCommunictionChannel.mockClear()
+        })
     })
 })
