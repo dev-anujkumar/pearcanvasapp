@@ -1068,7 +1068,6 @@ const getAltTextLongDesc = async (id) => {
             longdescription: properties["cplg:longDescription"]
         }
     } catch(error){
-        console.log(" error: ", error)
         return { 
             altText : "",
             longdescription: ""
@@ -1115,7 +1114,6 @@ export const saveTEMetadata = async (editedImageList) => {
                         'myCloudProxySession': config.myCloudProxySession
                     }
                 });
-    
                 promiseArray.push(response);
             }
             await Promise.all(promiseArray);

@@ -190,9 +190,9 @@
     cursor: default;
     pointer-events: none;
 }
-p.blockquoteTextCredit:empty:not(:focus)::before {
+/* p.blockquoteTextCredit:empty:not(:focus)::before {
     content: attr(data-placeholder);
-}
+} */
 h2 sup a{
   padding-right: 2px!important;
 }

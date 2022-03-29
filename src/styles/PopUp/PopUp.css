@@ -583,8 +583,8 @@
 
 .alt-text-span{
   color: red;
-  font-size: 13px;
-  font-family: OpenSans;
+  font-size: 11px;
+  font-family: 'Open Sans', sans-serif;
   margin-bottom: 6px;
 }
 
@@ -619,9 +619,6 @@
 }
 .figuremetadata-field {
   margin-top:42px;
-}
-.figuremetadata-field-table {
-  margin-top:14px;
 }
 .metadata-button{
   margin-top: 35px;
@@ -963,9 +960,9 @@ ol li.listItemNumeroUnoLowerRoman {
 
 .tableAlfrescoPopupHeader {
   position: sticky;
-  width: 121px;
+  width: 122px;
   height: 22px;
-  font-family: OpenSans;
+  font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   font-weight: 600;
   color: #005a70;
@@ -976,8 +973,8 @@ ol li.listItemNumeroUnoLowerRoman {
   width: 501px;
   height: 18px;
   margin: 1px 55px 13px 1px;
-  font-family: OpenSans;
-  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
   line-height: 1.5;
   color: #666;
 }

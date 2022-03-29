@@ -157,10 +157,8 @@ export const checkFigureInsideTableElement = (element, buttonType = null) => {
     let tableasHTMLValue = String(element?.figuredata?.tableasHTML)
     if(element.figuretype === 'tableasmarkup' && tableasHTMLValue.includes("src=")){
         return true;
-    }else{
-        return false;
     }
-
+    return false;
 }
 
 /*** @description - This is the function to check if an elm embedded assessment has update available */
