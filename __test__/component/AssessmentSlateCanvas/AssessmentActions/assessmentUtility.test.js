@@ -316,11 +316,53 @@ describe('Test---Assessment Utility Functions', () => {
         expect(spyFunction).toHaveReturnedWith({ "assessmentId": "43208", "itemId": "", "title": "9001 - myvirtual-x/myvirtual-child" })
         spyFunction.mockClear();
     });
-    it('Test 15---checkFigureMetadata Image', () => {
+    it('Test 15A---checkFigureMetadata Image', () => {
         let element = newFigureObj;
+        console.log('element value in 15A : ',element)
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureMetadata');
         assessment_UtiltyFn.checkFigureMetadata(element);
         expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+
+    it('Test 15B---checkFigureInsideTableElement Image for true case', () => { 
+        let element = {
+            "id": "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
+            "type": "figure",
+            "figuretype": "tableasmarkup",
+            "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+            "titlecontentintitlefield": true,
+            "figuredata": {
+                "schema": "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
+                "tableasHTML": "<table style=\"border-collapse: collapse; width: 1146px; word-break: normal; outline: none; text-align: left;\" class=\"mce-item-table\" contenteditable=\"false\"><tbody><tr><td style=\"width: 573px; outline: none;\"><img class=\"imageAssetContent\" src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\" width=\"149\" height=\"112\" data-id=\"imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:8235\" data-mce-src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\"/></td><td style=\"width: 573px; outline: none;\"><br></td></tr><tr><td style=\"width: 573px; outline: none;\"><br></td><td style=\"width: 573px; outline: none;\"></td></tr></tbody></table>"
+            },
+           
+        };
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureInsideTableElement');
+        let returnedValue = assessment_UtiltyFn.checkFigureInsideTableElement(element, 'editButton');
+        expect(spyFunction).toHaveBeenCalled();
+        expect(returnedValue).toBe(true);
+        // expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+
+    
+    it('Test 15B---checkFigureInsideTableElement Image for false case', () => { 
+        let element = {
+            "id": "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
+            "type": "figure",
+            "figuretype": "tableasmarkup",
+            "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+            "titlecontentintitlefield": true,
+            "figuredata": {
+                "schema": "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
+            },
+           
+        };
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureInsideTableElement');
+        let returnedValue = assessment_UtiltyFn.checkFigureInsideTableElement(element, 'editButton');
+        expect(spyFunction).toHaveBeenCalled();
+        expect(returnedValue).toBe(false);
         spyFunction.mockClear();
     });
     xit('Test 16---checkFigureMetadata Audio/Video', () => {

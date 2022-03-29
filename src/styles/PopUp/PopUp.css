@@ -8,7 +8,7 @@
     overflow: auto; 
     cursor:default;
   }
-  
+
   .modal-content {
     border-top: 5px solid #005a70;
     -moz-box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14);
@@ -31,7 +31,6 @@
   }
   .model-popup.single_assessment{
      background-color: rgba(0,0,0, 0.5) !important;
-    
   }
   .close {
     color: #aaa;
@@ -170,10 +169,14 @@
   } 
 }
 
-.dialog-buttons{
+.dialog-buttons {
   /* padding: 17px 8px 28px; */
   height: 36px;
   margin-top: 24px;
+}
+
+.dialog-button1{
+  height: 28px;  
 }
 
 .subscriberSlate-buttons{
@@ -190,12 +193,12 @@
     bottom: 40px;
     background: #fff;
 }
-.dialog-buttons.single_assessment{
-  width:100%;
-  margin:10px 0;
-  padding:0px;
-  height:30px;
- }
+.dialog-buttons.single_assessment {
+  width: 100%;
+  margin: 10px 0;
+  padding: 0px;
+  height: 30px;
+}
 @keyframes animatetop {
   from {top: 30%; opacity: 0}
   to {top: 38%; opacity: 1}
@@ -221,14 +224,14 @@
     font-family: "Helvetica Neue", sans-serif;
     color: #000;
 }
-.delete-element-text, .audioRemoveClass, .remove-glossary-image, .blockcode-warning-text{
+.delete-element-text, .audioRemoveClass, .remove-glossary-image, .blockcode-warning-text {
   font-family: "Helvetica Neue", sans-serif;
   color: #000;
   font-size: 16px;
   line-height: 20px;
   margin-top: 1.3em;
 }
-.dialog-window.split-slate{
+.dialog-window.split-slate {
   margin-top: 1.3em;
     font-family: "Helvetica Neue", sans-serif;
     color: #000;
@@ -237,7 +240,7 @@
     font-weight: normal;
 }
 .save-button.split-slate,
-.cancel-button.split-slate{
+.cancel-button.split-slate {
   font-family: "Helvetica Neue", sans-serif;
 }
 .tocDeleteHeader {
@@ -330,7 +333,7 @@
   line-height: 20px;
   margin-bottom: 16px;
   font-size: 12px;
-} 
+}
 
 .wordPasteClass {
   border-top: 5px solid #005a70;
@@ -414,6 +417,12 @@
   border: 1px solid #b3d8e1;
 }
 
+.cancel-button.disabled{
+  cursor: not-allowed;
+  pointer-events: none;
+  color:#b3d8e1
+}
+
 .dialog-input-poc {
   border: 1px solid #043a47;
   border-radius: 4px;
@@ -439,6 +448,33 @@
   color: #005a70;
 }
 
+.imageContainer:hover {
+  border: 2px solid #427ef5;
+}
+
+.right-arrow-icon {
+  padding-top: 2px;
+  padding-right: 4px;
+  transform: rotateZ(-90deg);
+  cursor: pointer;
+}
+
+.left-arrow-icon {
+  padding-top: 2px;
+  padding-right: 4px;
+  transform: rotateZ(+90deg);
+  cursor: pointer;
+}
+
+
+.left-arrow.disable,
+.right-arrow.disable{
+  cursor: not-allowed;
+  pointer-events: none;
+  background-color: #eee;
+  opacity: 0.2;
+}
+
 .figure-popup{
   width: 640px;
   height: 476px;
@@ -448,6 +484,80 @@
   margin: auto;
   border-top: 4px solid #005a70;
   padding: 20px;
+}
+
+.figure-popup.editPopupforTE{
+  width: 1000px;
+  height: 488px;
+}
+
+
+.left-container{
+  display: inline-block;
+  width: 350px;
+}
+
+.outer-img-container{
+  margin: 14px 47px 16px 0px;
+  height: 315px;
+  width: 300px;
+  padding: 0 20px 0 17px;
+  background-color: #eee;
+}
+
+.inner-img-container{
+  height: 319px;
+  width: 265px;
+}
+
+.outer-img-array-container{
+  width: 300px;
+  height: 79px;
+  display: flex;
+  flex-direction: row;
+}
+
+.left-arrow{
+  margin: 24px 0px 20px 0px;
+  height: 24px;
+  width: 18px;
+  font-size: large;
+}
+
+.inner-img-array{
+  display: flex;
+  flex-direction: row;
+  height: 78px;
+  max-width: 295px;
+}
+
+.img-inside-array{
+  width: 66px;
+  height: 66px;
+  margin: 3px 10px 4px 10px;
+  padding: 0 11px;
+  background-color: #eee
+}
+
+
+.img-inside-array:hover{
+  border: 1px solid rgb(69, 69, 211);
+}
+
+.right-arrow{
+  margin: 18px 0px 20px 0px;
+  height: 28px;
+  width: 18px;
+  font-size: large;
+}
+
+.right-container{
+  display: inline-block;
+  width: 64.5%;
+}
+
+.left-right-container{
+  display: flex;
 }
 
 .edit-metadata{
@@ -465,12 +575,29 @@
   margin-bottom: 20px;
   height: 70px;
 }
+
+.alt-text-body.invalid{
+  border-bottom: 2px solid #f31212;
+  margin-bottom: 0px;
+}
+
+.alt-text-span{
+  color: red;
+  font-size: 11px;
+  font-family: 'Open Sans', sans-serif;
+  margin-bottom: 6px;
+}
+
 .long-description-body{
   background-color: #f7f7f7;
   overflow: auto;
   border-bottom: 1px solid #cccccc;
   padding: 8px 12px;
   height: 230px;
+}
+
+.long-description-body.invalid{
+  border-bottom: 2px solid #f31212;
 }
 .alt-text-body .alt-text{
   font-size: 12px;
@@ -495,6 +622,9 @@
 }
 .metadata-button{
   margin-top: 35px;
+}
+.figuremetadata-field-table {
+  margin-top:14px;
 }
 #longDescription_AM{
   border: 0;
@@ -522,12 +652,12 @@
 #altText_AM::placeholder {
   font-size: 14px;
 }
-.model-popup.tcm-canvas-popup{
-left: unset;
-overflow: unset;
+.model-popup.tcm-canvas-popup {
+  left: unset;
+  overflow: unset;
 }
 
-.modal-content.tcm-canvas-popup{
+.modal-content.tcm-canvas-popup {
   width: 263px;
   transform: none;
   animation-name: none;
@@ -536,11 +666,11 @@ overflow: unset;
   position: absolute;
   left: -30px;
 }
-.tcmIcon{
+.tcmIcon {
   padding: 2px !important;
   background-color: transparent !important;
 }
-.tcmIconContainer,.userNametcmIconContainer{
+.tcmIconContainer,.userNametcmIconContainer {
   display: flex;
 }
 .tcmContainer{
@@ -655,7 +785,7 @@ a.paragraphNumeroUnoFootnote del{
 
 /* added css to show blank instead of blankline */
 span.answerLineContent ins{
-color: transparent !important;
+  color: transparent !important;
 }
 span.answerLineContent{
   border-bottom: 1px solid #bcbcbc !important;
@@ -828,3 +958,73 @@ ol li.listItemNumeroUnoLowerRoman {
   min-height: 22px;
 }
 
+.tableAlfrescoPopupHeader {
+  position: sticky;
+  width: 122px;
+  height: 22px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #005a70;
+}
+
+.Please-select-an-image{
+  position: sticky;
+  width: 501px;
+  height: 18px;
+  margin: 1px 55px 13px 1px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #666;
+}
+
+.tableElement-img-container {
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  max-height: 400px;
+  overflow-x: hidden;
+}
+
+.imageContainer {
+  width: 128px;
+  height: 125px;
+  margin: 8px 12px 0 0px;
+  padding: 0 22px 0 21px;
+  background-color: #eee;
+}
+
+.modal-content.alfresco-long-popup {
+  top: 53%;
+  width: 610px;
+  min-height: 234px;
+}
+
+.modal-content.alfresco-short-popup {
+  top: 31%;
+  width: 610px;
+  min-height: 234px;
+}
+
+.cancel-button.disable {
+  cursor: not-allowed;
+  pointer-events: none;
+  border: 1px solid #b3d8e1;
+  background: #ffffff;
+  color: #005a70;
+}
+
+.te-metadata-button{
+  margin-top: 26px;
+}
+
+.te-model-popup { 
+  position: fixed; 
+  z-index: 999999; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  cursor:default;
+}

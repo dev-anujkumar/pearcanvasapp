@@ -16,13 +16,14 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
+         prepareImageDataFromTable } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, labelHtmlData } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isSubscriberRole, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment } from '../../constants/IFrameMessageTypes.js';
@@ -31,7 +32,7 @@ import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
 import PageNumberContext from '../CanvasWrapper/PageNumberContext.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
-import { LABELS } from './ElementConstants.js';
+import { LABELS, TE_POP_UP_HEADER_TEXT, TE_POP_UP_NORMAL_TEXT } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData, handleBlankLineDom, updateAutoNumberedElement } from './UpdateElements.js';
 import ElementPopup from '../ElementPopup'
@@ -52,7 +53,7 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -64,6 +65,7 @@ import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
 import MetaDataPopUp from '../ElementFigure/MetaDataPopUp.jsx';
+import MetaDataPopUpForTE from '../ElementFigure/MetaDataPopUpForTE.jsx'
 import { closeTcmPopup, handleTCM } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations'
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx';
 import ShowHide from '../ShowHide/ShowHide.jsx';
@@ -94,6 +96,8 @@ class ElementContainer extends Component {
             borderToggle: 'showBorder',
             btnClassName: '',
             showDeleteElemPopup: false,
+            showAlfrescoExpansionPopup: false,
+            showAlfrescoEditPopupforTE: false,
             ElementId: this.props.index == 0 ? this.props.element.id : '',
             showColorPaletteList: false,
             showColorTextList: false,
@@ -467,8 +471,13 @@ class ElementContainer extends Component {
             || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
         let podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth")
         let oldImage = this.props.oldImage;
+        let isAltTextLongDescModified = false;
         if (previousElementData.figuretype !== 'tableasmarkup') {
             oldImage = this.props.oldFigureDataForCompare.path;
+        }
+
+        if(previousElementData.figuretype === 'tableasmarkup'){
+            isAltTextLongDescModified = this.props.oldFigureDataForCompare.tableasHTML !== previousElementData.figuredata.tableasHTML
         }
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             // Not selecting remove label and number
@@ -507,7 +516,7 @@ class ElementContainer extends Component {
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
                 || podwidth !== (previousElementData.figuredata.podwidth ?
-                    previousElementData.figuredata.podwidth : '') && podwidth !== null
+                    previousElementData.figuredata.podwidth : '') && podwidth !== null|| isAltTextLongDescModified
             );
         }
 
@@ -516,7 +525,7 @@ class ElementContainer extends Component {
             creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
             (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
             || podwidth !== (previousElementData.figuredata.podwidth ?
-                previousElementData.figuredata.podwidth : '') && podwidth !== null
+                previousElementData.figuredata.podwidth : '') && podwidth !== null|| isAltTextLongDescModified
         );
     }
 
@@ -2131,8 +2140,13 @@ class ElementContainer extends Component {
         let btnClassName = this.state.btnClassName;
         let bceOverlay = "";
         let elementOverlay = '';
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton');
-        let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton')
+        let alfrescoExpansionData = {
+            headerText : TE_POP_UP_HEADER_TEXT,
+            normalText: TE_POP_UP_NORMAL_TEXT,
+            renderImages : this.props.tableElementAssetData
+        }
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton');
+        let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton');
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -2206,7 +2220,7 @@ class ElementContainer extends Component {
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
-                        {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type="edit-button" btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                         {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
                     </div> : ''}
@@ -2221,9 +2235,12 @@ class ElementContainer extends Component {
                         warningHeaderText={`Warning`}
                         OwnersDeleteDialogText={OWNERS_ELM_DELETE_DIALOG_TEXT}
                         showDeleteElemPopup={this.state.showDeleteElemPopup}
+                        alfrescoExpansionPopup={this.state.showAlfrescoExpansionPopup}
+                        alfrescoExpansionMetaData={alfrescoExpansionData}
+                        openInNewWindow={this.openInNewWindow}
                         sectionBreak={this.state.sectionBreak}
                         deleteElement={this.deleteElement}
-                        isAddComment={true}
+                        isAddComment={this.state.showAlfrescoExpansionPopup ? false : true}
                         projectUsers={this.props.projectUsers}
                         comment={this.state.comment}
                         showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
@@ -2240,6 +2257,18 @@ class ElementContainer extends Component {
                             index={this.props.index}
                             asideData={this.props.asideData}
                         />}
+                    {this.state.showAlfrescoEditPopupforTE &&
+                        <MetaDataPopUpForTE
+                            togglePopup={this.handleFigurePopup}
+                            updateFigureData={this.updateFigureData}
+                            handleFocus={this.handleFocus}
+                            handleBlur={this.handleBlur}
+                            showAlfrescoEditPopupforTE = {this.state.showAlfrescoEditPopupforTE}
+                            imageList={this.props.tableElementAssetData}
+                            element={this.props.element}
+                            index={this.props.index}
+                            asideData={this.props.asideData}
+                        />}    
                     {this.props.children &&
                         <PageNumberContext.Consumer>
                             {
@@ -2429,6 +2458,7 @@ class ElementContainer extends Component {
             popup,
             showDeleteElemPopup: false,
             showBlockCodeElemPopup: false,
+            showAlfrescoExpansionPopup: false,
             comment: ""
         });
         if (this.props.isBlockerActive) {
@@ -2531,15 +2561,22 @@ class ElementContainer extends Component {
         // this.props.assetPopoverPopup(toggleApoPopup)
     }
 
-    handleFigurePopup = (togglePopup) => {
-        let imageId = this.props?.element?.figuredata?.imageid;
-        imageId = imageId.replace('urn:pearson:alfresco:', '');
+    handleFigurePopup = (togglePopup, elementType = null) => {
 
+        let imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
+        imageId = imageId.replace('urn:pearson:alfresco:', '');
         this.props.showBlocker(togglePopup);
-        this.setState({
-            isfigurePopup: togglePopup,
-            imageId
-        })
+        if(elementType === 'TE'){
+            this.setState({
+                showAlfrescoEditPopupforTE: togglePopup
+            })  
+        }else{
+            this.setState({
+                isfigurePopup: togglePopup,
+                imageId
+            })
+        }
+        
         if (togglePopup) {
             showTocBlocker();
         } else {
@@ -2547,30 +2584,53 @@ class ElementContainer extends Component {
         }
     }
 
+    showAlfrescoExpansionPopup = (e, popup, element) => {
+        e.stopPropagation();
+        this.props.showBlocker(true);
+        showTocBlocker();
+        this.props.prepareImageDataFromTable(element);
+        this.setState({
+            popup,
+            showAlfrescoExpansionPopup: true
+        });
+    } 
+    /**
+     * This function will take image id and open it in the Alfresco
+     * @param {*} id 
+     */
+    openInNewWindow(id){
+        const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${id}`
+        window.open(Url);
+    }
+
     /**
      * @description - This function is used to open alfresco metadata in new window.
      */
 
-    handleAlfrescoMetadataWindow = () => {
-        let imageId
-        switch(this.props?.element?.figuretype){
-            case IMAGE:
+    handleAlfrescoMetadataWindow = (e) => {       
+        if(this.props?.element?.figuretype === TABLE_ELEMENT){
+            this.showAlfrescoExpansionPopup(e, true, this.props.element)
+        }else{
+            let imageId;
+            switch(this.props?.element?.figuretype){
+             case IMAGE:
                 imageId=this.props?.element?.figuredata?.imageid
                 break;
-            case AUDIO :
+             case AUDIO :
                 imageId=this.props?.element?.figuredata?.audioid
                 break;
-            case VIDEO:
+             case VIDEO:
                 imageId=this.props?.element?.figuredata?.videoid
                 break;
-            case  INTERACTIVE:
+             case  INTERACTIVE:
                 imageId=this.props?.element?.figuredata?.interactiveid
                 break;
-            default: imageId=null
+             default: imageId=null
+            }
+            imageId = imageId.replace('urn:pearson:alfresco:', '');
+            this.openInNewWindow(imageId)
         }
-        imageId = imageId.replace('urn:pearson:alfresco:', '');
-        const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${imageId}`
-        window.open(Url);
+   
     }
 
     /**
@@ -2580,9 +2640,15 @@ class ElementContainer extends Component {
     handleEditButton = (event) => {
         event.stopPropagation();
         const { element } = this.props;
-        const figureImageTypes = ["image", "mathImage", "table"]
+        const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup"]
         if (element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) {
-            this.handleFigurePopup(true);
+            if(element?.figuretype === 'tableasmarkup'){
+                this.props.prepareImageDataFromTable(element);
+                this.handleFigurePopup(true, 'TE');
+            }else {
+                this.handleFigurePopup(true);
+            }
+            
         }
         else {
             let fullAssessment = checkFullElmAssessment(element);
@@ -2778,6 +2844,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateAutoNumberSequenceOnDelete: (parentIndex, contentUrn, numberedElements) => {
             dispatch(updateAutoNumberSequenceOnDelete(parentIndex, contentUrn, numberedElements))
+        },
+        prepareImageDataFromTable: (element) => {
+            dispatch(prepareImageDataFromTable(element));
         }
     }
 }
@@ -2824,6 +2893,7 @@ const mapStateToProps = (state) => {
         cypressPlusProjectStatus: state.appStore.isCypressPlusEnabled,
         isJoinedPdfSlate: state.appStore.isJoinedPdfSlate,
         figureDropdownData: state.appStore.figureDropdownData,
+        tableElementAssetData: state.appStore.tableElementAssetData,
         popupParentSlateData: state.autoNumberReducer.popupParentSlateData
     }
 }
