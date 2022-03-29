@@ -2271,7 +2271,6 @@ class ElementContainer extends Component {
                             handleBlur={this.handleBlur}
                             showAlfrescoEditPopupforTE = {this.state.showAlfrescoEditPopupforTE}
                             imageList={this.props.tableElementAssetData}
-                            handleBlur={this.handleBlur}
                             element={this.props.element}
                             index={this.props.index}
                             asideData={this.props.asideData}
@@ -2465,6 +2464,7 @@ class ElementContainer extends Component {
             popup,
             showDeleteElemPopup: false,
             showBlockCodeElemPopup: false,
+            showAlfrescoExpansionPopup: false,
             comment: ""
         });
         if (this.props.isBlockerActive) {
