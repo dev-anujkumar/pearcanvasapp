@@ -115,49 +115,25 @@ describe('Testcase for MetaDataPopUpForTE Component', () => {
     //     // expect(component.instance().props.prepareImageDataFromTable).toHaveBeenCalled();
     // })
 
-    // it('onClick Event of longDescription body', () => {
-    //     const component = mount(<Provider store={store}><MetaDataPopUpForTE {...props} /></Provider>);
-    //     component.find('.long-description-body').simulate('click');
-    // })
-
-    // it('onClick Event alt-text-body', () => {
-    //     const component = mount(<Provider store={store}><MetaDataPopUpForTE {...props} /></Provider>);
-    //     component.find('.alt-text-body').simulate('click');
-    // })
-
     // it('onClick Event metadata-import-button', () => {
     //     let togglePopup = jest.fn();
     //     const component = mount(<Provider store={store}><MetaDataPopUpForTE togglePopup={togglePopup} /></Provider>);
     //     component.find('.metadata-import-button').simulate('click');
     // })
-    // it('Changing input altText', () => {
-    //     const component = mount(<Provider store={store}><MetaDataPopUpForTE {...props} /></Provider>);
-    //     let event={ target: { value: '123' } }
-    //     component.find('#altText_AM').simulate('change',event);
-    // })
-
-    // it('Changing input longDescription', () => {
-    //     const component = mount(<Provider store={store}><MetaDataPopUpForTE {...props} /></Provider>);
-    //     let event={ target: { value: '123' } }
-    //     component.find('#longDescription_AM').simulate('change',event);
-    // })
-
-    it('Checking for disable right arrow button when condition is met', () => {
-        // const wrapper1 = mount(<Provider store={store}><MetaDataPopUpForTE {...props}/></Provider>);
-        // const textArea = wrapper1.find('textarea');
-        // console.log('textArea : ',textArea)
-        // let event={ target: { value: '123<h1>' } }
-        // textArea.simulate('change',event)
-        // expect(component.find('.alt-text-span')).toHaveLength(1)
-       
+    
+    it('Changing input altText', () => {
         const wrapper = mount(<Provider store={store}><MetaDataPopUpForTE {...props}/></Provider>);
-        console.log('wrapper : ',wrapper)
-        const container = wrapper.find('textarea')
-        // expect(container.length).to.equal(1)
-        // container.simulate('keyup', {keyCode: 27});
-        // expect(store.getActions()[0]).to.deep.equal(expectedAction);
+        const container = wrapper.find('#altText_AM')
+        let event={ target: { value: '123' } }
+        wrapper.find('#altText_AM').simulate('change',event)
+    })
 
-
+   
+    it('Changing input longDescription', () => {
+        const wrapper = mount(<Provider store={store}><MetaDataPopUpForTE {...props}/></Provider>);
+        const container = wrapper.find('textarea#longDescription_AM')
+        let event={ target: { value: '123' } }
+        wrapper.find('#longDescription_AM').simulate('change',event)
     })
 
 })

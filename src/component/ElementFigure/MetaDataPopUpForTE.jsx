@@ -54,7 +54,6 @@ const MetaDataPopUpForTE = (props) => {
   }
 
   const disableButtonForHTML = () => {
-
     if(editedImageList && Object.keys(editedImageList).length > 0){
       if(checkHTMLInString(altText) || checkHTMLInString(longDescription)){
         setDisableButton(true);
@@ -149,14 +148,6 @@ const MetaDataPopUpForTE = (props) => {
         updateEditedData(editedData);
     }
   }
-
-  const handleSave = () => {
-    saveTEMetadata(editedImageList)
-        .then(() => {
-          handleCancel();
-        });
-  }
-
   const handleImport = () => {
     saveTEMetadata(editedImageList)
       .then(() => {
@@ -189,10 +180,6 @@ const MetaDataPopUpForTE = (props) => {
     props.prepareImageDataFromTable({}); // this will delete the TE data from store
   }
 
-  const handleReset = () => {
-    updateEditedData({});
-    updateCurrentImage(index, true);
-  }
 
   let htmlErrMsg = ' HTML is not supported in this input field';
 
@@ -220,7 +207,7 @@ const MetaDataPopUpForTE = (props) => {
                           className='img-inside-array' 
                           src={image.imgSrc} 
                           id={image.imgId}
-                          style={ image.imgSrc === imageSrc ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
+                          style={ ( image.imgId === imageID && index == imgIndex ) ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
                         />)
                       }
                     })}
@@ -247,7 +234,6 @@ const MetaDataPopUpForTE = (props) => {
                         onBlur={updateImageInStore}
                       />
                     </div>
-                    {/* {console.log('altTextErr : ',altTextErr)} */}
                     {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
                     <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
                       <p className={'long-text'}> Long Description </p>
@@ -271,8 +257,6 @@ const MetaDataPopUpForTE = (props) => {
                   </div>
                   <div className="te-metadata-button">
                     <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleImport}>Import in Cypress</span>
-                    <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleSave}>Save All</span>
-                    <span className={`cancel-button ${disableButton ? "disabled" : ""}`} id='close-container' onClick={handleReset}>Reset</span>
                     <span className="cancel-button" id='close-container' onClick={handleCancel}>Cancel</span>
                   </div>
                 </div>
