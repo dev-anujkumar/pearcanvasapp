@@ -22,6 +22,7 @@ const MetaDataPopUpForTE = (props) => {
   const [imageID, setimageID] = useState('');
   const [imageSrc, setimageSrc] = useState('');
   const [disableButton, setDisableButton] = useState(true);
+  const [active, setActive] = useState("");
 
   useEffect(() => {
     if(imageList?.length > 0){
@@ -183,6 +184,10 @@ const MetaDataPopUpForTE = (props) => {
 
   let htmlErrMsg = ' HTML is not supported in this input field';
 
+  const handleActiveState = (active) => {
+		setActive(active)
+	}
+
   return(
       <div className="model">
         <div tabIndex="0" className="te-model-popup">
@@ -198,7 +203,7 @@ const MetaDataPopUpForTE = (props) => {
                     <img className='inner-img-container' src={imageSrc} id={imageID} /> 
                   </div>
                   <div className='outer-img-array-container'>
-                  <span className={`left-arrow ${index === 0 ? 'disable' : ''}`} onClick={traverseLeft}><div className={`left-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>
+                  { imageList.length > 3 && <span className={`left-arrow ${index === 0 ? 'disable' : ''}`} onClick={traverseLeft}><div className={`left-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>}
                     <span className='inner-img-array'>
                     {imageList && imageList.map((image, imgIndex) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
@@ -207,18 +212,18 @@ const MetaDataPopUpForTE = (props) => {
                           className='img-inside-array' 
                           src={image.imgSrc} 
                           id={image.imgId}
-                          style={ ( image.imgId === imageID && index == imgIndex ) ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
+                          style={ ( image.imgId === imageID && index == imgIndex ) ? {  border: '1px solid #005a70' } : {border: 'none'} } 
                         />)
                       }
                     })}
                     </span>
-                    <span className={`right-arrow ${index === (imageList.length - 1) ? 'disable' : '' }`} onClick={traverseRight}><div className={`right-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>
+                    {imageList.length > 3 && <span className={`right-arrow ${index === (imageList.length - 1) ? 'disable' : '' }`} onClick={traverseRight}><div className={`right-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>}
                   </div>
                 </div>
                 <div className="right-container">
                   <div className="figuremetadata-field-table">
-                    <div className={`alt-text-body ${altTextErr === true ? "invalid" : "" }`}>
-                      <p className="alt-text"> Alt Text </p>
+                    <div className={`alt-text-body ${active === 'altBody' ? 'active' : ""} ${altTextErr === true ? "invalid" : "" }`}>
+                      <p className={`alt-text ${active === 'altBody' ? 'active' : ""}`}> Alt Text </p>
                       <input
                         autocomplete="off"
                         id="altText_AM"
@@ -231,12 +236,13 @@ const MetaDataPopUpForTE = (props) => {
                             handleButtonDisable(e.target.value);
                         }
                         }
+                        onClick={() => handleActiveState('altBody')}
                         onBlur={updateImageInStore}
                       />
                     </div>
                     {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
-                    <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
-                      <p className={'long-text'}> Long Description </p>
+                    <div className={`long-description-body ${active === 'longBody' ? 'active' : ""} ${ longDescErr === true ? "invalid" : "" }`}>
+                      <p className={`long-text ${active === 'longBody' ? 'active' : ""}`}> Long Description </p>
                       <textarea
                         id="longDescription_AM"
                         name="longDescription"
@@ -249,6 +255,7 @@ const MetaDataPopUpForTE = (props) => {
                             handleButtonDisable(null, e.target.value);
                           }
                         }
+                        onClick={() => handleActiveState('longBody')}
                         onBlur={updateImageInStore}
                       ></textarea>
                     </div>
