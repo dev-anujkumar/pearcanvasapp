@@ -1033,15 +1033,13 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
  * @param {*} imagesArrayOfObj 
  */
 const getImageFromHTMLElement = async (node, imagesArrayOfObj) => {
-    console.log("========> getImageFromHTMLElement: ", node)
-    if(node.nodeName === 'IMG' && node.className === "imageAssetContent"){
+    if(node?.nodeName === 'IMG' && node?.className === "imageAssetContent"){
         const attributes = node.attributes;
         const id = attributes['data-id'].nodeValue;
         const src = attributes['data-mce-src'].nodeValue;
         let tempImgObj = {};
         const data = await getAltTextLongDesc(id);
         tempImgObj = { ...data }
-       
         tempImgObj['imgSrc'] = src;
         tempImgObj['imgId'] = id;
         imagesArrayOfObj.push(tempImgObj);
@@ -1070,18 +1068,12 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
         let tableHTML = figureData.tableasHTML;
         let dummyDiv = document.createElement('div');
         dummyDiv.innerHTML = tableHTML;
-        console.log("=====> dummydiv: ", dummyDiv.children)
-        let spanList = dummyDiv.children[0].childNodes;
-        console.log("======> spanList: ", spanList)
-        let tableRow = spanList[0].childNodes;
-        console.log("======> tableRow: ", tableRow)
-
-        for(let i=0;i<tableRow.length;i++){
+        let tBody = dummyDiv.querySelectorAll('tbody');
+        let tableRow = tBody[0]?.childNodes;
+        for(let i=0;i<tableRow?.length;i++){
             let cells = tableRow[i].childNodes;
-            console.log("cells: ", cells)
             for(let j=0; j<cells.length; j++){
                 for(let k=0; k<cells[j].childNodes.length; k++){
-                    console.log("cells[j].childNodes: ", cells[j].childNodes);
                     await getImageFromHTMLElement(cells[j].childNodes[k], imagesArrayOfObj);
 
                 }
