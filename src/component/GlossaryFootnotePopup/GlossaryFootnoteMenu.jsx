@@ -16,7 +16,6 @@ import config from '../../config/config';
 class GlossaryFootnoteMenu extends React.Component {
     constructor(props) {
         super(props);
-        //context=this;
         this.wrapperRef = null;
     }
     
@@ -31,7 +30,6 @@ class GlossaryFootnoteMenu extends React.Component {
 
     componentWillMount() {
         document.addEventListener('mousedown', this.handleClickOutside);
-        //this.setWrapperRef(this);
     }
 
     componentWillUnmount() {

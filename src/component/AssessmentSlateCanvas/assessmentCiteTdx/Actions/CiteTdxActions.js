@@ -203,12 +203,6 @@ export const specialCharacterDecode = (encodedString) => {
     return decodedString;
 }
 
-// const decodeHtmlCharCodes = (str) => {
-//     return str.replace(/(&#(\d+);)/g, (match, capture, charCode) => {
-//         return String.fromCharCode(charCode);
-//     });
-// }
-
 const escapeHtml = (str) => {
     var specialCharList = {
         '\\&nbsp;': " ",

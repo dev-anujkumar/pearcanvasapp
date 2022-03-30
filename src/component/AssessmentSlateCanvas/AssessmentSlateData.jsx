@@ -195,7 +195,6 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to close CITE/TDX PopUp */
     closeWindowAssessment = () => {
-        // this.props.setCurrentCiteTdx({});
         this.setState({
             showCiteTdxComponent: false
         });

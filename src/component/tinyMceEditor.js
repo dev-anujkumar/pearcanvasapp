@@ -33,13 +33,11 @@ import { deleteElement } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, restrictSpellCheck, checkActiveElement }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, checkActiveElement }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
-import { ELEMENT_TYPE_PDF } from './AssessmentSlateCanvas/AssessmentSlateConstants';
 import ElementConstants from './ElementContainer/ElementConstants';
-import { getDataFromLastTag, isKWChild, isLastChild, moveCursor, supportedClasses } from './Keyboard/KeyboardWrapper.jsx';
+import { moveCursor } from './Keyboard/KeyboardWrapper.jsx';
 import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
-import cypressConfig from '../config/cypressConfig';
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -568,7 +566,6 @@ export class TinyMceEditor extends Component {
                             }, 0)
                         }, false)
                     }, 0)
-                    //this.currentCursorBookmark = editor.selection.bookmarkManager.getBookmark();                
                     break;
                 case "mceInsertContent":
                     editor.selection.bookmarkManager.moveToBookmark(this.currentCursorBookmark);
@@ -769,7 +766,7 @@ export class TinyMceEditor extends Component {
          * Case - clicking over Footnote text
          */
 
-        if (e.target.parentElement && e.target.parentElement.nodeName == "SUP" && e.target.parentElement.childNodes &&
+        if (e.target.parentElement && (e.target.parentElement.nodeName == "SUP" || e.target?.parentElement?.nodeName == "P") && e.target.parentElement.childNodes &&
             e.target.parentElement.childNodes[0].nodeName == 'A' && e.target.dataset.uri) {
             let uri = e.target.dataset.uri;
             this.activeGlossaryFootnoteId = uri;
@@ -840,7 +837,6 @@ export class TinyMceEditor extends Component {
                    /* if(parentPosition.x +325 >800){
                         audioPopupPosition.left = '0'
                     } */
-                    // this.props.handleAudioPopupLocation(true, audioPopupPosition);
                     this.props.handleAssetsPopupLocation(true, audioPopupPosition);
                 }
             }
@@ -888,7 +884,6 @@ export class TinyMceEditor extends Component {
                 sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } });
                 let linkId = (abbrElm.attributes['asset-id'] && abbrElm.attributes['asset-id'].nodeValue) || (abbrElm.parentNode.attributes['asset-id'] && abbrElm.parentNode.attributes['asset-id'].nodeValue) || (abbrElm.attributes['id'] && abbrElm.attributes['id'].nodeValue) || abbrElm.parentNode.attributes['id'].nodeValue;
                 let elementId = this.props.element && this.props.element.id
-                // (abbrElm.attributes['element-id'] && abbrElm.attributes['element-id'].nodeValue) || abbrElm.parentNode.attributes['element-id'].nodeValue;
                 let pageId = (abbrElm.attributes['data-uri'] && abbrElm.attributes['data-uri'].nodeValue) || abbrElm.parentNode.attributes['data-uri'].nodeValue;
 
                 sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true, reviewerRole: hasReviewerRole() } });
@@ -1050,7 +1045,6 @@ export class TinyMceEditor extends Component {
                     }
                     else if (e.ctrlKey) {
                         if (key != undefined && (key === 66 || key === 98 || key === 73 || key === 105 || key === 85 || key === 117)) {
-                            //this.gRange = editor.selection.getRng();
                             let codeParent = tinymce.$(`code[id="cypress-${this.props.index}"]`).children();
                             spanHandlers.handleFormattingTags(editor, this.props.elementId, 'code', codeParent, 'codeNoHighlightLine', this.gRange);
                         }
@@ -1059,7 +1053,6 @@ export class TinyMceEditor extends Component {
                 if (activeElement.nodeName == "DIV" && this.props.element.type === 'stanza') {
                     let key = e.keyCode || e.which;
                     if (key != undefined && key === 13) {
-                        //activeElement.innerHTML += '<span class="poetryLine"><br /></span>';
                         tinymce.$(`div[data-id="${this.props.elementId}"] .poetryLine`).each(function () {
                             let imgTag = this && this.getElementsByTagName("img");
                             const blankLines = this && this.getElementsByClassName("answerLineContent")
@@ -2061,7 +2054,6 @@ export class TinyMceEditor extends Component {
                 let wirisChemistryInstance = window.WirisPlugin.instances[editor.id].getCore().getCustomEditors();
                 wirisChemistryInstance.enable('chemistry');
                 window.WirisPlugin.instances[editor.id].openNewFormulaEditor();
-                //editor.execCommand("tiny_mce_wiris_openFormulaEditorChemistry");
             },
             onSetup: (buttonApi) => {
                 /*
@@ -2611,6 +2603,7 @@ export class TinyMceEditor extends Component {
         let elementId = ""
         let selectedElement = editor.selection.getNode();
         if (selectedElement.tagName.toLowerCase() === 'sup' || (selectedElement.tagName.toLowerCase() === 'a' && selectedElement.parentNode.tagName.toLowerCase() === 'sup')) {
+            console.log("1")
             let parentNode = selectedElement.parentNode;
             let endPosition = true;
             if (selectedElement.tagName.toLowerCase() === 'a') {
@@ -2639,6 +2632,7 @@ export class TinyMceEditor extends Component {
             parentNode.innerHTML = newParentInnerHtml;
         }
         if (this.props.element.type === "popup") {
+            console.log("2")
             if ((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
                 let footNoteSpan = document.getElementById('footnote-attacher');
                 if (!footNoteSpan) {
@@ -2651,6 +2645,7 @@ export class TinyMceEditor extends Component {
             }
         }
         else if (this.props.element.type === "poetry") {
+            console.log("3")
             let tempIndex = this.props.index.split('-');
             let indexesLen = tempIndex.length;
             if (indexesLen === 2) {
@@ -2697,11 +2692,10 @@ export class TinyMceEditor extends Component {
             }
         }
         else {
+            console.log("4")
             elementId = this.props.elementId
             let footNoteSpan = document.getElementById('footnote-attacher');
             if (!footNoteSpan) {
-                //let liNode = editor.selection.getNode().getElementsByTagName ? editor.selection.getNode().getElementsByTagName('LI') : [];
-                //console.log('editor.selection.getNode()', editor.selection.getNode());
                 editor.selection.setContent('<span id="footnote-attacher"></span>'); //Fixing the issue BG-3561
                 /*if (liNode.length && this.props.element && this.props.element.type === "element-list") {
                     let liInnerHtml = liNode[0].innerHTML;
@@ -2933,7 +2927,6 @@ export class TinyMceEditor extends Component {
         let parentNode = true;
         do {
             if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
-                //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
                 selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>';
                 selection = selection.parentNode;
                 selectedTag = selection.nodeName;
@@ -2947,7 +2940,6 @@ export class TinyMceEditor extends Component {
         let linkCount = Math.floor(Math.random() * 100) + '-' + Math.floor(Math.random() * 10000);
         let insertionText = '<span asset-id="page-link-' + linkCount + '" class="page-link-attacher ' + selectedTag.toLocaleLowerCase() + '" element-id="' + activeElement.getAttribute('data-id') + '">' + selectedText + '</span>';
         editor.insertContent(insertionText);
-        // editor.selection.setContent(insertionText);
         if (selection.innerHTML) {
             let spanTag = selection.getElementsByClassName('page-link-attacher');
             if (spanTag.length) {
@@ -3004,7 +2996,6 @@ export class TinyMceEditor extends Component {
         let parentNode = true;
         do {
             if (selectedTag !== "LI" && selectedTag !== "P" && selectedTag !== "H3" && selectedTag !== "BLOCKQUOTE" && (!selectedTagClass.contains('poetryLine'))) {
-                //selectedText = window.getSelection().anchorNode.parentNode.outerHTML;
                 selectedText = '<' + selectedTag.toLocaleLowerCase() + '>' + selectedText + '</' + selectedTag.toLocaleLowerCase() + '>';
                 selection = selection.parentNode;
                 selectedTag = selection.nodeName;
@@ -3016,7 +3007,6 @@ export class TinyMceEditor extends Component {
 
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
         editor.insertContent(insertionText);
-        // editor.selection.setContent(insertionText);
         if (selection.innerHTML) {
             let spanTag = selection.getElementsByTagName('SPAN');
             if (spanTag.length) {
@@ -3260,7 +3250,6 @@ export class TinyMceEditor extends Component {
             default:
                 let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
                 defModel = removeBOM(defModel)
-                //defModel=defModel.replace(/(?:.png).*?[\"]/g,'.png?'+(new Date()).getTime()+'"');
                 defModel = removeMathmlImageCache(defModel)
                 if(this.props.element.type==="element-list"){
                    defModel = checkForDataIdAttribute(defModel)
@@ -3546,14 +3535,6 @@ export class TinyMceEditor extends Component {
             tinymceToolbar.classList.remove('toolbar-disabled')
         }
         let showHideObj;
-        // if (this.props.showHideType) {
-        //     showHideObj = {
-        //         currentElement: this.props.element,
-        //         index: this.props.index,
-        //         element: this.props.parentElement,
-        //         showHideType: this.props.showHideType
-        //     }
-        // }
         clickedX = e.clientX;
         clickedY = e.clientY;
         setTimeout(this.removeMultiTinyInstance, 0)
@@ -3581,7 +3562,6 @@ export class TinyMceEditor extends Component {
         if (wirisNodeLength > 1) {
             for (let i = 0; i < wirisNodeLength - 1; i++) {
                 wirisNodes[i].remove();
-                // document.getElementsByClassName('wrs_modal_overlay').remove();
                 document.getElementById('wrs_modal_overlay[' + i + ']').remove();
             }
         }
@@ -3596,7 +3576,6 @@ export class TinyMceEditor extends Component {
          * case - if active editor and editor currently being focused is same
          */
         if (tinymce.activeEditor && tinymce.activeEditor.id === currentTarget.id) {
-            // this.setToolbarByElementType();
             isSameTarget = true;
         }
         let currentActiveNode = null
@@ -3735,7 +3714,6 @@ export class TinyMceEditor extends Component {
                     else if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1) {
                         let cursorNode = document.elementFromPoint(clickedX, clickedY);
                         let selectNode = '';
-                        // const parentNodeName = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'SPAN', 'DIV', 'HEADER']
                         if (cursorNode?.nodeName === 'A') {
                             selectNode = cursorNode
                             tinymce.activeEditor.selection.select(selectNode);
@@ -3794,7 +3772,6 @@ export class TinyMceEditor extends Component {
             if (wirisObjLength > 1) {
                 for (let i = 0; i < wirisObjLength - 1; i++) {
                     wirisObj[i].remove();
-                    // document.getElementsByClassName('wrs_modal_overlay').remove();
                     document.getElementById('wrs_modal_overlay[' + i + ']').remove();
                 }
             }
@@ -4110,9 +4087,9 @@ export class TinyMceEditor extends Component {
        
         const temDiv = document.createElement('div');
         let hiddenBlock = this.generateHiddenElement();
-        tempDiv.innerHTML = model.text;
-        let firstParaBlock = tempDiv.children[0]?.children[0]?.outerHTML
-        let attrParaBlock = tempDiv.children[0]?.children[1]?.outerHTML
+        temDiv.innerHTML = model.text;
+        let firstParaBlock = temDiv.children[0]?.children[0]?.outerHTML
+        let attrParaBlock = temDiv.children[0]?.children[1]?.outerHTML
         temDiv.innerHTML = model && model.text ? model.text : `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false">${firstParaBlock}${attrParaBlock}</blockquote>`
         if (element && element.elementdata && element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length) {
             tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
@@ -4193,8 +4170,15 @@ export class TinyMceEditor extends Component {
                 )
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote")) {
+                let tmpModel = ""
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = this.props.model;
+                if (tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].nodeName === 'P') {
+                    tmpModel = tempDiv.children[0].innerHTML;
+                }
+                tmpModel = removeBOM(tmpModel)
                     return (
-                        <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: model }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</p>
+                        <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: tmpModel }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</p>
                     )
                 } else {
                     classes = classes + ' pullquote-editor';
