@@ -178,8 +178,8 @@ const MetaDataPopUpForTE = (props) => {
 
   const handleCancel = () => {
     updateEditedData({});
-    togglePopup(false, 'TE');
     props.prepareImageDataFromTable({}); // this will delete the TE data from store
+    togglePopup(false, 'TE');
   }
 
 
@@ -188,6 +188,12 @@ const MetaDataPopUpForTE = (props) => {
   const handleActiveState = (active) => {
 		setActive(active)
 	}
+
+  const changeImageOnClick = (newIndex) => {
+    updateCurrentImage(newIndex);
+    updateRangeForImages(newIndex);
+    setIndex(newIndex);
+  }
 
   return(
       <div className="model">
@@ -213,6 +219,7 @@ const MetaDataPopUpForTE = (props) => {
                           className='img-inside-array' 
                           src={image.imgSrc} 
                           id={image.imgId}
+                          onClick={() => changeImageOnClick(imgIndex)}
                           style={ ( image.imgId === imageID && index == imgIndex ) ? {  border: '1px solid #005a70' } : {border: 'none'} } 
                         />)
                       }
@@ -223,8 +230,8 @@ const MetaDataPopUpForTE = (props) => {
                 </div>
                 <div className="right-container">
                   <div className="figuremetadata-field-table">
-                    <div className={`alt-text-body ${active === 'altBody' ? 'active' : ""} ${altTextErr === true ? "invalid" : "" }`}>
-                      <p className={`alt-text ${active === 'altBody' ? 'active' : ""} ${altTextErr === true ? "invalid" : "" }`}> Alt Text </p>
+                    <div className={`alt-text-body ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}>
+                      <p className={`alt-text ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}> Alt Text </p>
                       <input
                         autocomplete="off"
                         id="altText_AM"
@@ -242,8 +249,8 @@ const MetaDataPopUpForTE = (props) => {
                       />
                     </div>
                     {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
-                    <div className={`long-description-body ${active === 'longBody' ? 'active' : ""} ${ longDescErr === true ? "invalid" : "" }`}>
-                      <p className={`long-text ${active === 'longBody' ? 'active' : ""} ${longDescErr === true ? "invalid" : "" }`}> Long Description </p>
+                    <div className={`long-description-body ${longDescErr === true ? "invalid" : active === 'longBody' ? 'active' : ""}`}>
+                      <p className={`long-text ${longDescErr === true ? "invalid" : active === 'longBody' ? 'active' : ""}`}> Long Description </p>
                       <textarea
                         id="longDescription_AM"
                         name="longDescription"

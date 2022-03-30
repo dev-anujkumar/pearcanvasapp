@@ -487,8 +487,9 @@
 }
 
 .figure-popup.editPopupforTE{
-  width: 1000px;
+  width: 960px;
   height: 488px;
+  padding: 16px 16px 0px 20px;
 }
 
 
@@ -587,10 +588,6 @@
   font-stretch: expanded;
   font-family: 'Open Sans', sans-serif;
   margin-bottom: 6px;
-}
-
-.alt-text-span span{
-  margin-top: 0px;
 }
 
 .long-description-body{
