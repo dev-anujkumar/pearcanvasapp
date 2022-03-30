@@ -14,6 +14,7 @@ import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY
 import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
 import { updateMarkedIndexStore } from '../MarkIndexPopup/MarkIndex_Action';
 import { fetchParentData } from '../TcmSnapshots/TcmSnapshotsOnDefaultSlate';
+import { prepareBqHtml } from '../../js/utils';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -69,7 +70,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         else if (tempIndex.length == 6 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
             glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]]?.contents?.bodymatter[tempIndex[4]];
         }
-        else if (elementType === "figure") {
+        else if (elementType === "figure" || elementType === "element-blockfeature") {
             let tempUpdatedIndex = index.split('-');
             let updatedIndex = tempUpdatedIndex[0];
             glossaryFootElem = newBodymatter[updatedIndex]
@@ -505,7 +506,19 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             preformattedtext = '<p>'+preformattedtext+'</p>';
             figureDataObj.preformattedtext = preformattedtext;
         }
-    } else {
+    } 
+    else if(elementType == 'element-blockfeature'){
+        let elementIndex;
+        let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
+        elementIndex = tempIndex[0]+'-'+tempIndex[1]
+        const bqNode = document.getElementById('cypress-' + elementIndex)
+        workContainer = prepareBqHtml(bqNode);
+        workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
+        figureDataObj = {
+            "text": workContainer
+        }
+    }
+    else {
         workEditor = document.getElementById('cypress-' + index)
          workContainer = workEditor.innerHTML;
         
@@ -766,7 +779,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         else if (tempIndex.length === 6 && elementType == 'figure') {
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = res.data;
         }
-        else if (elementType === "figure") {
+        else if (elementType === "figure" ||elementType === 'element-blockfeature') {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
         }
