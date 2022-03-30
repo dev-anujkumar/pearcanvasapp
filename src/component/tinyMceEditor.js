@@ -3736,7 +3736,7 @@ export class TinyMceEditor extends Component {
                             }
                         }*/
                     }
-                    if (this.props.element && this.props.element.type === 'element-blockfeature') {
+                    if (this.props?.element?.type === 'element-blockfeature') {
                         if (activeNode && (activeNode.className === 'blockquoteTextCredit' || activeNode.className.includes('blockquoteTextCredit'))) {
                             setFormattingToolbar('disableTinymceToolbar')
                         }
