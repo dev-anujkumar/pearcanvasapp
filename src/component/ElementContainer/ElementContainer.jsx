@@ -901,6 +901,7 @@ class ElementContainer extends Component {
                     }
                 }
                 const blockquoteCondition = (parentElement?.elementdata?.type === "marginalia" || parentElement?.elementdata?.type === "blockquote")
+                || (node.classList?.contains('blockquoteTextCredit') || node.classList?.contains('paragraphNummerEins'))
                 let currentNode = document.getElementById(index)
                 let html =  blockquoteCondition ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
