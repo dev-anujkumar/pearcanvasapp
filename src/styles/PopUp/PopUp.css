@@ -499,16 +499,16 @@
 }
 
 .outer-img-container{
-  margin: 14px 47px 16px 0px;
+  margin: 14px 25px 16px 0px;
   height: 315px;
   width: 300px;
-  padding: 0 20px 0 17px;
   background-color: #eee;
 }
 
 .inner-img-container{
-  height: 315px;
-  width: 265px;
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
 }
 
 .outer-img-array-container{
@@ -536,13 +536,18 @@
   width: 66px;
   height: 66px;
   margin: 3px 10px 4px 10px;
-  padding: 0 11px;
   background-color: #eee
+}
+
+.img-inside-array .seperate-img{
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
 }
 
 
 .img-inside-array:hover{
-  border: 1px solid rgb(69, 69, 211);
+  cursor: pointer;
 }
 
 .right-arrow{
@@ -1000,11 +1005,17 @@ ol li.listItemNumeroUnoLowerRoman {
 }
 
 .imageContainer {
+  display: inline-block;
   width: 128px;
   height: 125px;
   margin: 8px 12px 0 0px;
-  padding: 0 22px 0 21px;
   background-color: #eee;
+}
+
+.imageContainer .img-inside-container{
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
 }
 
 .modal-content.alfresco-long-popup {

@@ -214,14 +214,18 @@ const MetaDataPopUpForTE = (props) => {
                     <span className='inner-img-array'>
                     {imageList && imageList.map((image, imgIndex) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
-                          return (<img 
-                          key={image.imgId}
-                          className='img-inside-array' 
-                          src={image.imgSrc} 
-                          id={image.imgId}
-                          onClick={() => changeImageOnClick(imgIndex)}
-                          style={ ( image.imgId === imageID && index == imgIndex ) ? {  border: '1px solid #005a70' } : {border: 'none'} } 
-                        />)
+                          return (
+                          <div className='img-inside-array'>
+                             <img 
+                               key={image.imgId}
+                               className='seperate-img' 
+                               src={image.imgSrc} 
+                               id={image.imgId}
+                               onClick={() => changeImageOnClick(imgIndex)}
+                               style={ ( image.imgId === imageID && index == imgIndex ) ? {  border: '1px solid #005a70' } : {border: 'none'} } 
+                             />
+                          </div>
+                          )
                       }
                     })}
                     </span>
