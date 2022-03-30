@@ -182,7 +182,7 @@ const MetaDataPopUpForTE = (props) => {
   }
 
 
-  let htmlErrMsg = ' HTML is not supported in this input field';
+  let htmlErrMsg = ' HTML tags are not supported in this input field';
 
   return(
       <div className="model">
@@ -219,7 +219,7 @@ const MetaDataPopUpForTE = (props) => {
                 <div className="right-container">
                   <div className="figuremetadata-field-table">
                     <div className={`alt-text-body ${altTextErr === true ? "invalid" : "" }`}>
-                      <p className="alt-text"> Alt Text </p>
+                      <p className={`alt-text ${altTextErr === true ? "invalid" : "" }`}> Alt Text </p>
                       <input
                         autocomplete="off"
                         id="altText_AM"
@@ -235,9 +235,10 @@ const MetaDataPopUpForTE = (props) => {
                         onBlur={updateImageInStore}
                       />
                     </div>
-                    {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
+                    {altTextErr && <div className='alt-text-span' ><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}
+                    </div>}
                     <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
-                      <p className={'long-text'}> Long Description </p>
+                      <p className={`long-text ${longDescErr === true ? "invalid" : "" }`}> Long Description </p>
                       <textarea
                         id="longDescription_AM"
                         name="longDescription"
