@@ -582,10 +582,15 @@
 }
 
 .alt-text-span{
-  color: red;
+  color: #aa0100;
   font-size: 11px;
+  font-stretch: expanded;
   font-family: 'Open Sans', sans-serif;
   margin-bottom: 6px;
+}
+
+.alt-text-span span{
+  margin-top: 0px;
 }
 
 .long-description-body{
@@ -605,12 +610,22 @@
   margin: 0;
   padding: 1px 0;
 }
+
+.alt-text-body .alt-text.invalid{
+  color: #bb332b;
+}
+
 .long-description-body .long-text{
   font-size: 12px;
   color: #252525;
   margin: 0;
   padding: 1px 0;
 }
+
+.long-description-body .long-text.invalid{
+  color: #bb332b;
+}
+
 .alt-text-body .alt-text.active, .long-description-body .long-text.active{
   color:#005a70;
 }

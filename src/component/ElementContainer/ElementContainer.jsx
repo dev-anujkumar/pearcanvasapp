@@ -2577,7 +2577,7 @@ class ElementContainer extends Component {
         if(elementType === 'TE'){
             this.setState({
                 showAlfrescoEditPopupforTE: togglePopup
-            });
+            })  
             hideToc();
         }else{
             this.setState({

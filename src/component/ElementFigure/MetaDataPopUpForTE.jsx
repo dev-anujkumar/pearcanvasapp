@@ -6,6 +6,7 @@ import moveArrow from './Assets/down-arrow.svg';
 import errorMark from './Assets/shape.svg';
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 
+
 /**
  * @description This is a functional component for "Edit in Alfresco" of Table Element.
  * @param {*} props 
@@ -182,7 +183,7 @@ const MetaDataPopUpForTE = (props) => {
   }
 
 
-  let htmlErrMsg = ' HTML is not supported in this input field';
+  let htmlErrMsg = ' HTML tags are not supported in this input field';
 
   const handleActiveState = (active) => {
 		setActive(active)
@@ -223,7 +224,7 @@ const MetaDataPopUpForTE = (props) => {
                 <div className="right-container">
                   <div className="figuremetadata-field-table">
                     <div className={`alt-text-body ${active === 'altBody' ? 'active' : ""} ${altTextErr === true ? "invalid" : "" }`}>
-                      <p className={`alt-text ${active === 'altBody' ? 'active' : ""}`}> Alt Text </p>
+                      <p className={`alt-text ${active === 'altBody' ? 'active' : ""} ${altTextErr === true ? "invalid" : "" }`}> Alt Text </p>
                       <input
                         autocomplete="off"
                         id="altText_AM"
@@ -242,7 +243,7 @@ const MetaDataPopUpForTE = (props) => {
                     </div>
                     {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
                     <div className={`long-description-body ${active === 'longBody' ? 'active' : ""} ${ longDescErr === true ? "invalid" : "" }`}>
-                      <p className={`long-text ${active === 'longBody' ? 'active' : ""}`}> Long Description </p>
+                      <p className={`long-text ${active === 'longBody' ? 'active' : ""} ${longDescErr === true ? "invalid" : "" }`}> Long Description </p>
                       <textarea
                         id="longDescription_AM"
                         name="longDescription"
