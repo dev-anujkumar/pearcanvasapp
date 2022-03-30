@@ -397,6 +397,7 @@ class ElementContainer extends Component {
 
         /* Auto-numbering section */
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+            labeleHTML = labeleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, labeleHTML, numberHTML, true);
@@ -481,6 +482,7 @@ class ElementContainer extends Component {
             isAltTextLongDescModified = this.props.oldFigureDataForCompare.tableasHTML !== previousElementData.figuredata.tableasHTML
         }
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+            titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
@@ -574,6 +576,7 @@ class ElementContainer extends Component {
 
         //Handle Autonumbering
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+            titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
@@ -664,6 +667,7 @@ class ElementContainer extends Component {
         // }
 
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel') && (previousElementData.figuretype !== 'tableasmarkup')) {
+            titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             let isValid = validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth);
             return isValid;
         }
@@ -729,6 +733,7 @@ class ElementContainer extends Component {
         
         //Handle Autonumbering
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+            titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
@@ -806,6 +811,7 @@ class ElementContainer extends Component {
         let oldImage = this.props.oldImage;
         oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
         if (this.props.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+            titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);

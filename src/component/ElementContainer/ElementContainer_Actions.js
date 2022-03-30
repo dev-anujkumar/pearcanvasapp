@@ -853,6 +853,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     /** Updation of AutoNumbered Elements */
     if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
         dataArr = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
+        dataArr[0] = dataArr[0].replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
         payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, dataArr[0], dataArr[1], false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
