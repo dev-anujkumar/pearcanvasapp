@@ -3949,7 +3949,7 @@ export class TinyMceEditor extends Component {
      */
     handleBlur = (e, forceupdate) => {
         // save Non-HTML bookmark so pass parameter true to getBookmark
-        let caretPosition = tinymce.activeEditor.selection.getBookmark(2, true);
+        let caretPosition = tinymce.activeEditor?.selection?.getBookmark(2, true);
         if (caretPosition) {
             this.props.saveCaretPosition(caretPosition);
         }
