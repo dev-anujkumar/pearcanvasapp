@@ -769,7 +769,7 @@ export class TinyMceEditor extends Component {
          * Case - clicking over Footnote text
          */
 
-        if (e.target.parentElement && (e.target.parentElement.nodeName == "SUP" || e.target.parentElement.nodeName == "P") && e.target.parentElement.childNodes &&
+        if (e.target.parentElement && (e.target.parentElement.nodeName == "SUP" || e.target?.parentElement?.nodeName == "P") && e.target.parentElement.childNodes &&
             e.target.parentElement.childNodes[0].nodeName == 'A' && e.target.dataset.uri) {
             let uri = e.target.dataset.uri;
             this.activeGlossaryFootnoteId = uri;
