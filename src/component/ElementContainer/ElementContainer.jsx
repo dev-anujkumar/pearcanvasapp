@@ -83,6 +83,7 @@ import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumber_ElementSubTypeToCeate
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes';
 import { checkHTMLdataInsideString } from '../../constants/utility'; 
 import { prepareBqHtml } from '../../js/utils';
+import { hideToc } from '../../js/toggleLoader';
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -2577,6 +2578,7 @@ class ElementContainer extends Component {
             this.setState({
                 showAlfrescoEditPopupforTE: togglePopup
             })  
+            hideToc();
         }else{
             this.setState({
                 isfigurePopup: togglePopup,
