@@ -1,17 +1,8 @@
 // IMPORT - Action constants //
 import {
     FETCH_COMMENTS,
-    TOGGLE_COMMENTS_PANEL,
-    REPLY_COMMENT,
-    FETCH_COMMENT_BY_ELEMENT,
-    RESOLVE_COMMENT,
-    TOGGLE_REPLY,
-    UPDATE_COMMENT,
-    GET_PROJECT_USER,
-    UPDATE_ASSIGNEE,
     DELETE_COMMENT,
-    ADD_NEW_COMMENT,
-    UPDATE_ROLE
+    ADD_NEW_COMMENT
 } from '../constants/Action_Constants';
 
 /**

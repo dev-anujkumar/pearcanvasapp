@@ -32,8 +32,6 @@ import {
     OEP_DISCUSSION,
     UPDATE_AUTONUMBER_MAPPER_KEYS
 } from '../../constants/Action_Constants';
-import { SLATE_API_ERROR } from '../../constants/Element_Constants';
-
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
@@ -44,13 +42,12 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
-import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import ElementConstants from "../ElementContainer/ElementConstants.js";
 import { isAutoNumberEnabled, fetchProjectFigures, setAutoNumberinBrowser } from '../FigureHeader/AutoNumberActions.js';
@@ -123,9 +120,7 @@ export const findElementType = (element, index) => {
                                 element.figuredata.podwidth = POD_DEFAULT_VALUE
                             }
                         }
-                        //  if (element.subtype == "" || element.subtype == undefined) {                        
                         element.subtype = subType
-                        //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         podwidth = element.figuredata.podwidth
@@ -499,7 +494,6 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (usageTypeResponse => {
-                //console.log("the usage type response is", usageTypeResponse);
                 const data = usageTypeResponse?.data;
                 if(Array.isArray(data)){
                     const usageType = data.map(item => ({label:item.label.en}))
@@ -548,14 +542,10 @@ export const getProjectDetails = () => (dispatch, getState) => {
 
 
 export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload) => (dispatch, getState) => {
-    // if(config.isFetchSlateInProgress){
-    //  return false;
-    // }
     /** [TK-3289]- Fetch Data for All Slates */
     const startTime = performance.now();
     dispatch(fetchAllSlatesData());
     /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
-    // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
     localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
     if (config.totalPageCount <= page) {
@@ -822,7 +812,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                      * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be 
                      * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate 
                      */
-                    // let appData =  appData1 && appData1.id? appData1.id : appData1;
                     let appData =  config.lastActiveElementId;
                     if (page === 0) {
                         if (appData) {
@@ -870,8 +859,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateWrapperNode.scrollTop = 0;
                         }
                     }
-                    //}
-                    // config.isFetchSlateInProgress = false;
                 }else{
                     console.log("incorrect data comming...")
                 }

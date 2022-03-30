@@ -130,7 +130,6 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
 
         }).catch(error => {
             dispatch({ type: ERROR_POPUP, payload: { show: true } })
-            //console.log("Failed to add reply", error);
         })
 };
 
@@ -165,7 +164,6 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
 
         }).catch(error => {
             dispatch({ type: ERROR_POPUP, payload: { show: true } })
-            //console.log("status update fail", error);
         })
 };
 
@@ -197,7 +195,6 @@ export const updateComment = (commentUrn, updateCommentParams, elementId) => dis
         });
     }).catch(error => {
         dispatch({ type: ERROR_POPUP, payload: { show: true } })
-        //console.log("status update fail", error);
     })
 };
 
@@ -223,7 +220,7 @@ export const getProjectUsers = () => dispatch => {
                 payload: response.data
             });
         }).catch(error => {
-            //console.log("error while getting user", error);
+            
         })
 }
 
@@ -254,7 +251,6 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
         });
     }).catch(error => {
         dispatch({ type: ERROR_POPUP, payload: { show: true } })
-        //console.log("error while updating user", error);
     })
 
 }
@@ -281,7 +277,6 @@ export const updateRole = (commentUrn, newRole, elementId) => dispatch => {
         });
     }).catch(error => {
         dispatch({ type: ERROR_POPUP, payload: { show: true } })
-        //console.log("error while updating user", error);
     })
 
 }

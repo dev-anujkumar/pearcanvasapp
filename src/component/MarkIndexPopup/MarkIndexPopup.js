@@ -5,8 +5,7 @@ import '../../styles/MarkIndexPopup/MarkIndexPopup.css';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import config from '../../config/config';
-import { setFormattingToolbar } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { saveGlossaryAndFootnote } from "../GlossaryFootnotePopup/GlossaryFootnote_Actions";
+import { setFormattingToolbar, saveGlossaryAndFootnote } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import { getGlossaryFootnoteId } from '../../js/glossaryFootnote';
 import { markedIndexPopupOverGlossary, getCrossReferenceValues } from '../MarkIndexPopup/MarkIndex_Action';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor"

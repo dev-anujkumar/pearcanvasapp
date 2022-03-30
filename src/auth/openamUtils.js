@@ -105,7 +105,6 @@ function authenticateUser(options) {
     var formId = options.formId || "amLoginForm";
     var gotoURL = options.gotoURL || getMyURL();
     var forma = null;
-    // var gotoOnFail = options.gotoOnFail || getMyURL();
     var openamConn = options.openam;
     var response = options.data;
     var jsonResp = null;
@@ -192,7 +191,6 @@ function addSocial(options) {
     if (options) {
         var openam = options.openam || undefined;
         var gotoURL = options.gotoURL || undefined;
-        // var gotoOnFail = options.gotoOnFail || undefined;
         var overrideSocialImplementations = options.overrideSocialImplementations || undefined;
     } else {
         debug("There was no options for the addSocial method");
