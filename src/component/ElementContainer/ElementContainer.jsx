@@ -10,6 +10,7 @@ import ElementInteractive from '../ElementInteractive';
 import ElementAsideContainer from '../ElementAsideContainer';
 import ElementMetaDataAnchor from '../ElementMetaDataAnchor';
 import ElementMetaLOList from '../ElementMetaLOList';
+import ElementBlockquote from '../ElementAuthoring/ElementBlockquote.jsx';
 import ElementLearningObjectiveItem from '../ElementLearningObjectiveItem';
 import Button from './../ElementButtons';
 import PopUp from '../PopUp';
@@ -80,8 +81,8 @@ import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_he
 import { getSlateLevelData, updateChapterPopupData } from '../FigureHeader/AutoNumberActions';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumber_ElementSubTypeToCeateKeysMapper, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes';
-import { checkHTMLdataInsideString } from '../../constants/utility';
- 
+import { checkHTMLdataInsideString } from '../../constants/utility'; 
+import { prepareBqHtml } from '../../js/utils';
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -884,7 +885,7 @@ class ElementContainer extends Component {
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
             case elementTypeConstant.POETRY_STANZA:
-                let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent") ? activeEditorId : `cypress-${this.props.index}`
+                let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent" ||  parentElement.type == 'element-blockfeature') ? activeEditorId : `cypress-${this.props.index}`
                 if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id && !tinyMCE.activeEditor.id.includes("footnote")) {
                     let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins') ? document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText : "";
                     if (!blockqtText.trim()) {
@@ -899,8 +900,9 @@ class ElementContainer extends Component {
                         }
                     }
                 }
+                const blockquoteCondition = (parentElement?.elementdata?.type === "marginalia" || parentElement?.elementdata?.type === "blockquote")
                 let currentNode = document.getElementById(index)
-                let html = currentNode && currentNode.innerHTML;
+                let html =  blockquoteCondition ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
                 //tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
@@ -1704,6 +1706,7 @@ class ElementContainer extends Component {
         tcmStatus = this.showTCMButton(tcmData, element)
         tcm = tcmStatus.tcm
         feedback = tcmStatus.feedback
+        const isBlockquote = (this.props.element?.elementdata?.type === "blockquote"  || this.props.element?.elementdata?.type === "marginalia")
 
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         const commonProps = {
@@ -1741,7 +1744,10 @@ class ElementContainer extends Component {
                     editor = <ElementAuthoring isBlockList={this.props.isBlockList} element={element} model={element.html} onListSelect={this.props.onListSelect} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} placeholder={this.props.placeholder}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
-                    editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />;
+                    {isBlockquote ?
+                    editor = <ElementBlockquote tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />
+                    :
+                    editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />}
                     break;
                 case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
                     editor = <ElementLearningObjectiveItem model={element.html} element={element} {...commonProps} />;
@@ -2265,7 +2271,6 @@ class ElementContainer extends Component {
                             handleBlur={this.handleBlur}
                             showAlfrescoEditPopupforTE = {this.state.showAlfrescoEditPopupforTE}
                             imageList={this.props.tableElementAssetData}
-                            handleBlur={this.handleBlur}
                             element={this.props.element}
                             index={this.props.index}
                             asideData={this.props.asideData}
@@ -2458,7 +2463,9 @@ class ElementContainer extends Component {
         this.setState({
             popup,
             showDeleteElemPopup: false,
+            showAlfrescoExpansionPopup: false,
             showBlockCodeElemPopup: false,
+            showAlfrescoExpansionPopup: false,
             comment: ""
         });
         if (this.props.isBlockerActive) {

@@ -44,7 +44,9 @@ import {
     UPDATE_OLD_FIGUREIMAGE_INFO,
     UPDATE_OLD_AUDIOVIDEO_INFO,
     UPDATE_OLD_SMARTLINK_INFO,
-    UPDATE_FIGURE_DROPDOWN_OPTIONS
+    UPDATE_FIGURE_DROPDOWN_OPTIONS,
+    UPDATE_TABLE_ELEMENT_ASSET_DATA,
+    UPDATE_TABLE_ELEMENT_EDITED_DATA
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -80,7 +82,8 @@ const initialState = {
         image: ["No Label", "Custom"],
         smartlinks: ["No Label", "Custom"],
         video: ["No Label", "Custom"]
-    }
+    },
+    tableElementAssetData: []
 };
 
 const splittedElementIndexValue = "5";
@@ -729,5 +732,38 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
             type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
             payload: {}
         })).toEqual(output);
-    })
+    });
+
+    it('case 48- UPDATE_TABLE_ELEMENT_ASSET_DATA ', () => {
+        let output = {
+            ...initialState,
+            tableElementAssetData: [{imgSrc: "1234"}]
+        }
+        expect(reducer(initialState, {
+            type: UPDATE_TABLE_ELEMENT_ASSET_DATA,
+            payload: [{imgSrc: "1234"}]
+        })).toEqual(output);
+    });
+
+    it('case 49- UPDATE_TABLE_ELEMENT_EDITED_DATA', () => {
+        let output = {
+            ...initialState,
+            tableElementEditedData: {'rrt567':{imgSrc: "1234"}}
+        }
+        expect(reducer(initialState, {
+            type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
+            payload: {'rrt567':{imgSrc: "1234"}}
+        })).toEqual(output);
+    });
+
+    it('case 49- UPDATE_TABLE_ELEMENT_EDITED_DATA : IF ', () => {
+        let output = {
+            ...initialState,
+            tableElementEditedData: {}
+        }
+        expect(reducer(initialState, {
+            type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
+            payload: {}
+        })).toEqual(output);
+    });
 });

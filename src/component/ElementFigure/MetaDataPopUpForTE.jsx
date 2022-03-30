@@ -54,7 +54,7 @@ const MetaDataPopUpForTE = (props) => {
   }
 
   const disableButtonForHTML = () => {
-    if(Object.keys(editedImageList).length > 0){
+    if(editedImageList && Object.keys(editedImageList).length > 0){
       if(checkHTMLInString(altText) || checkHTMLInString(longDescription)){
         setDisableButton(true);
       } else {
@@ -148,14 +148,6 @@ const MetaDataPopUpForTE = (props) => {
         updateEditedData(editedData);
     }
   }
-
-  const handleSave = () => {
-    saveTEMetadata(editedImageList)
-        .then(() => {
-          handleCancel();
-        });
-  }
-
   const handleImport = () => {
     saveTEMetadata(editedImageList)
       .then(() => {
@@ -168,8 +160,8 @@ const MetaDataPopUpForTE = (props) => {
           let imgId = img.getAttribute('data-id');
           if(Object.keys(editedImageList).length > 0 && editedImageList[imgId]){
             let {altText, longdescription} = editedImageList[imgId];
-            img.setAttribute('alttext', altText);
-            img.setAttribute('longdescription', longdescription);
+            img.setAttribute('data-alttext', altText);
+            img.setAttribute('data-longdescription', longdescription);
           }     
         });
         figureData.tableasHTML = dummyDiv.innerHTML;
@@ -188,10 +180,6 @@ const MetaDataPopUpForTE = (props) => {
     props.prepareImageDataFromTable({}); // this will delete the TE data from store
   }
 
-  const handleReset = () => {
-    updateEditedData({});
-    updateCurrentImage(index, true);
-  }
 
   let htmlErrMsg = ' HTML is not supported in this input field';
 
@@ -199,7 +187,7 @@ const MetaDataPopUpForTE = (props) => {
       <div className="model">
         <div tabIndex="0" className="te-model-popup">
           <div className='figure-popup editPopupforTE'>
-          {imageList.length > 0 ? 
+          {imageList?.length > 0 ? 
             <React.Fragment>
               <div className="dialog-button1">
                   <span className="edit-metadata">Edit Alfresco Metadata</span>
@@ -215,10 +203,11 @@ const MetaDataPopUpForTE = (props) => {
                     {imageList && imageList.map((image, imgIndex) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
                           return (<img 
+                          key={image.imgId}
                           className='img-inside-array' 
                           src={image.imgSrc} 
                           id={image.imgId}
-                          style={ image.imgSrc === imageSrc ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
+                          style={ ( image.imgId === imageID && index == imgIndex ) ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
                         />)
                       }
                     })}
@@ -268,8 +257,6 @@ const MetaDataPopUpForTE = (props) => {
                   </div>
                   <div className="te-metadata-button">
                     <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleImport}>Import in Cypress</span>
-                    <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleSave}>Save All</span>
-                    <span className={`cancel-button ${disableButton ? "disabled" : ""}`} id='close-container' onClick={handleReset}>Reset</span>
                     <span className="cancel-button" id='close-container' onClick={handleCancel}>Cancel</span>
                   </div>
                 </div>
