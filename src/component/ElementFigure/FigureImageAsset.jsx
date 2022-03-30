@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react'
 /**Import Assets */
 import { DEFAULT_IMAGE_SOURCE } from '../../constants/Element_Constants';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';

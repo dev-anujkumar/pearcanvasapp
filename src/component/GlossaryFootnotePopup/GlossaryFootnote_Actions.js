@@ -11,9 +11,10 @@ const {
 } = config
 import { allowedFigureTypesForTCM } from "../ElementContainer/ElementConstants";
 import {ADD_AUDIO_GLOSSARY_POPUP,OPEN_GLOSSARY_FOOTNOTE, UPDATE_FOOTNOTEGLOSSARY, ERROR_POPUP, GET_TCM_RESOURCES,HANDLE_GLOSSARY_AUDIO_DATA, ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY, WRONG_IMAGE_POPUP, SHOW_REMOVE_GLOSSARY_IMAGE, UPDATE_NEW_ELEMENT_WORK_ID, UPDATE_CURRENT_VALUE} from "./../../constants/Action_Constants";
-import { handleElementsInShowHide, getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
+import { getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
 import { updateMarkedIndexStore } from '../MarkIndexPopup/MarkIndex_Action';
 import { fetchParentData } from '../TcmSnapshots/TcmSnapshotsOnDefaultSlate';
+import { prepareBqHtml } from '../../js/utils';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -45,8 +46,6 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
         if (showHideElement || asideParent?.type === 'showhide' && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) { /** Glossary-Footnotes inside Show-Hide */
-            //let showHideChild = handleElementsInShowHide(newBodymatter, tempIndex, elementType, showHideElement, 'glossaryFootnote')
-            //glossaryFootElem = showHideChild?.currentElement
             /* Get the element where footnote/Glossery is added */
             glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
         } else if ((tempIndex.length == 5 || tempIndex.length == 6) && elementType == 'figure' && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
@@ -69,13 +68,12 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         else if (tempIndex.length == 6 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
             glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]]?.contents?.bodymatter[tempIndex[4]];
         }
-        else if (elementType === "figure") {
+        else if (elementType === "figure" || elementType === "element-blockfeature") {
             let tempUpdatedIndex = index.split('-');
             let updatedIndex = tempUpdatedIndex[0];
             glossaryFootElem = newBodymatter[updatedIndex]
         }
         else if (typeWithPopup && typeWithPopup === "popup" ){
-            // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length;
             switch (indexesLen){
                 case 2:
@@ -98,7 +96,6 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
-            // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length;
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
@@ -505,7 +502,19 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             preformattedtext = '<p>'+preformattedtext+'</p>';
             figureDataObj.preformattedtext = preformattedtext;
         }
-    } else {
+    } 
+    else if(elementType == 'element-blockfeature'){
+        let elementIndex;
+        let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
+        elementIndex = tempIndex[0]+'-'+tempIndex[1]
+        const bqNode = document.getElementById('cypress-' + elementIndex)
+        workContainer = prepareBqHtml(bqNode);
+        workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
+        figureDataObj = {
+            "text": workContainer
+        }
+    }
+    else {
         workEditor = document.getElementById('cypress-' + index)
          workContainer = workEditor.innerHTML;
         
@@ -661,8 +670,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
     }
     if(showHideElement ||  asideParent?.type === 'showhide'){
-        //let shTypeIndex = innerSH_Index?.length > 3 && elementType == 'figure' ? innerSH_Index[innerSH_Index.length - 3] : innerSH_Index[innerSH_Index.length - 2]
-        //let showhideTypeVal = findSectionType(shTypeIndex?.toString())
         data.sectionType = asideParent?.sectionType; //showhideTypeVal
     }
     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })  //show saving spinner
@@ -692,7 +699,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
             let showhideTypeVal = "", showHideObject = undefined
             if(showHideElement ||  asideParent?.type === 'showhide'){ /** Glossary-Footnotes inside Show-Hide */
-                //let shTypeIndex = innerSH_Index?.length > 3 && elementType =='figure' ? innerSH_Index[innerSH_Index.length - 3] :  innerSH_Index[innerSH_Index.length - 2]
                 showhideTypeVal = asideParent?.sectionType;//findSectionType(shTypeIndex?.toString())
                 let showhideElement = getShowHideElement(tcmBodymatter, innerSH_Index.length, innerSH_Index)
                 let innerSH_Element = showhideTypeVal && showhideElement?.interactivedata[showhideTypeVal][innerSH_Index]
@@ -766,12 +772,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         else if (tempIndex.length === 6 && elementType == 'figure') {
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = res.data;
         }
-        else if (elementType === "figure") {
+        else if (elementType === "figure" ||elementType === 'element-blockfeature') {
             let updatedIndex = index.split('-')[0];
             newBodymatter[updatedIndex] = res.data;
         }
         else if (typeWithPopup && typeWithPopup === "popup"){
-            // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length
             let responseElement = {...res.data}
             responseElement.html.text = responseElement.html.text.replace(/<p>|<\/p>/g, "")
@@ -821,7 +826,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
-            // let tempIndex = index.split('-');
             let indexesLen = tempIndex.length;
             if (indexesLen === 2) {
                 switch (tempIndex[1]) {
@@ -1243,7 +1247,6 @@ export const showRemoveImageGlossaryPopup = (value) => (dispatch, getState) => {
 export const saveImageDataFromAlfresco = (message) => dispatch => {
     let imageData = message?.asset;
     let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "" ;
-    // let figureType = imageData?.content?.mimeType?.split('/')[0]
     let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
     let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
     let uniqID = imageData.id ? imageData.id : "";

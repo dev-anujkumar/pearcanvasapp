@@ -15,11 +15,8 @@ export class ElementBlockquote extends Component {
         let tempDiv = document.createElement('div');
         tempDiv.innerHTML = model.text;
         //checking no of childs in node
-        const noOfChilds = tempDiv.children[0].children.length
-        let xyz = noOfChilds > 2 ? tempDiv.children[0]?.children[1]?.outerHTML : tempDiv.children[0]?.children[0]?.outerHTML
-        let abc = noOfChilds > 2 ? tempDiv.children[0]?.children[3]?.outerHTML : tempDiv.children[0]?.children[1]?.outerHTML
-        // let xyz = '<p class="paragraphNummerEins" contenteditable="true"></p>'
-        // let abc = '<p class=\"blockquoteTextCredit\" contenteditable=\"true\"></p>'
+        let firstParaBlock = tempDiv.children[0]?.children[0]?.outerHTML
+        let attrParaBlock = tempDiv.children[0]?.children[1]?.outerHTML
         let blockquoteElement = 
       <div>
          <blockquote className={blockquoteClass}>
@@ -33,8 +30,8 @@ export class ElementBlockquote extends Component {
                     element={this.props.element}
                     placeholder={"Type Something..."}
                     className={firstClass}
-                    model={xyz}
-                    tagName="p"
+                    model={firstParaBlock}
+                    tagName="blockquote"
                     handleEditorFocus={this.props.handleFocus}
                     handleBlur={this.props.handleBlur}
                     slateLockInfo={slateLockInfo}
@@ -61,8 +58,8 @@ export class ElementBlockquote extends Component {
                     element={this.props.element}
                     placeholder={"Attribution Text"}
                     className={secondClass}
-                    model={abc}
-                    tagName="p"
+                    model={attrParaBlock}
+                    tagName="blockquote"
                     handleEditorFocus={this.props.handleFocus}
                     handleBlur={this.props.handleBlur}
                     slateLockInfo={slateLockInfo}
