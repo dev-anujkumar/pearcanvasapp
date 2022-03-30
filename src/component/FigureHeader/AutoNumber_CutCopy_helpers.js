@@ -1,7 +1,6 @@
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { containerElementTypes, containerElements } from './AutoNumberConstants';
-import { getImagesInsideSlates } from './slateLevelMediaMapper';
-import { getAsideElementsWrtKey } from './slateLevelMediaMapper';
+import { getImagesInsideSlates, getAsideElementsWrtKey } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS

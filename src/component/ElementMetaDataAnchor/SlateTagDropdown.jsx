@@ -2,7 +2,7 @@ import React from 'react';
 import config from '../../config/config';
 import { checkSlateLock } from '../../js/slateLockUtility.js';
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
-import { showBlocker, showTocBlocker, hideBlocker } from '../../js/toggleLoader';
+import { showBlocker, hideBlocker } from '../../js/toggleLoader';
 import {
     AddLearningObjectiveSlateDropdown,
     AddEditLearningObjectiveDropdown,
@@ -13,10 +13,9 @@ import {
     from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
 import { connect } from 'react-redux';
-import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../constants/Element_Constants';
+import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, CYPRESS_LF, EXTERNAL_LF } from '../../constants/Element_Constants';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX, SLATE_TYPE_PDF, SLATE_TYPE_SECTION } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { loNextIcon, tickIcon } from './../../images/ElementButtons/ElementButtons.jsx';
-import { CYPRESS_LF, EXTERNAL_LF } from '../../constants/Element_Constants';
+import { loNextIcon } from './../../images/ElementButtons/ElementButtons.jsx';
 class SlateTagDropdown extends React.Component {
     constructor(props) {
         super(props);

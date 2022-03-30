@@ -256,7 +256,6 @@ const setCurrentSlateAncestorDataDetails = (matterTypeData, ancestor, matterType
                 return setCurrentSlateAncestorDataDetails(matterTypeData[key].contents, ancestor, matterType)
             }
             else {
-                // return ancestor = Object.assign({}, setItemDetails(matterTypeData[key]), { ancestor: ancestor })
                 continue;
             }
         }

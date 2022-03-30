@@ -183,7 +183,6 @@ export class ReactEditor extends React.Component {
     *  addInlineCode function is responsible for adding custom icon for inline Code Formatting
     */
   addInlineCode = (editor) => {
-    // editor.execCommand('mceToggleFormat', false, 'code');
     let selectedText = window.getSelection().toString();
     if (selectedText != "") {
       editor.execCommand('mceToggleFormat', false, 'code');
@@ -422,10 +421,6 @@ export class ReactEditor extends React.Component {
     /**
      * [BG-262] | keep the commented code to track
      */
-    // if (tinymce.activeEditor && !(tinymce.activeEditor.id.includes('cypress'))) {
-    //    // previoulsy above code was placed here //
-    // }
-
     this.editorConfig.selector = '#' + currentTarget.id;
     let termText = document.getElementById(currentTarget.id)&&document.getElementById(currentTarget.id).innerHTML;
     tinymce.init(this.editorConfig).then((d)=>{
