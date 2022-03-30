@@ -213,7 +213,7 @@ export class TinyMceEditor extends Component {
                         editor.selection.placeCaretAt(clickedX, clickedY);
                     }
 
-                    if(e.level && e.level.content.match(/<blockquote/)?.input.includes('class="blockquoteMarginalia') && e.level.content.match(/<img/)?.input.includes('class="imageAssetContent')){
+                    if(e.level && e.level.content?.match(/<blockquote/)?.input?.includes('class="blockquoteMarginalia') && e.level.content?.match(/<img/)?.input?.includes('class="imageAssetContent')){
                         this.props.handleBlur(null, this.props.currentElement, this.props.index, null, eventTarget)
                     }
 
