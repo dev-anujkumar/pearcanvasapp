@@ -5,9 +5,8 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import './../../styles/ElementInteractive/ElementInteractive.css';
-import TinyMceEditor from "../tinyMceEditor";
 import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
-import { showTocBlocker,hideTocBlocker, disableHeader, showBlocker, hideToc } from '../../js/toggleLoader'
+import { showTocBlocker,hideTocBlocker, disableHeader, hideToc } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { utils } from '../../js/utils';
 import axios from 'axios';
@@ -233,12 +232,10 @@ class Interactive extends React.Component {
             figureData.interactiveid = newVersion.id;
             figureData.interactivetitle = latestVersion.title;
         }
-        // if (interactivetype && thumbnailTypes.indexOf(interactivetype) > -1) {
             const thumbnailData = await this.getVideoMCQandGuidedThumbnail(figureData.interactiveid);
             figureData.posterimage = thumbnailData?.posterImage;
             figureData.alttext = thumbnailData?.alttext;
             thumbnailImage = thumbnailData?.posterImage?.path;
-        // }
         this.setState({
             itemID: figureData.interactiveid,
             interactiveTitle: figureData.interactivetitle,
@@ -441,12 +438,10 @@ class Interactive extends React.Component {
                 interactiveformat: ELM_INT
             }
             const interactiveType = pufObj.interactiveType ?? this.props?.model?.figuredata?.interactivetype;
-            // if (interactiveType && thumbnailTypes.indexOf(interactiveType) > -1) {
                 const thumbnailData = await this.getVideoMCQandGuidedThumbnail(pufObj.id);
                 figureData.posterimage = thumbnailData?.posterImage;
                 figureData.alttext = thumbnailData?.alttext;
                 thumbnailImage = thumbnailData?.posterImage?.path;
-            // }
             this.setState({
                 itemID: pufObj.id,
                 interactiveTitle: pufObj.title,
@@ -466,7 +461,6 @@ class Interactive extends React.Component {
             if (cb) {
                 cb();
             }
-            // handlePostMsgOnAddAssess("", "", "", "remove","");
         }
     }
 
@@ -485,7 +479,6 @@ class Interactive extends React.Component {
         if (props?.assessmentReducer?.item?.calledFrom === 'createElm') {
             this.props.setNewItemFromElm({});
         }
-        // handlePostMsgOnAddAssess("", "", "", "remove","");
     }
 
     /**
@@ -523,7 +516,6 @@ class Interactive extends React.Component {
         this.props.showBlocker(false);
         let imageData = data;
         let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'] && imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
-        //let figureType = imageData['assetType'] ? imageData['assetType'] : "";
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
         let smartLinkPath = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
@@ -534,14 +526,11 @@ class Interactive extends React.Component {
         let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
         const avsJsonStringData = imageData?.properties["avs:jsonString"] 
         let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
-        //let avsStringData =imageData.properties["avs:jsonString"]&& JSON.parse(imageData.properties["avs:jsonString"]);
         let altText = avsStringData?.imageAltText ? avsStringData.imageAltText : "";
         let longDescription = avsStringData?.linkLongDesc ? avsStringData.linkLongDesc : "";
         let smartLinkTitle = imageData?.name ? imageData.name : "";
         if (avsStringData?.width) width = avsStringData?.width;
         if (avsStringData?.height) height = avsStringData?.height;
-        //let checkFormat = epsURL?.match(/\.[0-9a-z]+$/i)
-        //checkFormat = checkFormat && checkFormat[0]
         if (smartLinkType) {
             let uniqueIDInteractive;
             let uniqInter = imageData.id
@@ -571,7 +560,6 @@ class Interactive extends React.Component {
                         interactivetype = LEGACY_WEB_LINK;
                         break;
                 }
-                // let posterURL = imageData['posterImageUrl'] || 'https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png';
                 if (epsURL == "" || epsURL == undefined) {
                     epsURL = avsStringData.imageReferenceURL ? avsStringData.imageReferenceURL : INTERACTIVE_FPO;
                 }
@@ -811,7 +799,6 @@ class Interactive extends React.Component {
             let interactiveData ={};
             let tempInteractiveType = citeTdxObj.singleAssessmentID.taxonomicTypes ?String.prototype.toLowerCase.apply(citeTdxObj.singleAssessmentID.taxonomicTypes).split(","):"";
             tempInteractiveType = tempInteractiveType ? utils.getTaxonomicType(tempInteractiveType) : this.state.elementType;
-            // if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
                await getMCQGuidedData(itemId).then((responseData) => {
                     if(responseData && responseData['data'] && responseData['data']["thumbnail"]){
                         interactiveData['imageId'] = responseData['data']["thumbnail"]['id'];
@@ -835,11 +822,8 @@ class Interactive extends React.Component {
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
                }
-            // if(tempInteractiveType === 'video-mcq' || tempInteractiveType === 'guided-example'){
                 figureData.posterimage = posterImage;
                 figureData.alttext = alttext;  
-                
-            // }
             that.setState({itemID : itemId,
                 imagePath:posterImage.path,
                 itemParentID:citeTdxObj.id,

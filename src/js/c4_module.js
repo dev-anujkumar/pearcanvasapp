@@ -51,10 +51,6 @@ ajax.send = function (url, cb, method, data, contentType, arnKey, sync, pubApiKe
 
     document.cookie = `CTOOL_APIKEY=${xApiKey}; domain=.pearson.com; path=/; secure=true`;
     x.setRequestHeader('Content-Type', contentType);
-    // x.setRequestHeader('Content-Language', 'en');
-    // x.setRequestHeader('x-apikey', xApiKey);
-    // x.setRequestHeader('PearsonSSOSession', config_object.ssoToken);
-    // x.setRequestHeader('If-Match', IF_MATCH !== "" ? IF_MATCH : "");
     x.setRequestHeader('myCloudProxySession', config_object.myCloudProxySession);
     x.setRequestHeader('accept', 'application/json, text/plain, */*');
     x.setRequestHeader('aws-resource', config_object.AWS_RESOURCE);
@@ -94,7 +90,6 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview) {
         window.open(previewURL, '_blank');
         if (callBack) { callBack(); }
     } else {
-        //alert("Title Preview failed to load.");
         sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true, dialogText:"Title Preview failed to load."}});
         return false
     }
@@ -138,11 +133,9 @@ export const c4PublishObj = {
             }, 1100);
 
         } else {
-            //alert("Slate Preview failed to load");
             sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true, dialogText:"Slate Preview failed to load"}});
             return false;
         }
-        //}
     },
     publishTitle: function (project, section, cite, callBack, isPreview) {
         _.delay(() => {

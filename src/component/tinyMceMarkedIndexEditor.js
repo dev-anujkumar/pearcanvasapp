@@ -229,7 +229,6 @@ export class ReactMarkedIndexEditor extends React.Component {
     *  addInlineCode function is responsible for adding custom icon for inline Code Formatting
     */
   addInlineCode = (editor) => {
-    // editor.execCommand('mceToggleFormat', false, 'code');
     let selectedText = window.getSelection().toString();
     if (selectedText != "") {
       editor.execCommand('mceToggleFormat', false, 'code');
@@ -398,7 +397,6 @@ export class ReactMarkedIndexEditor extends React.Component {
       }, 0)
       this.editorConfig.selector = '#' + this.editorRef.current.id;
       let glossaryNode = document.getElementById('markedindex-0')
-      //   let footnoteNode = document.getElementById('footnote-0')
       this.setGlossaryFootnoteTerm(this.props.id, glossaryNode)
       tinymce.init(this.editorConfig).then((d) => {
         setFormattingToolbar('removeTinymceSuperscript')
@@ -419,7 +417,6 @@ export class ReactMarkedIndexEditor extends React.Component {
     }
     this.handlePlaceholer()
     let glossaryNode = document.getElementById('markedindex-0')
-    // let footnoteNode = document.getElementById('footnote-0')
     setFormattingToolbar('removeTinymceSuperscript')
     setFormattingToolbar('removeGlossaryFootnoteSuperscript')
     this.setGlossaryFootnoteNode(this.props.id, glossaryNode)

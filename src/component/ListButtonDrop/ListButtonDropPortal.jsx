@@ -113,7 +113,6 @@ class ListButtonDropPortal extends Component {
                         }else if (element.type === "showhide"){
                             this.props?.asideData?.type === "showhide" && this.props.asideData && element.interactivedata[this.props?.asideData?.sectionType].find(
                                 (nselement) => {
-                                    // let isMatched = false
                                     if (nselement.id === activeElement.elementId) {
                                         isMatched = nselement.type === 'element-list'
                                         isMatched && (listElement = nselement)
@@ -200,7 +199,6 @@ class ListButtonDropPortal extends Component {
                 }
             }
         } catch (error) {
-            //console.error(error);
             this.startValue = null;
             this.selectedOption = null;
         }
