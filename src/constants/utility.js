@@ -15,8 +15,6 @@ export const requestConfigURI = () => {
     let uri = '';
     if(process.env.NODE_ENV === "development"){
         uri = cypressConfig.sitePointing;
-        // projectDetailsRes.currentOrigin = uri;
-        // this.ifrmaeData();
     }else{
         let originUrl  = window.location.origin;
         if(originUrl === cypressConfig.prodUrl) {

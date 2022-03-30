@@ -15,13 +15,11 @@ import {videoIcon, figureAudioIcon, smartlinkIcon} from '../../images/ElementBut
 import pdSLfPosterImage from '../../images/ElementButtons/pdSLfPosterImage.png';
 import slPosterImage from '../../images/ElementButtons/slPosterImage.png'
 import  figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
-import { labelHtmlData } from '../../constants/Element_Constants';
+import { labelHtmlData, AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
 import interactiveTypeData from '../ElementInteractive/interactiveTypes.js';
-import { AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE } from '../../constants/Element_Constants';
 import SmallRoundedButton from './Small_RoundedButton.jsx';
 import { ELM_INT, MMI } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
-import { add } from 'lodash';
 import RoundedButton from './Rounded_Button.jsx';
 import approvedIcon from './Assets/approved.svg';
 import unApprovedIcon from './Assets/unapproved.svg';
@@ -467,7 +465,6 @@ class FigureUserInterface extends Component {
         let figureHtmlData = getLabelNumberTitleHTML(element);
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = (isAutoNumberingEnabled && element.figuretype !== INTERACTIVE) ? this.props.element.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
-        // let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
         if (!(this.checkForAutoNumberedContent(this.props.element))) {
             if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {

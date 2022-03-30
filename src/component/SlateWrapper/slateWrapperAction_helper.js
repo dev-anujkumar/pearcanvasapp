@@ -69,7 +69,6 @@ export const onPasteSuccess = async (params) => {
             cutcopyParentData = deleteElm.cutCopyParentUrn.slateLevelData;
         }
 
-        // if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
         if((cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type !=='popup') {
             const tcmDeleteArgs = {
                 deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutcopyParentData)) : newParentData,
@@ -232,7 +231,6 @@ export const onPasteSuccess = async (params) => {
                         newIndex = indexes;
                     }
                     if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest" && selcetIndex.length === 5 ) { /* paste inner level elements inside 2C/Aside */
-                        //item?.groupeddata?.bodymatter[selcetIndex[1]]?.groupdata?.bodymatter[selcetIndex[2]]?.elementdata?.bodymatter[selcetIndex[3]]?.contents.bodymatter?.splice(cutIndex, 0, responseData);
                         item?.groupeddata?.bodymatter?.[selcetIndex[1]]?.groupdata?.bodymatter?.[selcetIndex[2]]?.elementdata?.bodymatter?.map(item_L0 => {
                             if(item_L0?.id === parentUrn.manifestUrn) { /* 2/3C:WE:SectionBreak: Paste Element */
                                 item_L0?.contents.bodymatter?.splice(cutIndex, 0, responseData)

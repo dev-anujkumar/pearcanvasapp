@@ -221,7 +221,6 @@ class ElementDialogue extends React.PureComponent {
     handleOuterFocus = (c2Flag, showHideObj, event) => {
         this.setState({ selectedInnerElementIndex: null })
         this.props.handleFocus(c2Flag, showHideObj, event);
-        // this.setActiveElement(this.props.element);
     }
 
     handleOuterBlur = (field, eventTarget) => {
@@ -386,14 +385,6 @@ const dispatchActions = {
     updateElement,
     setBCEMetadata
 }
-/*
-const mapStateToProps = ({ appStore }) => {
-    return {
-        asideData: appStore.asideData,
-        parentUrn: appStore.parentUrn
-    }
-}
-*/
 ElementDialogue.displayName = "ElementDialogue"
 export default connect(null, dispatchActions)(ElementDialogue);
 

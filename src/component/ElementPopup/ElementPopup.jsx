@@ -6,10 +6,9 @@ import {
     fetchSlateData,
     createPopupUnit
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, getTitleSubtitleModel, isSubscriberRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import { checkSlateLock } from '../../js/slateLockUtility.js'
-import { getTitleSubtitleModel, isSubscriberRole } from "../../constants/utility.js"
 import { findKey } from "lodash";
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 

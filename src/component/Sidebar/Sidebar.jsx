@@ -267,7 +267,7 @@ class Sidebar extends Component {
                 if (this.state.elementDropdown === 'primary') {
                     active = 'active';
                 }
-                const sidebarDisableCondition = ((this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+                const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
@@ -310,11 +310,11 @@ class Sidebar extends Component {
 
         if(data === "fontStyle") {
             fontBulletOptionObject = elementList[data];
-            dataElement = "font",
+            dataElement = "font"
             dataValue =  this.state.activefontStyle
         } else if(data === "bulletIcon") {
             fontBulletOptionObject = elementList[data];
-            dataElement = "bullet",
+            dataElement = "bullet"
             dataValue = this.state.activebulletIcon
         }
 
@@ -334,7 +334,7 @@ class Sidebar extends Component {
         } else if (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet'){
             active = 'active';
         }
-        const sidebarDisableCondition = ((this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+        const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
         
         fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
             className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
@@ -531,7 +531,6 @@ class Sidebar extends Component {
         if (regex.test(e.target.value)) {
             this.props.setBCEMetadata('startNumber', e.target.value);
             this.setState({ bceNumberStartFrom: e.target.value });
-            // this.handleDialogueBlur();
         }
     }
 
@@ -583,8 +582,6 @@ class Sidebar extends Component {
             }
 
             if (attributionsList.length > 0) {
-                //let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
-                //let attrNode = activeElement ? activeElement.querySelector(".blockquoteTextCredit") : null
                 let attrValue = ""
                 attributions = attributionsList.map(item => {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable)
@@ -759,7 +756,6 @@ class Sidebar extends Component {
         //remove all formatting from code
 
         tinymce.$(`[data-id='${this.props.activeElement.elementId}'] .figureCodeContent span.codeNoHighlightLine`).each(function () {
-            // this.innerHTML = this.innerText;
             let boldTags = this.getElementsByTagName('STRONG');
             while (boldTags.length) {
                 let innerHTML = boldTags[0].innerHTML;

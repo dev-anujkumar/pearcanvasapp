@@ -286,7 +286,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             /**
              * PCAT-6929 : Renumbering of List element creates a new version but doesn't reorder the List numbering in element
              */
-            // return false;
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
@@ -343,14 +342,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[index] = res.data
                 } else {
                     if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents) || 'interactivedata' in bodymatter[index]) {
-                        //  focusedElement = focusedElement[index].elementdata.bodymatter;
                         focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents && focusedElement[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                     }
                 }
             }
             });
         }
-        store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
+        store[config.slateManifestURN].contents.bodymatter = bodymatter;
         let altText="";
         let longDesc="";
         if(res.data.figuredata){

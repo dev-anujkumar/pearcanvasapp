@@ -24,7 +24,6 @@ const TCMUtils = {
           }
         })
         latestAcepted = ' '+newStr+' ';
-        // latestAcepted = latestAcepted.replace(/(<([^>]+)>)/g, "");
       } else {
         try{
           latestAcepted = latestAcepted.replaceAll(acceptedTag, pendingTag)

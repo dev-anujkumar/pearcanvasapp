@@ -37,8 +37,7 @@ export const getAlfrescositeResponse = (elementId, callback) => {
         .then(response => {
             callback(response);
         }).catch(error => {
-            //console.log("error", error);
-        })
+    })
 }
 
 
