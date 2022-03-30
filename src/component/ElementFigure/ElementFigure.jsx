@@ -394,7 +394,6 @@ class ElementFigure extends Component {
 
             </div>
         } else {
-            // console.log("model.figuretype model.figuretype", model);
             /**JSX for Table Editor*/
             figureJsx = <div className={divClass} resource="">
                 <figure className={figureClass} resource="">

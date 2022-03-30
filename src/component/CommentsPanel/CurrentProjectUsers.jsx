@@ -1,5 +1,4 @@
 import React from 'react'
-//const configModule = require('../../js/config_module.js');
 import PropTypes from 'prop-types';
 class CurrentProjectUsers extends React.Component {
     constructor(props) {
@@ -30,7 +29,6 @@ class CurrentProjectUsers extends React.Component {
                     {
                         users.map((item, i) => {
                                 let fullName = item.lastName + ',' + item.firstName
-                                // let fullName = item.label
                             return (
                                 <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
                             )
@@ -44,7 +42,6 @@ class CurrentProjectUsers extends React.Component {
                 <ul className="assign-user-list-popup-container">
                     {
                         users.map((item, i) => {
-                                // let fullName = item.lastName + ',' + item.firstName
                                 let fullName = item.label
                             return (
                                 <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
@@ -55,22 +52,6 @@ class CurrentProjectUsers extends React.Component {
                 </ul>
             )
         }
-
-        // return (
-        //     <ul className="assign-user-list-popup-container">
-        //         {
-        //             users.map((item, i) => {
-        //                     let fullName = item.lastName + ',' + item.firstName
-        //                     // let fullName = item.label
-        //                 return (
-        //                     <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
-        //                 )
-        //             }
-        //             )
-        //         }
-        //     </ul>
-        // )
-
     }
 }
 

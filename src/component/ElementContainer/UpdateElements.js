@@ -6,9 +6,8 @@ import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
-import { createLabelNumberTitleModel, getTitleSubtitleModel, removeSpellCheckDOMAttributes } from '../../constants/utility';
+import { createLabelNumberTitleModel } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
-import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForFigures } from '../FigureHeader/AutoNumber_helperFunctions';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
@@ -629,6 +628,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     dataToSend.figuredata.elementdata.assessmentitemid = assessmentItemId ? assessmentItemId : "";
     dataToSend.figuredata.elementdata.assessmentitemtitle = assessmentItemTitle ? assessmentItemTitle : "";
 
+
     // dataToSend.figuredata.id = getAsid ? getAsid : "";   //PCAT-6792 fixes
     // dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
 
@@ -824,7 +824,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
             } 
             else if(asideData?.type==="manifestlist" && parentElement && parentElement?.type === "showhide" && showHideType){
-                // dataToReturn.sectionType = showHideType;
                 let manifestListItemIndex = asideData.index.split('-');
                 dataToReturn["elementParentEntityUrn"] = asideData?.parentManifestList?.listdata?.bodymatter[manifestListItemIndex[manifestListItemIndex.length-2]]?.contentUrn
             }

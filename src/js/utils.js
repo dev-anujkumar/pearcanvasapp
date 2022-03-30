@@ -321,7 +321,6 @@ export const spanHandlers = {
             let spanNode = selection.anchorNode;
             let outerNode = selection.anchorNode;
             if (spanNode.nodeName == "SPAN" || (spanNode.className && !spanNode.className.toLowerCase() == childClass)) {
-                //spanNode = selection.anchorNode.closest('.poetryLine');
                 while (outerNode.parentElement && outerNode.parentElement.tagName.toLowerCase() != parentTag) {
                     outerNode = outerNode.parentElement;
                 }

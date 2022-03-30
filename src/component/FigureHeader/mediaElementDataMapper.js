@@ -2,9 +2,7 @@
  * Prepare API data to get media elements based on Type
  */
 
-import config from '../../config/config';
 import { AUTO_NUMBER_ELEMENTS, slateTypes, SHOWHIDE_SECTION, CONTAINER_LABELS, DISPLAYED_LABELS, ELEMENT_TYPES, containerElements, autoNumberElementsAllowed } from './AutoNumberConstants';
-// import {getSlateLevelData} from './AutoNumberActions';
 /**
  * Common API Data handler for all elements supporting Auto-numbering
  * @param {*} projectContent 
