@@ -57,7 +57,8 @@ import {
     SET_JOINED_PDF_STATUS,
     SET_SLATE_MATTER_TYPE,
     UPDATE_TABLE_ELEMENT_ASSET_DATA,
-    UPDATE_TABLE_ELEMENT_EDITED_DATA
+    UPDATE_TABLE_ELEMENT_EDITED_DATA,
+    UPDATE_CARET_OFFSET
 } from '../constants/Action_Constants';
 
 /**
@@ -125,7 +126,8 @@ const INITIAL_STATE = {
     isCypressPlusEnabled:false,
     isJoinedPdfSlate: false,
     tableElementAssetData: [],
-    tableElementEditedData: {}
+    tableElementEditedData: {},
+    caretPosition: ''
 };
 
 const INITIAL_ACTION = {
@@ -403,6 +405,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 tableElementAssetData: [...action.payload]
+            }
+        case UPDATE_CARET_OFFSET:
+            return {
+                ...state,
+                caretPosition: action.payload
             }
         case UPDATE_TABLE_ELEMENT_EDITED_DATA:
             if(Object.keys(action.payload).length === 0){
