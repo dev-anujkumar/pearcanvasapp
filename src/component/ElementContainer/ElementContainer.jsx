@@ -887,16 +887,16 @@ class ElementContainer extends Component {
             case elementTypeConstant.POETRY_STANZA:
                 let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent" ||  parentElement.type == 'element-blockfeature') ? activeEditorId : `cypress-${this.props.index}`
                 if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id && !tinyMCE.activeEditor.id.includes("footnote")) {
-                    let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins') ? document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText : "";
+                    let blockqtText = document.querySelector('#' + tinymce.activeEditor.id) ? document.querySelector('#' + tinymce.activeEditor.id).innerText : "";
                     if (!blockqtText.trim()) {
                         var MLtext = document.querySelector('#' + tinymce.activeEditor.id + ' > p > img') || document.querySelector('#' + tinymce.activeEditor.id + ' > img')
                         if (MLtext) {
-                            tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
-                            document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(MLtext)
+                            tinyMCE.$('#' + tinymce.activeEditor.id).find('br').remove();
+                            document.querySelector('#' + tinymce.activeEditor.id).append(MLtext)
                             tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
                             tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
                             tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
-                            tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append("&nbsp;")
+                            tinyMCE.$('#' + tinymce.activeEditor.id).append("&nbsp;")
                         }
                     }
                 }

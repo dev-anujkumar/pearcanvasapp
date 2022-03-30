@@ -4110,9 +4110,9 @@ export class TinyMceEditor extends Component {
        
         const temDiv = document.createElement('div');
         let hiddenBlock = this.generateHiddenElement();
-        tempDiv.innerHTML = model.text;
-        let firstParaBlock = tempDiv.children[0]?.children[0]?.outerHTML
-        let attrParaBlock = tempDiv.children[0]?.children[1]?.outerHTML
+        temDiv.innerHTML = model.text;
+        let firstParaBlock = temDiv.children[0]?.children[0]?.outerHTML
+        let attrParaBlock = temDiv.children[0]?.children[1]?.outerHTML
         temDiv.innerHTML = model && model.text ? model.text : `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false">${firstParaBlock}${attrParaBlock}</blockquote>`
         if (element && element.elementdata && element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length) {
             tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
@@ -4193,8 +4193,15 @@ export class TinyMceEditor extends Component {
                 )
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote")) {
+                let tmpModel = ""
+                let tempDiv = document.createElement('div');
+                tempDiv.innerHTML = this.props.model;
+                if (tempDiv && tempDiv.children && tempDiv.children.length && tempDiv.children[0].nodeName === 'P') {
+                    tmpModel = tempDiv.children[0].innerHTML;
+                }
+                tmpModel = removeBOM(tmpModel)
                     return (
-                        <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={false} dangerouslySetInnerHTML={{ __html: model }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</p>
+                        <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: tmpModel }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</p>
                     )
                 } else {
                     classes = classes + ' pullquote-editor';
