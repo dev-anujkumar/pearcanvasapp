@@ -101,9 +101,11 @@
 }
 
 blockquote.blockquoteMarginaliaAttr,blockquote.blockquoteMarginalia{    
-    margin-left: 1.4rem !important;
+    margin-left: 2.2rem !important;
     padding-left: 1rem;
     border-left: 1px solid #005A70 !important;
+    margin-top: 4em !important;
+    margin-bottom: 4em !important;
 }
 
 #pageNumberForm {

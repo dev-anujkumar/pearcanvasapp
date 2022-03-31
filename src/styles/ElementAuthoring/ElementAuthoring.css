@@ -68,6 +68,21 @@ blockquote.blockquoteMarginaliaAttr {
 p[data-mce-bogus="all"] {
     display: none!important
 }
-blockquote.blockquoteMarginalia {
+/* blockquote.blockquoteMarginalia {
     padding: 16px 0 20px 1.5em !important;
+ } */
+
+ blockquote.blockquoteMarginalia .paragraphNummerEins, blockquote.blockquoteMarginalia .blockquoteTextCredit{
+    padding: 5px !important;
+    min-height: 30px !important;
+    font-size: 1.120em !important;
+ }
+.blockquoteMarginalia .cypress-editable.place-holder::before {
+    content: attr(placeholder);
+    color: #ADADAD;
+    display: block;
+    position: absolute;
+    margin-top: 0px;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
  }

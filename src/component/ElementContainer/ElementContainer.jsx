@@ -893,8 +893,8 @@ class ElementContainer extends Component {
                         }
                     }
                 }
-                const blockquoteCondition = (parentElement?.elementdata?.type === "marginalia" || parentElement?.elementdata?.type === "blockquote")
                 let currentNode = document.getElementById(index)
+                const blockquoteCondition = currentNode.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')
                 let html =  blockquoteCondition ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
@@ -1698,7 +1698,6 @@ class ElementContainer extends Component {
         tcm = tcmStatus.tcm
         feedback = tcmStatus.feedback
         const isBlockquote = (this.props.element?.elementdata?.type === "blockquote"  || this.props.element?.elementdata?.type === "marginalia")
-
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         const commonProps = {
             index,
@@ -2478,7 +2477,7 @@ class ElementContainer extends Component {
         if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
             sendDataToIframe({
                 'type': AddOrViewComment,
-                'message': { "id": elementId, "mode": type }
+                'message': { "id": elementId, "mode": type, "viewInCypress": false }
             });
         }
         e.stopPropagation();
