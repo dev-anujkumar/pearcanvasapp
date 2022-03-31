@@ -290,7 +290,6 @@ div.stageDirectionItalicFont dfn {
 }
 .blockquoteTextCredit.cypress-editable.place-holder::before{
     color: black !important;
-    margin-top: 5px !important;
 }
 
 .blockquoteMarginalia p {

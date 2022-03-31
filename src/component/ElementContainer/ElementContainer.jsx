@@ -2477,7 +2477,7 @@ class ElementContainer extends Component {
         if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
             sendDataToIframe({
                 'type': AddOrViewComment,
-                'message': { "id": elementId, "mode": type }
+                'message': { "id": elementId, "mode": type, "viewInCypress": false }
             });
         }
         e.stopPropagation();

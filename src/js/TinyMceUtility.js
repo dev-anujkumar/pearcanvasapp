@@ -22,22 +22,25 @@ import store from '../appstore/store';
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
     const imgData = `<img imageid="urn:pearson:alfresco:${uniqID}" src=${epsURL} height="150" width="112"  class="imageAssetContent" data-id="${imageID}"/>`;
     const imageTypes = ["image", "table", "mathImage", "authoredtext"];
-        if (imageTypes.indexOf(figureType) > -1) {
-            if (imageArgs?.id && editor?.targetElm) {
-                let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
-                if(!getImgNode){
-                    getImgNode = editor.targetElm.querySelector(`img[imageid="${imageArgs.id}"]`)
-                }
-                if (getImgNode) {
-                    getImgNode.outerHTML = imgData;
-                    imageArgs.handleBlur(null, true);
-                }
-            }
-            else {
-                editor.insertContent(imgData);
-                setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
-            }
-        }
+     if ((imageTypes.indexOf(figureType) > -1)) {
+         if (config.updateInlineImage === true) {
+             config.updateInlineImage = false
+             if (imageArgs?.id && editor?.targetElm) {
+                 let getImgNode = editor.targetElm.querySelector(`img[data-id="${imageArgs.id}"]`);
+                 if (!getImgNode) {
+                     getImgNode = editor.targetElm.querySelector(`img[imageid="${imageArgs.id}"]`)
+                 }
+                 if (getImgNode) {
+                     getImgNode.outerHTML = imgData;
+                     imageArgs.handleBlur(null, true);
+                 }
+             }
+             else {
+                 editor.insertContent(imgData);
+                 setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
+             }
+         }
+     }
     else{
         store.dispatch({
             type: 'MULTIPLE_LINE_POETRY_ERROR_POPUP',

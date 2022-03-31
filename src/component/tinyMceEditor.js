@@ -723,6 +723,7 @@ export class TinyMceEditor extends Component {
                     editor,
                     imageArgs
                 }
+                config.updateInlineImage = true
                 this.props.saveInlineImageData(params)
                 handleC2MediaClick(this.props.permissions, editor, this.props.element, this.props.saveSelectedAlfrescoElement);
             }
@@ -1932,6 +1933,7 @@ export class TinyMceEditor extends Component {
                     editor: editor,
                     props:this.props
                 }
+                config.updateInlineImage = true
                 self.props.saveInlineImageData(params)
                 const items = insertMediaSelectors(params);
                 callback(items);
