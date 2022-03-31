@@ -736,6 +736,11 @@ export class TinyMceEditor extends Component {
             else if (selectedText.length <= 0) { //handling Asset popover show hide toolbar icon
                 this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(true);
             }
+            if (this.props.element && this.props.element.type === 'element-blockfeature') {
+                if ( e && e.target && e.target.classList.contains('blockquoteTextCredit')) {
+                    setFormattingToolbar('disableTinymceToolbar')
+                }
+            }
         });
     }
     /**
@@ -3736,6 +3741,11 @@ export class TinyMceEditor extends Component {
                               this.removeSupFormat(clickedX, clickedY);
                             }
                         }*/
+                    }
+                    if (this.props?.element?.type === 'element-blockfeature') {
+                        if (activeNode && (activeNode.className === 'blockquoteTextCredit' || activeNode.className.includes('blockquoteTextCredit'))) {
+                            setFormattingToolbar('disableTinymceToolbar')
+                        }
                     }
                 }
 
