@@ -79,6 +79,7 @@ import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumber_ElementSubTypeToCeate
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes';
 import { checkHTMLdataInsideString } from '../../constants/utility'; 
 import { prepareBqHtml } from '../../js/utils';
+import { hideToc } from '../../js/toggleLoader';
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -879,21 +880,21 @@ class ElementContainer extends Component {
             case elementTypeConstant.POETRY_STANZA:
                 let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent" ||  parentElement.type == 'element-blockfeature') ? activeEditorId : `cypress-${this.props.index}`
                 if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id && !tinyMCE.activeEditor.id.includes("footnote")) {
-                    let blockqtText = document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins') ? document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').innerText : "";
+                    let blockqtText = document.querySelector('#' + tinymce.activeEditor.id) ? document.querySelector('#' + tinymce.activeEditor.id).innerText : "";
                     if (!blockqtText.trim()) {
                         var MLtext = document.querySelector('#' + tinymce.activeEditor.id + ' > p > img') || document.querySelector('#' + tinymce.activeEditor.id + ' > img')
                         if (MLtext) {
-                            tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').find('br').remove();
-                            document.querySelector('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append(MLtext)
+                            tinyMCE.$('#' + tinymce.activeEditor.id).find('br').remove();
+                            document.querySelector('#' + tinymce.activeEditor.id).append(MLtext)
                             tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
                             tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
                             tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
-                            tinyMCE.$('#' + tinymce.activeEditor.id + ' blockquote p.paragraphNummerEins').append("&nbsp;")
+                            tinyMCE.$('#' + tinymce.activeEditor.id).append("&nbsp;")
                         }
                     }
                 }
-                const blockquoteCondition = (parentElement?.elementdata?.type === "marginalia" || parentElement?.elementdata?.type === "blockquote")
                 let currentNode = document.getElementById(index)
+                const blockquoteCondition = currentNode.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')
                 let html =  blockquoteCondition ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
@@ -1697,7 +1698,6 @@ class ElementContainer extends Component {
         tcm = tcmStatus.tcm
         feedback = tcmStatus.feedback
         const isBlockquote = (this.props.element?.elementdata?.type === "blockquote"  || this.props.element?.elementdata?.type === "marginalia")
-
         /* TODO need better handling with a function and dynamic component rendering with label text*/
         const commonProps = {
             index,
@@ -2451,6 +2451,7 @@ class ElementContainer extends Component {
         this.setState({
             popup,
             showDeleteElemPopup: false,
+            showAlfrescoExpansionPopup: false,
             showBlockCodeElemPopup: false,
             showAlfrescoExpansionPopup: false,
             comment: ""
@@ -2476,7 +2477,7 @@ class ElementContainer extends Component {
         if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
             sendDataToIframe({
                 'type': AddOrViewComment,
-                'message': { "id": elementId, "mode": type }
+                'message': { "id": elementId, "mode": type, "viewInCypress": false }
             });
         }
         e.stopPropagation();
@@ -2562,7 +2563,8 @@ class ElementContainer extends Component {
         if(elementType === 'TE'){
             this.setState({
                 showAlfrescoEditPopupforTE: togglePopup
-            })  
+            });
+            hideToc();
         }else{
             this.setState({
                 isfigurePopup: togglePopup,

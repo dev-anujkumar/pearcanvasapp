@@ -95,7 +95,8 @@ let cypressConfig = {
     saveElmOnAS: false,
     fullName:'c5test01',
     isCypressPlusEnabled:true,
-    CYPRESS_PLUS_WINDOW:''
+    CYPRESS_PLUS_WINDOW:'',
+    updateInlineImage: false
 }
 
 
