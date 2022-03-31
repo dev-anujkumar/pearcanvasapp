@@ -184,6 +184,8 @@ export const UPDATE_LOB_PERMISSIONS = 'UPDATE_LOB_PERMISSIONS';
 export const UPDATE_LOB_WORKFLOW = 'UPDATE_LOB_WORKFLOW'
 export const OEP_DISCUSSION = 'onlineenglishproficiency'
 
+export const UPDATE_CARET_OFFSET = 'UPDATE_CARET_OFFSET';
+
 /*---------------- TCM POPUP ON CANVAS ------------------------*/
 export const LAUNCH_TCM_CANVAS_POPUP = 'LAUNCH_TCM_CANVAS_POPUP';
 /*---------------- 3Column details Info ------------------------*/

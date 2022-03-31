@@ -28,7 +28,7 @@ import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
-import { wirisAltTextPopup, createElement } from './SlateWrapper/SlateWrapper_Actions';
+import { wirisAltTextPopup, createElement, saveCaretPosition } from './SlateWrapper/SlateWrapper_Actions';
 import { deleteElement } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
@@ -3112,6 +3112,16 @@ export class TinyMceEditor extends Component {
         // const { spellCheckToggle } = this.props;
         // removing the tinymce editors when spellcheck toggle is turned off to prevent incorrect text highlighting
         // if (!spellCheckToggle) this.removeTinymceEditors();
+        
+        document.addEventListener("visibilitychange", () => {
+            /* On switching the application window restore the caret position to its original position */
+            window.onfocus = window.onblur = window.onpageshow = window.onpagehide = ((e) => {
+                if ({focus:1, pageshow:1}[e.type]) {
+                    tinymce.activeEditor?.selection?.moveToBookmark(this.props?.caretPosition);
+                } 
+            });
+        });
+
         let currentNode = document.getElementById('cypress-' + this.props.index);
         if (currentNode && currentNode.getElementsByTagName("IMG").length) {
             currentNode.innerHTML = this.getNodeContent(currentNode);
@@ -3377,6 +3387,7 @@ export class TinyMceEditor extends Component {
          * 3 . etc related to tinymce not in sync issues
          * must code to sync tinymce editor instances ant any moment of time
          */
+         document.removeEventListener("visibilitychange", () => { this.props.saveCaretPosition('') });
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
             if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && this.props.element.type && this.props.element.type === "figure" && this.props.element.figuretype !== "interactive"))) {
@@ -3932,6 +3943,11 @@ export class TinyMceEditor extends Component {
      * @param {*} e  event object
      */
     handleBlur = (e, forceupdate) => {
+        // save Non-HTML bookmark so pass parameter true to getBookmark
+        let caretPosition = tinymce.activeEditor?.selection?.getBookmark(2, true);
+        if (caretPosition) {
+            this.props.saveCaretPosition(caretPosition);
+        }
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
@@ -4255,11 +4271,12 @@ const mapStateToProps = (state) => {
         asideData: state.appStore.asideData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         autoNumberOption: state.autoNumberReducer.autoNumberOption,
-        spellCheckToggle: state.toolbarReducer.spellCheckToggle
+        spellCheckToggle: state.toolbarReducer.spellCheckToggle,
+        caretPosition: state.appStore.caretPosition
     }
 }
 
 export default connect(
     mapStateToProps,
-    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement, saveSelectedAlfrescoElement }
+    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement, saveSelectedAlfrescoElement, saveCaretPosition }
 )(TinyMceEditor);
