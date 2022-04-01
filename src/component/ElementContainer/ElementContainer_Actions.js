@@ -5,19 +5,28 @@ import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS } from "./../../constants/Action_Constants";
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS,
+         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
-import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
+import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
 import { tcmSnapshotsForCreate, prepareSnapshots_ShowHide} from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowHide/ShowHide_Helper';
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
 import ElementConstants, { containersInSH } from "./ElementConstants";
 import { checkBlockListElement } from '../../js/TinyMceUtility';
-import { getImagesInsideSlates } from '../FigureHeader/slateLevelMediaMapper';
-import { handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
-import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
+import { getAutoNumberedElementsOnSlate, getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
+import { handleAutonumberingOnCreate, handleAutonumberingForElementsInContainers } from '../FigureHeader/AutoNumberCreate_helper';
+import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
+import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
+import { updateAutoNumberedElement } from './UpdateElements';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
+
+const { 
+    AUTO_NUMBER_SETTING_DEFAULT,
+    AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 
 export const addComment = (commentString, elementId) => (dispatch) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/comment/`
@@ -388,7 +397,6 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         } else if (newParentData[config.slateManifestURN].status === 'approved') {
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
-        
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,
             payload: {
@@ -399,7 +407,6 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         showError(error, dispatch, "getTableEditorData Api fail")
     })
 }
-
 const updateTableEditorData = (elementId, tableData, slateBodyMatter, sectionType) => {
 
     return slateBodyMatter = slateBodyMatter.map(elm => {
@@ -444,7 +451,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
     let newShowhideIndex = parseInt(newIndex[newIndex.length-1]); //+1
-    //const { asideData, parentUrn ,showHideObj } = getState().appStore
     const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
     let _requestData = {
         "projectUrn": config.projectUrn,
@@ -474,16 +480,12 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-        /* let containerElement = {
-            asideData,
-            parentUrn,
-            showHideObj
-        }; */
         const containerElement = prepareSnapshots_ShowHide({ asideData: {...parentElement}}, createdElemData.data, index);
         let slateData = {
             currentParentData: newParentData,
             bodymatter: currentSlateData.contents.bodymatter,
-            response: createdElemData.data
+            response: createdElemData.data,
+            cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
         };
         //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed 
         if(type2BAdded !== "MANIFEST_LIST") {
@@ -514,54 +516,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 shObject.interactivedata[type] = sectionOfSH;
             }   
         }
-        let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
-        const slateAncestorData = getState().appStore.currentSlateAncestorData;
-        let elementsList = {};
-        if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
-            let slateFigures = getImagesInsideSlates(newBodymatter);
-            if (slateFigures) {
-                dispatch({
-                    type: SLATE_FIGURE_ELEMENTS,
-                    payload: {
-                        slateFigures
-                    }
-                });
-            }
-            let elementObj = slateFigures.find(element => element.contentUrn === createdElemData.data.contentUrn);
-            const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
-            const labelType = createdElemData?.data?.displayedlabel;
-            elementsList = autoNumberedElementsObj[listType];
-            handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
-        }
-        /* let condition;
-        if (newIndex.length == 4) {
-            condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]]
-            if (condition.versionUrn == elementId) {
-                    newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } else if (newIndex.length == 5) {
-            condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
-            if (condition.versionUrn == elementId) {
-                    newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } else if (newIndex.length == 6) {
-            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]];
-            //condition = newBodymatter[newIndex[0]].elementdata.bodymatter[newIndex[1]].contents.bodymatter[newIndex[2]]
-            if (condition.versionUrn == elementId) {
-                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } else if (newIndex.length == 7) {
-            condition = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
-            if (condition.versionUrn == elementId) {
-                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        }
-        else{
-            condition =  newBodymatter[newIndex[0]]
-            if(condition.versionUrn == elementId){
-                newBodymatter[newIndex[0]].interactivedata[type].splice(newShowhideIndex, 0, createdElemData.data)
-            }
-        } */
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
 
         if (config.tcmStatus) {
@@ -582,6 +536,29 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 showHideId: createdElemData.data.id
             }
         })
+        let autoNumberedElementsObj = getState().autoNumberReducer?.autoNumberedElements;
+        const slateAncestorData = getState().appStore?.currentSlateAncestorData;
+        const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
+        const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
+        let elementsList = {};
+        if (autoNumberFigureTypesForConverion.includes(type2BAdded) && isAutoNumberingEnabled) {
+            if (popupParentSlateData?.isPopupSlate) {
+                dispatch(handleAutonumberingOnCreate(type2BAdded, createdElemData.data));
+            } else {
+                let slateFigures = [];
+                let elementObj = {};
+                if (type2BAdded === 'CONTAINER' || type2BAdded === 'WORKED_EXAMPLE') {
+                    slateFigures = await getAsideElementsWrtKey(newParentData[slateManifestUrn].contents.bodymatter, 'element-aside', slateFigures);
+                } else {
+                    slateFigures = await getAutoNumberedElementsOnSlate(newParentData[slateManifestUrn], { dispatch });
+                }
+                elementObj = slateFigures?.find(element => element.contentUrn === createdElemData.data.contentUrn);
+                const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
+                const labelType = createdElemData?.data?.displayedlabel;
+                elementsList = autoNumberedElementsObj[listType];
+                handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
+            }
+        }
         if(cb){
             cb("create",index);
         }
@@ -835,31 +812,67 @@ const updateAsideNumberInStore = (updateParams, updatedId) => (dispatch) => {
     }
 }
 
-const prepareAsideTitleForUpdate = (index) => {
+export const prepareAsideTitleForUpdate = (index, isAutoNumberingEnabled) => {
     let labelDOM = document.getElementById(`cypress-${index}-t1`),
         numberDOM = document.getElementById(`cypress-${index}-t2`),
         titleDOM = document.getElementById(`cypress-${index}-t3`)
     let labeleHTML = labelDOM ? labelDOM.innerHTML : "",
         numberHTML = numberDOM ? numberDOM.innerHTML : "",
         titleHTML = titleDOM ? titleDOM.innerHTML : ""
-    labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '');
-    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '');
-    titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
-    return titleHTML
+    labeleHTML = labeleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    if (isAutoNumberingEnabled) {
+        return [labeleHTML, numberHTML, titleHTML];
+    } else {
+        titleHTML = createLabelNumberTitleModel(labeleHTML, numberHTML, titleHTML);
+        return titleHTML
+    }
 }
-export const updateAsideNumber = (previousData, index,elementId) => (dispatch, getState) => {
+export const updateAsideNumber = (previousData, index, elementId, isAutoNumberingEnabled, autoNumberOption) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
     const activeElementId=elementId;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
     let elementEntityUrn = "", updatedElement
-    let titleHTML = prepareAsideTitleForUpdate(index);
-    
+    let titleHTML = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
+    let dataArr, payloadKeys, displayedlabel;
+    let numberedandlabel = false;
+    let manualoverride = {};
     updatedElement = {
         ...previousData,
         html: {
             title: titleHTML
         }
+    }
+    /** Updation of AutoNumbered Elements */
+    if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
+        dataArr = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
+        dataArr[0] = dataArr[0].replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+        payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, dataArr[0], dataArr[1], false);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
+        const validDropdownOptions = generateDropdownDataForContainers(previousData);
+        if (validDropdownOptions?.includes(dataArr[0])) {
+            displayedlabel = dataArr[0];
+        } else if (!(previousData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+            displayedlabel = getValueOfLabel(previousData?.subtype);
+        } else {
+            displayedlabel = previousData?.displayedlabel;
+        }
+        updatedElement = {
+            ...updatedElement,
+            html: {
+                ...updatedElement.html,
+                title: `<p>${dataArr[2]}</p>`
+            },
+            numberedandlabel: numberedandlabel,
+            displayedlabel: displayedlabel,
+            manualoverride: manualoverride
+        }
+        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
+        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;
+        const dataToReturn = updateAutoNumberedElement(autoNumberOption, updatedElement, { displayedlabel: updatedElement?.displayedlabel, manualoverride: updatedElement?.manualoverride })
+        updatedElement = { ...dataToReturn }
     }
     const updateParams = {
         index,
@@ -893,7 +906,21 @@ export const updateAsideNumber = (previousData, index,elementId) => (dispatch, g
         versionUrn: activeElementId,
         contentUrn: previousData.contentUrn,
         status: updatedSlateLevelData.status
-
+    }
+    if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
+        
+        dataToSend = {
+            ...dataToSend,
+            html : {
+                ...dataToSend.html,
+                title: `<p>${dataArr[2]}</p>`
+            },
+            numberedandlabel : numberedandlabel,
+            displayedlabel : displayedlabel,
+            manualoverride : manualoverride
+        }
+        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete dataToSend.manualoverride : dataToSend;
+        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete dataToSend.displayedlabel : dataToSend;
     }
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
     return axios.put(url, dataToSend, {
@@ -946,10 +973,6 @@ export const updateAsideNumber = (previousData, index,elementId) => (dispatch, g
         if (res?.data?.versionUrn && (res?.data?.versionUrn.trim() !== "")) {
             activeElementObject.elementId = res.data.versionUrn
         }
-        // dispatch({  // commented for future reference
-        //     type: 'SET_ACTIVE_ELEMENT',
-        //     payload: activeElementObject
-        // });
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
         config.savingInProgress = false
@@ -962,4 +985,143 @@ export const updateAsideNumber = (previousData, index,elementId) => (dispatch, g
         config.isSavingElement = false
         console.error(" Error >> ", err)
     })
+}
+
+/**
+ * This function will make an API call to fetch the metadata for an image
+ * @param {*} id Image ID
+ * @returns Returns altText & longdescription
+ */
+ const getAltTextLongDesc = async (id) => {
+    let imgId = id.substring(id.indexOf(":") + 1, id.lastIndexOf(":"));
+    try{
+        let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${imgId}`;
+        let response = await axios.get(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'ApiKey': config.CMDS_APIKEY,
+                    'Content-Type': 'application/json',
+                    'myCloudProxySession': config.myCloudProxySession
+                }
+            });
+        const {properties} = response.data.entry;
+        return { 
+            altText : properties["cplg:altText"],
+            longdescription: properties["cplg:longDescription"]
+        }
+    } catch(error){
+        return { 
+            altText : "",
+            longdescription: ""
+        }
+    }
+}
+
+/**
+ * This is a recursive function will collect image data from HTML element within a cell, such as, OL, UL & P
+ * @param {*} node 
+ * @param {*} imagesArrayOfObj 
+ */
+const getImageFromHTMLElement = async (node, imagesArrayOfObj) => {
+    if(node?.nodeName === 'IMG' && node?.className === "imageAssetContent"){
+        const attributes = node.attributes;
+        const id = attributes['data-id'].nodeValue;
+        const src = attributes['data-mce-src'].nodeValue;
+        let tempImgObj = {};
+        const data = await getAltTextLongDesc(id);
+        tempImgObj = { ...data }
+        tempImgObj['imgSrc'] = src;
+        tempImgObj['imgId'] = id;
+        imagesArrayOfObj.push(tempImgObj);
+    } else if(node?.childNodes?.length > 0) {
+        for(let i=0; i<node.childNodes.length; i++){
+            await getImageFromHTMLElement(node.childNodes[i], imagesArrayOfObj);
+        }
+    }
+}
+
+/**
+ * This function will prepare data for "Expand in alfresco POP-UP" and update the redux store
+ * Format: 
+ * {
+ *   imgSrc: "",
+ *   imgId : "",
+ *   alttext : "",
+ *    longdescription : ""   
+ * }
+ * @param {*} element Table element Object
+ */
+export const prepareImageDataFromTable = element => async (dispatch) => {
+    let figureData = element?.figuredata;
+    let imagesArrayOfObj = [];
+    if(figureData?.tableasHTML && figureData?.tableasHTML !== ""){
+        let tableHTML = figureData.tableasHTML;
+        let dummyDiv = document.createElement('div');
+        dummyDiv.innerHTML = tableHTML;
+        let tBody = dummyDiv.querySelectorAll('tbody');
+        let tableRow = tBody[0]?.childNodes;
+        for(let i=0;i<tableRow?.length;i++){
+            let cells = tableRow[i].childNodes;
+            for(let j=0; j<cells.length; j++){
+                for(let k=0; k<cells[j].childNodes.length; k++){
+                    await getImageFromHTMLElement(cells[j].childNodes[k], imagesArrayOfObj);
+
+                }
+            }
+        }
+    }
+
+    dispatch({
+        type: UPDATE_TABLE_ELEMENT_ASSET_DATA,
+        payload: imagesArrayOfObj
+    })
+}
+
+/**
+ * This is an action, which will update the edited data in store
+ * @param {*} imageObject 
+ * @returns 
+ */
+export const updateEditedData = (imageObject) => (dispatch) => {
+    dispatch({
+        type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
+        payload: imageObject
+    })
+}
+
+/**
+ * This function will make an saving API call to update the altText & longDescription
+ * @param {*} editedImageList 
+ */
+export const saveTEMetadata = async (editedImageList) => {
+    try{
+        let url = "";
+        const editedImagesArray = Object.values(editedImageList);
+        if(editedImagesArray?.length > 0){
+            let promiseArray = [];
+            for(let i=0; i< editedImagesArray.length; i++){
+                let { altText, imgId, longdescription} = editedImagesArray[i];
+                let id = imgId.substring(imgId.indexOf(":") + 1, imgId.lastIndexOf(":"));
+                url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${id}`;
+                const body = {
+                    properties: { 
+                        "cplg:altText": altText,
+                        "cplg:longDescription": longdescription
+                    }
+                }
+                const response = axios.put(url, body, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "apikey": config.CMDS_APIKEY,
+                        'myCloudProxySession': config.myCloudProxySession
+                    }
+                });
+                promiseArray.push(response);
+            }
+            await Promise.all(promiseArray);
+    
+        }
+    } catch(error){
+    }
 }

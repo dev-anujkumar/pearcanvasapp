@@ -6,7 +6,7 @@ import moxios from 'moxios';
 import axios from 'axios';
 import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
 import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure, slateMockData, sectionBreakMockSlateData, NotSectionBreakMockSlateData, NotSectionBreakMockSlateData2, NotSectionBreakMockSlateData3, slateWithShowhideData } from "../../../fixtures/slateTestingData"
-import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE, SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED, SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP } from '../../../src/constants/Action_Constants';
+import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP, SET_PARENT_NODE, SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED, SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP, CYPRESS_PLUS_ENABLED } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
 import { elementAside, slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, asideDataType3, slateLevelData3, asideData11, workedexampleaside, asideforgouped } from '../../../fixtures/elementAsideData';
 import MockAdapter from 'axios-mock-adapter';
@@ -693,6 +693,11 @@ describe('Tests Slate Wrapper Actions', () => {
         store.dispatch(actions.setSlateParent({}))
         const { type } = store.getActions()[0];
         expect(type).toBe(SET_PARENT_NODE);
+    });
+    it('testing------- cypressPlusEnabled  ------action', () => {
+        store.dispatch(actions.cypressPlusEnabled({}))
+        const { type } = store.getActions()[0];
+        expect(type).toBe(CYPRESS_PLUS_ENABLED);
     });
     it('updatePageNumber ----else', () => {
         jest.mock('axios');

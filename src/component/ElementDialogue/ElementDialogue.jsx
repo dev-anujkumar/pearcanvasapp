@@ -14,6 +14,7 @@ import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker } from '../../js/toggleLoader';
 import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
+import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx'
 
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
@@ -123,6 +124,7 @@ class ElementDialogue extends React.PureComponent {
                                     handleAudioPopupLocation = {_props.handleAudioPopupLocation}
                                     handleAssetsPopupLocation={_props.handleAssetsPopupLocation}
                                 />
+                                { this.state.selectedInnerElementIndex == index && ( _props.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { _props.handleAssetsPopupLocation(false) }} position={_props.position} isImageGlossary={true} isGlossary={true} />)}
                             </div>
                         </div>
                         <DialogueSeprator index={index}
@@ -219,7 +221,6 @@ class ElementDialogue extends React.PureComponent {
     handleOuterFocus = (c2Flag, showHideObj, event) => {
         this.setState({ selectedInnerElementIndex: null })
         this.props.handleFocus(c2Flag, showHideObj, event);
-        // this.setActiveElement(this.props.element);
     }
 
     handleOuterBlur = (field, eventTarget) => {
@@ -354,7 +355,6 @@ class ElementDialogue extends React.PureComponent {
                                 {this.renderDialogueContent(this.props)}
                             </div>
                         </figure>
-                            {console.log("check1",this.props.index)}
                         <div>
                         <KeyboardWrapper index={`${this.props.index}-2`}  enable>
                             <TinyMceEditor
@@ -385,14 +385,6 @@ const dispatchActions = {
     updateElement,
     setBCEMetadata
 }
-/*
-const mapStateToProps = ({ appStore }) => {
-    return {
-        asideData: appStore.asideData,
-        parentUrn: appStore.parentUrn
-    }
-}
-*/
 ElementDialogue.displayName = "ElementDialogue"
 export default connect(null, dispatchActions)(ElementDialogue);
 

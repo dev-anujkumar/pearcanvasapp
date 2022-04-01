@@ -214,6 +214,4 @@ ListButtonDrop.propTypes = {
     startValue: PropTypes.any
 }
 
-// const MemoizedListButtonDrop = React.memo(ListButtonDrop);
-
 export default React.memo(ListButtonDrop);

@@ -188,6 +188,83 @@ describe('Testing Figure image component', () => {
             expect(component.find('.divImage50TextMathImage .figureImage50TextMathImage .image50TextMathImage')).toHaveLength(1)
         })
     });
+    it('changeFigureLabel case if', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: 'test'
+            }
+        }
+        let props = {
+            model:figureImage50TextElementWithData,
+            index: 1,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            handleBlur: function () { },
+            permissions: ['add_multimedia_via_alfresco'],
+            element: {
+                figuretype:['image','table','mathImage','authoredtext'],
+                figuredata: {
+                    hasOwnProperty: jest.fn(()=> true),
+                    path:'test path',
+                    interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                    interactivetype:'3rd-party',
+                    posterimage:{
+                        imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                        path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                     },
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+            }
+        }
+        const component1 = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
+        const FigureImage1 = component1.find('FigureImage').instance();
+        FigureImage1.changeFigureLabel('Table', 'Figure');
+        let instance1 = component1.instance();
+        expect(instance1).toBeDefined();
+        component1.find('.figure-label').simulate('click');
+    });
+    it('changeFigureLabel case else', () => {
+        document.getElementById = () => {
+            return {
+                innerHTML: ''
+            }
+        }
+        let props = {
+            model:figureImage50TextElementWithData,
+            handleBlur:jest.fn(),
+            index: 1,
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            permissions: ['add_multimedia_via_alfresco'],
+            element: {
+                figuretype:['image','table','mathImage','authoredtext'],
+                figuredata: {
+                    hasOwnProperty: jest.fn(()=> true),
+                    path:'test path',
+                    interactiveid: 'urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456',
+                    interactivetype:'3rd-party',
+                    posterimage:{
+                        imageid:"urn:pearson:alfresco:cedeb658-3b9b-4aef-a0cf-9eb83b03a456",
+                        path:"https://eps.openclass.com/eps/sanvan/api/item/11253a14-a237-43a2-bbd7-91c7359aa520/100/file/CITe_COS_Gold_Book_V27/m/OPS/components/metrodigi/ch05-tabs_accordions_v2-01/index.html"
+                     },
+                },
+                html:{captions:"<p>test caption</p>",credits:"<p>test credit</p>",title:"<p><label>sdsfdfsdf&nbsp;</label><number>1.0&nbsp;</number>dfsdggdg ffse</p>",footnotes:{},glossaryentries:{},postertext:"<p>ssds dsd&nbsp; sasa sas dada</p>",tableasHTML:"",text:""},
+            }
+        }
+        const component = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
+        const FigureImage1 = component.find('FigureImage').instance();
+        FigureImage1.changeFigureLabel('');
+        let instance = component.instance();
+        expect(instance).toBeDefined();
+    });
     describe('Testing Element figure - handleC2MediaClick Functions', () => {
         let type = "figure";
         let props = {
@@ -385,7 +462,42 @@ describe('Testing Figure image component', () => {
             expect(elementFigureInstance.state.imgSrc).toBe(testDataFromNewAlfresco.epsUrl)
             spydataFromAlfresco.mockClear()
         })
-        xit('Test- if case workflow when scaleMarkerData present', () => {
+        it('Test- if case workflow when scaleMarkerData present', () => {
+            let testDatascaleMarker = { ...testDataFromNewAlfresco }
+            testDatascaleMarker["scalemarker"] = {
+                id: "c332dee9-f62a-4d6b-9fe6-4148ab5603a6",
+                name: "urry0679_03_c02-30_prf.png",
+                epsUrl: "www.xyz.com",
+                properties: {
+                    "exif:pixelYDimension": 600,
+                    "exif:pixelXDimension": 700
+                }
+            }
+            elementFigureInstance.dataFromNewAlfresco(testDatascaleMarker)
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear();
+        })
+        it('Test- if case workflow when some scaleMarkerData present', () => {
+            let testDatascaleMarker = { ...testDataFromNewAlfresco }
+            testDatascaleMarker["scalemarker"] = {
+                "institution-urls": {
+                    0: {
+                        publicationUrl: "www.xyz.com"
+                    }
+                }
+            }
+            elementFigureInstance.dataFromNewAlfresco(testDatascaleMarker)
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear();
+        })
+        it('Test- if case workflow when scaleMarkerData not present', () => {
+            let testDatascaleMarker = { ...testDataFromNewAlfresco }
+            testDatascaleMarker["id"] = null;
+            testDatascaleMarker["scalemarker"] = { }
             elementFigureInstance.dataFromNewAlfresco(testDatascaleMarker)
             elementFigureInstance.forceUpdate();
             elementFigure.update();
@@ -394,13 +506,26 @@ describe('Testing Figure image component', () => {
         })
         it('Test- else case workflow when epsURL is not given', () => {
             let data = testDataFromNewAlfresco;
-            data["epsUrl"] = '',
-            data['id'] = '',
-            data.properties["exif:pixelXDimension"] = '',
-            data.properties["exif:pixelYDimension"] = '',
-            data.properties["cplg:altText"] = '',
-            data.properties['cplg:longDescription'] = ''
+            data["epsUrl"] = "";
+            data['id'] = "";
+            data.properties["exif:pixelXDimension"] = "";
+            data.properties["exif:pixelYDimension"] = "";
+            data.properties["cplg:altText"] = "";
+            data.properties['cplg:longDescription'] = "";
             let DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/9b39bfd7-b73c-4b0f-b2c5-60e77ed17ce7/Page097a.jpg"
+            elementFigureInstance.dataFromNewAlfresco(data)
+            expect(elementFigureInstance.state.imgSrc).toBe(DEFAULT_IMAGE_SOURCE)
+        })
+        it('Test- else case workflow when epsURL becomes ``', () => {
+            let data = testDataFromNewAlfresco;
+            data["institution-urls"] = { };
+            data["epsUrl"] = "";
+            data['id'] = "";
+            data.properties["exif:pixelXDimension"] = "";
+            data.properties["exif:pixelYDimension"] = "";
+            data.properties["cplg:altText"] = "";
+            data.properties['cplg:longDescription'] = "";
+            let DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
             elementFigureInstance.dataFromNewAlfresco(data)
             expect(elementFigureInstance.state.imgSrc).toBe(DEFAULT_IMAGE_SOURCE)
         })
@@ -420,9 +545,9 @@ describe('Testing Figure image component', () => {
             jest.spyOn(elementFigureInstance, 'deleteFigureResource')
             elementFigureInstance.deleteFigureResource();
         })
-        xit('Test handleFigureDropdown', () => {
+        it('Test handleFigureDropdown', () => {
             jest.spyOn(elementFigureInstance, 'handleFigureDropdown')
-            elementFigureInstance.handleFigureDropdown();
+            elementFigureInstance.handleFigureDropdown('active');
         })
         it('Test onFigureImageFieldFocus', () => {
             jest.spyOn(elementFigureInstance, 'onFigureImageFieldFocus')
@@ -431,6 +556,103 @@ describe('Testing Figure image component', () => {
         it('Test onFigureImageFieldBlur', () => {
             jest.spyOn(elementFigureInstance, 'onFigureImageFieldBlur')
             elementFigureInstance.onFigureImageFieldBlur("test");
+        })
+        describe("Test isCiteChanged", () => {
+            it("Test isCiteChanged - IF Condition", () => {
+                let initialState2 = { ...initialState }
+                initialState2["alfrescoReducer"]["isCiteChanged"] = true;
+                initialState2["alfrescoReducer"]["changedSiteData"] = {
+                    guid: "78338-88-9990",
+                    title: "Image_Title",
+                    id: "urn:4766647-746646-98484884",
+                    visibility: ""
+                };
+                const store2 = mockStore(initialState2);
+                const elementFigure2 = mount(<Provider store={store2}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" { ...props }/></Provider>);
+                const elementFigureInstance2 = elementFigure2.find('FigureImage').instance();
+                const spydataFromAlfresco2 = jest.spyOn(elementFigureInstance2, 'dataFromNewAlfresco');
+                elementFigureInstance2.dataFromNewAlfresco(testDataFromNewAlfresco);
+                expect(spydataFromAlfresco2).toHaveBeenCalled();
+            })
+            it("Test isCiteChanged - ELSE Condition", () => {
+                let initialState2 = { ...initialState }
+                initialState2["alfrescoReducer"]["isCiteChanged"] = false;
+                const store2 = mockStore(initialState2);
+                const elementFigure2 = mount(<Provider store={store2}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" { ...props }/></Provider>);
+                const elementFigureInstance2 = elementFigure2.find('FigureImage').instance();
+                elementFigureInstance2.setState({alfrescoSiteData: {
+                    nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a"
+                }});
+                const spydataFromAlfresco2 = jest.spyOn(elementFigureInstance2, 'dataFromNewAlfresco');
+                elementFigureInstance2.dataFromNewAlfresco(testDataFromNewAlfresco);
+                expect(spydataFromAlfresco2).toHaveBeenCalled();
+            })
+        })
+        describe("Branch coverage for dataFromAlfresco", () => {
+            it('when figureType=table', () => {
+                let modelForTable = {
+                    ...figureImage50TextElementDefault
+                }
+                modelForTable["figuretype"] = "table";
+                let tableDataFromNewAlfresco = {
+                    ...testDataFromNewAlfresco
+                }
+                tableDataFromNewAlfresco["content"]["mimeType"] = "table";
+                const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={modelForTable} index="30" {...props}/></Provider>);
+                let elementFigureInstance = elementFigure.find('FigureImage').instance();
+                const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco');
+                elementFigureInstance.dataFromNewAlfresco(tableDataFromNewAlfresco);
+                elementFigureInstance.forceUpdate();
+                elementFigure.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled();
+            })
+            it('when figureType=mathImage', () => {
+                let modelForMathImage = {
+                    ...figureImage50TextElementDefault
+                }
+                modelForMathImage["figuretype"] = "mathImage";
+                let mathImageDataFromNewAlfresco = {
+                    ...testDataFromNewAlfresco
+                }
+                mathImageDataFromNewAlfresco["content"]["mimeType"] = "mathImage";
+                const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={modelForMathImage} index="30" {...props}/></Provider>);
+                let elementFigureInstance = elementFigure.find('FigureImage').instance();
+                const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco');
+                elementFigureInstance.dataFromNewAlfresco(mathImageDataFromNewAlfresco);
+                elementFigureInstance.forceUpdate();
+                elementFigure.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled();
+            })
+            it('when figureType=authoredtext', () => {
+                let authoredtextDataFromNewAlfresco = {
+                    ...testDataFromNewAlfresco
+                }
+                authoredtextDataFromNewAlfresco["content"]["mimeType"] = "authoredtext";
+                const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
+                let elementFigureInstance = elementFigure.find('FigureImage').instance();
+                const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco');
+                elementFigureInstance.dataFromNewAlfresco(authoredtextDataFromNewAlfresco);
+                elementFigureInstance.forceUpdate();
+                elementFigure.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled();
+            })
+            it('when figureType=codelisting', () => {
+                let modelForCodelisting = {
+                    ...figureImage50TextElementDefault
+                }
+                modelForCodelisting["figuretype"] = "codelisting";
+                let codelistingDataFromNewAlfresco = {
+                    ...testDataFromNewAlfresco
+                }
+                codelistingDataFromNewAlfresco["content"]["mimeType"] = "codelisting";
+                const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={modelForCodelisting} index="30" {...props}/></Provider>);
+                let elementFigureInstance = elementFigure.find('FigureImage').instance();
+                const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco');
+                elementFigureInstance.dataFromNewAlfresco(codelistingDataFromNewAlfresco);
+                elementFigureInstance.forceUpdate();
+                elementFigure.update();
+                expect(spydataFromAlfresco).toHaveBeenCalled();
+            })
         })
     })
     describe("Testing changeFigureLabel()", () => {
@@ -675,27 +897,343 @@ describe('Testing Figure image component', () => {
         keyboardReducer : {selectedElement: '' }
     }
     const store2 = mockStore(initialState2);
-
-    test('renders without crashing', () => {
-        let props = {
-            model: figureImage50TextElementWithData,
-            index: "",
-            slateLockInfo: {
-                isLocked: false,
-                userId: 'c5Test01'
-            },
-            onClick: () => { },
-            handleFocus: function () { },
-            permissions: ['add_multimedia_via_alfresco'],
-            figureData: {
-                model: {
-                    figuretype: ['image', 'table', 'mathImage', 'authoredtext']
-                }
+    let props = {
+        model: figureImage50TextElementWithData,
+        index: "",
+        slateLockInfo: {
+            isLocked: false,
+            userId: 'c5Test01'
+        },
+        onClick: () => { },
+        handleFocus: function () { },
+        permissions: ['add_multimedia_via_alfresco'],
+        figureData: {
+            model: {
+                figuretype: ['image', 'table', 'mathImage', 'authoredtext']
             }
-        }
+        },
+        showBlocker: jest.fn()
+    }
+
+    it('renders without crashing', () => {
         const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>)
         expect(component).toHaveLength(1);
         let instance = component.instance();
         expect(instance).toBeDefined();
-    })
+    });
+
+    describe('Testing rendering of Other Figure Image type', () => {
+        it('Testing rendering of mathImage without alignment', () => {
+            let mathImage = {...props}
+            mathImage['model'] = mathImage50TextElementDefault;
+            mathImage['model']['alignment'] = null;
+            const component = mount(<Provider store={store2}><FigureImage {...mathImage} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of image without alignment', () => {
+            let imageProps = {...props}
+            imageProps['model']['alignment'] = null;
+            const component = mount(<Provider store={store2}><FigureImage {...imageProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of image with alignment=`actual-size` having width & height', () => {
+            let imageProps = {...props}
+            imageProps['model']['alignment'] = 'actual-size';
+            imageProps['model']['figuredata'] = {
+                width: 50,
+                height: 50
+            }
+            const component = mount(<Provider store={store2}><FigureImage {...imageProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of image with alignment=`actual-size` not having width & height', () => {
+            let imageProps = {...props}
+            imageProps['model']['alignment'] = 'actual-size';
+            imageProps['model']['figuredata'] = { }
+            const component = mount(<Provider store={store2}><FigureImage {...imageProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of image with width > 600', () => {
+            let imageProps = {...props}
+            imageProps['model']['figuredata'] = { width: 700 }
+            const component = mount(<Provider store={store2}><FigureImage {...imageProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of tableasmarkup with alignment', () => {
+            let tableasmarupProps = {...props}
+            tableasmarupProps['model'] = tableasmarkupWithData;
+            tableasmarupProps['model']['alignment'] = 'table-editor';
+            const component = mount(<Provider store={store2}><FigureImage {...tableasmarupProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+        it('Testing rendering of mathml with alignment', () => {
+            let mathmlProps = {...props}
+            mathmlProps['model'] = blockmathWithData;
+            mathmlProps['model']['alignment'] = 'mathml';
+            const component = mount(<Provider store={store2}><FigureImage {...mathmlProps} /></Provider>)
+            expect(component).toHaveLength(1);
+            const instance = component.instance();
+            expect(instance).toBeDefined();
+        });
+    });
+
+    describe('Testing other functions of Figure Image', () => {
+
+        describe("Testing showDeleteAssetPopup", () => {
+            const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+            const figureImageInstance = component.find('FigureImage').instance();
+            const spy = jest.spyOn(figureImageInstance, 'showDeleteAssetPopup');
+            it('Testing showDeleteAssetPopup - IF Condition', () => {
+                figureImageInstance.setState({ deleteAssetPopup: true });
+                figureImageInstance.showDeleteAssetPopup();
+                expect(spy).toBeCalled();
+            });
+            it('Testing showDeleteAssetPopup - ELSE Condition', () => {
+                figureImageInstance.setState({ deleteAssetPopup: false });
+                figureImageInstance.showDeleteAssetPopup();
+                expect(spy).toBeCalled();
+            });
+        });
+
+        describe('Testing onFigureImageFieldFocus', () => {
+            it('Testing onFigureImageFieldFocus - IF Condition', () => {
+                const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+                document.getElementById = () => {
+                    return {
+                        nextElementSibling: {
+                            classList: {
+                                contains: () => true,
+                                add: jest.fn()
+                            }
+                        }
+                    }
+                }
+                const figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldFocus');
+                figureImageInstance.onFigureImageFieldFocus("urn:");
+                expect(spy).toBeCalled();
+            });
+            it('Testing onFigureImageFieldFocus - ELSE Condition', () => {
+                const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+                document.getElementById = () => {
+                    return {
+                        nextElementSibling: {
+                            classList: {
+                                contains: () => false,
+                                add: jest.fn()
+                            }
+                        }
+                    }
+                }
+                const figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldFocus');
+                figureImageInstance.onFigureImageFieldFocus("urn:");
+                expect(spy).toBeCalled();
+            });
+        });
+
+        describe('Testing onFigureImageFieldBlur', () => {
+            it('Testing onFigureImageFieldBlur - First IF', () => {
+                const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+                document.getElementById = () => {
+                    return {
+                        nextElementSibling: {
+                            classList: {
+                                remove: jest.fn()
+                            }
+                        }
+                    }
+                }
+                const figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldBlur');
+                figureImageInstance.onFigureImageFieldBlur("urn:");
+                expect(spy).toBeCalled();
+            });
+            it('Testing onFigureImageFieldBlur - Second IF', () => {
+                const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+                document.getElementById = () => {
+                    return {
+                        nextElementSibling: {
+                            classList: {
+                                contains: () => true,
+                                remove: jest.fn()
+                            }
+                        },
+                        innerHTML: '<p><br></p>'
+                    }
+                }
+                const figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldBlur');
+                figureImageInstance.onFigureImageFieldBlur("urn:");
+                expect(spy).toBeCalled();
+            });
+            it('Testing onFigureImageFieldBlur - Third IF', () => {
+                const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+                document.getElementById = () => {
+                    return {
+                        nextElementSibling: {
+                            classList: {
+                                contains: () => true,
+                                remove: jest.fn()
+                            }
+                        },
+                        innerHTML: '<p><br></p>'
+                    }
+                }
+                const figureImageInstance = component.find('FigureImage').instance();
+                const spy = jest.spyOn(figureImageInstance, 'onFigureImageFieldBlur');
+                figureImageInstance.setState({figureLabelData: ['<p><br></p>']})
+                figureImageInstance.onFigureImageFieldBlur('0-0');
+                expect(spy).toBeCalled();
+            });
+        });
+
+        describe('Testing handleLabelKeyDown', () => {
+            const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+            const figureImageInstance = component.find('FigureImage').instance();
+            const spy = jest.spyOn(figureImageInstance, "handleLabelKeyDown");
+            it('Testing handleLabelKeyDown - First IF', () => {
+                const labelListRef = {
+                    current: {
+                        childNodes: {
+                            0: {
+                                click: jest.fn()
+                            }
+                        }
+                    }
+                };
+                const labelRef = {
+                    current: {
+                        focus: jest.fn()
+                    }
+                };
+                figureImageInstance.labelListRef = { ...labelListRef };
+                figureImageInstance.labelRef = { ...labelRef };
+                const event = {
+                    keyCode: 13,
+                    stopPropagation: jest.fn(),
+                    preventDefault: jest.fn()
+                };
+                figureImageInstance.setState({showingListIndex: 0});
+                figureImageInstance.handleLabelKeyDown(event);
+                expect(spy).toBeCalled();
+            });
+            it('Testing handleLabelKeyDown - Second IF', () => {
+                const labelListRef = {
+                    current: {
+                        childNodes: {
+                            3: {
+                                click: jest.fn()
+                            }
+                        }
+                    }
+                };
+                const labelRef = {
+                    current: {
+                        focus: jest.fn()
+                    }
+                };
+                figureImageInstance.labelListRef = { ...labelListRef };
+                figureImageInstance.labelRef = { ...labelRef };
+                const event = {
+                    button: 0,
+                    target: {
+                        attributes: {
+                            1: {
+                                nodeValue: 3
+                            }
+                        }
+                    }
+                };
+                figureImageInstance.handleLabelKeyDown(event);
+                expect(spy).toBeCalled();
+            });
+            it('Testing handleLabelKeyDown - Third IF', () => {
+                const labelListRef = {
+                    current: {
+                        childNodes: {
+                            1: {
+                                focus: jest.fn()
+                            }
+                        }
+                    }
+                };
+                const labelRef = {
+                    current: {
+                        focus: jest.fn()
+                    }
+                };
+                figureImageInstance.labelListRef = { ...labelListRef };
+                figureImageInstance.labelRef = { ...labelRef };
+                const event = {
+                    keyCode: 40,
+                    stopPropagation: jest.fn(),
+                    preventDefault: jest.fn()
+                };
+                figureImageInstance.setState({showingListIndex: 0});
+                figureImageInstance.handleLabelKeyDown(event);
+                expect(spy).toBeCalled();
+            });
+            it('Testing handleLabelKeyDown - Fourth IF', () => {
+                const labelListRef = {
+                    current: {
+                        childNodes: {
+                            0: {
+                                focus: jest.fn()
+                            }
+                        }
+                    }
+                };
+                const labelRef = {
+                    current: {
+                        focus: jest.fn()
+                    }
+                };
+                figureImageInstance.labelListRef = { ...labelListRef };
+                figureImageInstance.labelRef = { ...labelRef };
+                const event = {
+                    keyCode: 38,
+                    stopPropagation: jest.fn(),
+                    preventDefault: jest.fn()
+                };
+                figureImageInstance.setState({showingListIndex: 1});
+                figureImageInstance.handleLabelKeyDown(event);
+                expect(spy).toBeCalled();
+            });
+        });
+
+        it("Testing isEnableKeyboard", () => {
+            let props2 = { ...props };
+            props2["model"]["figuredata"]["programlanguage"] = "Select";
+            const component = mount(<Provider store={store2}><FigureImage {...props2} /></Provider>);
+            const figureImageInstance = component.find('FigureImage').instance();
+            const spy = jest.spyOn(figureImageInstance, "isEnableKeyboard");
+            const result = figureImageInstance.isEnableKeyboard();
+            expect(spy).toBeCalled();
+            expect(result).toBe(false);
+        });
+
+        it("Testing toggleDeletePopup", () => {
+            const component = mount(<Provider store={store2}><FigureImage {...props} /></Provider>);
+            const figureImageInstance = component.find('FigureImage').instance();
+            const spy = jest.spyOn(figureImageInstance, "toggleDeletePopup");
+            const event = {
+                preventDefault: jest.fn()
+            };
+            figureImageInstance.toggleDeletePopup(null, event);
+            expect(spy).toBeCalled();
+        });
+    });
 });

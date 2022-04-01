@@ -286,7 +286,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             /**
              * PCAT-6929 : Renumbering of List element creates a new version but doesn't reorder the List numbering in element
              */
-            // return false;
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
@@ -343,14 +342,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[index] = res.data
                 } else {
                     if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents) || 'interactivedata' in bodymatter[index]) {
-                        //  focusedElement = focusedElement[index].elementdata.bodymatter;
                         focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents && focusedElement[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                     }
                 }
             }
             });
         }
-        store[config.slateManifestURN].contents.bodymatter = bodymatter;//res.data;
+        store[config.slateManifestURN].contents.bodymatter = bodymatter;
         let altText="";
         let longDesc="";
         if(res.data.figuredata){
@@ -385,7 +383,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             type: FETCH_SLATE_DATA,
             payload: store
         });
-        if (isAutoNumberingEnabled && autoNumberFigureTypesForConverion.includes(outputPrimaryOptionEnum)) {
+        const isBCE_Element = res.data?.type === 'figure' && res.data?.figuretype === 'codelisting' ?  true : false
+        if (isAutoNumberingEnabled && autoNumberFigureTypesForConverion.includes(outputPrimaryOptionEnum) && !isBCE_Element ) {
             const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
             const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
             dispatch(updateAutonumberingOnElementTypeUpdate(res.data, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
@@ -709,7 +708,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
                 }
             })
         }
-        if(dataToSend.columnnumber){
+        if(dataToSend.columnnumber || dataToSend.fontstyle || dataToSend.iconcolor){
         let activeElementObject = {
             contentUrn: dataToUpdate.blockListData.contentUrn,
             elementId: dataToUpdate.blockListData.id,
@@ -717,6 +716,8 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             elementType: dataToUpdate.elementType,
             primaryOption: dataToUpdate.primaryOption,
             secondaryOption: dataToUpdate.secondaryOption,
+            fontStyle: dataToUpdate.fontStyle,
+            bulletIcon: dataToUpdate.iconColor,
             toolbar: dataToUpdate.toolbar,
             elementWipType: dataToUpdate.elementWipType,
             tag: "P"
@@ -838,6 +839,12 @@ export const updateBLMetaData = (elementId, elementData, metaData) => {
         if(metaData.columnnumber){
             elementData.columnnumber = metaData.columnnumber;
         }
+        if(metaData.fontstyle){
+            elementData.fontstyle = metaData.fontstyle;
+        }
+        if(metaData.iconcolor){
+            elementData.iconcolor = metaData.iconcolor;
+        }
     }
     else{
         if (elementData?.listdata?.bodymatter) {
@@ -853,6 +860,12 @@ export const updateBLMetaData = (elementId, elementData, metaData) => {
                     }
                     if(metaData.columnnumber){
                         elementData.listitemdata.bodymatter[index].columnnumber = metaData.columnnumber;
+                    }
+                    if(metaData.fontstyle){
+                        elementData.listitemdata.bodymatter[index].fontstyle = metaData.fontstyle;
+                    }
+                    if(metaData.iconcolor){
+                        elementData.listitemdata.bodymatter[index].iconcolor = metaData.iconcolor;
                     }
                     return;
                 }

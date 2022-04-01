@@ -6,15 +6,12 @@
 /**************************Import Modules**************************/
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
-import { setSemanticsSnapshots, fetchElementsTag, generateWipDataForFigure, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
+import { setSemanticsSnapshots, fetchElementsTag, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
 import { getTitleSubtitleModel } from '../../constants/utility';
 /*************************Import Constants*************************/
 import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
-import { storeOldAssetForTCM } from '../ElementContainer/ElementContainer_Actions'
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
-import { indexOfSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper.js';
-import { MULTI_COLUMN_2C } from '../../constants/Element_Constants.js';
 import { tcmSnapshotsOnDefaultSlate } from './TcmSnapshotsOnDefaultSlate.js';
 
 
@@ -276,7 +273,6 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
     }
     else if((defaultKeys.action === 'delete' && type == POPUP_ELEMENT)) {            /** Delete Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
-        // tcmSnapshotsCreatePopup(snapshotsData, defaultKeys, deleVercase, newVersionUrns,index);
          tcmSnapshotsDeletePopup(snapshotsData, defaultKeys,index,containerElement,type);
         if(defaultKeys.action === 'delete' && type == POPUP_ELEMENT && (metaDataField && formattedTitleField.includes(metaDataField))){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'delete');
@@ -492,7 +488,6 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
         else if (asideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:SH || 3C:SH */
             const {columnName, manifestUrn, mcId} = parentUrn;
-            //let grandParentTag = tag.grandParent.split(":")[0];
             elementTag = `${parentUrn?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
         }
@@ -524,7 +519,6 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         
         else if (poetryAsideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:BP || 3C:BP */
             const {columnName, manifestUrn, mcId} = poetryParentURN;
-            //let grandParentTag = tag.grandParent.split(":")[0];
             elementTag = `${poetryParentURN?.multiColumnType}:${columnName}:${elementTag}`;
             elementId = `${mcId}+${manifestUrn}+${elementId}`;
         } 
@@ -851,7 +845,7 @@ const isEmpty = (obj) => {
     return false;
 }
 
-const allowedFigureTypesForAutoNumbering = ['image', 'table', 'mathImage', 'interactive', 'audio', 'video']
+const allowedFigureTypesForAutoNumbering = ['image', 'table', 'mathImage', 'interactive', 'audio', 'video', 'authoredtext', 'codelisting']
 
 export const autoNumberedElements = (element) => {
    

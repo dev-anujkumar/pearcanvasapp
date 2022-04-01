@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { slateData } from '../../../fixtures/slateTestingData.js'
+import { slateData, slateData2 } from '../../../fixtures/slateTestingData.js'
 import SlateWrapper from '../../../src/component/SlateWrapper';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -16,7 +16,6 @@ import "tinymce/skins/content/default/content.css";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/advlist";
 import "tinymce/plugins/paste";
-import { isOwnerRole, isSubscriberRole } from '../../../src/constants/utility.js';
 jest.mock('../../../src/config/config.js', () => ({
     scrolling: true,
     totalPageCount:3,
@@ -86,10 +85,10 @@ const initialState = {
     },
     projectInfo:{
         projectSubscriptionDetails: {
-            projectSharingRole: "OWNER",
+            projectSharingRole: "",
             isOwnersSubscribedSlateChecked: false,
             projectSubscriptionDetails: {
-                isSubscribed: true
+                isSubscribed: false
             }
         },
     }
@@ -112,6 +111,12 @@ jest.mock('../../../src/component/CanvasWrapper/SlateLock_Actions.js', () => ({
 jest.mock('../../../src/component/ElementContainer/AssessmentEventHandling.js', () => ({
     reloadSlate: jest.fn()
 }));
+
+jest.mock('../../../src/component/Toast',()=>{
+    return function () {
+        return (<div>test</div>)
+    }
+})
 const actionProps = {
     setSlateLock: jest.fn(),
     getSlateLockStatus: jest.fn(),
@@ -163,6 +168,10 @@ describe("SlateWrapper Component", () => {
         showBlocker:jest.fn(),
         releaseSlateLock: jest.fn(),
         commentSearchScrollTop: "123",
+        accesDeniedPopup: true,
+        getCommentElements: jest.fn(),
+        updateTimer: jest.fn(),
+        commentSearchScrollTop : {},
         ...actionProps
     };
     it("1.2 Test - componentDidMount ", () => {
@@ -214,6 +223,19 @@ describe("SlateWrapper Component", () => {
                 commentSearchReducer: { commentSearchTerm: '', parentId: 'commentP-123', scrollTop: "", scroll:"10" }
             }
 
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+            compInstance.componentDidUpdate();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it("1.3.4 Test - else cases (commentSearchNode/commentSearchScroll/searchNode !== '')", () => {
+            const newInitialState = {
+                ...initialState,
+                searchReducer: {searchTerm: '', parentId: 'parentId-123', deeplink: false, scroll: ""},
+                commentSearchReducer: { commentSearchTerm: '', parentId: 'commentP-123', scrollTop: "", scroll:"10" },
+                
+            }
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'componentDidUpdate')
             compInstance.componentDidUpdate();
@@ -387,6 +409,20 @@ describe("SlateWrapper Component", () => {
                 isLocked: true,
                 userId: 'c5Test01'
             }, withinLockPeriod: true }}
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'checkLockStatus')
+            compInstance.checkLockStatus();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.13.1  Test - if OWNER case ', () => {
+            const newInitialState = {...initialState,
+                projectSubscriptionDetails: {
+                projectSharingRole: "OWNER",
+                projectSubscriptionDetails: {
+                    isSubscribed: true
+                },
+        }}
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'checkLockStatus')
             compInstance.checkLockStatus();
@@ -789,12 +825,12 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
     })
-    describe("1.39 Test - accessDeniedPopup ", () => {
-        xit('1.39.1  Test - if case (this.props.accesDeniedPopup)', () => {
+    xdescribe("1.39 Test - accessDeniedPopup ", () => {
+        it('1.39.1  Test - if case (this.props.accesDeniedPopup)', () => {
             const newInitialState = {...initialState, appStore: {accesDeniedPopup: true}};
             const compInstance = slateWrapInstance(props, newInitialState);
             const spy = jest.spyOn(compInstance, 'accessDeniedPopup')
-            compInstance.accessDeniedPopup(true, 1);
+            compInstance.accessDeniedPopup();
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
@@ -995,6 +1031,8 @@ describe("SlateWrapper Component", () => {
     });
 
     describe('subscriber Content',()=>{
+
+        
         it('Subscriber Content', () => {
             jest.mock('../../../src/constants/utility', () => {
                 return {
@@ -1019,13 +1057,25 @@ describe("SlateWrapper Component", () => {
                     }
                 }
             }
+
+            let props1 = {
+                slateData: slateData2,
+                projectSubscriptionDetails: {
+                    projectSharingRole: "SUBSCRIBER",
+                    isOwnersSubscribedSlateChecked: false,
+                    projectSubscriptionDetails: {
+                        isSubscribed: true
+                    }
+                },
+                ...props,
+            }
             
-            const slateWrapInstance = (props, initialSt = initialState2) => {
+            const slateWrapInstance = (props1, initialSt = initialState2) => {
                 const store2 = mockStore(initialSt);
-                const component = mount(<Provider store={store2}><SlateWrapper {...props} /></Provider>);
+                const component = mount(<Provider store={store2}><SlateWrapper {...props1} /></Provider>);
                 return component.find('SlateWrapper').instance();
             }
-            const compInstance = slateWrapInstance(props);
+            const compInstance = slateWrapInstance(props1);
             const spy = jest.spyOn(compInstance, 'showLockPopup');
             compInstance.showLockPopup();
             compInstance.setState({ showOwnerSlatePopup: true });
@@ -1035,5 +1085,19 @@ describe("SlateWrapper Component", () => {
             expect(spy).toHaveBeenCalled();
             spy.mockClear();
         });
+        it(' Test - if SUBSCRIBER case ', () => {
+            const newInitialState = {...initialState,
+                projectSubscriptionDetails: {
+                projectSharingRole: "SUBSCRIBER",
+                projectSubscriptionDetails: {
+                    isSubscribed: true
+                },
+        }}
+            const compInstance = slateWrapInstance(props, newInitialState);
+            const spy = jest.spyOn(compInstance, 'checkLockStatus')
+            compInstance.checkLockStatus();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
     })
 })

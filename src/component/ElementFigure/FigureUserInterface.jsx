@@ -15,13 +15,11 @@ import {videoIcon, figureAudioIcon, smartlinkIcon} from '../../images/ElementBut
 import pdSLfPosterImage from '../../images/ElementButtons/pdSLfPosterImage.png';
 import slPosterImage from '../../images/ElementButtons/slPosterImage.png'
 import  figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
-import { labelHtmlData } from '../../constants/Element_Constants';
+import { labelHtmlData, AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
 import interactiveTypeData from '../ElementInteractive/interactiveTypes.js';
-import { AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE } from '../../constants/Element_Constants';
 import SmallRoundedButton from './Small_RoundedButton.jsx';
 import { ELM_INT, MMI } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
-import { add } from 'lodash';
 import RoundedButton from './Rounded_Button.jsx';
 import approvedIcon from './Assets/approved.svg';
 import unApprovedIcon from './Assets/unapproved.svg';
@@ -90,6 +88,7 @@ class FigureUserInterface extends Component {
                 this.setState({showingListIndex: 0});
                 this.labelListRef.current.childNodes[0].focus();
                 this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown)
+                this.labelListRef.current.addEventListener('click', this.handleLabelKeyDown)
             }
         }
     }
@@ -221,7 +220,9 @@ class FigureUserInterface extends Component {
            const node = document.activeElement;
            node.click();
         }
-        event.preventDefault();
+        if(event.keyCode === 38){
+            event.preventDefault();
+        }
     }
 
 
@@ -434,8 +435,12 @@ class FigureUserInterface extends Component {
         if(event.keyCode === 13) {
             this.labelListRef.current.childNodes[this.state.showingListIndex].click()
             this.figureLabelRef.current.focus()
+        } else if(event.button == 0){
+            const nodeValue = (event.target?.attributes[1]?.nodeValue)
+            this.labelListRef?.current?.childNodes[nodeValue]?.click();
+            this.figureLabelRef?.current?.focus();
+            this.setState({showingListIndex: nodeValue});
         }
-
         else if (event.keyCode === 40) {
             if(this.labelListRef.current.childNodes[this.state.showingListIndex + 1]) {
                 this.labelListRef.current.childNodes[this.state.showingListIndex + 1 ].focus()
@@ -448,8 +453,10 @@ class FigureUserInterface extends Component {
             
             }
         }
+        if (event.button != 0) {
         event.stopPropagation();
         event.preventDefault();
+        }
     }
 
 
@@ -458,7 +465,6 @@ class FigureUserInterface extends Component {
         let figureHtmlData = getLabelNumberTitleHTML(element);
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = (isAutoNumberingEnabled && element.figuretype !== INTERACTIVE) ? this.props.element.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
-        // let figureLabelFromApi = checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
         if (!(this.checkForAutoNumberedContent(this.props.element))) {
             if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
@@ -575,7 +581,7 @@ class FigureUserInterface extends Component {
                                          <ul ref={this.labelListRef}>
                                             {this.state.figureLabelData.map((label, i) => {
                                                 return (
-                                                    <li onKeyDown={this.clickNode} tabIndex={0} className="media-dropdown-options" key={i} onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
+                                                    <li onKeyDown={this.clickNode} tabIndex={0} currentIndex={i} className="media-dropdown-options" key={i} onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
                                                       
                                                 )
 

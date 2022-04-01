@@ -6,7 +6,7 @@ import { slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
 import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData } from "../../../fixtures/containerActionsTestingData"
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO } from '../../../src/constants/Action_Constants';
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_TABLE_ELEMENT_EDITED_DATA } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
 import axios from "axios"
@@ -1582,3 +1582,67 @@ describe("asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE && asideDataFromA
     })
     
 })
+
+describe("Testing Table Element code of alfresco metadata", () => {
+    let mock;
+
+    beforeAll(() => {
+      mock = new MockAdapter(axios);
+    });
+  
+    afterEach(() => {
+      mock.reset();
+    });
+
+    it("Should test prepareImageDataFromTable", () => {
+        let store = mockStore(() => initialState);
+        const element = {
+            figuredata: {
+                tableasHTML: '<table class="mce-item-table" style="border-collapse: collapse; width: 942px; word-break: normal; outline: none; height: 137px; text-align: left;" contenteditable="false" data-mce-style="border-collapse: collapse; width: 942px; word-break: normal; outline: none; height: 137px;" data-mce-selected="1"><tbody><tr style="height: 118px;" data-mce-style="height: 118px;"><td style="width: 469.99px; outline: none; height: 118px;" data-mce-style="width: 469.99px; outline: none; height: 118px;"><img class="imageAssetContent" src="https://cite-media-stg.pearson.com/legacy_paths/e70304a2-9064-45d4-a100-ed0e1c6768c9/Long_Desc_graph.png" width="93" height="112" data-id="imageAssetContent:e70304a2-9064-45d4-a100-ed0e1c6768c9:7805" data-mce-src="https://cite-media-stg.pearson.com/legacy_paths/e70304a2-9064-45d4-a100-ed0e1c6768c9/Long_Desc_graph.png"/>ab</td><td style="width: 470.01px; outline: none; height: 118px;" data-mce-style="width: 470.01px; outline: grey solid 2px; height: 118px;"><img class="imageAssetContent" src="https://cite-media-stg.pearson.com/legacy_paths/4819307d-7857-44f6-809a-24cae6836ff6/carimageNew01-QA.jpg" width="150" height="84" data-id="imageAssetContent:4819307d-7857-44f6-809a-24cae6836ff6:2648" data-mce-src="https://cite-media-stg.pearson.com/legacy_paths/4819307d-7857-44f6-809a-24cae6836ff6/carimageNew01-QA.jpg"/></td></tr><tr style="height: 19px;" data-mce-style="height: 19px;"><td style="width: 469.99px; outline: none; height: 19px;" data-mce-style="width: 469.99px; outline: none; height: 19px;"><img class="imageAssetContent" src="https://cite-media-stg.pearson.com/legacy_paths/31189d68-e07d-42f6-923e-a78955387c6f/galaxy_assesttest%20%281%29.jpg" width="150" height="94" data-id="imageAssetContent:31189d68-e07d-42f6-923e-a78955387c6f:1673" data-mce-src="https://cite-media-stg.pearson.com/legacy_paths/31189d68-e07d-42f6-923e-a78955387c6f/galaxy_assesttest%20%281%29.jpg"/></td><td style="width: 470.01px; outline: none; height: 19px;" data-mce-style="width: 470.01px; outline: none; height: 19px;"><img class="imageAssetContent" src="https://cite-media-stg.pearson.com/legacy_paths/e70304a2-9064-45d4-a100-ed0e1c6768c9/Long_Desc_graph.png" width="93" height="112" data-id="imageAssetContent:e70304a2-9064-45d4-a100-ed0e1c6768c9:8606" data-mce-src="https://cite-media-stg.pearson.com/legacy_paths/e70304a2-9064-45d4-a100-ed0e1c6768c9/Long_Desc_graph.png"/></td></tr></tbody></table>'
+            }
+        }
+        
+        const response = {
+            data:{
+                entry:{
+                    properties:{
+                        "cplg:altText": "AltText",
+                        "cplg:longDescription": "Description"
+                    }
+                }
+            }
+        };
+
+        mock.onGet(`${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/*`).reply(200, Promise.resolve(response));
+        const spyPrepareImageDataFromTable  = jest.spyOn(actions, 'prepareImageDataFromTable') 
+        actions.prepareImageDataFromTable(element, store.dispatch);
+        store.dispatch(actions.prepareImageDataFromTable(element)).then(() => {
+            expect(spyPrepareImageDataFromTable).toHaveBeenCalled();
+        });
+    })
+
+    it("Should test updateEditedData", () => {
+        let store = mockStore(() => initialState);
+        let expectedActions = {
+            type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
+            payload: {}
+        }
+        store.dispatch(actions.updateEditedData({}));
+        expect(store.getActions()[0].type).toEqual(expectedActions.type);
+    });
+
+    it("Should test saveTEMetadata", () => {
+        const editedImageList = {
+            "imageAssetContent:e70304a2-9064-45d4-a100-ed0e1c6768c9:7805":{
+                altText: "AltText", 
+                imgId: "imageAssetContent:e70304a2-9064-45d4-a100-ed0e1c6768c9:7805",
+                longdescription: "Long Description"
+            }
+        }
+        
+        mock.onPut(`${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/imageAssetContent:e70304a2-9064-45d4-a100-ed0e1c6768c9:7805`).reply(200,{});
+        const spysaveTEMetadata  = jest.spyOn(actions, 'saveTEMetadata') 
+        actions.saveTEMetadata(editedImageList);
+        expect(spysaveTEMetadata).toHaveBeenCalled();
+    });
+});

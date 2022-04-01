@@ -7,6 +7,7 @@ import config from '../../config/config';
 // IMPORT - Components //
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
+import ContainerHeader from '../ContainerHeader/ContainerHeader.jsx';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import { guid } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -52,7 +53,7 @@ class ElementAsideContainer extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.asideRef && !this.asideRef.current.contains(event.target)) {
+        if (this.asideRef && !this.asideRef.current.contains(event.target) && !this.props.isAutoNumberingEnabled) {
             this.handleAsideBlur(event);
         }
     }
@@ -73,9 +74,6 @@ class ElementAsideContainer extends Component {
     }
 
     handleFocus = (e) => {
-        // if(e.target && !(e.target.classList.contains('elemDiv-hr') )){
-        //     return false;
-        // }
 
         if (checkSlateLock(this.props.slateLockInfo)) {
             return false
@@ -114,9 +112,6 @@ class ElementAsideContainer extends Component {
 
                     let filterElement = _bodyMatter.filter((ele) => ele.type == "manifest");
                     let elementLength = _bodyMatter.length - filterElement.length;
-                    /* if(!_bodyMatter.length && this.props.deleteElement){
-                        this.props.deleteElement();
-                    } */
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
                         <div className={`container-aside ${isDiffDesignType ? designtype : ''}`} data-id={_containerId} container-type={_containerType}>
@@ -700,21 +695,38 @@ class ElementAsideContainer extends Component {
             }
         }
     }
+
+    checkForAutoNumberedContent = (currentElement) => {
+        if ((currentElement?.type === 'element-aside') && currentElement.hasOwnProperty('numberedandlabel') && this.props?.isAutoNumberingEnabled) {
+            return true
+        }
+        return false
+    }
     /**
      * render | renders title and slate wrapper
      */
     render() {
-        const { element } = this.props;
-        let asideHtmlData = getLabelNumberTitleHTML(element);
+        const { element, isAutoNumberingEnabled } = this.props;
+        let asideHtmlData;
+        if (!isAutoNumberingEnabled) {
+            asideHtmlData = getLabelNumberTitleHTML(element);
+        }
         let designtype = element.hasOwnProperty("designtype") ? element.designtype : "",
             subtype = element.hasOwnProperty("subtype") ? element.subtype : "";
         let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
-        let labelMargin = showTitleField ? 'remove-margin-top' : ''
+        let labelMargin = (showTitleField || this.checkForAutoNumberedContent(element)) ? 'remove-margin-top' : ''
         let diffDesignType = ["asideSidebar04", "asideSidebar05", "asideSidebarFeature", "asideActivity"]
         let isDiffDesignType= diffDesignType.includes(designtype);
         return (
             <aside className={`${labelMargin} ${ isDiffDesignType ? '' : designtype } aside-container`} tabIndex="0" ref={this.asideRef}>
-                {this.renderTitleField(asideHtmlData)}
+                {this.checkForAutoNumberedContent(element) ?
+                    <ContainerHeader
+                        {...this.props}
+                        model = {element}
+                        isAutoNumberingEnabled = {isAutoNumberingEnabled}
+                        elementHtmlData = {asideHtmlData}
+                    /> : this.renderTitleField(asideHtmlData)
+                }
                 {subtype == "workedexample" ? this.renderWorkExample(designtype) : this.renderAside(designtype,isDiffDesignType)}
             </aside>
         );
@@ -731,7 +743,9 @@ const mapStateToProps = state => {
     return {
         searchUrn: state.searchReducer.searchTerm,
         asideTitleData: state.appStore.asideTitleData,
-        activeElement: state.appStore.activeElement
+        activeElement: state.appStore.activeElement,
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
+        figureDropdownData: state.appStore.figureDropdownData
     };
 };
 

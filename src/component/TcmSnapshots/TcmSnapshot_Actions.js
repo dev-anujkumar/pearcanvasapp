@@ -2,6 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { GET_TCM_RESOURCES, AUTHORING_ELEMENT_UPDATE } from '../../constants/Action_Constants';
+import { MULTI_COLUMN } from './TcmConstants'
 
  /**
      * @description - TCM STATUS FOR ELEMENT LEVEL ON SLATE
@@ -9,6 +10,10 @@ import { GET_TCM_RESOURCES, AUTHORING_ELEMENT_UPDATE } from '../../constants/Act
   */
 export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
+    const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
+    if (cypressPlusProjectStatus && config.slateType === "pdfslate") {
+        return false; // disable TCM for all PDF slates in Cypress+ Enabled Projects
+    }
     let url = `${config.TCM_SRVR_STATUS_URL}${config.projectUrn}/slate/${slateManifestUrn}`;
     return axios.get(url, {
         headers: {
@@ -158,7 +163,6 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
 /** TCM Snapshots API for CUT/COPY PASTE operation */
 export const callCutCopySnapshotAPI = async (snapshotData) => {
     const url = config.TCM_CUT_COPY_URL
-    // const url = 'http://localhost:5000/cut-copy-snapshots'
     if (snapshotData.operationType === 'copy') {
         return axios.post(url, snapshotData, {
             headers: {

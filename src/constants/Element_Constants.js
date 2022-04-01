@@ -2,10 +2,12 @@ import { WORKED_EXAMPLE } from "../component/SlateWrapper/SlateWrapperConstants"
 /*---------------- Error message constants -----------------*/
 export const SLATE_API_ERROR = "Error in getting slate data. Please try again."
 
-/*---------------Element Figure ----------------------*/ 
+/*---------------Element Figure ----------------------*/
+export const TABLE_AS_MARKUP = "tableasmarkup" 
 export const FIGURE = "figure"
 export const IMAGE = "image"
 export const TABLE = "table"
+export const TABLE_ELEMENT = "tableasmarkup"
 export const MATH_IMAGE = "mathImage"
 export const AUTHORED_TEXT = "authoredtext"
 export const CODELISTING = "codelisting"
@@ -126,7 +128,7 @@ export const SOURCE_MAP = {
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
     [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','POP_UP'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
     [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] },
-    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY'], 'notSupport': [] }
+    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST'], 'notSupport': [] }
 };
 const SHOWHIDE = "SHOW_HIDE";
 // This mapping is used for conditional rendering of Paste Button inside Elements

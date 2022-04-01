@@ -11,7 +11,7 @@ import {
 import config from '../../config/config.js'
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
-import { getLatestVersion, slateLinkDetails } from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import { slateLinkDetails } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 let currentlySearching = false;
 let searchterm = "";
 
@@ -63,60 +63,6 @@ export const assetIdForSnapshot = (assetID) => {
     }
   }
 }
-
-// export const getCurrentlyLinkedImage = (id, cb) => {
-
-//   let url = config.NARRATIVE_API_ENDPOINT+"entity/" + id + "/versions";
-//   let currentlyLinkedData = {};
-
-//   sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-
-//   return axios.get(url,{
-//     headers: {
-//       'Content-Type': 'application/json',
-//       ApiKey: config.STRUCTURE_APIKEY,
-//       PearsonSSOSession: config.ssoToken
-//     }
-//   }).then((res) => {
-//     if (res.data.length) {
-
-//       let workId = res.data[res.data.length - 1].versionUrn;
-
-//       let workUrl = config.NARRATIVE_API_ENDPOINT+"v2/" + workId + "/content"
-//       axios.get(workUrl, {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           ApiKey: config.STRUCTURE_APIKEY,
-//           PearsonSSOSession: config.ssoToken
-//         }
-//       }).then((res1) => {
-//         sendDataToIframe({'type': HideLoader,'message': { status: false }});
-//         currentlyLinkedData.id=res1.data.id;
-//         currentlyLinkedData.title=res1.data.title.text;
-//         cb(currentlyLinkedData)
-//       }).catch((err) => {
-//         sendDataToIframe({'type': HideLoader,'message': { status: false }});
-//         cb(currentlyLinkedData);
-//         console.log("err from narrative api", err)
-//       })
-
-//     }
-//     else{
-//       sendDataToIframe({'type': HideLoader,'message': { status: false }});
-//       cb(currentlyLinkedData);
-//     }
-
-//   }).catch((err) => {
-//     sendDataToIframe({'type': HideLoader,'message': { status: false }});
-//     cb(currentlyLinkedData);
-//     console.log("err from vesion api", err)
-//   })
-
-//   // return cb(mockData.images.filter((value, key) => {
-//   //   return value.entityUrn == id
-//   // }))
-// }
-
 /**
  * Get images from manifest Api
  */

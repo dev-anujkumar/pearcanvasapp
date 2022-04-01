@@ -274,7 +274,6 @@ const AssessmentAPIHandlers = {
                 latestItemTitle: itemTitle
             }
             await dispatch(fetchAssessmentItems(responseData.entityUrn, {assessmentData, assessmentItemData: {...assessmentItemData, updatedItem: itemData },dispatch}));
-            //dispatch(fetchAssessmentVersions(responseData.entityUrn, 'assessmentItem', responseData.dateCreated, assessmentData, { ...assessmentItemData, updatedItem: itemData }));
         }
     },
     latestAssessmentItemHandler: (responseData, args, dispatch) =>{

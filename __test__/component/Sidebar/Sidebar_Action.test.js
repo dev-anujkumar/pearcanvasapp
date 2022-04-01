@@ -9,6 +9,7 @@ import activeElementData from './SidebarInitialState';
 import * as sidebarAction from '../../../src/component/Sidebar/Sidebar_Action';
 import config from '../../../src/config/config';
 import testData from "./TestData";
+import { CHECK_ASIDE_NUMBER } from '../../../src/constants/Action_Constants'
 
 jest.mock('axios');
 jest.mock('../../../src/constants/utility.js', () => ({
@@ -264,7 +265,7 @@ const initialState20 = {
     }
 }
 
-xdescribe('Test - Sidebar_Actions',()=>{
+describe('Test - Sidebar_Actions',()=>{
     describe('Test convertElement- paragraph', () => {
         let store = mockStore(() => initialState);
         it('Test Convert Element', () => {
@@ -282,7 +283,6 @@ xdescribe('Test - Sidebar_Actions',()=>{
             store.dispatch(sidebarAction.conversionElement(elementData));
             expect(spyconversionElement).toHaveBeenCalled()
             spyconversionElement.mockClear()
-    
         });
         it('Test handleElementConversion -else case', () => {
             store = mockStore(() => initialState);
@@ -295,7 +295,6 @@ xdescribe('Test - Sidebar_Actions',()=>{
                 toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "increaseindent", "decreaseindent", "glossary", "assetpopover", "slatetag", "redo"]
             }
             let store = mockStore(() => initialState);
-    
             const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
             store.dispatch(sidebarAction.conversionElement(elementData));
             expect(spyconversionElement).toHaveBeenCalled()
@@ -370,7 +369,6 @@ xdescribe('Test - Sidebar_Actions',()=>{
                 primaryOption: "primary-blockcode-equation",
                 secondaryOption: "secondary-blockcode-language-Default",
                 toolbar:  ["assetpopover", "decreaseindent", "glossary"]
-                
              }
             let store = mockStore(() => initialState4);
             const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
@@ -994,7 +992,6 @@ xdescribe('Test - Sidebar_Actions',()=>{
         });
     });
     describe('Test convertElement- codelisting MOCK API CALL', () => {
-    
         it('Test convertElement  -we MOCK API CALL', async () => {
             let expectedRes = {
                 status: 200,
@@ -1063,7 +1060,7 @@ describe('Test handleElementConversion- ShowHide in WE-Paragraph to List', () =>
         spyconversionElement.mockClear()
     });
 });
-xdescribe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
+describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
 
     it('Test convertElement  -we MOCK API CALL', async () => {
         let expectedRes = {
@@ -1144,7 +1141,7 @@ xdescribe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
         await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
     });
 });
-xdescribe('1 Test convertElement ', () => {
+describe('1 Test convertElement ', () => {
     const showHideObj = { index: "0-0",
         element: { contentUrn: "urn:pearson:entity:808c0c76-1786-455a-8410-4f250384b142" }
     };
@@ -1367,7 +1364,7 @@ xdescribe('1 Test convertElement ', () => {
             expect(spyconversionElement).toHaveBeenCalled()
             spyconversionElement.mockClear()
         });
-        xdescribe('1.10.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
+        describe('1.10.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
             it('1.10.3.1 indexes.length === 4 ', async () => {
                 const { initState, store, showHideObj } = testData?.testcase2;
                 const { oldElementData, newElementData, oldElementInfo } = testData?.testcase17;
@@ -1509,10 +1506,15 @@ describe('3 Test setBCEMetadata ', () => {
 describe('4 Test tcmSnapshotsForConversion  ', () => {
     const { elementConversionData, indexes, appStore } = testData?.testcase14;
     it('4.1 Test response.hasOwnProperty("figuretype") ', () => {
+        let actionStatus={
+            action:"update",
+            status:"",
+            fromWhere:"conversion"
+        }
         config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
         const storeMock = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'tcmSnapshotsForConversion');
-        sidebarAction.tcmSnapshotsForConversion(elementConversionData,indexes,appStore, storeMock.dispatch); 
+        sidebarAction.tcmSnapshotsForConversion(elementConversionData,indexes,appStore, storeMock.dispatch);
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
     });
@@ -1599,7 +1601,9 @@ describe('Test - ManifestList conversion', () => {
         }
         const metadata = {
             subtype: 'roman',
-            columnnumber: 1
+            columnnumber: 1,
+            fontstyle:2,
+            iconcolor:2
         }
         const spyFunction = jest.spyOn(sidebarAction, 'updateBLMetaData');
         sidebarAction.updateBLMetaData("urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334", elementData, metadata);
@@ -1614,7 +1618,9 @@ describe('Test - ManifestList conversion', () => {
         }
         const metadata = {
             subtype: 'roman',
-            columnnumber: 1
+            columnnumber: 1,
+            fontstyle:2,
+            iconcolor:2
         }
         const spyFunction = jest.spyOn(sidebarAction, 'updateBLMetaData');
         sidebarAction.updateBLMetaData("urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334", elementData, metadata);
@@ -1629,13 +1635,14 @@ describe('Test - ManifestList conversion', () => {
         }
         const metadata = {
             subtype: 'roman',
-            columnnumber: 1
+            columnnumber: 1,
+            fontstyle:2,
+            iconcolor:2
         }
         const spyFunction = jest.spyOn(sidebarAction, 'updateBLMetaData');
         sidebarAction.updateBLMetaData("urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334", elementData, metadata);
         expect(spyFunction).toHaveBeenCalled()
     })
-
     it('Test - updateBlockListMetadata - success block', async () => {
         const {initState} = testData?.testcase18;
         config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
@@ -1649,7 +1656,84 @@ describe('Test - ManifestList conversion', () => {
             },
             dataToSend: {
                 columnnumber: 1,
-                slateLevelBLIndex: 0
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                parent:{
+                    type:"showhide"
+                }
+            }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+    it('Test - updateBlockListMetadata1- success block', async () => {
+        const {initState} = testData?.testcase18;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.resolve({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: '',
+            },
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                    type:"showhide"
+            }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+    it('Test - updateBlockListMetadata2- success block', async () => {
+        const {initState} = testData?.testcase18;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.resolve({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: '',
+            },
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                parent:{
+                    type:"showhide",
+                    showHideType:"showhide"
+                }
+            }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+    it('Test - updateBlockListMetadata2- success block', async () => {
+        const {initState} = testData?.testcase18;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.resolve({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: '',
+            },
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                sectionType:"showhide",
             }
         }
         storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
@@ -1669,7 +1753,12 @@ describe('Test - ManifestList conversion', () => {
             },
             dataToSend: {
                 columnnumber: 1,
-                slateLevelBLIndex: 0
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                parent:{
+                    type:"showhide"
+                }
             }
         }
         storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
@@ -1689,7 +1778,13 @@ describe('Test - ManifestList conversion', () => {
             },
             dataToSend: {
                 columnnumber: 1,
-                slateLevelBLIndex: 0
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                sectionType:"showhide",
+                parent:{
+                    type:"showhide"
+                }
             }
         }
         storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
@@ -1709,12 +1804,21 @@ describe('Test - ManifestList conversion', () => {
             },
             dataToSend: {
                 columnnumber: 1,
-                slateLevelBLIndex: 0
+                slateLevelBLIndex: 1
             }
         }
         storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
         expect(spyFunction).toHaveBeenCalled()
         spyFunction.mockClear()
     })
+    it('testing-- enableAsideNumbering  action', () => {
+        let dispatch = (obj) => {
+            expect(obj.type).toBe(CHECK_ASIDE_NUMBER);
+            expect(obj.payload).toEqual({"elementId": undefined, "isAsideNumber": true});
+        };
+        const spyFunction = jest.spyOn(sidebarAction, 'enableAsideNumbering');
+        sidebarAction.enableAsideNumbering(true)(dispatch)
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    })
 });
-

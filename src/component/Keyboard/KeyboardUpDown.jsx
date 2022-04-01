@@ -15,6 +15,10 @@ const KeyboardUpDown = (props) => {
 
     const getLastChild = (element) => {
         if(element && element.lastChild) {
+            if(element.lastChild?.nodeName === "A" 
+            && element.lastChild?.classList?.contains('paragraphNumeroUnoFootnote')){
+                return element.lastChild
+            }
             return getLastChild(element.lastChild);
         } else {
             return element;
@@ -39,9 +43,13 @@ const KeyboardUpDown = (props) => {
             
             const tinymceChild = getTinymceElement(childElement);
             const lastChild = getLastChild(tinymceChild);
-            console.log("Last child is ", lastChild, childElement, tinymceChild);
             if(lastChild) {
                 if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
+                    if(tinymceChild.classList.contains("paragraphNummerEins")){
+                        tinymceChild.click();
+                        tinymceChild.focus();
+                    }
+                    else {
                     // for foot note
                     // add span at last and click on span
                     // childElement.click();
@@ -50,6 +58,7 @@ const KeyboardUpDown = (props) => {
                     span.innerHTML = "<br>";
                     childElement.firstChild.appendChild(span);
                     span.click();
+                    }
                 }
                 else if(lastChild.id === "f-e-s") {
                     if(lastChild?.previousSibling?.nodeName !== 'SUP') {
@@ -62,9 +71,9 @@ const KeyboardUpDown = (props) => {
                 }
                 else if (tinymceChild) {
                     // case of floating placeholder
-                    if(tinymceChild.innerHTML === "<p></p>") {
-                        tinymceChild.innerHTML = '';
-                    }
+                    // if(tinymceChild.innerHTML === "<p></p>") {
+                    //     tinymceChild.innerHTML = '';
+                    // }
                     tinymceChild.click();
                     tinymceChild.focus();
                 }
@@ -117,6 +126,10 @@ const KeyboardUpDown = (props) => {
                 if (event.keyCode === 38 && selectedNodeIndex !== 0) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex - 1]);
 
+                }
+                else if ((event.keyCode === 38 && selectedNodeIndex === 0) ||
+                    (event.keyCode === 40 && selectedNodeIndex === allInteractiveElements.length - 1)) {
+                    getChildAndClick(allInteractiveElements[selectedNodeIndex]);
                 }
                 else if (event.keyCode === 40 && selectedNodeIndex !== allInteractiveElements.length) {
                     getChildAndClick(allInteractiveElements[selectedNodeIndex + 1], selectedNodeIndex);

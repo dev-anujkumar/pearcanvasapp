@@ -7,7 +7,10 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS,
     UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
     UPDATE_AUTONUMBERING_DROPDOWN_VALUE,
-    UPDATE_POPUP_PARENT_SLATE
+    UPDATE_POPUP_PARENT_SLATE,
+    GET_SLATE_LIST_IN_CONTAINER,
+    UPDATE_AUTONUMBER_MAPPER_KEYS,
+    UPDATE_CHAPTER_POPUP_DATA
 } from '../constants/Action_Constants.js';
 
 const INITIAL_STATE = {
@@ -20,7 +23,8 @@ const INITIAL_STATE = {
         videosList: [],
         asidesList: [],
         workedExamplesList: [],
-        interactiveList: []
+        interactiveList: [],
+        exhibitsList: []
     },
     autoNumberingDetails: {},
     autoNumberElementsIndex: {
@@ -31,11 +35,58 @@ const INITIAL_STATE = {
         videoIndex: {},
         asideIndex: {},
         workedExampleIndex: {},
-        interactiveIndex: {}
+        interactiveIndex: {},
+        exhibitsIndex: {}
     },
     slateFigureList:[],
     autoNumberOption: '',
-    popupParentSlateData: {}
+    popupParentSlateData: {},
+    tocContainerSlateList:[],
+    autoNumber_KeyMapper: {
+        'Figure': 'figureImageIndex',
+        'Table': 'tableIndex',
+        'Equation': 'equationsIndex',
+        'Audio': 'audioIndex',
+        'Video': 'videoIndex',
+        "Interactive": 'interactiveIndex',
+        "Aside": "asideIndex",
+        "Worked Example": "workedExampleIndex",
+        'Exhibit': 'exhibitsIndex'
+    },
+    autoNumber_ElementTypeKey: {
+        'Figure': 'imagesList',
+        'Table': 'tablesList',
+        'Equation': 'equationsList',
+        'Audio': 'audiosList',
+        'Video': 'videosList',
+        'Interactive': 'interactiveList',
+        "Aside": "asidesList",
+        "Worked Example": "workedExamplesList",
+        'Exhibit': 'exhibitsList'
+    },
+    autoNumber_response_ElementType_mapper: {
+        "figures": "imagesList",
+        "tables": "tablesList",
+        "equations": "equationsList",
+        "audios": "audiosList",
+        "videos": "videosList",
+        "interactives": "interactiveList",
+        "asides": "asidesList",
+        "workedexamples": "workedExamplesList",
+        'exhibits': 'exhibitsList'
+    },
+    autoNumber_IndexMapper: {
+        'imagesList': 'figureImageIndex',
+        'tablesList': 'tableIndex',
+        'equationsList': 'equationsIndex',
+        'audiosList': 'audioIndex',
+        'videosList': 'videoIndex',
+        'interactiveList': 'interactiveIndex',
+        'asidesList': 'asideIndex',
+        'workedExamplesList': 'workedExampleIndex',
+        'exhibitsList': 'exhibitsIndex'
+    },
+    popupElementsData: []
 }
 
 const INITIAL_ACTION = {
@@ -104,6 +155,35 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
                 ...state,
                 popupParentSlateData: action.payload
             }
+        case GET_SLATE_LIST_IN_CONTAINER:
+            return {
+                ...state,
+                tocContainerSlateList: action.payload
+            }
+        case UPDATE_AUTONUMBER_MAPPER_KEYS:
+            return {
+                ...state,
+                autoNumber_KeyMapper: action.payload.autoNumber_KeyMapper,
+                autoNumber_IndexMapper: action.payload.autoNumber_IndexMapper,
+                autoNumber_ElementTypeKey: action.payload.autoNumber_ElementTypeKey,
+                autoNumber_response_ElementType_mapper: action.payload.autoNumber_response_ElementType_mapper
+            }
+            case UPDATE_CHAPTER_POPUP_DATA:
+                if (action.key) {
+                    let popupElementsData = state.popupElementsData;
+                    popupElementsData = popupElementsData.filter(function (data) {
+                        return data.versionUrn !== action.key
+                    })
+                    return {
+                        ...state,
+                        popupElementsData: [...popupElementsData, action.payload]
+                    }
+                } else {
+                    return {
+                        ...state,
+                        popupElementsData: []
+                    }
+                }
         default:
             return state
     }

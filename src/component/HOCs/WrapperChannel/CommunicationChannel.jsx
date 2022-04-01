@@ -138,6 +138,7 @@ function CommunicationChannel(WrappedComponent) {
                         if (message?.alfresco?.siteId) config.alfrescoMetaData.alfresco.siteId = alfrescoRepository
                         fetchAlfrescoSiteDropdownList('projectAlfrescoSettings')
                     }
+                    this.props.cypressPlusEnabled( message.isCypressPlusEnabled, config.SHOW_CYPRESS_PLUS,)
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
                     this.props.fetchLearnosityContent()
@@ -379,6 +380,15 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.deleteComment(message)
                     break
                 }
+                case 'refreshCanvasOnPdfMerge': { // Refresh Toc & Canvas on PDF Merge operation in Cypress Plus
+                    //sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                    sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+                    break;
+                }
+                case 'newCustomCanvasLabels': {
+                    this.props.updateFigureDropdownValues(message)
+                    break;
+                }
             }
         }
 
@@ -443,6 +453,10 @@ function CommunicationChannel(WrappedComponent) {
                 elementId = linkData.elementId || "";
                 pageId = linkData.pageId || "";
 
+                var html = linkData.pageName;
+                var div = document.createElement("div");
+                div.innerHTML = html;
+                const pageLinkText = div.innerText
                 let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');              
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
@@ -462,9 +476,9 @@ function CommunicationChannel(WrappedComponent) {
                                 linkHTML = linkNode.innerHTML || '';
                                 linkNode.outerHTML = '<abbr title="Slate Link" class="Pearson-Component AssetPopoverTerm ' + elementTag + '" asset-id="' + linkId + '" element-id="' + elementId + '" data-uri="' + pageId + '">' + linkHTML + '</abbr>';
                                 if (/(<abbr [^>]*id="page-link-[^"]*"[^>]*>.*<\/abbr>)/gi.test(linkNode.outerHTML)) {
-                                    linkNotification = "Link updated to slate '" + linkData.pageName + "'.";
+                                    linkNotification = "Link updated to slate '" + pageLinkText + "'.";
                                 } else {
-                                    linkNotification = "Link added to slate '" + linkData.pageName + "'.";
+                                    linkNotification = "Link added to slate '" + pageLinkText + "'.";
                                 }
                             });
                         }
@@ -907,6 +921,23 @@ function CommunicationChannel(WrappedComponent) {
                 let slateData = {
                     currentProjectId: config.projectUrn,
                     slateEntityUrn: config.slateEntityURN
+                }
+                /* Message from TOC is current Slate is Joined PDF */
+                /** ---------------------------------------------- */
+                if (message?.node) {
+                    let matterType = 'bodymatter'
+                    if (message.node.parentOfParentItem !== "") {
+                        if (message.node.parentOfParentItem === 'backmatter') {
+                            matterType = 'backmatter'
+                        } else if (message.node.parentOfParentItem === 'frontmatter') {
+                            matterType = 'frontmatter'
+                        }
+                    } else if (message.node.nodeParentLabel === 'backmatter') {
+                        matterType = 'backmatter'
+                    } else if (message.node.nodeParentLabel === 'frontmatter') {
+                        matterType = 'frontmatter'
+                    }
+                    this.props.setSlateMatterType(matterType);
                 }
                 config.isPopupSlate = false;
                 config.figureDataToBeFetched = true;

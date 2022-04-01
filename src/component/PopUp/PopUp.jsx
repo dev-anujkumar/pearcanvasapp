@@ -13,6 +13,7 @@ import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
+import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -109,6 +110,10 @@ class PopUp extends React.Component {
         })
     }
 
+    processImageID = (imgId) => {
+        let id = imgId.substring(imgId.indexOf(":") + 1, imgId.lastIndexOf(":"));
+        this.props.openInNewWindow(id)
+    }
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
     * @param {event} 
@@ -122,6 +127,9 @@ class PopUp extends React.Component {
                 </div>
             )
         } else
+            if(props.alfrescoExpansionPopup){
+                return null;
+            }
             if (props.showDeleteElemPopup) {
                 if (props.isOwnerSlate) {
                     return (
@@ -254,7 +262,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup) {
+        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -313,6 +321,28 @@ class PopUp extends React.Component {
     */
 
     renderDialogText = (props) => {
+        if(props.alfrescoExpansionPopup){
+            let imgList = props?.alfrescoExpansionMetaData?.renderImages?.map((image) => (
+                  <div className='imageContainer'>
+                    <img 
+                      className='img-inside-container' 
+                      src={image.imgSrc} 
+                      id={image.imgId}
+                      onClick={() => this.processImageID(image.imgId)}
+                    /> 
+                  </div>    
+                ))
+            return (
+                <> 
+                   <div className='tableAlfrescoPopupHeader'>{props?.alfrescoExpansionMetaData?.headerText}</div>
+                    <div className="Please-select-an-image">{props?.alfrescoExpansionMetaData?.normalText}</div>
+                    <div className='tableElement-img-container'>
+                        {props.alfrescoExpansionMetaData.renderImages.length > 0 ? imgList : <LargeLoader/>}
+                    </div>
+                    
+                </>
+            )
+        }
         if (props.showDeleteElemPopup) {
             if (props.sectionBreak) {
                 return (
@@ -480,13 +510,13 @@ class PopUp extends React.Component {
     }
 
     render() {
-        const { active, assessmentClass, isGlossary, isTCMCanvasPopup } = this.props;
+        const { active, assessmentClass, isGlossary, isTCMCanvasPopup, alfrescoExpansionMetaData } = this.props;
         return (
             <div className="model">
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : `modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : ''}>
+                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : ''}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}

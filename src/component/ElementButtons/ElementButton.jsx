@@ -11,8 +11,7 @@ import {
     workedExampleIcon,
     sectionBreakElement, 
     assessmentIcon, 
-    openerElement, 
-    noteFlag , 
+    openerElement,
     tcmIcon, 
     addNote,
     viewNote,
@@ -35,7 +34,8 @@ import {
     multiColumnContainer,
     elmInteractiveIcon,
     editIcon,
-    approvedIcon
+    approvedIcon,
+    commentFlagged
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
@@ -75,7 +75,7 @@ class ElementButton extends Component {
                 </span></Tooltip>
                 break;
             case buttonTypes.VIEW_COMMENT:
-                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="flag" onClick={(e)=>clickHandlerFn(e,elementId)}>
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="note" onClick={(e)=>clickHandlerFn(e,elementId)}>
                     {viewNote}
                     </span>
                 break;
@@ -213,6 +213,11 @@ class ElementButton extends Component {
                     {editIcon}
                 </span>
                 break;
+            case ButtonTypes.EDIT_TE_BUTTON:
+                buttonJSX = <span className={`btn-element small edit-button ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="Edit Alfresco Metadata" onClick={clickHandlerFn}>
+                    {editIcon}
+                </span>
+                break;
             case ButtonTypes.APPROVE_TICK_ICON:
                 buttonJSX = <span className={`btn-element small approve-icon ${btnClassName}`} onClick={clickHandlerFn}>
                     {approvedIcon}
@@ -239,6 +244,11 @@ class ElementButton extends Component {
                 break;
             case buttonTypes.ELEMENT_LABEL_CLICKABLE:
                 buttonJSX = <span className={`btn-element element-label-clickable-button ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
+                break;
+            case buttonTypes.COMMENT_FLAGGED:
+                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="flag" onClick={(e) => clickHandlerFn(e, elementId)}>
+                    {commentFlagged}
+                </span>
                 break;
         }
         return buttonJSX

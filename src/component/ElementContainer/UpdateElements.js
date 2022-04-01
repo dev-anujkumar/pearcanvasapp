@@ -6,10 +6,9 @@ import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
-import { createLabelNumberTitleModel, getTitleSubtitleModel, removeSpellCheckDOMAttributes } from '../../constants/utility';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, displayLabelsForAutonumbering } from '../FigureHeader/AutoNumberConstants';
-import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
-import { setAutonumberingValuesForPayload, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
+import { createLabelNumberTitleModel } from '../../constants/utility';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
+import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForFigures } from '../FigureHeader/AutoNumber_helperFunctions';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -58,6 +57,9 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+
     let titleText = titleDOM ? titleDOM.innerText : "",
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
@@ -66,13 +68,16 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = previousElementData?.displayedlabel;
-    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+    const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
+    if (validDropdownOptions?.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
         displayedlabel = titleText;
     } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
-    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
@@ -126,7 +131,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
         inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
     }
-    if (previousElementData.figuretype !== elementTypeConstant.FIGURE_TABLE_EDITOR && isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         data = {
             ...data,
             html : {
@@ -206,6 +211,9 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
+    
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
 
     let titleText = titleDOM ? titleDOM.innerText : "",
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
@@ -215,13 +223,16 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     let numberedandlabel = false;
     let manualoverride = {};
     let displayedlabel = previousElementData?.displayedlabel;
-    if (displayLabelsForAutonumbering.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+    const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
+    if (validDropdownOptions?.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
         displayedlabel = titleText;
     } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
@@ -351,7 +362,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) || document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
     let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
@@ -371,11 +382,32 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : ""
 
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+
     let titleText = titleDOM ? titleDOM.innerText : "",
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
         captionText = captionDOM ? captionDOM.innerText : "",
         creditsText = creditsDOM ? creditsDOM.innerText : ""
 
+    /**Autonumbering Code */
+    let numberedandlabel = false;
+    let manualoverride = {};
+    let displayedlabel = previousElementData?.displayedlabel;
+    const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
+    if (validDropdownOptions?.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+        displayedlabel = titleText;
+    } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+        displayedlabel = getValueOfLabel(previousElementData?.figuretype);
+    }
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
+    }
+    /**********************/
         captionHTML = replaceUnwantedtags(captionHTML,true)
         creditsHTML = replaceUnwantedtags(creditsHTML,true)
         subtitleHTML = replaceUnwantedtags(subtitleHTML,true)
@@ -430,6 +462,19 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
     }
+    /**Autonumbering Code */
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        data = {
+            ...data,
+            html : {
+                ...data.html,
+                title: `<p>${subtitleHTML}</p>`
+            }
+        }
+        const dataToReturn = updateAutoNumberedElement(autoNumberOption, data, { displayedlabel, manualoverride })
+        data = {...dataToReturn}  
+    }
+    /**********************/
     return data
 }
 
@@ -441,7 +486,7 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-const generateCommonFigureDataAT = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
+const generateCommonFigureDataAT = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),
@@ -456,6 +501,9 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         captionHTML = captionDOM ? captionDOM.innerHTML : "",
         creditsHTML = creditsDOM ? creditsDOM.innerHTML : "",
         textHTML = textDOM ? textDOM.innerHTML : ""
+    
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    numberHTML = numberHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
 
     let titleText = titleDOM ? titleDOM.innerText : "",
         subtitleText = subtitleDOM ? subtitleDOM.innerText : "",
@@ -463,6 +511,24 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         creditsText = creditsDOM ? creditsDOM.innerText : "",
         eleText = textDOM ? textDOM.innerText : ""
 
+    /**Autonumbering Code */
+    let numberedandlabel = false;
+    let manualoverride = {};
+    let displayedlabel = previousElementData?.displayedlabel;
+    const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
+    if (validDropdownOptions?.includes(titleText) && titleText !== previousElementData?.displayedlabel) {
+        displayedlabel = titleText;
+    } else if (!(previousElementData.hasOwnProperty('displayedlabel')) && autoNumberOption !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
+        displayedlabel = getValueOfLabel(previousElementData?.figuretype);
+    }
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
+        numberedandlabel = payloadKeys?.numberedandlabel;
+        manualoverride = payloadKeys?.manualoverride;
+    }
+    /**********************/
     captionHTML = replaceUnwantedtags(captionHTML, true)
     creditsHTML = replaceUnwantedtags(creditsHTML, true)
     subtitleHTML = replaceUnwantedtags(subtitleHTML, true)
@@ -518,6 +584,19 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
     }
+    /**Autonumbering Code */
+    if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        data = {
+            ...data,
+            html : {
+                ...data.html,
+                title: `<p>${subtitleHTML}</p>`
+            }
+        }
+        const dataToReturn = updateAutoNumberedElement(autoNumberOption, data, { displayedlabel, manualoverride })
+        data = {...dataToReturn}  
+    }
+    /**********************/
     return data
 }
 
@@ -550,6 +629,7 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
     dataToSend.figuredata.elementdata.assessmenttitle = assessmentTitle ? assessmentTitle : "";
     dataToSend.figuredata.elementdata.assessmentitemid = assessmentItemId ? assessmentItemId : "";
     dataToSend.figuredata.elementdata.assessmentitemtitle = assessmentItemTitle ? assessmentItemTitle : "";
+
 
     // dataToSend.figuredata.id = getAsid ? getAsid : "";   //PCAT-6792 fixes
     // dataToSend.figuredata.elementdata.posterimage.imageid = getAsid ? getAsid : ""; //PCAT-6792 fixes
@@ -746,7 +826,6 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
             } 
             else if(asideData?.type==="manifestlist" && parentElement && parentElement?.type === "showhide" && showHideType){
-                // dataToReturn.sectionType = showHideType;
                 let manifestListItemIndex = asideData.index.split('-');
                 dataToReturn["elementParentEntityUrn"] = asideData?.parentManifestList?.listdata?.bodymatter[manifestListItemIndex[manifestListItemIndex.length-2]]?.contentUrn
             }
@@ -792,10 +871,10 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:
-                        dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        dataToReturn = generateCommonFigureDataAT(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateCommonFigureDataAT(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                 }
                 

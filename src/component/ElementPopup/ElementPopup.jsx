@@ -6,10 +6,9 @@ import {
     fetchSlateData,
     createPopupUnit
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, getTitleSubtitleModel, isSubscriberRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import { checkSlateLock } from '../../js/slateLockUtility.js'
-import { getTitleSubtitleModel, isSubscriberRole } from "../../constants/utility.js"
 import { findKey } from "lodash";
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 
@@ -44,8 +43,11 @@ class ElementPopup extends React.Component {
                 this.renderSlate();
                 let popupParentSlateData = {
                     isPopupSlate: true,
-                    parentSlateId: Object.keys(this.props.slateLevelData)[0],
-                    index: this.props.index
+                    parentSlateId: Object.keys(this.props?.slateLevelData)[0],
+                    parentSlateEntityUrn: Object.values(this.props?.slateLevelData)[0]?.contentUrn,
+                    index: this.props?.index,
+                    versionUrn: this.props?.element?.id,
+                    contentUrn: this.props?.element?.contentUrn
                 }
                 this.props.savePopupParentSlateData(popupParentSlateData);
             }

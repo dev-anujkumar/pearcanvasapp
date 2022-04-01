@@ -13,7 +13,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -29,10 +29,9 @@ import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
-import { guid, releaseOwnerPopup } from '../../constants/utility.js';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
-import { fetchSlateData, setActiveElement,openPopupSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
@@ -49,7 +48,6 @@ import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/
 import store from '../../appstore/store';
 import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
-import {isOwnersSubscribedSlate} from '../CanvasWrapper/CanvasWrapper_Actions';
 import KeyboardUpDown from '../Keyboard/KeyboardUpDown.jsx';
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 
@@ -123,7 +121,6 @@ class SlateWrapper extends Component {
     handleScroll = (e) => {
         forceCheck();
         if (config.totalPageCount <= config.page) return false;
-        // const bottom = e.target.scrollHeight - e.target.scrollTop === e.target.clientHeight;        
         let scrollPosition = Number(e.target.scrollTop + e.target.clientHeight + 100);
         let scrollingPosition = Number(e.target.scrollTop);
         if (this.props.slateData[config.slateManifestURN] && (this.props.slateData[config.slateManifestURN].type === 'manifest')) {
@@ -241,7 +238,6 @@ class SlateWrapper extends Component {
      */
     prepareSwapData = (event) => {
         const { slateData } = this.props
-        // const _slateBodyMatter = slateData[Object.keys(slateData)[0]].contents.bodymatter
         const _slateBodyMatter = slateData[config.slateManifestURN].contents.bodymatter
         const swappedElementData = _slateBodyMatter[event.oldDraggableIndex]
         let dataObj = {

@@ -28,33 +28,34 @@ import {
     OWNERS_SUBSCRIBED_SLATE,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     ERROR_API_POPUP,
-    SLATE_FIGURE_ELEMENTS
+    SLATE_FIGURE_ELEMENTS,
+    OEP_DISCUSSION,
+    UPDATE_AUTONUMBER_MAPPER_KEYS
 } from '../../constants/Action_Constants';
-import { SLATE_API_ERROR } from '../../constants/Element_Constants';
-
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
-import { HideLoader, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
+import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
-import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import ElementConstants from "../ElementContainer/ElementConstants.js";
 import { isAutoNumberEnabled, fetchProjectFigures, setAutoNumberinBrowser } from '../FigureHeader/AutoNumberActions.js';
 const { SHOW_HIDE } = ElementConstants;
 import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunctions';
-import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/NestedFigureDataMapper';
+import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
+import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -66,11 +67,11 @@ export const findElementType = (element, index) => {
             case "manifestlist":
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
-                    //primaryOption : "primary-column-1",
                     primaryOption: `primary-column-${element.columnnumber}`,
+                    fontStyle: element.fontstyle ? `font-style-${element.fontstyle[element.fontstyle.length-1]}` : 'font-style-1',
+                    bulletIcon: element.iconcolor ? `bullet-color-${element.iconcolor[element.iconcolor.length-1]}`: 'bullet-color-1',
                     secondaryOption: `secondary-column-${element.columnnumber}`,
                     contentUrn : element.contentUrn
-                    //secondaryOption: elementDataBank[element.type]["secondaryOption"]
                 }
                 break;
             case 'element-authoredtext':
@@ -119,9 +120,7 @@ export const findElementType = (element, index) => {
                                 element.figuredata.podwidth = POD_DEFAULT_VALUE
                             }
                         }
-                        //  if (element.subtype == "" || element.subtype == undefined) {                        
                         element.subtype = subType
-                        //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         podwidth = element.figuredata.podwidth
@@ -339,23 +338,76 @@ export const fetchElementTag = (element, index = 0) => {
 export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
     // Api to get Figure dropdown options
     let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
-    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/images-type?isAutoNumberingEnabled=${isAutoNumberingEnabled}`;
+    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/project/${config.projectEntityUrn}/element-labels?isAutoNumberingEnabled=${isAutoNumberingEnabled}`;
     return axios.get(figureDropdownOptionsURL, {
         headers: {
             "Content-Type": "application/json",
-            // "PearsonSSOSession": config.ssoToken,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
         let dropdownOptionsObj = response?.data;
-        if (Object.keys(dropdownOptionsObj).length > 0) {
-            dispatch({
-                type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
-                payload: dropdownOptionsObj
-            })
-        }
+        dispatch(updateFigureDropdownValues(dropdownOptionsObj))
     }).catch(error => {
         console.log("Get figure dropdown options API Failed !!", error)
+    })
+}
+
+export const updateFigureDropdownValues = (dropdownOptionsObj) => (dispatch, getState) => {
+    if (Object.keys(dropdownOptionsObj).length > 0) {
+        dispatch({
+            type: UPDATE_FIGURE_DROPDOWN_OPTIONS,
+            payload: dropdownOptionsObj
+        })
+        sendDataToIframe({
+            'type': SET_CONTROL_VOCAB_DETAILS,
+            'message': dropdownOptionsObj
+        });
+        const autoNumberReducer = getState().autoNumberReducer
+        updateAutoNumberLabelKeys(dropdownOptionsObj, { autoNumberReducer }, dispatch)
+    }
+}
+
+// update the keys' Object used for mapping in Autonumbering in the Redux store
+export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReducer }, dispatch) => {
+    const autoNumber_KeyMapper = autoNumberReducer?.autoNumber_KeyMapper ?? {}
+    const autoNumber_ElementTypeKey = autoNumberReducer?.autoNumber_ElementTypeKey ?? {}
+    const autoNumber_response_ElementType_mapper = autoNumberReducer?.autoNumber_response_ElementType_mapper ?? {}
+    const autoNumber_IndexMapper = autoNumberReducer.autoNumber_IndexMapper ?? {}
+    let listOfCustomeLabels = []
+    const labelDefaultKeys = ['id', 'aside', 'audio', 'image', 'interactive', 'mathml', 'preformattedtext', 'smartlinks', 'tableasmarkup', 'video', 'workedexample']
+    Object.keys(dropdownOptionsObj)?.forEach(labelType => {
+        if (labelDefaultKeys.indexOf(labelType) == -1) {
+            listOfCustomeLabels = [...listOfCustomeLabels, ...dropdownOptionsObj[labelType]]
+        }
+    })
+    listOfCustomeLabels = listOfCustomeLabels.filter((item, index, inputArray) => {
+        return inputArray.indexOf(item) == index;
+    });
+
+    listOfCustomeLabels.forEach(item => {
+        let customValue = item.replace(' ', '').toLowerCase()
+        if (!autoNumber_KeyMapper?.hasOwnProperty(item)) {
+            autoNumber_KeyMapper[item] = `${customValue}Index`
+        }
+        if (!autoNumber_ElementTypeKey?.hasOwnProperty(item)) {
+            autoNumber_ElementTypeKey[item] = `${customValue}List`
+        }
+        if (!autoNumber_IndexMapper?.hasOwnProperty(`${customValue}List`)) {
+            autoNumber_IndexMapper[`${customValue}List`] = `${customValue}Index`
+        }
+        if (!autoNumber_response_ElementType_mapper?.hasOwnProperty(`${customValue}s`)) {
+            autoNumber_response_ElementType_mapper[`${customValue}s`] = `${customValue}List`
+        }
+    });
+
+    dispatch({
+        type: UPDATE_AUTONUMBER_MAPPER_KEYS,
+        payload: {
+            autoNumber_KeyMapper,
+            autoNumber_IndexMapper,
+            autoNumber_ElementTypeKey,
+            autoNumber_response_ElementType_mapper
+        }
     })
 }
 
@@ -442,7 +494,6 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (usageTypeResponse => {
-                //console.log("the usage type response is", usageTypeResponse);
                 const data = usageTypeResponse?.data;
                 if(Array.isArray(data)){
                     const usageType = data.map(item => ({label:item.label.en}))
@@ -455,15 +506,16 @@ export const getProjectDetails = () => (dispatch, getState) => {
             }).catch(error => {
             }) 
 
-
-
+            
+            
             // call api to get discussion items
+            /* If LOB is english, then it will change to onlineenglishproficiency(OEP) */
             const discussionURLEndPoint = 'v1/discussion/discussions';
             // 'https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1/discussion/discussions'
             const discussionUrl = `${config.REACT_APP_API_URL}${discussionURLEndPoint}`;
             return axios.post(discussionUrl, {
                 "lineOfBusinesses" : [
-                    lineOfBusiness
+                    (lineOfBusiness === "english" ? OEP_DISCUSSION : lineOfBusiness)
                 ]
             },
             {
@@ -490,14 +542,10 @@ export const getProjectDetails = () => (dispatch, getState) => {
 
 
 export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload) => (dispatch, getState) => {
-    // if(config.isFetchSlateInProgress){
-    //  return false;
-    // }
     /** [TK-3289]- Fetch Data for All Slates */
     const startTime = performance.now();
     dispatch(fetchAllSlatesData());
     /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
-    // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
     localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
     if (config.totalPageCount <= page) {
@@ -585,6 +633,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 config.saveElmOnAS = true
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
+        }
+        /** ---- Check if current slate is Double Spread PDF ---- */
+        const isCypressPlusProject = getState()?.appStore?.isCypressPlusEnabled
+        if (isCypressPlusProject && config.slateType == 'pdfslate' && slateData && slateData.data[newVersionManifestId]) {
+            let pdfBodymatter = slateData?.data?.[newVersionManifestId]?.contents?.bodymatter ?? []
+            const hasMergedPdf = pdfBodymatter?.length === 2 ? true : false
+            dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -757,7 +812,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                      * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be 
                      * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate 
                      */
-                    // let appData =  appData1 && appData1.id? appData1.id : appData1;
                     let appData =  config.lastActiveElementId;
                     if (page === 0) {
                         if (appData) {
@@ -805,8 +859,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateWrapperNode.scrollTop = 0;
                         }
                     }
-                    //}
-                    // config.isFetchSlateInProgress = false;
                 }else{
                     console.log("incorrect data comming...")
                 }
@@ -822,6 +874,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(fetchProjectFigures(currentParentUrn));
             dispatch(fetchFigureDropdownOptions());
             config.figureDataToBeFetched = false;
+            const slateMatterType = getState().appStore.slateMatterType
+            const allSlatesData = getState().appStore.allSlateData
+            getCurrentSlatesList(allSlatesData,slateMatterType,currentParentUrn,dispatch)
         }
 
         if (slateData.data[newVersionManifestId].type !== "popup") {
@@ -854,18 +909,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(getContainerData(searchTerm));
         }
         /** Get List of Figures on a Slate for Auto-Numbering */
-        // const bodyMatter = slateData.data[newVersionManifestId].contents.bodymatter
-        // const slateFigures = getImagesInsideSlates(bodyMatter)
         const slateFigures = getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
-        /* if (slateFigures) {
-            console.log('slateFigures',slateFigures)
-            dispatch({
-                type: SLATE_FIGURE_ELEMENTS,
-                payload: {
-                    slateFigures :slateFigures
-                }
-            });
-        }*/
     })
     .catch(err => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
@@ -1167,9 +1211,9 @@ export const fetchAuthUser = () => dispatch => {
         sendDataToIframe({
             type: 'updateUserDetail',
             message : {
-                userId : userInfo.userId,
-                firstName : userInfo.firstName,
-                lastName: userInfo.lastName
+                userId: userInfo.userId ? userInfo.userId : '',
+                firstName: userInfo.firstName ? userInfo.firstName : '',
+                lastName: userInfo.lastName ? userInfo.lastName : ''
             }
             
         });
@@ -1412,9 +1456,11 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             let slateData = {
                 currentParentData:newParentData,
                 bodymatter: currentSlateData.contents.bodymatter,
-                response: response.data
+                response: response.data,
+                cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             };
-            if(config.tcmStatus){
+            // disable TCM for all PDF slates in Cypress+ Enabled Projects
+            if(config.tcmStatus && !(slateData?.cypressPlusProjectStatus && slateData?.response?.type === 'element-pdf')){
                 prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
             }
             tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);

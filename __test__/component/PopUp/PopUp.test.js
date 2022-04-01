@@ -164,5 +164,23 @@ describe('Testing PopUp component', () => {
         wrapper.find('.OwnersSlateCheckBox').simulate('change');
         const component = mount(<PopUp {...props}/>);
         expect(component.instance().props.withCheckBox).toEqual(true);
-    })
+    });
+
+    it('alfrescoExpansionPopup', () => {
+        const props = {
+            alfrescoExpansionPopup: true,
+            alfrescoExpansionMetaData:{
+                renderImages:[{
+                    imgId: "123",
+                    imgSrc: "src"
+                }],
+                headerText: 'Header',
+                normalText: 'Normal'
+            },
+            openInNewWindow: jest.fn()
+        }
+        const component = mount(<PopUp {...props}/>);
+        component.find('img').simulate('click');
+        expect(component.instance().props.alfrescoExpansionPopup).toEqual(true);
+    });
 })

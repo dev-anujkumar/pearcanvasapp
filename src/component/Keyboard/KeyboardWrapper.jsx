@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
@@ -11,6 +11,8 @@ export const NORMAL_SELECTOR = `cypress-`
  * @param {*} e : event
  * @param {*} move : boolean true or false.
  */
+ let selectedNodeIndex = 0;
+ let allInteractiveElements=[]
 const updateCursor = (e, move) => {
     if (move) {
         // moves to next element
@@ -35,8 +37,14 @@ export const moveCursor = (e, node, tinymceOffset) => {
         updateCursor(e, move);
     }
     else if (e.keyCode === 40) {
-        move = isLastChild(node, tinymceOffset);
-        updateCursor(e, move)
+        //for last selected element
+        if (selectedNodeIndex === allInteractiveElements.length - 1) {
+            updateCursor(e, false)
+        }
+        else {
+            move = isLastChild(node, tinymceOffset);
+            updateCursor(e, move)
+        }
     }
     else {
         e.stopPropagation();
@@ -73,6 +81,23 @@ const isFirtstChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const firstTextNode = getFirstTextNode(tinymceNode);
         const uniCode = '\uFEFF';
+        //for bce when code have blank lines
+        if (node?.className === 'codeNoHighlightLine' || node?.parentNode?.className === 'codeNoHighlightLine' ) {
+            if(node?.parentNode?.className === 'codeNoHighlightLine'){
+                //when line is not empty
+                return !node?.parentNode?.previousSibling && tinymceOffset === 0
+            }
+            //for empty line
+            else return !node?.previousSibling
+        }
+        if(tinymceOffset == 0 && (node?.parentNode?.classList.contains("figureCredit") 
+        || node?.classList?.contains("figureCaption") || node?.classList?.contains("figureMathContent")
+        || node?.classList?.contains("figureTitle") || node?.classList?.contains("figureCodeContent") 
+        || node?.classList?.contains('figureNumber') || node?.classList?.contains("figureLabel")
+        || node?.classList?.contains("figureCredit")
+        )) {
+            return true;
+        }
         if (firstTextNode?.textContent?.indexOf(uniCode) === 0 && tinymceOffset === 1) {
             return true;
         }
@@ -150,11 +175,33 @@ const isLastChild = (node, tinymceOffset) => {
         const tinymceNode = isKChild.node.querySelector(`[id^='${NORMAL_SELECTOR}']`);
         const lastTextNode = getLastTextNode(tinymceNode);
         const uniCode = '\uFEFF';
+        //for bce when code have blank lines
+        if (node?.className === 'codeNoHighlightLine' || node?.parentNode?.className === 'codeNoHighlightLine') {
+            if (node?.parentNode?.className === 'codeNoHighlightLine') {
+                //when line is not empty
+                return !node?.parentNode?.nextSibling && tinymceOffset === node?.length
+            }
+            //for empty line
+            else return !node?.nextSibling
+        }
+        if(lastTextNode.className == "Wirisformula") {
+            if(tinymceOffset != 0 && node.lastChild != null) {
+             return true;
+            }
+        }
         if (lastTextNode === node) {
+            if(lastTextNode?.previousSibling?.className == "answerLineContent") {
+                if(tinymceOffset != 0 && lastTextNode.lastChild == null) {
+                    return true;
+                   }
+            }
             if (lastTextNode?.textContent?.indexOf(uniCode) > -1) {
                 if(lastTextNode?.parentNode?.id === "_mce_caret") {
                     // unicode inside footnote
                     return true;
+                } else if( lastTextNode?.nodeName == "#text" && lastTextNode?.previousSibling?.nodeName === "SUP" 
+                && tinymceOffset == 2 && lastTextNode === node){
+                    return true
                 }
                 else {
                     // unicode inside inline code
@@ -224,6 +271,13 @@ const isParentFootnote = (node) => {
 
 
 const KeyboardWrapper = (props) => {
+    const activeElement = useSelector(state => state.keyboardReducer.selectedElement);
+    allInteractiveElements = document.querySelectorAll(`[id^='${QUERY_SELECTOR}-']`);
+    allInteractiveElements.forEach((currentValue, currentIndex) => {
+        if (currentValue.id === activeElement) {
+            selectedNodeIndex = currentIndex
+        }
+    });
     const dispatch = useDispatch();
     // alphanumeric, id should be unique for all the elements.
     const id = `${QUERY_SELECTOR}-${props.index}`;

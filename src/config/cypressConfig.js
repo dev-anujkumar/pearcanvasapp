@@ -23,7 +23,7 @@ let cypressConfig = {
     colors : ["#005A70", "#003057", "#006128", "#505759", "#000000"],
     // textcolors:["#ffffff", "#000000"],
     textcolors:["option1", "option2"],
-    figureFieldsPlaceholders: ['Number', 'Label Name', 'Title', 'Caption', 'Credit', 'Math Block Content','Code Block Content'],
+    figureFieldsPlaceholders: ['Number', 'Label', 'Label Name', 'Title', 'Caption', 'Credit', 'Math Block Content','Code Block Content'],
     smartlinkContexts: ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table', 'fpo'],
     ctaButtonSmartlinkContexts: ['pdf', 'web-link', 'pop-up-web-link'],
     isCO : false,
@@ -95,7 +95,8 @@ let cypressConfig = {
     saveElmOnAS: false,
     fullName:'c5test01',
     isCypressPlusEnabled:true,
-    CYPRESS_PLUS_WINDOW:''
+    CYPRESS_PLUS_WINDOW:'',
+    updateInlineImage: false
 }
 
 

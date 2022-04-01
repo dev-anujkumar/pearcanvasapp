@@ -4,6 +4,10 @@
     position: relative;
 }
 
+.editor.container-pdf {
+    margin: 48px 0px 40px 0px !important;
+    padding: 4px 0 0 0 !important;
+}
 .element-container {
     /* padding: 15px; */
     flex-grow: 1;
@@ -83,6 +87,7 @@
 
 .showBorder {
     border: 1px solid #737373;
+    
 }
 
 .editor.searched > .showBorder {
@@ -282,4 +287,11 @@ button.SearchLibraryStyles__btnCancel___1G1qN, button.BrowseStyles__btnCancel___
 }
 div.stageDirectionItalicFont dfn {
     font-style: italic;
+}
+.blockquoteTextCredit.cypress-editable.place-holder::before{
+    color: black !important;
+}
+
+.blockquoteMarginalia p {
+    min-height: 45px !important;
 }

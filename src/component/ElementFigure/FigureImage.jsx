@@ -1,15 +1,11 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, createRef } from 'react';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
 import FigureImageAsset from './FigureImageAsset.jsx';
 import FigureTableAsset from './FigureTableAsset.jsx';
 import BlockMathCode from './BlockMathCode.jsx';
 // IMPORT - Assets //
-import {
-    DEFAULT_IMAGE_DATA_SOURCE,
-    DEFAULT_IMAGE_SOURCE
-} from '../../constants/Element_Constants';
+import { DEFAULT_IMAGE_SOURCE, labelHtmlData } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype } from '../../constants/utility';
@@ -20,25 +16,18 @@ import './../../styles/ElementFigure/FigureImage.css';
 import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action';
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
-import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
-import { labelHtmlData } from '../../constants/Element_Constants';
 import PopUp from '../PopUp';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormControl from '@material-ui/core/FormControl'
-import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions.js';
+import { setAutoNumberSettingValue, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions.js';
 import FigureHeader from '../FigureHeader/FigureHeader.jsx';
 import { IMAGE, TABLE, MATH_IMAGE, TABLE_AS_MARKUP, MATH_ML, BLOCK_CODE } from './ElementFigure_Constants'
 import { launchTableSPA } from './ElementFigure_Utility';
 import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx';
-import { createRef } from 'react';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
-//const BLANK_NUMBER_LABEL_OPTIONS = ['Default Auto-number', 'Override number only'];
 const BLANK_NUMBER_LABEL_OPTIONS = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
-const imageFigureTypes = ["image","mathImage","table"];
+const imageFigureTypes = ["image","mathImage","table","tableasmarkup","authoredtext","codelisting"];
 const blockMathCodeTypes = ["authoredtext","codelisting"];
 
 const KEYBOARD_ENABLE = [TABLE, MATH_IMAGE, MATH_ML, BLOCK_CODE, IMAGE];
@@ -99,6 +88,7 @@ class FigureImage extends Component {
             this.setState({showingListIndex: 0});
             this.labelListRef.current.childNodes[0].focus();
             this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown)
+            this.labelListRef.current.addEventListener('click', this.handleLabelKeyDown)
         }
     }
 
@@ -108,8 +98,12 @@ class FigureImage extends Component {
             if(event.keyCode === 13) {
                 this.labelListRef.current.childNodes[this.state.showingListIndex].click();
                 this.labelRef.current.focus();
+            } else if(event.button == 0){
+                const nodeValue = (event.target?.attributes[1]?.nodeValue)
+                this.labelListRef?.current?.childNodes[nodeValue]?.click();
+                this.labelRef?.current?.focus();
+                this.setState({showingListIndex: nodeValue});
             }
-
             else if (event.keyCode === 40) {
                 if(this.labelListRef.current.childNodes[this.state.showingListIndex + 1]) {
                     this.labelListRef.current.childNodes[this.state.showingListIndex + 1 ].focus();
@@ -122,8 +116,10 @@ class FigureImage extends Component {
                 
                 }
             }
+            if(event.button != 0){
             event.stopPropagation();
             event.preventDefault();
+            }
         }
     }
 
@@ -148,7 +144,12 @@ class FigureImage extends Component {
     }
 
     isEnableKeyboard = () => {
+    if (this.props.model?.figuredata?.programlanguage === "Select") {
+            return false
+        }
+        else {
         return KEYBOARD_ENABLE.indexOf(this.props.model.figuretype) > -1
+        }
     }
 
     /**
@@ -593,12 +594,14 @@ class FigureImage extends Component {
                                             <KeyboardWrapper index={`${this.props.index}-label-1`} enable={this.isEnableKeyboard()} focus>
                                                 <div ref={this.labelRef} tabIndex={0} onKeyDown={(e) => {
                                                     if(this.isEnableKeyboard()) {
-                                                        const key = e.which || e.keyCode;
-                                                        if(key === 13) {
+                                                        const key = e.which || e.keyCode || e.button;
+                                                        if(key === 13 || key === 0) {
                                                             this.handleFigureDropdown();
                                                         }
-                                                        e.stopPropagation();
-                                                        e.preventDefault();
+                                                        if(key === 38) {
+                                                            e.stopPropagation();
+                                                            e.preventDefault();
+                                                        }
                                                     }
                                                 }}>
                                                     <div className={this.props.selectedElement === `${QUERY_SELECTOR}-${this.props.index}-label-1` ? "figure-label-highlight" : "figure-label"} onClick={this.handleFigureDropdown}>
@@ -613,7 +616,7 @@ class FigureImage extends Component {
                                                 <ul ref={this.labelListRef}>
                                                     {this.state.figureLabelData.map((label, i) => {
                                                         return (
-                                                            <li tabIndex={0} key={i} onClick={() => {
+                                                            <li tabIndex={0} currentIndex={i} key={i} onClick={() => {
                                                                 this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
                                                         )
                                                     })}
