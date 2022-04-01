@@ -598,7 +598,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     expect(obj.payload).toEqual({ showHideObj: undefined });
                 }
                 else if (obj.type === SET_OLD_IMAGE_PATH) {
-                    expect(obj.payload).toEqual({ oldImage: oldPath });
+                    expect(obj.payload).toEqual({ oldImage: "" });
 
                 }
             }
@@ -613,7 +613,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             }
             let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[3];
             const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
-            canvasActions.setActiveElement(activeElement, 3, {}, {}, undefined, undefined)(dispatch, getState);
+            canvasActions.setActiveElement(activeElement, 3, {}, {}, true, undefined)(dispatch, getState);
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear()
         })
@@ -639,7 +639,10 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     appStore: {
                         slateLevelData: slateTestData.slateData1,
                         activeElement: {},
-                        parentUrn: {}
+                        parentUrn: {},
+                        asideData:{
+                            type:'showhide'
+                        }
                     }
                 };
             }
@@ -763,7 +766,10 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     appStore: {
                         slateLevelData: slateTestData.slateData1,
                         activeElement: {},
-                        parentUrn: {}
+                        parentUrn: {},
+                        asideData:{
+                            type:'showhide'
+                        }
                     }
                 };
             }
@@ -885,7 +891,10 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     appStore: {
                         slateLevelData: slateTestData.slateData1,
                         activeElement: {},
-                        parentUrn: {}
+                        parentUrn: {},
+                        asideData:{
+                            type:'showhide'
+                        }
                     }
                 };
             }
@@ -1008,7 +1017,10 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     appStore: {
                         slateLevelData: slateTestData.slateData1,
                         activeElement: {},
-                        parentUrn: {}
+                        parentUrn: {},
+                        asideData:{
+                            type: 'showhide'
+                        }
                     }
                 };
             }
@@ -1080,6 +1092,37 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear()
         })
+        it('Test-3.5.5-setActiveElement - Interactive Element at Slate Level when updateFromC2Flag is true', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.interactiveElement);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {}
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[6];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, 6, {}, {}, true, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
         it('Test-3.6-setActiveElement - deafult params', () => {
             let oldPath = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png";
             let dispatch = (obj) => {
@@ -1124,6 +1167,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         })
     });
     describe('Test-4.B- fetchSlateData',()=>{
+        const spy = jest.spyOn(Storage.prototype, 'setItem');
         it('Test-4.B.1-fetchSlateData - calledFrom - versioning slate', () => {
             config.cachedActiveElement={}
             config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c1"
@@ -1445,7 +1489,11 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                 page = 1,
                 versioning = {
                     type: "manifestlist",
-                    index: 1
+                    index: 1,
+                    parent:{
+                        type:'showhide',
+                        showHideType:true
+                    }
                 },
                 calledFrom = '',
                 versionPopupReload = undefined
@@ -1525,7 +1573,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                 page = 1,
                 versioning = {
                     type: "manifestlist",
-                    index: ["0","1"]
+                    indexes: ["0","1"]
                 },
                 calledFrom = '',
                 versionPopupReload = undefined
@@ -1565,7 +1613,11 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                 page = 1,
                 versioning = {
                     type: "manifestlist",
-                    index: null
+                    indexes: 1,
+                    parent:{
+                        showHideType:{},
+                        type:'showhide',
+                    }
                 },
                 calledFrom = '',
                 versionPopupReload = undefined
@@ -2085,6 +2137,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                     appStore: {
                         slateLevelData: {"urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670": slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"]},
                         activeElement: {},
+                        isCypressPlusEnabled: true
                     },
                     tcmReducer: { tcmSnapshot: [{
                         "txCnt": 1,
@@ -2604,6 +2657,45 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             await canvasActions.getProjectDetails(lineOfBusiness)(dispatch)
             expect(dispatch).toHaveBeenCalled();
         })
+        it('Test-11.1 Get Project Details - then Block: With Parameters', async () => {
+            let firstResponseData = {
+                "data": {
+                    "lineOfBusiness":"ukschools",
+                    "parameters":{
+                        enablenumberedandlabel:true
+                    },
+                    "elementPermissions":{
+                        'playscript': 'true',
+                        'discussion': 'true'}
+                }
+            }
+            let discussionResponse = {
+                "data":[]
+            }
+            let lineOfBusiness = "ukschools"
+            let dispatch = jest.fn();
+            axios.post.mockImplementation(() => Promise.resolve(discussionResponse))
+            axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
+            await canvasActions.getProjectDetails(lineOfBusiness)(dispatch)
+            expect(dispatch).toHaveBeenCalled();
+        })
+        it('Test-11.1 Get Project Details - then Block: With Parameters when enablenumberedandlabel is not as parameter', async () => {
+            let firstResponseData = {
+                "data": {
+                    "lineOfBusiness":"ukschools",
+                    "parameters":{
+                        "abch":{abc:''}
+                    }
+                }
+            }
+            let lineOfBusiness = "ukschools"
+            let dispatch = jest.fn();
+            axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
+            await canvasActions.getProjectDetails(lineOfBusiness)(dispatch)
+            expect(dispatch).toHaveBeenCalled();
+        })
+
+        
     });
     describe('Test-12- tcmCosConversionSnapshot ', () => {
         it('Test-12.1 tcmCosConversionSnapshot  - then Block', async () => {
@@ -2971,6 +3063,27 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
     });
 });
 
+describe('Test-15 updateFigureDropdownValues', () => {
+    let getState = () => {
+        return {
+            autoNumberReducer:{
+                autoNumberReducer: {}
+            }
+        }
+    }
+    it('15.1 updateFigureDropdownValues when dropdownOptionsObj is given',() => {
+        const data = {
+            audio: [ 'No Label', 'Custom' ],
+            image: [ 'No Label', 'Custom' ],
+            smartlinks: [ 'No Label', 'Custom' ],
+            video: [ 'No Label', 'Custom' ],
+            abc:['No Label', 'Custom']
+          }
+        let dispatch = jest.fn()
+        canvasActions.updateFigureDropdownValues(data)(dispatch,getState)
+        expect(dispatch).toHaveBeenCalled();
+    })
+})
 it('Test: setProjectSharingRole function', () => {
     const expectedActions = {
         type: SET_PROJECT_SHARING_ROLE,
