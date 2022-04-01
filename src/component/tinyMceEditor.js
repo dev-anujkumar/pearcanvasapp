@@ -3374,7 +3374,7 @@ export class TinyMceEditor extends Component {
          * 3 . etc related to tinymce not in sync issues
          * must code to sync tinymce editor instances ant any moment of time
          */
-         document.removeEventListener("visibilitychange", () => { this.props.saveCaretPosition('') });
+         document.removeEventListener("visibilitychange", () => { this.props?.saveCaretPosition('') });
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
             if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && this.props.element.type && this.props.element.type === "figure" && this.props.element.figuretype !== "interactive"))) {
@@ -3928,7 +3928,7 @@ export class TinyMceEditor extends Component {
         // save Non-HTML bookmark so pass parameter true to getBookmark
         let caretPosition = tinymce.activeEditor?.selection?.getBookmark(2, true);
         if (caretPosition) {
-            this.props.saveCaretPosition(caretPosition);
+            this.props?.saveCaretPosition(caretPosition);
         }
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
