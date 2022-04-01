@@ -92,6 +92,27 @@ jest.mock('../../../src/component/AssessmentSlateCanvas/AssessmentActions/assess
         isElmLearnosityAssessment: ()=>{return true}
     }
 });
+
+jest.mock('../../../src/component/ShowHide/ShowHide_Helper', () => {
+    return {
+        getShowHideElement: () => {
+            return {
+                type: 'showhide', 
+                interactivedata: {
+                    "postertextobject": [
+                        {
+                            "type": "element-authoredtext",
+                            "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                            "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f",
+                            "versionUrn":"urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+                        }
+                    ]
+                }
+            }
+        },
+        indexOfSectionType: () => {return "postertextobject"}
+    }
+})
 /*********************Declare Common Variables**********************/
 const cb = jest.fn();
 config.slateManifestURN = "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
@@ -1061,6 +1082,42 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear()
         })
+
+        it('Test-3.5.3-setActiveElement - Interactive Elemente in WE-Section Break covering getPathOfFigureAsset function', () => {
+            let dispatch = (obj) => {
+                if (obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual(slateTestData.setActiveElementPayload.interactiveInWE);
+                }
+                else if (obj.type === SET_PARENT_ASIDE_DATA) {
+                    expect(obj.payload).toEqual({ parentUrn: {}, asideData: {} });
+                }
+                else if (obj.type === SET_PARENT_SHOW_DATA) {
+                    expect(obj.payload).toEqual({ showHideObj: undefined });
+                }
+                else if (obj.type === SET_OLD_IMAGE_PATH) {
+                    expect(obj.payload).toEqual({ oldImage: "" });
+
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        parentUrn: {},
+                        asideData: {
+                            type: 'showhide'
+                        }
+                    }
+                };
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[9].elementdata.bodymatter[1].contents.bodymatter[3];
+            const spyFunction = jest.spyOn(canvasActions, 'setActiveElement')
+            canvasActions.setActiveElement(activeElement, '9-1-3', {}, {}, undefined, undefined)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+
         it('Test-3.5.4-setActiveElement - Interactive Element in Multi-Column', () => {
             let dispatch = (obj) => {
                 if (obj.type === SET_ACTIVE_ELEMENT) {
@@ -1676,7 +1733,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             spyFunction.mockClear();
         })
 
-        it('Test-4.1-fetchSlateData - Pdf Slate', () => {
+        it('Test-4.1-fetchSlateData - Pdf Slate joined pdf', () => {
             config.slateType ="pdfslate"
             let responseData = {
                 data: {
@@ -1686,7 +1743,54 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                         contents: {
                             bodymatter: [{
                                 type: "element-pdf", elementdata:{}
+                            },{
+                                type: "element-pdf", elementdata:{}
                             }]
+                        }
+                    }
+                }
+            }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === FETCH_SLATE_DATA) {
+                    expect(obj.payload).toEqual(slateTestData.slateData1);
+                }
+                else if (obj && obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual({});
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                        isCypressPlusEnabled: true
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9',
+                entityURN = 'urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294',
+                page = 1,
+                versioning = '',
+                calledFrom = 'SlateRefresh',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+
+        it('Test-4.1-fetchSlateData - Pdf Slate', () => {
+            config.slateType ="pdfslate"
+            let responseData = {
+                data: {
+                    "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9": {
+                        id: "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                        type: "element-pdf",
+                        contents: {
                         }
                     }
                 }
