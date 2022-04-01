@@ -77,7 +77,7 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
         let numberText = numberDOM ? numberDOM.innerText : ""
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberText, false);
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
@@ -232,7 +232,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
         let numberText = numberDOM ? numberDOM.innerText : ""
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberText, false);
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
@@ -402,7 +402,8 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
     }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
@@ -522,7 +523,8 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
