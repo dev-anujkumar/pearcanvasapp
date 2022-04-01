@@ -323,12 +323,14 @@ class PopUp extends React.Component {
     renderDialogText = (props) => {
         if(props.alfrescoExpansionPopup){
             let imgList = props?.alfrescoExpansionMetaData?.renderImages?.map((image) => (
+                  <div className='imageContainer'>
                     <img 
-                      className='imageContainer' 
+                      className='img-inside-container' 
                       src={image.imgSrc} 
                       id={image.imgId}
                       onClick={() => this.processImageID(image.imgId)}
-                    />     
+                    /> 
+                  </div>    
                 ))
             return (
                 <> 

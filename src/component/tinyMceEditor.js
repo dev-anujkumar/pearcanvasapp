@@ -38,6 +38,8 @@ import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/A
 import ElementConstants from './ElementContainer/ElementConstants';
 import { moveCursor } from './Keyboard/KeyboardWrapper.jsx';
 import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
+import {prepareBqHtml} from '../../src/js/utils.js'
+
 let context = {};
 let clickedX = 0;
 let clickedY = 0;
@@ -209,6 +211,10 @@ export class TinyMceEditor extends Component {
                             }
                         }
                         editor.selection.placeCaretAt(clickedX, clickedY);
+                    }
+
+                    if(e.level && e.level.content?.match(/<blockquote/)?.input?.includes('class="blockquoteMarginalia') && e.level.content?.match(/<img/)?.input?.includes('class="imageAssetContent')){
+                        this.props.handleBlur(null, this.props.currentElement, this.props.index, null, eventTarget)
                     }
 
                     let content = e.target.getContent({ format: 'text' }),
@@ -717,6 +723,7 @@ export class TinyMceEditor extends Component {
                     editor,
                     imageArgs
                 }
+                config.updateInlineImage = true
                 this.props.saveInlineImageData(params)
                 handleC2MediaClick(this.props.permissions, editor, this.props.element, this.props.saveSelectedAlfrescoElement);
             }
@@ -729,6 +736,11 @@ export class TinyMceEditor extends Component {
             }
             else if (selectedText.length <= 0) { //handling Asset popover show hide toolbar icon
                 this.assetPopoverButtonState && this.assetPopoverButtonState.setDisabled(true);
+            }
+            if (this.props.element && this.props.element.type === 'element-blockfeature') {
+                if ( e && e.target && e.target.classList.contains('blockquoteTextCredit')) {
+                    setFormattingToolbar('disableTinymceToolbar')
+                }
             }
         });
     }
@@ -1921,6 +1933,7 @@ export class TinyMceEditor extends Component {
                     editor: editor,
                     props:this.props
                 }
+                config.updateInlineImage = true
                 self.props.saveInlineImageData(params)
                 const items = insertMediaSelectors(params);
                 callback(items);
@@ -3111,7 +3124,7 @@ export class TinyMceEditor extends Component {
 
         let currentNode = document.getElementById('cypress-' + this.props.index);
         if (currentNode && currentNode.getElementsByTagName("IMG").length) {
-            currentNode.innerHTML = this.getNodeContent();
+            currentNode.innerHTML = this.getNodeContent(currentNode);
         }
         const { slateLockInfo: { isLocked } } = this.props
         const userId = this.props.slateLockInfo && this.props.slateLockInfo.userId.replace(/.*\(|\)/gi, '');
@@ -3200,7 +3213,7 @@ export class TinyMceEditor extends Component {
             }
         }
     }
-    getNodeContent = () => {
+    getNodeContent = (node) => {
         const { slateLockInfo: { isLocked, userId } } = this.props;
         let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
         switch (this.props.tagName) {
@@ -3235,8 +3248,8 @@ export class TinyMceEditor extends Component {
 
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote")) {
-                    let temDiv = this.processBlockquoteHtml(this.props.model, this.props.element, lockCondition);
-                    let bgModel=removeImageCache(temDiv.innerHTML)
+                    let temDiv = prepareBqHtml(node);
+                    let bgModel=removeImageCache(temDiv)
                     return bgModel;
                 } else {
                     let pqModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUno"><br/></p>'
@@ -3742,6 +3755,11 @@ export class TinyMceEditor extends Component {
                             }
                         }*/
                     }
+                    if (this.props?.element?.type === 'element-blockfeature') {
+                        if (activeNode && (activeNode.className === 'blockquoteTextCredit' || activeNode.className.includes('blockquoteTextCredit'))) {
+                            setFormattingToolbar('disableTinymceToolbar')
+                        }
+                    }
                 }
 
                 //---------------------------------------------------------------------------------//
@@ -4099,30 +4117,6 @@ export class TinyMceEditor extends Component {
     }
 
 
-    processBlockquoteHtml = (model, element, lockCondition) => {
-       
-        const temDiv = document.createElement('div');
-        let hiddenBlock = this.generateHiddenElement();
-        temDiv.innerHTML = model.text;
-        let firstParaBlock = temDiv.children[0]?.children[0]?.outerHTML
-        let attrParaBlock = temDiv.children[0]?.children[1]?.outerHTML
-        temDiv.innerHTML = model && model.text ? model.text : `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false">${firstParaBlock}${attrParaBlock}</blockquote>`
-        if (element && element.elementdata && element.elementdata.type === "blockquote" && !tinymce.$(temDiv).find('blockquote p.blockquoteTextCredit').length) {
-            tinymce.$(temDiv).find('blockquote').append('<p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text"></p>');
-        }
-        tinyMCE.$(temDiv).find('[data-mce-bogus]') && tinyMCE.$(temDiv).find('[data-mce-bogus]').remove();
-        tinymce.$(temDiv).find('.blockquoteTextCredit').attr('contenteditable', 'true').attr('data-placeholder', 'Attribution Text');
-        if (tinymce.$(temDiv).find('.blockquoteTextCredit') && !tinymce.$(temDiv).find('blockquote p.blockquote-hidden').length) {
-            temDiv.childNodes[0].insertBefore(hiddenBlock, tinymce.$(temDiv).find('.blockquoteTextCredit')[0]);
-        }
-        tinymce.$(temDiv).find('blockquote').attr('contenteditable', 'false');
-        tinymce.$(temDiv).find('.paragraphNummerEins').attr('contenteditable', !lockCondition);
-        if (tinymce.$(temDiv).find('.paragraphNummerEins') && tinymce.$(temDiv).find('.paragraphNummerEins')[0]) {
-            tinymce.$(temDiv).find('.paragraphNummerEins')[0].addEventListener('blur', this.handleBlur);
-        }
-        temDiv.innerHTML = removeBOM(temDiv.innerHTML)
-        return temDiv;
-    }
 
     render() {
         const { slateLockInfo: { isLocked, userId } } = this.props;
