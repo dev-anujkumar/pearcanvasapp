@@ -1568,5 +1568,72 @@ describe('Test for Sidebar component', () => {
                 expect(spyFontBulletOption).toHaveBeenCalled();
             })
         })
+
+        it("Testing handleSyntaxHighlightingPopup - IF Condition", () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...updatedProps} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleSyntaxHighlightingPopup = jest.spyOn(sidebarInstance, 'handleSyntaxHighlightingPopup');
+            sidebarInstance.handleSyntaxHighlightingPopup(true);
+            expect(spyHandleSyntaxHighlightingPopup).toHaveBeenCalled();
+        })
+
+        describe("Testing handleSyntaxHighlightingToggle", () => {
+            it("Test handleSyntaxHighlightingToggle - when `this.state.syntaxHighlightingToggleValue == false`", () => {
+                let mockDataForHandleSyntaxHighlightingToggle = {
+                    ...storeData1,
+                    appStore: {
+                        activeElement: {
+                            "elementType": "element-dialogue",
+                            "primaryOption": "primary-element-dialogue",
+                            "secondaryOption": 'secondary-element-dialogue',
+                            "asideNumber": false,
+                            "elementId": "urn:pearson:manifest:a4b48624-2ae1-46aa-bf21-ddb88a5dcf82",
+                            "index": 0,
+                            "elementWipType": "element-dialogue",
+                            "toolbar": [],
+                            "tag": "DE",
+                            "syntaxhighlighting": false
+                        },
+                        updateElement,
+                        conversionElement,
+                        slateLevelData,
+                    }
+                };
+                const mockStoreForHandleSyntaxHighlightingToggle = mockStore(mockDataForHandleSyntaxHighlightingToggle);
+                let sidebar = mount(<Provider store={mockStoreForHandleSyntaxHighlightingToggle}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spyHandleSyntaxHighlightingToggle = jest.spyOn(sidebarInstance, 'handleSyntaxHighlightingToggle');
+                sidebarInstance.handleSyntaxHighlightingToggle();
+                expect(spyHandleSyntaxHighlightingToggle).toHaveBeenCalled();
+            })
+            it("Test handleSyntaxHighlightingToggle - when `this.state.syntaxHighlightingToggleValue == null`", () => {
+                let mockDataForHandleSyntaxHighlightingToggle = {
+                    ...storeData1,
+                    appStore: {
+                        activeElement: {
+                            "elementType": "element-dialogue",
+                            "primaryOption": "primary-element-dialogue",
+                            "secondaryOption": 'secondary-element-dialogue',
+                            "asideNumber": false,
+                            "elementId": "urn:pearson:manifest:a4b48624-2ae1-46aa-bf21-ddb88a5dcf82",
+                            "index": 0,
+                            "elementWipType": "element-dialogue",
+                            "toolbar": [],
+                            "tag": "DE",
+                            "syntaxhighlighting": null
+                        },
+                        updateElement,
+                        conversionElement,
+                        slateLevelData,
+                    }
+                };
+                const mockStoreForHandleSyntaxHighlightingToggle = mockStore(mockDataForHandleSyntaxHighlightingToggle);
+                let sidebar = mount(<Provider store={mockStoreForHandleSyntaxHighlightingToggle}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spyHandleSyntaxHighlightingToggle = jest.spyOn(sidebarInstance, 'handleSyntaxHighlightingToggle');
+                sidebarInstance.handleSyntaxHighlightingToggle();
+                expect(spyHandleSyntaxHighlightingToggle).toHaveBeenCalled();
+            })
+        })
     });
 });
