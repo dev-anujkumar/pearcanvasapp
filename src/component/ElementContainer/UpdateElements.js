@@ -75,8 +75,9 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
         let numberText = numberDOM ? numberDOM.innerText : ""
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberText, false);
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
@@ -229,8 +230,9 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
+        titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
         let numberText = numberDOM ? numberDOM.innerText : ""
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberText, false);
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
@@ -399,7 +401,9 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }
@@ -518,7 +522,9 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
         displayedlabel = getValueOfLabel(previousElementData?.figuretype);
     }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleHTML, numberHTML, false);
+        titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+        let numberText = numberDOM ? numberDOM.innerText : ""
+        let payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, titleText, numberText, false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
     }

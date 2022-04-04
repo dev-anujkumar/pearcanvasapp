@@ -7,7 +7,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import ElementFigure from '../../../src/component/ElementFigure/ElementFigure';
-import { figureImage50TextElementDefault,figureImage50TextElementWithData, mathmlEditorDefault, mathmlEditorWithData,mathImage50TextElementDefault, blockCodeEditorDefault,blockCodeEditorWithData, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,figureTableEditorTextWidthElementDefault,testDataFromNewAlfresco } from '../../../fixtures/ElementFigureTestingData.js'
+import { figureImage50TextElementDefault,figureImage50TextElementWithData, mathmlEditorDefault, mathmlEditorWithData,mathImage50TextElementDefault, blockCodeEditorDefault,blockCodeEditorWithData, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,figureTableEditorTextWidthElementDefault,testDataFromNewAlfresco,testDataFromNewAlfresco1,testDataFromNewAlfresco2} from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
@@ -286,6 +286,81 @@ describe('Testing Figure element component', () => {
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith({target : {tagName : 'b'}})
             spyhandleC2MediaClick.mockClear()
         })
+        it('Simulating alfresco click with alfresco location', () =>{
+            const elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider> )
+            let elementFigureInstance = elementFigure.find('ElementFigure').instance();
+            config.alfrescoMetaData = {
+                alfresco:{
+                    'path':'test',
+                    'nodeRef' : {},
+                    'name':'text1'
+                }
+            }
+            const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
+            elementFigureInstance.handleC2MediaClick({target : {tagName : 'b'}})           
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith({target : {tagName : 'b'}})
+            spyhandleC2MediaClick.mockClear()
+        })
+        it('Simulating alfresco click with alfresco location', () =>{
+            const elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider> )
+            let elementFigureInstance = elementFigure.find('ElementFigure').instance();
+            config.alfrescoMetaData = {
+                alfresco:{
+                    'path':'test',
+                    'nodeRef' : {},
+                    'name':'text1',
+                    'title':"text2"
+                }
+            }
+            const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
+            elementFigureInstance.handleC2MediaClick({target : {tagName : 'b'}})           
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith({target : {tagName : 'b'}})
+            spyhandleC2MediaClick.mockClear()
+        })
+        it('Simulating alfresco click without alfresco location', () =>{
+            const elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider> )
+            elementFigure.instance({ alfrescoSiteData:{
+                'nodeRef':"workspace://SpacesStore/9b39bfd7-b73c-4b0f-b2c5-60e77ed17ce7"
+            } });
+            let elementFigureInstance = elementFigure.find('ElementFigure').instance();
+            config.alfrescoMetaData = {
+                alfresco:{
+                    'path':'test',
+                    'nodeRef' : {},
+                    'name':'text1',
+                    'title':'text2'
+                }
+            }
+            props.permissions = [];
+            const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
+            elementFigureInstance.handleC2MediaClick({target : {tagName : 'b'}}) 
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith({target : {tagName : 'b'}})
+            spyhandleC2MediaClick.mockClear()
+        })
+        it('Simulating alfresco click without alfresco location', () =>{
+            const elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider> )
+            let elementFigureInstance = elementFigure.find('ElementFigure').instance();
+            config.alfrescoMetaData = {
+                alfresco:{
+                    'path':'test',
+                    'nodeRef' : {},
+                    'name':'text1'
+                }
+            }
+            props.permissions = [];
+            const spyhandleC2MediaClick = jest.spyOn(elementFigureInstance, 'handleC2MediaClick') 
+            elementFigureInstance.handleC2MediaClick({target : {tagName : 'b'}}) 
+            elementFigureInstance.forceUpdate();
+            elementFigure.update();
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith({target : {tagName : 'b'}})
+            spyhandleC2MediaClick.mockClear()
+        })
         it('Simulating alfresco click without alfresco location', () =>{
             const elementFigure = mount(<Provider store={store}><ElementFigure {...props} /></Provider> )
             let elementFigureInstance = elementFigure.find('ElementFigure').instance();
@@ -321,6 +396,30 @@ describe('Testing Figure element component', () => {
                 expect(elementFigureInstance.state.imgSrc).toBe(defaultImageSrc)
             })
         })
+        it('Test- else case workflow when epsURL is not given1', () => {
+            let data = testDataFromNewAlfresco1
+            data["epsUrl"] = ''
+            data['id'] = ''
+            data.properties["exif:pixelXDimension"] = ''
+            data.properties["exif:pixelYDimension"] = ''
+            data.properties["cplg:altText"] = ''
+            data.properties['cplg:longDescription'] = ''
+            let defaultImageSrc = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            elementFigureInstance.dataFromNewAlfresco(data)
+            expect(elementFigureInstance.state.imgSrc).toBe(defaultImageSrc)
+        })
+        it('Test- else case workflow when epsURL is not given1', () => {
+            let data = testDataFromNewAlfresco2
+            data["epsUrl"] = ''
+            data['id'] = ''
+            data.properties["exif:pixelXDimension"] = ''
+            data.properties["exif:pixelYDimension"] = ''
+            data.properties["cplg:altText"] = ''
+            data.properties['cplg:longDescription'] = ''
+            let defaultImageSrc = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
+            elementFigureInstance.dataFromNewAlfresco(data)
+            expect(elementFigureInstance.state.imgSrc).toBe(defaultImageSrc)
+        })
     })
     describe('TEST-----Table Editor',()=>{
         let type = "figure";
@@ -331,7 +430,28 @@ describe('Testing Figure element component', () => {
             },
             model:{
                 figuretype:"tableasmarkup",
+                figuredata:{
+                    tableasHTML:""
+                }
             },
+            
+            onClick : ()=>{},
+            handleFocus: function(){},
+            permissions: ['add_multimedia_via_alfresco'],
+            elementId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+        };
+        let props1 = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            model:{
+                figuretype:"tableasmarkup",
+                figuredata:{
+                    tableasHTML:"xyz"
+                }
+            },
+            
             onClick : ()=>{},
             handleFocus: function(){},
             permissions: ['add_multimedia_via_alfresco'],
@@ -344,12 +464,21 @@ describe('Testing Figure element component', () => {
             stopPropagation() { }
         }
         const elementFigure = mount(<Provider store={store}><ElementFigure type={type} index="30" {...props}/></Provider>);
+        const elementFigure1 = mount(<Provider store={store}><ElementFigure type={type} index="30" {...props1}/></Provider>);
         let elementFigureInstance = elementFigure.find('ElementFigure').instance();
         it('TEST- Call AddResource function',()=>{
             const spyaddFigureResource = jest.spyOn(elementFigureInstance, 'addFigureResource') 
             elementFigureInstance.addFigureResource(e);
             elementFigureInstance.forceUpdate();
             elementFigure.update();
+            expect(spyaddFigureResource).toHaveBeenCalledWith(e)
+            spyaddFigureResource.mockClear()
+        })
+        it('TEST- Call AddResource function',()=>{
+            const spyaddFigureResource = jest.spyOn(elementFigureInstance, 'addFigureResource') 
+            elementFigureInstance.addFigureResource(e);
+            elementFigureInstance.forceUpdate();
+            elementFigure1.update();
             expect(spyaddFigureResource).toHaveBeenCalledWith(e)
             spyaddFigureResource.mockClear()
         })
