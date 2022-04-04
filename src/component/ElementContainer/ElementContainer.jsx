@@ -2467,6 +2467,9 @@ class ElementContainer extends Component {
             hideBlocker();
         }
         this.props.getProjectUsers();
+        if(this.props?.element?.figuretype === TABLE_ELEMENT){
+            this.props.prepareImageDataFromTable({}); // this will delete the TE data from store
+        }
     }
 
     handleCommunication = ( elementId ) => {
