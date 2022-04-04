@@ -235,10 +235,11 @@ class ElementButton extends Component {
                 buttonJSX = <span className= {`btn-element alfresco-metadata-icon  ${isSubscribersSlate ? 'subscriberSlate' :''} ${btnClassName}`} onClick={clickHandlerFn} title="Expand in Alfresco" ><img src={alfrescoMetadata} /></span>
                 break;
             case ButtonTypes.ALFRESCO_TE_METADATA:
-                buttonJSX = 
+                buttonJSX = <div  className='expand-te-btn'>
                 <Tooltip direction='picker-for-table' tooltipText="Expand in Alfresco">
                 <span className= {`btn-element alfresco-metadata-icon  ${isSubscribersSlate ? 'subscriberSlate' :''} ${btnClassName}`} onClick={clickHandlerFn} title="" ><img src={alfrescoMetadata} /></span>
                 </Tooltip>
+                </div>
                 break;
             case ButtonTypes.STAGE_DIRECTION:
                 buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>

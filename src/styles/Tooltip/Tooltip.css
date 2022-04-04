@@ -172,13 +172,14 @@
 }
 
 .tooltip .tooltip-picker-for-table {
-    width: 120px;
+    /* width: 120px; */
+    width: max-content;
     top: 125%;
-    margin-left: -75px;
+    margin-left: -85px;
     font-size: 10px;
     font-weight: 600;
     border-radius: 2px;
-    padding: 4px 5px 3px;
+    padding: 6px 8px 3px;
     height: 23px;
     background-color: black;
     color: #fff;
@@ -188,15 +189,23 @@
     transition: opacity 1s;
 }
 
+.expand-te-btn .tooltip .tooltip-picker-for-table {
+    margin-left: -65px !important;
+}
+
 .tooltip .tooltip-picker-for-table::after {
     content: " ";
     position: absolute;
     bottom: 100%;
-    left: 71%;
+    left: 76%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
     border-color: transparent transparent black transparent;
+}
+
+.expand-te-btn .tooltip .tooltip-picker-for-table::after {
+  left: 71% !important;
 }
 
 .tooltip .hide{
@@ -283,3 +292,4 @@
     transition: opacity 1s;
     left: 15px;
 }
+
