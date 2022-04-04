@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import ElementAudioVideo from '../../../src/component/ElementAudioVideo/ElementAudioVideo';
 import config from '../../../src/config/config';
-import { audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault, audioData, audioData1, newAlfrescoData, videoSmartLinksData, newVideoData, smartLinkAudio, permissions } from '../../../fixtures/ElementAudioVideoTestingData.js'
+import { figureImage50TextElementWithData,audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault, audioData, audioData1, newAlfrescoData, videoSmartLinksData, newVideoData, smartLinkAudio, permissions } from '../../../fixtures/ElementAudioVideoTestingData.js'
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
@@ -552,5 +552,158 @@ describe('Testing Element Audio-Video component', () => {
             spydataFromAlfresco.mockClear()
         })
 
+    })
+    describe("Testing showDeleteAssetPopup", () => {
+        let props = {
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            permissions: permissions,
+            model: audioElementTypeSLWithData,
+            updateFigureData: jest.fn(),
+            handleBlur: jest.fn(),
+            handleFocus: jest.fn(),
+            accessDenied: jest.fn(),
+            showBlocker: jest.fn(),
+            isCiteChanged: true
+        };
+        const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
+        let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+        const spy = jest.spyOn(elementAudioVideoInstance, 'showDeleteAssetPopup');
+        it('Testing showDeleteAssetPopup - IF Condition', () => {
+            elementAudioVideoInstance.setState({ deleteAssetPopup: true });
+            elementAudioVideoInstance.showDeleteAssetPopup();
+            expect(spy).toBeCalled();
+        });
+        it('Testing showDeleteAssetPopup - ELSE Condition', () => {
+            elementAudioVideoInstance.setState({ deleteAssetPopup: false });
+            elementAudioVideoInstance.showDeleteAssetPopup();
+            expect(spy).toBeCalled();
+        });
+    });
+    describe("Testing toggleDeletePopup", () => {
+        it("Testing toggleDeletePopup", () => {
+            let props = {
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions: permissions,
+                model: audioElementTypeSLWithData,
+                updateFigureData: jest.fn(),
+                handleBlur: jest.fn(),
+                handleFocus: jest.fn(),
+                accessDenied: jest.fn(),
+                showBlocker: jest.fn(),
+                isCiteChanged: true
+            };
+            const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
+            let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+            const spy = jest.spyOn(elementAudioVideoInstance, "toggleDeletePopup");
+            const event = {
+                preventDefault: jest.fn()
+            };
+            elementAudioVideoInstance.toggleDeletePopup(null, event);
+            expect(spy).toBeCalled();
+        });
+    });
+    describe('Testing alfrescoSiteUrl', () => {
+        let props = {
+            model: figureImage50TextElementWithData,
+            index: "",
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            onClick: () => { },
+            handleFocus: function () { },
+            permissions: ['add_multimedia_via_alfresco'],
+        }
+        test('Testing updateAlfrescoSiteUrl if condition', () => {
+            const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
+            let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+            elementAudioVideoInstance.setState({
+                alfrescoSiteData: {
+                    title: 'test'
+                }
+            });
+            elementAudioVideoInstance.updateAlfrescoSiteUrl();
+            expect(elementAudioVideoInstance.state.alfrescoSite).toBe('test')
+        })
+        test('Testing updateAlfrescoSiteUrl else condition', () => {
+            const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
+            let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+            elementAudioVideoInstance.setState({
+                alfrescoSiteData: {
+                    title: null
+                }
+            });
+            elementAudioVideoInstance.updateAlfrescoSiteUrl();
+            let defaultSite = config.alfrescoMetaData?.alfresco?.repositoryFolder || config.alfrescoMetaData?.alfresco?.title
+            expect(elementAudioVideoInstance.state.alfrescoSite).toBe(defaultSite)
+        })
+    })
+    describe('deleteElementAsset', () => {
+        it('Testing deleteElementAsset - audio case', () => {
+            const audioVideoInstance = () => {
+                let component = mount(<Provider store={elementAudioVideoData}>
+                    <ElementAudioVideo {...props} /></Provider>
+                );
+                return component.find('ElementAudioVideo').instance();
+            }
+            let props = {
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions: permissions,
+                model: audioElementTypeSLWithData,
+                updateFigureData: jest.fn(),
+                handleBlur: jest.fn(),
+                handleFocus: jest.fn(),
+                accessDenied: jest.fn(),
+                showBlocker: jest.fn(),
+                isCiteChanged: true
+            };
+            const elementAudioVideoInstance = audioVideoInstance(props)
+            const deleteElementAsset = jest.spyOn(elementAudioVideoInstance, 'deleteElementAsset')
+            elementAudioVideoInstance.deleteElementAsset()
+            expect(deleteElementAsset).toHaveBeenCalled()
+        })
+        it('Testing deleteElementAsset - video case', () => {
+            const audioVideoInstance = () => {
+                let component = mount(<Provider store={elementAudioVideoData}>
+                    <ElementAudioVideo {...props1} /></Provider>
+                );
+                return component.find('ElementAudioVideo').instance();
+            }
+            let props1 = {
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions: permissions,
+                model: videoElementTypeSLWithData,
+                updateFigureData: jest.fn(),
+                handleBlur: jest.fn(),
+                handleFocus: jest.fn(),
+                accessDenied: jest.fn(),
+                showBlocker: jest.fn(),
+                isCiteChanged: true
+            };
+            const elementAudioVideoInstance = audioVideoInstance(props1)
+            const deleteElementAsset = jest.spyOn(elementAudioVideoInstance, 'deleteElementAsset')
+            elementAudioVideoInstance.deleteElementAsset()
+            expect(deleteElementAsset).toHaveBeenCalled()
+        })
     })
 });
