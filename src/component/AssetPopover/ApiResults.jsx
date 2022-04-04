@@ -59,8 +59,9 @@ class ApiResults extends React.Component {
                 <h3 className="figureCount">{assetTypeTitle}</h3>
                 {
                     matchingAssets.map((value, index) => {
-                        const assetTitle = value?.title ? value.title : value?.unformattedTitle?.en ? value.unformattedTitle.en : "";
-                        return <FigureCard forInputKey={index} key={index} figureDetails={value} title={assetTitle} path={value.path ?? assetTitle} selectedFigure={selectedFigure} />
+                        const assetTitle = getTitle(value);
+                        const assetCaption = getCaption(value);
+                        return <FigureCard forInputKey={index} key={index} figureDetails={value} title={assetTitle} caption={assetCaption} path={value.path ?? assetTitle} selectedFigure={selectedFigure} />
                     })
                 }
             </>
