@@ -183,7 +183,7 @@ const MetaDataPopUpForTE = (props) => {
   }
 
 
-  let htmlErrMsg = ' HTML tags are not supported in this input field';
+  let htmlErrMsg = 'HTML tags are present. Please remove as this is not supported.';
 
   const handleActiveState = (active) => {
 		setActive(active)
@@ -210,12 +210,12 @@ const MetaDataPopUpForTE = (props) => {
                     <img className='inner-img-container' src={imageSrc} id={imageID} /> 
                   </div>
                   <div className='outer-img-array-container'>
-                  <span className={`left-arrow ${index === 0 ? 'disable' : ''}`} onClick={traverseLeft}><div className={`left-arrow-icon`}>{imageList.length > 3 &&<img width="12px" height="12px" src={moveArrow} />}</div></span>
+                  {imageList.length > 3 && <span className={`left-arrow ${index === 0 ? 'disable' : ''}`} onClick={traverseLeft}><div className={`left-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>}
                     <span className='inner-img-array'>
                     {imageList && imageList.map((image, imgIndex) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
                           return (
-                          <div className='img-inside-array'>
+                          <div className={`img-inside-array ${(imageList.length <= 3 && imgIndex === 0) ? 'first-img' : '' }`}>
                              <img 
                                key={image.imgId}
                                className='seperate-img' 
@@ -229,12 +229,12 @@ const MetaDataPopUpForTE = (props) => {
                       }
                     })}
                     </span>
-                    <span className={`right-arrow ${index === (imageList.length - 1) ? 'disable' : '' }`} onClick={traverseRight}><div className={`right-arrow-icon`}>{imageList.length > 3 && <img width="12px" height="12px" src={moveArrow} />}</div></span>
+                    {imageList.length > 3 && <span className={`right-arrow ${index === (imageList.length - 1) ? 'disable' : '' }`} onClick={traverseRight}><div className={`right-arrow-icon`}>{imageList.length > 3 && <img width="12px" height="12px" src={moveArrow} />}</div></span>}
                   </div>
                 </div>
                 <div className="right-container">
                   <div className="figuremetadata-field-table">
-                    <div className={`alt-text-body ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}>
+                    <div className={`alt-text-body-table ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}>
                       <p className={`alt-text ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}> Alt Text </p>
                       <input
                         autocomplete="off"
@@ -252,8 +252,13 @@ const MetaDataPopUpForTE = (props) => {
                         onBlur={updateImageInStore}
                       />
                     </div>
-                    {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
-                    <div className={`long-description-body ${longDescErr === true ? "invalid" : active === 'longBody' ? 'active' : ""}`}>
+                    {altTextErr && <div className='alt-text-span'>
+                      <span className='err-msg-img-span'>
+                        <img width="12px" height="12px" src={errorMark} />
+                      </span>
+                      <span>{htmlErrMsg}</span>
+                    </div>}
+                    <div className={`long-description-body-table ${longDescErr === true ? "invalid" : active === 'longBody' ? 'active' : ""}`}>
                       <p className={`long-text ${longDescErr === true ? "invalid" : active === 'longBody' ? 'active' : ""}`}> Long Description </p>
                       <textarea
                         id="longDescription_AM"
@@ -271,7 +276,11 @@ const MetaDataPopUpForTE = (props) => {
                         onBlur={updateImageInStore}
                       ></textarea>
                     </div>
-                    {longDescErr && <div className='alt-text-span' ><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}
+                    {longDescErr && <div className='alt-text-span' >
+                      <span className='err-msg-img-span'>
+                        <img width="12px" height="12px" src={errorMark} />
+                      </span>
+                      <span>{htmlErrMsg}</span>
                     </div>}
                   </div>
                   <div className="te-metadata-button">
