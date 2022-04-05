@@ -9,7 +9,7 @@ import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ER
          UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
-import { onDeleteSuccess, prepareTCMSnapshotsForDelete } from "./ElementContainerDelete_helpers";
+import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
 import { tcmSnapshotsForCreate, prepareSnapshots_ShowHide} from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { getShowHideElement, indexOfSectionType,findSectionType } from '../ShowHide/ShowHide_Helper';
 import * as slateWrapperConstants from "../SlateWrapper/SlateWrapperConstants";
@@ -451,7 +451,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     let newIndex = index.split("-")
     let newShowhideIndex = parseInt(newIndex[newIndex.length-1]); //+1
-    //const { asideData, parentUrn ,showHideObj } = getState().appStore
     const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
     let _requestData = {
         "projectUrn": config.projectUrn,
@@ -481,11 +480,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         let currentSlateData = newParentData[config.slateManifestURN];
 
         /** [PCAT-8699] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-        /* let containerElement = {
-            asideData,
-            parentUrn,
-            showHideObj
-        }; */
         const containerElement = prepareSnapshots_ShowHide({ asideData: {...parentElement}}, createdElemData.data, index);
         let slateData = {
             currentParentData: newParentData,
@@ -853,6 +847,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     /** Updation of AutoNumbered Elements */
     if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
         dataArr = prepareAsideTitleForUpdate(index, isAutoNumberingEnabled);
+        dataArr[0] = dataArr[0].replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
         payloadKeys = setAutonumberingValuesForPayload(autoNumberOption, dataArr[0], dataArr[1], false);
         numberedandlabel = payloadKeys?.numberedandlabel;
         manualoverride = payloadKeys?.manualoverride;
@@ -978,10 +973,6 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         if (res?.data?.versionUrn && (res?.data?.versionUrn.trim() !== "")) {
             activeElementObject.elementId = res.data.versionUrn
         }
-        // dispatch({  // commented for future reference
-        //     type: 'SET_ACTIVE_ELEMENT',
-        //     payload: activeElementObject
-        // });
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
         config.savingInProgress = false
@@ -994,6 +985,60 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         config.isSavingElement = false
         console.error(" Error >> ", err)
     })
+}
+
+/**
+ * This function will make an API call to fetch the metadata for an image
+ * @param {*} id Image ID
+ * @returns Returns altText & longdescription
+ */
+ const getAltTextLongDesc = async (id) => {
+    let imgId = id.substring(id.indexOf(":") + 1, id.lastIndexOf(":"));
+    try{
+        let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${imgId}`;
+        let response = await axios.get(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'ApiKey': config.CMDS_APIKEY,
+                    'Content-Type': 'application/json',
+                    'myCloudProxySession': config.myCloudProxySession
+                }
+            });
+        const {properties} = response.data.entry;
+        return { 
+            altText : properties["cplg:altText"],
+            longdescription: properties["cplg:longDescription"]
+        }
+    } catch(error){
+        return { 
+            altText : "",
+            longdescription: ""
+        }
+    }
+}
+
+/**
+ * This is a recursive function will collect image data from HTML element within a cell, such as, OL, UL & P
+ * @param {*} node 
+ * @param {*} imagesArrayOfObj 
+ */
+const getImageFromHTMLElement = async (node, imagesArrayOfObj) => {
+    if(node?.nodeName === 'IMG' && node?.className === "imageAssetContent"){
+        const attributes = node.attributes;
+        const id = attributes['data-id'].nodeValue;
+        const src = attributes['data-mce-src'].nodeValue;
+        let tempImgObj = {};
+        const data = await getAltTextLongDesc(id);
+        tempImgObj = { ...data }
+        tempImgObj['imgSrc'] = src;
+        tempImgObj['imgId'] = id;
+        imagesArrayOfObj.push(tempImgObj);
+    } else if(node?.childNodes?.length > 0) {
+        for(let i=0; i<node.childNodes.length; i++){
+            await getImageFromHTMLElement(node.childNodes[i], imagesArrayOfObj);
+        }
+    }
 }
 
 /**
@@ -1014,27 +1059,15 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
         let tableHTML = figureData.tableasHTML;
         let dummyDiv = document.createElement('div');
         dummyDiv.innerHTML = tableHTML;
-        let spanList = dummyDiv.children[0].childNodes;
-        let tableRow = spanList[0].childNodes;
-        for(let i=0;i<tableRow.length;i++){
+        let tBody = dummyDiv.querySelectorAll('tbody');
+        let tableRow = tBody[0]?.childNodes;
+        for(let i=0;i<tableRow?.length;i++){
             let cells = tableRow[i].childNodes;
             for(let j=0; j<cells.length; j++){
                 for(let k=0; k<cells[j].childNodes.length; k++){
-                    if(cells[j].childNodes[k].nodeName === 'IMG'){
-                        const attributes = cells[j].childNodes[k].attributes;
-                        const id = attributes['data-id'].nodeValue;
-                        const src = attributes['data-mce-src'].nodeValue;
-                        let tempImgObj = {};
-                        const data = await getAltTextLongDesc(id);
-                        tempImgObj = { ...data }
-                       
-                        tempImgObj['imgSrc'] = src;
-                        tempImgObj['imgId'] = id;
-                        imagesArrayOfObj.push(tempImgObj);
-                    }
+                    await getImageFromHTMLElement(cells[j].childNodes[k], imagesArrayOfObj);
 
                 }
-
             }
         }
     }
@@ -1043,37 +1076,6 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
         type: UPDATE_TABLE_ELEMENT_ASSET_DATA,
         payload: imagesArrayOfObj
     })
-}
-/**
- * This function will make an API call to fetch the metadata for an image
- * @param {*} id Image ID
- * @returns Returns altText & longdescription
- */
-const getAltTextLongDesc = async (id) => {
-    let imgId = id.substring(id.indexOf(":") + 1, id.lastIndexOf(":"));
-    try{
-        let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${imgId}`;
-        let response = await axios.get(url,
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
-                    'myCloudProxySession': config.myCloudProxySession
-                }
-            });
-        const {properties} = response.data.entry;
-        return { 
-            altText : properties["cplg:altText"],
-            longdescription: properties["cplg:longDescription"]
-        }
-    } catch(error){
-        console.log(" error: ", error)
-        return { 
-            altText : "",
-            longdescription: ""
-        }
-    }
 }
 
 /**
@@ -1115,7 +1117,6 @@ export const saveTEMetadata = async (editedImageList) => {
                         'myCloudProxySession': config.myCloudProxySession
                     }
                 });
-    
                 promiseArray.push(response);
             }
             await Promise.all(promiseArray);

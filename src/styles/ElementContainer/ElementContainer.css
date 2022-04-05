@@ -288,3 +288,10 @@ button.SearchLibraryStyles__btnCancel___1G1qN, button.BrowseStyles__btnCancel___
 div.stageDirectionItalicFont dfn {
     font-style: italic;
 }
+.blockquoteTextCredit.cypress-editable.place-holder::before{
+    color: black !important;
+}
+
+.blockquoteMarginalia p {
+    min-height: 45px !important;
+}

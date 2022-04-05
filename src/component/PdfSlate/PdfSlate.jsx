@@ -70,7 +70,6 @@ class PdfSlate extends Component {
 			let isSmartLinkAsset = smartLinkString !== "{}" ? true : false
 			let smartlinkAvsString = (isSmartLinkAsset === true) ? smartLinkString : {}
 			const smartLinkDesc = (typeof smartlinkAvsString === 'string')? JSON.parse(smartlinkAvsString) : smartlinkAvsString;
-			// const smartLinkDesc = smartLinkString !== "{}" ? JSON.parse(smartLinkString) : "";
 			const smartLinkType = smartLinkDesc !== "" && smartLinkDesc.smartLinkType ? smartLinkDesc.smartLinkType : "";
 
 			if ((isPdf?.toLowerCase() == "pdf") || (smartLinkType?.toLowerCase() === 'pdf')) {
@@ -95,6 +94,7 @@ class PdfSlate extends Component {
 				} 
 			} else {
 				console.info("Please import pdf");
+				hideBlocker();
 			} 
 		} catch (error){
 			console.error("Error - ",error);

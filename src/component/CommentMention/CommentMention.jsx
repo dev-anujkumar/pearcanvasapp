@@ -1,6 +1,5 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState} from 'react';
 import { MentionsInput, Mention } from 'react-mentions';
 import { useDispatch } from 'react-redux';
 import { getProjectUsers } from '../CommentsPanel/CommentsPanel_Action';

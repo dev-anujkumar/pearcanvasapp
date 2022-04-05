@@ -66,7 +66,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     const anchorNode = editor.selection.getSel().anchorNode;
     let imgElement = anchorNode && anchorNode.getElementsByTagName ? anchorNode.getElementsByTagName('IMG') : [];
     const newNode = anchorNode.closest('div.showHide');
-    // let isOnlyMathmlFlag = false;
     const _selRange = editor.selection.getRng(true);
     const isMultilineSelection = _selRange.startContainer !== _selRange.endContainer;
     let listUpdatedOnce = false;
@@ -101,7 +100,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
             // if only mathml image is present in editor //
             if ((editor.targetElm.textContent.length === 0) ||
                 (editor.targetElm.innerHTML.indexOf('Wirisformula') != -1)) {
-                // isOnlyMathmlFlag = true;
             }
 
             // creating new paragraph //
@@ -123,7 +121,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
                     if (anchorNode.children[1] &&
                         (anchorNode.children[1].tagName === "OL" ||
                             anchorNode.children[1].tagName === "UL")) {
-                        // isOnlyMathmlFlag = false;
                         prohibitEventBubling(e);
                         return false;
                     }
@@ -178,7 +175,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     if (editor.targetElm.querySelectorAll('li').length == 0) {
         if ((e.metaKey && e.which == 13) || (e.which == 13)) {
             prohibitEventBubling(e);
-            // createNewParagraphElement(e, editor);
             return false;
         }
     }
@@ -259,7 +255,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
              */
             if (closestTreeLevel === '1') {
                 prohibitEventBubling(e);
-                // updatelistFlag = false;
                 return false;
             }
 
@@ -285,7 +280,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
                 });
             }
         }
-        // prohibitEventBubling(e);
         if (updatelistFlag) {
             let timeoutInstance = setTimeout(() => {
                 clearTimeout(timeoutInstance);
@@ -296,7 +290,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
 
     let firstChild = editor.targetElm.childNodes[0];
     if (isOnlyListElement && e.which === 13 && firstChild.nodeName !== "PRE") {
-        // prohibitEventBubling(e);
         /**
          * Case - hit enter on last element of list
          * That is a sibling next to it.., then do not perform anything

@@ -6,7 +6,7 @@ import { slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
 import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData } from "../../../fixtures/containerActionsTestingData"
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO } from '../../../src/constants/Action_Constants';
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
 import axios from "axios"
@@ -1581,4 +1581,62 @@ describe("asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE && asideDataFromA
         spyupdateFigureData.mockClear()
     })
     
+})
+
+describe("TEsting for prepareImageDataFromTable", ()=>{
+    it("test for prepareImageDataFromTable", ()=>{
+    const initialState = {
+         appStore: {
+                slateLevelData: newslateShowhideData.slateLevelData
+            }}
+       let store = mockStore(() => initialState);
+       let dispatch = jest.fn(),
+       getState = store.getState;
+       let element = "0-1-1"
+       const spyupdateFigureData = jest.spyOn(actions, 'prepareImageDataFromTable');
+       actions.prepareImageDataFromTable(element)(dispatch, getState)
+       expect(spyupdateFigureData).toHaveBeenCalled()
+       spyupdateFigureData.mockClear()
+    })
+})
+describe("Testing for updateAside Number", ()=>{
+    it("testing with updateAside",()=>{
+    const initialState = {
+        appStore: {
+            slateLevelData: newslateShowhideData.slateLevelData
+        }}
+        let store = mockStore(() => initialState);
+        let dispatch = jest.fn(),
+        getState = store.getState;
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220d0"
+        let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a";
+        let index = "0-1-1";
+        let isAutoNumberingEnabled = true ;
+        let autoNumberOption = 'resume-numbering'
+        let  previousData = {
+           "numberedandlabel" : "1-2"
+       };
+       const spyupdateFigureData = jest.spyOn(actions, 'updateAsideNumber');
+       actions.updateAsideNumber(previousData, index, elementId, isAutoNumberingEnabled, autoNumberOption)(dispatch, getState)
+       expect(spyupdateFigureData).toHaveBeenCalled()
+       spyupdateFigureData.mockClear()
+    })
+})
+
+describe("updateAutoNumberingDropdownForCompare  Testing", ()=>{
+    it('testing------- updateAutoNumberingDropdownForCompare------method', () => {
+        let store = mockStore(() => initialState2);
+        const expectedActions = [
+            { 
+                type: UPDATE_AUTONUMBERING_DROPDOWN_VALUE,
+                payload: {}
+            }
+          ]
+       const spyUpdateMultipleColumnData  = jest.spyOn(actions, 'updateAutoNumberingDropdownForCompare') 
+       actions.updateAutoNumberingDropdownForCompare({}, "testing", store.dispatch);
+       expect(spyUpdateMultipleColumnData).toHaveBeenCalled();
+       store.dispatch(actions.updateAutoNumberingDropdownForCompare({}, 'testing'));
+       expect(store.getActions().type).toEqual(expectedActions.type);
+       spyUpdateMultipleColumnData.mockClear();
+    })
 })

@@ -88,17 +88,6 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     /** latest version for WE/CE/PE/AS/2C*/
     containerElement = await checkContainerElementVersion(containerElement, versionStatus,currentSlateData)
     let oldData = Object.assign({}, response);
-    /** set new slate Manifest in store also */
-    // if(containerElement.slateManifest){
-    //     delete Object.assign(currentParentData, {[containerElement.slateManifest]: currentParentData[currentSlateData.id] })[currentSlateData.id];     
-    //     //currentParentData[containerElement.slateManifest].status = "wip"
-    //     currentParentData[containerElement.slateManifest].id = containerElement.slateManifest
-    //     dispatch({
-    //         type: VERSIONING_SLATEMANIFEST,
-    //         payload: {slateLevelData:currentParentData}
-    //     })
-    // }
-
     if (response.id !== updatedId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData?.poetrylines;

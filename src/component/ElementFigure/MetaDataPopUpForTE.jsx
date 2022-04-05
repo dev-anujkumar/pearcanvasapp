@@ -22,6 +22,7 @@ const MetaDataPopUpForTE = (props) => {
   const [imageID, setimageID] = useState('');
   const [imageSrc, setimageSrc] = useState('');
   const [disableButton, setDisableButton] = useState(true);
+  const [active, setActive] = useState("");
 
   useEffect(() => {
     if(imageList?.length > 0){
@@ -54,7 +55,7 @@ const MetaDataPopUpForTE = (props) => {
   }
 
   const disableButtonForHTML = () => {
-    if(Object.keys(editedImageList).length > 0){
+    if(editedImageList && Object.keys(editedImageList).length > 0){
       if(checkHTMLInString(altText) || checkHTMLInString(longDescription)){
         setDisableButton(true);
       } else {
@@ -135,6 +136,7 @@ const MetaDataPopUpForTE = (props) => {
   }
 
   const updateImageInStore = () => {
+    handleActiveState("");
     let altTxt = imageList[index].altText;
     let {longdescription} = imageList[index];
     if((!checkHTMLInString(altText) && !checkHTMLInString(longDescription)) && (altTxt !== altText || longdescription !== longDescription)){
@@ -148,14 +150,6 @@ const MetaDataPopUpForTE = (props) => {
         updateEditedData(editedData);
     }
   }
-
-  const handleSave = () => {
-    saveTEMetadata(editedImageList)
-        .then(() => {
-          handleCancel();
-        });
-  }
-
   const handleImport = () => {
     saveTEMetadata(editedImageList)
       .then(() => {
@@ -168,8 +162,8 @@ const MetaDataPopUpForTE = (props) => {
           let imgId = img.getAttribute('data-id');
           if(Object.keys(editedImageList).length > 0 && editedImageList[imgId]){
             let {altText, longdescription} = editedImageList[imgId];
-            img.setAttribute('alttext', altText);
-            img.setAttribute('longdescription', longdescription);
+            img.setAttribute('data-alttext', altText);
+            img.setAttribute('data-longdescription', longdescription);
           }     
         });
         figureData.tableasHTML = dummyDiv.innerHTML;
@@ -184,22 +178,28 @@ const MetaDataPopUpForTE = (props) => {
 
   const handleCancel = () => {
     updateEditedData({});
-    togglePopup(false, 'TE');
     props.prepareImageDataFromTable({}); // this will delete the TE data from store
+    togglePopup(false, 'TE');
   }
 
-  const handleReset = () => {
-    updateEditedData({});
-    updateCurrentImage(index, true);
-  }
 
-  let htmlErrMsg = ' HTML is not supported in this input field';
+  let htmlErrMsg = ' HTML tags are not supported in this input field';
+
+  const handleActiveState = (active) => {
+		setActive(active)
+	}
+
+  const changeImageOnClick = (newIndex) => {
+    updateCurrentImage(newIndex);
+    updateRangeForImages(newIndex);
+    setIndex(newIndex);
+  }
 
   return(
       <div className="model">
         <div tabIndex="0" className="te-model-popup">
           <div className='figure-popup editPopupforTE'>
-          {imageList.length > 0 ? 
+          {imageList?.length > 0 ? 
             <React.Fragment>
               <div className="dialog-button1">
                   <span className="edit-metadata">Edit Alfresco Metadata</span>
@@ -210,26 +210,32 @@ const MetaDataPopUpForTE = (props) => {
                     <img className='inner-img-container' src={imageSrc} id={imageID} /> 
                   </div>
                   <div className='outer-img-array-container'>
-                  <span className={`left-arrow ${index === 0 ? 'disable' : ''}`} onClick={traverseLeft}><div className={`left-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>
+                  <span className={`left-arrow ${index === 0 ? 'disable' : ''}`} onClick={traverseLeft}><div className={`left-arrow-icon`}>{imageList.length > 3 &&<img width="12px" height="12px" src={moveArrow} />}</div></span>
                     <span className='inner-img-array'>
                     {imageList && imageList.map((image, imgIndex) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
-                          return (<img 
-                          className='img-inside-array' 
-                          src={image.imgSrc} 
-                          id={image.imgId}
-                          style={ image.imgSrc === imageSrc ? {  border: '2px solid #427ef5' } : {border: 'none'} } 
-                        />)
+                          return (
+                          <div className='img-inside-array'>
+                             <img 
+                               key={image.imgId}
+                               className='seperate-img' 
+                               src={image.imgSrc} 
+                               id={image.imgId}
+                               onClick={() => changeImageOnClick(imgIndex)}
+                               style={ ( image.imgId === imageID && index == imgIndex ) ? {  border: '1px solid #005a70' } : {border: 'none'} } 
+                             />
+                          </div>
+                          )
                       }
                     })}
                     </span>
-                    <span className={`right-arrow ${index === (imageList.length - 1) ? 'disable' : '' }`} onClick={traverseRight}><div className={`right-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>
+                    <span className={`right-arrow ${index === (imageList.length - 1) ? 'disable' : '' }`} onClick={traverseRight}><div className={`right-arrow-icon`}>{imageList.length > 3 && <img width="12px" height="12px" src={moveArrow} />}</div></span>
                   </div>
                 </div>
                 <div className="right-container">
                   <div className="figuremetadata-field-table">
-                    <div className={`alt-text-body ${altTextErr === true ? "invalid" : "" }`}>
-                      <p className="alt-text"> Alt Text </p>
+                    <div className={`alt-text-body ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}>
+                      <p className={`alt-text ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}> Alt Text </p>
                       <input
                         autocomplete="off"
                         id="altText_AM"
@@ -242,12 +248,13 @@ const MetaDataPopUpForTE = (props) => {
                             handleButtonDisable(e.target.value);
                         }
                         }
+                        onClick={() => handleActiveState('altBody')}
                         onBlur={updateImageInStore}
                       />
                     </div>
                     {altTextErr && <div className='alt-text-span'><img width="12px" height="12px" src={errorMark} />{htmlErrMsg}</div>}
-                    <div className={`long-description-body ${ longDescErr === true ? "invalid" : "" }`}>
-                      <p className={'long-text'}> Long Description </p>
+                    <div className={`long-description-body ${longDescErr === true ? "invalid" : active === 'longBody' ? 'active' : ""}`}>
+                      <p className={`long-text ${longDescErr === true ? "invalid" : active === 'longBody' ? 'active' : ""}`}> Long Description </p>
                       <textarea
                         id="longDescription_AM"
                         name="longDescription"
@@ -260,6 +267,7 @@ const MetaDataPopUpForTE = (props) => {
                             handleButtonDisable(null, e.target.value);
                           }
                         }
+                        onClick={() => handleActiveState('longBody')}
                         onBlur={updateImageInStore}
                       ></textarea>
                     </div>
@@ -268,8 +276,6 @@ const MetaDataPopUpForTE = (props) => {
                   </div>
                   <div className="te-metadata-button">
                     <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleImport}>Import in Cypress</span>
-                    <span className={`metadata-import-button ${disableButton ? "disabled" : ""}`} onClick={handleSave}>Save All</span>
-                    <span className={`cancel-button ${disableButton ? "disabled" : ""}`} id='close-container' onClick={handleReset}>Reset</span>
                     <span className="cancel-button" id='close-container' onClick={handleCancel}>Cancel</span>
                   </div>
                 </div>

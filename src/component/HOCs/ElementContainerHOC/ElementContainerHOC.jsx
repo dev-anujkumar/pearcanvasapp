@@ -33,7 +33,6 @@ const ElementContainerHOC = (WrappedComponent) => {
                 formattedTitle = `<p class="paragraphNumeroUno"><br/></p>`
             }
 
-            // let formattedCaption = model.contents.hasOwnProperty('formatted-caption') ? model.contents["formatted-caption"].html && model.contents["formatted-caption"].html.text : "<p></p>";
             let formattedCredit = model.contents.hasOwnProperty('creditsarray') && model.contents['creditsarray'].length ?
                 model.contents["creditsarray"][0].html && model.contents["creditsarray"][0].html.text : "<p><br/></p>";
             let subTitle

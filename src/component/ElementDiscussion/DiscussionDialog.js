@@ -136,7 +136,6 @@ const DiscussionDialog = ({
             <div
               onClick={() => {
                 closeDialog();
-                // setSelectedDiscussion(undefined);
               }}
               className="cancelDiscussion"
             >

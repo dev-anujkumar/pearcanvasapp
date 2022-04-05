@@ -97,7 +97,6 @@ class Comments extends React.Component {
             status: "Open"
         };
 
-        // const updatedText = this.state.updatedFields.text
         this.props.updateElementComment(commentId, updatedComment, elementId)
     }
 
