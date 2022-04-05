@@ -415,13 +415,13 @@ span.approved-button.enable svg path#path2 {
   display: none;
 }
 .slate_cypress_plus_enhance{
-  width: 85%;
+  width: 72%;
   display: grid;
   place-items: center;
-  padding-top: 4%;
+  padding-top: 2%;
 }
 .slate_assessment_cypress_plus_enhance{
-font-size: 20px;
+font-size: 14px;
 font-weight: bold;
 }
 
