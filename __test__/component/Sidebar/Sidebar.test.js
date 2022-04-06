@@ -27,8 +27,7 @@ describe('Test for Sidebar component', () => {
         toolbar: [],
         type:"figure"
     };
-
-    const sidebarWithData = mockStore({
+    let initialStore = {
         appStore: {
             activeElement,
             updateElement,
@@ -57,7 +56,8 @@ describe('Test for Sidebar component', () => {
         autoNumberReducer: {
             isAutoNumberingEnabled: false
         }
-    });
+    }
+    const sidebarWithData = mockStore(initialStore);
     let props = {
         value:['fontValue','bulletValue'],
         slateId: 'urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121af0f',
@@ -433,6 +433,22 @@ describe('Test for Sidebar component', () => {
             const elementIdInfo = document.createElement('div');
             elementIdInfo.className = "moduleContainer learningObjectiveData showmodule";
             document.body.appendChild(elementIdInfo);
+            document.getElementsByClassName = () => {
+                let els = []
+                let children =  {
+                    classList: {
+                        add: jest.fn(),
+                        remove: jest.fn()
+                    },
+                    querySelectorAll: () => {
+                        return {
+                            length: 2
+                        }
+                    }
+                }
+                els.push(children)
+                return els
+            }
             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
             sidebarInstance.showModuleName(e);
@@ -443,7 +459,62 @@ describe('Test for Sidebar component', () => {
             const elementIdInfo = document.createElement('div');
             elementIdInfo.className = "moduleContainer learningObjectiveData";
             document.body.appendChild(elementIdInfo);
+            document.getElementsByClassName = () => {
+                let els = []
+                let children =  {
+                    classList: {
+                        add: jest.fn(),
+                        remove: jest.fn()
+                    },
+                    querySelectorAll: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                }
+                els.push(children)
+                return els
+            }
             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.showModuleName(e);
+        })
+
+        it("Checking showModuleName function for slateType = partintro", () => {
+            let slateLevelData2 = { ...slateLevelData }
+            slateLevelData2["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"]["type"] = "partintro";
+            let initalStore2 = { ...initialStore }
+            initalStore2["appStore"] = {
+                activeElement,
+                updateElement,
+                conversionElement,
+                slateLevelData: slateLevelData2
+            }
+            const sidebarWithDataTemp = mockStore(initalStore2);
+            let e = { currentTarget: { checked: true } }
+            const elementIdInfo = document.createElement('div');
+            elementIdInfo.className = "moduleContainer learningObjectiveData";
+            document.body.appendChild(elementIdInfo);
+            document.getElementsByClassName = () => {
+                let els = []
+                let children =  {
+                    classList: {
+                        add: jest.fn(),
+                        remove: jest.fn()
+                    },
+                    querySelectorAll: () => {
+                        return {
+                            length: 1
+                        }
+                    }
+                }
+                els.push(children)
+                return els
+            }
+            config.elementStatus = {
+                "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b": "approved"
+            }
+            let sidebar = mount(<Provider store={sidebarWithDataTemp}><Sidebar {...props}/></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
             sidebarInstance.showModuleName(e);
         })
