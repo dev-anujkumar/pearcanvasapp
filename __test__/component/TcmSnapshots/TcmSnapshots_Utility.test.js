@@ -59,7 +59,10 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
 
                     }
                 },
-                "parentUrn": undefined,
+                // "parentUrn": undefined,
+                "parentUrn":{
+                    "multiColumnType":"citation"
+                },
                 "poetryData": undefined
             }
         it('prepareTcmSnapshots  - Normal elements', () => {
@@ -79,6 +82,85 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareTcmSnapshots');
             tcmSnapshotUtility.prepareTcmSnapshots(elementcitation,actionStatus,containerElement,"","");
             expect(spyFunction).toHaveBeenCalledWith(elementcitation, actionStatus,containerElement,"","");
+        })
+        it('prepareTcmSnapshots  - add element in citation and poetry elements1', () => {
+            let containerElement1 ={
+                "asideData": {
+                    "type": "citations",
+                    "id": "urn:pearson:manifest:8a4d5a66-ce1b-4047-aa67-64cb1aa256c7",
+                    "contentUrn": "urn:pearson:entity:53e08afb-61fe-4c76-a9c4-72c9992344b8",
+                    "parent":{
+                        "multiColumnType":"Citation"
+                    },
+                    "element": {
+                        "contentUrn": "urn:pearson:entity:53e08afb-61fe-4c76-a9c4-72c9992344b8",
+                        "contents": {
+                            "bodymatter":[{
+                                "contentUrn": "urn:pearson:entity:60d66604-7813-4a30-97e3-1d645026be31",
+                                "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                                "html": { "text": "<p class='paragraphNumeroUnoCitation'><br></p>" },
+                                "id": "urn:pearson:work:e9c83beb-4f0a-4597-aa0e-77df6c15e2ba",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "type": "element-citation",
+                                "versionUrn": "urn:pearson:work:e9c83beb-4f0a-4597-aa0e-77df6c15e2ba"
+    
+                            }] 
+                        },
+                            "id": "urn:pearson:manifest:8a4d5a66-ce1b-4047-aa67-64cb1aa256c7",
+                            "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                            "status": "wip",
+                            "type": "citations",
+                            "versionUrn": "urn:pearson:manifest:8a4d5a66-ce1b-4047-aa67-64cb1aa256c7"
+    
+                        }
+                    },
+                    "parentUrn": undefined,
+                    "poetryData": undefined
+                }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareTcmSnapshots');
+            tcmSnapshotUtility.prepareTcmSnapshots(elementcitation,actionStatus,containerElement1,"","");
+            expect(spyFunction).toHaveBeenCalledWith(elementcitation, actionStatus,containerElement1,"","");
+        })
+        it('prepareTcmSnapshots  - add element in citation and poetry elements1', () => {
+            let containerElement2 ={
+                "asideData": {
+                    "type": "citations",
+                    "id": "urn:pearson:manifest:8a4d5a66-ce1b-4047-aa67-64cb1aa256c7",
+                    "contentUrn": "urn:pearson:entity:53e08afb-61fe-4c76-a9c4-72c9992344b8",
+                    "parent":{
+                        "multiColumnType":"Citation"
+                    },
+                    "element": {
+                        "contentUrn": "urn:pearson:entity:53e08afb-61fe-4c76-a9c4-72c9992344b8",
+                        "contents": {
+                            "bodymatter":[{
+                                "contentUrn": "urn:pearson:entity:60d66604-7813-4a30-97e3-1d645026be31",
+                                "elementdata": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "" },
+                                "html": { "text": "<p class='paragraphNumeroUnoCitation'><br></p>" },
+                                "id": "urn:pearson:work:e9c83beb-4f0a-4597-aa0e-77df6c15e2ba",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "type": "element-citation",
+                                "versionUrn": "urn:pearson:work:e9c83beb-4f0a-4597-aa0e-77df6c15e2ba"
+    
+                            }] 
+                        },
+                            "id": "urn:pearson:manifest:8a4d5a66-ce1b-4047-aa67-64cb1aa256c7",
+                            "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                            "status": "wip",
+                            "type": "citations",
+                            "versionUrn": "urn:pearson:manifest:8a4d5a66-ce1b-4047-aa67-64cb1aa256c7"
+    
+                        }
+                    },
+                    "parentUrn": undefined,
+                    "poetryData": undefined,
+                    "parentData": {
+                        "multiColumnType":"Citation"
+                    }
+                }
+            const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareTcmSnapshots');
+            tcmSnapshotUtility.prepareTcmSnapshots(elementcitation,actionStatus,containerElement2,"","");
+            expect(spyFunction).toHaveBeenCalledWith(elementcitation, actionStatus,containerElement2,"","");
         })
         it('prepareTcmSnapshots  - WE', () => {
             let asideContainer= {
@@ -1669,5 +1751,72 @@ describe("tcmSnapshotsPopupInContainer- isHead value-head",()=>{
     it("tcmSnapshotsPopupInContainer- isHead value-head",()=>{
         jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsPopupInContainer');
         tcmSnapshotUtility.tcmSnapshotsPopupInContainer(snapshotsData, {}, containerElement, "", 0, null);
+    })
+    it("autoNumberedElements",() =>{
+        let element = {
+            type:"figure",
+            figuretype:"table"
+        }
+        jest.spyOn(tcmSnapshotUtility, 'autoNumberedElements');
+        tcmSnapshotUtility.autoNumberedElements(element);
+    })
+    it("autoNumberedElements",() =>{
+        let element = {
+            type:"",
+            figuretype:""
+        }
+        jest.spyOn(tcmSnapshotUtility, 'autoNumberedElements');
+        tcmSnapshotUtility.autoNumberedElements(element);
+    })
+    
+})
+describe("autoNumberedElements funtion",()=>{
+    let element={type:'figure'}
+    it("autoNumberedElements",()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'autoNumberedElements');
+        tcmSnapshotUtility.autoNumberedElements(element);
+        expect(spyFunction).toHaveBeenCalledWith(element);
+    })
+})
+
+describe("getAutoNumberedLabelData funtion",()=>{
+    let element={type:'figure'}
+    it("getAutoNumberedLabelData",()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'getAutoNumberedLabelData');
+        tcmSnapshotUtility.getAutoNumberedLabelData(element);
+        expect(spyFunction).toHaveBeenCalledWith(element);
+    })
+})
+describe("getAutoNumberedLabelData funtion -- if case", () => {
+    let element={type:'figure', numberedandlabel: false, figuretype: "image", manualoverride: "abc", overridelabelvalue: "123"}
+    it("getAutoNumberedLabelData", () => {
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'getAutoNumberedLabelData');
+        tcmSnapshotUtility.getAutoNumberedLabelData(element);
+        expect(spyFunction).toHaveBeenCalledWith(element);
+    })
+})
+    
+describe("getAutoNumberedLabelData funtion -- else if case", () => {
+    let element={type:'figure', numberedandlabel: true, manualoverride:"abc", overridelabelvalue: "123"}
+    it("getAutoNumberedLabelData", () => {
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'getAutoNumberedLabelData');
+        tcmSnapshotUtility.getAutoNumberedLabelData(element);
+        expect(spyFunction).toHaveBeenCalledWith(element);
+    })
+})
+describe("getAutoNumberedLabelData funtion -- else if case", () => {
+    let element={type:'figure', numberedandlabel: true, manualoverride:"", }
+    it("getAutoNumberedLabelData", () => {
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'getAutoNumberedLabelData');
+        tcmSnapshotUtility.getAutoNumberedLabelData(element);
+        expect(spyFunction).toHaveBeenCalledWith(element);
+    })
+})
+describe("getAutoNumberedLabelData funtion -- else if case", () => {
+    let element={type:'table', numberedandlabel: true, manualoverride:"abc", overridelabelvalue: "123"}
+    it("getAutoNumberedLabelData", () => {
+        const spyFunction = jest.spyOn(tcmSnapshotUtility, 'getAutoNumberedLabelData');
+        tcmSnapshotUtility.getAutoNumberedLabelData(element);
+        expect(spyFunction).toHaveBeenCalledWith(element);
     })
 })
