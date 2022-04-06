@@ -77,6 +77,9 @@ p[data-mce-bogus="all"] {
     min-height: 30px !important;
     font-size: 1.120em !important;
  }
+ blockquote.blockquoteMarginalia .blockquoteTextCredit {
+     font-size: 1.115em !important;
+ }
 .blockquoteMarginalia .cypress-editable.place-holder::before {
     content: attr(placeholder);
     color: #ADADAD;
