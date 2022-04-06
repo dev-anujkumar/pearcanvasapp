@@ -1801,5 +1801,269 @@ describe('Test for Sidebar component', () => {
                 expect(spyHandleSyntaxHighlightingToggle).toHaveBeenCalled();
             })
         })
+
+        describe("Testing secondaryOption", () => {
+            let storeData = {
+                ...storeData1,
+                appStore: {
+                    activeElement: {
+                        "elementType": "groupedcontent",
+                        "primaryOption": "primary-multicolumn-3c",
+                        "secondaryOption": "secondary-multicolumn-3c-wider",
+                        "elementId": "urn:pearson:manifest:4eeac843-68a0-4e67-bc85-f118343fda9f",
+                        "index": 0,
+                        "elementWipType": "groupedcontent",
+                        "toolbar": [],
+                        "tag": "3C"
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData
+                },
+            }
+            const mockStoreData = mockStore(storeData);
+            it('Testing secondaryOption - this.state.activePrimaryOption === MULTI_COLUMN_3C.ELEMENT_NAME', () => {
+                let sidebar = mount(<Provider store={mockStoreData}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spySecondaryOption = jest.spyOn(sidebarInstance, 'secondaryOption');
+                sidebarInstance.secondaryOption();
+                expect(spySecondaryOption).toHaveBeenCalled();
+            })
+        })
+
+        describe("Testing attributions", () => {
+            let storeData = {
+                ...storeData1,
+                appStore: {
+                    activeElement: {
+                        "elementType": "element-interactive",
+                        "primaryOption": "primary-mmi",
+                        "altText": "Sample alt-text",
+                        "longDesc": "",
+                        "tag": "QUAD",
+                        "secondaryOption": "secondary-interactive-mmi",
+                        "elementId": "urn:pearson:work:62ce3163-68bd-4f4a-9bb4-e80dfde799bc",
+                        "index": 1,
+                        "elementWipType": "figure",
+                        "toolbar": ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry']
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: true
+                }
+            }
+            let storeData2 = {
+                ...storeData,
+                appStore: {
+                    activeElement: {
+                        "elementType": "element-interactive",
+                        "primaryOption": "primary-elm-interactive",
+                        "altText": "",
+                        "longDesc": "",
+                        "tag": "QUAD",
+                        "secondaryOption": "secondary-elm-interactive",
+                        "elementId": "urn:pearson:work:62ce3163-68bd-4f4a-9bb4-e80dfde799bc",
+                        "index": 1,
+                        "elementWipType": "figure",
+                        "toolbar": ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry']
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData
+                },
+            }
+            let storeData3 = {
+                ...storeData,
+                appStore: {
+                    activeElement: {
+                        elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+                        elementType: "figure",
+                        elementWipType: "figure",
+                        primaryOption: "primary-image-figure",
+                        secondaryOption: "secondary-image-figure-width",
+                        index: 0,
+                        tag: "Fg",
+                        toolbar: [],
+                        type:"figure",
+                        longDesc: "This Image is of Rainbow"
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData
+                },
+            }
+            let storeData4 = {
+                ...storeData,
+                appStore: {
+                    activeElement: {
+                        "elementType": "figure",
+                        "primaryOption": "primary-blockcode-equation",
+                        "numbered": null,
+                        "startNumber": null,
+                        "syntaxhighlighting": null,
+                        "secondaryOption": "secondary-blockcode-language-default",
+                        "elementId": "urn:pearson:work:4d0eb1fc-7fb7-4f23-a4b2-11d61880330f",
+                        "index": 0,
+                        "elementWipType": "figure",
+                        "toolbar": [],
+                        "tag": "BCE",
+                        querySelector: () => {
+                            return {
+                                setAttribute: jest.fn()
+                            }
+                        }
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData
+                },
+            }
+            let storeData5 = {
+                ...storeData,
+                appStore: {
+                    activeElement: {
+                        "elementType": "element-dialogue",
+                        "primaryOption": "primary-element-dialogue",
+                        "secondaryOption": "secondary-element-dialogue",
+                        "numbered": false,
+                        "startNumber": "1",
+                        "elementId": "urn:pearson:work:86510e9b-8b16-4679-aac4-03d47e4b4c02",
+                        "index": 0,
+                        "elementWipType": "element-dialogue",
+                        "toolbar": [],
+                        "tag": "PS"
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData
+                },
+            }
+            let storeData6 = {
+                ...storeData,
+                appStore: {
+                    activeElement: {
+                        "elementType": "poetry",
+                        "primaryOption": "primary-poetry",
+                        "secondaryOption": "secondary-poetry",
+                        "numbered": false,
+                        "startNumber": "1",
+                        "elementId": "urn:pearson:manifest:4fb50881-64c2-4124-a4a9-152beb308091",
+                        "index": 0,
+                        "elementWipType": "poetry",
+                        "toolbar": [],
+                        "tag": "PE"
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData
+                },
+            }
+            let storeData7 = {
+                ...storeData,
+                appStore: {
+                    activeElement: {
+                        "elementType": "poetry",
+                        "primaryOption": "primary-poetry",
+                        "secondaryOption": "secondary-poetry",
+                        "numbered": null,
+                        "startNumber": null,
+                        "elementId": "urn:pearson:manifest:4fb50881-64c2-4124-a4a9-152beb308091",
+                        "index": 0,
+                        "elementWipType": "poetry",
+                        "toolbar": [],
+                        "tag": "PE"
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData
+                },
+            }
+            let storeData8 = {
+                ...storeData,
+                appStore: {
+                    activeElement: {
+                        "elementType": "element-aside",
+                        "primaryOption": "primary-aside-aside",
+                        "secondaryOption": "secondary-aside-sb1",
+                        "asideNumber": true,
+                        "elementId": "urn:pearson:manifest:f6cda7dc-8b11-4ccb-b429-7578804456ee",
+                        "index": 0,
+                        "elementWipType": "element-aside",
+                        "toolbar": [],
+                        "tag": "As"
+                    },
+                    updateElement,
+                    conversionElement,
+                    slateLevelData
+                },
+            }
+            const mockStoreData = mockStore(storeData);
+            const mockStoreData2 = mockStore(storeData2);
+            const mockStoreData3 = mockStore(storeData3);
+            const mockStoreData4 = mockStore(storeData4);
+            const mockStoreData5 = mockStore(storeData5);
+            const mockStoreData6 = mockStore(storeData6);
+            const mockStoreData7 = mockStore(storeData7);
+            const mockStoreData8 = mockStore(storeData8);
+            it("Testing `primaryOptionList.text && primaryOptionList.text === 'Quad Interactive'`", () => {
+                let sidebar = mount(<Provider store={mockStoreData}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spyAttributions = jest.spyOn(sidebarInstance, 'attributions');
+                sidebarInstance.attributions();
+                expect(spyAttributions).toHaveBeenCalled();
+            })
+            it("Testing `primaryOptionList.text && (primaryOptionList.text === 'Quad Interactive' || primaryOptionList.text === 'Elm Interactive')`", () => {
+                let sidebar = mount(<Provider store={mockStoreData2}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spyAttributions = jest.spyOn(sidebarInstance, 'attributions');
+                sidebarInstance.attributions();
+                expect(spyAttributions).toHaveBeenCalled();
+            })
+            it("Cover branch - this.props.activeElement.longDesc", () => {
+                let sidebar = mount(<Provider store={mockStoreData3}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spyAttributions = jest.spyOn(sidebarInstance, 'attributions');
+                sidebarInstance.attributions();
+                expect(spyAttributions).toHaveBeenCalled();
+            })
+            it("Cover branches in condition - this.state.activePrimaryOption === 'primary-blockcode-equation' && this.props.activeElement.elementId", () => {
+                let sidebar = mount(<Provider store={mockStoreData4}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spyAttributions = jest.spyOn(sidebarInstance, 'attributions');
+                sidebarInstance.attributions();
+                expect(spyAttributions).toHaveBeenCalled();
+            })
+            it("Cover branches in condition - this.state.activePrimaryOption && this.state.activePrimaryOption === 'primary-element-dialogue' && this.props.activeElement.elementId", () => {
+                let sidebar = mount(<Provider store={mockStoreData5}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spyAttributions = jest.spyOn(sidebarInstance, 'attributions');
+                sidebarInstance.attributions();
+                expect(spyAttributions).toHaveBeenCalled();
+            })
+            it("Cover branches in condition - this.state.activePrimaryOption === 'primary-poetry' && this.props.activeElement.elementId", () => {
+                let sidebar = mount(<Provider store={mockStoreData6}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spyAttributions = jest.spyOn(sidebarInstance, 'attributions');
+                sidebarInstance.attributions();
+                expect(spyAttributions).toHaveBeenCalled();
+            })
+            it("Cover branches in condition - this.state.activePrimaryOption === 'primary-poetry' && this.props.activeElement.elementId - when bceToggleValue is null", () => {
+                let sidebar = mount(<Provider store={mockStoreData7}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spyAttributions = jest.spyOn(sidebarInstance, 'attributions');
+                sidebarInstance.attributions();
+                expect(spyAttributions).toHaveBeenCalled();
+            })
+            it("Cover branches in condition - this.props.activeElement.elementType === 'element-aside' || this.props.activeElement.elementType === 'element-workedexample'", () => {
+                let sidebar = mount(<Provider store={mockStoreData8}><Sidebar {...updatedProps} /></Provider>);
+                const sidebarInstance = sidebar.find('Sidebar').instance();
+                const spyAttributions = jest.spyOn(sidebarInstance, 'attributions');
+                sidebarInstance.attributions();
+                expect(spyAttributions).toHaveBeenCalled();
+            })
+        })
     });
 });
