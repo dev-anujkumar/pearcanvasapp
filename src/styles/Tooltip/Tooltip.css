@@ -277,7 +277,6 @@
 .container-aside .tooltip .tooltip-poc {
     margin-left: -65px;
 }
-
 .tooltip .tooltip-enhance {
     width: 158px;
     top: 30px;
@@ -290,6 +289,4 @@
     text-align: center;
     font-family: 'Open Sans', sans-serif;
     transition: opacity 1s;
-    left: 15px;
 }
-
