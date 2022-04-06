@@ -3248,8 +3248,7 @@ export class TinyMceEditor extends Component {
 
             case 'blockquote':
                 if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote")) {
-                    let temDiv = prepareBqHtml(node);
-                    let bgModel=removeImageCache(temDiv)
+                    let bgModel=removeImageCache(node.innerHTML)
                     return bgModel;
                 } else {
                     let pqModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUno"><br/></p>'
