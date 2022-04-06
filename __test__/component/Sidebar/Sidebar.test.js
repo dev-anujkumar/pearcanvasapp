@@ -70,7 +70,8 @@ describe('Test for Sidebar component', () => {
         updateBlockListMetadata: jest.fn(),
         updateContainerMetadata: jest.fn(),
         setBCEMetadata: jest.fn(),
-        showCanvasBlocker: jest.fn()
+        showCanvasBlocker: jest.fn(),
+        enableAsideNumbering: jest.fn()
     };
 
     let sidebar = mount(<Provider store={sidebarWithData}>
@@ -1163,7 +1164,29 @@ describe('Test for Sidebar component', () => {
                 isAutoNumberingEnabled: false
             }
         }
+        const storeData2 = {
+            ...storeData,
+            appStore: {
+                activeElement: {
+                    "elementType": "element-interactive",
+                    "primaryOption": "primary-smartlink",
+                    "altText": "",
+                    "longDesc": "",
+                    "tag": "SL",
+                    "secondaryOption": "secondary-interactive-smartlink-tab",
+                    "elementId": "urn:pearson:work:60f26a17-87e8-48f6-8570-468fd968bca7",
+                    "index": 0,
+                    "elementWipType": "figure",
+                    "toolbar": [],
+                    "podwidth": "print100%"
+                },
+                updateElement,
+                conversionElement,
+                slateLevelData
+            },
+        }
         const sidebarWithData1 = mockStore(storeData);
+        const sidebarWithData2 = mockStore(storeData2);
         it("Test for Smartlink", () => {
             let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
@@ -1198,6 +1221,34 @@ describe('Test for Sidebar component', () => {
                 target: {
                     getAttribute: () => {
                         return 'print50'
+                    }
+                }
+            }
+            const spyTogglePODDropdown = jest.spyOn(sidebarInstance, 'togglePODDropdown');
+            sidebarInstance.togglePODDropdown(event);
+            expect(spyTogglePODDropdown).toHaveBeenCalled();
+        });
+        it("Testing togglePODDropdown for null pod option", () => {
+            let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            let event = {
+                target: {
+                    getAttribute: () => {
+                        return null
+                    }
+                }
+            }
+            const spyTogglePODDropdown = jest.spyOn(sidebarInstance, 'togglePODDropdown');
+            sidebarInstance.togglePODDropdown(event);
+            expect(spyTogglePODDropdown).toHaveBeenCalled();
+        });
+        it("Testing togglePODDropdown for pod value `print100%`", () => {
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            let event = {
+                target: {
+                    getAttribute: () => {
+                        return null
                     }
                 }
             }
@@ -1316,12 +1367,46 @@ describe('Test for Sidebar component', () => {
                 }]
             }
         }
+        const storeData5 = {
+            ...storeData1,
+            appStore: {
+                activeElement: {
+                    "elementType": "figure",
+                    "asideNumber": false,
+                    "primaryOption": "primary-blockcode-equation",
+                    "numbered": true,
+                    "startNumber": "1",
+                    "syntaxhighlighting": false,
+                    "secondaryOption": "secondary-blockcode-language-html",
+                    "elementId": "urn:pearson:work:0c423606-c2fe-4505-96c3-f04834870bd0",
+                    "index": 0,
+                    "elementWipType": "figure",
+                    "toolbar": [],
+                    "tag": "BCE"
+                },
+                updateElement,
+                conversionElement,
+                slateLevelData,
+                isLearnosityProjectInfo: [{
+                    ItemBankName: 'a'
+                }]
+            }
+        }
         const sidebarWithData1 = mockStore(storeData1);
         const sidebarWithData2 = mockStore(storeData2);
         const sidebarWithData3 = mockStore(storeData3);
         const sidebarWithData4 = mockStore(storeData4);
+        const sidebarWithData5 = mockStore(storeData5);
         it("Test renderSyntaxHighlighting if consition tag='BCE' ", () => {
             let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            let tag = "BCE";
+            const spyRenderSyntaxHighlighting = jest.spyOn(sidebarInstance, 'renderSyntaxHighlighting');
+            sidebarInstance.renderSyntaxHighlighting(tag);
+            expect(spyRenderSyntaxHighlighting).toHaveBeenCalled();
+        });
+        it("Test renderSyntaxHighlighting if consition tag='BCE' when this.state.syntaxHighlightingToggleValue === false", () => {
+            let sidebar = mount(<Provider store={sidebarWithData5}><Sidebar {...props} /></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
             let tag = "BCE";
             const spyRenderSyntaxHighlighting = jest.spyOn(sidebarInstance, 'renderSyntaxHighlighting');
@@ -1414,6 +1499,16 @@ describe('Test for Sidebar component', () => {
 
         it("Test handleAsideNumber - asideNumber - true", () => {
             let sidebar = mount(<Provider store={sidebarWithData3}><Sidebar {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleAsideNumber  = jest.spyOn(sidebarInstance, 'handleAsideNumber');
+            sidebarInstance.handleAsideNumber();
+            expect(spyHandleAsideNumber).toHaveBeenCalled();
+        });
+
+        it("Test handleAsideNumber - asideNumber - true", () => {
+            jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(false);
+            config.savingInProgress = false;
+            let sidebar = mount(<Provider store={sidebarWithData5}><Sidebar {...props} /></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
             const spyHandleAsideNumber  = jest.spyOn(sidebarInstance, 'handleAsideNumber');
             sidebarInstance.handleAsideNumber();
