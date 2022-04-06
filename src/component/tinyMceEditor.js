@@ -3526,7 +3526,6 @@ export class TinyMceEditor extends Component {
     removeAttributionBr = () => {
         let attributionNodeBr = document.querySelector(`#cypress-${this.props.index} p.blockquoteTextCredit br`)
         attributionNodeBr && attributionNodeBr.remove();
-        setFormattingToolbar('disableTinymceToolbar')
         return 
     }
 
