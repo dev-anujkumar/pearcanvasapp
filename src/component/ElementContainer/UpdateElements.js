@@ -131,6 +131,11 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         inputType : elementType?elementTypes[elementType][primaryOption]['enum']:"",
         inputSubType : elementType?elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']:""    
     }
+
+    // Adding tableasHTML in html for table element
+    if(previousElementData?.figuretype === elementTypeConstant.FIGURE_TABLE_EDITOR && !data.html.tableasHTML){
+        data.html.tableasHTML = previousElementData.html.tableasHTML
+    }
     if (isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
         data = {
             ...data,
