@@ -6,7 +6,7 @@ const CutCopyDialog = props => {
     return (
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">
-                {!config.isPopupSlate && renderCutCopyOption(props)}
+                {renderCutCopyOption(props)}
                 <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
             
