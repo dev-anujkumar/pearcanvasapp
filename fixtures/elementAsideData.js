@@ -671,6 +671,41 @@ export const slateLevelData3 = {
 	"urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
 		contents: {
 			bodymatter: [{
+				interactivedata: {
+					show:[{
+						listdata: {
+						bodymatter: [{
+							listitemdata: {
+								bodymatter: [{
+									listdata: {
+										bodymatter: [{
+											listitemdata: {
+												bodymatter: [{
+													listdata: {
+														bodymatter: [{
+															listitemdata: {
+																bodymatter: [{
+																	listdata: {
+																		bodymatter: [{
+																			listitemdata: {
+																				bodymatter: []
+																			}
+																		}]
+																	}
+																}]
+															}
+														}]
+													}
+												}]
+											}
+										}]
+									}
+								}]
+							}
+						}]
+					}
+					}],
+				},
 				listdata: {
 					bodymatter: [{
 						listitemdata: {
