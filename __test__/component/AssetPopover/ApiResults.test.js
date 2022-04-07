@@ -15,7 +15,7 @@ const selectedFigure = jest.fn(() => {
 let wrapper;
 let apiResultsInstance;
 beforeEach(() => {
-    wrapper = mount(<ApiResults  assetPopoverData = {assetPopoverSampleData} ValueToBeSearch = 'a' selectedFigure = {selectedFigure} />)
+    wrapper = mount(<ApiResults  assetPopoverData = {assetPopoverSampleData} ValueToBeSearch = '1' selectedFigure = {selectedFigure} />)
     apiResultsInstance = wrapper.find('ApiResults').instance();
 });
 
@@ -66,12 +66,12 @@ describe('Test ApiResults rendering as expected', () => {
 
 describe('Testing ApiResults methods', () => {
     it('Testing findMatchingAssets()', () => {
-        const matchingAssetsArray = apiResultsInstance.findMatchingAssets(assetPopoverSampleData,"a");
+        const matchingAssetsArray = apiResultsInstance.findMatchingAssets(assetPopoverSampleData,"1");
         expect(matchingAssetsArray.length).toEqual(matchedAssets.length);
     });
     it('Testing renderByAssetType()', () => {
         const spy = jest.spyOn(apiResultsInstance, 'apiResultsJsx');
-        apiResultsInstance.renderByAssetType(assetPopoverSampleData,selectedFigure,"a");
+        apiResultsInstance.renderByAssetType(assetPopoverSampleData,selectedFigure,"1");
         /**
         Note :- Value 8 in tohaveBeenCalledTimes() is number of total
         Asset Types like figures,audios,videos & etc
