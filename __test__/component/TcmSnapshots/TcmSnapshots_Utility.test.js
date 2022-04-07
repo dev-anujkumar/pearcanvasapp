@@ -1794,8 +1794,7 @@ describe("getAutoNumberedLabelData funtion -- if case", () => {
         tcmSnapshotUtility.getAutoNumberedLabelData(element);
         expect(spyFunction).toHaveBeenCalledWith(element);
     })
-})
-    
+})   
 describe("getAutoNumberedLabelData funtion -- else if case", () => {
     let element={type:'figure', numberedandlabel: true, manualoverride:"abc", overridelabelvalue: "123"}
     it("getAutoNumberedLabelData", () => {
@@ -1803,20 +1802,16 @@ describe("getAutoNumberedLabelData funtion -- else if case", () => {
         tcmSnapshotUtility.getAutoNumberedLabelData(element);
         expect(spyFunction).toHaveBeenCalledWith(element);
     })
-})
-describe("getAutoNumberedLabelData funtion -- else if case", () => {
-    let element={type:'figure', numberedandlabel: true, manualoverride:"", }
+    let element1={type:'figure', numberedandlabel: true, manualoverride:"", }
     it("getAutoNumberedLabelData", () => {
         const spyFunction = jest.spyOn(tcmSnapshotUtility, 'getAutoNumberedLabelData');
-        tcmSnapshotUtility.getAutoNumberedLabelData(element);
-        expect(spyFunction).toHaveBeenCalledWith(element);
+        tcmSnapshotUtility.getAutoNumberedLabelData(element1);
+        expect(spyFunction).toHaveBeenCalledWith(element1);
     })
-})
-describe("getAutoNumberedLabelData funtion -- else if case", () => {
-    let element={type:'table', numberedandlabel: true, manualoverride:"abc", overridelabelvalue: "123"}
+    let element2={type:'table', numberedandlabel: true, manualoverride:"abc", overridelabelvalue: "123"}
     it("getAutoNumberedLabelData", () => {
         const spyFunction = jest.spyOn(tcmSnapshotUtility, 'getAutoNumberedLabelData');
-        tcmSnapshotUtility.getAutoNumberedLabelData(element);
-        expect(spyFunction).toHaveBeenCalledWith(element);
+        tcmSnapshotUtility.getAutoNumberedLabelData(element2);
+        expect(spyFunction).toHaveBeenCalledWith(element2);
     })
 })
