@@ -206,13 +206,7 @@ export const updateChapterPopupData = (dataObj, key) => {
     });
 }
 
-export const popupCutCopyParentData = (type) => {
-    let {slateLevelData} = store.getState().appStore;
-    let data = {
-        parentSlateId: Object.keys(slateLevelData)[0],
-        parentSlateEntityUrn: Object.values(slateLevelData)[0]?.contentUrn,
-        operationType: type
-    }
+export const popupCutCopyParentData = (data) => {
     store.dispatch({
         type: SET_POPUP_PARENT_CUT_COPY,
         payload: data

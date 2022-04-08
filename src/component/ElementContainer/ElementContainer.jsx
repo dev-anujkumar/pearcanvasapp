@@ -2331,6 +2331,7 @@ class ElementContainer extends Component {
                     copyClickedX={this.copyClickedX}
                     copyClickedY={this.copyClickedY}
                     permissions={_props.permissions}
+                    slateLevelData={this.props.slateLevelData}
                 />
             )
         }

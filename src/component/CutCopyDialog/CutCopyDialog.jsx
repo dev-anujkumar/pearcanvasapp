@@ -51,7 +51,12 @@ export const performCutCopy = (event, componentProps, type) => {
     }
     componentProps.setElementDetails(elementDetailsToSet)
     componentProps.toggleCopyMenu(false);
-    popupCutCopyParentData(type);
+    let data = {
+        parentSlateId: Object.keys(componentProps?.slateLevelData)[0],
+        parentSlateEntityUrn: Object.values(componentProps?.slateLevelData)[0]?.contentUrn,
+        operationType: type
+    }
+    popupCutCopyParentData(data);
 }
 
 export const copyToClipBoard = (e, _props) => {
