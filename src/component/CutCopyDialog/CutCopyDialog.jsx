@@ -1,5 +1,6 @@
 import React from 'react'
 import config from './../../config/config';
+import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions'
 const CutCopyDialog = props => {
 
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
@@ -49,7 +50,8 @@ export const performCutCopy = (event, componentProps, type) => {
         tcmFlag: componentProps?.tcmFlag
     }
     componentProps.setElementDetails(elementDetailsToSet)
-    componentProps.toggleCopyMenu(false)
+    componentProps.toggleCopyMenu(false);
+    popupCutCopyParentData(type);
 }
 
 export const copyToClipBoard = (e, _props) => {
