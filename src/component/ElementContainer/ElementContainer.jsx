@@ -900,7 +900,7 @@ class ElementContainer extends Component {
                     }
                 }
                 let currentNode = document.getElementById(index)
-                const blockquoteCondition = currentNode.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')
+                const blockquoteCondition = currentNode?.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')
                 let html =  blockquoteCondition ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
