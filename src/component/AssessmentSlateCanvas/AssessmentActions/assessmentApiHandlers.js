@@ -280,7 +280,7 @@ const AssessmentAPIHandlers = {
         const {
             assessmentData, assessmentItemData
         } = args;
-        const itemTitle = responseData?.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : "";
+        const itemTitle = responseData?.name ? specialCharacterDecode(responseData.name) : responseData?.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : "";
         const updatedItem = {
             oldItemId: assessmentItemData.itemId,
             latestItemId: responseData?.versionUrn,
