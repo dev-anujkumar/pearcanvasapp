@@ -2689,7 +2689,11 @@ describe('Tests Slate Wrapper Actions', () => {
             selectionReducer: {
                 selection: {
                     activeAnimation: true,
-                    element: { id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", figuretype: " ", type: "figure", schema: "http://schemas.pearson.com/wip-authoring/element/1" },
+                    element: { id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", figuretype: "image", type: "figure", schema: "http://schemas.pearson.com/wip-authoring/element/1",
+                    manualoverride: {
+                        overridenumbervalue: "aaa",
+                        overridelabelvalue: "Fig"
+                    }},
                     inputSubType: "NA",
                     inputType: "AUTHORED_TEXT",
                     operationType: "cut",
@@ -2698,6 +2702,59 @@ describe('Tests Slate Wrapper Actions', () => {
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6",
                     sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
                 }
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: true
+            }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        config.slateEntityURN = "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1ff";
+        const spypasteElement = jest.spyOn(actions, 'pasteElement')
+        const params = {
+            parentUrn: { contentUrn: 'urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc' },
+            index: 2
+        }
+        actions.pasteElement(params)(store3.dispatch, store3.getState)
+        expect(spypasteElement).toHaveBeenCalled()
+    });
+
+    it('pasteElement  action - with parentUrn else condition for isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(selection?.element?.figuretype', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+                        contents: {
+                            bodymatter: [{
+                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                                contents: {
+                                    bodymatter: []
+                                }
+                            }]
+                        }
+                    }
+                },
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            selectionReducer: {
+                selection: {
+                    activeAnimation: true,
+                    element: { id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", figuretype: "image", type: "figure", schema: "http://schemas.pearson.com/wip-authoring/element/1"},
+                    inputSubType: "NA",
+                    inputType: "AUTHORED_TEXT",
+                    operationType: "cut",
+                    sourceElementIndex: '1-0-1',
+                    sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+                    sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6",
+                    sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
+                }
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: true
             }
         }
         store3 = mockStore(() => initialState3);
@@ -2821,6 +2878,9 @@ describe('Tests Slate Wrapper Actions', () => {
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6",
                     sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
                 }
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: true
             }
         }
         store3 = mockStore(() => initialState3);
@@ -2833,6 +2893,168 @@ describe('Tests Slate Wrapper Actions', () => {
             index: 1,
             sectionType: 'sectionType',
             asideData: { interactivedata: { sectionType: [{ id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62" }] } }
+        }
+        actions.pasteElement(params)(store3.dispatch, store3.getState)
+        expect(spypasteElement).toHaveBeenCalled()
+    });
+
+    it('pasteElement  action - without sectionType', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+                        contents: {
+                            bodymatter: [{
+                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                                contents: {
+                                    bodymatter: []
+                                }
+                            }]
+                        }
+                    }
+                },
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            selectionReducer: {
+                selection: {
+                    activeAnimation: true,
+                    element: { id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", figuretype: " ", type: "element-aside", schema: "http://schemas.pearson.com/wip-authoring/element/1", html: {title: 'title'},                   manualoverride: {
+                        overridenumbervalue: "aaa",
+                        overridelabelvalue: "Fig"
+                    }},
+                    inputSubType: "NA",
+                    inputType: "AUTHORED_TEXT",
+                    operationType: "cut",
+                    sourceElementIndex: '2',
+                    sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+                    sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6",
+                    sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
+                }
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: true
+            }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        config.slateEntityURN = "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1ff";
+        const spypasteElement = jest.spyOn(actions, 'pasteElement')
+        const params = {
+            parentUrn: { contentUrn: 'urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc' },
+            index: 1,
+            // sectionType: 'sectionType',
+            asideData: { interactivedata: { sectionType: [{ id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62" }] },
+                sectionType: 'sectionType' }
+        }
+        actions.pasteElement(params)(store3.dispatch, store3.getState)
+        expect(spypasteElement).toHaveBeenCalled()
+    });
+
+    it('pasteElement  action - without sectionType: manualoveride else case', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+                        contents: {
+                            bodymatter: [{
+                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                                contents: {
+                                    bodymatter: []
+                                }
+                            }]
+                        }
+                    }
+                },
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            selectionReducer: {
+                selection: {
+                    activeAnimation: true,
+                    element: { id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", figuretype: " ", type: "element-aside", schema: "http://schemas.pearson.com/wip-authoring/element/1", html: {title: 'title'}},
+                    inputSubType: "NA",
+                    inputType: "AUTHORED_TEXT",
+                    operationType: "cut",
+                    sourceElementIndex: '2',
+                    sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+                    sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6",
+                    sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
+                }
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: true
+            }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        config.slateEntityURN = "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1ff";
+        const spypasteElement = jest.spyOn(actions, 'pasteElement')
+        const params = {
+            parentUrn: { contentUrn: 'urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc' },
+            index: 1,
+            // sectionType: 'sectionType',
+            asideData: { interactivedata: { sectionType: [{ id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62" }] },
+                sectionType: 'sectionType' }
+        }
+        actions.pasteElement(params)(store3.dispatch, store3.getState)
+        expect(spypasteElement).toHaveBeenCalled()
+    });
+
+    it('pasteElement  action - element type : element-dialogue', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+                        contents: {
+                            bodymatter: [{
+                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                                contents: {
+                                    bodymatter: []
+                                }
+                            }]
+                        }
+                    }
+                },
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            selectionReducer: {
+                selection: {
+                    activeAnimation: true,
+                    element: { id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", figuretype: " ", type: "element-dialogue", schema: "http://schemas.pearson.com/wip-authoring/element/1" },
+                    inputSubType: "NA",
+                    inputType: "AUTHORED_TEXT",
+                    operationType: "cut",
+                    sourceElementIndex: '2',
+                    sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+                    sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6",
+                    sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
+                }
+            },
+            autoNumberReducer: {
+                isAutoNumberingEnabled: true
+            }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        config.slateEntityURN = "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1ff";
+        const spypasteElement = jest.spyOn(actions, 'pasteElement')
+        const params = {
+            parentUrn: { contentUrn: 'urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc' },
+            index: 1,
+            // sectionType: 'sectionType',
+            asideData: { interactivedata: { sectionType: [{ id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62" }] },
+                sectionType: 'sectionType' }
         }
         actions.pasteElement(params)(store3.dispatch, store3.getState)
         expect(spypasteElement).toHaveBeenCalled()
