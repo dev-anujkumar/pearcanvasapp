@@ -6,7 +6,7 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
-import { checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
+import { checkElementExistenceInOtherSlates, handleAutonumberingOnCreate } from './AutoNumberCreate_helper';
 import config from '../../config/config';
 
 
@@ -173,8 +173,13 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
                     getAutoNumberSequence(numberedElements, dispatch);
                 }
             }
+            let {isPopupSlate} = getState().autoNumberReducer.popupParentSlateData;
             // This function will insert the selectedElement in numbered element
-            checkElementExistenceInOtherSlates(selectedElement, config.slateEntityURN, getState, dispatch);
+            if(isPopupSlate){
+                dispatch(handleAutonumberingOnCreate(selectedElement?.displayedlabel.toUpperCase(), selectedElement))
+            } else {
+                checkElementExistenceInOtherSlates(selectedElement, config.slateEntityURN, getState, dispatch);
+            }
         }
     }
 }
