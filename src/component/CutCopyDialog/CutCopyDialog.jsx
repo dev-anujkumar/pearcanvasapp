@@ -57,7 +57,7 @@ export const performCutCopy = (event, componentProps, type) => {
     let data = {
         contentUrn: isPopupSlate ? popupParentData?.contentUrn : '',
         versionUrn: isPopupSlate ? popupParentData?.versionUrn : '',
-        index: isPopupSlate ? popupParentData?.index : '',
+        index: componentProps?.index,
         isPopupSlate: isPopupSlate ? popupParentData?.isPopupSlate : false,
         parentSlateEntityUrn: isPopupSlate ? popupParentData?.parentSlateEntityUrn : Object.values(componentProps?.slateLevelData)[0]?.contentUrn,
         parentSlateId: isPopupSlate ? popupParentData?.parentSlateId : Object.keys(componentProps?.slateLevelData)[0],
