@@ -17,7 +17,7 @@ import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
-import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper'; 
+import { getSlateLevelData } from '../FigureHeader/AutoNumberActions'; 
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -127,7 +127,16 @@ export const deleteFromStore = async (params) => {
     } = params
 
     /* Get the slate bodymatter data */
-    let bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter || [];
+    const cutCopyParentData = getState().autoNumberReducer?.popupCutCopyParentData;
+    const slateManifestURN = cutCopyParentData?.isPopupSlate ? cutCopyParentData?.versionUrn : cutCopyParentData?.parentSlateId;
+    let bodymatter = [];
+    if (cutCopyParentData?.isPopupSlate) {
+        // Call api to get popup slate data
+        const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
+        bodymatter = popupContent?.contents?.bodymatter;
+    } else {
+        bodymatter = newParentData[slateManifestURN]?.contents?.bodymatter;
+    }
     const iList = index?.toString()?.split("-") || [];
     /* update the store on /cut/paste of showhide elements */
     if(asideData?.type === SHOWHIDE && iList?.length >= 3) {

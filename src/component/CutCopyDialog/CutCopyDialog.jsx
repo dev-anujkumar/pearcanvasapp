@@ -1,6 +1,7 @@
 import React from 'react'
-import config from './../../config/config';
-import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions'
+import store from '../../appstore/store';
+import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions';
+
 const CutCopyDialog = props => {
 
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
@@ -51,9 +52,15 @@ export const performCutCopy = (event, componentProps, type) => {
     }
     componentProps.setElementDetails(elementDetailsToSet)
     componentProps.toggleCopyMenu(false);
+    const popupParentData = store.getState().autoNumberReducer?.popupParentSlateData;
+    const isPopupSlate = popupParentData?.isPopupSlate;
     let data = {
-        parentSlateId: Object.keys(componentProps?.slateLevelData)[0],
-        parentSlateEntityUrn: Object.values(componentProps?.slateLevelData)[0]?.contentUrn,
+        contentUrn: isPopupSlate ? popupParentData?.contentUrn : '',
+        versionUrn: isPopupSlate ? popupParentData?.versionUrn : '',
+        index: isPopupSlate ? popupParentData?.index : '',
+        isPopupSlate: isPopupSlate ? popupParentData?.isPopupSlate : false,
+        parentSlateEntityUrn: isPopupSlate ? popupParentData?.parentSlateEntityUrn : Object.values(componentProps?.slateLevelData)[0]?.contentUrn,
+        parentSlateId: isPopupSlate ? popupParentData?.parentSlateId : Object.keys(componentProps?.slateLevelData)[0],
         operationType: type
     }
     popupCutCopyParentData(data);
