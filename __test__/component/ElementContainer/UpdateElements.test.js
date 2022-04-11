@@ -1,7 +1,9 @@
 import * as updateFunction from '../../../src/component/ElementContainer/UpdateElements';
+import * as utils from '../../../src/constants/utility';
 import { poetryTitle, stanzaData, citationElementData, elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData,asideElementData, interactiveDataPDF,poetryElementData } from '../../../fixtures/UpdateElementsTestData';
 import tinyMCE from 'tinymce/tinymce'
 import config from "../../../src/config/config.js"
+import { figureImageData } from "./UpdateElementsTestData.js";
 jest.mock('./../../../src/constants/utility.js', () => ({
     matchHTMLwithRegex: jest.fn(),
     removeBlankTags: jest.fn(),
@@ -891,5 +893,50 @@ describe('Test for UpdateElements Functions', () => {
         jest.spyOn(updateFunction, 'createUpdatedData')
         updateFunction.createUpdatedData(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement);
         expect(updateFunction.createUpdatedData).toHaveBeenCalledWith(type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext, parentElement)
+    })
+
+    describe("Branch Coverage", () => {
+        describe("Testing generateCommonFigureData()", () => {
+            it("AutoNumbering is true", () => {
+                jest.spyOn(updateFunction, 'generateCommonFigureData');
+                document.getElementById = jest.fn()
+                    .mockReturnValueOnce({
+                        innerHTML: "Figure",
+                        innerText: "Figure"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "1",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("1")
+                        }
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Figure 1",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("Figure 1")
+                        }
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Caption for Figure 1",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("Caption for Figure 1")
+                        }
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Credit for Figure 1",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("Credit for Figure 1")
+                        }
+                    })
+                document.querySelector = jest.fn()
+                    .mockReturnValue({
+                        getAttribute: jest.fn().mockReturnValue("100%") 
+                    })
+                jest.spyOn(utils, "matchHTMLwithRegex").mockReturnValue(true);
+                jest.spyOn(updateFunction, "podHtmlmatchWithRegex").mockReturnValue(true);
+                updateFunction.generateCommonFigureData(1, figureImageData, null, "primary-image-figure", "secondary-image-figure-width", true, "Default Auto-number");
+                expect(updateFunction.generateCommonFigureData).toBeCalled();
+            })
+        })
     })
 })
