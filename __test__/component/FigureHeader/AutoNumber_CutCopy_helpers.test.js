@@ -2,7 +2,7 @@
 import * as autoNumber_cutcopyFunctions from '../../../src/component/FigureHeader/AutoNumber_CutCopy_helpers';
 /*************************Import Constants*************************/
 import { currentSlateData, mockAutoNumberingDetails, mockIndexedElements, mockNumberedElements,slateFigures2, slateAncestorChapter,
-         selectedElement, mock_autoNumber_ElementTypeKey, asideOnSlateData } from './AutoNumberApiTestData';
+         selectedElement, mock_autoNumber_ElementTypeKey, asideOnSlateData, cutSelection } from './AutoNumberApiTestData';
 describe('-----------------Testing AutoNumber_CutCopy_helpers-----------------', () => {
     const mockGetState = () => {
         return {
@@ -49,6 +49,16 @@ describe('-----------------Testing AutoNumber_CutCopy_helpers-----------------',
         params.currentSlateData = asideOnSlateData;
         params. operationType = 'cut';
         params.selectedElement = selectedElement[1];
+        const spyFunction = jest.spyOn(autoNumber_cutcopyFunctions, 'handleAutoNumberingOnCopyPaste');
+        await autoNumber_cutcopyFunctions.handleAutoNumberingOnCopyPaste(params);
+        expect(spyFunction).toHaveBeenCalled();
+    });
+
+    it('Test-4---handleAutoNumberingOnCopyPaste---', async () => {
+        params.currentSlateData = asideOnSlateData;
+        params. operationType = 'cut';
+        params.selectedElement = selectedElement[2];
+        params.cutSelection = cutSelection;
         const spyFunction = jest.spyOn(autoNumber_cutcopyFunctions, 'handleAutoNumberingOnCopyPaste');
         await autoNumber_cutcopyFunctions.handleAutoNumberingOnCopyPaste(params);
         expect(spyFunction).toHaveBeenCalled();
