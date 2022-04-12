@@ -73,7 +73,8 @@ export const onDeleteSuccess = (params) => {
         newParentData,
         getState,
         type,
-        contentUrn
+        contentUrn,
+        operationType: 'delete'
     }
     deleteFromStore(args)
     
@@ -153,7 +154,8 @@ export const deleteFromStore = async (params) => {
         newParentData,
         getState,
         type,
-        contentUrn
+        contentUrn,
+        operationType
     } = params
 
     /* Get the slate bodymatter data */
@@ -161,14 +163,14 @@ export const deleteFromStore = async (params) => {
     const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
     let bodymatter = [];
     /* To check if the element is cutted from popup slate */
-    if (cutCopyParentData?.isPopupSlate) {
+    if (cutCopyParentData?.isPopupSlate && operationType === 'cut') {
         // Call api to get popup slate data
         // const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
         // bodymatter = popupContent?.contents?.bodymatter;
         deleteFromPopupInStore(cutCopyParentData, getState);
         return;
         /* To check if the cutted element is pasted on popup slate */
-    } else if (popupParentSlateData?.isPopupSlate) {
+    } else if (popupParentSlateData?.isPopupSlate && operationType === 'cut') {
         bodymatter = newParentData[popupParentSlateData?.parentSlateId]?.contents?.bodymatter;
     } else {
         bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter;

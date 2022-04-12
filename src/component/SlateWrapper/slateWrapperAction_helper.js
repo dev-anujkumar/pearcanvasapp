@@ -98,6 +98,7 @@ export const onPasteSuccess = async (params) => {
             poetryData: deleteElm.poetryData,
             newParentData,
             type: deleteElm.type,
+            operationType: operationType
         }
         deleteFromStore(deleteParams)
 
