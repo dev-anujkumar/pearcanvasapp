@@ -289,9 +289,15 @@ div.stageDirectionItalicFont dfn {
     font-style: italic;
 }
 .blockquoteTextCredit.cypress-editable.place-holder::before{
-    color: black !important;
+    color: #505759 !important;
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif !important;
+    font-size: 13.4px !important;
 }
 
 .blockquoteMarginalia p {
     min-height: 45px !important;
+}
+
+p.blockquoteTextCredit.mce-edit-focus.place-holder:focus::before {
+    content: attr(data-placeholder);
 }

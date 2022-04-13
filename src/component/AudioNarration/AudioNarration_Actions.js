@@ -106,7 +106,8 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
                             "title": {
                                 "en": audioDataResponse?.data?.data[0]?.title?.en
                             },
-                            "format": audioDataResponse?.data?.data[0]?.format
+                            "format": audioDataResponse?.data?.data[0]?.format,
+                            "slateManifestURN": config.slateManifestURN
                         }
                     }
                     config.CYPRESS_PLUS_WINDOW.postMessage(obj, urlCypress)

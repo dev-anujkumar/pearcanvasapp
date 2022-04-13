@@ -77,12 +77,19 @@ p[data-mce-bogus="all"] {
     min-height: 30px !important;
     font-size: 1.120em !important;
  }
+ blockquote.blockquoteMarginalia .paragraphNummerEins {
+    letter-spacing: 0px;
+    margin-left: -1.5px
+ }
+ blockquote.blockquoteMarginalia .blockquoteTextCredit {
+     font-size: 1.115em !important;
+ }
 .blockquoteMarginalia .cypress-editable.place-holder::before {
     content: attr(placeholder);
     color: #ADADAD;
     display: block;
     position: absolute;
-    margin-top: 0px;
+    margin-top: -.9px;
     font-size: 12px;
     font-family: 'Open Sans', sans-serif;
  }
