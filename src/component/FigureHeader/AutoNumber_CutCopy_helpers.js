@@ -176,7 +176,8 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
             let {isPopupSlate} = getState().autoNumberReducer.popupParentSlateData;
             // This function will insert the selectedElement in numbered element
             if(isPopupSlate){
-                dispatch(handleAutonumberingOnCreate(selectedElement?.displayedlabel.toUpperCase(), selectedElement))
+                const { autoNumber_FigureTypeKey_Mapper } = getState().autoNumberReducer;
+                dispatch(handleAutonumberingOnCreate(autoNumber_FigureTypeKey_Mapper[selectedElement?.figuretype], selectedElement));
             } else {
                 checkElementExistenceInOtherSlates(selectedElement, config.slateEntityURN, getState, dispatch);
             }

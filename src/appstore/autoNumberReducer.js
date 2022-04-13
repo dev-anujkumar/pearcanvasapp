@@ -88,6 +88,15 @@ const INITIAL_STATE = {
         'workedExamplesList': 'workedExampleIndex',
         'exhibitsList': 'exhibitsIndex'
     },
+    autoNumber_FigureTypeKey_Mapper: {
+        'image': 'IMAGE',
+        'video': 'AUDIO',
+        'audio': 'VIDEO',
+        'interactive': 'INTERACTIVE',
+        'tableasmarkup': 'TABLE',
+        "authoredtext": 'AUTHOREDTEXT',
+        'codelisting': 'CODELISTING',
+    },
     popupElementsData: []
 }
 
