@@ -17,9 +17,8 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     var assessmentDispatchType = (assessmentType === CITE)? 'GET_CITE_RESOURCES': (assessmentType === TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=25;
     const taxonomicTypes = assessmentType === CITE ? CITE.toUpperCase() : assessmentType === TDX ? TDX.toUpperCase() : MMI.toUpperCase();
-
-    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${taxonomicTypes}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}&collation.caseSensitivity=false&groupByEntity=true`;
-
+    
+    let url = `${config.ACON_API_ENDPOINT}assessments/search?taxonomicTypes=${taxonomicTypes}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}&collation.caseSensitivity=false&groupByEntity=true`
     try {
         const res = await axiosGetAPI(url);
         dispatch({
@@ -96,7 +95,7 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
     
     let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/urn:pearson:work:${filterUUID}`;
     
-    var filterData = { assessments: [] };
+    var filterData = { assesssments: [] };
     var assessmentDispatchtype = (assessmentType === CITE)? 'GET_CITE_RESOURCES': (assessmentType === TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
 
     var typeAssessment = (assessmentType === CITE)? CITE.toUpperCase() : (assessmentType === TDX)? TDX.toUpperCase(): MMI.toUpperCase();
@@ -114,7 +113,7 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
             let name = (res.data.name !== undefined) ? res.data.name : 'NA';
             let modifiedDate = (res.data.dateModified !== undefined) ? res.data.dateModified : 'NA';
             let modifiedBy = (res.data.createdBy !== undefined) ? res.data.createdBy : 'NA';
-            filterData.assessments.push({ versionUrn, name, modifiedDate, modifiedBy })
+            filterData.assesssments.push({ versionUrn, name, modifiedDate, modifiedBy })
         }
         dispatch({
             type: assessmentDispatchtype,
