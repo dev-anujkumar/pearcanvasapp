@@ -901,7 +901,7 @@ export class TinyMceEditor extends Component {
                 sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'update', link: linkId, element: elementId, page: pageId, blockCanvas: true, crossLink: true, reviewerRole: hasReviewerRole() } });
             }
         }
-        else if (e.target.className === "blockquoteTextCredit") {
+        else if (e.target.className === "blockquoteTextCredit" || e.target?.className?.includes('blockquoteTextCredit')) {
             setFormattingToolbar('disableTinymceToolbar')
         }
         /**
