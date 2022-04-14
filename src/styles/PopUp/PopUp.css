@@ -569,7 +569,7 @@
 
 .right-container{
   display: inline-block;
-  width: 64.5%;
+  width: 71.5%;
 }
 
 .left-right-container{
@@ -599,7 +599,8 @@
   border-bottom: 1px solid #cccccc;
   margin-bottom: 20px;
   height: 70px;
-  width: 600px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 
@@ -633,7 +634,8 @@
   border-bottom: 1px solid #cccccc;
   padding: 8px 12px;
   height: 230px;
-  width: 600px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .long-description-body-table.invalid{
