@@ -320,4 +320,258 @@ describe('Testing ListButtonDropPortal component', () => {
         expect(spygetListDropPopUpState).toHaveBeenCalled();
         spygetListDropPopUpState.mockClear()
     })
+
+    it("Test - getListDropPopUpState - groupedcontent - element-aside - element-list", () => {
+        const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
+        const slateData = {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                contents: {
+                    bodymatter: [{
+                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70',
+                        type: 'groupedcontent',
+                        groupeddata: {
+                            bodymatter: [
+                            {
+                                id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                type: 'element-list',
+                                groupdata: {
+                                    bodymatter: [{
+                                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                        type: 'element-aside',
+                                        elementdata: {
+                                                       bodymatter: [{
+                                                            id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                                            type: 'element-list'
+                                                        }]
+                                                   }
+                                    }]
+                                },
+                            },
+                                    {
+                                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                        type: 'element-list'
+                                    }]
+                                }
+                            }]
+                            
+                        }
+                    
+                }
+            }
+        
+        const activeElement = {
+            elementWipType: 'element-list',
+            elementId: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+            index: '0-0-0'
+        }
+        ListButtonDropPortalInstance.getListDropPopUpState(slateData, activeElement);
+        expect(spygetListDropPopUpState).toHaveBeenCalled();
+        spygetListDropPopUpState.mockClear()
+    })
+
+    it("Test - getListDropPopUpState - groupedcontent - element-aside - showhide", () => {
+        const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
+        const slateData = {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                contents: {
+                    bodymatter: [{
+                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70',
+                        type: 'groupedcontent',
+                        groupeddata: {
+                            bodymatter: [
+                            {
+                                id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                type: 'element-list',
+                                groupdata: {
+                                    bodymatter: [{
+                                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                        type: 'element-aside',
+                                        elementdata: {
+                                            bodymatter: [{
+                                                id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70',
+                                                type: 'showhide',
+                                                interactivedata: {
+                                                    show: [{
+                                                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                                        type:'element-list'
+                                                    }]
+                                                }
+                                            }]
+                                                   }
+                                    }]
+                                },
+                            }]
+                                }
+                            }]
+                            
+                        }
+                    
+                }
+            }
+        
+        const activeElement = {
+            elementWipType: 'element-list',
+            elementId: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+            index: '1-0-0-0-0-0'
+        }
+        ListButtonDropPortalInstance.getListDropPopUpState(slateData, activeElement);
+        expect(spygetListDropPopUpState).toHaveBeenCalled();
+        spygetListDropPopUpState.mockClear()
+    })
+
+
+    it("Test - getListDropPopUpState - groupedcontent - element-aside - manifest", () => {
+        const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
+        const slateData = {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                contents: {
+                    bodymatter: [{
+                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70',
+                        type: 'groupedcontent',
+                        groupeddata: {
+                            bodymatter: [
+                            {
+                                id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                type: 'element-list',
+                                groupdata: {
+                                    bodymatter: [{
+                                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                        type: 'element-aside',
+                                        elementdata: {
+                                            bodymatter: [{
+                                                id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70',
+                                                type: 'manifest',
+                                                contents: {
+                                                    bodymatter: [{
+                                                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                                        type: 'element-list'
+                                                    }]
+                                                }
+                                            }]
+                                                   }
+                                    }]
+                                },
+                            }]
+                                }
+                            }]
+                            
+                        }
+                    
+                }
+            }
+        
+        const activeElement = {
+            elementWipType: 'element-list',
+            elementId: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+            index: '1-0-0-0-0-0'
+        }
+        ListButtonDropPortalInstance.getListDropPopUpState(slateData, activeElement);
+        expect(spygetListDropPopUpState).toHaveBeenCalled();
+        spygetListDropPopUpState.mockClear()
+    })
+
+    it("Test - getListDropPopUpState - groupedcontent - element-aside - manifest - showhide", () => {
+        const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
+        const slateData = {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                contents: {
+                    bodymatter: [{
+                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70',
+                        type: 'groupedcontent',
+                        groupeddata: {
+                            bodymatter: [
+                            {
+                                id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                type: 'element-list',
+                                groupdata: {
+                                    bodymatter: [{
+                                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                        type: 'element-aside',
+                                        elementdata: {
+                                            bodymatter: [{
+                                                id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70',
+                                                type: 'manifest',
+                                                contents: {
+                                                    bodymatter: [{
+                                                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb72',
+                                                        type: 'showhide',
+                                                        interactivedata: {
+                                                            show: [{
+                                                                id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                                                type:'element-list'
+                                                            }]
+                                                        }
+                                                    }]
+                                                }
+                                            }]
+                                                   }
+                                    }]
+                                },
+                            }]
+                                }
+                            }]
+                            
+                        }
+                    
+                }
+            }
+        
+        const activeElement = {
+            elementWipType: 'element-list',
+            elementId: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+            index: '1-0-0-0-0-0-0'
+        }
+        ListButtonDropPortalInstance.getListDropPopUpState(slateData, activeElement);
+        expect(spygetListDropPopUpState).toHaveBeenCalled();
+        spygetListDropPopUpState.mockClear()
+    })
+
+    
+    
+    it("Test - getListDropPopUpState - groupedcontent - element-aside - showhide - 2", () => {
+        const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
+        const slateData = {
+            "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                contents: {
+                    bodymatter: [{
+                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb70',
+                        type: 'groupedcontent',
+                        groupeddata: {
+                            bodymatter: [
+                            {
+                                id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                type: 'element-list',
+                                groupdata: {
+                                    bodymatter: [{
+                                        id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                        type: 'showhide',
+                                        interactivedata: {
+                                            show: [{
+                                                id: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+                                                type:'element-list'
+                                            }]
+                                        }
+                                    }]
+                                },
+                            }]
+                                }
+                            }]
+                            
+                        }
+                    
+                }
+            }
+        
+        const activeElement = {
+            elementWipType: 'element-list',
+            elementId: 'urn:pearson:work:dcfbfd07-a00e-4497-bfe8-7a5c2824cb71',
+            index: '1-0-0-0-0-0-0'
+        }
+        ListButtonDropPortalInstance.getListDropPopUpState(slateData, activeElement);
+        expect(spygetListDropPopUpState).toHaveBeenCalled();
+        spygetListDropPopUpState.mockClear()
+    })
+
+
+
 })
