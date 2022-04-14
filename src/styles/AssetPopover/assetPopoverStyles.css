@@ -212,6 +212,7 @@
     margin-top: 24px;
     padding-left: 15px;
     color: #858585;
+    margin-bottom: 5px;
   }
   
   .currentlyLinkedHeader {
@@ -368,15 +369,15 @@
   }
   .modalInput{
     display: flex;
-    margin-top: 5px;
+    margin-top: 3px;
   }
   .modalAssetDetails{
     display: flex;
     flex-direction: column;
+    margin-left: 8px;
   }
   .modalText{
     display: flex;
-    margin-left: 5px;
     font-size: 14px;
     line-height: 20px;
     font-family: sans-serif;
@@ -385,7 +386,6 @@
   }
   .modalCaption{
     display: flex;
-    margin-left: 5px;
     font-size: 12px;
     line-height: 20px;
     font-family: sans-serif;
@@ -394,6 +394,7 @@
   }
   .modalInputField{
     display: flex;
+    margin-bottom: 12px;
   }
 
 .modalBody::-webkit-scrollbar-thumb {
