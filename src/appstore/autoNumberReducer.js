@@ -10,7 +10,8 @@ import {
     UPDATE_POPUP_PARENT_SLATE,
     GET_SLATE_LIST_IN_CONTAINER,
     UPDATE_AUTONUMBER_MAPPER_KEYS,
-    UPDATE_CHAPTER_POPUP_DATA
+    UPDATE_CHAPTER_POPUP_DATA,
+    SET_POPUP_PARENT_CUT_COPY
 } from '../constants/Action_Constants.js';
 
 const INITIAL_STATE = {
@@ -41,6 +42,7 @@ const INITIAL_STATE = {
     slateFigureList:[],
     autoNumberOption: '',
     popupParentSlateData: {},
+    popupCutCopyParentData: {},
     tocContainerSlateList:[],
     autoNumber_KeyMapper: {
         'Figure': 'figureImageIndex',
@@ -85,6 +87,15 @@ const INITIAL_STATE = {
         'asidesList': 'asideIndex',
         'workedExamplesList': 'workedExampleIndex',
         'exhibitsList': 'exhibitsIndex'
+    },
+    autoNumber_FigureTypeKey_Mapper: {
+        'image': 'IMAGE',
+        'video': 'AUDIO',
+        'audio': 'VIDEO',
+        'interactive': 'INTERACTIVE',
+        'tableasmarkup': 'TABLE',
+        "authoredtext": 'AUTHOREDTEXT',
+        'codelisting': 'CODELISTING',
     },
     popupElementsData: []
 }
@@ -184,6 +195,11 @@ export default function autoNumberReducer(state = INITIAL_STATE, action = INITIA
                         popupElementsData: []
                     }
                 }
+        case SET_POPUP_PARENT_CUT_COPY:
+            return {
+                ...state,
+                popupCutCopyParentData: action.payload
+            }
         default:
             return state
     }

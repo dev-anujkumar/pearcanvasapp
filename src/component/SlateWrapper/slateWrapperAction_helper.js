@@ -7,7 +7,7 @@ import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
 import { sendDataToIframe, replaceWirisClassAndAttr, getShowhideChildUrns } from '../../constants/utility.js';
 import { tcmSnapshotsForCreate, prepareSnapshots_ShowHide} from '../TcmSnapshots/TcmSnapshotsCreate_Update';
-import { SET_SELECTION } from './../../constants/Action_Constants.js';
+import { SET_SELECTION, SET_POPUP_PARENT_CUT_COPY } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
@@ -98,6 +98,7 @@ export const onPasteSuccess = async (params) => {
             poetryData: deleteElm.poetryData,
             newParentData,
             type: deleteElm.type,
+            operationType: operationType
         }
         deleteFromStore(deleteParams)
 
@@ -135,6 +136,7 @@ export const onPasteSuccess = async (params) => {
             }
         }
         dispatch({ type: SET_SELECTION, payload: {} });
+        dispatch({ type: SET_POPUP_PARENT_CUT_COPY, payload: {} });
     }
 
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
