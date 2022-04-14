@@ -26,8 +26,6 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
                 ...res.data,
                 assessments: res.data.assesssments
             }
-        }
-        else{
             delete res.data.assesssments
         }
         dispatch({
@@ -118,8 +116,6 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
                 ...res.data,
                 assessments: res.data.assesssments
             }
-        }
-        else{
             delete res.data.assesssments
         }
         responseName=specialCharacterEncode(responseName);
