@@ -160,7 +160,7 @@ export function ElementSaprator(props) {
 
         const insertionIndex = firstOne ? index : index + 1
         return (
-            <div className={`elemDiv-expand paste-button-wrapper}`} onClickCapture={onClickCapture} >
+            <div className={'elemDiv-expand'} onClickCapture={onClickCapture} >
                 <Tooltip direction='poc' tooltipText='Paste from Word'>
                     <Button type="powerpaste" onClick={() => props.handleCopyPastePopup(true, insertionIndex, parentUrn, asideData)} />
                 </Tooltip>

@@ -63,6 +63,62 @@ export const audioElementTypeSLDefault = {
     "versionUrn": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
     "contentUrn": "urn:pearson:entity:b8c31acf-2c66-4a05-92ac-e0d910ec2720"
 }
+export const figureImage50TextElementDefault = {
+   "id": "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+   "type": "figure",
+   "figuretype": "image",
+   "subtype": "image50Text",
+   "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+   "alignment": "half-text",
+   "title": {
+       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+       "text": "12345",
+       "textsemantics": [],
+       "mathml": []
+   },
+   "subtitle": {
+       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+       "text": "eresrwqe",
+       "textsemantics": [],
+       "mathml": [],
+       "footnotes": []
+   },
+   "captions": {
+       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+       "text": "sdafsad",
+       "textsemantics": [],
+       "mathml": [],
+       "footnotes": []
+   },
+   "credits": {
+       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+       "text": "asdfasdfasdf",
+       "textsemantics": [],
+       "mathml": [],
+       "footnotes": []
+   },
+   "figuredata": {
+       "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+       "height": "1225",
+       "width": "1440",
+       "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+       "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+   },
+   "html": {
+       "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+       "title": "",
+       "subtitle": "",
+       "caption": "",
+       "credit": "",
+       "postertext": "",
+       "tableasHTML": ""
+   },
+   "comments": true,
+   "tcm": true,
+   "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
+   "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89"
+
+}
 export const audioElementTypeAlfrescoDefault = {
     "id": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
     "type": "figure",
