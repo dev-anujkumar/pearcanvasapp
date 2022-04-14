@@ -3,7 +3,7 @@ import * as utils from '../../../src/constants/utility';
 import { poetryTitle, stanzaData, citationElementData, elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData,asideElementData, interactiveDataPDF,poetryElementData } from '../../../fixtures/UpdateElementsTestData';
 import tinyMCE from 'tinymce/tinymce'
 import config from "../../../src/config/config.js"
-import { figureImageData } from "./UpdateElementsTestData.js";
+import { figureImageData, updatedElement } from "./UpdateElementsTestData.js";
 jest.mock('./../../../src/constants/utility.js', () => ({
     matchHTMLwithRegex: jest.fn(),
     removeBlankTags: jest.fn(),
@@ -936,6 +936,14 @@ describe('Test for UpdateElements Functions', () => {
                 jest.spyOn(updateFunction, "podHtmlmatchWithRegex").mockReturnValue(true);
                 updateFunction.generateCommonFigureData(1, figureImageData, null, "primary-image-figure", "secondary-image-figure-width", true, "Default Auto-number");
                 expect(updateFunction.generateCommonFigureData).toBeCalled();
+            })
+        })
+
+        describe("Testing updateAutoNumberedElement()", () => {
+            it("Testing for AUTO_NUMBER_SETTING_RESUME_NUMBER", () => {
+                jest.spyOn(updateFunction, 'updateAutoNumberedElement');
+                updateFunction.updateAutoNumberedElement("Resume numbering with", updatedElement, { displayedlabel: "Figure", manualoverride: { "resumenumbervalue" : 12 } });
+                expect(updateFunction.updateAutoNumberedElement).toBeCalled();
             })
         })
     })
