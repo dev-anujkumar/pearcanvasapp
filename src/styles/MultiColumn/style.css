@@ -383,8 +383,8 @@
     cursor: pointer;
     margin: auto;
 }
-.container-multi-column-group-3c .elemDiv-expand{
-    right: 1%;
+.container-multi-column-group-3c .elementSapratorContainer .elemDiv-expand{
+    right: 1% !important;
 }
 
 /*style for Block Poetry element picker inside Multi-Column element*/

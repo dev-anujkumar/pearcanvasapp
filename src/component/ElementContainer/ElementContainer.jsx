@@ -394,7 +394,7 @@ class ElementContainer extends Component {
 
         /* Auto-numbering section */
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-            labeleHTML = labeleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+            labeleHTML = labeleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, labeleHTML, numberHTML, true);
@@ -479,7 +479,7 @@ class ElementContainer extends Component {
             isAltTextLongDescModified = this.props.oldFigureDataForCompare.tableasHTML !== previousElementData.figuredata.tableasHTML
         }
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-            titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+            titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
@@ -573,7 +573,7 @@ class ElementContainer extends Component {
 
         //Handle Autonumbering
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-            titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+            titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
@@ -661,7 +661,7 @@ class ElementContainer extends Component {
         let oldImage = this.props.oldImage;
              oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel') && (previousElementData.figuretype !== 'tableasmarkup')) {
-            titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+            titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             let isValid = validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth);
             return isValid;
         }
@@ -727,7 +727,7 @@ class ElementContainer extends Component {
         
         //Handle Autonumbering
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-            titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+            titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
@@ -805,7 +805,7 @@ class ElementContainer extends Component {
         let oldImage = this.props.oldImage;
         oldImage = this.props.oldAudioVideoDataForCompare?.videoid ? this.props.oldAudioVideoDataForCompare?.videoid : this.props.oldAudioVideoDataForCompare?.audioid ? this.props.oldAudioVideoDataForCompare?.audioid : "";
         if (this.props.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
-            titleHTML = titleHTML.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
+            titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
             if (this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_REMOVE_NUMBER) {
                 let isValidValues = setAutonumberingValuesForPayload(this.props.autoNumberOption.option, titleHTML, numberHTML, true);
@@ -885,22 +885,8 @@ class ElementContainer extends Component {
             case elementTypeConstant.BLOCKFEATURE:
             case elementTypeConstant.POETRY_STANZA:
                 let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent" ||  parentElement.type == 'element-blockfeature') ? activeEditorId : `cypress-${this.props.index}`
-                if (this.props.element && this.props.element.type === "element-blockfeature" && this.props.element.subtype === "quote" && tinyMCE.activeEditor && tinyMCE.activeEditor.id && !tinyMCE.activeEditor.id.includes("footnote")) {
-                    let blockqtText = document.querySelector('#' + tinymce.activeEditor.id) ? document.querySelector('#' + tinymce.activeEditor.id).innerText : "";
-                    if (!blockqtText.trim()) {
-                        var MLtext = document.querySelector('#' + tinymce.activeEditor.id + ' > p > img') || document.querySelector('#' + tinymce.activeEditor.id + ' > img')
-                        if (MLtext) {
-                            tinyMCE.$('#' + tinymce.activeEditor.id).find('br').remove();
-                            document.querySelector('#' + tinymce.activeEditor.id).append(MLtext)
-                            tinyMCE.$('#' + tinymce.activeEditor.id).find('p[data-mce-caret="before"]').remove();
-                            tinyMCE.$('#' + tinymce.activeEditor.id).find('span#mce_1_start').remove();
-                            tinyMCE.$('#' + tinymce.activeEditor.id).find('div.mce-visual-caret').remove();
-                            tinyMCE.$('#' + tinymce.activeEditor.id).append("&nbsp;")
-                        }
-                    }
-                }
                 let currentNode = document.getElementById(index)
-                const blockquoteCondition = currentNode.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')
+                const blockquoteCondition = currentNode?.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')
                 let html =  blockquoteCondition ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = html;
@@ -1769,14 +1755,14 @@ class ElementContainer extends Component {
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:
-                            editor = <ElementInteractive accessDenied={this.props.accessDenied} asideData={this.props.asideData} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} editInteractiveId={this.state.editInteractiveId} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} />;
+                            editor = <ElementInteractive accessDenied={this.props.accessDenied} asideData={this.props.asideData} showBlocker={this.props.showBlocker} updateFigureData={this.updateFigureData} permissions={permissions} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} model={element} slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation={this.handleAudioPopupLocation} editInteractiveId={this.state.editInteractiveId} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} />;
                             labelText = LABELS[element.figuredata.interactiveformat];
                             isQuadInteractive = labelText === "Quad" ? "quad-interactive" : "";
                             break;
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} markedIndexValue={this.props.markedIndexValue} openMarkedIndexPopUp={this.openMarkedIndexPopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} markedIndexValue={this.props.markedIndexValue} openMarkedIndexPopUp={this.openMarkedIndexPopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType} />;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -2145,8 +2131,8 @@ class ElementContainer extends Component {
             normalText: TE_POP_UP_NORMAL_TEXT,
             renderImages : this.props.tableElementAssetData
         }
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton');
-        let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton');
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton', this.props.permissions);
+        let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton', this.props.permissions);
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -2221,7 +2207,7 @@ class ElementContainer extends Component {
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
-                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type="alfresco-metadata" btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'alfresco-TE-metadata': 'alfresco-metadata'}`} btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />} 
                         {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
                     </div> : ''}
                     {this.state.popup && <PopUp
@@ -2467,6 +2453,9 @@ class ElementContainer extends Component {
             hideBlocker();
         }
         this.props.getProjectUsers();
+        if(this.props?.element?.figuretype === TABLE_ELEMENT){
+            this.props.prepareImageDataFromTable({}); // this will delete the TE data from store
+        }
     }
 
     handleCommunication = ( elementId ) => {
