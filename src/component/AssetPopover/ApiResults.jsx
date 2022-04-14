@@ -4,6 +4,7 @@
 import React from 'react';
 import FigureCard from './FigureCard.jsx';
 import ErrorComp from './ErrorComp.jsx';
+import { formatString, checkIfIncludes, getTitle, getCaption } from './AssetPopover_Helpers'; 
 class ApiResults extends React.Component {
     constructor(props) {
         super(props);
@@ -23,13 +24,12 @@ class ApiResults extends React.Component {
         });
         const finalAssetDetails = filteredDetails?.flat()
         if (ValueToBeSearch && finalAssetDetails) {
+            let searchValue = formatString(ValueToBeSearch);
             tempFiguresForResults = finalAssetDetails.filter((value, index, array) => {
-                if (typeof (value.title) !== 'undefined' || (typeof (value?.unformattedTitle) !== 'undefined')) {
-                    let searchItem = value?.title ? value.title : value?.unformattedTitle?.en ? value.unformattedTitle.en : "";
-                    searchItem = String(searchItem).replace(/\u00a0/g, ' ').replace(/&nbsp;/g, ' ').replace(/ /g, ' ');
-                    let searchValue = ValueToBeSearch;
-                    searchValue = String(searchValue).replace(/\u00a0/g, ' ').replace(/&nbsp;/g, ' ').replace(/ /g, ' ');
-                    return searchItem.toUpperCase().includes(searchValue.toUpperCase());
+                if (typeof (value.title) !== 'undefined' || (typeof (value?.unformattedTitle) !== 'undefined') || (typeof (value?.captions?.text) !== 'undefined')) {
+                    let titleOfAsset = getTitle(value);
+                    let captionOfAsset = getCaption(value);
+                    return (checkIfIncludes(titleOfAsset, searchValue) || checkIfIncludes(captionOfAsset, searchValue))
                 }
             });
         }
@@ -59,8 +59,9 @@ class ApiResults extends React.Component {
                 <h3 className="figureCount">{assetTypeTitle}</h3>
                 {
                     matchingAssets.map((value, index) => {
-                        const assetTitle = value?.title ? value.title : value?.unformattedTitle?.en ? value.unformattedTitle.en : "";
-                        return <FigureCard forInputKey={index} key={index} figureDetails={value} title={assetTitle} path={value.path ?? assetTitle} selectedFigure={selectedFigure} />
+                        const assetTitle = getTitle(value);
+                        const assetCaption = getCaption(value);
+                        return <FigureCard forInputKey={index} key={index} figureDetails={value} title={assetTitle} caption={assetCaption} path={value.path ?? assetTitle} selectedFigure={selectedFigure} />
                     })
                 }
             </>
