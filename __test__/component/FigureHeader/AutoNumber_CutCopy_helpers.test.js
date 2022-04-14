@@ -63,4 +63,39 @@ describe('-----------------Testing AutoNumber_CutCopy_helpers-----------------',
         await autoNumber_cutcopyFunctions.handleAutoNumberingOnCopyPaste(params);
         expect(spyFunction).toHaveBeenCalled();
     });
-})
+    it('Test-5---handleAutoNumberingOnCopyPaste---', async () => {
+        params. operationType = 'cut';
+        params.selectedElement = selectedElement[3];
+        const spyFunction = jest.spyOn(autoNumber_cutcopyFunctions, 'handleAutoNumberingOnCopyPaste');
+        await autoNumber_cutcopyFunctions.handleAutoNumberingOnCopyPaste(params);
+        expect(spyFunction).toHaveBeenCalled();
+    });
+
+    it('Test-6---handleAutoNumberingOnCopyPaste---', async () => {
+        params. operationType = 'copy';
+        params.selectedElement = selectedElement[2];
+        const mockGetState1 = () => {
+            return {
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false,
+                    autoNumberedElements: {
+                        frontMatter: [],
+                        backMatter: []
+                    },
+                    autoNumberingDetails: mockAutoNumberingDetails,
+                    autoNumberElementsIndex: mockIndexedElements,
+                    slateFigureList: slateFigures2,
+                    autoNumberOption: '',
+                    autoNumber_ElementTypeKey: mock_autoNumber_ElementTypeKey
+                },
+                appStore: {
+                    currentSlateAncestorData: slateAncestorChapter
+                }
+            }
+        }
+        params.getState = mockGetState1
+        const spyFunction = jest.spyOn(autoNumber_cutcopyFunctions, 'handleAutoNumberingOnCopyPaste');
+        await autoNumber_cutcopyFunctions.handleAutoNumberingOnCopyPaste(params);
+        expect(spyFunction).toHaveBeenCalled();
+    });
+});
