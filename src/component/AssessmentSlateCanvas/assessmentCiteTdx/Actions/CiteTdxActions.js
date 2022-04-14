@@ -21,6 +21,15 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     let url = `${config.ACON_API_ENDPOINT}assessments/search?taxonomicTypes=${taxonomicTypes}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}&collation.caseSensitivity=false&groupByEntity=true`
     try {
         const res = await axiosGetAPI(url);
+        if(res.data?.hasOwnProperty('assesssments')){
+            res.data={
+                ...res.data,
+                assessments: res.data.assesssments
+            }
+        }
+        else{
+            delete res.data.assesssments
+        }
         dispatch({
             type: assessmentDispatchType,
             payload: {
@@ -95,7 +104,7 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
     
     let url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/urn:pearson:work:${filterUUID}`;
     
-    var filterData = { assesssments: [] };
+    var filterData = { assessments: [] };
     var assessmentDispatchtype = (assessmentType === CITE)? 'GET_CITE_RESOURCES': (assessmentType === TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
 
     var typeAssessment = (assessmentType === CITE)? CITE.toUpperCase() : (assessmentType === TDX)? TDX.toUpperCase(): MMI.toUpperCase();
@@ -104,6 +113,15 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
         const res = await axiosGetAPI(url);
         let taxonomyType = (res.data.taxonomicTypes.length > 0) ? res.data.taxonomicTypes : [];
         let responseName = (res.data.name !== undefined) ? res.data.name : '';
+        if(res.data?.hasOwnProperty('assesssments')){
+            res.data={
+                ...res.data,
+                assessments: res.data.assesssments
+            }
+        }
+        else{
+            delete res.data.assesssments
+        }
         responseName=specialCharacterEncode(responseName);
         assessmentTitle=specialCharacterEncode(assessmentTitle);
         if ((taxonomyType.includes(typeAssessment) == false) || (responseName.toLowerCase().search(assessmentTitle.toLowerCase()) == -1)) {
@@ -113,7 +131,7 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
             let name = (res.data.name !== undefined) ? res.data.name : 'NA';
             let modifiedDate = (res.data.dateModified !== undefined) ? res.data.dateModified : 'NA';
             let modifiedBy = (res.data.createdBy !== undefined) ? res.data.createdBy : 'NA';
-            filterData.assesssments.push({ versionUrn, name, modifiedDate, modifiedBy })
+            filterData.assessments.push({ versionUrn, name, modifiedDate, modifiedBy })
         }
         dispatch({
             type: assessmentDispatchtype,

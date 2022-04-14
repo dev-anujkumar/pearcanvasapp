@@ -87,14 +87,14 @@ class CiteTdxTable extends Component {
             <div>
                 <div className='cite-wrapper main-div'>
                 <CiteLoader isLoading={this.props.isLoading} citeErrorFlag={this.props.citeErrorFlag} />
-                    { (isLoading == false) && (assessmenterrFlag == false) && apiData && apiData.assesssments && apiData.assesssments.length > 0 &&
+                    { (isLoading == false) && (assessmenterrFlag == false) && apiData && apiData.assessments && apiData.assessments.length > 0 &&
                         <table className='assessment-table-class'>
                             <thead>
                                 <tr>
                                 {this.tableHeaders.map(item => (
                                     <th key={`assessment-${item}`} className={`assessment-row-class ${item.toLowerCase()}`}>{item}
                                     {(item === "Title" || item === "Date Modified")  && this.state.sortBy[item] &&
-                                    <div className={`sort-icon ${this.state.sortBy[item].className} ${apiData.assesssments.length > 1 ? '':'disabled'}`} onClick={() => this.setSort(item)}>{this.state.sortBy[item].sortIcon}</div>
+                                    <div className={`sort-icon ${this.state.sortBy[item].className} ${apiData.assessments.length > 1 ? '':'disabled'}`} onClick={() => this.setSort(item)}>{this.state.sortBy[item].sortIcon}</div>
                                     }
                                     </th>
 
@@ -102,7 +102,7 @@ class CiteTdxTable extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {apiData.assesssments.map((item, index) => {
+                                {apiData.assessments.map((item, index) => {
                                     return (
                                         <React.Fragment key={`assessment-${index}`}>
                                             <tr className ={(this.props.currentAssessmentSelected && this.props.currentAssessmentSelected.versionUrn=== item.versionUrn) ? 'selected':''}>
@@ -121,7 +121,7 @@ class CiteTdxTable extends Component {
                             </tbody>
                         </table>
                     }
-                    {(apiData && apiData.assesssments && apiData.assesssments.length == 0) && (this.props.isLoading == false) && (assessmenterrFlag == false)&& <div className ="no-result">No results found</div>}
+                    {(apiData && apiData.assessments && apiData.assessments.length == 0) && (this.props.isLoading == false) && (assessmenterrFlag == false)&& <div className ="no-result">No results found</div>}
                 </div>
             </div>
         );
