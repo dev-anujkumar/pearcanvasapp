@@ -3,7 +3,7 @@ import * as utils from '../../../src/constants/utility';
 import { poetryTitle, stanzaData, citationElementData, elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData,asideElementData, interactiveDataPDF,poetryElementData } from '../../../fixtures/UpdateElementsTestData';
 import tinyMCE from 'tinymce/tinymce'
 import config from "../../../src/config/config.js"
-import { figureImageData, updatedElement } from "./UpdateElementsTestData.js";
+import { figureImageData, updatedElement, figureElmInteractiveData } from "./UpdateElementsTestData.js";
 jest.mock('./../../../src/constants/utility.js', () => ({
     matchHTMLwithRegex: jest.fn(),
     removeBlankTags: jest.fn(),
@@ -944,6 +944,297 @@ describe('Test for UpdateElements Functions', () => {
                 jest.spyOn(updateFunction, 'updateAutoNumberedElement');
                 updateFunction.updateAutoNumberedElement("Resume numbering with", updatedElement, { displayedlabel: "Figure", manualoverride: { "resumenumbervalue" : 12 } });
                 expect(updateFunction.updateAutoNumberedElement).toBeCalled();
+            })
+            it("Testing for AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER", () => {
+                jest.spyOn(updateFunction, 'updateAutoNumberedElement');
+                updateFunction.updateAutoNumberedElement("Override label & number", updatedElement, { displayedlabel: "Figure", manualoverride: { "resumenumbervalue" : 12 } });
+                expect(updateFunction.updateAutoNumberedElement).toBeCalled();
+            })
+            it("Testing for AUTO_NUMBER_SETTING_OVERRIDE_NUMBER", () => {
+                jest.spyOn(updateFunction, 'updateAutoNumberedElement');
+                updateFunction.updateAutoNumberedElement("Override number only", updatedElement, { displayedlabel: "Figure", manualoverride: { "resumenumbervalue" : 12 } });
+                expect(updateFunction.updateAutoNumberedElement).toBeCalled();
+            })
+            it("Testing for AUTO_NUMBER_SETTING_REMOVE_NUMBER", () => {
+                jest.spyOn(updateFunction, 'updateAutoNumberedElement');
+                let updatedElement2 = {...updatedElement};
+                updatedElement2["manualoverride"] = { "resumenumbervalue" : 12 }
+                updateFunction.updateAutoNumberedElement("Remove label & number", updatedElement2, { displayedlabel: "Figure", manualoverride: { "resumenumbervalue" : 12 } });
+                expect(updateFunction.updateAutoNumberedElement).toBeCalled();
+            })
+            it("Testing for AUTO_NUMBER_SETTING_DEFAULT", () => {
+                jest.spyOn(updateFunction, 'updateAutoNumberedElement');
+                let updatedElement2 = {...updatedElement};
+                updatedElement2["manualoverride"] = { "resumenumbervalue" : 12 }
+                updateFunction.updateAutoNumberedElement("Default Auto-number", updatedElement2, { displayedlabel: "Figure", manualoverride: { "resumenumbervalue" : 12 } });
+                expect(updateFunction.updateAutoNumberedElement).toBeCalled();
+            })
+        })
+
+        describe("Testing generateCommonFigureDataInteractive()", () => {
+            it("AutoNumbering is true", () => {
+                jest.spyOn(updateFunction, 'generateCommonFigureDataInteractive');
+                document.getElementById = jest.fn()
+                    .mockReturnValueOnce({
+                        innerHTML: "Interactive",
+                        innerText: "Interactive"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "1",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("1")
+                        }
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Elm Interactive 1",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("Elm Interactive 1")
+                        }
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Caption for Elm Interactive",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("Caption for Elm Interactive")
+                        }
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Credit for Elm Interactive 1",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("Credit for Elm Interactive 1")
+                        }
+                    })
+                document.querySelector = () => {
+                    return {
+                        querySelector: () => {
+                            return {
+                                innerText: "Elm Interactive 1"
+                            }
+                        }
+                    }
+                }
+                updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
+                expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
+            })
+            it("AutoNumbering is true - autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER", () => {
+                jest.spyOn(updateFunction, 'generateCommonFigureDataInteractive');
+                document.getElementById = jest.fn()
+                    .mockReturnValueOnce({
+                        innerHTML: "Interactive",
+                        innerText: "Interactive"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "1",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("1")
+                        }
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Elm Interactive 1",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("Elm Interactive 1")
+                        }
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Caption for Elm Interactive",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("Caption for Elm Interactive")
+                        }
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Credit for Elm Interactive 1",
+                        innerText: {
+                            replace: jest.fn().mockReturnValueOnce("Credit for Elm Interactive 1")
+                        }
+                    })
+                document.querySelector = () => {
+                    return {
+                        querySelector: () => {
+                            return {
+                                innerText: "Elm Interactive 1"
+                            }
+                        }
+                    }
+                }
+                updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Remove label & number");
+                expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
+            })
+            describe(`previousElementData.figuredata.interactivetype === '3rd-party' || previousElementData.figuredata.interactivetype === "table"`, () => {
+                it("When podwidth is present", () => {
+                    jest.spyOn(updateFunction, 'generateCommonFigureDataInteractive');
+                    document.getElementById = jest.fn()
+                        .mockReturnValueOnce({
+                            innerHTML: "Interactive",
+                            innerText: "Interactive"
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Elm Interactive 1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Caption for Elm Interactive",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Caption for Elm Interactive")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Credit for Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Credit for Elm Interactive 1")
+                            }
+                        })
+                    document.querySelector = jest.fn()
+                        .mockReturnValue({
+                            getAttribute: jest.fn().mockReturnValue("100%") 
+                        })
+                    jest.spyOn(utils, "matchHTMLwithRegex").mockReturnValue(true);
+                    jest.spyOn(updateFunction, "podHtmlmatchWithRegex").mockReturnValue(true);
+                    let figureElmInteractiveData2 = {...figureElmInteractiveData};
+                    figureElmInteractiveData2["figuredata"] = {
+                        "interactivetype": "table",
+                        "posterimage": {
+                            "podwidth": "100%"
+                        }
+                    }
+                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
+                    expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
+                })
+                it("When podwidth is not present", () => {
+                    jest.spyOn(updateFunction, 'generateCommonFigureDataInteractive');
+                    document.getElementById = jest.fn()
+                        .mockReturnValueOnce({
+                            innerHTML: "Interactive",
+                            innerText: "Interactive"
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Elm Interactive 1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Caption for Elm Interactive",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Caption for Elm Interactive")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Credit for Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Credit for Elm Interactive 1")
+                            }
+                        })
+                    document.querySelector = jest.fn()
+                        .mockReturnValue({
+                            getAttribute: jest.fn().mockReturnValue(null)
+                        })
+                    jest.spyOn(utils, "matchHTMLwithRegex").mockReturnValue(true);
+                    jest.spyOn(updateFunction, "podHtmlmatchWithRegex").mockReturnValue(true);
+                    let figureElmInteractiveData2 = {...figureElmInteractiveData};
+                    figureElmInteractiveData2["figuredata"] = {
+                        "interactivetype": "table",
+                    }
+                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
+                    expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
+                })
+            })
+            describe(`previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" || previousElementData.figuredata.interactivetype === "web-link"`, () => {
+                it("When posterObject & postertext is present", () => {
+                    jest.spyOn(updateFunction, 'generateCommonFigureDataInteractive');
+                    document.getElementById = jest.fn()
+                        .mockReturnValueOnce({
+                            innerHTML: "Interactive",
+                            innerText: "Interactive"
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Elm Interactive 1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Caption for Elm Interactive",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Caption for Elm Interactive")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Credit for Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Credit for Elm Interactive 1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Inner HTML of postertext",
+                            innerText: "Inner Text of postertext"
+                        })
+                    let figureElmInteractiveData2 = {...figureElmInteractiveData};
+                    figureElmInteractiveData2["figuredata"] = {
+                        "interactivetype": "pdf",
+                        "postertext": {
+                            "text": "Lorem Ipsum"
+                        }
+                    }
+                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
+                    expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
+                })
+                it("When posterObject & postertext is present", () => {
+                    jest.spyOn(updateFunction, 'generateCommonFigureDataInteractive');
+                    document.getElementById = jest.fn()
+                        .mockReturnValueOnce({
+                            innerHTML: "Interactive",
+                            innerText: "Interactive"
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Elm Interactive 1")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Caption for Elm Interactive",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Caption for Elm Interactive")
+                            }
+                        })
+                        .mockReturnValueOnce({
+                            innerHTML: "Credit for Elm Interactive 1",
+                            innerText: {
+                                replace: jest.fn().mockReturnValueOnce("Credit for Elm Interactive 1")
+                            }
+                        })
+                    let figureElmInteractiveData2 = {...figureElmInteractiveData};
+                    figureElmInteractiveData2["figuredata"] = {
+                        "interactivetype": "pdf"
+                    }
+                    updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
+                    expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
+                })
             })
         })
     })
