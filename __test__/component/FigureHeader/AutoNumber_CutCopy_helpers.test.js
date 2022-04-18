@@ -25,12 +25,12 @@ describe('-----------------Testing AutoNumber_CutCopy_helpers-----------------',
         dispatch: jest.fn(),
         isAutoNumberingEnabled: true,
         cutSelection: {},
-        tocContainerSlateList: ["urn:pearson:entity:35303acf-be7a-4538-a605-7176d417c6ea","urn:pearson:entity:62ad9ae9-1170-45aa-8ba5-85225cb27664"]
+        tocContainerSlateList: ["urn:pearson:entity:35303acf-be7a-4538-a605-7176d417c6ea","urn:pearson:entity:62ad9ae9-1170-45aa-8ba5-85225cb27664"],
+        currentSlateData
     }
     it('Test-1---handleAutoNumberingOnCopyPaste---', async () => {
         params.operationType = 'cut';
         params.selectedElement = selectedElement[0];
-        params.currentSlateData = currentSlateData;
         const spyFunction = jest.spyOn(autoNumber_cutcopyFunctions, 'handleAutoNumberingOnCopyPaste');
         await autoNumber_cutcopyFunctions.handleAutoNumberingOnCopyPaste(params);
         expect(spyFunction).toHaveBeenCalled();
@@ -94,6 +94,42 @@ describe('-----------------Testing AutoNumber_CutCopy_helpers-----------------',
             }
         }
         params.getState = mockGetState1
+        const spyFunction = jest.spyOn(autoNumber_cutcopyFunctions, 'handleAutoNumberingOnCopyPaste');
+        await autoNumber_cutcopyFunctions.handleAutoNumberingOnCopyPaste(params);
+        expect(spyFunction).toHaveBeenCalled();
+    });
+
+    it('Test-7---handleAutoNumberingOnCopyPaste---', async () => {
+        params. operationType = 'cut';
+        params.selectedElement = selectedElement[2];
+        const mockGetState1 = () => {
+            return {
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false,
+                    autoNumberedElements: {
+                        imagesList: {
+                            "urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4tt":[{
+                                slateEntityUrn : "urn:pearson:entity:35303acf-be7a-4538-a605-7176d417c6ebb",
+                                displayedlabel: "Figure"
+                            }]
+                        }
+                    },
+                    autoNumberingDetails: mockAutoNumberingDetails,
+                    autoNumberElementsIndex: mockIndexedElements,
+                    slateFigureList: slateFigures2,
+                    autoNumberOption: '',
+                    autoNumber_ElementTypeKey: mock_autoNumber_ElementTypeKey
+                },
+                appStore: {
+                    currentSlateAncestorData: slateAncestorChapter
+                }
+            }
+        }
+        params.getState = mockGetState1;
+        params.oldSlateFigureList = [{
+            slateEntityUrn : "urn:pearson:entity:35303acf-be7a-4538-a605-7176d417c6ebb",
+            displayedlabel: "Figure"
+        }]
         const spyFunction = jest.spyOn(autoNumber_cutcopyFunctions, 'handleAutoNumberingOnCopyPaste');
         await autoNumber_cutcopyFunctions.handleAutoNumberingOnCopyPaste(params);
         expect(spyFunction).toHaveBeenCalled();
