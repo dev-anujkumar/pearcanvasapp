@@ -3,7 +3,7 @@ import * as utils from '../../../src/constants/utility';
 import { poetryTitle, stanzaData, citationElementData, elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData,asideElementData, interactiveDataPDF,poetryElementData } from '../../../fixtures/UpdateElementsTestData';
 import tinyMCE from 'tinymce/tinymce'
 import config from "../../../src/config/config.js"
-import { figureImageData, updatedElement, figureElmInteractiveData } from "./UpdateElementsTestData.js";
+import { figureImageData, updatedElement, figureElmInteractiveData, figureBlockCodeData } from "./UpdateElementsTestData.js";
 jest.mock('./../../../src/constants/utility.js', () => ({
     matchHTMLwithRegex: jest.fn(),
     removeBlankTags: jest.fn(),
@@ -1235,6 +1235,44 @@ describe('Test for UpdateElements Functions', () => {
                     updateFunction.generateCommonFigureDataInteractive(1, figureElmInteractiveData2, "element-interactive", "primary-elm-interactive", "secondary-elm-interactive", true, "Default Auto-number");
                     expect(updateFunction.generateCommonFigureDataInteractive).toBeCalled();
                 })
+            })
+        })
+
+        describe("Testing generateCommonFigureDataBlockCode()", () => {
+            it("When Autonumbering is true", () => {
+                jest.spyOn(updateFunction, 'createUpdatedData');
+                document.querySelector = jest.fn()
+                    .mockReturnValueOnce({
+                        getAttribute: jest.fn().mockReturnValueOnce(0).mockReturnValueOnce("true").mockReturnValueOnce("true")
+                    })
+                document.getElementById = jest.fn()
+                    .mockReturnValueOnce({
+                        innerHTML: "Custom",
+                        innerText: "Custom"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "1"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Block Code Subtitle",
+                        innerText: "Block Code Subtitle"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Preformatted Text"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Preformatted Text"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Block Code Caption",
+                        innerText: "Block Code Caption"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Block Code Credit",
+                        innerText: "Block Code Credit"
+                    })
+                updateFunction.createUpdatedData("figure", figureBlockCodeData, null, "figure", "primary-blockcode-equation", "secondary-blockcode-language-c++", null, 1, null, null, null, null, true, "Default Auto-number")
+                expect(updateFunction.createUpdatedData).toBeCalled();
             })
         })
     })

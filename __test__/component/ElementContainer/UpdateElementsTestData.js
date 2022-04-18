@@ -145,3 +145,57 @@ export const figureElmInteractiveData = {
     "index": 1,
     "indexPos": "1"
 }
+
+export const figureBlockCodeData = {
+    "id": "urn:pearson:work:9293a77b-6213-4bca-85be-21ebc1c0c069",
+    "type": "figure",
+    "figuretype": "codelisting",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield": true,
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "Block Code"
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "Caption for Block Code"
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "Credit for Block Code"
+    },
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/preformatted/1#/definitions/preformatted",
+        "type": "codelistingformatted",
+        "numbered": true,
+        "startNumber": "1",
+        "programlanguage": "C++",
+        "preformattedtext": [
+            {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": ""
+            }
+        ],
+        "syntaxhighlighting": true
+    },
+    "html": {
+        "title": "<p>Block Code</p>",
+        "text": "<p><span class=\"codeNoHighlightLine\"><br></span></p>",
+        "postertext": "",
+        "preformattedtext": "<p><span class=\"codeNoHighlightLine\"><br></span></p>",
+        "captions": "Caption of Block Code<p></p>",
+        "credits": "Credit of Block Code<p></p>",
+        "footnotes": {},
+        "assetsPopover": {},
+        "glossaryentries": {},
+        "indexEntries": {}
+    },
+    "versionUrn": "urn:pearson:work:9293a77b-6213-4bca-85be-21ebc1c0c069",
+    "contentUrn": "urn:pearson:entity:43d64bf6-df7f-44fc-a621-bc91864a50db",
+    "displayedlabel": "Exhibit",
+    "numberedandlabel": true,
+    "parentDetails": [],
+    "slateEntityUrn": "urn:pearson:entity:2a3a61a1-5467-4bc9-8248-b63951cf78c6",
+    "index": 1,
+    "indexPos": "1"
+}
