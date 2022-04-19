@@ -45,11 +45,6 @@ const KeyboardUpDown = (props) => {
             const lastChild = getLastChild(tinymceChild);
             if(lastChild) {
                 if(lastChild.nodeName === 'A' && lastChild.hasAttribute("data-footnoteelementid")) {
-                    if(tinymceChild.classList.contains("paragraphNummerEins")){
-                        tinymceChild.click();
-                        tinymceChild.focus();
-                    }
-                    else {
                     // for foot note
                     // add span at last and click on span
                     // childElement.click();
@@ -62,7 +57,6 @@ const KeyboardUpDown = (props) => {
                     childElement.firstChild.appendChild(span);
                     }
                     span.click();
-                    }
                 }
                 else if(lastChild.id === "f-e-s") {
                     if(lastChild?.previousSibling?.nodeName !== 'SUP') {
