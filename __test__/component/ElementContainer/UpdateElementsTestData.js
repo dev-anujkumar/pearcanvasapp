@@ -199,3 +199,47 @@ export const figureBlockCodeData = {
     "index": 1,
     "indexPos": "1"
 }
+
+export const figureBlockMathData = {
+    "id": "urn:pearson:work:9293a77b-6213-4bca-85be-21ebc1c0c069",
+    "type": "figure",
+    "figuretype": "authoredtext",
+    "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "titlecontentintitlefield": true,
+    "title": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "Block Code"
+    },
+    "captions": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "Caption for Block Code"
+    },
+    "credits": {
+        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+        "text": "Credit for Block Code"
+    },
+    "figuredata": {
+        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+        "type": "element-authoredtext",
+        "elementdata": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": ""
+        }
+    },
+    "html": {
+        "title": "<p><br></p>",
+        "text": "<p><br></p>",
+        "postertext": "",
+        "captions": "<p><br></p>",
+        "credits": "<p><br></p>"
+    },
+    "versionUrn": "urn:pearson:work:9293a77b-6213-4bca-85be-21ebc1c0c069",
+    "contentUrn": "urn:pearson:entity:43d64bf6-df7f-44fc-a621-bc91864a50db",
+    "displayedlabel": "Equation",
+    "numberedandlabel": true,
+    "parentDetails": [],
+    "slateEntityUrn": "urn:pearson:entity:2a3a61a1-5467-4bc9-8248-b63951cf78c6",
+    "index": 1,
+    "indexPos": "1",
+    "subtype": "mathml"
+}

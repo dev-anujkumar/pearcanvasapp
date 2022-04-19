@@ -3,7 +3,7 @@ import * as utils from '../../../src/constants/utility';
 import { poetryTitle, stanzaData, citationElementData, elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData,asideElementData, interactiveDataPDF,poetryElementData } from '../../../fixtures/UpdateElementsTestData';
 import tinyMCE from 'tinymce/tinymce'
 import config from "../../../src/config/config.js"
-import { figureImageData, updatedElement, figureElmInteractiveData, figureBlockCodeData } from "./UpdateElementsTestData.js";
+import { figureImageData, updatedElement, figureElmInteractiveData, figureBlockCodeData, figureBlockMathData } from "./UpdateElementsTestData.js";
 jest.mock('./../../../src/constants/utility.js', () => ({
     matchHTMLwithRegex: jest.fn(),
     removeBlankTags: jest.fn(),
@@ -1272,6 +1272,38 @@ describe('Test for UpdateElements Functions', () => {
                         innerText: "Block Code Credit"
                     })
                 updateFunction.createUpdatedData("figure", figureBlockCodeData, null, "figure", "primary-blockcode-equation", "secondary-blockcode-language-c++", null, 1, null, null, null, null, true, "Default Auto-number")
+                expect(updateFunction.createUpdatedData).toBeCalled();
+            })
+        })
+
+        describe("Testing generateCommonFigureDataAT()", () => {
+            it("When Autonumbering is true", () => {
+                jest.spyOn(updateFunction, 'createUpdatedData');
+                document.getElementById = jest.fn()
+                    .mockReturnValueOnce({
+                        innerHTML: "Custom",
+                        innerText: "Custom"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "1"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Block Math Subtitle",
+                        innerText: "Block Math Subtitle"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Block Math Caption",
+                        innerText: "Block Math Caption"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Block Math Credit",
+                        innerText: "Block Math Credit"
+                    })
+                    .mockReturnValueOnce({
+                        innerHTML: "Preformatted Text",
+                        innerText: "Preformatted Text"
+                    })
+                updateFunction.createUpdatedData("figure", figureBlockMathData, null, "figure", "primary-mathml-equation", "secondary-mathml-equation", null, 1, null, null, null, null, true, "Default Auto-number")
                 expect(updateFunction.createUpdatedData).toBeCalled();
             })
         })
