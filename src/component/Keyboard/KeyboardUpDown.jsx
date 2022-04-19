@@ -56,7 +56,11 @@ const KeyboardUpDown = (props) => {
                     const span = document.createElement('span');
                     span.id = "f-e-s"
                     span.innerHTML = "<br>";
+                    if(childElement.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')){
+                        childElement.appendChild(span);
+                    } else {
                     childElement.firstChild.appendChild(span);
+                    }
                     span.click();
                     }
                 }
