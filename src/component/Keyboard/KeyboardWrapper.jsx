@@ -104,7 +104,7 @@ const isFirtstChild = (node, tinymceOffset) => {
         else if (firstTextNode === node) {
             return tinymceOffset === 0;
         }
-        else if (node?.parentNode?.id?.startsWith(NORMAL_SELECTOR)) {
+        else if (node?.parentNode?.id?.startsWith(NORMAL_SELECTOR) && tinymceNode?.parentNode?.parentNode?.className !== 'blockquoteMarginalia') {
             
             if(firstTextNode?.nodeName === 'IMG') {
                 return tinymceOffset === 0;

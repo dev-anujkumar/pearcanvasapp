@@ -8,6 +8,7 @@ let config = {
     PROJECTAPI_ENDPOINT: "https://contentapis-staging.pearsoncms.net/project-api/distributable/v2",
     ELM_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/manifest-api/",
     ASSESSMENT_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/assessment-api/",
+    ACON_API_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/acapi/",
     LERNOSITY_ENDPOINT:  "https://contentapis-staging.pearsoncms.net/manifest-api/",
     SLATE_REFRESH_URL : "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/",
     AUDIO_NARRATION_URL : 'https://contentapis-staging.pearsoncms.net/structure-api/',
