@@ -62,7 +62,7 @@ config.projectUrn = "urn:pearson:distributable:3e872df6-834c-45f5-b5c7-c7b525fab
 config.slateType = "assessment"
 let permissions = [
     "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
-    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview",
+    "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "split_slate", "full_project_slate_preview",
     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
 ]
 let initialState = {
@@ -80,7 +80,8 @@ let initialState = {
         slateLevelData: DefaultAssessmentSlateData,
         usageTypeListData: {
             usageTypeList: MockUsageTypeList_Data
-        }
+        },
+        isLearnosityProjectInfo: [],
     },
     learningToolReducer: {
         learningTypeSelected: ""
@@ -194,6 +195,44 @@ describe('Testing Assessment Slate Data component', () => {
             expect(assessmentSlateInstance.state.changeLearningData).toBe(true)
             expect(assessmentSlateInstance.state.activeAssessmentType).toBe("learningtemplate")
         })
+        it('Test 2.4-renderAssessmentSlate - Render Assessment Slate with Learnosity ', () => {
+            assessmentSlateInstance.setState({
+                showElmComponent: true,
+                activeAssessmentType: "LEARNOSITY"
+            })
+            component.update();
+            assessmentSlateInstance.forceUpdate();
+            assessmentSlateInstance.renderAssessmentSlate();
+            expect(assessmentSlateInstance.state.showElmComponent).toBe(true)
+            expect(assessmentSlateInstance.state.activeAssessmentType).toBe("LEARNOSITY")
+        })
+        it('Test 2.5-showCustomPopup', () => {
+            assessmentSlateInstance.setState({
+                showUpdatePopup: true,
+            })
+            component.update();
+            assessmentSlateInstance.forceUpdate();
+            assessmentSlateInstance.showCustomPopup();
+            expect(assessmentSlateInstance.state.showUpdatePopup).toBe(true)
+        })
+        it('Test 2.6- showUpdateAssessmentTypePopup', () => {
+            assessmentSlateInstance.setState({
+                updateAssessmentTypePopup: true,
+            })
+            component.update();
+            assessmentSlateInstance.forceUpdate();
+            assessmentSlateInstance.showUpdateAssessmentTypePopup();
+            expect(assessmentSlateInstance.state.updateAssessmentTypePopup).toBe(true)
+        })
+        it('Test 2.7- showChangeUsageTypePopup', () => {
+            assessmentSlateInstance.setState({
+                changeUsageTypePopup: true,
+            })
+            component.update();
+            assessmentSlateInstance.forceUpdate();
+            assessmentSlateInstance.showChangeUsageTypePopup();
+            expect(assessmentSlateInstance.state.changeUsageTypePopup).toBe(true)
+        })
     })
     it('Test 3-renderAssessmentSlate - Render Assessment Slate Final Slate ', () => {
         const component2 = mount(<Provider store={store}><AssessmentSlateData
@@ -238,6 +277,7 @@ describe('Testing Assessment Slate Data component', () => {
         })
         component2.update();
         assessmentSlateInstance2.forceUpdate();
+        let event = "test"
         jest.spyOn(assessmentSlateInstance2, 'showNewAssessmentSlate');
         assessmentSlateInstance2.showNewAssessmentSlate("puf","Homework");
         expect(assessmentSlateInstance2.props.getAssessmentData).toBe(true)
@@ -245,6 +285,7 @@ describe('Testing Assessment Slate Data component', () => {
         expect(assessmentSlateInstance2.state.activeAssessmentUsageType).toBe('Homework')
         expect(assessmentSlateInstance2.props.getAssessmentDataPopup).toBe(false)
         expect(assessmentSlateInstance2.showNewAssessmentSlate).toHaveBeenCalled();
+        component2.find('.slate_assessment_type_button').simulate('click', event);
     });
     it('Test 4-renderAssessmentSlate - Render Assessment Slate-Success Message', () => {
         const component3 = mount(<Provider store={store}><AssessmentSlateData
@@ -328,6 +369,9 @@ describe('Testing Assessment Slate Data component', () => {
             templateid: "2004",
             label: { en: "Test LT/LA" },
         }
+        let assessmentData = {
+            assessmentId: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+        }
         const component5 = mount(<Provider store={store}><AssessmentSlateData
             {...props}
             assessmentSlateObj={learningObj}
@@ -370,6 +414,14 @@ describe('Testing Assessment Slate Data component', () => {
             expect(assessmentSlateInstance5.state.learningToolStatus).toBe(false)
             expect(assessmentSlateInstance5.state.activeAssessmentType).toBe('learningtemplate')
         })
+        it('Test 6.5-setCiteTdxFilterData cite', () => {
+            jest.spyOn(assessmentSlateInstance5, 'setCiteTdxFilterData')
+            assessmentSlateInstance5.setCiteTdxFilterData("cite", assessmentData);
+        })
+        it('Test 6.6-setCiteTdxFilterData tdx', () => {
+            jest.spyOn(assessmentSlateInstance5, 'setCiteTdxFilterData')
+            assessmentSlateInstance5.setCiteTdxFilterData("tdx", assessmentData);
+        })
     })
     describe('Test 7- Elm/Learnosity Assessments Methods', () => {
         let pufObj = {
@@ -392,6 +444,22 @@ describe('Testing Assessment Slate Data component', () => {
         })
         component6.update();
         assessmentSlateInstance6.forceUpdate();
+
+        const component7 = mount(<Provider store={store}><AssessmentSlateData
+            {...props}
+            permissions={["elements_add_remove"]}
+            model={assessmentSlateELM}
+            assessmentSlateObj={pufObj}
+            getAssessmentData={false}
+            getAssessmentDataPopup={true}
+        /></Provider>)
+        let assessmentSlateInstance7 = component7.find('AssessmentSlateData').instance();
+        assessmentSlateInstance7.setState({
+            showElmComponent: true,
+            activeAssessmentUsageType: ''
+        })
+        component7.update();
+        assessmentSlateInstance7.forceUpdate();
         it('Test 7.1-addPufAssessment', () => {
             jest.spyOn(assessmentSlateInstance6, 'addPufAssessment')
             assessmentSlateInstance6.addPufAssessment(pufObj);
@@ -405,9 +473,24 @@ describe('Testing Assessment Slate Data component', () => {
                 stopPropagation: jest.fn(),
                 preventDefault: jest.fn()
             }
+            assessmentSlateInstance6.setState({
+                showUpdatePopup: true,
+            })
             jest.spyOn(assessmentSlateInstance6, 'updateElm')
             assessmentSlateInstance6.updateElm(event);
             expect(assessmentSlateInstance6.state.showUpdatePopup).toBe(true)
+        })
+        it('Test 7.2-updateElm', () => {
+            let event = {
+                stopPropagation: jest.fn(),
+                preventDefault: jest.fn()
+            }
+            assessmentSlateInstance7.setState({
+                showUpdatePopup: false,
+            })
+            jest.spyOn(assessmentSlateInstance7, 'updateElm')
+            assessmentSlateInstance7.updateElm(event);
+            expect(assessmentSlateInstance7.state.showUpdatePopup).toBe(true)
         })
         it('Test 7.3-showCustomPopup', () => {
             assessmentSlateInstance6.setState({
@@ -419,6 +502,17 @@ describe('Testing Assessment Slate Data component', () => {
             jest.spyOn(assessmentSlateInstance6, 'showCustomPopup')
             assessmentSlateInstance6.showCustomPopup();
             expect(assessmentSlateInstance6.state.showUpdatePopup).toBe(true)
+        })
+        it('Test 7.3-showCustomPopup -- else case', () => {
+            assessmentSlateInstance6.setState({
+                showUpdatePopup: false,
+                activeAssessmentUsageType: 'Homework'
+            })
+            component6.update();
+            assessmentSlateInstance6.forceUpdate();
+            jest.spyOn(assessmentSlateInstance6, 'showCustomPopup')
+            assessmentSlateInstance6.showCustomPopup();
+            expect(assessmentSlateInstance6.state.showUpdatePopup).toBe(false)
         })
         it('Test 7.4-updateElmAssessment', () => {
             document.getElementById = () => {
@@ -486,6 +580,7 @@ describe('Testing Assessment Slate Data component', () => {
             let assessmentSlateInstance7 = component7.find('AssessmentSlateData').instance();
             jest.spyOn(assessmentSlateInstance7, 'showElmVersionStatus')
             assessmentSlateInstance7.showElmVersionStatus();
+            expect(assessmentSlateInstance7.showElmVersionStatus).toHaveBeenCalled()
             expect(assessmentSlateInstance7.props.assessmentReducer).toEqual(expectedProps)
         })
         it('Test 10.6-componentDidUpdate', () => {
@@ -630,7 +725,16 @@ describe('Testing Assessment Slate Data component', () => {
             expect(assessmentSlateInstance9.props.model.elementdata.assessmentid).toBe('')
         })
         it('Test 10.5-sendDataAssessment', () => {
+            config.S3MathImagePath = true
             config.parentEntityUrn = "BodyMatter"
+            config.slateType = "assessment"
+            jest.spyOn(assessmentSlateInstance9, 'sendDataAssessment')
+            assessmentSlateInstance9.sendDataAssessment(event);
+            expect(assessmentSlateInstance9.props.model.elementdata.assessmentid).toBe('')
+        })
+        it('Test 10.5-sendDataAssessment -- else case', () => {
+            config.S3MathImagePath = false
+            config.parentEntityUrn = "Front Matter"
             jest.spyOn(assessmentSlateInstance9, 'sendDataAssessment')
             assessmentSlateInstance9.sendDataAssessment(event);
             expect(assessmentSlateInstance9.props.model.elementdata.assessmentid).toBe('')
@@ -738,7 +842,8 @@ describe('Testing Assessment Slate Data component', () => {
         let assessmentSlateInstance11 = component11.find('AssessmentSlateData').instance();
         assessmentSlateInstance11.setState({
             showElmComponent: false,
-            activeAssessmentUsageType: 'Homework'
+            activeAssessmentUsageType: 'Homework',
+            activeAssessmentType: "puf"
         })
         component11.update();
         assessmentSlateInstance11.forceUpdate();
