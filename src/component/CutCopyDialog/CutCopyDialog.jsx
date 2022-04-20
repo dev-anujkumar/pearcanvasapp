@@ -1,14 +1,17 @@
 import React from 'react'
 import store from '../../appstore/store';
+import config from './../../config/config';
 import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions';
 
 const CutCopyDialog = props => {
 
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
+    const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "element-aside"];
+    let allowToShowOptions = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.element?.type) ? false : true;
     return (
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">
-                {renderCutCopyOption(props)}
+                {allowToShowOptions && renderCutCopyOption(props)}
                 <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
             
