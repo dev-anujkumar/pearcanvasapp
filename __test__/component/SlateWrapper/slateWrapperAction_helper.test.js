@@ -225,6 +225,55 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         helperMethods.onPasteSuccess(params);
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
+
+    it("onPasteSuccess when aside type:  element-aside and asidedata parentid is given", async () => {
+        // initialState2.selectionReducer.selection.operationType = "cut";
+        const store = mockStore(() => initialState);
+        const responseData1 = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+            "type": "element-aside",
+            "subtype": "",
+            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+            "elementdata": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": ""
+            },
+            "html": {
+                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+            },
+            "comments": false,
+            "tcm": true,
+            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+        };
+        const params = {
+            responseData: responseData1,
+            index: 3,
+            dispatch: jest.fn(),
+            getState: store.getState,
+            parentUrn:{
+                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
+                elementType:'manifest'
+            },
+            asideData: {
+                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c542',
+                type: 'element-aside',
+                sectionType: {
+                    type: 'element-aside'
+                },
+                // index:'0-0-0',
+                parent: {
+                    id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
+                    type: 'groupedcontent'
+                },
+                subtype:'workedexample'
+            }
+        }
+        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
+        helperMethods.onPasteSuccess(params);
+        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
+    });
+
     it("onPasteSuccess when aside type:  element-aside,asidedata subtype: workedexample asidedata subtype: workedexample and index length is not 5", async () => {
         initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
         const store = mockStore(() => initialState);
@@ -404,7 +453,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
                 sectionType: {
                     type: 'element-aside'
                 },
-                index:'0-0-0',
+                // index:'0-0-0',
                 parent: {
                     id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
                     type: 'showhide',
@@ -454,7 +503,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
                 sectionType: {
                     type: 'element-aside'
                 },
-                index:'0-0-0',
+                // index:'0-0-0',
                 parent: {
                     id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
                     type: 'showhide',
@@ -748,7 +797,9 @@ describe('Tests Slate Wrapper Action helper methods', () => {
             poetryData: null,
             parentUrn: null,
             type: null,
-            responseData: {},
+            responseData: {type: 'popup', popupdata:{
+                "formatted-title": {}
+            }},
             dispatch: jest.fn(),
         }
         const spyhandleTCMSnapshotsForCreation = jest.spyOn(helperMethods, "handleTCMSnapshotsForCreation")
