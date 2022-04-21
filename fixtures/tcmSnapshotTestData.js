@@ -1485,7 +1485,8 @@ export default {
                     "urn:pearson:work:54852ceb-e627-475a-a3d7-1ee4ce049508": "<p>footnote after versioning</p>"
                 },
                 "assetsPopover": {},
-                "glossaryentries": {}
+                "glossaryentries": {},
+                "title": ""
             },
             "versionUrn": "urn:pearson:work:5c790c66-c6d9-4052-b210-e64d19e75600",
             "contentUrn": "urn:pearson:entity:ea7806b3-a41e-450a-bc42-06334614b244"
@@ -1656,7 +1657,7 @@ export default {
             "elementdata": {
                 "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": ""
             },
-            "html": { "text": "<p class='paragraphNumeroUno'><br></p>" },
+            "html": { "text": "<p class='paragraphNumeroUno'><br></p>, title:''" },
             "id": "urn:pearson:work:edbbf64b-4d06-4dc6-ae27-05de949f71a1",
             "schema": "http://schemas.pearson.com/wip-authoring/element/1",
             "status": "wip",
@@ -1982,14 +1983,13 @@ export default {
             "id": "urn:pearson:manifest:27a03fd2-73d9-45d2-bf7f-c214769f2f74",
             "popupdata": { "bodymatter": [{"contentUrn": "urn:pearson:entity:fb481ed0-af54-4a18-b00f-068d72c26839",
             "elementdata": {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: ""},
-            "html": {text: "<p class='paragraphNumeroUno'><br></p>"},
+            "html": {text: "<p class='paragraphNumeroUno'><br></p>", title:""},
             "id": "urn:pearson:work:84643fc2-f0bb-47c4-bd5a-6b4a9c6d2489",
             "schema": "http://schemas.pearson.com/wip-authoring/element/1",
             "status": "wip",
             "type": "element-authoredtext",
             "versionUrn": "urn:pearson:work:84643fc2-f0bb-47c4-bd5a-6b4a9c6d2489"}], "postertextobject": [{"contentUrn": "urn:pearson:entity:2b2fdbbf-1463-4ea7-8844-abfbea402e17",
             "elementdata": {"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": ""},
-            "html": {"text": "<p class='paragraphNumeroUno'><br></p>"},
             "id": "urn:pearson:work:976d60b0-6199-4090-8400-412a8789e29d",
             "schema": "http://schemas.pearson.com/wip-authoring/element/1",
             "status": "wip",

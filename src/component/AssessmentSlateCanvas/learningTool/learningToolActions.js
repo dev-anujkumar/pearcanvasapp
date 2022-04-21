@@ -189,7 +189,7 @@ export const linkDisable = () => {
   */
 export const fetchLearningTemplates = () => async dispatch => {
   let url = `${config.REACT_APP_API_URL}v1/content/assessment/learningobjectivetemplate`;
-  const resp = await fetch(url, {
+  const resp = await axios(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
