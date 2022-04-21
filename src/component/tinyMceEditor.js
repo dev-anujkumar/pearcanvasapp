@@ -3947,7 +3947,7 @@ export class TinyMceEditor extends Component {
         if (caretPosition) {
             this.props?.saveCaretPosition(caretPosition);
         }
-        if(tinymce.activeEditor?.targetElm?.className?.includes('blockquoteTextCredit')){
+        if(tinymce.activeEditor?.targetElm?.className.includes('blockquoteTextCredit')){
             setFormattingToolbar('disableTinymceToolbar')
         }
         const eventTarget = e?.target
