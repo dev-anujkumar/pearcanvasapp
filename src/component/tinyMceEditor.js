@@ -618,7 +618,7 @@ export class TinyMceEditor extends Component {
                     }
                     break
                 case 'Italic':
-                    if ((activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked) || elementType === 'Learning Objective Item' || attributionElement) {
+                    if ((activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked) || elementType === 'Learning Objective Item' || elementType === 'Blockquote' || attributionElement) {
                         e.preventDefault();
                         e.stopPropagation();
                     }
