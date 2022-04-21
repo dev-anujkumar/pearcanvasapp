@@ -735,3 +735,15 @@ export const removeSpellCheckDOMAttributes = (innerHTML) => {
     }
     return spellCheckDiv?.innerHTML;
 }
+
+export const getDesignType = (classList) => {
+    if(classList.includes("paragraphNumeroUnoIndentLevel1")) {
+        return "indent-level1";
+    } else if(classList.includes("paragraphNumeroUnoIndentLevel2")) {
+        return "indent-level2";
+    } else if(classList.includes("paragraphNumeroUnoIndentLevel3")) {
+        return "indent-level3";
+    } else {
+        return null;
+    }
+}
