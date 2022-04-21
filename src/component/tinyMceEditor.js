@@ -618,7 +618,7 @@ export class TinyMceEditor extends Component {
                     }
                     break
                 case 'Italic':
-                    if ((activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked) || elementType === 'Learning Objective Item' || elementType === 'Blockquote' || attributionElement) {
+                    if ((activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked) || elementType === 'Learning Objective Item' || this.props.placeholder === "Attribution Text" || attributionElement) {
                         e.preventDefault();
                         e.stopPropagation();
                     }
@@ -3947,7 +3947,7 @@ export class TinyMceEditor extends Component {
         if (caretPosition) {
             this.props?.saveCaretPosition(caretPosition);
         }
-        if(tinymce.activeEditor?.targetElm?.className.includes('blockquoteTextCredit')){
+        if(tinymce.activeEditor?.targetElm?.className?.includes('blockquoteTextCredit')){
             setFormattingToolbar('disableTinymceToolbar')
         }
         const eventTarget = e?.target
