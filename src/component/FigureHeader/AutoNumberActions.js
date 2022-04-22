@@ -5,7 +5,8 @@ import {
     SET_AUTO_NUMBER_SEQUENCE,
     GET_TOC_AUTO_NUMBERING_LIST,
     GET_ALL_AUTO_NUMBER_ELEMENTS,
-    UPDATE_CHAPTER_POPUP_DATA
+    UPDATE_CHAPTER_POPUP_DATA,
+    SET_POPUP_PARENT_CUT_COPY
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList, getNumberedElements } from './AutoNumber_helperFunctions';
 import store from '../../appstore/store'
@@ -202,5 +203,12 @@ export const updateChapterPopupData = (dataObj, key) => {
         type: UPDATE_CHAPTER_POPUP_DATA,
         key: key,
         payload: dataObj
+    });
+}
+
+export const popupCutCopyParentData = (data) => {
+    store.dispatch({
+        type: SET_POPUP_PARENT_CUT_COPY,
+        payload: data
     });
 }
