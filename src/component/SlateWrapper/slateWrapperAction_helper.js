@@ -100,7 +100,7 @@ export const onPasteSuccess = async (params) => {
             type: deleteElm.type,
             operationType: operationType
         }
-        deleteFromStore(deleteParams)
+        await deleteFromStore(deleteParams)
 
     }
 
@@ -414,7 +414,11 @@ export const checkElementExistence = async (slateEntityUrn = '', elementEntity =
         await axiosObject.get(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${slateEntityUrn}/elementids`)
             .then(res => {
                 if (res && res.status == 200) {
-                    bodymatter = (Object.values(res.data)[0]).contents.bodymatter || [];
+                    if (Object.values(res?.data)[0]?.type === 'popup') {
+                        bodymatter = (Object.values(res.data)[0])?.popupdata?.bodymatter || [];
+                    } else {
+                        bodymatter = (Object.values(res.data)[0])?.contents?.bodymatter || [];
+                    }
                 }
             })
             .catch(error => {

@@ -551,10 +551,10 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${elementId}`;
     } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && !popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from normal slate to popup slate 
         elementTag = `${elementTag}`;
-        elementId = `${popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : config.slateManifestURN} + ${elementId}`;
+        elementId = `${elementId}`;
     } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate 
         elementTag = `POP:BODY:${elementTag}`;
-        elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN} + ${elementId}`;
+        elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
     } else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;

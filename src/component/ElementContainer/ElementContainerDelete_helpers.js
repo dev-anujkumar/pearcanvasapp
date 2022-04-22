@@ -17,7 +17,7 @@ import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
-import { updateChapterPopupData } from '../FigureHeader/AutoNumberActions'; 
+import { getSlateLevelData, updateChapterPopupData } from '../FigureHeader/AutoNumberActions'; 
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -113,31 +113,28 @@ export function prepareTCMforDelete(elmId, dispatch, getState) {
     
 }
 
-export const deleteFromPopupInStore = (cutCopyParentData, getState) => {
-    const popupElementsData = getState().autoNumberReducer?.popupElementsData;
-    let popupContent = {};
-    popupContent = popupElementsData.find((data) => { return data.versionUrn === cutCopyParentData?.versionUrn; });
+export const deleteFromPopupInStore = (cutCopyParentData, popupContent) => {
     const indexes = cutCopyParentData?.index?.toString()?.split("-") || [];
-    if (popupContent) {
-        if (popupContent?.contents?.bodymatter[indexes[0]].type === MULTI_COLUMN && indexes.length >= 3) {
-            if (indexes.length === 5) {
+    if (popupContent?.contents?.bodymatter?.length) {
+        if (popupContent?.contents?.bodymatter[indexes[0]]?.type === MULTI_COLUMN && indexes?.length >= 3) {
+            if (indexes?.length === 5) {
                 /* get the section type of showhide */
                 const sectionType = indexOfSectionType(indexes);
                 popupContent?.contents?.bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.interactivedata[sectionType]?.splice(indexes[4], 1);
-            } else if (indexes.length === 3) {
+            } else if (indexes?.length === 3) {
                 popupContent?.contents?.bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.splice(indexes[2], 1);
             }
-        } else if (popupContent?.contents?.bodymatter[indexes[0]].type === SHOWHIDE && indexes.length === 3) {
+        } else if (popupContent?.contents?.bodymatter[indexes[0]]?.type === SHOWHIDE && indexes.length === 3) {
             const sectionType = indexOfSectionType(indexes);
             popupContent?.contents?.bodymatter[indexes[0]]?.interactivedata[sectionType]?.splice(indexes[2], 1);
-        } else if (popupContent?.contents?.bodymatter[indexes[0]].type === ELEMENT_ASIDE && indexes.length >= 2) {
+        } else if (popupContent?.contents?.bodymatter[indexes[0]]?.type === ELEMENT_ASIDE && indexes.length >= 2) {
             if (indexes.length === 3) {
                 popupContent?.contents?.bodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter?.splice(indexes[2], 1);
-            } else if (indexes.length === 2) {
+            } else if (indexes?.length === 2) {
                 popupContent?.contents?.bodymatter[indexes[0]]?.elementdata?.bodymatter?.splice(indexes[1], 1);
             }
-        } else if (indexes.length === 1) {
-            popupContent?.contents?.bodymatter.splice(indexes[0], 1);
+        } else if (indexes?.length === 1) {
+            popupContent?.contents?.bodymatter?.splice(indexes[0], 1);
         }
         updateChapterPopupData(popupContent, cutCopyParentData?.versionUrn);
     }
@@ -163,11 +160,16 @@ export const deleteFromStore = async (params) => {
     const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
     let bodymatter = [];
     /* To check if the element is cutted from popup slate */
-    if (cutCopyParentData?.isPopupSlate && operationType === 'cut') {
+    if ((cutCopyParentData?.isPopupSlate && operationType === 'cut') && popupParentSlateData?.isPopupSlate && (cutCopyParentData?.versionUrn === popupParentSlateData?.versionUrn)) {    // popup slate cut & paste on same slate
         // Call api to get popup slate data
-        // const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
-        // bodymatter = popupContent?.contents?.bodymatter;
-        deleteFromPopupInStore(cutCopyParentData, getState);
+        const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
+        deleteFromPopupInStore(cutCopyParentData, popupContent);
+        bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter;
+        /* To check if the cutted element is pasted on popup slate */
+    } else if (cutCopyParentData?.isPopupSlate && operationType === 'cut') {
+        // Call api to get popup slate data
+        const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
+        deleteFromPopupInStore(cutCopyParentData, popupContent);
         return;
         /* To check if the cutted element is pasted on popup slate */
     } else if (popupParentSlateData?.isPopupSlate && operationType === 'cut') {
