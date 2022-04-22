@@ -10,6 +10,7 @@ import * as sidebarAction from '../../../src/component/Sidebar/Sidebar_Action';
 import config from '../../../src/config/config';
 import testData from "./TestData";
 import { CHECK_ASIDE_NUMBER } from '../../../src/constants/Action_Constants'
+import tinymce from 'tinymce/tinymce';
 
 jest.mock('axios');
 jest.mock('../../../src/constants/utility.js', () => ({
@@ -27,9 +28,15 @@ jest.mock('../../../src/config/config.js', () => ({
     elementStatus : { "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5" : 'wip'}
 }))
 const initialState = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
-        activeElement: activeElementData.paragraph
+        activeElement: activeElementData.paragraph,
+        parentUrn: {
+            manifestUrn: "urn:pearson:manifest:86fab86c-16ca-4428-9e38-bc15ebdbee49",
+            contentUrn: "urn:pearson:entity:646f6acc-e6ce-4ac4-ab04-4e526a6cb866",
+            elementType: "element-aside"
+        }
     },
     elementStatusReducer:{},
     tcmReducer:{
@@ -37,6 +44,7 @@ const initialState = {
     }
 }
 const initialState2 = {
+    autoNumberReducer: { isAutoNumberingEnabled: false },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.assessment,
@@ -48,6 +56,7 @@ const initialState2 = {
     }
 }
 const initialState3 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.image
@@ -58,6 +67,7 @@ const initialState3 = {
     }
 }
 const initialState4 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.video
@@ -68,6 +78,7 @@ const initialState4 = {
     }
 }
 const initialState5 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.interactive
@@ -78,6 +89,7 @@ const initialState5 = {
     }
 }
 const initialState6 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.blockcode
@@ -88,6 +100,7 @@ const initialState6 = {
     }
 }
 const initialState7 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.list
@@ -98,6 +111,7 @@ const initialState7 = {
     }
 }
 const initialState8 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.workedexample
@@ -108,6 +122,7 @@ const initialState8 = {
     }
 }
 const initialState9 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.aside 
@@ -118,6 +133,7 @@ const initialState9 = {
     }
 }
 const initialState10 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.aside_authoredtext
@@ -128,6 +144,7 @@ const initialState10 = {
     }
 }
 const initialState11 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.we_authoredtext
@@ -138,6 +155,7 @@ const initialState11 = {
     }
 }
 const initialState12 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData2,
         activeElement: activeElementData.we_conversiondata,
@@ -153,6 +171,7 @@ const initialState12 = {
     }
 }
 const initialState13 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData2,
         activeElement: activeElementData.Section_ActiveElement,
@@ -168,6 +187,7 @@ const initialState13 = {
     }
 }
 const initialState14 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData3,
         activeElement: activeElementData.Aside_ActiveElement,
@@ -183,6 +203,7 @@ const initialState14 = {
     }
 }
 const initialState15 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData3,
         activeElement: activeElementData.Aside_MMI_ActiveElement,
@@ -198,6 +219,7 @@ const initialState15 = {
     }
 }
 const initialState16 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.SH_ActiveElement,
@@ -210,6 +232,7 @@ const initialState16 = {
     }
 }
 const initialState17 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.SH_Aside,        
@@ -226,6 +249,7 @@ const initialState17 = {
     }
 }
 const initialState18 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.SH_WE_ActiveElement,
@@ -242,6 +266,7 @@ const initialState18 = {
     }
 }
 const initialState19 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.BlockCode_OldInfo,
@@ -254,6 +279,7 @@ const initialState19 = {
 }
 
 const initialState20 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData5,
         activeElement: activeElementData.image,
@@ -270,6 +296,7 @@ describe('Test - Sidebar_Actions',()=>{
         let store = mockStore(() => initialState);
         it('Test Convert Element', () => {
             store = mockStore(() => initialState);
+            tinymce.activeEditor = {'id' : 'cypress-1'}
             let elementData = {
                 elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
                 elementType: "element-authoredtext",
