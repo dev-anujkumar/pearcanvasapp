@@ -138,12 +138,14 @@ export const deleteFromStore = async (params) => {
     let bodymatter = [];
     /* To check if the element is cutted from popup slate */
     if ((cutCopyParentData?.isPopupSlate && operationType === 'cut') && popupParentSlateData?.isPopupSlate && (cutCopyParentData?.versionUrn === popupParentSlateData?.versionUrn)) {    // popup slate cut & paste on same slate
+        const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
+        deleteFromPopupInStore(cutCopyParentData, popupContent);
         bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter;
         /* To check if the cutted element is pasted on popup slate */
     } else if (cutCopyParentData?.isPopupSlate && operationType === 'cut') {
         // Call api to get popup slate data
-        // const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
-        // deleteFromPopupInStore(cutCopyParentData, popupContent);
+        const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
+        deleteFromPopupInStore(cutCopyParentData, popupContent);
         return;
         /* To check if the cutted element is pasted on popup slate */
     } else if (popupParentSlateData?.isPopupSlate && operationType === 'cut') {
