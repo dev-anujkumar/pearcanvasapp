@@ -3947,6 +3947,9 @@ export class TinyMceEditor extends Component {
         if (caretPosition) {
             this.props?.saveCaretPosition(caretPosition);
         }
+        if(tinymce.activeEditor?.targetElm?.className.includes('blockquoteTextCredit')){
+            setFormattingToolbar('disableTinymceToolbar')
+        }
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
