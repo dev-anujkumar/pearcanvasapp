@@ -54,7 +54,11 @@ const KeyboardUpDown = (props) => {
                     if(childElement.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')){
                         childElement.appendChild(span);
                     } else {
+                        if (childElement.firstChild?.parentNode?.className?.includes('floating') && childElement.firstChild?.firstChild?.nodeName === "P") {
+                            childElement.firstChild.firstChild.appendChild(span)
+                        } else {
                     childElement.firstChild.appendChild(span);
+                    }
                     }
                     span.click();
                 }
