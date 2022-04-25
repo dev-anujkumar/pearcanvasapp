@@ -5207,6 +5207,47 @@ export const selectedElement = [{
 	  "0",
 	  "0"
 	]
+  },{
+	id: "urn:pearson:work:0e84ecb9-ff85-4df9-9790-a14f967bb4dd",
+	type: "figure",
+	figuretype: "image",
+	subtype: "imageTextWidth",
+	schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+	titlecontentintitlefield: true,
+	alignment: "text-width",
+	title: {
+	  schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+	  text: ""
+	},
+	captions: {
+	  schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+	  text: ""
+	},
+	credits: {
+	  schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+	  text: ""
+	},
+	figuredata: {
+	  schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+	  imageid: "",
+	  path: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+	  height: "422",
+	  width: "680",
+	  podwidth: ""
+	},
+	html: {
+	  title: "<p></p>",
+	  captions: "<p></p>",
+	  credits: "<p></p>",
+	  footnotes: {},
+	  assetsPopover: {},
+	  glossaryentries: {},
+	  indexEntries: {}
+	},
+	versionUrn: "urn:pearson:work:0e84ecb9-ff85-4df9-9790-a14f967bb4dd",
+	contentUrn: "urn:pearson:entity:5b98f4b8-f9fb-4e55-82ca-357286d803e0",
+	displayedlabel: "Figure",
+	numberedandlabel: true
   }];
 
   export const asideOnSlateData = {

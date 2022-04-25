@@ -1,7 +1,7 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
-import { matchHTMLwithRegex, removeBlankTags } from '../../constants/utility.js'
+import { matchHTMLwithRegex, removeBlankTags, getDesignType } from '../../constants/utility.js'
 import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
@@ -801,6 +801,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }
 
             if(type === 'element-authoredtext'){
+                const classList = node?.firstChild?.classList?.value?.split(" ") ?? [];
+                dataToReturn["designtype"] = getDesignType(classList);
+                if(dataToReturn.designtype === null) {
+                    delete dataToReturn.designtype;
+                }
                 dataToReturn.html['indexEntries'] = previousElementData.html.indexEntries || {}
             }
             
