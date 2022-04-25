@@ -189,6 +189,14 @@ const isLastChild = (node, tinymceOffset) => {
              return true;
             }
         }
+        //for inline code
+        if(lastTextNode.parentNode?.nodeName === 'CODE' && node.lastChild != null) {
+            return true
+        }
+        //for mathml/chem in blockquote
+        if(lastTextNode.className == "Wirisformula" && node.lastChild != null && tinymceNode?.parentNode?.parentNode?.className === 'blockquoteMarginalia') {
+            return true
+        } 
         if (lastTextNode === node) {
             if(lastTextNode?.previousSibling?.className == "answerLineContent") {
                 if(tinymceOffset != 0 && lastTextNode.lastChild == null) {
@@ -215,7 +223,7 @@ const isLastChild = (node, tinymceOffset) => {
         }
         else if (node?.parentNode?.id?.startsWith(NORMAL_SELECTOR)) {
             // case for only single image
-            if(lastTextNode?.nodeName === 'IMG') {
+            if(lastTextNode?.nodeName === 'IMG' && tinymceNode?.parentNode?.parentNode?.className !== 'blockquoteMarginalia') {
                 return tinymceOffset !==0
             } 
             // case of empty para
