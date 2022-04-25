@@ -494,7 +494,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
 
         if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate 
             elementTag = `POP:BODY:${elementTag}`;
-            elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN} + ${elementId}`;
+            elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
         }
     }
     /* */
@@ -507,11 +507,11 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             poetryParentURN = asideData?.grandParent?.parentUrn;
         }
         elementTag = `${tag.parentTag}:${tag.childTag}`;
-        if (popupInContainer && config.isPopupSlate){  // PE inside popup
-            elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
-            elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
-        }
-       else if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype !== WORKED_EXAMPLE) { //block poetry inside Aside
+        // if (popupInContainer && config.isPopupSlate){  // PE inside popup
+        //     elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
+        //     elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        // }
+       if (poetryAsideData?.type === ELEMENT_ASIDE && poetryAsideData?.subtype !== WORKED_EXAMPLE) { //block poetry inside Aside
             elementTag = `AS:${elementTag}`
             elementId = `${poetryAsideData.id}+${eleId.parentId}+${eleId.childId}`
         }
@@ -536,9 +536,20 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementId = `${shId}+${eleId.parentId}+${eleId.childId}`
         }
 
+        if ((popupInContainer && config.isPopupSlate)) {  //WE:BODY:POP:BODY:WE:BODY:P
+            elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}POP:BODY:${elementTag}`;
+            elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && !popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from popup slate to normal slate 
+            elementTag = `${elementTag}`;
+            elementId = `${elementId}`;
+        } else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
+            elementTag = `POP:BODY:${elementTag}`;
+            elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
+        }
+
         if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate 
             elementTag = `POP:BODY:${elementTag}`;
-            elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN} + ${elementId}`;
+            elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
         }
     }
 
@@ -619,7 +630,7 @@ export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePop
         slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
     actionStatus.status = tcmKeys.status;
-    if (popupCutCopyParentData?.operationType === 'cut' && action === 'delete' && popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate 
+    if (popupCutCopyParentData?.operationType === 'cut' && action === 'delete' && ((popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) || (!popupCutCopyParentData?.isPopupSlate && config.isPopupSlate))) {            // operation cut from popup slate to normal slate or vice versa
         tcmKeys = {
             ...tcmKeys,
             slateID: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : config.slateManifestURN,
