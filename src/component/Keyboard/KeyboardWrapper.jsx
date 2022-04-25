@@ -184,7 +184,7 @@ const isLastChild = (node, tinymceOffset) => {
             //for empty line
             else return !node?.nextSibling
         }
-        if(lastTextNode.className == "Wirisformula") {
+        if(lastTextNode.className == "Wirisformula" || (lastTextNode.className == "Wirisformula" && tinymceNode?.parentNode?.parentNode?.className === 'blockquoteMarginalia')) {
             if(tinymceOffset != 0 && node.lastChild != null) {
              return true;
             }
@@ -193,10 +193,6 @@ const isLastChild = (node, tinymceOffset) => {
         if(lastTextNode.parentNode?.nodeName === 'CODE' && node.lastChild != null) {
             return true
         }
-        //for mathml/chem in blockquote
-        if(lastTextNode.className == "Wirisformula" && node.lastChild != null && tinymceNode?.parentNode?.parentNode?.className === 'blockquoteMarginalia') {
-            return true
-        } 
         if (lastTextNode === node) {
             if(lastTextNode?.previousSibling?.className == "answerLineContent") {
                 if(tinymceOffset != 0 && lastTextNode.lastChild == null) {
