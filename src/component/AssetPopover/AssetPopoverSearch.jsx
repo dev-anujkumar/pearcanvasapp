@@ -132,13 +132,20 @@ class AssetPopoverSearch extends React.Component {
      * Jsx for currently linked
      */
     currentlyLinkedJsx = () => {
-        return (<section className="modalSubHeader">
-            <h3 className="currentlyLinkedHeader"><i>Currently Linked to-</i></h3>
-            <div className="modalLinkedField">
-            <div className ="modalInput" ><input type='radio' disabled name='selectedradio' checked /></div>
-            <span className="modalText"> {this.props.currentlyLinkedImageData.title}</span>
-            </div>
-        </section>
+        const { title, caption } = this.props.currentlyLinkedImageData
+        return (
+            <section className="modalSubHeader">
+                <h3 className="currentlyLinkedHeader"><i>Currently Linked to-</i></h3>
+                <div className="modalLinkedField">
+                    <div className="modalInput">
+                        <input type='radio' disabled name='selectedradio' checked />
+                    </div>
+                    <div className="modalAssetDetails">
+                        {title ? <div className="modalText">{title}</div> : null}
+                        {caption ? <div className="modalCaption">{`Caption: ${caption}`}</div> : null}
+                    </div>
+                </div>
+            </section>
         )
     }
 
