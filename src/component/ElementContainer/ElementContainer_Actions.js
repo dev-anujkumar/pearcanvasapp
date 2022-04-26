@@ -537,7 +537,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             }
         })
         let autoNumberedElementsObj = getState().autoNumberReducer?.autoNumberedElements;
-        const slateAncestorData = getState().appStore?.currentSlateAncestorData;
+        const slateAncestorData = getState()?.appStore?.currentSlateAncestorData;
         const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
         const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
         let elementsList = {};

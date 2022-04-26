@@ -231,7 +231,7 @@ export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
 export const getContainerEntityUrn = (slateAncestors) =>{
 
     if (slateAncestors?.matterType !== MATTER_TYPES.BODYMATTER) {
-        const matterType = slateAncestors.matterType === MATTER_TYPES.FRONTMATTER ? CONTAINER_LABELS.FRONTMATTER : slateAncestors.matterType === MATTER_TYPES.BACKMATTER ? CONTAINER_LABELS.BACKMATTER : ""
+        const matterType = slateAncestors?.matterType === MATTER_TYPES.FRONTMATTER ? CONTAINER_LABELS.FRONTMATTER : slateAncestors?.matterType === MATTER_TYPES.BACKMATTER ? CONTAINER_LABELS.BACKMATTER : ""
         return matterType
     }
     else if (slateTypes.includes(slateAncestors?.label)) {
@@ -287,13 +287,13 @@ export const prepareAutoNumberList = (imagesData) => {
     let imagesList = { ...imagesData };
     /** Destructure the ImageList into an array of Fig-EntityUrns in Order */
     Object.keys(imagesList).forEach((key) => {
-        imagesList[key] = imagesList[key]?.map((item) => item.contentUrn);
+        imagesList[key] = Array.isArray(imagesList[key]) && imagesList[key]?.map((item) => item.contentUrn);
     });
     /** Get the number value for the Fig-Element based on aut-numbering wip values*/
     //can be replaced with the logic for getNodeIndex from toc
     Object.keys(imagesList).forEach((key) => {
         let count = 0
-        imagesList[key] = imagesList[key]?.reduce(function (result, item, index, array) {
+        imagesList[key] = Array.isArray(imagesList[key]) && imagesList[key]?.reduce(function (result, item, index, array) {
             const activeItem = imagesData[key].find((img) => img.contentUrn === item);
             let numberValue = count
             if (activeItem) {
@@ -356,7 +356,7 @@ export const getAutoNumberedElement = (element) =>{
 
 export const updateAutonumberingOnElementTypeUpdate = (newElement, element, autoNumberedElements, currentSlateAncestorData, slateLevelData) => async (dispatch, getState) => {
     try{
-        const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey;
+        const autoNumber_ElementTypeKey = getState()?.autoNumberReducer.autoNumber_ElementTypeKey;
         const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
         const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config?.slateManifestURN;
         const slateEntityUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateEntityUrn : config?.slateEntityURN;
@@ -413,7 +413,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
 
 export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements, currentSlateAncestorData) => (dispatch,getState) => {
     const figureParentEntityUrn = getContainerEntityUrn(currentSlateAncestorData);
-    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
+    const autoNumber_ElementTypeKey = getState()?.autoNumberReducer.autoNumber_ElementTypeKey
     if (updatedData?.displayedlabel && figureParentEntityUrn && updatedData?.contentUrn && autoNumberedElements) {
         if (autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]]?.hasOwnProperty(figureParentEntityUrn) && autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]) {
             let index = autoNumberedElements[autoNumber_ElementTypeKey[updatedData?.displayedlabel]][figureParentEntityUrn]?.findIndex(element => element.contentUrn === updatedData.contentUrn);

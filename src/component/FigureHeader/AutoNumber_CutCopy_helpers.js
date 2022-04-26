@@ -56,7 +56,7 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
     } = params
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
-    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
+    const autoNumber_ElementTypeKey = getState()?.autoNumberReducer.autoNumber_ElementTypeKey
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after cut/copy operation
         const bodyMatter = currentSlateData.contents.bodymatter
