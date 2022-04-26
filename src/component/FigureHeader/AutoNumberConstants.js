@@ -11,60 +11,60 @@ export const LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES = {
 export const autoNumber_KeyMapper = {
     'Figure': 'figureImageIndex',
     'Table': 'tableIndex',
-    'Equation': 'equationsIndex',
+    'Equation': 'equationIndex',
     'Audio': 'audioIndex',
     'Video': 'videoIndex',
     'Aside': 'asideIndex',
     'Worked Example': 'workedExampleIndex',
     "Interactive": 'interactiveIndex',
-    'Exhibit': 'exhibitsIndex'
+    'Exhibit': 'exhibitIndex'
 }
 
 export const autoNumber_FigureTypeKeyMapper = {
   'image': 'figureImageIndex',
   'table': 'tableIndex',
-  'mathImage': 'equationsIndex',
+  'mathImage': 'equationIndex',
   'audio': 'audioIndex',
   'video': 'videoIndex',
   "interactive": 'interactiveIndex',
-  'authoredtext': 'equationsIndex',
-  'codelisting': 'exhibitsIndex'
+  'authoredtext': 'equationIndex',
+  'codelisting': 'exhibitIndex'
 }
 
 export const autoNumber_IndexMapper = {
   'imagesList': 'figureImageIndex',
-  'tablesList': 'tableIndex',
-  'equationsList': 'equationsIndex',
-  'audiosList': 'audioIndex',
-  'videosList': 'videoIndex',
-  'asidesList': 'asideIndex',
-  'workedExamplesList': 'workedExampleIndex',
+  'tableList': 'tableIndex',
+  'equationList': 'equationIndex',
+  'audioList': 'audioIndex',
+  'videoList': 'videoIndex',
+  'asideList': 'asideIndex',
+  'workedExampleList': 'workedExampleIndex',
   'interactiveList': 'interactiveIndex',
-  'exhibitsList': 'exhibitsIndex'
+  'exhibitList': 'exhibitIndex'
 }
 
 export const autoNumber_ElementTypeKey = {
   'Figure': 'imagesList',
-  'Table': 'tablesList',
-  'Equation': 'equationsList',
-  'Audio': 'audiosList',
-  'Video': 'videosList',
+  'Table': 'tableList',
+  'Equation': 'equationList',
+  'Audio': 'audioList',
+  'Video': 'videoList',
   'Interactive': 'interactiveList',
-  'Aside': 'asidesList',
-  "Worked Example": "workedExamplesList",
-  'Exhibit': 'exhibitsList'
+  'Aside': 'asideList',
+  "Worked Example": "workedExampleList",
+  'Exhibit': 'exhibitList'
 }
 
 export const autoNumber_response_ElementType_mapper = {
   "figures":"imagesList",
-  "tables":"tablesList",
-  "equations":"equationsList",
-  "audios":"audiosList",
-  "videos":"videosList",
-  "interactives":"interactiveList",
-  "asides": "asidesList",
-  "workedExamples": "workedExamplesList",
-  'exhibits': 'exhibitsList'
+  "table":"tableList",
+  "equation":"equationList",
+  "audio":"audioList",
+  "video":"videoList",
+  "interactive":"interactiveList",
+  "aside": "asideList",
+  "workedExample": "workedExampleList",
+  'exhibit': 'exhibitList'
 }
 
 export const moduleTypes = ['module', 'appendix']
@@ -140,22 +140,22 @@ export const autoNumber_ElementSubTypeToCeateKeysMapper = {
 export const autoNumber_ElementTypeToStoreKeysMapper = {
   'IMAGE': 'imagesList',
   'FIGURE': 'imagesList',
-  'TABLE': 'tablesList',
-  'EQUATION': 'equationsList',
-  'AUDIO': 'audiosList',
-  'VIDEO': 'videosList',
-  'MATHIMAGE': 'equationsList',
-  'CONTAINER': 'asidesList',
-  'WORKED_EXAMPLE': 'workedExamplesList',
+  'TABLE': 'tableList',
+  'EQUATION': 'equationList',
+  'AUDIO': 'audioList',
+  'VIDEO': 'videoList',
+  'MATHIMAGE': 'equationList',
+  'CONTAINER': 'asideList',
+  'WORKED_EXAMPLE': 'workedExampleList',
   'MMI_ELM': 'interactiveList',
   'INTERACTIVE': 'interactiveList',
   'SMART_LINK': 'interactiveList',
-  'TABLE_EDITOR': 'tablesList',
-  'MATH_ML_CHEM_EDITOR': 'equationsList',
-  'TABLEASMARKUP': 'tablesList',
-  'AUTHOREDTEXT': 'equationsList',
-  'BLOCK_CODE_EDITOR': 'exhibitsList',
-  'CODELISTING': 'exhibitsList'
+  'TABLE_EDITOR': 'tableList',
+  'MATH_ML_CHEM_EDITOR': 'equationList',
+  'TABLEASMARKUP': 'tableList',
+  'AUTHOREDTEXT': 'equationList',
+  'BLOCK_CODE_EDITOR': 'exhibitList',
+  'CODELISTING': 'exhibitList'
 }
 export const SIDEBAR = "sidebar"
 export const TACTIC = "Tactic"

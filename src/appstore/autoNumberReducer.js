@@ -18,26 +18,26 @@ const INITIAL_STATE = {
     isAutoNumberingEnabled: false,
     autoNumberedElements: {
         imagesList: [],
-        tablesList: [],
-        equationsList: [],
-        audiosList: [],
-        videosList: [],
-        asidesList: [],
-        workedExamplesList: [],
+        tableList: [],
+        equationList: [],
+        audioList: [],
+        videoList: [],
+        asideList: [],
+        workedExampleList: [],
         interactiveList: [],
-        exhibitsList: []
+        exhibitList: []
     },
     autoNumberingDetails: {},
     autoNumberElementsIndex: {
         figureImageIndex: {},
         tableIndex: {},
-        equationsIndex: {},
+        equationIndex: {},
         audioIndex: {},
         videoIndex: {},
         asideIndex: {},
         workedExampleIndex: {},
         interactiveIndex: {},
-        exhibitsIndex: {}
+        exhibitIndex: {}
     },
     slateFigureList:[],
     autoNumberOption: '',
@@ -47,46 +47,46 @@ const INITIAL_STATE = {
     autoNumber_KeyMapper: {
         'Figure': 'figureImageIndex',
         'Table': 'tableIndex',
-        'Equation': 'equationsIndex',
+        'Equation': 'equationIndex',
         'Audio': 'audioIndex',
         'Video': 'videoIndex',
         "Interactive": 'interactiveIndex',
         "Aside": "asideIndex",
         "Worked Example": "workedExampleIndex",
-        'Exhibit': 'exhibitsIndex'
+        'Exhibit': 'exhibitIndex'
     },
     autoNumber_ElementTypeKey: {
         'Figure': 'imagesList',
-        'Table': 'tablesList',
-        'Equation': 'equationsList',
-        'Audio': 'audiosList',
-        'Video': 'videosList',
+        'Table': 'tableList',
+        'Equation': 'equationList',
+        'Audio': 'audioList',
+        'Video': 'videoList',
         'Interactive': 'interactiveList',
-        "Aside": "asidesList",
-        "Worked Example": "workedExamplesList",
-        'Exhibit': 'exhibitsList'
+        "Aside": "asideList",
+        "Worked Example": "workedExampleList",
+        'Exhibit': 'exhibitList'
     },
     autoNumber_response_ElementType_mapper: {
         "figures": "imagesList",
-        "tables": "tablesList",
-        "equations": "equationsList",
-        "audios": "audiosList",
-        "videos": "videosList",
-        "interactives": "interactiveList",
-        "asides": "asidesList",
-        "workedexamples": "workedExamplesList",
-        'exhibits': 'exhibitsList'
+        "table": "tableList",
+        "equation": "equationList",
+        "audio": "audioList",
+        "video": "videoList",
+        "interactive": "interactiveList",
+        "aside": "asideList",
+        "workedexample": "workedExampleList",
+        'exhibit': 'exhibitList'
     },
     autoNumber_IndexMapper: {
         'imagesList': 'figureImageIndex',
-        'tablesList': 'tableIndex',
-        'equationsList': 'equationsIndex',
-        'audiosList': 'audioIndex',
-        'videosList': 'videoIndex',
+        'tableList': 'tableIndex',
+        'equationList': 'equationIndex',
+        'audioList': 'audioIndex',
+        'videoList': 'videoIndex',
         'interactiveList': 'interactiveIndex',
-        'asidesList': 'asideIndex',
-        'workedExamplesList': 'workedExampleIndex',
-        'exhibitsList': 'exhibitsIndex'
+        'asideList': 'asideIndex',
+        'workedExampleList': 'workedExampleIndex',
+        'exhibitList': 'exhibitIndex'
     },
     autoNumber_FigureTypeKey_Mapper: {
         'image': 'IMAGE',
