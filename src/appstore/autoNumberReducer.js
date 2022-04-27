@@ -17,7 +17,7 @@ import {
 const INITIAL_STATE = {
     isAutoNumberingEnabled: false,
     autoNumberedElements: {
-        imagesList: [],
+        imageList: [],
         tableList: [],
         equationList: [],
         audioList: [],
@@ -56,7 +56,7 @@ const INITIAL_STATE = {
         'Exhibit': 'exhibitIndex'
     },
     autoNumber_ElementTypeKey: {
-        'Figure': 'imagesList',
+        'Figure': 'imageList',
         'Table': 'tableList',
         'Equation': 'equationList',
         'Audio': 'audioList',
@@ -67,7 +67,7 @@ const INITIAL_STATE = {
         'Exhibit': 'exhibitList'
     },
     autoNumber_response_ElementType_mapper: {
-        "figures": "imagesList",
+        "figure": "imageList",
         "table": "tableList",
         "equation": "equationList",
         "audio": "audioList",
@@ -78,7 +78,7 @@ const INITIAL_STATE = {
         'exhibit': 'exhibitList'
     },
     autoNumber_IndexMapper: {
-        'imagesList': 'figureImageIndex',
+        'imageList': 'figureImageIndex',
         'tableList': 'tableIndex',
         'equationList': 'equationIndex',
         'audioList': 'audioIndex',

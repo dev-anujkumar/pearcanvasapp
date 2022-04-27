@@ -32,7 +32,7 @@ export const autoNumber_FigureTypeKeyMapper = {
 }
 
 export const autoNumber_IndexMapper = {
-  'imagesList': 'figureImageIndex',
+  'imageList': 'figureImageIndex',
   'tableList': 'tableIndex',
   'equationList': 'equationIndex',
   'audioList': 'audioIndex',
@@ -44,7 +44,7 @@ export const autoNumber_IndexMapper = {
 }
 
 export const autoNumber_ElementTypeKey = {
-  'Figure': 'imagesList',
+  'Figure': 'imageList',
   'Table': 'tableList',
   'Equation': 'equationList',
   'Audio': 'audioList',
@@ -56,7 +56,7 @@ export const autoNumber_ElementTypeKey = {
 }
 
 export const autoNumber_response_ElementType_mapper = {
-  "figures":"imagesList",
+  "figure":"imageList",
   "table":"tableList",
   "equation":"equationList",
   "audio":"audioList",
@@ -138,8 +138,8 @@ export const autoNumber_ElementSubTypeToCeateKeysMapper = {
 }
 
 export const autoNumber_ElementTypeToStoreKeysMapper = {
-  'IMAGE': 'imagesList',
-  'FIGURE': 'imagesList',
+  'IMAGE': 'imageList',
+  'FIGURE': 'imageList',
   'TABLE': 'tableList',
   'EQUATION': 'equationList',
   'AUDIO': 'audioList',
