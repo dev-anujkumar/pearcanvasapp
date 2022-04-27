@@ -136,7 +136,7 @@ export function ElementSaprator(props) {
         let sourceComp = 'source' in props ? props.source : '';
         let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
         let pasteValidation = getPasteValidated(props, sourceComp, inputType);
-        const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "element-aside", "popup"];
+        const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "element-aside", "popup", 'citations', 'element-citation', 'poetry', 'stanza'];
         let allowToShowPasteIcon = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.elementSelection?.element?.type) ? false : true;
         if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation) {
             return (

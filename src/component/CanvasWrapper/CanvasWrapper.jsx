@@ -41,6 +41,7 @@ import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Ac
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import {markedIndexPopup} from '../MarkIndexPopup/MarkIndex_Action';
 import { fetchProjectFigures, setTocContainersAutoNumberList } from '../FigureHeader/AutoNumberActions';
+import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -342,6 +343,7 @@ export default connect(
         deleteComment,
         cypressPlusEnabled,
         setSlateMatterType,
-        updateFigureDropdownValues
+        updateFigureDropdownValues,
+        savePopupParentSlateData
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
