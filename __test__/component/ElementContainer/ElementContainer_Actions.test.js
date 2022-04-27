@@ -6,7 +6,7 @@ import { slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
 import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData } from "../../../fixtures/containerActionsTestingData"
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE } from '../../../src/constants/Action_Constants';
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, UPDATE_TABLE_ELEMENT_EDITED_DATA,SET_ELEMENT_STATUS } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
 import axios from "axios"
@@ -251,6 +251,61 @@ describe('Tests ElementContainer Actions', () => {
             });
             const spydeleteElement = jest.spyOn(actions, "deleteElement")
             return store.dispatch(actions.deleteElement(elementId, type, "", "", contentUrn)).then(() => {
+                expect(spydeleteElement).toHaveBeenCalled();
+                
+            });
+        })
+        it('testing------- Delete Element------action----type-element-workedexample', () => {
+            let store = mockStore(() => initialState);
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+                contentUrn = "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                type = "element-workedexample"
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_CREATED,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }];
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+
+            });
+            const spydeleteElement = jest.spyOn(actions, "deleteElement")
+            return store.dispatch(actions.deleteElement(elementId, type, "", "", contentUrn)).then(() => {
+                expect(spydeleteElement).toHaveBeenCalled();
+                
+            });
+        })
+        it('testing------- Delete Element------action----type-element-aside', () => {
+            let store = mockStore(() => initialState);
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",
+                contentUrn = "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                type = "element-aside"
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_CREATED,
+                payload: {
+                    slateLevelData: slateLevelData.slateLevelData
+                }
+            }];
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+
+            });
+            const cutCopyUrnObj = {
+                contentUrn: "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+            }
+            const spydeleteElement = jest.spyOn(actions, "deleteElement")
+            return store.dispatch(actions.deleteElement(elementId, type, "", "", contentUrn,"", "", "",cutCopyUrnObj)).then(() => {
                 expect(spydeleteElement).toHaveBeenCalled();
                 
             });
@@ -1592,7 +1647,11 @@ describe("TEsting for prepareImageDataFromTable", ()=>{
        let store = mockStore(() => initialState);
        let dispatch = jest.fn(),
        getState = store.getState;
-       let element = "0-1-1"
+       let element = {
+        figuredata: {
+            tableasHTML: '<table style="border-collapse: collapse; width: 1146.4px; word-break: break-all; outline: none; text-align: left;" data-mce-style="border-collapse: collapse; width: 100%;" class="mce-item-table" contenteditable="false" data-mce-selected="1"><tbody><tr><td style="width: 573.2px; outline: none;">22</td><td style="width: 573.2px; outline: none;"><img className="imageAssetContent" src = "dummyData"/></td></tr></tbody></table>'
+        },
+       }
        const spyupdateFigureData = jest.spyOn(actions, 'prepareImageDataFromTable');
        actions.prepareImageDataFromTable(element)(dispatch, getState)
        expect(spyupdateFigureData).toHaveBeenCalled()
@@ -1638,5 +1697,97 @@ describe("updateAutoNumberingDropdownForCompare  Testing", ()=>{
        store.dispatch(actions.updateAutoNumberingDropdownForCompare({}, 'testing'));
        expect(store.getActions().type).toEqual(expectedActions.type);
        spyUpdateMultipleColumnData.mockClear();
+    })
+})
+describe("updateEditedData  Testing", ()=>{
+    it('testing------- updateEditedData------method', () => {
+        let store = mockStore(() => initialState2);
+        const expectedActions = [
+            { 
+                type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
+                payload: {}
+            }
+          ]
+       const spyUpdateMultipleColumnData  = jest.spyOn(actions, 'updateEditedData') 
+       actions.updateEditedData({}, "testing", store.dispatch);
+       expect(spyUpdateMultipleColumnData).toHaveBeenCalled();
+       store.dispatch(actions.updateEditedData({}, 'testing'));
+       expect(store.getActions().type).toEqual(expectedActions.type);
+       spyUpdateMultipleColumnData.mockClear();
+    })
+})
+
+describe("clearElementStatus  Testing", ()=>{
+    it('testing------- clearElementStatus------method', () => {
+        let store = mockStore(() => initialState2);
+        const expectedActions = [
+            { 
+                type: SET_ELEMENT_STATUS,
+                payload: {}
+            }
+          ]
+       const spyUpdateClearElementStatus  = jest.spyOn(actions, 'clearElementStatus') 
+       actions.clearElementStatus({}, "testing", store.dispatch);
+       expect(spyUpdateClearElementStatus).toHaveBeenCalled();
+       store.dispatch(actions.clearElementStatus({}, 'testing'));
+       expect(store.getActions().type).toEqual(expectedActions.type);
+       spyUpdateClearElementStatus.mockClear();
+    })
+})
+
+describe("Test case for getElementStatus",()=>{
+    it("testing-------getElementStatus------method", async ()=>{
+        let store = mockStore(() => initialState);
+        let newObj = {
+                "id": "urn:pearson:work:d70d0ba7-aa97-4149-be94-08b1088f56b2",
+                "entityURN": "urn:pearson:entity:b20db4c1-6e18-4975-a18e-79d375a109c0",
+                "type": [
+                    "NarrativeText",
+                    "Work"
+                ],
+                "status": [
+                    "https://schema.pearson.com/ns/contentlifecyclestatus/wip"
+                ],
+                "dateCreated": "2022-02-09T13:19:34.600Z",
+                "dateModified": "2022-02-09T13:19:34.600Z",
+                "etag": "\"346448123455\""
+        }
+        let elementWorkId = "4343653"
+        let index = "0-1-1";
+        global.fetch = jest.fn().mockImplementationOnce(() =>   {
+            return new Promise((resolve, reject) => {
+                resolve({json: jest.fn(()=> newObj)});
+           });
+        });
+        const spyGetElementStatus = jest.spyOn(actions, 'getElementStatus')
+            return store.dispatch(actions.getElementStatus(elementWorkId, index)).then(() => {
+                expect(spyGetElementStatus).toHaveBeenCalled()
+                spyGetElementStatus.mockClear()
+            });
+    })
+})
+describe("Test case for saveTEMetadata ",()=>{
+    xit("testing-------saveTEMetadata ------method", async ()=>{
+        let store = mockStore(() => initialState);
+        let editedImageList ={
+
+            "list": [{
+                "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imgId": "",
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                "height": "422",
+                "width": "680",
+                "alttext": "alttext",
+                "longdescription": "longdescription",
+                "podwidth": "100"
+            }]
+        }
+        let  promiseArray =[]
+       
+        const spyGetSaveTEMetadata = jest.spyOn(actions, 'saveTEMetadata')
+            return store.dispatch(actions.saveTEMetadata(editedImageList)).then(() => {
+                expect(spyGetSaveTEMetadata).toHaveBeenCalled()
+                spyGetSaveTEMetadata.mockClear()
+            });
     })
 })

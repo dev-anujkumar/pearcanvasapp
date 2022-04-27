@@ -5,6 +5,8 @@ import {  singleAssessmentCITEDefault, singleAssessmentElmDefault, singleAssessm
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
+import { elementType } from 'prop-types';
+import { PUF } from '../../../src/component/AssessmentSlateCanvas/AssessmentSlateConstants';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const userPermissions = [
@@ -166,7 +168,10 @@ describe('Testing Element Single Assessment component', () => {
     });
     it('Test-handleAssessmentTypeChange function', () => {
         singleAssessmentInstance.setState({
-            showAssessmentPopup: true
+            showAssessmentPopup: true,
+            elementType: PUF,
+            assessmentId: "1",
+            // activeAsseessmentUsageType : "learn"
         });
         singleAssessmentInstance.forceUpdate();
         const spyhandleAssessmentTypeChange = jest.spyOn(singleAssessmentInstance, 'handleAssessmentTypeChange')
@@ -256,7 +261,8 @@ describe('Testing Element Single Assessment component', () => {
     });
     it('Test-addCiteTdxAssessment function', () => {
         let obj={
-            slateType:"singleSlateAssessment"
+            slateType:"singleSlateAssessment",
+            title: "abc"
         }
         const spyaddAssessment = jest.spyOn(singleAssessmentInstance, 'addCiteTdxAssessment')
         singleAssessmentInstance.addCiteTdxAssessment(obj);
@@ -309,7 +315,8 @@ describe('Testing Element Single Assessment component', () => {
             checkEntityUrn: jest.fn(),
             fetchAssessmentMetadata: jest.fn(),
             updateAssessmentVersion: jest.fn(),
-            fetchAssessmentLatestVersion: jest.fn()
+            fetchAssessmentLatestVersion: jest.fn(),
+            assessmentReducer:{}
         };
         let cb = jest.fn();
         let event = {
@@ -756,7 +763,8 @@ describe('Testing Element Single Assessment - ELM ASSESSMENTS - Elm Functions', 
                 dataFromElm: {
                     resourceType: "assessmentItem",
                     elementUrn: "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
-                    type: 'SaveElmDatas',
+                    type: 'SaveElmData',
+                    pufObj: {},
                     elmUrl: "https://localhost:4000",
                     usageType: "homework"
                 }
@@ -966,7 +974,7 @@ describe(" Test 4 render changeUsageTypePopup ", () => {
         singleAssessmentInstance.setState({
             changeUsageTypePopup: false
         });
-        singleAssessmentInstance.updateUsageTypeAfterProceed();
+        singleAssessmentInstance.updateUsageTypeAfterProceed(true);
         singleAssessmentInstance.setChangeUsageType(format);
         expect(singleAssessmentInstance.updateUsageTypeAfterProceed).toHaveBeenCalled();
         expect(singleAssessmentInstance.setChangeUsageType).toHaveBeenCalled();
