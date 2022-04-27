@@ -71,7 +71,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     */
     if(typeOfElement === SHOWHIDE) {
         containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex, currentSlateData);
-        wipData =  containerElement?.showHideObj?.element?.interactivedata[containerElement?.sectionType][tempIndex[2]]  || {};
+        wipData =  containerElement?.showHideObj?.element?.interactivedata?.[containerElement?.sectionType][tempIndex[2]]  || {};
     } 
     else if(typeOfElement === POETRY_ELEMENT) {
         containerElement = prepareSnaphotPoetry(containerElement, response, elementIndex, currentSlateData);
@@ -138,7 +138,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch, index, operationType = null, elmFeedback = null) => {
-    if (elementCreateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementCreateData.response.figuretype)) {
+    if (elementCreateData?.response?.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementCreateData?.response?.figuretype)) {
         return false
     }
     if(elementCreateData?.cypressPlusProjectStatus && elementCreateData?.response?.type === ELEMENT_TYPE_PDF){
