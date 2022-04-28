@@ -46,7 +46,11 @@ export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
         })
         if (Object.keys(projectContent)?.length > 0) {
             let numberedElements = {}
-            numberedElements = getNumberedElements(projectContent, currentParentUrn);
+            let requiredProjectContent = {}
+            Object.keys(projectContent).map((key) => {
+                requiredProjectContent[key.slice(0,-1)] = projectContent[key]
+            })
+            numberedElements = getNumberedElements(requiredProjectContent, currentParentUrn);
             console.log('numberedElements>>>>', numberedElements)
             getAutoNumberSequence(numberedElements,dispatch)
             dispatch({
