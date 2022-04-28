@@ -136,7 +136,6 @@ export const onPasteSuccess = async (params) => {
             }
         }
         dispatch({ type: SET_SELECTION, payload: {} });
-        dispatch({ type: SET_POPUP_PARENT_CUT_COPY, payload: {} });
     }
 
     sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
@@ -169,6 +168,9 @@ export const onPasteSuccess = async (params) => {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
+    }
+    if (operationType === 'cut') {
+        dispatch({ type: SET_POPUP_PARENT_CUT_COPY, payload: {} });
     }
     /* Paste Aside/WE/CG/Poetry into S/H */
     const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP, POETRY_ELEMENT];

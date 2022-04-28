@@ -57,6 +57,9 @@ export const performCutCopy = (event, componentProps, type) => {
     componentProps.toggleCopyMenu(false);
     const popupParentData = store.getState().autoNumberReducer?.popupParentSlateData;
     const isPopupSlate = popupParentData?.isPopupSlate;
+    const parentData = store.getState().appStore?.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    const slateStatus = newParentData[config.slateManifestURN]?.status;
     let data = {
         contentUrn: isPopupSlate ? popupParentData?.contentUrn : '',
         versionUrn: isPopupSlate ? popupParentData?.versionUrn : '',
@@ -64,7 +67,8 @@ export const performCutCopy = (event, componentProps, type) => {
         isPopupSlate: isPopupSlate ? popupParentData?.isPopupSlate : false,
         parentSlateEntityUrn: isPopupSlate ? popupParentData?.parentSlateEntityUrn : Object.values(componentProps?.slateLevelData)[0]?.contentUrn,
         parentSlateId: isPopupSlate ? popupParentData?.parentSlateId : Object.keys(componentProps?.slateLevelData)[0],
-        operationType: type
+        operationType: type,
+        isSlateApproved: isPopupSlate ? false : slateStatus === 'approved' ? true : false
     }
     popupCutCopyParentData(data);
 }

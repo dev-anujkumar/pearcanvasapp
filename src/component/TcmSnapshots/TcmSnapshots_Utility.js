@@ -630,7 +630,7 @@ export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePop
         slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
     actionStatus.status = tcmKeys.status;
-    if (popupCutCopyParentData?.operationType === 'cut' && action === 'delete' && ((popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) || (!popupCutCopyParentData?.isPopupSlate && config.isPopupSlate))) {            // operation cut from popup slate to normal slate or vice versa
+    if (popupCutCopyParentData?.operationType === 'cut' && action === 'delete' && ((popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) || (!popupCutCopyParentData?.isPopupSlate && config.isPopupSlate)) && !popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate or vice versa
         tcmKeys = {
             ...tcmKeys,
             slateID: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : config.slateManifestURN,
