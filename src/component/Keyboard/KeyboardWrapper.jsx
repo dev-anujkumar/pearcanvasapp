@@ -184,6 +184,9 @@ const isLastChild = (node, tinymceOffset) => {
             //for empty line
             else return !node?.nextSibling
         }
+        if(node.parentNode?.classList?.contains('figureTitle') && node.nextSibling?.id === 'f-e-s'){
+            return footNoteCases(node, lastTextNode);
+        }
         if(lastTextNode.className == "Wirisformula" || (lastTextNode.className == "Wirisformula" && tinymceNode?.parentNode?.parentNode?.className === 'blockquoteMarginalia')) {
             if(tinymceOffset != 0 && node.lastChild != null) {
              return true;
@@ -266,7 +269,7 @@ const isKWChild = (node, index = 0) => {
 const isParentFootnote = (node) => {
     const nodeParent = node?.parentNode;
     if(nodeParent) {
-        return ((nodeParent?.nodeName === 'A' && nodeParent?.hasAttribute && node?.parentNode?.hasAttribute("data-footnoteelementid")) || (node.parentNode?.className?.includes('figureCaption') && node.nextSibling?.id == 'f-e-s')) ; // for caption field in case of footnotes in the last
+        return ((nodeParent?.nodeName === 'A' && nodeParent?.hasAttribute && node?.parentNode?.hasAttribute("data-footnoteelementid")) || ((node.parentNode?.className?.includes('figureCaption') || node.parentNode?.parentNode?.className?.includes('figureCaption') || node.parentNode?.className?.includes('figureTitle')) && node.nextSibling?.id == 'f-e-s')) ; // for caption field in case of footnotes in the last
     }
     else {
         return false;
