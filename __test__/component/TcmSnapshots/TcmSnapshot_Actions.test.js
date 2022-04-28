@@ -19,6 +19,7 @@ describe('TCM snapshot Action test case', () => {
             tcmActivatedOnProjectLevel: false,
             appStore: {
                 slateLength: 25,
+                isCypressPlusEnabled: true,
                 slateLevelData:{
                     "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585": {
                         "contentUrn": "urn:pearson:entity:3e58848c-415e-4681-b7c1-600a69a88c4b",
@@ -41,7 +42,8 @@ describe('TCM snapshot Action test case', () => {
                         "versionUrn": "urn:pearson:manifest:145f099e-bc9a-4525-9f0a-db58425a2403"
 
                     }
-                }
+                },
+                
             }
         };
         moxios.install();
@@ -51,6 +53,53 @@ describe('TCM snapshot Action test case', () => {
     afterEach(() => moxios.uninstall());
 
     it('handle tcmdata -slate level if', () => {
+        let slateManifestUrn = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
+        let response = {
+                elements: [{
+                    "elemURN": "urn:pearson:manifest:62a2fba5-7211-45a7-b568-82d49a076303+urn:pearson:work:3bbb7a10-6ecf-4d7c-ae89-6e992039acd3",
+                    "isPrevAcceptedTxAvailable": true,
+                    "txCnt": 1
+                }]
+        }
+        store = mockStore(() => initialState);
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: response
+            });
+        });
+        return store.dispatch(selectActions.handleTCMData(slateManifestUrn)).then(() => {
+            const { type } = store.getActions()[0];
+            expect(type).toBe('GET_TCM_RESOURCES');
+        })
+    });
+
+    it('handle tcmdata -slate level if 2', () => {
+        config.slateType === "pdfslate"
+        let slateManifestUrn = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
+        let response = {
+                elements: [{
+                    "elemURN": "urn:pearson:manifest:62a2fba5-7211-45a7-b568-82d49a076303+urn:pearson:work:3bbb7a10-6ecf-4d7c-ae89-6e992039acd3",
+                    "isPrevAcceptedTxAvailable": true,
+                    "txCnt": 1
+                }]
+        }
+        store = mockStore(() => initialState);
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: response
+            });
+        });
+        return store.dispatch(selectActions.handleTCMData(slateManifestUrn)).then(() => {
+            const { type } = store.getActions()[0];
+            expect(type).toBe('GET_TCM_RESOURCES');
+        })
+    });
+    it('handle tcmdata -slate level if 3', () => {
+        config.slateType === "pdfslate"
         let slateManifestUrn = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
         let response = {
                 elements: [{
@@ -97,6 +146,7 @@ describe('TCM snapshot Action test case', () => {
             expect(type).toBe('GET_TCM_RESOURCES');
         })
     });
+    
     
     it('fetchPOPupSlateData', () => {
         let slateManifestUrn = "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
@@ -499,12 +549,38 @@ describe('TCM snapshot Action test case', () => {
        
 
     })
+    it('get latest version testing catch', async () => {
+        let slateManifestUrn = "urn:pearson:entity:ba31d1d1-b049-4467-a68f-ffdb610e4549"
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 500,
+                response: {}
+            });
+        });
+        await selectActions.getLatestVersion(slateManifestUrn)
+       
+
+    })
     it('slateLinkDetails', async () => {
         let slateManifestUrn = "urn:pearson:entity:ba31d1d1-b049-4467-a68f-ffdb610e4549"
         moxios.wait(() => {
             const request = moxios.requests.mostRecent();
             request.respondWith({
                 status: 200,
+                response: {}
+            });
+        });
+        const spyFunction = jest.spyOn(selectActions, 'slateLinkDetails')
+        await selectActions.slateLinkDetails(slateManifestUrn)
+        expect(spyFunction).toHaveBeenCalled();
+    })
+    it('slateLinkDetails Testing catch', async () => {
+        let slateManifestUrn = "urn:pearson:entity:ba31d1d1-b049-4467-a68f-ffdb610e4549"
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 500,
                 response: {}
             });
         });
@@ -522,6 +598,7 @@ describe('TCM snapshot Action test case', () => {
         });
         await selectActions.sendElementTcmSnapshot({})
     })
+    
 });
 
 
