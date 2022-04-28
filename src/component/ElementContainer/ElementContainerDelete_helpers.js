@@ -9,6 +9,7 @@ import {
 } from "./../../constants/Action_Constants";
 import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
 import config from '../../config/config';
+import store from '../../appstore/store.js';
 import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning } from '../../constants/IFrameMessageTypes.js';
 import tinymce from 'tinymce'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
@@ -17,7 +18,7 @@ import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
-import { getSlateLevelData, updateChapterPopupData } from '../FigureHeader/AutoNumberActions'; 
+import { getSlateLevelData, updateChapterPopupData, popupCutCopyParentData } from '../FigureHeader/AutoNumberActions';
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -475,5 +476,10 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData, actionStatus.action, elementDeleteData.wipData.type);
+    let popupCutCopyParent = store?.getState()?.autoNumberReducer?.popupCutCopyParentData || {};
+    if (currentSlateData?.type === 'popup' && currentSlateData?.status === 'approved' && popupCutCopyParent?.operationType === 'cut' && popupCutCopyParent?.isPopupSlate) {
+        popupCutCopyParent = { ...popupCutCopyParent, versionUrn: containerElement?.slateManifest }
+        popupCutCopyParentData(popupCutCopyParent);
+    }
     prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"",operationType);
 }
