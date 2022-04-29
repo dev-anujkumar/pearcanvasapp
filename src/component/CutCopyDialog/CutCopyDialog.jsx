@@ -68,7 +68,7 @@ export const performCutCopy = (event, componentProps, type) => {
         parentSlateEntityUrn: isPopupSlate ? popupParentData?.parentSlateEntityUrn : Object.values(componentProps?.slateLevelData)[0]?.contentUrn,
         parentSlateId: isPopupSlate ? popupParentData?.parentSlateId : Object.keys(componentProps?.slateLevelData)[0],
         operationType: type,
-        isSlateApproved: isPopupSlate ? false : slateStatus === 'approved' ? true : false
+        isSlateApproved: slateStatus === 'approved' ? true : false
     }
     popupCutCopyParentData(data);
 }

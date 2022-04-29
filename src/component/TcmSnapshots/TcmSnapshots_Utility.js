@@ -62,7 +62,7 @@ const {
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null) => {
+export const prepareTcmSnapshots = async (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null) => {
     
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
@@ -72,7 +72,7 @@ export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, typ
     const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT, POPUP_ELEMENT,SHOWHIDE];
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
-    let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback, popupCutCopyParentData) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback, popupCutCopyParentData);
+    let defaultKeys = config.isPopupSlate ? await setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback, popupCutCopyParentData) : await setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback, popupCutCopyParentData);
     /* Tag of elements*/
     let tag = {
         parentTag: fetchElementsTag(wipData)
@@ -615,7 +615,7 @@ export const getShowHideTag = (showHideType) => {
  * @param {Object} action - type of action performed
  * @returns {Object} Default keys for the snapshot
 */
-export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn, elmFeedback = null, popupCutCopyParentData) => {
+export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn, elmFeedback = null, popupCutCopyParentData) => {
     const {action,status} = actionStatus
     let tcmKeys = {}
     
@@ -636,6 +636,14 @@ export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePop
             slateID: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : config.slateManifestURN,
             slateUrn: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : config.slateManifestURN,
             slateType: CONTAINER_INTRO
+        }
+    }
+    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate && popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate 
+        let newManifestUrn = await getLatestVersion(popupCutCopyParentData?.parentSlateEntityUrn);
+        tcmKeys = {
+            ...tcmKeys,
+            slateID: newManifestUrn ? newManifestUrn : tcmKeys.slateID,
+            slateUrn: newManifestUrn ? newManifestUrn : tcmKeys.slateUrn
         }
     }
     return tcmKeys
