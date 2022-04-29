@@ -1406,7 +1406,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 elementdata: { filetitle: "title", assetid: "ai-1234"}},
                 actionStatus = {action: "update"},
                 index = 0, elementDetails = {}, CurrentSlateStatus = {};
-            jest.spyOn('')
+            // jest.spyOn('')
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareElementSnapshots');
             tcmSnapshotUtility.prepareElementSnapshots(element,actionStatus,index, elementDetails, CurrentSlateStatus);
             expect(spyFunction).toHaveBeenCalled();
