@@ -642,7 +642,7 @@ export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, sl
             slateType: CONTAINER_INTRO
         }
     }
-    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate && popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate 
+    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate 
         let newManifestUrn = await getLatestVersion(popupCutCopyParentData?.parentSlateEntityUrn);
         tcmKeys = {
             ...tcmKeys,
@@ -650,7 +650,7 @@ export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, sl
             slateUrn: newManifestUrn ? newManifestUrn : tcmKeys.slateUrn
         }
     }
-    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && config.isPopupSlate && (popupCutCopyParentData?.versionUrn !== popupParentSlateData?.versionUrn)) {            // operation cut from popup slate to popup slate 
+    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && config.isPopupSlate && (popupCutCopyParentData?.versionUrn !== popupParentSlateData?.versionUrn) && !popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to popup slate 
         tcmKeys = {
             ...tcmKeys,
             slateID: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : tcmKeys.slateID,
