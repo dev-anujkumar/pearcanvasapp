@@ -10,6 +10,7 @@ import { elementAsideWorkExample } from '../../../fixtures/elementAsideData';
 import { citationGroupElement } from "../../../fixtures/ElementCitationData";
 import { multiColumnContainer } from "../../../fixtures/multiColumnContainer"
 import { popup } from "../../../fixtures/ElementPopup"
+import { mockNumberedElements } from '../FigureHeader/AutoNumberApiTestData';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -51,6 +52,9 @@ describe('Tests Slate Wrapper Action helper methods', () => {
                 sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                 sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
             }
+        },
+        autoNumberReducer:{
+            autoNumberedElements: mockNumberedElements,
         }
     }
     config.tcmStatus = true
@@ -111,7 +115,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         let initialState1 = { ...initialState };
         const checkElementExistence = jest.fn();
         checkElementExistence.mockReturnValue(true);
-        initialState1 = initialState1.selectionReducer.selection.operationType = "cut";
+        initialState1.selectionReducer.selection.operationType = "cut";
         const store = mockStore(() => initialState1);
         const params = {
             responseData: responseData,
@@ -302,7 +306,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
 
     it("handleTCMSnapshotsForCreation ", async () => {
         const params = {
-            newParentData : null,
+            newParentData : createstoreWithFigure.slateLevelData3[config.slateManifestUrn],
             currentSlateData: createstoreWithFigure.slateLevelData[config.slateManifestUrn],
             asideData: null,
             poetryData: null,
@@ -318,7 +322,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
 
     it("handleTCMSnapshotsForCreation for wip slate status ", async () => {
         const params = {
-            newParentData : null,
+            newParentData : createstoreWithFigure.slateLevelData3[config.slateManifestUrn],
             currentSlateData: createstoreWithFigure.slateLevelData3[config.slateManifestUrn],
             asideData: null,
             poetryData: null,

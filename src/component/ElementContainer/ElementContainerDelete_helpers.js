@@ -366,7 +366,7 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
         isSectionBreak
     } = params
 
-    const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
+    const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn]?.contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
         //const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
         //const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")

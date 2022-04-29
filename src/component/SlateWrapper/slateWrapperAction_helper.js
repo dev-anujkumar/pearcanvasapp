@@ -81,7 +81,7 @@ export const onPasteSuccess = async (params) => {
                 poetryData: deleteElm.poetryData,
                 cutCopyParentUrn: {
                     ...deleteElm.cutCopyParentUrn,
-                    manifestUrn: deleteElm.cutCopyParentUrn.sourceSlateManifestUrn
+                    manifestUrn: deleteElm.cutCopyParentUrn?.sourceSlateManifestUrn
                 },
                 element: responseData
             }
