@@ -395,8 +395,8 @@ export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReduce
         if (!autoNumber_IndexMapper?.hasOwnProperty(`${customValue}List`)) {
             autoNumber_IndexMapper[`${customValue}List`] = `${customValue}Index`
         }
-        if (!autoNumber_response_ElementType_mapper?.hasOwnProperty(`${customValue}s`)) {
-            autoNumber_response_ElementType_mapper[`${customValue}s`] = `${customValue}List`
+        if (!autoNumber_response_ElementType_mapper?.hasOwnProperty(`${customValue}`)) {
+            autoNumber_response_ElementType_mapper[`${customValue}`] = `${customValue}List`
         }
     });
 
