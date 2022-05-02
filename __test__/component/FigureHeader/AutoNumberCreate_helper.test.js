@@ -144,7 +144,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
         it('Test-1.10---handleAutonumberingOnCreate for IMAGE conditional coverage', () => {
             let mock_NumberedElements = {
                 ...mockAutoNumberingDetails,
-                'imagesList': {
+                'imageList': {
                     'urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb': []
                 }
             }
@@ -169,7 +169,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
         it('Test-1.11---handleAutonumberingOnCreate for IMAGE conditional coverage', () => {
             let mock_NumberedElements = {
                 ...mockAutoNumberingDetails,
-                'imagesList': {}
+                'imageList': {}
             }
             let initialState2 = {
                 ...initialState,
@@ -357,7 +357,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             const getState = jest.fn();
             const dispatch = jest.fn();
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData5[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData5, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData5[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData5, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -369,7 +369,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             const getState = jest.fn();
             const dispatch = jest.fn();
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData6[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData6[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -380,7 +380,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             const getState = jest.fn();
             const dispatch = jest.fn();
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData6[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, [], 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData6[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, [], 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -392,9 +392,9 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             const getState = jest.fn();
             const dispatch = jest.fn();
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData6[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData6[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             bodyMatter[0].groupeddata.bodymatter = [];
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData6[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData6[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -407,7 +407,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             let slateData = slateData6;
             slateData[0].indexPos = ['1', '0']
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -422,7 +422,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             let slateData = slateData6;
             slateData[0].indexPos = ['1', '0']
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -435,7 +435,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             let slateData = slateData6;
             slateData[0].indexPos = ['2', '0']
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -449,7 +449,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             let slateData = slateData6;
             slateData[0].indexPos = ['2', '0']
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -462,7 +462,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             let slateData = slateData6;
             slateData[0].indexPos = ['3', '0']
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -476,7 +476,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             let slateData = slateData6;
             slateData[0].indexPos = ['3', '0']
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -489,7 +489,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             let slateData = slateData6;
             slateData[0].indexPos = ['4', '0']
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -506,7 +506,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
                 type: 'element-aside'
             }
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], element, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], element, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -520,7 +520,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             let slateData = slateData6;
             slateData[0].indexPos = ['4', '0']
             const spyHandleAutonumberingForElementsInContainers = jest.spyOn(autonumbercreate_helper, 'handleAutonumberingForElementsInContainers');
-            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imagesList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imagesList', 'Figure', getState, dispatch);
+            autonumbercreate_helper.handleAutonumberingForElementsInContainers(bodyMatter, slateData[0], elementObj, mockNumberedElements['imageList'], slateAncestorChapter, mockNumberedElements, slateData6, 'imageList', 'Figure', getState, dispatch);
             expect(spyHandleAutonumberingForElementsInContainers).toHaveBeenCalled();
             spyHandleAutonumberingForElementsInContainers.mockClear();
         });
@@ -633,7 +633,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
         it('Test-1.37---checkElementExistenceInOtherSlates conditional coverage', () => {
             let mock_NumberedElements = {
                 ...mockNumberedElements,
-                'imagesList': {
+                'imageList': {
                     'urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb': []
                 }
             }
@@ -686,7 +686,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
         it('Test-1.39---checkElementExistenceInOtherSlates conditional coverage', () => {
             let mock_NumberedElements = {
                 ...mockNumberedElements,
-                'imagesList': {
+                'imageList': {
                     'urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb': []
                 }
             }
@@ -784,14 +784,14 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
         it('Test-1.43---appendElementToList conditional coverage', () => {
             let mock_NumberedElements = {
                 ...mockNumberedElements,
-                'imagesList': {
+                'imageList': {
                     'urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb': []
                 }
             }
             const slateEntityForAutonumber = 'urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb';
             const dispatch = jest.fn();
             const spyAppendElementToList = jest.spyOn(autonumbercreate_helper, 'appendElementToList');
-            autonumbercreate_helper.appendElementToList(elementsArr, elementObj, 'Figure', mock_NumberedElements['imagesList'], slateEntityForAutonumber, 'imagesList', mock_NumberedElements, dispatch);
+            autonumbercreate_helper.appendElementToList(elementsArr, elementObj, 'Figure', mock_NumberedElements['imageList'], slateEntityForAutonumber, 'imageList', mock_NumberedElements, dispatch);
             expect(spyAppendElementToList).toHaveBeenCalled();
             spyAppendElementToList.mockClear();
         });
@@ -800,7 +800,7 @@ describe('-----------------Testing AutoNumberCreate_helper-----------------', ()
             const slateEntityForAutonumber = 'urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb';
             const dispatch = jest.fn();
             const spyAppendElementToList = jest.spyOn(autonumbercreate_helper, 'appendElementToList');
-            autonumbercreate_helper.appendElementToList([], elementObj, 'Figure', mockNumberedElements['imagesList'], slateEntityForAutonumber, 'imagesList', mockNumberedElements, dispatch);
+            autonumbercreate_helper.appendElementToList([], elementObj, 'Figure', mockNumberedElements['imageList'], slateEntityForAutonumber, 'imageList', mockNumberedElements, dispatch);
             expect(spyAppendElementToList).toHaveBeenCalled();
             spyAppendElementToList.mockClear();
         });
