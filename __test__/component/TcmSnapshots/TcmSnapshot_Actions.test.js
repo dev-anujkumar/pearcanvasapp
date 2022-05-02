@@ -42,8 +42,7 @@ describe('TCM snapshot Action test case', () => {
                         "versionUrn": "urn:pearson:manifest:145f099e-bc9a-4525-9f0a-db58425a2403"
 
                     }
-                },
-                
+                }
             }
         };
         moxios.install();
@@ -74,7 +73,6 @@ describe('TCM snapshot Action test case', () => {
             expect(type).toBe('GET_TCM_RESOURCES');
         })
     });
-
     it('handle tcmdata -slate level if for config.slateType === "pdfslate"', () => {
         config.slateType === "pdfslate"
         let slateManifestUrn = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
@@ -123,7 +121,6 @@ describe('TCM snapshot Action test case', () => {
             expect(type).toBe('GET_TCM_RESOURCES');
         })
     });
-    
     
     it('fetchPOPupSlateData', () => {
         let slateManifestUrn = "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
@@ -184,8 +181,6 @@ describe('TCM snapshot Action test case', () => {
         });
     });
 
-
-    
     it('Test fetchPOPupSlateData for if condition for type of index === Array and length === 1', () => {
         let slateManifestUrn = "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
         config.slateManifestURN="urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
@@ -279,7 +274,6 @@ describe('TCM snapshot Action test case', () => {
             expect(type).toBe('AUTHORING_ELEMENT_UPDATE');
         });
     });
-
 
     it('Test fetchPOPupSlateData for nested if condition inside type of index === string', () => {
         let slateManifestUrn = "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
@@ -386,7 +380,6 @@ describe('TCM snapshot Action test case', () => {
             expect(type).toBe('AUTHORING_ELEMENT_UPDATE');
         });
     });
-
 
     it('Test fetchPOPupSlateData for nested else if condition inside type of index === string', () => {
         let slateManifestUrn = "urn:pearson:manifest:47d368a6-9f8a-4f9b-8efc-6011abc84585"
@@ -534,8 +527,6 @@ describe('TCM snapshot Action test case', () => {
             });
         });
         await selectActions.getLatestVersion(slateManifestUrn)
-       
-
     })
     it('slateLinkDetails', async () => {
         let slateManifestUrn = "urn:pearson:entity:ba31d1d1-b049-4467-a68f-ffdb610e4549"
