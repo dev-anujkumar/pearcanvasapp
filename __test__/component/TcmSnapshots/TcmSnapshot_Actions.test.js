@@ -546,8 +546,6 @@ describe('TCM snapshot Action test case', () => {
             });
         });
         await selectActions.getLatestVersion(slateManifestUrn)
-       
-
     })
     it('get latest version testing catch', async () => {
         let slateManifestUrn = "urn:pearson:entity:ba31d1d1-b049-4467-a68f-ffdb610e4549"
@@ -597,6 +595,34 @@ describe('TCM snapshot Action test case', () => {
             });
         });
         await selectActions.sendElementTcmSnapshot({})
+    })
+
+    it('sendElementTcmSnapshot 2', async () => {
+        let snapshotData = {
+            "elementUrn": "urn:pearson:manifest:75c71595-d9ff-4579-a421-95dd304946ac+urn:pearson:work:97ac55ff-ff10-4800-8991-dc5c4f2da0dc",
+            "snapshotUrn": "urn:pearson:manifest:75c71595-d9ff-4579-a421-95dd304946ac+urn:pearson:work:97ac55ff-ff10-4800-8991-dc5c4f2da0dc",
+            "elementType": "POP:HEAD:CTA",
+            "elementWip": "{\"id\":\"urn:pearson:work:97ac55ff-ff10-4800-8991-dc5c4f2da0dc\",\"type\":\"element-authoredtext\",\"schema\":\"http://schemas.pearson.com/wip-authoring/element/1\",\"elementdata\":{\"schema\":\"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext\",\"text\":\"\"},\"versionUrn\":\"urn:pearson:work:97ac55ff-ff10-4800-8991-dc5c4f2da0dc\",\"contentUrn\":\"urn:pearson:entity:540878a8-a132-4261-abc2-f58c0dc15b23\",\"status\":\"wip\"}",
+            "elementSnapshot": "{\"contentSnapshot\":\"<p class=\\\"paragraphNumeroUno\\\"><br></p>\",\"glossorySnapshot\":\"[]\",\"footnoteSnapshot\":\"[]\",\"assetPopOverSnapshot\":\"[]\"}",
+            "slateID": "urn:pearson:manifest:f6d891bf-f031-4c62-81f8-48a0e5af4764",
+            "slateUrn": "urn:pearson:manifest:f6d891bf-f031-4c62-81f8-48a0e5af4764",
+            "projectUrn": "urn:pearson:distributable:42f7a4f4-d79a-4508-91e3-0f3af2d552c2",
+            "index": 0,
+            "action": "create",
+            "feedback": null,
+            "status": "accepted",
+            "slateType": "container-introduction"
+        }
+
+        jest.useFakeTimers();
+        moxios.wait(() => {
+            const request = moxios.requests.mostRecent();
+            request.respondWith({
+                status: 200,
+                response: {}
+            });
+        });
+        await selectActions.sendElementTcmSnapshot(snapshotData)
     })
     
 });
