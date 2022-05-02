@@ -75,30 +75,7 @@ describe('TCM snapshot Action test case', () => {
         })
     });
 
-    it('handle tcmdata -slate level if 2', () => {
-        config.slateType === "pdfslate"
-        let slateManifestUrn = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
-        let response = {
-                elements: [{
-                    "elemURN": "urn:pearson:manifest:62a2fba5-7211-45a7-b568-82d49a076303+urn:pearson:work:3bbb7a10-6ecf-4d7c-ae89-6e992039acd3",
-                    "isPrevAcceptedTxAvailable": true,
-                    "txCnt": 1
-                }]
-        }
-        store = mockStore(() => initialState);
-        moxios.wait(() => {
-            const request = moxios.requests.mostRecent();
-            request.respondWith({
-                status: 200,
-                response: response
-            });
-        });
-        return store.dispatch(selectActions.handleTCMData(slateManifestUrn)).then(() => {
-            const { type } = store.getActions()[0];
-            expect(type).toBe('GET_TCM_RESOURCES');
-        })
-    });
-    it('handle tcmdata -slate level if 3', () => {
+    it('handle tcmdata -slate level if for config.slateType === "pdfslate"', () => {
         config.slateType === "pdfslate"
         let slateManifestUrn = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
         let response = {
@@ -597,7 +574,7 @@ describe('TCM snapshot Action test case', () => {
         await selectActions.sendElementTcmSnapshot({})
     })
 
-    it('sendElementTcmSnapshot 2', async () => {
+    it('Testing sendElementTcmSnapshot with snapshotData', async () => {
         let snapshotData = {
             "elementUrn": "urn:pearson:manifest:75c71595-d9ff-4579-a421-95dd304946ac+urn:pearson:work:97ac55ff-ff10-4800-8991-dc5c4f2da0dc",
             "snapshotUrn": "urn:pearson:manifest:75c71595-d9ff-4579-a421-95dd304946ac+urn:pearson:work:97ac55ff-ff10-4800-8991-dc5c4f2da0dc",
