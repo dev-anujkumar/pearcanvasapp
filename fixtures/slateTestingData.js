@@ -1253,6 +1253,105 @@ export const createstoreWithFigure = {
                                     "tcm": true,
                                     "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                                     "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                },
+                                {
+                                    "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                                    "type": "element-authoredtext",
+                                    "subtype": "",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": ""
+                                    },
+                                    "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                    },
+                                    "comments": false,
+                                    "tcm": true,
+                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                }
+                            ],
+                        "backmatter": [ ]
+                        },
+                        "contentUrn": "urn:pearson:entity:2b489c98-5e61-46d8-967c-6354b28e3679",
+                        "versionUrn": "urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7"
+                    },{
+                        "id": "urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "type": "groupedcontent",
+                        "subtype": "sidebar",
+                        "designtype": "asideSidebar02",
+                        "groupeddata": {
+                            "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                            "frontmatter": [ ],
+                            "bodymatter": [
+                                {
+                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                    "type": "element-aside",
+                                    "subtype": "",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    groupdata: {
+                                        bodymatter: [
+                                            {
+                                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40e",
+                                                subtype: "workedexample",
+                                                elementdata: {
+                                                    bodymatter: [
+                                                        {
+                                                            id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                                                            contents: {
+                                                                bodymatter: [{
+                                                                    "type": "element-authoredtext",
+                                                                    "subtype": "",
+                                                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                                    "elementdata": {
+                                                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                        "text": ""
+                                                                    },
+                                                                    "html": {
+                                                                        "text": "<p class=\"paragraphNumeroUno\">React previously shipped with an experimental context API. The old API will be supported in all 16.x releases, but applications using it should migrate to the new version.</p>"
+                                                                    },
+                                                                    "comments": false,
+                                                                    "tcm": true,
+                                                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d534dr5td5354sd",
+                                                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-ert4er45643tfg4"
+                                                                }]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": ""
+                                    },
+                                    "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                    },
+                                    "comments": false,
+                                    "tcm": true,
+                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                },
+                                {
+                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                    "type": "element-aside",
+                                    "subtype": "",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": ""
+                                    },
+                                    "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                    },
+                                    "comments": false,
+                                    "tcm": true,
+                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
                                 }
                             ],
                         "backmatter": [ ]

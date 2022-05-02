@@ -951,6 +951,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setSlateParent(message.node.nodeParentLabel);
                 this.props.glossaaryFootnotePopup(false);
                 this.props.audioGlossaryPopup(false);
+                this.props.savePopupParentSlateData({});
                 let apiKeys_LO = {
                     'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
                     'strApiKey': config.STRUCTURE_APIKEY,

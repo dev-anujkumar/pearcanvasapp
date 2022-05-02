@@ -585,7 +585,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
         containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN  
-        if (!currentSlateData.popupSlateData) {
+        if (!currentSlateData?.popupSlateData && currentSlateData?.type !== 'popup') {
             config.tcmslatemanifest = newSlateManifest;
         }  
     }

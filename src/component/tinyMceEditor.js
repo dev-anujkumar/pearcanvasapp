@@ -618,7 +618,7 @@ export class TinyMceEditor extends Component {
                     }
                     break
                 case 'Italic':
-                    if ((activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked) || elementType === 'Learning Objective Item' || attributionElement) {
+                    if ((activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked) || elementType === 'Learning Objective Item' || (elementType === "Blockquote" && activeElement.className.includes('blockquoteTextCredit')) || attributionElement) {
                         e.preventDefault();
                         e.stopPropagation();
                     }
@@ -3946,6 +3946,9 @@ export class TinyMceEditor extends Component {
         let caretPosition = tinymce.activeEditor?.selection?.getBookmark(2, true);
         if (caretPosition) {
             this.props?.saveCaretPosition(caretPosition);
+        }
+        if(tinymce.activeEditor?.targetElm?.className.includes('blockquoteTextCredit')){
+            setFormattingToolbar('disableTinymceToolbar')
         }
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");

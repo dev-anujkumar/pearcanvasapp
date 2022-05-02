@@ -220,8 +220,9 @@ export const getElementVersionContent = async (elementId) =>{
       })    
       let data = await response.json()
           sendDataToIframe({'type': HideLoader,'message': { status: false }});
-          currentlyLinkedData.id=data.id;
-          currentlyLinkedData.title=data.title.text;
+          currentlyLinkedData["id"] = data?.id ? data.id : "";
+          currentlyLinkedData["title"] = data?.title?.text ? data.title.text : "";
+          currentlyLinkedData["caption"] = data?.captions?.text ? data.captions.text : "";
           return currentlyLinkedData
     } catch (err) {
       sendDataToIframe({'type': HideLoader,'message': { status: false }});        
