@@ -64,6 +64,8 @@ const KeyboardUpDown = (props) => {
                     }
                     }
                     span.click();
+                    tinymceChild.click();
+                    tinymceChild.focus();
                 }
                 else if(lastChild.id === "f-e-s") {
                     if(lastChild?.previousSibling?.nodeName !== 'SUP') {

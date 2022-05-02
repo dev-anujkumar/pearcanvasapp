@@ -6,7 +6,7 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
-import { checkElementExistenceInOtherSlates, handleAutonumberingOnCreate } from './AutoNumberCreate_helper';
+import { checkElementExistenceInOtherSlates, addElementInPopupSlate } from './AutoNumberCreate_helper';
 import config from '../../config/config';
 
 
@@ -176,8 +176,12 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
             let {isPopupSlate} = getState().autoNumberReducer.popupParentSlateData;
             // This function will insert the selectedElement in numbered element
             if(isPopupSlate){
-                const { autoNumber_FigureTypeKey_Mapper } = getState().autoNumberReducer;
-                dispatch(handleAutonumberingOnCreate(autoNumber_FigureTypeKey_Mapper[selectedElement?.figuretype], selectedElement));
+                const { autoNumber_ElementTypeKey, autoNumberedElements } = getState().autoNumberReducer;
+                const listType = autoNumber_ElementTypeKey[selectedElement?.displayedlabel];
+                const labelType = selectedElement?.displayedlabel;
+                let slateAncestorData = getState().appStore.currentSlateAncestorData;
+                let elementsList = autoNumberedElements[listType];
+                addElementInPopupSlate(selectedElement, elementsList, slateAncestorData, autoNumberedElements, listType, labelType, getState, dispatch);
             } else {
                 checkElementExistenceInOtherSlates(selectedElement, config.slateEntityURN, getState, dispatch);
             }

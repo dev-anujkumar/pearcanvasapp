@@ -62,17 +62,18 @@ const {
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-export const prepareTcmSnapshots = (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null) => {
+export const prepareTcmSnapshots = async (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null) => {
     
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
     const parentData = store?.getState()?.appStore?.asideData?.parent || {};
     const popupCutCopyParentData = store?.getState()?.autoNumberReducer?.popupCutCopyParentData || {};
+    const popupParentSlateData = store?.getState()?.autoNumberReducer?.popupParentSlateData || {};
     const selectionMultiColumnType = store?.getState()?.selectionReducer?.selection?.multiColumnType || "";
     const figureElementList = [SMART_LINK, SECTION_BREAK, POP_UP, SHOW_HIDE, VIDEO, IMAGE, BLOCK_CODE_EDITOR, MMI_ELM, TEXT, POPUP_ELEMENT,SHOWHIDE];
     /** isContainer : used to set SlateType  */
     let isContainer = setSlateType(wipData,containerElement,type);
-    let defaultKeys = config.isPopupSlate ? setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback, popupCutCopyParentData) : setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback, popupCutCopyParentData);
+    let defaultKeys = config.isPopupSlate ? await setDefaultKeys(actionStatus, true, true, popupslateManifest, cutCopyParentUrn, elmFeedback, popupCutCopyParentData, popupParentSlateData) : await setDefaultKeys(actionStatus, isContainer,"",slateManifest,cutCopyParentUrn, elmFeedback, popupCutCopyParentData, popupParentSlateData);
     /* Tag of elements*/
     let tag = {
         parentTag: fetchElementsTag(wipData)
@@ -566,6 +567,9 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
     } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate 
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
+    } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from popup slate to popup slate 
+        elementTag = `POP:BODY:${elementTag}`;
+        elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
     } else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
@@ -615,7 +619,7 @@ export const getShowHideTag = (showHideType) => {
  * @param {Object} action - type of action performed
  * @returns {Object} Default keys for the snapshot
 */
-export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn, elmFeedback = null, popupCutCopyParentData) => {
+export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, slatePopupManifestUrn, cutCopyParentUrn, elmFeedback = null, popupCutCopyParentData, popupParentSlateData) => {
     const {action,status} = actionStatus
     let tcmKeys = {}
     
@@ -630,12 +634,27 @@ export const setDefaultKeys = (actionStatus, isContainer, inPopupSlate, slatePop
         slateType: isContainer === true ? CONTAINER_INTRO : SLATE,/** set based on condition */
     }
     actionStatus.status = tcmKeys.status;
-    if (popupCutCopyParentData?.operationType === 'cut' && action === 'delete' && ((popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) || (!popupCutCopyParentData?.isPopupSlate && config.isPopupSlate))) {            // operation cut from popup slate to normal slate or vice versa
+    if (popupCutCopyParentData?.operationType === 'cut' && action === 'delete' && ((popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) || (!popupCutCopyParentData?.isPopupSlate && config.isPopupSlate)) && !popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate or vice versa
         tcmKeys = {
             ...tcmKeys,
             slateID: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : config.slateManifestURN,
             slateUrn: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : config.slateManifestURN,
             slateType: CONTAINER_INTRO
+        }
+    }
+    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate 
+        let newManifestUrn = await getLatestVersion(popupCutCopyParentData?.parentSlateEntityUrn);
+        tcmKeys = {
+            ...tcmKeys,
+            slateID: newManifestUrn ? newManifestUrn : tcmKeys.slateID,
+            slateUrn: newManifestUrn ? newManifestUrn : tcmKeys.slateUrn
+        }
+    }
+    if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate && config.isPopupSlate && (popupCutCopyParentData?.versionUrn !== popupParentSlateData?.versionUrn) && !popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to popup slate 
+        tcmKeys = {
+            ...tcmKeys,
+            slateID: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : tcmKeys.slateID,
+            slateUrn: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : tcmKeys.slateUrn
         }
     }
     return tcmKeys
