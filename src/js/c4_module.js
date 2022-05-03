@@ -72,26 +72,30 @@ ajax.put = function (url, data, cb, contentType, sync) {
 };
 
 export function publishTitleDelay(project, section, cite, callBack, isPreview) {
-    var content_url = config_object.PROJECT_PREVIEW_ENDPOINT;
-    let content_data = {};
-    content_data["projectManifest"] = project;
-    content_data["sectionManifest"] = section;
-    content_data["citeManifest"] = cite;
-    content_data["requester"] = config_object.userEmail;//"requester": "james.cooney@pearson.com",
-    content_data["timestamp"] = new Date().toISOString();//"timestamp": "2017-04-23T18:25:43.511Z"
-    if (isPreview == true) {
-        content_data["preview"] = true;
-    }
-    ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', config_object.PROJECT_PREVIEW_ARN, false);
-    let parsedResponse = JSON.parse(response.responseText);
+    try {
+        var content_url = config_object.PROJECT_PREVIEW_ENDPOINT;
+        let content_data = {};
+        content_data["projectManifest"] = project;
+        content_data["sectionManifest"] = section;
+        content_data["citeManifest"] = cite;
+        content_data["requester"] = config_object.userEmail;//"requester": "james.cooney@pearson.com",
+        content_data["timestamp"] = new Date().toISOString();//"timestamp": "2017-04-23T18:25:43.511Z"
+        if (isPreview == true) {
+            content_data["preview"] = true;
+        }
+        ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', config_object.PROJECT_PREVIEW_ARN, false);
+        let parsedResponse = JSON.parse(response.responseText);
 
-    if (parsedResponse.data && parsedResponse.data.previewURL) {
-        let previewURL = parsedResponse.data.previewURL;
-        window.open(previewURL, '_blank');
-        if (callBack) { callBack(); }
-    } else {
-        sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true, dialogText:"Title Preview failed to load."}});
-        return false
+        if (parsedResponse.data && parsedResponse.data.previewURL) {
+            let previewURL = parsedResponse.data.previewURL;
+            window.open(previewURL, '_blank');
+            if (callBack) { callBack(); }
+        } else {
+            sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true, dialogText: "Title Preview failed to load." } });
+            return false
+        }
+    } catch (error) {
+        console.log("Error in publishTitleDelay function", error);
     }
 }
 

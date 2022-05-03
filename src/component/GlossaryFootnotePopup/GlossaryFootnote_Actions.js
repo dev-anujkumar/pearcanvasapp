@@ -38,10 +38,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
         const showHideElement = store.getState().appStore?.showHideObj;
-        if(currentSlateData.type==="popup" && currentSlateData.status === "approved" && (config.isCreateFootnote || config.isCreateGlossary)){
+        if(currentSlateData?.type==="popup" && currentSlateData.status === "approved" && (config.isCreateFootnote || config.isCreateGlossary)){
             return false;
         }
-        let newBodymatter = newParentData[slateId].contents.bodymatter;
+        let newBodymatter = newParentData[slateId]?.contents?.bodymatter;
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData

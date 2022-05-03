@@ -40,10 +40,10 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         let currentSlateData = newParentData[slateId];
         const showHideElement = store.getState().appStore?.showHideObj;
 
-        if (currentSlateData.type === "popup" && currentSlateData.status === "approved") {
+        if (currentSlateData?.type === "popup" && currentSlateData?.status === "approved") {
             return false;
         }
-        let newBodymatter = currentSlateData.contents.bodymatter;
+        let newBodymatter = currentSlateData?.contents?.bodymatter;
         var markedIndexTextFirstLvl, markedIndexTextSecondLvl, markedIndexElem = {}, tempMarkedIndexContentText, crossReferences;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData

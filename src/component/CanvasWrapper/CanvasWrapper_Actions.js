@@ -1290,7 +1290,7 @@ export const appendCreatedElement = async (paramObj, responseData) => {
     let _slateObject = newslateData[slateManifestURN]
 
     if(parentElement.type === "popup"){
-        let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
+        let targetPopupElement=_slateObject?.contents?.bodymatter[popupElementIndex[0]];
         switch(popupElementIndex?.length) {
             case 3:
                 targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
@@ -1455,7 +1455,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             };
             let slateData = {
                 currentParentData:newParentData,
-                bodymatter: currentSlateData.contents.bodymatter,
+                bodymatter: currentSlateData?.contents?.bodymatter,
                 response: response.data,
                 cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             };
@@ -1720,7 +1720,7 @@ export const fetchProjectLFs = () => dispatch => {
         console.log('Error in fetching Learning Framework linked to the project>>>> ', error)
         dispatch({
             type: PROJECT_LEARNING_FRAMEWORKS,
-            payload: {}
+            payload: {apiStatus: {}}
         });
     })
 

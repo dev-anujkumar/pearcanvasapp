@@ -81,7 +81,10 @@ let initialState = {
 	appStore: {
 		asideData: {},
 		parentUrn: {},
-		activeElement: {}
+		activeElement: {},
+		slateLevelData: {
+			'urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee': {contents: {bodymatter: []}}
+		}
 	},
 	keyboardReducer: {
         selectedElement: []
@@ -97,6 +100,7 @@ const dialogueInstance = (props, initialSt = initialState) => {
     const component = mount(<Provider store={store}><ElementDialogue {...props} /></Provider>);
     return component.find('ElementDialogue').instance();
 }
+config.slateManifestURN = "urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee";
 
 describe('1. Dialogue element test cases', () => {
     let props = {

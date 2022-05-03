@@ -2641,7 +2641,7 @@ export class TinyMceEditor extends Component {
                 innerHtml = '<span id="footnote-attacher"></span>' + existingInnerHTML;
             }
             let parentInnerHtml = removeBOM(parentNode.innerHTML);
-            let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
+            let newParentInnerHtml = parentInnerHtml?.replace(existingInnerHTML, innerHtml);
             parentNode.innerHTML = newParentInnerHtml;
         }
         if (this.props.element.type === "popup") {

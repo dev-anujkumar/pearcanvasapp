@@ -421,20 +421,20 @@ describe('Tests commentsPanel action', () => {
        });
    })
 
-   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 2 typeWithPopup is popup --', async() => {
-    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure2222','0-0','image','term text--','popup');
+   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 2 typeWithPopup is popup --', () => {
+    let result = actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure2222','1-0','image','term text--','popup');
     result(store.dispatch).then((item)=>{
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
-        expect(item.payload.elementIndex).toEqual("0-0");
+        expect(item.payload.elementIndex).toEqual("1-0");
     });
    });
    it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 3 typeWithPopup is popup   --', async() => {
-    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure2222','0-0-0','image','term text--','popup');
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure2222','10-0-0','image','term text--','popup');
     result(store.dispatch).then((item)=>{
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
-        expect(item.payload.elementIndex).toEqual("0-0-0");
+        expect(item.payload.elementIndex).toEqual("10-0-0");
     });
    });
    it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 4 typeWithPopup is popup   --', async() => {
@@ -449,32 +449,32 @@ describe('Tests commentsPanel action', () => {
    });
 
    it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 2 typeWithPopup is poetry   --', async() => {
-    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','element-authoredtext','1-1','image','term text--','poetry');
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','element-authoredtext','0-1','image','term text--','poetry');
     result(store.dispatch).then((item)=>{
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
-        expect(item.payload.elementIndex).toEqual("1-1");
+        expect(item.payload.elementIndex).toEqual("0-1");
     });
    });
 
    it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 4 and element type image  --', async() => {
-    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','poetry','1-4','image','term text--','poetry');
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','poetry','11-4','image','term text--','poetry');
     result(store.dispatch).then((item)=>{
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
-        expect(item.payload.elementIndex).toEqual("1-4");
+        expect(item.payload.elementIndex).toEqual("11-4");
     });
    });
 
    it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 4 and element type image  --', async() => {
-    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','stanza','0-3-0','image','term text--','stanza');
+    let result = await actions.glossaaryFootnotePopup(true,"footnote",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b','stanza','0-0-0','image','term text--','stanza');
     result(store.dispatch).then((item)=>{
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
-        expect(item.payload.elementIndex).toEqual("0-3-0");
+        expect(item.payload.elementIndex).toEqual("0-0-0");
     });
    });
-   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 5 typeWithPopup is popup   --', async() => {
+   xit('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 5 typeWithPopup is popup   --', async() => {
     let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","figure","0-0-0-1-1-2","image","","figure",undefined);
     let store = mockStore(() => initialState2);
     result(store.dispatch).then((item)=>{

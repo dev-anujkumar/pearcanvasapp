@@ -91,19 +91,17 @@ describe('testingAssetPopoverActions',() => {
     it('testing------- getCurrentlyLinkedImage if', () => {
         let id = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         const users = [{name: 'Bob'}];
-        const resp = { data: users, json:jest.fn(() => [{}]) };
+        const resp = { data: users, status: 200, json:jest.fn(() => users) };
         global.fetch = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              resolve(resp);
            });
         });
-        const cb = jest.fn()
-        getCurrentlyLinkedImage(id, cb).then((data) => {
-            expect(data).toEqual(users)
-        }) .catch(e =>
-            expect(e).toEqual({
-              error: 'User with 2 not found.',
-            }))
+        const cb = (data) => {
+            expect(data).toEqual({});
+        }
+        getCurrentlyLinkedImage(id, cb)
+
     })
 
     it('testing------- getCurrentlyLinkedImage else', () => {
@@ -116,14 +114,10 @@ describe('testingAssetPopoverActions',() => {
              resolve(resp);
            });
         });
-        const cb = jest.fn()
-        getCurrentlyLinkedImage(id, cb).then((data) => {
-            expect(data).toEqual(users)
-        })
-        .catch(e =>
-            expect(e).toEqual({
-              error: 'User with 2 not found.',
-            }))
+        const cb = (data) => {
+            expect(data).toEqual({});
+        }
+        getCurrentlyLinkedImage(id, cb)
     })
     it('testing------- getCurrentlyLinkedImage catch', () => {
         let id = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d";

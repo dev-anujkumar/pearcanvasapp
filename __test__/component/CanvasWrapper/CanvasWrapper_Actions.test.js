@@ -28,7 +28,8 @@ import {
     OEP_DISCUSSION,
     SET_PROJECT_SHARING_ROLE,
     SET_PROJECT_SUBSCRIPTION_DETAILS,
-    OWNERS_SUBSCRIBED_SLATE
+    OWNERS_SUBSCRIBED_SLATE,
+    GET_TCM_RESOURCES
 } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
@@ -2234,7 +2235,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         it('Test-6.1-createPopupUnit - popupField - formatted-title', () => {
             let responseData = { data: slateTestData.popupLabelResponse }
             let dispatch = (obj) => {
-                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+                expect(obj.type).toBe(ERROR_POPUP);
             }
             let getState = () => {
                 return {
@@ -2270,7 +2271,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             }
             let responseData = { data: slateTestData.popupLabelResponse }
             let dispatch = (obj) => {
-                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+                expect(obj.type).toBe(ERROR_POPUP);
             }
             let getState = () => {
                 return {
@@ -2352,7 +2353,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             }
             let responseData = { data: slateTestData.popupLabelResponse }
             let dispatch = (obj) => {
-                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+                expect(obj.type).toBe(ERROR_POPUP);
             }
             let getState = () => {
                 return {
@@ -2383,7 +2384,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             }
             let responseData = { data: slateTestData.popupLabelResponse }
             let dispatch = (obj) => {
-                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+                expect(obj.type).toBe(ERROR_POPUP);
             }
             let getState = () => {
                 return {
@@ -2414,7 +2415,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             }
             let responseData = { data: slateTestData.popupLabelResponse }
             let dispatch = (obj) => {
-                expect(obj.type).toBe(AUTHORING_ELEMENT_UPDATE);
+                expect(obj.type).toBe(ERROR_POPUP);
             }
             let getState = () => {
                 return {
@@ -2919,7 +2920,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                 createdFromFootnote
             }
             const spyFunction = jest.spyOn(canvasActions, 'appendCreatedElement')
-            canvasActions.appendCreatedElement(paramObj)
+            canvasActions.appendCreatedElement(paramObj, {elementdata: {text: ""}, html: {text: ""}})
             expect(spyFunction).toHaveBeenCalled()
             spyFunction.mockClear()
         })

@@ -69,7 +69,8 @@ componentWillMount() {
 
     if (!hasReviewerRole()) {
       const { markedIndexValue } = this.props;
-      let { elementWorkId, elementType, markIndexid, type, elementSubType, typeWithPopup, poetryField } = markedIndexValue;
+      const markedIndexValues = {...markedIndexValue};
+      let { elementWorkId, elementType, markIndexid, type, elementSubType, typeWithPopup, poetryField } = markedIndexValues;
       let firstLevel = null;
       let secondLevel = null;
       let defaultValue = document.createElement('p')
@@ -99,7 +100,7 @@ componentWillMount() {
 
   getCrossRefData = () => {
     let crossRefValues = document.querySelector('#markedindex-cross-reference').innerHTML;
-    crossRefValues = crossRefValues.replace('<br data-mce-bogus="1">', '')
+    crossRefValues = crossRefValues?.replace('<br data-mce-bogus="1">', '')
     let crossReferences = "<p></p>";
     if(crossRefValues){
       let crossRefArray = crossRefValues.split(',');

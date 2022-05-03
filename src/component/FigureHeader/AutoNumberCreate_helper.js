@@ -227,7 +227,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
     const listType = autoNumber_ElementTypeToStoreKeysMapper[type];
     const labelType = createdElementData.displayedlabel;
     let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
-    let slateAncestorData = getState().appStore.currentSlateAncestorData;
+    let slateAncestorData = getState()?.appStore.currentSlateAncestorData;
     const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
     const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
     let bodyMatter = getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter;
@@ -446,13 +446,13 @@ export const updateSlateData = (allSlateData, chaptersArr) => {
  * @returns 
  */
 export const checkElementExistenceInOtherSlates = (createdElementData, slateEntityURN, getState, dispatch) => {
-    let allSlateData = getState().appStore?.allSlateData;
-    const slateAncestorData = getState().appStore?.currentSlateAncestorData;
+    let allSlateData = getState()?.appStore?.allSlateData;
+    const slateAncestorData = getState()?.appStore?.currentSlateAncestorData;
     const parentUrn = getContainerEntityUrn(slateAncestorData);
-    const autoNumber_ElementTypeKey = getState().autoNumberReducer?.autoNumber_ElementTypeKey
-    let autoNumberedElements = getState().autoNumberReducer?.autoNumberedElements;
-    const listType = autoNumber_ElementTypeKey[createdElementData?.displayedlabel];
-    let elementsList = autoNumberedElements[listType];
+    const autoNumber_ElementTypeKey = getState()?.autoNumberReducer?.autoNumber_ElementTypeKey
+    let autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
+    const listType = autoNumber_ElementTypeKey && autoNumber_ElementTypeKey[createdElementData?.displayedlabel];
+    let elementsList = autoNumberedElements?.listType;
     let parentEntityObject = {};
     let slateKey = '';
     let slatesArr = [];

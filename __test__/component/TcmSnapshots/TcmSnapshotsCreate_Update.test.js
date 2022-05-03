@@ -16,14 +16,20 @@ jest.mock('../../../src/component/TcmSnapshots/ElementSnapshot_Utility.js', () =
         generateWipDataForFigure: jest.fn(),
         getInteractiveSubtypeData: jest.fn(),
         removeCalloutTitle: jest.fn(),
-        setSemanticsSnapshots: jest.fn(),
+        setSemanticsSnapshots: jest.fn()
+    }
+})
+
+jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => {
+    return {
+        prepareTcmSnapshots: jest.fn()
     }
 })
 
 describe('-----------------------Test TcmSnapshots_Utility Functions-----------------------', () => {
     config.projectUrn = "urn:pearson:distributable:ff18cbc0-ab3f-4c7e-9ed0-84eb34f4e126"
     config.slateManifestUrn = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54"
-
+    const dispatch = jest.fn();
     describe('Test-19-Function--tcmSnapshotsForUpdate', () => {
         // const { setSemanticsSnapshotsData } = tcmTestData
         it('Test-19.1-Function--tcmSnapshotsForUpdate', () => {
@@ -48,8 +54,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 }
             };
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
-            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement, dispatch);
 
         })
         it('Test-19.2-Function--tcmSnapshotsForUpdate', () => {
@@ -74,8 +80,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 }
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
-            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement, dispatch);
 
         })
         it('Test-19.3-Function--tcmSnapshotsForUpdate', () => {
@@ -100,8 +106,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 }
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
-            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement, dispatch);
 
         })
         it('Test-19.4-Function-tcmSnapshotsForUpdate', () => {
@@ -126,8 +132,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 }
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
-            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement, dispatch);
 
         })
         it('Test-19.5-Function--tcmSnapshotsForUpdate', () => {
@@ -156,8 +162,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 }
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
-            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement, dispatch);
 
         })
         it('Test-19.6-Function--tcmSnapshotsForUpdate', () => {
@@ -186,8 +192,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 }
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
-            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement, dispatch);
 
         })
         it('Test-19.7-Function--tcmSnapshotsForUpdate', () => {
@@ -218,8 +224,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             }
 
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
-            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement, dispatch);
 
         })
         it('Test-19.8-Function--tcmSnapshotsForUpdate', () => {
@@ -252,8 +258,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 }
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
-            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement, dispatch);
 
         })
         it('Test-19.9-Function--tcmSnapshotsForUpdate', () => {
@@ -286,8 +292,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 }
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
-            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement, dispatch);
 
         })
         it('Test-19.9-Function--tcmSnapshotsForUpdate', () => {
@@ -318,8 +324,8 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 }
             }
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement);
-            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(elementUpdateData, 0, containerElement, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(elementUpdateData, 0, containerElement, dispatch);
 
         })
 
@@ -338,13 +344,14 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             }
             let index = 0;
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForUpdate');
-            tcmSnapshotUtility.tcmSnapshotsForUpdate(update,index);
-            expect(spyFunction).toHaveBeenCalledWith(update,index);
+            tcmSnapshotUtility.tcmSnapshotsForUpdate(update,index, {}, dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(update,index, {}, dispatch);
         })
 
     })
 
     describe('Test-24#1 - tcmSnapshotsForCreate functions', () => {
+        config.slateManifestURN = "urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54";
         it('14.1 - tcmSnapshotsForCreate', () => {
             config.isPopupSlate = true;
             let elementCreateData = {
@@ -354,7 +361,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
             }
             let dispatch = jest.fn();
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'tcmSnapshotsForCreate');
-            tcmSnapshotUtility.tcmSnapshotsForCreate({}, "", {}, dispatch, 0, "cut");
+            tcmSnapshotUtility.tcmSnapshotsForCreate({currentParentData: {"urn:pearson:manifest:bca66109-2c69-4b1b-bea9-a057fd073d54": {}}}, "", {}, dispatch, 0, "cut");
             // expect(spyFunction).toHaveBeenCalled();
 
         })

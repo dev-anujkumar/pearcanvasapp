@@ -547,43 +547,43 @@ export const mock_autoNumber_KeyMapper = {
 }
 
 export const mock_autoNumber_ElementTypeKey = {
-	'Figure': 'imagesList',
-	'Table': 'tablesList',
-	'Equation': 'equationsList',
-	'Audio': 'audiosList',
-	'Video': 'videosList',
+	'Figure': 'imageList',
+	'Table': 'tableList',
+	'Equation': 'equationList',
+	'Audio': 'audioList',
+	'Video': 'videoList',
 	'Interactive': 'interactiveList',
-	"Aside": "asidesList",
-	"Worked Example": "workedExamplesList",
-	'Exhibit': 'exhibitsList'
+	"Aside": "asideList",
+	"Worked Example": "workedExampleList",
+	'Exhibit': 'exhibitList'
 }
 
 export const mock_autoNumber_response_ElementType_mapper = {
-	"figures": "imagesList",
-	"tables": "tablesList",
-	"equations": "equationsList",
-	"audios": "audiosList",
-	"videos": "videosList",
+	"figures": "imageList",
+	"tables": "tableList",
+	"equations": "equationList",
+	"audios": "audioList",
+	"videos": "videoList",
 	"interactives": "interactiveList",
-	"asides": "asidesList",
-	"workedexamples": "workedExamplesList",
-	'exhibits': 'exhibitsList'
+	"asides": "asideList",
+	"workedexamples": "workedExampleList",
+	'exhibits': 'exhibitList'
 }
 
 export const mock_autoNumber_IndexMapper = {
-	'imagesList': 'figureImageIndex',
-	'tablesList': 'tableIndex',
-	'equationsList': 'equationsIndex',
-	'audiosList': 'audioIndex',
-	'videosList': 'videoIndex',
+	'imageList': 'figureImageIndex',
+	'tableList': 'tableIndex',
+	'equationList': 'equationsIndex',
+	'audioList': 'audioIndex',
+	'videoList': 'videoIndex',
 	'interactiveList': 'interactiveIndex',
-	'asidesList': 'asideIndex',
-	'workedExamplesList': 'workedExampleIndex',
-	'exhibitsList': 'exhibitsIndex'
+	'asideList': 'asideIndex',
+	'workedExampleList': 'workedExampleIndex',
+	'exhibitList': 'exhibitsIndex'
 }
 
 export const mockNumberedElements = {
-    "imagesList": {
+    "imageList": {
         "frontMatter": [
             {
                 "versionUrn": "urn:pearson:work:1e7110db-057f-4d5f-9324-85596b3067ca",
@@ -893,7 +893,7 @@ export const mockNumberedElements = {
             }
         ]
     },
-	"asidesList": {
+	"asideList": {
 		"urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb": [
             {
                 "versionUrn": "urn:pearson:work:adc27883-e2bf-4679-b118-fc6c45523e84",
@@ -929,7 +929,7 @@ export const mockNumberedElements = {
             }
 		]
 	},
-    "tablesList": {
+    "tableList": {
         "frontMatter": [],
         "backMatter": [],
         "urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb": [
@@ -949,7 +949,7 @@ export const mockNumberedElements = {
         "urn:pearson:entity:b459b0a8-a6ec-419e-8b5b-e815d1f7f067": [],
         "urn:pearson:entity:288806e5-9c0e-4373-b2af-426acf010220": []
     },
-    "equationsList": {
+    "equationList": {
         "frontMatter": [],
         "backMatter": [],
         "urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb": [
@@ -969,7 +969,7 @@ export const mockNumberedElements = {
         "urn:pearson:entity:b459b0a8-a6ec-419e-8b5b-e815d1f7f067": [],
         "urn:pearson:entity:288806e5-9c0e-4373-b2af-426acf010220": []
     },
-    "audiosList": {
+    "audioList": {
         "urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb": [
             {
                 "versionUrn": "urn:pearson:work:ce95f301-79ac-4f75-a3f1-caa1d31b2d76",
@@ -982,7 +982,7 @@ export const mockNumberedElements = {
             }
         ]
     },
-    "videosList": {
+    "videoList": {
         "urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb": [
             {
                 "versionUrn": "urn:pearson:work:74a1a324-77fa-4f03-9102-7c5c89e0940f",

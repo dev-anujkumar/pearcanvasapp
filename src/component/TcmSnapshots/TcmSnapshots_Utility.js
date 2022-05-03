@@ -354,7 +354,7 @@ export const tcmSnapshotsElementsInPopupInContainer = async (snapshotsData, defa
     tcmSnapshotsOnDefaultSlate(popupData, defaultKeys, containerElement, type,index, "");
 }
 export const checkContainerPopupVersion = async (containerElement) => {
-    if (containerElement && (containerElement.popupAsideData && containerElement.popupAsideData.element.status === "approved")) {
+    if (containerElement && (containerElement.popupAsideData && containerElement.popupAsideData.element?.status === "approved")) {
         let contentUrn = containerElement.popupAsideData ? containerElement.popupAsideData.contentUrn : containerElement.popupParentUrn ? containerElement.popupParentUrn.contentUrn : ""
         if (contentUrn) {
             let newManifestData = await getLatestVersion(contentUrn);
@@ -406,24 +406,28 @@ export const checkParentData = (containerElement) => {
  * @param {Function} dispatch - dispatch function  
 */
 export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys, actionStatus,index, CurrentSlateStatus) => {
-    let res = Object.assign({}, wipData);
-    delete res["html"];
-    let currentSnapshot = {
-        elementUrn: elementDetails.elementUrn,
-        snapshotUrn: elementDetails.elementUrn,
-        elementType: elementDetails.elementType,
-        elementWip: JSON.stringify(res),
-        elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) : JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
-        ...defaultKeys
-    };
-    if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create' && operType!=='copy'){
-        currentSnapshot.status = 'accepted'  
-        if(currentSnapshot.elementType.includes("LB") && CurrentSlateStatus != 'approved'){
-            res.elementdata.text = ''
-            currentSnapshot.elementWip = JSON.stringify(res)
+    try{
+        let res = Object.assign({}, wipData);
+        delete res["html"];
+        let currentSnapshot = {
+            elementUrn: elementDetails.elementUrn,
+            snapshotUrn: elementDetails.elementUrn,
+            elementType: elementDetails.elementType,
+            elementWip: JSON.stringify(res),
+            elementSnapshot: wipData.type === FIGURE ? JSON.stringify(await prepareFigureElementSnapshots(wipData, actionStatus, index)) : JSON.stringify(await prepareElementSnapshots(wipData, actionStatus, index, elementDetails, CurrentSlateStatus)),
+            ...defaultKeys
+        };
+        if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) || currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create' && operType!=='copy'){
+            currentSnapshot.status = 'accepted'  
+            if(currentSnapshot.elementType.includes("LB") && CurrentSlateStatus != 'approved'){
+                res.elementdata.text = ''
+                currentSnapshot.elementWip = JSON.stringify(res)
+            }
         }
+        await sendElementTcmSnapshot(currentSnapshot)
+    } catch(error){
+        console.log(error)
     }
-    await sendElementTcmSnapshot(currentSnapshot)
 }
 
 /**
@@ -740,16 +744,20 @@ const prepareStandAloneSlateSnapshot = (element, elementDetails) => {
  * @returns {Object} Element snapshot for TCM_Snapshot
 */
 export const prepareFigureElementSnapshots = async (element, actionStatus, index) => {
-    let elementSnapshot = {};
-    let semanticSnapshots = element.type !== CITATION_ELEMENT ? await setSemanticsSnapshots(element, actionStatus, index) : {};
-    elementSnapshot = {
-        ...element ? setFigureElementContentSnapshot(element,actionStatus) : "",
-        glossorySnapshot: JSON.stringify([]),
-        footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
-        assetPopOverSnapshot: JSON.stringify([])
+    try{
+        let elementSnapshot = {};
+        let semanticSnapshots = element.type !== CITATION_ELEMENT ? await setSemanticsSnapshots(element, actionStatus, index) : {};
+        elementSnapshot = {
+            ...element ? setFigureElementContentSnapshot(element,actionStatus) : "",
+            glossorySnapshot: JSON.stringify([]),
+            footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
+            assetPopOverSnapshot: JSON.stringify([])
+        }
+        
+        return elementSnapshot;
+    } catch(error){
+        console.error(error)
     }
-    
-    return elementSnapshot;
 }
 
 /**
@@ -761,26 +769,30 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
  * @returns {Object} Element snapshot for TCM_Snapshot
 */
 export const prepareElementSnapshots = async (element,actionStatus,index, elementDetails, CurrentSlateStatus) => {
-    let elementSnapshot = {};
-    let semanticSnapshots = (![CITATION_ELEMENT, ELEMENT_TYPE_PDF].includes(element?.type)) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
-    /* Element type PDF Slate */
-    if (element?.type === ELEMENT_TYPE_PDF) {
-        elementSnapshot = preparePDFSlateSnapshot(element);  
-    } 
-    else if(element.type !== ELEMENT_ASSESSMENT) {
-        elementSnapshot = {
-            contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
-            glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
-            footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
-            assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
+    try{
+        let elementSnapshot = {};
+        let semanticSnapshots = (![CITATION_ELEMENT, ELEMENT_TYPE_PDF].includes(element?.type)) ? await setSemanticsSnapshots(element,actionStatus,index) : {};
+        /* Element type PDF Slate */
+        if (element?.type === ELEMENT_TYPE_PDF) {
+            elementSnapshot = preparePDFSlateSnapshot(element);  
+        } 
+        else if(element.type !== ELEMENT_ASSESSMENT) {
+            elementSnapshot = {
+                contentSnapshot: element ? setContentSnapshot(element,elementDetails,actionStatus, CurrentSlateStatus) : "",
+                glossorySnapshot: JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.glossarySnapshot : []),
+                footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
+                assetPopOverSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.assetPopoverSnapshot : [])
+            }
+        } else {
+            elementSnapshot = {
+                ...prepareStandAloneSlateSnapshot(element, elementDetails),
+               
+            }
         }
-    } else {
-        elementSnapshot = {
-            ...prepareStandAloneSlateSnapshot(element, elementDetails),
-           
-        }
+        return elementSnapshot;
+    } catch(error){
+        console.error(error)
     }
-    return elementSnapshot;
 }
 
 /**

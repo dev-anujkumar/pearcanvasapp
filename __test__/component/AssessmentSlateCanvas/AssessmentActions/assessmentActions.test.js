@@ -6,8 +6,8 @@ import axios from 'axios';
 import config from '../../../../src/config/config';
 import * as assessment_Actions from '../../../../src/component/AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 /*************************Import Constants*************************/
-import { GET_USAGE_TYPE, ELM_PORTAL_API_ERROR, SET_ASSESSMENT_METADATA, UPDATE_ELM_ITEM_ID, SET_INTERACTIVE_METADATA } from "../../../../src/constants/Action_Constants";
-import { usageTypeAPI_Data, MockUsageTypeList_Data } from '../../../../fixtures/AssessmentSlateCanvasTestingData.js';
+import { GET_USAGE_TYPE, SET_USAGE_TYPE, ELM_PORTAL_API_ERROR, SET_ASSESSMENT_METADATA, UPDATE_ELM_ITEM_ID, SET_INTERACTIVE_METADATA } from "../../../../src/constants/Action_Constants";
+import { usageTypeAPI_Data, MockUsageTypeList_Data1, MockUsageTypeList_Data2 } from '../../../../fixtures/AssessmentSlateCanvasTestingData.js';
 jest.mock('axios');
 jest.mock('../../../../src/component/ElementContainer/AssessmentEventHandling.js', () => ({
     handleRefreshSlate: jest.fn()
@@ -26,10 +26,13 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
                 data: usageTypeAPI_Data
             }
             let dispatch = (obj) => {
-                expect(obj.type).toBe(GET_USAGE_TYPE);
-                expect(obj.payload.apiStatus).toEqual(200);
-                expect(obj.payload.usageTypeList).toEqual(MockUsageTypeList_Data);
-                expect(obj.payload.entityType).toEqual(entityType);
+                if(obj.type === SET_USAGE_TYPE){
+                    expect(obj.payload.usageTypeList).toEqual(MockUsageTypeList_Data2);
+                    expect(obj.payload.entityType).toEqual(entityType);
+                } else {
+                    expect(obj.payload.usageTypeList).toEqual(MockUsageTypeList_Data1);
+                    expect(obj.payload.entityType).toEqual(entityType);
+                }
             }
             const spyFunction = jest.spyOn(assessment_Actions, 'fetchUsageTypeData');
             axios.get = jest.fn(() => Promise.resolve(responseData));
@@ -43,10 +46,13 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
                 data: []
             }
             let dispatch = (obj) => {
-                expect(obj.type).toBe(GET_USAGE_TYPE);
-                expect(obj.payload.apiStatus).toEqual(200);
-                expect(obj.payload.usageTypeList).toEqual(MockUsageTypeList_Data);
-                expect(obj.payload.entityType).toEqual(entityType);
+                if(obj.type === SET_USAGE_TYPE){
+                    expect(obj.payload.usageTypeList).toEqual([]);
+                    expect(obj.payload.entityType).toEqual(entityType);
+                } else {
+                    expect(obj.payload.usageTypeList).toEqual([]);
+                    expect(obj.payload.entityType).toEqual(entityType);
+                }
             }
             const spyFunction = jest.spyOn(assessment_Actions, 'fetchUsageTypeData');
             axios.get = jest.fn(() => Promise.resolve(responseData));
@@ -996,7 +1002,7 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             let dispatch = (obj) => {
                 if (obj.type == ELM_PORTAL_API_ERROR) {
                     expect(obj.type).toBe(ELM_PORTAL_API_ERROR);
-                    expect(obj.payload.showError).toEqual(true);
+                    expect(obj.payload.show).toEqual(true);
                     expect(obj.payload.errorMessage).toEqual('Unable to Update Other Instances of this Assessment in the Project');
                     expect(obj.payload.isElmApiError).toEqual('elm-api-error');
                 } else {

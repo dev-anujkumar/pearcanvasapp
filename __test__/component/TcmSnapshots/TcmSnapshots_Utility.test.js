@@ -8,7 +8,9 @@ jest.mock('../../../src/component/TcmSnapshots/TcmSnapshot_Actions.js', () => {
    return {
     getLatestVersion: ()=>{
         return true
-    }}
+    },
+    sendElementTcmSnapshot: jest.fn()
+    }
 })
 
 jest.mock('../../../src/component/TcmSnapshots/ElementSnapshot_Utility.js', () => {
@@ -17,7 +19,13 @@ jest.mock('../../../src/component/TcmSnapshots/ElementSnapshot_Utility.js', () =
         generateWipDataForFigure: jest.fn(),
         getInteractiveSubtypeData: jest.fn(),
         removeCalloutTitle: jest.fn(),
-        setSemanticsSnapshots: jest.fn(),
+        setSemanticsSnapshots: () => {
+            return Promise.resolve({
+                footnoteSnapshot: [],
+                glossarySnapshot: [],
+                assetPopoverSnapshot: []
+            })
+        },
     }
 })
 
@@ -1398,6 +1406,7 @@ describe('-----------------------Test TcmSnapshots_Utility Functions------------
                 elementdata: { filetitle: "title", assetid: "ai-1234"}},
                 actionStatus = {action: "update"},
                 index = 0, elementDetails = {}, CurrentSlateStatus = {};
+            // jest.spyOn('')
             const spyFunction = jest.spyOn(tcmSnapshotUtility, 'prepareElementSnapshots');
             tcmSnapshotUtility.prepareElementSnapshots(element,actionStatus,index, elementDetails, CurrentSlateStatus);
             expect(spyFunction).toHaveBeenCalled();
@@ -1590,6 +1599,9 @@ describe('checkElementsInPopupInContainer-hasPopupParentUrn false case', () => {
             },
             popupParentUrn: {
                 urn: "urn"
+            },
+            popupAsideData:{
+                data: "data"
             }
     }
     it('checkElementsInPopupInContainer-hasPopupParentUrn false case', () => {
@@ -1636,7 +1648,7 @@ describe("prepareMetablock funtion",()=>{
     })
 })
 describe("checkParentData funtion",()=>{
-    let containerElement ={poetryData:''}
+    let containerElement ={poetryData:{},asideData: {}, parentUrn: {}}
     it("checkParentData",()=>{
         const spyFunction = jest.spyOn(tcmSnapshotUtility, 'checkParentData');
         tcmSnapshotUtility.checkParentData(containerElement);
@@ -1669,6 +1681,8 @@ describe("checkElementsInPopupInContainer funtion",()=>{
     it("checkElementsInPopupInContainer",()=>{
         config.popupParentElement.parentElement['type']='test'
         config.popupParentElement['popupParentUrn']='test'
+        config.popupParentElement['popupAsideData']='data'
+
         const spyFunction = jest.spyOn(tcmSnapshotUtility, 'checkElementsInPopupInContainer');
         tcmSnapshotUtility.checkElementsInPopupInContainer();
         expect(spyFunction).toHaveBeenCalledWith();
