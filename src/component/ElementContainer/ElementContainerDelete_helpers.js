@@ -377,7 +377,7 @@ export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
 }
 
 
-export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
+export const prepareTCMSnapshotsForDelete = async (params, operationType = null) => {
     const {
         deleteParentData,
         type,
@@ -444,7 +444,7 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
                 deleteData.wipData = element;
             }
         }
-        tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)
+        await tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)
     }
 }
 
@@ -481,5 +481,5 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         popupCutCopyParent = { ...popupCutCopyParent, versionUrn: containerElement?.slateManifest }
         popupCutCopyParentData(popupCutCopyParent);
     }
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"",operationType);
+    await prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"",operationType);
 }
