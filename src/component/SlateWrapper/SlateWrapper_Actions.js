@@ -619,7 +619,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     }
                     return false;
                 }
-                let newBodymatter = newParentData[slateId].contents.bodymatter;
+                let newBodymatter = newParentData[slateId]?.contents?.bodymatter;
                 if(containerTypeElem === SHOW_HIDE) { /* Swap inner elements of ShowHide */
                     const indexes = elementIndex?.toString().split('-') || [];
                     /* Get the showhide element object from slate data using indexes */

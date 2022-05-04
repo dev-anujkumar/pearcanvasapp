@@ -3179,4 +3179,51 @@ export const usageTypeAPI_Data =[
     }
 ]
 
-export const MockUsageTypeList_Data = ["Concept Check", "Diagnostic", "Homework", "Journal", "Non Scored", "Practice", "Quiz", "Remediation", "Shared Writing", "Study Tools", "Test"]
+export const MockUsageTypeList_Data1 = ["Concept Check", "Diagnostic", "Homework", "Journal", "Non Scored", "Practice", "Quiz", "Remediation", "Shared Writing", "Study Tools", "Test"]
+
+export const MockUsageTypeList_Data2 = [
+    {
+      "usagetype": "conceptcheck",
+      "label": "Concept Check"
+    },
+    {
+      "usagetype": "diagnostic",
+      "label": "Diagnostic"
+    },
+    {
+      "usagetype": "homework",
+      "label": "Homework"
+    },
+    {
+      "usagetype": "journal",
+      "label": "Journal"
+    },
+    {
+      "usagetype": "non-scored",
+      "label": "Non Scored"
+    },
+    {
+      "usagetype": "practice",
+      "label": "Practice"
+    },
+    {
+      "usagetype": "quiz",
+      "label": "Quiz"
+    },
+    {
+      "usagetype": "remediation",
+      "label": "Remediation"
+    },
+    {
+      "usagetype": "sharedwriting",
+      "label": "Shared Writing"
+    },
+    {
+      "usagetype": "studytools",
+      "label": "Study Tools"
+    },
+    {
+      "usagetype": "test",
+      "label": "Test"
+    }
+  ]

@@ -422,15 +422,18 @@ describe('actions', () => {
 
     describe('saveDataFromAlfresco', () => {
         let message = alfrescoDataTesting;
-        let dispatch =jest.fn().mockImplementationOnce((cb)=>{cb()});
-        it('saveDataFromAlfresco ===> if figureType is audio', async() => {
+        it('saveDataFromAlfresco ===> if figureType is audio', () => {
+            let mockedAddAudio = jest.spyOn(actions, 'addAudioNarrationForContainer');
+            let dispatch = () => {
+                mockedAddAudio();
+                expect(mockedAddAudio).toHaveBeenCalled()
+            }
             message.asset["institution-urls"] = [
                 {
                     'publicationUrl': ""
                 }
             ]
             actions.saveDataFromAlfresco(message)(dispatch);
-            expect(dispatch).toHaveBeenCalled()
         });
     });
 })

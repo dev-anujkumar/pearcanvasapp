@@ -7,12 +7,16 @@
 import { GET_SLATE_LIST_IN_CONTAINER } from '../constants/Action_Constants';
 import { TOC_CONTAINER } from '../constants/Toc_Constants';
 export const getCurrentSlatesList = async (allSlateData, slateMatterType, currentParentUrn,dispatch) => {
-    const currentMatterData = allSlateData[slateMatterType]
-    const slatesList = await fetchCurrentContainerSlateList(currentMatterData, currentParentUrn.toLowerCase())
-    dispatch({
-        type: GET_SLATE_LIST_IN_CONTAINER,
-        payload: slatesList
-    })
+    try{
+        const currentMatterData = allSlateData[slateMatterType]
+        const slatesList = await fetchCurrentContainerSlateList(currentMatterData, currentParentUrn.toLowerCase())
+        dispatch({
+            type: GET_SLATE_LIST_IN_CONTAINER,
+            payload: slatesList
+        })
+    } catch(error){
+        console.log("Error: ", error)
+    }
 }
 
 const fetchCurrentContainerSlateList = (currentMatterData, currentParentUrn, slatesList = []) => {

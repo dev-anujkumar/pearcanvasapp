@@ -76,7 +76,7 @@ class AssetPopoverSearch extends React.Component {
             getAssetPopoverId(imageObj.versionUrn).then((assetPopoverId) => {
                 if (assetPopoverId) {
                     document.getElementById(tinymce.activeEditor.id).focus()
-                    tinymce.activeEditor.undoManager.transact(() => {
+                    tinymce.activeEditor.undoManager?.transact(() => {
                         domNode = document.getElementById('asset-popover-attacher');
                         originalText = domNode.innerHTML;
                         assetPopoverDomId = assetPopoverId;

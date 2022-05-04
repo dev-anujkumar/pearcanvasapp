@@ -2802,7 +2802,8 @@ describe('Tests Slate Wrapper Actions', () => {
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6",
                     sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
                 }
-            }
+            },
+            autoNumberReducer: { isAutoNumberingEnabled: true}
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -2834,7 +2835,8 @@ describe('Tests Slate Wrapper Actions', () => {
                 },
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
-            selectionReducer: {}
+            selectionReducer: {},
+            autoNumberReducer:{isAutoNumberingEnabled: true}
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
