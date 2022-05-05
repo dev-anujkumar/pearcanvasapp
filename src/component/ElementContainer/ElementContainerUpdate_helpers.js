@@ -784,7 +784,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
     const isPopupOrShowhideElement = ((parentElement?.type === POOPUP_ELEMENT) || (parentElement?.type === SHOW_HIDE && !(updatedData?.metaDataField || updatedData?.sectionType === 'creditsarray'))|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
-    const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false
+    const noAdditionalFields = (updatedData.metaDataField == undefined && (updatedData.sectionType == undefined || updatedData.sectionType == 'bodymatter')) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     //This check will be removed once Blocklist will support TCM
     if (asideData?.type !== "manifestlist") {
@@ -1019,7 +1019,7 @@ export const updateStoreInCanvas = (params) => {
     const autoNumberDetails = {autoNumberSettingsOption,isAutoNumberingEnabled}
     //tcm update code
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
-    const noAdditionalFields = (updatedData.metaDataField == undefined && updatedData.sectionType == undefined) ? true : false;
+    const noAdditionalFields = (updatedData.metaDataField == undefined && (updatedData.sectionType == undefined || updatedData.sectionType == 'bodymatter')) ? true : false;
     if (config.tcmStatus) {
         //This check will be removed once Blocklist will support TCM
         const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
