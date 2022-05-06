@@ -3019,7 +3019,7 @@ export class TinyMceEditor extends Component {
         } while (parentNode);
 
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
-        editor.insertContent(insertionText);
+        editor.selection.setContent(insertionText);
         if (selection.innerHTML) {
             let spanTag = selection.getElementsByTagName('SPAN');
             if (spanTag.length) {

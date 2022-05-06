@@ -161,9 +161,12 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
 }
 
 /** TCM Snapshots API for CUT/COPY PASTE operation */
-export const callCutCopySnapshotAPI = async (snapshotData) => {
-    const url = config.TCM_CUT_COPY_URL
+export const callCutCopySnapshotAPI = async (snapshotData,isAutoNumberingEnabled) => {
+    let url = config.TCM_CUT_COPY_URL
     if (snapshotData.operationType === 'copy') {
+        if (isAutoNumberingEnabled) {
+            url = `${url}?isAutoNumberingEnabled=${isAutoNumberingEnabled}`
+        }
         return axios.post(url, snapshotData, {
             headers: {
                 // PearsonSSOSession: config.ssoToken,

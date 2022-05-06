@@ -1419,7 +1419,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     tcmSnapshotParams.elementStatus = responseData[0]?.status
                     let tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
                     if (selection?.operationType === 'copy' || (selection?.operationType === 'cut' && responseData[0]?.status === 'wip')) {
-                        callCutCopySnapshotAPI(tcmSnapshotPayload)
+                        callCutCopySnapshotAPI(tcmSnapshotPayload,isAutoNumberingEnabled)
                     }
                 }
                 if (selection?.element?.type === 'element-aside') {
