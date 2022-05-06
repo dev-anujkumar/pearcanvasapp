@@ -504,7 +504,7 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
     }
     subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
     const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-    if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
+    if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) && props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
         titleHTML = previousElementData.displayedlabel;
     }
 

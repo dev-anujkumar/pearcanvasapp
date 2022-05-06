@@ -506,7 +506,7 @@ class ElementContainer extends Component {
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
                 titleHTML = previousElementData.displayedlabel;
             }
             const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
@@ -600,7 +600,7 @@ class ElementContainer extends Component {
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
                 titleHTML = previousElementData.displayedlabel;
             }
             const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
@@ -754,7 +754,7 @@ class ElementContainer extends Component {
             }
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
                 titleHTML = previousElementData.displayedlabel;
             }
             const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
@@ -833,7 +833,7 @@ class ElementContainer extends Component {
             let podwidth = this.props?.oldAudioVideoDataForCompare?.figuredata?.podwidth;
             subtitleHTML = subtitleHTML.match(/<p>/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
             const validDropdownOptions = generateDropdownDataForFigures(previousElementData)
-            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER)) {
+            if (!titleHTML || titleHTML === '' || (!validDropdownOptions.includes(titleHTML) && (this.props?.autoNumberOption?.option !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn)) {
                 titleHTML = previousElementData.displayedlabel;
             }
             return (titleHTML !== previousElementData.displayedlabel ||
