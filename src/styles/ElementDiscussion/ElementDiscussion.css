@@ -174,22 +174,34 @@
   flex: 1;
 }
 
+.const {
+  display: flex;
+}
+.LOB-label {
+  padding-top: 25px;
+  padding-left: 22px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.LOBdropdown {
+  width: 320px;
+  height: 44px;
+  font-size: 16px;
+  margin: 13px;
+}
 .searchContainerDiscussion {
+  width: 620px;
+  margin: 13px 0px 13px 0px;
+}
+.searchContainerDiscussion, .LOBdropdown {
   flex-direction: row;
   align-items: center;
-  margin-right: 149px;
-  margin-left: 20px;
-  margin-top: 13px;
   display: flex;
-  padding-left: 20px;
-  padding-right: 24px;
+  padding: 9px 24px 9px 20px;
   border-radius: 4px;
-  padding-top: 9px;
-  padding-bottom: 9px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   border: solid 1px #e8e8e8;
   background-color: #ffffff;
-  margin-bottom: 13px;
 }
 
 .searchTextDiscussion {

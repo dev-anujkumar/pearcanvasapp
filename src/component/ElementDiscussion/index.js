@@ -5,6 +5,7 @@ import { UsageTypeDropdown } from "../AssessmentSlateCanvas/UsageTypeDropdown/Us
 import "../../styles/ElementDiscussion/ElementDiscussion.css";
 import { useSelector,connect } from "react-redux";
 import DiscussionDialog from "./DiscussionDialog";
+import { getLOBDiscussionItems } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { createDiscussionForUpdateAPI, clearElement, removeLabel } from "./Utils";
 import { updateElement } from "../ElementContainer/ElementContainer_Actions";
 import {
@@ -274,13 +275,14 @@ const ElementDiscussion = (props) => {
           disableHeader(false);
         }}
         showDialog={showDialog}
+        getLOBDiscussionItems={props.getLOBDiscussionItems}
       />
     </div>
   );
 };
 
 const dispatchActions = {
-  updateElement,
+  updateElement,getLOBDiscussionItems
 };
 
 const mapStateToProps = ({ appStore }) => {

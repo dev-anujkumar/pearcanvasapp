@@ -61,7 +61,8 @@ let config = {
     PROJECT_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-dev-publishTitleInterimNonBroker',
     AWS_RESOURCE : 'lambda',
     PROJECT_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
-    SLATE_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/'
+    SLATE_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
+    PROJECT_LOB_ENDPOINT: "https://contentapis-qa.pearsoncms.net/project-api/lineofbusiness/v1",
 
     
 };
