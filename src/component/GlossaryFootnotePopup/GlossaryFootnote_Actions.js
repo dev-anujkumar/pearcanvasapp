@@ -71,7 +71,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         else if (elementType === "figure" || elementType === "element-blockfeature") {
             let tempUpdatedIndex = index.split('-');
             let updatedIndex = tempUpdatedIndex[0];
-            glossaryFootElem = newBodymatter[updatedIndex]
+            if(tempIndex.length == 4 && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'groupedcontent'){
+                glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]
+                console.log("glossaryFootElem1 --->>>>", glossaryFootElem, newBodymatter)
+            } else if(tempIndex.length == 3 && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'element-aside'){
+                glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[1]]
+                console.log("glossaryFootElem2 --->>>>", glossaryFootElem)
+            } else {
+                glossaryFootElem = newBodymatter[updatedIndex]
+                console.log("glossaryFootElem3 --->>>>", glossaryFootElem)
+            }
         }
         else if (typeWithPopup && typeWithPopup === "popup" ){
             let indexesLen = tempIndex.length;
@@ -506,7 +515,14 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     else if(elementType == 'element-blockfeature'){
         let elementIndex;
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
-        elementIndex = tempIndex[0]+'-'+tempIndex[1]
+        if(tempIndex.length == 4){
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]+'-'+tempIndex[3]
+        }else if(tempIndex.length == 3){
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]
+        }else{
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]
+        }
+        // elementIndex = tempIndex[0]+'-'+tempIndex[1]
         const bqNode = document.getElementById('cypress-' + elementIndex)
         workContainer = prepareBqHtml(bqNode);
         workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
@@ -773,8 +789,14 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = res.data;
         }
         else if (elementType === "figure" ||elementType === 'element-blockfeature') {
-            let updatedIndex = index.split('-')[0];
-            newBodymatter[updatedIndex] = res.data;
+            if(tempIndex.length == 3 || tempIndex.length == 4){
+                newBodymatter[tempIndex[1]] = res.data;
+                console.log("newBodymatter1 -->>", newBodymatter)
+            } else{
+                let updatedIndex = index.split('-')[0];
+                console.log("updatedIndex -->>", updatedIndex)
+                newBodymatter[updatedIndex] = res.data;
+            }
         }
         else if (typeWithPopup && typeWithPopup === "popup"){
             let indexesLen = tempIndex.length
