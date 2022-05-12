@@ -32,10 +32,7 @@ const DiscussionDialog = ({
 }) => {
   const discussionItems = useSelector((state) => state.projectInfo.discussionItems);
   const options = useSelector((state) => state.projectInfo.LOBList)
-
-  const getDiscussion = (e) => {
-    getLOBDiscussionItems(e.target.value);
-  }
+  const showDiscussionLOBDropdown = useSelector((state) => state.projectInfo.showDiscussionLOBDropdown)
 
   const [selectedDiscussion, setSelectedDiscussion] = useState(getSelectedItemFromId(itemId));
   const [filteredItems, setFilteredItems] = useState(discussionItems);
@@ -61,13 +58,15 @@ const DiscussionDialog = ({
             <div className="headingTextDiscussion">Select a Discussion Item</div>
             <div onClick={() =>  closeDialog()} className="closeIconDiscussion">{discussionCloseIcon}</div>
           </div>
-          <div className="const"><div className="LOB-label">LOB</div>
+          <div className={showDiscussionLOBDropdown ? "const" : ""}>{showDiscussionLOBDropdown && <div className="opt"><div className="LOB-label">LOB</div>
           <div>
-            <select className="LOBdropdown" onChange={(e) => getDiscussion(e)}>
-            {options.map((x) => (<option value={x.lineOfBusiness}>{x.label}</option>))}
-          </select>
-          </div>
-            <div className="searchContainerDiscussion">
+          <select className="LOBdropdown" defaultValue="select" onChange={(e) => getLOBDiscussionItems(e.target.value)}>
+          <option value="select" disabled hidden>Select</option>
+          {options.map((x) => (<option value={x.lineOfBusiness}>{x.label}</option>))}
+        </select>
+        </div>
+          </div>}
+            <div className={showDiscussionLOBDropdown ? "searchContainerDiscussionWithLOBDropdown" : "searchContainerDiscussion"}>
               {searchDisussion}
               <input
                 value={searchText}

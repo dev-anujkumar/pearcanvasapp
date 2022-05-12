@@ -32,18 +32,22 @@ const ElementDiscussion = (props) => {
   let usagetype = '';
   let htmltitle = props?.element?.html?.title;
   let smartlink = ''
+  let lineOfBusiness = ''
   let blockdata = props?.element?.blockdata;
   if (blockdata) {
     itemid = blockdata.itemid;
     importeddiscussiontitle = blockdata.importeddiscussiontitle;
     usagetype = blockdata.usagetype;
     smartlink = blockdata.path;
+    lineOfBusiness = blockdata.business;
   }
 
   const LOB = useSelector((state) => state.projectInfo.lineOfBusiness);
   const USAGE_TYPES = useSelector((state) => state.projectInfo.usageType);
+  const showDiscussionLOBDropdown = useSelector((state) => state.projectInfo.showDiscussionLOBDropdown)
   const [showUsageTypeOptions, setshowUsageTypeOptions] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [selectedLOB, setSelectedLOB] = useState(lineOfBusiness);
 
   const [usageType, setUsageType] = useState(usagetype);
   const [itemId, setItemId] = useState(itemid);
@@ -149,7 +153,7 @@ const ElementDiscussion = (props) => {
             </div>
           )}
           {typeof LOB === "string" && (
-            <span className="valueDiscussion">{`${LOB}`}</span>
+            <span className="valueDiscussion">{showDiscussionLOBDropdown ? `${selectedLOB}` : `${LOB}`}</span>
           )}
         </div>
 
@@ -201,7 +205,7 @@ const ElementDiscussion = (props) => {
                               ...props.element.blockdata.importeddiscussiontitle,
                               text: title,
                             },
-                            business: LOB,
+                            business: selectedLOB,
                             usagetype: usageType,
                           };
 
@@ -256,12 +260,13 @@ const ElementDiscussion = (props) => {
               ...props.element.blockdata.importeddiscussiontitle,
               text: item.title,
             },
-            business: LOB,
+            business: item.lineOfBusiness,
             usagetype: usageType,
           };
 
           setItemId(item.discussionUrn);
           setTitle(item.title);
+          setSelectedLOB(item.lineOfBusiness);
           setPath(item.smartLink);
           callUpdateApi({
             ...props.element,

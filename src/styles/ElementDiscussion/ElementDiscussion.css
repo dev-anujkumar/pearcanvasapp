@@ -174,26 +174,30 @@
   flex: 1;
 }
 
-.const {
+.const, .opt{
   display: flex;
 }
+
 .LOB-label {
   padding-top: 25px;
   padding-left: 22px;
   font-size: 16px;
   font-weight: bold;
 }
-.LOBdropdown {
-  width: 320px;
-  height: 44px;
-  font-size: 16px;
-  margin: 13px;
-}
+
 .searchContainerDiscussion {
-  width: 620px;
-  margin: 13px 0px 13px 0px;
+  flex-direction: row;
+  align-items: center;
+  display: flex;
+  border-radius: 4px;
+  padding: 9px 24px 9px 20px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
+  border: 1px solid #e8e8e8;
+  background-color: #fff;
+  margin: 13px 149px 13px 20px;
 }
-.searchContainerDiscussion, .LOBdropdown {
+
+.searchContainerDiscussionWithLOBDropdown {
   flex-direction: row;
   align-items: center;
   display: flex;
@@ -202,6 +206,23 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   border: solid 1px #e8e8e8;
   background-color: #ffffff;
+  width: 620px;
+  margin: 13px 0px 13px 0px;
+}
+
+.LOBdropdown {
+  flex-direction: row;
+  align-items: center;
+  display: flex;
+  padding: 9px 24px 9px 20px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  border: solid 1px #e8e8e8;
+  background-color: #ffffff;
+  width: 320px;
+  height: 44px;
+  font-size: 16px;
+  margin: 13px;
 }
 
 .searchTextDiscussion {

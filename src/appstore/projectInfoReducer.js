@@ -14,10 +14,7 @@ const initialState = {
   isOwnersSubscribedSlateChecked: isOwnerKeyExist ? false : true,
   workflowRole:{},
   LOBList:[],
-  LOBDiscussionDetails: {
-    showDiscussionLOBDropdown: false,
-    selectedDiscussionLOB: ''
-  }
+  showDiscussionLOBDropdown: false
 }
 
 export const projectInfo = (state = initialState, action={type:'', payload:{}}) => {
@@ -53,9 +50,7 @@ export const projectInfo = (state = initialState, action={type:'', payload:{}}) 
         case NO_DISCUSSION_ITEMS: {
           return {
             ...state,
-            LOBDiscussionDetails: {
-              showDiscussionLOBDropdown: true,
-            }
+              showDiscussionLOBDropdown: action.payload
           }
         }
 

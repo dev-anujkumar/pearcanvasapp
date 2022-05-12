@@ -62,9 +62,6 @@ let config = {
     AWS_RESOURCE : 'lambda',
     PROJECT_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
     SLATE_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
-    PROJECT_LOB_ENDPOINT: "https://contentapis-qa.pearsoncms.net/project-api/lineofbusiness/v1",
-
-    
 };
 
 if (process.env.NODE_ENV === "development") {

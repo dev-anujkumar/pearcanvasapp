@@ -413,7 +413,6 @@ export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReduce
     })
 }
 export const getDiscussionItemsbyLOB = (lineOfBusiness) => {
-    console.log("jj",lineOfBusiness)
     const discussionURLEndPoint = 'v1/discussion/discussions';
     // 'https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1/discussion/discussions'
     const discussionUrl = `${config.REACT_APP_API_URL}${discussionURLEndPoint}`;
@@ -432,7 +431,6 @@ export const getDiscussionItemsbyLOB = (lineOfBusiness) => {
 
 export const getLOBDiscussionItems = (lineOfBusiness)  => async (dispatch) => {
     try {
-        console.log("kt",lineOfBusiness)
         const LOBDiscussionItemsResponse = await getDiscussionItemsbyLOB(lineOfBusiness)
         if (Array.isArray(LOBDiscussionItemsResponse?.data)) {
             dispatch({
@@ -442,15 +440,11 @@ export const getLOBDiscussionItems = (lineOfBusiness)  => async (dispatch) => {
         }
     }
     catch (error) {
-        console.log("TEST",LOBDiscussionItemsResponse.status)
-        if(LOBDiscussionItemsResponse.status === 404)
+        if(error?.response?.status === 404)
         {
             dispatch({
                 type: NO_DISCUSSION_ITEMS,
-                payload: {
-                    showDiscussionLOBDropdown,
-                    // selectedDiscussionLOB
-                  }
+                payload: true
             });   
         }
         else
@@ -1786,8 +1780,8 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
 }
 
 const getLOBList = () => {
-    const url = `${config.PROJECT_LOB_ENDPOINT}/${config.projectUrn}`
-	return axios.get("https://contentapis-qa.pearsoncms.net/project-api/lineofbusiness/v1", {
+    // "https://10.11.7.24:8081/cypress-api/v1/project-taxonomy/lob_details"
+	return axios.get(`${config.REACT_APP_API_URL}v1/project-taxonomy/lob_details`, {
 		headers: {
 			"ApiKey": config.STRUCTURE_APIKEY,
             "myCloudProxySession": config.myCloudProxySession,
@@ -1799,13 +1793,13 @@ const getLOBList = () => {
 export const fetchLOBList = () => async (dispatch) => {
 	try {
 		const response = await getLOBList();
-		if (response.status === 200 && response?.data?.length > 0) {
+		if (response.status === 200) {
 			dispatch({
                 type: PROJECT_LOB_LIST,
-                payload: response.data
+                payload: response.data.details.listOfLob
             });
 				}
 	} catch (error) {
-		console.log("Error in fetching the list of Line of Business from the project", error);
+		console.error("Error in fetching the list of Line of Business from the project", error);
 	}
 }
