@@ -275,7 +275,8 @@ const mapStateToProps = state => {
         markedIndexValue: state.markedIndexReducer.markedIndexValue,
         markedIndexGlossary: state.markedIndexReducer.markedIndexGlossary,
         alfrescoReducer: state.alfrescoReducer,
-        currentSlateAncestorData: state.appStore.currentSlateAncestorData
+        currentSlateAncestorData: state.appStore.currentSlateAncestorData,
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
     };
 };
 
