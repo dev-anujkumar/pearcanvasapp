@@ -283,11 +283,11 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 if(eleIndex.length == 2 && bodymatter[eleIndex[0]].type === 'element-aside'){
                     wipData = bodymatter[eleIndex[0]]?.elementdata?.bodymatter[eleIndex[1]]
                 } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === 'element-aside'){
-                    wipData = bodymatter[eleIndex[0]].elementdata?.bodymatter[eleIndex[1]]
+                    wipData = bodymatter[eleIndex[0]]?.elementdata?.bodymatter[eleIndex[1]]
                 } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === 'element-blockfeature'){
                     wipData = bodymatter[eleIndex[0]]
                 } else if((eleIndex.length == 3 || eleIndex.length == 4) && !(bodymatter[eleIndex[0]].type === 'element-blockfeature')){
-                    wipData = bodymatter[eleIndex[0]].groupeddata?.bodymatter[eleIndex[1]].groupdata?.bodymatter[eleIndex[2]]
+                    wipData = bodymatter[eleIndex[0]]?.groupeddata?.bodymatter[eleIndex[1]]?.groupdata?.bodymatter[eleIndex[2]]
                 } else {
                     wipData = bodymatter[eleIndex[0]]
                 }
