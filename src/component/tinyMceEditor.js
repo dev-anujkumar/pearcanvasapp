@@ -35,7 +35,7 @@ import { getParentPosition} from './CutCopyDialog/copyUtil';
 
 import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, checkActiveElement }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
-import ElementConstants from './ElementContainer/ElementConstants';
+import ElementConstants, { allowedFigureTypesForTCM } from './ElementContainer/ElementConstants';
 import { moveCursor } from './Keyboard/KeyboardWrapper.jsx';
 import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
 import {prepareBqHtml} from '../../src/js/utils.js'
@@ -3389,7 +3389,7 @@ export class TinyMceEditor extends Component {
          document.removeEventListener("visibilitychange", () => { this.props?.saveCaretPosition('') });
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
-            if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && this.props.element.type && this.props.element.type === "figure" && this.props.element.figuretype !== "interactive"))) {
+            if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && this.props.element.type && this.props.element.type === "figure" && !allowedFigureTypesForTCM.includes(this.props.element.figuretype)))) {
                 removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                 tinymce.remove(`#${ed_id}`)
                 tinymce.$('.wrs_modal_desktop').remove();

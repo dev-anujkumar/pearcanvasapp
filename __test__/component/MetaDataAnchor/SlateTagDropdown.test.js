@@ -271,7 +271,7 @@ describe('External LO - Test Rendering of metadaanchor on slate', () => {
     it('render component', () => {
         expect(wrapper.find('SlateTagDropdown')).toHaveLength(1);
     })
-    it('on innerText=AlignToExternalFrameworkSlateDropdown ', () => {
+    it('on innerText=AlignToWillowFrameworkSlateDropdown ', () => {
         document.cookie = "?,projectUrn=urn:pearson:distributable:04518dba-76ef-4da3-924c-46cdf7e496b7,&projectEntityUrn=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e,projectTitle:ElmDevTest&slateEntityURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&slateManifestURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&ssoToken=THO1MDfgOpKowwW6ETpiNmYhSaQ.*AAJTSQACMDIAAlNLABxFQ1N2TytSQU9sWWMrcmVjMU8vOWc3RldqZlk9AAJTMQACMDE.*";
         let event = { target: { innerText: "Align to External Framework" } };
         let data = "Align to External Framework";
