@@ -48,7 +48,8 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
     }).then((res) => {
         dispatchUsageTypeList(entityType, res, 200, dispatch);
         dispatchUsageTypeData(entityType, prepareUsageTypeData(res), 200, dispatch);
-    }).catch((error) => {
+    })
+    .catch((error) => {
         dispatchUsageTypeData(entityType, [], 404, dispatch);
         console.error('Error in Fetching UsageType from API>>>', error)
     })

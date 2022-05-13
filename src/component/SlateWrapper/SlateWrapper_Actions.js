@@ -619,7 +619,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     }
                     return false;
                 }
-                let newBodymatter = newParentData[slateId].contents.bodymatter;
+                let newBodymatter = newParentData[slateId]?.contents?.bodymatter;
                 if(containerTypeElem === SHOW_HIDE) { /* Swap inner elements of ShowHide */
                     const indexes = elementIndex?.toString().split('-') || [];
                     /* Get the showhide element object from slate data using indexes */
@@ -1419,7 +1419,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     tcmSnapshotParams.elementStatus = responseData[0]?.status
                     let tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
                     if (selection?.operationType === 'copy' || (selection?.operationType === 'cut' && responseData[0]?.status === 'wip')) {
-                        callCutCopySnapshotAPI(tcmSnapshotPayload)
+                        callCutCopySnapshotAPI(tcmSnapshotPayload,isAutoNumberingEnabled)
                     }
                 }
                 if (selection?.element?.type === 'element-aside') {

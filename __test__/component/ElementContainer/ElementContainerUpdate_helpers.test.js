@@ -18,7 +18,8 @@ jest.mock('../../../src/constants/utility.js', () => ({
     hasReviewerRole: jest.fn()
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
-    tcmSnapshotsForUpdate: jest.fn()
+    tcmSnapshotsForUpdate: jest.fn(),
+    prepareTcmSnapshots: jest.fn()
 }))
 jest.mock('../../../src/component/ShowHide/ShowHide_Helper.js', () => ({
     getShowHideElement: jest.fn(() => {
@@ -80,7 +81,12 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 oldAssessmentId: "urn:pearson:work:23454424325"
             }
         },
-        autoNumberReducer: mockAutoNumberReducerEmpty
+        autoNumberReducer: mockAutoNumberReducerEmpty,
+        markedIndexReducer:{
+            markedIndexValue: {elementWorkId:""},
+            markedIndexCurrentValue: "",
+            elementIndex: ""
+        }
     };
 
     let initialState2 = {
@@ -2968,6 +2974,15 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 showHideObj: {}
             }
             const spyupdateStore = jest.spyOn(updateHelpers, "processAndStoreUpdatedResponse")
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            jest.spyOn(document, 'getElementById').mockImplementation(() => {
+                return {
+                    innerText: "text",
+                    style: {
+                        display: ""
+                    }
+                }
+            })
             updateHelpers.processAndStoreUpdatedResponse (params)
             expect(spyupdateStore).toHaveBeenCalled()
             spyupdateStore.mockClear()

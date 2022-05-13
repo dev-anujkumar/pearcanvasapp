@@ -298,7 +298,7 @@ export const deleteFromStore = async (params) => {
     })
     
     /** ---------------------------- Auto-Numbering handling ------------------------------*/
-    const isAutoNumberingEnabled = getState().autoNumberReducer?.isAutoNumberingEnabled;
+    const isAutoNumberingEnabled = getState()?.autoNumberReducer?.isAutoNumberingEnabled;
     const autoNumberParams = {
         type,
         getState,
@@ -377,7 +377,7 @@ export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
 }
 
 
-export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
+export const prepareTCMSnapshotsForDelete = async (params, operationType = null) => {
     const {
         deleteParentData,
         type,
@@ -392,7 +392,7 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
         isSectionBreak
     } = params
 
-    const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
+    const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn]?.contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
         //const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
         //const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
@@ -444,7 +444,7 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
                 deleteData.wipData = element;
             }
         }
-        tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)
+        await tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)
     }
 }
 
@@ -475,11 +475,11 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     if ((parentType.indexOf(type) === -1) || (type === "element-aside" && parentUrn && elementDeleteData?.wipData?.type === "manifest") ) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData, actionStatus.action, elementDeleteData.wipData.type);
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData, actionStatus.action, elementDeleteData?.wipData?.type);
     let popupCutCopyParent = store?.getState()?.autoNumberReducer?.popupCutCopyParentData || {};
     if (currentSlateData?.type === 'popup' && currentSlateData?.status === 'approved' && popupCutCopyParent?.operationType === 'cut' && popupCutCopyParent?.isPopupSlate) {
         popupCutCopyParent = { ...popupCutCopyParent, versionUrn: containerElement?.slateManifest }
         popupCutCopyParentData(popupCutCopyParent);
     }
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"",operationType);
+    await prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"",operationType);
 }

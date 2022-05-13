@@ -27,7 +27,7 @@ export const handleAutoNumberingOnDelete = async (params) => {
     } = params
     const slateAncestors = getState().appStore.currentSlateAncestorData;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    const autoNumberedElements = getState().autoNumberReducer.autoNumberedElements;
+    const autoNumberedElements = getState()?.autoNumberReducer.autoNumberedElements;
     const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
     if (popupParentSlateData?.isPopupSlate) {
         const popupContent = await getSlateLevelData(popupParentSlateData?.versionUrn, popupParentSlateData.contentUrn);
@@ -148,7 +148,7 @@ export const handleAutoNumberingOnSwapping = async (isAutoNumberingEnabled, para
     } = params
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
-    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
+    const autoNumber_ElementTypeKey = getState()?.autoNumberReducer.autoNumber_ElementTypeKey
     const containerElements = ['popup', 'showhide', 'groupedcontent', 'element-aside']
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after swap

@@ -667,7 +667,7 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
             let dispatch = (obj) => {
                 expect(obj.type).toBe(GET_ALL_AUTO_NUMBER_ELEMENTS);
             }
-            autonumber_helperFunctions.updateAutonumberingOnElementTypeUpdate(newElement, element, mockNumberedElements, slateAncestorChapter, slateLevelData)(dispatch);
+            autonumber_helperFunctions.updateAutonumberingOnElementTypeUpdate(newElement, element, mockNumberedElements, slateAncestorChapter, slateLevelData)(getState, dispatch);
 
         });
     });

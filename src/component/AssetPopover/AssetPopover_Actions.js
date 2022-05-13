@@ -176,7 +176,6 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
       }
       
     })
-
     let data = await response?.json()
     if (data.length && response?.status == 200) {
       let latestIndex = 0;
@@ -201,7 +200,6 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
         console.error("err from narrative api 1", err1)
       }
     }
-
   } catch (err) {
     try {
       currentlyLinkedData = await getElementVersionContent(id)

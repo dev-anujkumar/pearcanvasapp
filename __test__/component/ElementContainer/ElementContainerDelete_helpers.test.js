@@ -23,7 +23,8 @@ jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => (
     tcmSnapshotsForUpdate: jest.fn(),
     checkContainerElementVersion: jest.fn(),
     fetchElementWipData: jest.fn(),
-    prepareSnapshots_ShowHide: jest.fn()
+    prepareSnapshots_ShowHide: jest.fn(),
+    prepareTcmSnapshots: jest.fn()
 }))
 let cb = new stub();
 jest.setTimeout(10000);
@@ -237,7 +238,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: 3,
             poetryData: null,
             // newParentData: parentElement
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -254,7 +256,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: 3,
             poetryData: null,
             // newParentData: parentElement
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -271,7 +274,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: null,
             index: 3,
             poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854", parent: {id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540"} },
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -287,7 +291,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { elementType : "showhide" , id:"urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540"},
             index: 3,
             poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854", parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", showHideType:"show"}  },
-            newParentData: showhidetestData
+            newParentData: showhidetestData,
+            getState: jest.fn()
         }
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
         deleteHelpers.deleteFromStore(args)
@@ -303,7 +308,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: null,
             index: 3,
             poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540" },
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -320,7 +326,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { elementType : "manifest", manifestUrn: "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c" },
             index: 3,
             poetryData: null,
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -337,7 +344,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { elementType : "citations", manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e" },
             index: "0-1",
             poetryData: null,
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -362,7 +370,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e" },
             index: "12-0-0",
             poetryData: null,
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -386,7 +395,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e", elementType: 'citations' },
             index: "12-0-1-1",
             poetryData: null,
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -414,7 +424,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e", elementType: 'citations' },
             index: "7-0-1",
             poetryData: null,
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -442,7 +453,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e", elementType: 'group' },
             index: "11-0-1",
             poetryData: null,
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -470,7 +482,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { manifestUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e", elementType: 'group' },
             index: "11-0-1",
             poetryData: null,
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -486,7 +499,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: { },
             index: "13-0-1",
             poetryData: {type: 'poetry', parentUrn: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540'},
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -503,7 +517,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             parentUrn: null,
             index: 3,
             poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28541", parent: {id: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540'} },
-            newParentData: slateLevelData.slateLevelData
+            newParentData: slateLevelData.slateLevelData,
+            getState: jest.fn()
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")

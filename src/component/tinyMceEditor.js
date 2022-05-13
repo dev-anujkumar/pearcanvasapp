@@ -2641,7 +2641,7 @@ export class TinyMceEditor extends Component {
                 innerHtml = '<span id="footnote-attacher"></span>' + existingInnerHTML;
             }
             let parentInnerHtml = removeBOM(parentNode.innerHTML);
-            let newParentInnerHtml = parentInnerHtml.replace(existingInnerHTML, innerHtml);
+            let newParentInnerHtml = parentInnerHtml?.replace(existingInnerHTML, innerHtml);
             parentNode.innerHTML = newParentInnerHtml;
         }
         if (this.props.element.type === "popup") {
@@ -3019,7 +3019,7 @@ export class TinyMceEditor extends Component {
         } while (parentNode);
 
         let insertionText = '<span id="asset-popover-attacher">' + selectedText + '</span>';
-        editor.insertContent(insertionText);
+        editor.selection.setContent(insertionText);
         if (selection.innerHTML) {
             let spanTag = selection.getElementsByTagName('SPAN');
             if (spanTag.length) {
