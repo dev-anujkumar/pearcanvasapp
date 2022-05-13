@@ -73,13 +73,10 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             let updatedIndex = tempUpdatedIndex[0];
             if(tempIndex.length == 4 && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'groupedcontent'){
                 glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]
-                console.log("glossaryFootElem1 --->>>>", glossaryFootElem, newBodymatter)
             } else if(tempIndex.length == 3 && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'element-aside'){
                 glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[1]]
-                console.log("glossaryFootElem2 --->>>>", glossaryFootElem)
             } else {
                 glossaryFootElem = newBodymatter[updatedIndex]
-                console.log("glossaryFootElem3 --->>>>", glossaryFootElem)
             }
         }
         else if (typeWithPopup && typeWithPopup === "popup" ){
@@ -522,7 +519,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }else{
             elementIndex = tempIndex[0]+'-'+tempIndex[1]
         }
-        // elementIndex = tempIndex[0]+'-'+tempIndex[1]
         const bqNode = document.getElementById('cypress-' + elementIndex)
         workContainer = prepareBqHtml(bqNode);
         workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
@@ -789,12 +785,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = res.data;
         }
         else if (elementType === "figure" ||elementType === 'element-blockfeature') {
-            if(tempIndex.length == 3 || tempIndex.length == 4){
-                newBodymatter[tempIndex[1]] = res.data;
-                console.log("newBodymatter1 -->>", newBodymatter)
+            let updatedIndex = index.split('-')[0];
+            if(!(tempIndex.length === 2) && newBodymatter[tempIndex[0]].type === 'groupedcontent' && elementType === 'element-blockfeature'){
+                newBodymatter[updatedIndex].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
+            } else if(!(tempIndex.length === 2) && newBodymatter[tempIndex[0]].type === 'element-aside' && elementType === 'element-blockfeature'){
+                newBodymatter[updatedIndex].elementdata.bodymatter[tempIndex[1]] = res.data;
             } else{
-                let updatedIndex = index.split('-')[0];
-                console.log("updatedIndex -->>", updatedIndex)
                 newBodymatter[updatedIndex] = res.data;
             }
         }

@@ -281,20 +281,15 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 break;
             case BLOCKFEATURE:
                 if(eleIndex.length == 2 && bodymatter[eleIndex[0]].type === 'element-aside'){
-                    wipData = bodymatter[eleIndex[0]]?.elementdata.bodymatter[eleIndex[0]]
-                    console.log("wipData1 --->>>>", wipData)               
+                    wipData = bodymatter[eleIndex[0]]?.elementdata.bodymatter[eleIndex[1]]
                 } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === 'element-aside'){
-                    wipData = bodymatter[eleIndex[0]].elementdata?.bodymatter[eleIndex[0]]
-                    console.log("wipData2 --->>>>", wipData)               
+                    wipData = bodymatter[eleIndex[0]].elementdata?.bodymatter[eleIndex[1]]
                 } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === 'element-blockfeature'){
                     wipData = bodymatter[eleIndex[0]]
-                    console.log("wipData3 --->>>>", wipData)               
-                } else if(eleIndex.length == 3 ){
+                } else if((eleIndex.length == 3 || eleIndex.length == 4) && !(bodymatter[eleIndex[0]].type === 'element-blockfeature')){
                     wipData = bodymatter[eleIndex[0]].groupeddata?.bodymatter[eleIndex[1]].groupdata.bodymatter[eleIndex[2]]
-                    console.log("wipData4 --->>>>", wipData)
                 } else {
                     wipData = bodymatter[eleIndex[0]]
-                    console.log("wipData5 --->>>>", wipData)               
                 }
             case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */           
                 wipData = popupWipData(bodymatter, eleIndex,operationType,wipData)
