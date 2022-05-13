@@ -786,9 +786,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
         else if (elementType === "figure" ||elementType === 'element-blockfeature') {
             let updatedIndex = index.split('-')[0];
-            if(!(tempIndex.length === 2) && newBodymatter[tempIndex[0]].type === 'groupedcontent' && elementType === 'element-blockfeature'){
+            if(tempIndex.length === 4 && newBodymatter[tempIndex[0]].type === 'groupedcontent' && elementType === 'element-blockfeature'){
                 newBodymatter[updatedIndex].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
-            } else if(!(tempIndex.length === 2) && newBodymatter[tempIndex[0]].type === 'element-aside' && elementType === 'element-blockfeature'){
+            } else if(tempIndex.length === 3 && newBodymatter[tempIndex[0]].type === 'element-aside' && elementType === 'element-blockfeature'){
                 newBodymatter[updatedIndex].elementdata.bodymatter[tempIndex[1]] = res.data;
             } else{
                 newBodymatter[updatedIndex] = res.data;
