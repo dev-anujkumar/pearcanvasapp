@@ -62,6 +62,7 @@ export const TYPE_SINGLE_CONTAINER_DELETE = 'singleContainerDelete'
 export const TYPE_WITH_PENDING_TRACK = 'withPendingTrack'
 export const TYPE_UNLINK = 'unlink'
 export const elementType = ['ASSESSMENT', 'ELEMENT_ASSESSMENT','WORKED_EXAMPLE', 'CONTAINER', 'SECTION_BREAK', 'TEXT', 'CITATION', 'ELEMENT_CITATION', 'POETRY', 'STANZA' , 'MULTI_COLUMN', 'MULTI_COLUMN_3C','POP_UP', "IMAGE", "VIDEO", "AUDIO", "MATH_ML_CHEM_EDITOR", "BLOCK_CODE_EDITOR", "INTERACTIVE", "MMI_ELM", "SMART_LINK", "SHOW_HIDE", "ELEMENT_PDF", "MANIFEST_LIST"];
+export const DELETE_INSTRUCTION_FOR_TCM = 'Are you sure you want to delete this? This can only be reverted via TCM.'
 
 export const CLONE_STATUS_INTERVAL = 2000
 export const checkTCM = element => {
