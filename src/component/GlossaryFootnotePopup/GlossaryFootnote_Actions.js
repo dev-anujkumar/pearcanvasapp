@@ -71,7 +71,13 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         else if (elementType === "figure" || elementType === "element-blockfeature") {
             let tempUpdatedIndex = index.split('-');
             let updatedIndex = tempUpdatedIndex[0];
-            glossaryFootElem = newBodymatter[updatedIndex]
+            if(tempIndex.length == 4 && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'groupedcontent'){
+                glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]
+            } else if(tempIndex.length == 3 && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'element-aside'){
+                glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[1]]
+            } else {
+                glossaryFootElem = newBodymatter[updatedIndex]
+            }
         }
         else if (typeWithPopup && typeWithPopup === "popup" ){
             let indexesLen = tempIndex.length;
@@ -506,7 +512,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     else if(elementType == 'element-blockfeature'){
         let elementIndex;
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
-        elementIndex = tempIndex[0]+'-'+tempIndex[1]
+        if(tempIndex.length == 4){
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]+'-'+tempIndex[3]
+        }else if(tempIndex.length == 3){
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]
+        }else{
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]
+        }
         const bqNode = document.getElementById('cypress-' + elementIndex)
         workContainer = prepareBqHtml(bqNode);
         workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
@@ -774,7 +786,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
         else if (elementType === "figure" ||elementType === 'element-blockfeature') {
             let updatedIndex = index.split('-')[0];
-            newBodymatter[updatedIndex] = res.data;
+            if(tempIndex.length === 4 && newBodymatter[updatedIndex].type === 'groupedcontent' && elementType === 'element-blockfeature'){
+                newBodymatter[updatedIndex].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
+            } else if(tempIndex.length === 3 && newBodymatter[updatedIndex].type === 'element-aside' && elementType === 'element-blockfeature'){
+                newBodymatter[updatedIndex].elementdata.bodymatter[tempIndex[1]] = res.data;
+            } else{
+                newBodymatter[updatedIndex] = res.data;
+            }
         }
         else if (typeWithPopup && typeWithPopup === "popup"){
             let indexesLen = tempIndex.length
