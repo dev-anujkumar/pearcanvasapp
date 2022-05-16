@@ -1110,6 +1110,32 @@ export const mockSlateFiguresList = [{
 }]
 
 export const mockAutoNumberReducerEmpty = {
+    isAutoNumberingEnabled: true,
+    autoNumberedElements: {
+        imagesList: [],
+        tablesList: [],
+        equationsList: [],
+        audiosList:[],
+        videosList:[]
+    },
+    autoNumberingDetails: {},
+    autoNumberElementsIndex: {
+        figureImageIndex: {},
+        tableIndex: {},
+        equationsIndex: {},
+        audioIndex: {},
+        videoIndex: {}
+    },
+    slateFigureList:[],
+    autoNumberOption: '',
+	autoNumberSettingsOption : '',
+	popupParentSlateData: {
+		isPopupSlate: true,
+		versionUrn: "urn:pearson:manifest:2be66a27-559f-4ad9-b162-6580ecfb9c20"
+	},
+}
+
+export const mockAutoNumberReducerEmpty1 = {
     isAutoNumberingEnabled: false,
     autoNumberedElements: {
         imagesList: [],
@@ -1128,7 +1154,11 @@ export const mockAutoNumberReducerEmpty = {
     },
     slateFigureList:[],
     autoNumberOption: '',
-	autoNumberSettingsOption : ''
+	autoNumberSettingsOption : '',
+	popupParentSlateData: {
+		isPopupSlate: false,
+		versionUrn: "urn:pearson:manifest:2be66a27-559f-4ad9-b162-6580ecfb9c20"
+	},
 }
 
 export const mockAutoNumberingDetails = {
