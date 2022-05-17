@@ -257,7 +257,6 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 }
                 break;
             case ELEMENT_LIST:
-            case BLOCKFEATURE:
             case AUTHORED_TEXT:
             case LEARNING_OBJECTIVE:
             case SHOWHIDE:
@@ -280,6 +279,18 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                     }
                 }
                 break;
+            case BLOCKFEATURE:
+                if(eleIndex.length == 2 && bodymatter[eleIndex[0]].type === 'element-aside'){
+                    wipData = bodymatter[eleIndex[0]]?.elementdata?.bodymatter[eleIndex[1]]
+                } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === 'element-aside'){
+                    wipData = bodymatter[eleIndex[0]]?.elementdata?.bodymatter[eleIndex[1]]
+                } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]].type === 'element-blockfeature'){
+                    wipData = bodymatter[eleIndex[0]]
+                } else if((eleIndex.length == 3 || eleIndex.length == 4) && !(bodymatter[eleIndex[0]].type === 'element-blockfeature')){
+                    wipData = bodymatter[eleIndex[0]]?.groupeddata?.bodymatter[eleIndex[1]]?.groupdata?.bodymatter[eleIndex[2]]
+                } else {
+                    wipData = bodymatter[eleIndex[0]]
+                }
             case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */           
                 wipData = popupWipData(bodymatter, eleIndex,operationType,wipData)
                 break;
