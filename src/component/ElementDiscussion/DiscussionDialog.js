@@ -33,7 +33,6 @@ const DiscussionDialog = ({
   const discussionItems = useSelector((state) => state.projectInfo.discussionItems);
   const options = useSelector((state) => state.projectInfo.LOBList)
   const showDiscussionLOBDropdown = useSelector((state) => state.projectInfo.showDiscussionLOBDropdown)
-
   const [selectedDiscussion, setSelectedDiscussion] = useState(getSelectedItemFromId(itemId));
   const [filteredItems, setFilteredItems] = useState(discussionItems);
   const [searchText, setSearchText] = useState("");

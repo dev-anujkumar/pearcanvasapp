@@ -5,7 +5,7 @@ import { UsageTypeDropdown } from "../AssessmentSlateCanvas/UsageTypeDropdown/Us
 import "../../styles/ElementDiscussion/ElementDiscussion.css";
 import { useSelector,connect } from "react-redux";
 import DiscussionDialog from "./DiscussionDialog";
-import { getLOBDiscussionItems } from "../CanvasWrapper/CanvasWrapper_Actions";
+import { getLOBDiscussionItems, resetLOBDiscussionItems } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { createDiscussionForUpdateAPI, clearElement, removeLabel } from "./Utils";
 import { updateElement } from "../ElementContainer/ElementContainer_Actions";
 import {
@@ -48,7 +48,6 @@ const ElementDiscussion = (props) => {
   const [showUsageTypeOptions, setshowUsageTypeOptions] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [selectedLOB, setSelectedLOB] = useState(lineOfBusiness);
-
   const [usageType, setUsageType] = useState(usagetype);
   const [itemId, setItemId] = useState(itemid);
   const [title, setTitle] = useState(importeddiscussiontitle.text);
@@ -153,7 +152,7 @@ const ElementDiscussion = (props) => {
             </div>
           )}
           {typeof LOB === "string" && (
-            <span className="valueDiscussion">{showDiscussionLOBDropdown ? `${selectedLOB}` : `${LOB}`}</span>
+          <span className="valueDiscussion">{itemId && showDiscussionLOBDropdown ? `${selectedLOB}` : `${LOB}`}</span>
           )}
         </div>
 
@@ -251,6 +250,7 @@ const ElementDiscussion = (props) => {
       </div>
       <DiscussionDialog
         elemendId={props?.element?.id}
+        resetLOBDiscussionItems={props.resetLOBDiscussionItems}
         selectDiscussion={(item) => {
           // update itemid, title in update api
           const blockdata = {
@@ -274,6 +274,7 @@ const ElementDiscussion = (props) => {
           });
         }}
         closeDialog={() => {
+          props.resetLOBDiscussionItems();
           setShowDialog(false);
           hideBlocker(true);
           hideTocBlocker(true);
@@ -287,7 +288,7 @@ const ElementDiscussion = (props) => {
 };
 
 const dispatchActions = {
-  updateElement,getLOBDiscussionItems
+  updateElement,getLOBDiscussionItems,resetLOBDiscussionItems
 };
 
 const mapStateToProps = ({ appStore }) => {

@@ -452,6 +452,13 @@ export const getLOBDiscussionItems = (lineOfBusiness)  => async (dispatch) => {
     }
 }
 
+export const resetLOBDiscussionItems = ()  => async (dispatch) => {
+    dispatch({
+        type: "UPDATE_DISCUSSION_ITEMS",
+        payload: []
+    })  
+}
+
 export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
     // console.log("the lob url is " + lobURL)
