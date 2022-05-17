@@ -212,12 +212,13 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   border: solid 1px #e8e8e8;
   background-color: #ffffff;
-  width: 540px;
+  width: 792px;
   margin: 13px 0px 13px 0px;
   height: 36px;
 }
 
 .LOBdropdown {
+  position: relative;
   flex-direction: row;
   align-items: center;
   display: flex;
@@ -226,10 +227,29 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   border: solid 1px #e8e8e8;
   background-color: #ffffff;
-  width: 360px;
+  width: 206px;
   height: 36px;
   font-size: 16px;
   margin: 13px 0 13px 8px;
+}
+
+.MuiInput-underline:before {
+  border-bottom: none !important
+}
+
+.MuiInput-underline:after {
+  border-bottom: none !important
+}
+
+.MuiSelect-select.MuiSelect-select {
+  width: 156px;
+}
+
+.MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded{
+  top: 91px;
+  left: 163px !important;
+  width: 206px !important;
+  height: 115px;
 }
 
 .searchTextDiscussion {

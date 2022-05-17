@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { discussionCloseIcon, searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
 import { Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 //Function for display tooltip in title
 const TitleTooltip = withStyles({
@@ -58,11 +60,11 @@ const DiscussionDialog = ({
             <div onClick={() =>  closeDialog()} className="closeIconDiscussion">{discussionCloseIcon}</div>
           </div>
           <div className={showDiscussionLOBDropdown ? "const" : ""}>{showDiscussionLOBDropdown && <div className="opt"><div className="LOB-label">LOB</div>
-          <div>
-          <select className="LOBdropdown" defaultValue="select" onChange={(e) => getLOBDiscussionItems(e.target.value)}>
-          <option value="select" disabled hidden>Select</option>
-          {options.map((x) => (<option value={x.lineOfBusiness}>{x.label}</option>))}
-        </select>
+          <div className="LOBdropdown" >
+          <Select defaultValue="select" onChange={(e) => getLOBDiscussionItems(e.target.value)}>
+          <MenuItem value="select" disabled style={{ display: "none"}}>Select a LOB</MenuItem>
+          {options.map((x) => (<MenuItem value={x.lineOfBusiness}>{x.label}</MenuItem>))}
+        </Select>
         </div>
           </div>}
             <div className={showDiscussionLOBDropdown ? "searchContainerDiscussionWithLOBDropdown" : "searchContainerDiscussion"}>
