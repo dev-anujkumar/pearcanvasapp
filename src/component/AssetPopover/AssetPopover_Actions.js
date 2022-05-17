@@ -191,14 +191,24 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
       cb(currentlyLinkedData)
 
     } else {
+      try {
         currentlyLinkedData = await getElementVersionContent(id)
         cb(currentlyLinkedData)
+      } catch (err1) {
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+        cb(currentlyLinkedData);
+        console.error("err from narrative api 1", err1)
+      }
     }
-
   } catch (err) {
-    sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-    cb(currentlyLinkedData);
-    console.error("err from narrative api 2", err)
+    try {
+      currentlyLinkedData = await getElementVersionContent(id)
+      cb(currentlyLinkedData)
+    } catch (err1) {
+      sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
+      cb(currentlyLinkedData);
+      console.error("err from narrative api 2", err1)
+    }
   }
 }
 
