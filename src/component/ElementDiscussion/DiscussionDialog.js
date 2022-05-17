@@ -38,6 +38,7 @@ const DiscussionDialog = ({
   const [selectedDiscussion, setSelectedDiscussion] = useState(getSelectedItemFromId(itemId));
   const [filteredItems, setFilteredItems] = useState(discussionItems);
   const [searchText, setSearchText] = useState("");
+  const [defaultLOBDropdownValue, setLOBDropdownValue] = useState("select");
 
   useEffect(() => {
     if (showDialog) {
@@ -46,6 +47,18 @@ const DiscussionDialog = ({
       setSearchText("");
     }
   }, [showDialog,discussionItems]);
+
+  // function to set LOB value selected and fetch discussion items for selected LOB
+  const setSelectedLOBValue = (value) => {
+    setLOBDropdownValue(value);
+    getLOBDiscussionItems(value);
+  }
+
+  //function to reset LOB dropdown value to "select" and close dialog
+  const resetSelectedLOBValue = () => {
+    setLOBDropdownValue("select");
+    closeDialog();
+  }
 
   return (
     <div
@@ -57,15 +70,16 @@ const DiscussionDialog = ({
         >
           <div className="headingContainerDiscussion">
             <div className="headingTextDiscussion">Select a Discussion Item</div>
-            <div onClick={() =>  closeDialog()} className="closeIconDiscussion">{discussionCloseIcon}</div>
+            <div onClick={() =>  resetSelectedLOBValue()} className="closeIconDiscussion">{discussionCloseIcon}</div>
           </div>
-          <div className={showDiscussionLOBDropdown ? "const" : ""}>{showDiscussionLOBDropdown && <div className="opt"><div className="LOB-label">LOB</div>
-          <div className="LOBdropdown" >
-          <Select defaultValue="select" onChange={(e) => getLOBDiscussionItems(e.target.value)}>
-          <MenuItem value="select" disabled style={{ display: "none"}}>Select a LOB</MenuItem>
-          {options.map((x) => (<MenuItem value={x.lineOfBusiness}>{x.label}</MenuItem>))}
-        </Select>
-        </div>
+          <div className={showDiscussionLOBDropdown ? "const" : ""}>
+            {showDiscussionLOBDropdown && <div className="opt"><div className="LOB-label">LOB</div>
+            <div className="LOBdropdown" >
+              <Select value={defaultLOBDropdownValue} onChange={(e) => setSelectedLOBValue(e.target.value)}>
+                <MenuItem value="select" disabled style={{ display: "none" }}>Select</MenuItem>
+                {options.map((x) => (<MenuItem value={x.lineOfBusiness}>{x.label}</MenuItem>))}
+              </Select>
+            </div>
           </div>}
             <div className={showDiscussionLOBDropdown ? "searchContainerDiscussionWithLOBDropdown" : "searchContainerDiscussion"}>
               {searchDisussion}
@@ -144,7 +158,7 @@ const DiscussionDialog = ({
             </div>
             <div
               onClick={() => {
-                closeDialog();
+                resetSelectedLOBValue();
               }}
               className="cancelDiscussion"
             >
@@ -153,7 +167,7 @@ const DiscussionDialog = ({
             <div
               onClick={() => {
                 if (typeof selectedDiscussion === "object") {
-                  closeDialog();
+                  resetSelectedLOBValue();
                   selectDiscussion(selectedDiscussion);
                 }
               }}
