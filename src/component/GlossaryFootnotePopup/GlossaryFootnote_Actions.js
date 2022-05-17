@@ -48,6 +48,9 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         if (showHideElement || asideParent?.type === 'showhide' && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) { /** Glossary-Footnotes inside Show-Hide */
             /* Get the element where footnote/Glossery is added */
             glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
+            if(tempIndex.length == 4 && glossaryFootElem[tempIndex[0]]?.type === "showhide" && elementType === 'element-blockfeature'){
+                glossaryFootElem = newBodymatter[tempIndex[0]]?.interactivedata?.show[tempIndex[0]]
+            }
         } else if ((tempIndex.length == 5 || tempIndex.length == 6) && elementType == 'figure' && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
             glossaryFootElem = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
             if (tempIndex.length == 6 && glossaryFootElem.type === 'manifest') {
@@ -73,8 +76,8 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             let updatedIndex = tempUpdatedIndex[0];
             if(tempIndex.length == 4 && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'groupedcontent'){
                 glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]
-            } else if(tempIndex.length == 3 && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'element-aside'){
-                glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[1]]
+            } else if((tempIndex.length == 3 || tempIndex.length == 4) && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'element-aside'){
+                glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[0]]
             } else {
                 glossaryFootElem = newBodymatter[updatedIndex]
             }
@@ -764,6 +767,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
         if (showHideElement || asideParent?.type === 'showhide'  && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) {/** Glossary-Footnotes inside Show-Hide */
             newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
+            if(tempIndex.length == 4 && asideParent?.type === 'showhide' && elementType === 'element-blockfeature'){
+                newBodymatter[tempIndex[0]].interactivedata.show[tempIndex[0]] = res.data;
+            }
         } else if ((tempIndex.length == 5 || tempIndex.length == 6) && elementType == 'figure' && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
             let elementInSH = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]];
             if (elementInSH.subtype === "workedexample" && tempIndex.length == 6 && elementInSH.elementdata.bodymatter[tempIndex[3]].type === 'manifest') {
@@ -788,8 +794,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             let updatedIndex = index.split('-')[0];
             if(tempIndex.length === 4 && newBodymatter[updatedIndex].type === 'groupedcontent' && elementType === 'element-blockfeature'){
                 newBodymatter[updatedIndex].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
-            } else if(tempIndex.length === 3 && newBodymatter[updatedIndex].type === 'element-aside' && elementType === 'element-blockfeature'){
-                newBodymatter[updatedIndex].elementdata.bodymatter[tempIndex[1]] = res.data;
+            } else if((tempIndex.length === 3 || tempIndex.length === 4) && newBodymatter[updatedIndex].type === 'element-aside' && elementType === 'element-blockfeature'){
+                newBodymatter[updatedIndex].elementdata.bodymatter[tempIndex[0]] = res.data;
             } else{
                 newBodymatter[updatedIndex] = res.data;
             }
