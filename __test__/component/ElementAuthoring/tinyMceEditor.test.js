@@ -6503,6 +6503,7 @@ describe('Test function--handleBlankLineArrowKeys', () => {
  describe('Testing function--setCalloutToSelection', () => {
     it('setCalloutToSelection', () => {
         tinymce.activeEditor.selection.getBookmark = jest.fn()
+        tinymce.activeEditor.targetElm.className = []
         let nextEditor = {
             on: (temp, cb) => { cb(event) },
             selection: editor.selection,
@@ -6861,7 +6862,8 @@ describe('Test function--handleBlankLineArrowKeys', () => {
                             querySelectorAll: jest.fn(),
                             classList: {
                                 remove: jest.fn()
-                            }
+                            },
+                            className:[]
                         }
                     }
                 },
@@ -6929,7 +6931,8 @@ describe('Test function--handleBlankLineArrowKeys', () => {
                             querySelectorAll: jest.fn(),
                             classList: {
                                 remove: jest.fn()
-                            }
+                            },
+                            className:[]
                         }
                     }
                 },
