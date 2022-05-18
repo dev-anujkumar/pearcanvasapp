@@ -6,6 +6,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import clsx from "clsx";
 
 //Function for display tooltip in title
 const TitleTooltip = withStyles({
@@ -65,6 +66,17 @@ const DiscussionDialog = ({
     }
   }
 
+  const CustomDropDownIcon = withStyles()(
+    ({ className, classes, ...rest }) => {
+      return (
+        <KeyboardArrowDownIcon
+          {...rest}
+          className={clsx(className, classes.selectIcon)}
+        />
+      );
+    }
+  );
+
   return (
     <div
       className={`modalDiscussion ${showDialog? 'displayBlockDiscussion' : 'displayNoneDiscussion'}`}
@@ -75,13 +87,13 @@ const DiscussionDialog = ({
         >
           <div className="headingContainerDiscussion">
             <div className="headingTextDiscussion">Select a Discussion Item</div>
-            <div onClick={() =>  resetSelectedLOBValue()} className="closeIconDiscussion">{discussionCloseIcon}</div>
+            <div onClick={() => resetSelectedLOBValue()} className="closeIconDiscussion">{discussionCloseIcon}</div>
           </div>
           <div className={showDiscussionLOBDropdown ? "const" : ""}>
             {showDiscussionLOBDropdown && <div className="opt"><div className="LOB-label">LOB</div>
             <div className="LOBdropdown" >
-              <Select value={defaultLOBDropdownValue} IconComponent={() => <KeyboardArrowDownIcon />} onChange={(e) => setSelectedLOBValue(e.target.value)}>
-                <MenuItem value="select" className="selectOption" disabled style={{ display: "none" }}>Select</MenuItem>
+              <Select className={defaultLOBDropdownValue === "select" ? "selectInDropdown" : "LOBInDropdown"} value={defaultLOBDropdownValue} IconComponent={CustomDropDownIcon} onChange={(e) => setSelectedLOBValue(e.target.value)}>
+                <MenuItem value="select" className="selectOption">Select</MenuItem>
                 {options.map((x) => (<MenuItem value={x.lineOfBusiness}>{x.label}</MenuItem>))}
               </Select>
             </div>

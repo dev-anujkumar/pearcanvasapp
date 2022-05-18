@@ -202,6 +202,7 @@
   border: 1px solid #e8e8e8;
   background-color: #fff;
   margin: 13px 149px 13px 20px;
+  height: 36px;
 }
 
 .searchContainerDiscussionWithLOBDropdown {
@@ -218,8 +219,16 @@
   height: 36px;
 }
 
-.selectOption{
+.selectOption {
+  display: none !important;
+}
+
+.selectInDropdown {
   color: #ababab !important;
+}
+
+.LOBInDropdown {
+  color: black !important;
 }
 
 .LOBdropdown {
@@ -246,9 +255,6 @@
   border-bottom: none !important
 }
 
-.LOBdropdown .MuiSelect-select.MuiSelect-select {
-  width: 156px;
-}
 
 .LOBdropdown .MuiInputBase-root {
   font-size: 16px !important;
@@ -262,25 +268,16 @@
   padding: 0;
 }
 
-.MuiMenuItem-root {
-  font-size: 14px !important;
-}
-
 .LOBdropdown .MuiSelect-select.MuiSelect-select {
-  width: 50px;
+  width: 73px;
   padding: 0;
+  background-color: white !important
 }
 
 .LOBdropdown .MuiSvgIcon-root {
   font-size: 2rem !important;
 }
 
-.MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded {
-  width: 206px !important;
-  height: 115px;
-  /* top: 54px;
-  left: 133px; */
-}
 
 .searchTextDiscussion {
   margin: 1px 0 1px 8px;
