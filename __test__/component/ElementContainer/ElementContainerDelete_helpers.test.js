@@ -239,7 +239,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             poetryData: null,
             // newParentData: parentElement
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -257,7 +261,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             poetryData: null,
             // newParentData: parentElement
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -275,7 +283,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: 3,
             poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854", parent: {id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540"} },
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -292,7 +304,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: 3,
             poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854", parent: {id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02", showHideType:"show"}  },
             newParentData: showhidetestData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
         deleteHelpers.deleteFromStore(args)
@@ -309,7 +325,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: 3,
             poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540" },
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -327,7 +347,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: 3,
             poetryData: null,
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -345,7 +369,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: "0-1",
             poetryData: null,
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -371,7 +399,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: "12-0-0",
             poetryData: null,
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -396,7 +428,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: "12-0-1-1",
             poetryData: null,
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -425,7 +461,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: "7-0-1",
             poetryData: null,
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -454,7 +494,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: "11-0-1",
             poetryData: null,
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -483,7 +527,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: "11-0-1",
             poetryData: null,
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -500,7 +548,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: "13-0-1",
             poetryData: {type: 'poetry', parentUrn: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540'},
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")
@@ -518,7 +570,11 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             index: 3,
             poetryData: { type: 'poetry', parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28541", parent: {id: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f28540'} },
             newParentData: slateLevelData.slateLevelData,
-            getState: jest.fn()
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
         }
         
         const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore")

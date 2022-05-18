@@ -9,7 +9,7 @@ import * as AutoNumberActions from '../../../src/component/FigureHeader/AutoNumb
 import {GET_ALL_AUTO_NUMBER_ELEMENTS} from '../../../src/constants/Action_Constants'
 /*************************Import Constants*************************/
 import { mockSlateFiguresList, mockAutoNumberingDetails, slateAncestorFM, slateAncestorBM, slateAncestorPart, slateAncestorChapter, slateAncestorChapterwithMod, mockIndexedElements,
-         figureData, element, newElement, mockNumberedElements, mock_autoNumber_ElementTypeKey, slateLevelData, elementObj, slateData1} from './AutoNumberApiTestData';
+         figureData, element, newElement, mockNumberedElements, mock_autoNumber_ElementTypeKey, slateLevelData, elementObj, slateData1, mock_autoNumber_response_ElementType_mapper} from './AutoNumberApiTestData';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -689,8 +689,8 @@ describe('-----------------Testing AutoNumber_helperFunctions-----------------',
                 "type": "figure",
                 "versionUrn": "urn:pearson:work:f7d4ef4f-03ee-4e62-9f21-d2ef16f98a7d"
                 }
-            let data = { "figures": [mockData]}
-            const output = { imagesList: { frontMatter: [mockData] } }
+            let data = { "figure": [mockData]}
+            const output = { imageList: { frontMatter: [mockData] } }
             const result = autonumber_helperFunctions.getNumberedElements(data, "frontMatter");
             expect(result).toStrictEqual(output)
         });
