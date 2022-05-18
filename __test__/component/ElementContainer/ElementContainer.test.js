@@ -483,8 +483,40 @@ describe('Test for element container component', () => {
         })
         it('Render Element Container ----->handleBlur', () => {
             let props = {
-                element: wipData.figure,
-                permissions: []
+                element: wipData.poetry,
+                permissions: [],
+                parentElement: {
+                    type: "groupedcontent",
+                    groupeddata: {
+                        "bodymatter": [
+                            {
+                                "type": "stanza",
+                                "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                                "contentUrn": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5",
+                                "versionUrn": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                                "slateUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                                "poetrylines": [
+                                    {
+                                        "type": "line",
+                                        "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67",
+                                        "authoredtext": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                            "text": ""
+                                        }
+                                    },
+                                ],
+                                "html": {
+                                    "title": "<p></p>",
+                                    "subtitle": "<p></p>",
+                                    "captions": "<p></p>",
+                                    "credits": "<p></p>",
+                                    "text": "<span><br /></span>"
+                                }
+                            }
+                        ]
+                    }
+                }
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -1377,7 +1409,7 @@ describe('Test for element container component', () => {
             let e = {
                 target: {
                     getAttribute:  ()=> {
-                        return 'primary';
+                        return 'data-value';
                     }
                 }
             }
@@ -3405,7 +3437,6 @@ describe('Test-Other Functions', () => {
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         const previousElementData = {
             manualoverride: {
-                overridelabelvalue: true
             },
             numberedandlabel: false
         }
@@ -3417,6 +3448,20 @@ describe('Test-Other Functions', () => {
         spyhandleAutonumberAfterUpdate.mockClear()
     });
 
+    it("handleAutonumberAfterUpdate function -- else if", () => {
+        let elementContainer = mount(<Provider store={store2}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        const previousElementData = {
+            numberedandlabel: true
+        }
+        let updateData=wipData.paragraphUpdate
+        let dataToSend ={updateData} 
+        const spyhandleAutonumberAfterUpdate = jest.spyOn(elementContainerInstance, 'handleAutonumberAfterUpdate')
+        elementContainerInstance.handleAutonumberAfterUpdate(previousElementData, dataToSend, null, null, null);
+        expect(spyhandleAutonumberAfterUpdate).toHaveBeenCalled();
+        spyhandleAutonumberAfterUpdate.mockClear()
+    });
+    
     it('showAlfrescoExpansionPopup method for TE ', () => {
         let props7 = {
             element: {
