@@ -186,9 +186,10 @@
 }
 
 .LOB-label {
-  padding: 22px 0 21px 0;
+  padding: 19px 0 21px 0;
   font-size: 16px;
   font-weight: bold;
+  position: relative;
 }
 
 .searchContainerDiscussion {
@@ -212,9 +213,13 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   border: solid 1px #e8e8e8;
   background-color: #ffffff;
-  width: 792px;
+  width: 906px;
   margin: 13px 0px 13px 0px;
   height: 36px;
+}
+
+.selectOption{
+  color: #ababab !important;
 }
 
 .LOBdropdown {
@@ -227,29 +232,54 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   border: solid 1px #e8e8e8;
   background-color: #ffffff;
-  width: 206px;
+  width: 93px;
   height: 36px;
   font-size: 16px;
   margin: 13px 0 13px 8px;
 }
 
-.MuiInput-underline:before {
+.LOBdropdown .MuiInput-underline:before  {
   border-bottom: none !important
 }
 
-.MuiInput-underline:after {
+.LOBdropdown .MuiInput-underline:after {
   border-bottom: none !important
 }
 
-.MuiSelect-select.MuiSelect-select {
+.LOBdropdown .MuiSelect-select.MuiSelect-select {
   width: 156px;
 }
 
-.MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded{
-  top: 91px;
-  left: 163px !important;
+.LOBdropdown .MuiInputBase-root {
+  font-size: 16px !important;
+}
+
+.LOBdropdown .MuiSelect-iconOpen {
+  transform: none;
+}
+
+.LOBdropdown .MuiInputBase-input {
+  padding: 0;
+}
+
+.MuiMenuItem-root {
+  font-size: 14px !important;
+}
+
+.LOBdropdown .MuiSelect-select.MuiSelect-select {
+  width: 50px;
+  padding: 0;
+}
+
+.LOBdropdown .MuiSvgIcon-root {
+  font-size: 2rem !important;
+}
+
+.MuiPaper-root.MuiMenu-paper.MuiPopover-paper.MuiPaper-elevation8.MuiPaper-rounded {
   width: 206px !important;
   height: 115px;
+  /* top: 54px;
+  left: 133px; */
 }
 
 .searchTextDiscussion {

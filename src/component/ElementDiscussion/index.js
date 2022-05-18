@@ -250,7 +250,6 @@ const ElementDiscussion = (props) => {
       </div>
       <DiscussionDialog
         elemendId={props?.element?.id}
-        resetLOBDiscussionItems={props.resetLOBDiscussionItems}
         selectDiscussion={(item) => {
           // update itemid, title in update api
           const blockdata = {
@@ -274,7 +273,6 @@ const ElementDiscussion = (props) => {
           });
         }}
         closeDialog={() => {
-          props.resetLOBDiscussionItems();
           setShowDialog(false);
           hideBlocker(true);
           hideTocBlocker(true);
@@ -282,6 +280,7 @@ const ElementDiscussion = (props) => {
         }}
         showDialog={showDialog}
         getLOBDiscussionItems={props.getLOBDiscussionItems}
+        resetLOBDiscussionItems={props.resetLOBDiscussionItems}
       />
     </div>
   );

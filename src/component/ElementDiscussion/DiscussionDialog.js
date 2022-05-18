@@ -5,6 +5,7 @@ import { Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 //Function for display tooltip in title
 const TitleTooltip = withStyles({
@@ -30,7 +31,8 @@ const DiscussionDialog = ({
   itemId = undefined,
   selectDiscussion = () => {},
   closeDialog = () => {},
-  getLOBDiscussionItems
+  getLOBDiscussionItems,
+  resetLOBDiscussionItems
 }) => {
   const discussionItems = useSelector((state) => state.projectInfo.discussionItems);
   const options = useSelector((state) => state.projectInfo.LOBList)
@@ -58,6 +60,9 @@ const DiscussionDialog = ({
   const resetSelectedLOBValue = () => {
     setLOBDropdownValue("select");
     closeDialog();
+    if(showDiscussionLOBDropdown === true){
+      resetLOBDiscussionItems()
+    }
   }
 
   return (
@@ -75,8 +80,8 @@ const DiscussionDialog = ({
           <div className={showDiscussionLOBDropdown ? "const" : ""}>
             {showDiscussionLOBDropdown && <div className="opt"><div className="LOB-label">LOB</div>
             <div className="LOBdropdown" >
-              <Select value={defaultLOBDropdownValue} onChange={(e) => setSelectedLOBValue(e.target.value)}>
-                <MenuItem value="select" disabled style={{ display: "none" }}>Select</MenuItem>
+              <Select value={defaultLOBDropdownValue} IconComponent={() => <KeyboardArrowDownIcon />} onChange={(e) => setSelectedLOBValue(e.target.value)}>
+                <MenuItem value="select" className="selectOption" disabled style={{ display: "none" }}>Select</MenuItem>
                 {options.map((x) => (<MenuItem value={x.lineOfBusiness}>{x.label}</MenuItem>))}
               </Select>
             </div>
