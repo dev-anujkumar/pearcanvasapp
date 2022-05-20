@@ -97,10 +97,10 @@ const DiscussionDialog = ({
             <div className="headingTextDiscussion">Select a Discussion Item</div>
             <div onClick={() => resetSelectedLOBValue()} className="closeIconDiscussion">{discussionCloseIcon}</div>
           </div>
-          <div className={showDiscussionLOBDropdown ? "const" : ""}>
-            {showDiscussionLOBDropdown && <div className="opt"><div className="LOB-label">LOB</div>
-            <div className="LOBdropdown" >
-              <Select MenuProps={{ style: LOBDropdownMenuStyles}} className={defaultLOBDropdownValue === "select" ? "selectInDropdown" : "LOBInDropdown"} value={defaultLOBDropdownValue} IconComponent={CustomDropDownIcon} onChange={(e) => setSelectedLOBValue(e.target.value)}>
+          <div className={showDiscussionLOBDropdown ? "LOBDropdownAndSearchboxContainer" : ""}>
+            {showDiscussionLOBDropdown && <div className="LOBDropdownContainer"><div className="LOB-label">LOB</div>
+            <div className="LOBDropdown" >
+              <Select MenuProps={{style: LOBDropdownMenuStyles}} className={defaultLOBDropdownValue === "select" ? "selectInDropdown" : "LOBInDropdown"} value={defaultLOBDropdownValue} IconComponent={CustomDropDownIcon} onChange={(e) => setSelectedLOBValue(e.target.value)}>
                 <MenuItem value="select" className="selectOption">Select</MenuItem>
                 {options.map((x) => (<MenuItem className="LOBMenuList" value={x.lineOfBusiness}>{x.label}</MenuItem>))}
               </Select>
