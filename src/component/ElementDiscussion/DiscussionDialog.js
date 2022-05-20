@@ -90,9 +90,7 @@ const DiscussionDialog = ({
       className={`modalDiscussion ${showDialog? 'displayBlockDiscussion' : 'displayNoneDiscussion'}`}
     >
       <div className="popupContainerDiscussion">
-        <div
-          className="popupDiscussion"
-        >
+        <div className="popupDiscussion">
           <div className="headingContainerDiscussion">
             <div className="headingTextDiscussion">Select a Discussion Item</div>
             <div onClick={() => resetSelectedLOBValue()} className="closeIconDiscussion">{discussionCloseIcon}</div>
