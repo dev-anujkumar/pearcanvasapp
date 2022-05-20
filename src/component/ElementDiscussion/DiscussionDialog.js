@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { discussionCloseIcon, searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
 import { Tooltip } from "@material-ui/core";
-import { withStyles, createTheme,ThemeProvider } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -26,18 +26,13 @@ const getSelectedItemFromId = (id) => {
   return undefined;
 };
 
-const LOBDropdownTheme = createTheme({
-  overrides: {
-    MuiPopover: {
-      root: {
-        top: '-252px !important',
-        left: '-16px !important',
-        width: '125px',
-        height: '211px',
-      }
-    }
-  }
-});
+// handle LOB dropdown select menu position
+const LOBDropdownMenuStyles = {
+  top: '-252px',
+  left: '-16px',
+  width: '125px',
+  height: '211px',
+}
 
 const DiscussionDialog = ({
   showDialog = false,
@@ -105,12 +100,10 @@ const DiscussionDialog = ({
           <div className={showDiscussionLOBDropdown ? "const" : ""}>
             {showDiscussionLOBDropdown && <div className="opt"><div className="LOB-label">LOB</div>
             <div className="LOBdropdown" >
-            <ThemeProvider theme={LOBDropdownTheme}>
-              <Select className={defaultLOBDropdownValue === "select" ? "selectInDropdown" : "LOBInDropdown"} value={defaultLOBDropdownValue} IconComponent={CustomDropDownIcon} onChange={(e) => setSelectedLOBValue(e.target.value)}>
+              <Select MenuProps={{ style: LOBDropdownMenuStyles}} className={defaultLOBDropdownValue === "select" ? "selectInDropdown" : "LOBInDropdown"} value={defaultLOBDropdownValue} IconComponent={CustomDropDownIcon} onChange={(e) => setSelectedLOBValue(e.target.value)}>
                 <MenuItem value="select" className="selectOption">Select</MenuItem>
                 {options.map((x) => (<MenuItem className="LOBMenuList" value={x.lineOfBusiness}>{x.label}</MenuItem>))}
               </Select>
-              </ThemeProvider>
             </div>
           </div>}
             <div className={showDiscussionLOBDropdown ? "searchContainerDiscussionWithLOBDropdown" : "searchContainerDiscussion"}>
