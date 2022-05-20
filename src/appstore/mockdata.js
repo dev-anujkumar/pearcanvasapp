@@ -18,6 +18,50 @@ export default {
                       "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
                       "versionUrn": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
                       "contentUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+                      "elementdata": {
+                        "bodymatter":[
+                          {
+                            "id": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b",
+                            "type": "stanza",
+                            "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                            "html": {
+                              "text": "<p><span class=\"poetryLine\" data-id=\"urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3:55721e6a-7408-4eb2-aee2-296d0d0f2981\"><br></span></p>",
+                              "footnotes":{
+                                "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d": []
+                              }
+                            },
+                            "versionUrn": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b",
+                            "contentUrn": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3",
+                            "status": "wip",
+                            "tcm": false,
+                            "feedback": false,
+                            "comments": false,
+                            "poetrylines": [
+                              {
+                                "id": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3:55721e6a-7408-4eb2-aee2-296d0d0f2981",
+                                "type": "line",
+                                "authoredtext": {
+                                  "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                  "text": ""
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "groupeddata":{
+                        "bodymatter": [
+                          {
+                            "groupdata":{
+                              "bodymatter":{
+                                "elementData":{
+                                  "bodymatter":[]
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
                       "contents": {
                         "bodymatter": [
                           {

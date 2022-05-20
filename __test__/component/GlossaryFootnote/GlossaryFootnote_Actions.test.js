@@ -32,7 +32,9 @@ let  initialState = {
         }
     },
     glossaryFootnoteReducer: {"elementIndex" : "0"},
-    glossaaryFootnoteValue:{ "type":"","popUpStatus":false}
+    glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
+    markedIndexReducer: {"elementIndex": '0-0'}
+
 };
 
 let  initialState2 = {
@@ -52,10 +54,14 @@ let  initialState2 = {
             "tag": "Fg"
         }
     },
+    asideData: {
+        type: 'showhide'
+    },
     glossaryFootnoteReducer: {"elementIndex" : "0"},
-    glossaaryFootnoteValue:{ "type":"","popUpStatus":false}
-};
+    glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
+    markedIndexReducer: {"elementIndex": '0-0'}
 
+};
 
 jest.mock('./../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
@@ -96,9 +102,16 @@ jest.mock('../../../src/appstore/store', () => {
                     },
                     parentUrn : {
                         contentUrn : "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184"
-                    }
+                    },
+                    // showHideObj: {
+                    //     currentElement: {
+                    //         type: "element-aside",
+                    //         subtype: "workedexample"
+                    //     }
+                    // }
                 },
-                glossaryFootnoteReducer:{"elementIndex": "0"}
+                glossaryFootnoteReducer:{"elementIndex": "0"},
+                markedIndexReducer: {"elementIndex": "0-0-0-0"}
             }
         },
         dispatch:(obj)=>{
@@ -108,7 +121,12 @@ jest.mock('../../../src/appstore/store', () => {
         }
     }
 })
-
+jest.mock('./../../../src/component/ShowHide/ShowHide_Helper', () => {
+    return {
+        onGlossaryFnUpdateSuccessInShowHide: jest.fn(),
+        getShowHideIndex: jest.fn(() => {return '0-0'})
+    }
+})
 describe('Tests commentsPanel action', () => {
     // beforeAll(() => {
     //     Object.defineProperty(global, 'document', {
@@ -262,9 +280,25 @@ describe('Tests commentsPanel action', () => {
                     }
                     }
                 
-        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','interactive','dsusiudfd','MARKEDINDEX','apple','fruit','image',''); 
+        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','interactive','dsusiudfd','Markedindex','apple','fruit','image',''); 
        });
-       xit('testing if there is an audio in glossary', async () => {
+       it('testing new func MARKEDINDEX : MarkedIndex', async () => {
+        document.querySelector = () => { return false; }
+        document.getElementById = ()=>{
+                        return {
+                        innerHTML:'tests',
+                        getElementsByTagName: () => {
+                            return {
+                                tagName: 'dfn',
+                                textContent: () => { return { slice: () => { return "" } } }
+                            }
+                        }
+                    }
+                    }
+                
+        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','Markedindex','apple','fruit','image',''); 
+       });
+       it('testing if there is an audio in glossary', async () => {
            document.querySelector = () => { return false; }
            document.getElementById = () => {
                return {
@@ -298,6 +332,13 @@ describe('Tests commentsPanel action', () => {
                     }
         await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','FOOTNOTE','apple','fruit','tableasmarkup', 'term', 'popup'); 
        });
+       it('testing new func ===>element-blockfeature ', async () => {
+        document.querySelector = () => { return false; }
+        document.getElementById = ()=>{
+                        return {innerHTML:'tests'}
+                    }
+        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','element-blockfeature','dsusiudfd','FOOTNOTE','apple','fruit','tableasmarkup', 'term', 'popup'); 
+       });
        it('testing new func ===> audio', async () => {
         document.querySelector = () => { return false; }
         document.getElementById = ()=>{
@@ -320,6 +361,13 @@ describe('Tests commentsPanel action', () => {
         await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','FOOTNOTE','apple','fruit','table', 'term', 'popup'); 
        });
        it('testing new func ===> mathImage', async () => {
+        document.querySelector = () => { return false; }
+        document.getElementById = ()=>{
+                        return {innerHTML:'tests'}
+                    }
+        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','FOOTNOTE','apple','fruit','mathImage', 'term', 'popup'); 
+       });
+              it('testing new func ===> mathImage', async () => {
         document.querySelector = () => { return false; }
         document.getElementById = ()=>{
                         return {innerHTML:'tests'}
@@ -485,32 +533,83 @@ describe('Tests commentsPanel action', () => {
    });
     describe('testing setFormattingToolbar ', () => {
         it('setFormattingToolbar', () => {
-            document.querySelector = () => { return false; }
+            document.querySelector = () => { return {classList : {
+                remove: jest.fn()
+            }}; }
             actions.setFormattingToolbar('enableTinymceToolbar')
         });
         it('setFormattingToolbar', () => {
-            document.querySelector = () => { return false; }
+            document.querySelector = () => { return  {classList : {
+                add: jest.fn()
+            }}; }
             actions.setFormattingToolbar('disableTinymceToolbar')
            });
            it('setFormattingToolbar', () => {
-            document.querySelector = () => { return false; }
+            document.querySelector = () => { return  {classList : {
+                remove: jest.fn()
+            }}; }
             actions.setFormattingToolbar('enableGlossaryFootnoteToolbar')
            });
            it('setFormattingToolbar', () => {
-            document.querySelector = () => { return false; }
+            document.querySelector = () => { return  {classList : {
+                add: jest.fn()
+            }}; }
             actions.setFormattingToolbar('disableGlossaryFootnoteToolbar')
            });
            it('setFormattingToolbar', () => {
-            document.querySelector = () => { return false; }
+            document.querySelector = () => { return  {
+                removeAttribute: jest.fn(),
+                classList : {
+                remove: jest.fn(),
+                add: jest.fn(),
+            }}; }
             actions.setFormattingToolbar('removeTinymceSuperscript')
            });
            it('setFormattingToolbar', () => {
-            document.querySelector = () => { return false; }
+            document.querySelector = () => { return   {
+                removeAttribute: jest.fn(),
+                classList : {
+                remove: jest.fn(),
+                add: jest.fn(),
+            }}; }
+            actions.setFormattingToolbar('removeGlossaryFootnoteSuperscript')
+           });
+           it('setFormattingToolbar', () => {
+            document.querySelector = () => { return false;}
             actions.setFormattingToolbar('removeGlossaryFootnoteSuperscript')
            });
     })
    
+    describe('Testing Actions', () => {
 
+        xit('testing------- handleFigureGlossaryActions  action', () => {
+            store = mockStore(() => initialState);
+            const expectedActions = [
+                { type: 'ADD_FIGURE_GLOSSARY_POPUP', payload: true  },
+                { type: 'SET_FIGURE_GLOSSARY', payload: {} },
+            ];
+    
+            store.dispatch(actions.handleFigureGlossaryActions(true,{}))
+            expect(store.getActions()).toEqual(expectedActions);
+        })
+        it('testing------- showWrongImagePopup   action', () => {
+            store = mockStore(() => initialState);
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(SET_ASSESSMENT_METADATA);
+                expect(obj.payload).toEqual(expectedPayload);
+            }
+            const result =  actions.showWrongImagePopup({})
+        })
+        it('testing------- updateCurrentValue   action', () => {
+            store = mockStore(() => initialState);
+            const result =  actions.updateCurrentValue({})
+        })
+    })
+
+        it('Testing UpdateElementWorkId ', () => {
+            let store = mockStore(() => initialState2);
+            
+        })
    
 })
 
