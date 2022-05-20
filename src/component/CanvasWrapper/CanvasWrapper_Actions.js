@@ -440,15 +440,13 @@ export const getLOBDiscussionItems = (lineOfBusiness)  => async (dispatch) => {
         }
     }
     catch (error) {
-        if(error?.response?.status === 404)
-        {
+        console.error("Error in getting Discussion items", error)
+        if(error?.response?.status === 404){
             dispatch({
                 type: NO_DISCUSSION_ITEMS,
                 payload: true
-            });   
+            });
         }
-        else
-        {console.error("Error in getting Discussion items", error)}
     }
 }
 
