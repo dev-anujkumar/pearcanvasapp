@@ -30,7 +30,9 @@ import {
     ERROR_API_POPUP,
     SLATE_FIGURE_ELEMENTS,
     OEP_DISCUSSION,
-    UPDATE_AUTONUMBER_MAPPER_KEYS
+    UPDATE_AUTONUMBER_MAPPER_KEYS,
+    PROJECT_LOB_LIST,
+    NO_DISCUSSION_ITEMS
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -410,6 +412,50 @@ export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReduce
         }
     })
 }
+export const getDiscussionItemsbyLOB = (lineOfBusiness) => {
+    const discussionURLEndPoint = 'v1/discussion/discussions';
+    // 'https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1/discussion/discussions'
+    const discussionUrl = `${config.REACT_APP_API_URL}${discussionURLEndPoint}`;
+    return axios.post(discussionUrl, {
+        "lineOfBusinesses": [
+            (lineOfBusiness === "english" ? OEP_DISCUSSION : lineOfBusiness)
+        ]
+    },
+        {
+            headers: {
+                "Content-Type": "application/json",
+                'myCloudProxySession': config.myCloudProxySession
+            }
+        })
+}
+
+export const getLOBDiscussionItems = (lineOfBusiness)  => async (dispatch) => {
+    try {
+        const LOBDiscussionItemsResponse = await getDiscussionItemsbyLOB(lineOfBusiness)
+        if (Array.isArray(LOBDiscussionItemsResponse?.data)) {
+            dispatch({
+                type: UPDATE_DISCUSSION_ITEMS,
+                payload: LOBDiscussionItemsResponse.data
+            })
+        }
+    }
+    catch (error) {
+        console.error("Error in getting Discussion items", error)
+        if(error?.response?.status === 404){
+            dispatch({
+                type: NO_DISCUSSION_ITEMS,
+                payload: true
+            });
+        }
+    }
+}
+
+export const resetLOBDiscussionItems = ()  => async (dispatch) => {
+    dispatch({
+        type: "UPDATE_DISCUSSION_ITEMS",
+        payload: []
+    })  
+}
 
 export const getProjectDetails = () => (dispatch, getState) => {
     let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
@@ -505,34 +551,10 @@ export const getProjectDetails = () => (dispatch, getState) => {
                 
             }).catch(error => {
             }) 
-
-            
-            
+        
             // call api to get discussion items
             /* If LOB is english, then it will change to onlineenglishproficiency(OEP) */
-            const discussionURLEndPoint = 'v1/discussion/discussions';
-            // 'https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1/discussion/discussions'
-            const discussionUrl = `${config.REACT_APP_API_URL}${discussionURLEndPoint}`;
-            return axios.post(discussionUrl, {
-                "lineOfBusinesses" : [
-                    (lineOfBusiness === "english" ? OEP_DISCUSSION : lineOfBusiness)
-                ]
-            },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    // "PearsonSSOSession": config.ssoToken,
-                    'myCloudProxySession': config.myCloudProxySession
-                }
-            }).then (discussionResponse => {
-                if(Array.isArray(discussionResponse?.data)) {
-                    dispatch({
-                        type: UPDATE_DISCUSSION_ITEMS,
-                        payload: discussionResponse.data
-                    })
-                }
-            }).catch(error => {
-            }) 
+            dispatch(getLOBDiscussionItems(lineOfBusiness))
         }
     }).catch(error => {
         console.log("API Failed!!!")
@@ -1760,4 +1782,29 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
         type: OWNERS_SUBSCRIBED_SLATE,
         payload: showPopup
     })
+}
+
+const getLOBList = () => {
+    // "https://10.11.7.24:8081/cypress-api/v1/project-taxonomy/lob_details"
+	return axios.get(`${config.REACT_APP_API_URL}v1/project-taxonomy/lob_details`, {
+		headers: {
+			"ApiKey": config.STRUCTURE_APIKEY,
+            "myCloudProxySession": config.myCloudProxySession,
+			"Content-Type": "application/json",
+			"x-Roles": "LearningAdmin",
+		}
+	})
+}
+export const fetchLOBList = () => async (dispatch) => {
+	try {
+		const response = await getLOBList();
+		if (response.status === 200) {
+			dispatch({
+                type: PROJECT_LOB_LIST,
+                payload: response.data.details.listOfLob
+            });
+				}
+	} catch (error) {
+		console.error("Error in fetching the list of Line of Business from the project", error);
+	}
 }
