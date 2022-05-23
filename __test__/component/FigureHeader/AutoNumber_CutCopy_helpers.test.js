@@ -13,7 +13,8 @@ describe('-----------------Testing AutoNumber_CutCopy_helpers-----------------',
                 autoNumberElementsIndex: mockIndexedElements,
                 slateFigureList: slateFigures2,
                 autoNumberOption: '',
-                autoNumber_ElementTypeKey: mock_autoNumber_ElementTypeKey
+                autoNumber_ElementTypeKey: mock_autoNumber_ElementTypeKey,
+                popupParentSlateData: { isPopupSlate: true}
             },
             appStore: {
                 currentSlateAncestorData: slateAncestorChapter

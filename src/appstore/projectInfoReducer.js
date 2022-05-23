@@ -1,4 +1,4 @@
-import { UPDATE_PROJECT_INFO, UPDATE_DISCUSSION_ITEMS, UPDATE_USAGE_TYPE, UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, UPDATE_LOB_WORKFLOW } from "../constants/Action_Constants";
+import { UPDATE_PROJECT_INFO, UPDATE_DISCUSSION_ITEMS, UPDATE_USAGE_TYPE, UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, UPDATE_LOB_WORKFLOW, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS } from "../constants/Action_Constants";
 
 var isOwnerKeyExist= localStorage.getItem('hasOwnerEdit');
 const initialState = {
@@ -12,7 +12,9 @@ const initialState = {
     owner: {}
   },
   isOwnersSubscribedSlateChecked: isOwnerKeyExist ? false : true,
-  workflowRole:{}
+  workflowRole:{},
+  LOBList:[],
+  showDiscussionLOBDropdown: false
 }
 
 export const projectInfo = (state = initialState, action={type:'', payload:{}}) => {
@@ -35,6 +37,20 @@ export const projectInfo = (state = initialState, action={type:'', payload:{}}) 
           return {
             ...state,
             discussionItems: action.payload
+          }
+        }
+
+        case PROJECT_LOB_LIST: {
+          return {
+            ...state,
+            LOBList: action.payload
+          }
+        }
+
+        case NO_DISCUSSION_ITEMS: {
+          return {
+            ...state,
+              showDiscussionLOBDropdown: action.payload
           }
         }
 
