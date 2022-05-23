@@ -270,7 +270,9 @@
 .LOBDropdown .MuiSelect-select.MuiSelect-select {
   width: 73px;
   padding: 0;
-  background-color: white !important
+  background-color: white !important;
+  font-family: 'Open Sans', sans-serif;
+  height: 20px;
 }
 
 .LOBDropdown .MuiSvgIcon-root {
