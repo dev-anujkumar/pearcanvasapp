@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as actions from '../../../src/component/GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import  mockData  from "../../../src/appstore/mockdata.js";
+import  mockData, {message, message2,message3}  from "../../../src/appstore/mockdata.js";
 import axios from 'axios';
 const middlewares = [thunk];
 import { JSDOM } from 'jsdom'
@@ -58,6 +58,35 @@ let  initialState2 = {
         type: 'showhide'
     },
     glossaryFootnoteReducer: {"elementIndex" : "0"},
+    glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
+    markedIndexReducer: {"elementIndex": '0-0'}
+
+};
+let  initialState3 = {
+    appStore:{
+        slateLevelData:mockData,
+        activeElement: {
+            elementType: "figure",
+            primaryOption: "primary-image-figure",
+            altText: "",
+            longDesc: "",
+            podwidth: "",
+            secondaryOption: "secondary-image-figure-width",
+            elementId: "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6",
+            index: "0-0-0-1-1",
+            elementWipType: "figure",
+            toolbar: ["insertMedia", "formatSelector", "crossLinkingIcon", "assetpopover", "glossary", "decreaseindent", "alignment", "calloutIcon", "IndexEntry"],
+            "tag": "Fg"
+        }
+    },
+    asideData: {
+        type: 'showhide'
+    },
+    glossaryFootnoteReducer: {
+        glossaryFootnoteValue: { elementWorkId: "4343653", elementType:'stanza' },
+        glossaryFootNoteCurrentValue: "",
+        elementIndex: ""
+    },
     glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
     markedIndexReducer: {"elementIndex": '0-0'}
 
@@ -595,21 +624,112 @@ describe('Tests commentsPanel action', () => {
         it('testing------- showWrongImagePopup   action', () => {
             store = mockStore(() => initialState);
             let dispatch = (obj) => {
-                expect(obj.type).toBe(SET_ASSESSMENT_METADATA);
-                expect(obj.payload).toEqual(expectedPayload);
+                expect(obj.type).toBe('WRONG_IMAGE_POPUP');
+                expect(obj.payload).toEqual('abc');
             }
-            const result =  actions.showWrongImagePopup({})
+            actions.showWrongImagePopup('abc')(dispatch)
+        })
+        it('testing------- showRemoveImageGlossaryPopup   action', () => {
+            store = mockStore(() => initialState);
+            let dispatch = (obj) => {
+                expect(obj.type).toBe('SHOW_REMOVE_GLOSSARY_IMAGE');
+                expect(obj.payload).toEqual('abc');
+            }
+            actions.showRemoveImageGlossaryPopup('abc')(dispatch)
         })
         it('testing------- updateCurrentValue   action', () => {
             store = mockStore(() => initialState);
             const result =  actions.updateCurrentValue({})
         })
     })
+    it('Testing saveImageDataFromAlfresco function  --',  () => {
+        let expectedPayload = {
+            "alttext": "",
+            "height": 170,
+            "imageid": "urn:pearson:alfresco:d039c78e-6f36-4c64-9c50-20e0622486b2",
+            "longdescription": "sfdsf",
+            "alttext": "sda",
+            "path": "https://eps.openclass.com/eps/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml",
+            "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            "title": "Metrodigi with adjusted width-515 height-455 and MF as YES",
+            "width": 148,
+        }
+           const expectedActions = [
+            { type: 'SET_FIGURE_GLOSSARY', payload: expectedPayload },
+            { type: 'ADD_FIGURE_GLOSSARY_POPUP', payload: true  }
+        ];
+        store.dispatch(actions.saveImageDataFromAlfresco(message))
+        expect(store.getActions()).toEqual(expectedActions);
+    });
+        it('Testing saveImageDataFromAlfresco function conditional coverage  --',  () => {
+        store.dispatch(actions.saveImageDataFromAlfresco(message2))
+    });
+    it('Testing saveImageDataFromAlfresco function conditional coverage imageData  --',  () => {
+        store.dispatch(actions.saveImageDataFromAlfresco(message3))
+    });
 
-        it('Testing UpdateElementWorkId ', () => {
-            let store = mockStore(() => initialState2);
-            
-        })
-   
 })
 
+describe('Testing --------- UpdateElementWorkId  function ------',() => {
+    jest.mock('../../../src/appstore/store', () => {
+        return {
+            getState: () => {
+                return {
+                    appStore:{slateLevelData:mockData,
+                        activeElement: {
+                            altText: "",
+                            elementId: "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184",
+                            elementType: "element-interactive",
+                            elementWipType: "figure",
+                            index: 0,
+                            primaryOption: "primary-smartlink",
+                            secondaryOption: "secondary-interactive-smartlink-pdf",
+                            tag: "SL",
+                            toolbar: ["crossLinkingIcon", "assetpopover", "glossary"]
+                        },
+                        parentUrn : {
+                            contentUrn : "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184"
+                        },
+                        // showHideObj: {
+                        //     currentElement: {
+                        //         type: "element-aside",
+                        //         subtype: "workedexample"
+                        //     }
+                        // }
+                    },
+                    glossaryFootnoteReducer:{
+                        "elementIndex": "0",
+                        glossaryFootnoteValue: { elementWorkId: "4343653", elementType:'stanza' },
+                        glossaryFootNoteCurrentValue: "",
+                    },
+                    markedIndexReducer: {"elementIndex": "0-0-0-0"}
+                }
+            },
+            dispatch:(obj)=>{
+                responseData = obj;
+               // console.log("object123456---",obj);
+                return jest.fn();
+            }
+        }
+    })
+    it('Testing UpdateElementWorkId function  --',  () => {
+        // let store2 = mockStore(() => initialState3);
+        let expectedPayload = {
+            "alttext": "",
+            "height": 170,
+            "imageid": "urn:pearson:alfresco:d039c78e-6f36-4c64-9c50-20e0622486b2",
+            "longdescription": "sfdsf",
+            "alttext": "sda",
+            "path": "https://eps.openclass.com/eps/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml",
+            "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            "title": "Metrodigi with adjusted width-515 height-455 and MF as YES",
+            "width": 148,
+        }
+           const expectedActions = [
+            { type: 'SET_FIGURE_GLOSSARY', payload: expectedPayload },
+            { type: 'ADD_FIGURE_GLOSSARY_POPUP', payload: true  }
+        ];
+        actions.UpdateElementWorkId()
+        // expect(store.getActions()).toEqual(expectedActions);
+    });
+})
