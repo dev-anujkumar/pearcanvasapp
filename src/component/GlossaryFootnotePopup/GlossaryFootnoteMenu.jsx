@@ -180,7 +180,7 @@ class GlossaryFootnoteMenu extends React.Component {
                     }
                 }
              }
-            let isMarkedIndexPresent = markedIndexGlossaryData?.markedIndexEntryURN !== "";
+            let isMarkedIndexPresent = (markedIndexGlossaryData?.markedIndexEntryURN) && (markedIndexGlossaryData?.markedIndexEntryURN !== "") ? true : false;
             let isAudioDataPresent = audioGlossaryData && Object.keys(audioGlossaryData).length > 0;
             let isFigureDataPresent = figureGlossaryData && Object.keys(figureGlossaryData).length > 0;
             const audioTerm = `<p audio-id=${audioGlossaryData.narrativeAudioUrn} audio-path=${audioGlossaryData.location} ${isMarkedIndexPresent?"mark-index-id="+markedIndexGlossaryData?.markedIndexEntryURN: ""}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;

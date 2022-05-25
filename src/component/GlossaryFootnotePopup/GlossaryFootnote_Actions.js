@@ -48,6 +48,9 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         if (showHideElement || asideParent?.type === 'showhide' && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) { /** Glossary-Footnotes inside Show-Hide */
             /* Get the element where footnote/Glossery is added */
             glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
+            if(tempIndex.length == 4 && glossaryFootElem[tempIndex[0]]?.type === "showhide" && elementType === 'element-blockfeature'){
+                glossaryFootElem = newBodymatter[tempIndex[0]]?.interactivedata?.show[tempIndex[0]]
+            }
         } else if ((tempIndex.length == 5 || tempIndex.length == 6) && elementType == 'figure' && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
             glossaryFootElem = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
             if (tempIndex.length == 6 && glossaryFootElem.type === 'manifest') {
@@ -71,7 +74,13 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         else if (elementType === "figure" || elementType === "element-blockfeature") {
             let tempUpdatedIndex = index.split('-');
             let updatedIndex = tempUpdatedIndex[0];
-            glossaryFootElem = newBodymatter[updatedIndex]
+            if(tempIndex.length == 4 && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'groupedcontent'){
+                glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]
+            } else if((tempIndex.length == 3 || tempIndex.length == 4) && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'element-aside'){
+                glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[0]]
+            } else {
+                glossaryFootElem = newBodymatter[updatedIndex]
+            }
         }
         else if (typeWithPopup && typeWithPopup === "popup" ){
             let indexesLen = tempIndex.length;
@@ -506,7 +515,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     else if(elementType == 'element-blockfeature'){
         let elementIndex;
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
-        elementIndex = tempIndex[0]+'-'+tempIndex[1]
+        if(tempIndex.length == 4){
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]+'-'+tempIndex[3]
+        }else if(tempIndex.length == 3){
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]+'-'+tempIndex[2]
+        }else{
+            elementIndex = tempIndex[0]+'-'+tempIndex[1]
+        }
         const bqNode = document.getElementById('cypress-' + elementIndex)
         workContainer = prepareBqHtml(bqNode);
         workContainer = workContainer.replace(/data-mce-href="#"/g,'').replace(/ reset/g,'')
@@ -752,6 +767,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
         if (showHideElement || asideParent?.type === 'showhide'  && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) {/** Glossary-Footnotes inside Show-Hide */
             newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
+            if(tempIndex.length == 4 && asideParent?.type === 'showhide' && elementType === 'element-blockfeature'){
+                newBodymatter[tempIndex[0]].interactivedata.show[tempIndex[0]] = res.data;
+            }
         } else if ((tempIndex.length == 5 || tempIndex.length == 6) && elementType == 'figure' && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
             let elementInSH = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]];
             if (elementInSH.subtype === "workedexample" && tempIndex.length == 6 && elementInSH.elementdata.bodymatter[tempIndex[3]].type === 'manifest') {
@@ -774,7 +792,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
         else if (elementType === "figure" ||elementType === 'element-blockfeature') {
             let updatedIndex = index.split('-')[0];
-            newBodymatter[updatedIndex] = res.data;
+            if(tempIndex.length === 4 && newBodymatter[updatedIndex].type === 'groupedcontent' && elementType === 'element-blockfeature'){
+                newBodymatter[updatedIndex].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
+            } else if((tempIndex.length === 3 || tempIndex.length === 4) && newBodymatter[updatedIndex].type === 'element-aside' && elementType === 'element-blockfeature'){
+                newBodymatter[updatedIndex].elementdata.bodymatter[tempIndex[0]] = res.data;
+            } else{
+                newBodymatter[updatedIndex] = res.data;
+            }
         }
         else if (typeWithPopup && typeWithPopup === "popup"){
             let indexesLen = tempIndex.length

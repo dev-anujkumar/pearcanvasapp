@@ -7,7 +7,8 @@ import { figureImageData, updatedElement, figureElmInteractiveData, figureBlockC
 jest.mock('./../../../src/constants/utility.js', () => ({
     matchHTMLwithRegex: jest.fn(),
     removeBlankTags: jest.fn(),
-    createLabelNumberTitleModel: jest.fn()
+    createLabelNumberTitleModel: jest.fn(),
+    getDesignType:jest.fn()
 }))
 
 config["elementStatus"] = {}
