@@ -109,7 +109,7 @@ export const addElementInShowHide = (index, sectionType, type2BAdded, props) => 
 * @param {Number} indexlength - indexlength of showhide element on slate
 * @param {Array} iList - array of index heirarchy of showhide element on slate
 */
-export function getShowHideElement(_slateBodyMatter, indexlength, iList) {
+export function getShowHideElement(_slateBodyMatter, indexlength, iList, elementType) {
 	try {
         let sh_Element;
 		switch(indexlength) {
@@ -117,7 +117,7 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList) {
 				sh_Element =  _slateBodyMatter[iList[0]];
                 break;
 			case 4: /* AS/WE-Head:SH:Element */
-				sh_Element =  _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
+				sh_Element = elementType === "element-blockfeature" ?  _slateBodyMatter[iList[0]] : _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
                 break;
 			case 5:
 				sh_Element =  _slateBodyMatter[iList[0]].type === ElementConstants.MULTI_COLUMN ? 
