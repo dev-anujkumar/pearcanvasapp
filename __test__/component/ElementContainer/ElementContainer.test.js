@@ -429,7 +429,27 @@ describe('Test for element container component', () => {
             elementContainer.update();
             expect(elementContainerInstance).toBeDefined();
         })
-        it('Render Element Container ----->BlockQuote-Pullquote', () => {
+        it('Render Element Container ----->BlockQuote', () => {
+            let props = {
+                element: wipData.marginalia,
+                permissions: [],
+                activeElement: {
+                    elementId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                    elementType: "element-authoredtext",
+                    elementWipType: "element-blockfeature",
+                    index: 2,
+                    primaryOption: "primary-blockquote",
+                    secondaryOption: "secondary-pullquote",
+                    tag: "BQ",
+                    toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
+                }
+            }; 
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Pullquote', () => {
 
             let props = {
                 element: wipData.pullquote,
@@ -883,10 +903,12 @@ describe('Test for element container component', () => {
         it('Render Element Container ----->Figure Element-Image', () => {
             let props = {
                 element: wipData.figure,
-                permissions: []
+                permissions: [],
+                showHideType: true
             };
             let parentElement = {
-                contentUrn:"67"
+                contentUrn:"67",
+                showHideType: true
             }
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -1147,7 +1169,7 @@ describe('Test for element container component', () => {
     })
     describe('Test- Add Comment Functions', () => {
         let props = {
-            element: wipData.paragraph,
+            element: wipData.tableasmarkup,
             permissions: [
                 "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
                 "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
@@ -1222,11 +1244,16 @@ describe('Test for element container component', () => {
                 "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
                 "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing","access-to-cypress+","notes_relpying",
             ],
-            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            slateLockInfo: {
+                userId: "vtyhg123",
+                isLocked: true
+            }
         };
         let event= {
             stopPropagation:()=>{}
         }
+        config.userId="vtyhg123"
         config.isCypressPlusEnabled=true
         config.SHOW_CYPRESS_PLUS=true
         let elementId = 'urn:perason:work:1234567' 
@@ -1239,6 +1266,14 @@ describe('Test for element container component', () => {
             elementContainer.update();
             expect(spyhandleEditInCypressPlus).toHaveBeenCalledWith(event,elementId)
             spyhandleEditInCypressPlus.mockClear()
+        })
+        it('Test-addOrViewComment Function', () => {
+            const spyaddOrViewComment = jest.spyOn(elementContainerInstance, 'addOrViewComment')
+            elementContainerInstance.addOrViewComment(event,elementId, "AddOrViewComment");
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyaddOrViewComment).toHaveBeenCalledWith(event,elementId, "AddOrViewComment")
+            spyaddOrViewComment.mockClear()
         })
        
     })
@@ -1288,12 +1323,11 @@ describe('Test for element container component', () => {
             expect(spyopenAssetPopoverPopUp).toHaveBeenCalledWith(true)
             spyopenAssetPopoverPopUp.mockClear()
         })
-        xit('Test-showDeleteElemPopup  Function', () => {
+        it('Test-showDeleteElemPopup  Function', () => {
             const spyshowDeleteElemPopup = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup')
             elementContainerInstance.showDeleteElemPopup(event,true,true);
             elementContainerInstance.forceUpdate();
             elementContainer.update();
-            expect(spyshowDeleteElemPopup).toHaveBeenCalledWith(true)
             expect(elementContainerInstance.state.showDeleteElemPopup).toBe(true)
             expect(elementContainerInstance.state.popup).toBe(true)
             spyshowDeleteElemPopup.mockClear()
@@ -1310,6 +1344,12 @@ describe('Test for element container component', () => {
             elementContainerInstance.handleOnMouseOut();
             expect(spyhandleOnMouseOut).toHaveBeenCalled()
             expect(elementContainerInstance.state.isHovered).toBe(false)
+            spyhandleOnMouseOut.mockClear()
+        })
+        it('Test-getDerivedStateFromError  Function', () => {
+            const spyhandleOnMouseOut = jest.spyOn(elementContainerInstance, 'getDerivedStateFromError')
+            elementContainerInstance.getDerivedStateFromError("");
+            expect(spyhandleOnMouseOut).toHaveBeenCalled()
             spyhandleOnMouseOut.mockClear()
         })
     })
@@ -1639,7 +1679,9 @@ describe('Test for element container component', () => {
                 showBlocker: jest.fn(),
                 isBlockerActive: true,
                 asideData: {},
-                parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                parentUrn: {
+                    elementType: "group"
+                },
                 index:0,
                 deleteElement: jest.fn(),
                 parentElement:{
@@ -2835,7 +2877,7 @@ describe('Test-Other Functions', () => {
         spysetBorderToggle.mockClear()
     })
     
-    xit('Render and Update three column test click event', () => {
+    it('Render and Update three column test click event', () => {
         let props = {
             onClickCapture: jest.fn(),
             element: wipData.threeMulticolumn
@@ -2846,10 +2888,7 @@ describe('Test-Other Functions', () => {
         const spyrenderMultipleColumnLabels  = jest.spyOn(elementContainerInstance, 'renderMultipleColumnLabels') 
         elementContainerInstance.renderMultipleColumnLabels(element);
         expect(spyrenderMultipleColumnLabels).toHaveBeenCalled();
-        const spyUpdateColumnValues  = jest.spyOn(elementContainerInstance, 'updateColumnValues') 
-        elementContainer.find('span.element-label-clickable-button').at(0).simulate('click');
-        expect(spyUpdateColumnValues).toHaveBeenCalled();
-        spyUpdateColumnValues.mockClear();
+        spyrenderMultipleColumnLabels.mockClear();
       });
 
       it('updateColumnValues function', () => {
@@ -2897,6 +2936,34 @@ describe('Test-Other Functions', () => {
                 },
                 type: 'groupedcontent'
             },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: {
+                contentUrn: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319z'
+            }
+        };
+        let elementContainer2 = mount(<Provider store={store}><ElementContainer {...props4} /></Provider>);
+        const elementContainerInstance2 = elementContainer2.find('ElementContainer').instance();
+        const elementDetails = {
+            element: {
+                type: 'element-list',
+                html: {
+                    text: ''
+                },
+                elementdata: {
+                    type: ''
+                },
+            },
+            operationType: 'cut'
+        }
+        elementContainerInstance2.setElementDetails(elementDetails);
+    });
+
+    it('setElementDetails method - with parentUrn and element type groupedcontent -- else', () => {
+        let props4 = {
             permissions: [],
             showBlocker: jest.fn(),
             index: 0,
@@ -2990,7 +3057,7 @@ describe('Test-Other Functions', () => {
         let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
         const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
         const element = {type: 'element-authoredtext'};
-        elementContainerInstance3.handleTCMLaunch({}, element);
+        elementContainerInstance3.handleTCMLaunch(event, element);
     });
 
     it('handleTCMLaunch method - else block', () => {
@@ -3006,9 +3073,12 @@ describe('Test-Other Functions', () => {
             updateElement: jest.fn(),
             parentUrn: null
         };
+        let event = {
+            stopPropagation: jest.fn()
+        }
         let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
         const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
-        elementContainerInstance3.handleTCMLaunch({}, {});
+        elementContainerInstance3.handleTCMLaunch(event, {});
     });
 
     it('checkTCMStatus method', () => {
@@ -3411,6 +3481,12 @@ describe('Test-Other Functions', () => {
         expect(spychangeInPodwidth).toHaveBeenCalled();
         spychangeInPodwidth.mockClear()
     })
+    it("handleAudioPopupLocation function", () => {
+        const spyhandleAudioPopupLocation = jest.spyOn(elementContainerInstance, 'handleAudioPopupLocation')
+        elementContainerInstance.handleAudioPopupLocation(true, {});
+        expect(spyhandleAudioPopupLocation).toHaveBeenCalled();
+        spyhandleAudioPopupLocation.mockClear()
+    });
     it("handleAssetsPopupLocation function", () => {
         const spyhandleAssetsPopupLocation = jest.spyOn(elementContainerInstance, 'handleAssetsPopupLocation')
         elementContainerInstance.handleAssetsPopupLocation(true, {});
