@@ -174,28 +174,120 @@
   flex: 1;
 }
 
+.LOBDropdownAndSearchboxContainer {
+  height: 59px;
+  display: flex;
+  padding: 0 10px 0 10px;
+}
+
+.LOBDropdownContainer {
+  display: flex;
+  padding: 0 16px 0 10px;
+}
+
+.LOB-label {
+  padding: 19px 0 21px 0;
+  font-size: 16px;
+  font-weight: bold;
+  position: relative;
+}
+
 .searchContainerDiscussion {
   flex-direction: row;
   align-items: center;
-  margin-right: 149px;
-  margin-left: 20px;
-  margin-top: 13px;
   display: flex;
-  padding-left: 20px;
-  padding-right: 24px;
   border-radius: 4px;
-  padding-top: 9px;
-  padding-bottom: 9px;
+  padding: 9px 24px 9px 20px;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
+  border: 1px solid #e8e8e8;
+  background-color: #fff;
+  margin: 13px 149px 13px 20px;
+  height: 36px;
+}
+
+.searchContainerDiscussionWithLOBDropdown {
+  flex-direction: row;
+  align-items: center;
+  display: flex;
+  padding: 9px 24px 9px 20px;
+  border-radius: 4px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   border: solid 1px #e8e8e8;
   background-color: #ffffff;
-  margin-bottom: 13px;
+  width: 906px;
+  margin: 13px 0px 13px 0px;
+  height: 36px;
+}
+
+.selectOption {
+  display: none !important;
+}
+
+.selectInDropdown {
+  color: #ababab !important;
+}
+
+.LOBInDropdown {
+  color: black !important;
+}
+
+.LOBDropdown {
+  position: relative;
+  flex-direction: row;
+  align-items: center;
+  display: flex;
+  padding: 0 0 0 12px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  border: solid 1px #e8e8e8;
+  background-color: #ffffff;
+  width: 93px;
+  height: 36px;
+  font-size: 16px;
+  margin: 13px 0 13px 8px;
+}
+
+.LOBDropdown .MuiInput-underline:before  {
+  border-bottom: none !important
+}
+
+.LOBDropdown .MuiInput-underline:after {
+  border-bottom: none !important
+}
+
+.LOBDropdown .MuiInputBase-root {
+  font-size: 16px !important;
+}
+
+.LOBDropdown .MuiSelect-iconOpen {
+  transform: none;
+}
+
+.LOBDropdown .MuiInputBase-input {
+  padding: 0;
+}
+
+.LOBDropdown .MuiSelect-select.MuiSelect-select {
+  width: 73px;
+  padding: 0;
+  background-color: white !important;
+  font-family: 'Open Sans', sans-serif;
+  height: 20px;
+}
+
+.LOBDropdown .MuiSvgIcon-root {
+  font-size: 2rem !important;
+}
+
+.LOBMenuList {
+  font-size: 14px !important;
 }
 
 .searchTextDiscussion {
   margin: 1px 0 1px 8px;
   border: none;
   width: 100%;
+  font-family: 'Open Sans', sans-serif;
 }
 ::placeholder {
   color: #ababab;

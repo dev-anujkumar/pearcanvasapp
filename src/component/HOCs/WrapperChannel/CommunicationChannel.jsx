@@ -1013,6 +1013,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
                 this.props.fetchSlateData(message.node.containerUrn, config.slateEntityURN, config.page, '', "");
+                this.props.fetchLOBList();
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);

@@ -1,6 +1,10 @@
 /**************************Import Plugins**************************/
 import axios from 'axios';
 import { JSDOM } from 'jsdom'
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+const middlewares = [thunk]
+const mockStore = configureMockStore(middlewares)
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("getElementById")) {
     Object.defineProperty(global.Element.prototype, 'getElementById', {
@@ -3231,6 +3235,119 @@ it('Test: isOwnersSubscribedSlate function', () => {
 
     const spyFunction = jest.spyOn(canvasActions, 'isOwnersSubscribedSlate')
     canvasActions.isOwnersSubscribedSlate(showPopup)(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    spyFunction.mockClear()
+})
+
+it('Testing fetchLOBList - try block', async () => {
+    const response = {
+        status: 200,
+        data : 
+            {
+                "id": "627b7445f9a4681ce8cd88e6",
+                "key": "lob_details",
+                "details": {
+                    "listOfLob": [
+                        {
+                            "lineOfBusiness": "highernationalonline",
+                            "label": "HNO",
+                            "description": "Higher National Online"
+                        },
+                        {
+                            "lineOfBusiness": "onlineblendedlearning",
+                            "label": "OBL",
+                            "description": "OBL/Online Blended Learning"
+                        },
+                        {
+                            "lineOfBusiness": "onlineenglishproficiency",
+                            "label": "OEP",
+                            "description": "Online English Proficiency"
+                        }
+                    ]
+                }
+            }
+        }
+    const state = {}
+    const store = mockStore(() => state);
+    axios.get = jest.fn(() => Promise.resolve(response));
+    await store.dispatch(canvasActions.fetchLOBList());
+    const { type } = store.getActions()[0];
+    expect(type).toBe('PROJECT_LOB_LIST');
+});
+
+it('Testing fetchLOBList - catch block', async () => {
+    const state = {}
+    const store = mockStore(() => state);
+    const spyFunction = jest.spyOn(canvasActions,'fetchLOBList');
+    axios.get = jest.fn(() => Promise.reject({}));
+    await store.dispatch(canvasActions.fetchLOBList());
+    expect(spyFunction).toHaveBeenCalled();
+});
+
+it('Test: resetLOBDiscussionItems function', async () => {
+    const expectedActions = {
+        type: "UPDATE_DISCUSSION_ITEMS",
+        payload: []
+    };
+    let dispatch = (obj) => {
+        expect(obj).toEqual(expectedActions);
+    }
+    const spyFunction = jest.spyOn(canvasActions,'resetLOBDiscussionItems')
+    canvasActions.resetLOBDiscussionItems([])(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    spyFunction.mockClear()
+})
+
+it('Testing getLOBDiscussionItems - try block', async () => {
+    const response = {
+        status: 200,
+        data : 
+             [
+                 {
+                     "0":
+                     {
+                        "createTimeStamp": "2022-01-25T07:07:23.862Z",
+                        "discussionUrn": "urn:pearson:gps:discussion:84486489-cd76-4bb9-b037-7ab3574bffcb",
+                        'lineOfBusiness': "onlineblendedlearning",
+                        "question": "What needs to be done to switch to the new discussion builder?",
+                        'sampleAnswer': "They need to render in Vega when published.",
+                        'smartLink': "",
+                        'stimulus': "You previously learned all the parts and pieces that go into how discussions are currently built and heard about a new discussion builder.",
+                        "subTitle": "PVS Section Title",
+                        "title": "PVS_Discussion_Test",
+                        "updatedTimeStamp": "2022-01-25T07:07:23.913Z"
+                     }
+                 }
+                    ]
+        }
+    const state = {}
+    const store = mockStore(() => state);
+    axios.get = jest.fn(() => Promise.resolve(response));
+    await store.dispatch(canvasActions.getLOBDiscussionItems());
+    const { type } = store.getActions()[0];
+    expect(type).toBe('UPDATE_DISCUSSION_ITEMS');
+});
+
+it('Testing getLOBDiscussionItems - try block', async () => {
+    const response = {status: 500}
+    const state = {}
+    const store = mockStore(() => state);
+    axios.get = jest.fn(() => Promise.resolve(response));
+    await store.dispatch(canvasActions.getLOBDiscussionItems());
+    const { type } = store.getActions()[0];
+    expect(type).toBe('UPDATE_DISCUSSION_ITEMS');
+});
+
+it('Testing getLOBDiscussionItems - catch block', async () => {
+    const expectedActions = {
+        type: "NO_DISCUSSION_ITEMS",
+        payload: true
+    };
+    let dispatch = (obj) => {
+        expect(obj).toEqual(expectedActions);
+    }
+    const spyFunction = jest.spyOn(canvasActions,'getLOBDiscussionItems')
+    canvasActions.getLOBDiscussionItems(true)(dispatch);
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })
