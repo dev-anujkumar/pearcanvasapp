@@ -62,36 +62,6 @@ let  initialState2 = {
     markedIndexReducer: {"elementIndex": '0-0'}
 
 };
-let  initialState3 = {
-    appStore:{
-        slateLevelData:mockData,
-        activeElement: {
-            elementType: "figure",
-            primaryOption: "primary-image-figure",
-            altText: "",
-            longDesc: "",
-            podwidth: "",
-            secondaryOption: "secondary-image-figure-width",
-            elementId: "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6",
-            index: "0-0-0-1-1",
-            elementWipType: "figure",
-            toolbar: ["insertMedia", "formatSelector", "crossLinkingIcon", "assetpopover", "glossary", "decreaseindent", "alignment", "calloutIcon", "IndexEntry"],
-            "tag": "Fg"
-        }
-    },
-    asideData: {
-        type: 'showhide'
-    },
-    glossaryFootnoteReducer: {
-        glossaryFootnoteValue: { elementWorkId: "4343653", elementType:'stanza' },
-        glossaryFootNoteCurrentValue: "",
-        elementIndex: ""
-    },
-    glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
-    markedIndexReducer: {"elementIndex": '0-0'}
-
-};
-
 jest.mock('./../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
@@ -670,7 +640,7 @@ describe('Tests commentsPanel action', () => {
 
 })
 
-describe('Testing --------- UpdateElementWorkId  function ------',() => {
+xdescribe('Testing --------- UpdateElementWorkId  function ------',() => {
     jest.mock('../../../src/appstore/store', () => {
         return {
             getState: () => {
