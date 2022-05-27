@@ -139,7 +139,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
 
-    it("onPasteSuccess when aside type:  element-aside", async () => {
+    xit("onPasteSuccess when aside type:  element-aside", async () => {
         const store = mockStore(() => initialState);
         const responseData1 = {
             "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
@@ -182,7 +182,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
 
-    it("onPasteSuccess when aside type:  element-aside and asidedata parentid is given", async () => {
+    xit("onPasteSuccess when aside type:  element-aside and asidedata parentid is given", async () => {
         // initialState2.selectionReducer.selection.operationType = "cut";
         const store = mockStore(() => initialState);
         const responseData1 = {
@@ -230,7 +230,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
 
-    it("onPasteSuccess when aside type:  element-aside and asidedata parentid is given", async () => {
+    xit("onPasteSuccess when aside type:  element-aside and asidedata parentid is given", async () => {
         // initialState2.selectionReducer.selection.operationType = "cut";
         const store = mockStore(() => initialState);
         const responseData1 = {
@@ -278,7 +278,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
 
-    it("onPasteSuccess when aside type:  element-aside,asidedata subtype: workedexample asidedata subtype: workedexample and index length is not 5", async () => {
+    xit("onPasteSuccess when aside type:  element-aside,asidedata subtype: workedexample asidedata subtype: workedexample and index length is not 5", async () => {
         initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
         const store = mockStore(() => initialState);
         const responseData1 = {
@@ -325,7 +325,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         helperMethods.onPasteSuccess(params);
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
-    it("onPasteSuccess when aside type:  element-aside,asidedata subtype is not workedexample and index length is not 5", async () => {
+    xit("onPasteSuccess when aside type:  element-aside,asidedata subtype is not workedexample and index length is not 5", async () => {
         initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
         const store = mockStore(() => initialState);
         const responseData1 = {
@@ -372,7 +372,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         helperMethods.onPasteSuccess(params);
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
-    it("onPasteSuccess when aside parent type: showhide,asidedata subtype is workedexample and index length is not 5", async () => {
+    xit("onPasteSuccess when aside parent type: showhide,asidedata subtype is workedexample and index length is not 5", async () => {
         initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
         const store = mockStore(() => initialState);
         const responseData1 = {
@@ -422,7 +422,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         helperMethods.onPasteSuccess(params);
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
-    it("onPasteSuccess when aside type: citations,asidedata subtype is not workedexample and index length is not 5", async () => {
+    xit("onPasteSuccess when aside type: citations,asidedata subtype is not workedexample and index length is not 5", async () => {
         initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
         const store = mockStore(() => initialState);
         const responseData1 = {
@@ -472,7 +472,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         helperMethods.onPasteSuccess(params);
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
-    it("onPasteSuccess when aside type: citations,asidedata subtype is not workedexample and index length is not 5 else case", async () => {
+    xit("onPasteSuccess when aside type: citations,asidedata subtype is not workedexample and index length is not 5 else case", async () => {
         const initialState3 = {
             appStore : {
                 slateLevelData: createstoreWithFigure.slateLevelData,
@@ -554,7 +554,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
 
-    it("onPasteSuccess when aside parent type: showhide,asidedata subtype is not workedexample and index length is not 5", async () => {
+    xit("onPasteSuccess when aside parent type: showhide,asidedata subtype is not workedexample and index length is not 5", async () => {
         initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
         const store = mockStore(() => initialState);
         const responseData1 = {
@@ -676,7 +676,7 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         helperMethods.onPasteSuccess(params);
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
-    it("onPasteSuccess - No poetryData - parentUrn ", async () => {
+    xit("onPasteSuccess - No poetryData - parentUrn ", async () => {
         const store = mockStore(() => initialState);
         const params = {
             responseData: responseData,
