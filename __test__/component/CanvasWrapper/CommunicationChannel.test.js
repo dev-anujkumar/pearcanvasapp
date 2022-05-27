@@ -40,7 +40,13 @@ const initialState = {
             label:{
                 en:'en'
             }
-        }]
+        }],
+        projectLearningFrameworks: {
+            externalLF: [
+                { "urn": 'urn:pearson:goalframework:f35b6132-fab1-4358-848f-70e791b2e797' },
+                { "urn": 'urn:pearson:goalframework:f35b6132-fab1-4358-848f-70e791b2e7979' }
+            ]
+        }
     },
     toolbarReducer:{
         pageNumberToggle:false
@@ -66,7 +72,8 @@ const initialState = {
     },
     autoNumberReducer: {
         isAutoNumberingEnabled: true
-    }
+    },
+
 };
 
 jest.mock('../../../src/auth/openam.js', () => {
@@ -274,7 +281,13 @@ describe('Testing communication channel', () => {
         addNewComment: jest.fn(),
         deleteComment: jest.fn(),
         handleSlateRefresh: jest.fn(),
-        setTocContainersAutoNumberList: jest.fn()
+        setTocContainersAutoNumberList: jest.fn(),
+        projectLearningFrameworks: {
+            externalLF: [
+                { "urn": 'urn:pearson:goalframework:f35b6132-fab1-4358-848f-70e791b2e797' },
+                { "urn": 'urn:pearson:goalframework:f35b6132-fab1-4358-848f-70e791b2e7979' }
+            ]
+        }
     }
     let wrapper = mount(<Provider store={store}><CanvasWrapper {...props} /></Provider>)
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
@@ -2593,5 +2606,62 @@ describe('Testing communication channel', () => {
             expect(spyinitTocCommunictionChannel).toHaveBeenCalled()
             spyinitTocCommunictionChannel.mockClear()
         })
+    })
+    it("getAssessmentData for cite alignment",()=>{
+        config.tempSlateManifestURN = "urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f6"
+        const event = {
+            data: {
+                type: "getAssessmentData",
+            }
+        };
+        config.slateType="assessment"
+        document.getElementsByClassName = () => {
+            return {
+                length: 1
+            }
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
+            }]
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'cite'
+            }]
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    it("getAssessmentData for cite alignment",()=>{
+        config.slateManifestURN = 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4'
+        const event = {
+            data: {
+                type: "getAssessmentData",
+            }
+        };
+        config.slateType="assessment"
+        config.slateType="assessment"
+        document.getElementsByClassName = () => {
+            return {
+                length: 1
+            }
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
+            }]
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'tdx'
+            }]
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
     })
 })

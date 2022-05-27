@@ -1,5 +1,5 @@
 import { projectInfo } from "../../src/appstore/projectInfoReducer";
-import { UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE } from "../../src/constants/Action_Constants";
+import { UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS } from "../../src/constants/Action_Constants";
 
 const INITIAL_STATE = {
     usageType: [],
@@ -12,6 +12,8 @@ const INITIAL_STATE = {
         owner: {}
     },
     isOwnersSubscribedSlateChecked: true,
+    LOBList:[],
+    showDiscussionLOBDropdown: false
 }
 
 describe("Testing LOB permissions", () => {
@@ -32,6 +34,32 @@ describe("Testing LOB permissions", () => {
                 playscript: true,
                 discussion: true
             }
+        })).toEqual(output)
+    });
+
+    it('PROJECT_LOB_LIST', () => {
+        let LOBList = ['test']
+        let output = {
+            ...INITIAL_STATE,
+            LOBList: ['test']
+        }
+        expect(projectInfo(INITIAL_STATE, {
+            type: PROJECT_LOB_LIST,
+            payload: LOBList
+
+        })).toEqual(output)
+    });
+
+    it('NO_DISCUSSION_ITEMS', () => {
+        let showDiscussionLOBDropdown = true
+        let output = {
+            ...INITIAL_STATE,
+            showDiscussionLOBDropdown: true
+        }
+        expect(projectInfo(INITIAL_STATE, {
+            type: NO_DISCUSSION_ITEMS,
+            payload: showDiscussionLOBDropdown
+
         })).toEqual(output)
     });
 

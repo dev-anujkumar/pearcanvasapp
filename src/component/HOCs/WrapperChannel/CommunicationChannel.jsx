@@ -10,13 +10,13 @@ import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
 import { sendDataToIframe, defaultMathImagePath, isOwnerRole} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
-import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS } from '../../../constants/IFrameMessageTypes';
+import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
-import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT } from '../../../constants/Element_Constants.js';
-import { SLATE_TYPE_PDF } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../../constants/Element_Constants.js';
+import { SLATE_TYPE_PDF, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 function CommunicationChannel(WrappedComponent) {
@@ -389,7 +389,75 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.updateFigureDropdownValues(message)
                     break;
                 }
+                case "getAssessmentData":
+                    this.getAssessmentForWillowAlignment();
+                    break;
             }
+        }
+
+
+        /**
+            This Function is used to get AssessmentData For Aligned Willow Framework
+         */
+        getAssessmentForWillowAlignment = () => {
+            const {currentSlateLOData, projectLearningFrameworks, currentSlateLF } = this.props
+            let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
+            let apiKeys_LO = {
+                'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
+                'strApiKey': config.STRUCTURE_APIKEY,
+                'productApiUrl': config.PRODUCTAPI_ENDPOINT,
+                'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+                'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
+                'myCloudProxySession': config.myCloudProxySession
+            };
+            let externalLFUrn = '';
+            if (projectLearningFrameworks?.externalLF?.length) {
+                externalLFUrn = projectLearningFrameworks.externalLF[0].urn;
+            }
+            let assessmentuRN = "";
+            let assessmentType = "";
+            let assessmentTypeLO = "";
+            if (config.slateType === 'assessment' && document.getElementsByClassName("slate_assessment_data_id_lo").length) {
+                assessmentuRN = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+                assessmentType = document.getElementsByClassName("slate_assessment_data_format_lo")[0].innerText;
+            }
+            switch (assessmentType) {
+                case TDX:
+                    assessmentTypeLO = ASSESSMENT_ITEM_TDX
+                    break;
+                case CITE:
+                case LEARNING_TEMPLATE:
+                case PUF:
+                case LEARNOSITY:
+                default:
+                    assessmentTypeLO = ASSESSMENT_ITEM
+                    break;
+            }
+            let previewData = {
+                previewUrl: config.PREVIEW_ASSESSMENT_LO_ENDPOINT,
+                bookId: config.citeUrn,
+                assessmentUrn: assessmentuRN,
+                assessmentType: assessmentTypeLO
+            }
+            sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
+            sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } });
+            sendDataToIframe({
+                'type': OpenLOPopup,
+                'message': {
+                    'text': AddToExternalFrameworkAS,
+                    'data': currentSlateLOData,
+                    'isLOExist': true,
+                    'editAction': '',
+                    'selectedLOs': currentSlateLOData,
+                    'apiConstants': apiKeys_LO,
+                    'externalLFUrn': externalLFUrn,
+                    'currentSlateId': slateManifestURN,
+                    'chapterContainerUrn': '',
+                    'currentSlateLF': currentSlateLF,
+                    'assessmentUrn': assessmentuRN,
+                    'previewData': previewData
+                }
+            })
         }
 
         /**
@@ -945,6 +1013,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.clearElementStatus()
                 this.props.fetchUsageTypeData('assessment');
                 this.props.fetchSlateData(message.node.containerUrn, config.slateEntityURN, config.page, '', "");
+                this.props.fetchLOBList();
                 config.savingInProgress = false
                 this.props.setSlateType(config.slateType);
                 this.props.setSlateEntity(config.slateEntityURN);

@@ -636,6 +636,60 @@ export default {
         "versionUrn": "urn:pearson:work:b33703aa-d629-4466-8606-cfcf0505e291",
         "contentUrn": "urn:pearson:entity:a313d0b8-4665-450b-a6ff-be780f1e5cce"
     },
+    "tableasmarkup":{
+        "id": "urn:pearson:work:b33703aa-d629-4466-8606-cfcf0505e291",
+        "type": "figure",
+        "figuretype": "tableasmarkup",
+        "subtype": "image50TextTableImage",
+        "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+        "alignment": "half-text",
+        "title": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": []
+        },
+        "subtitle": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "captions": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "credits": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "text": "",
+            "textsemantics": [],
+            "mathml": [],
+            "footnotes": []
+        },
+        "figuredata": {
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+            "height": "422",
+            "width": "680",
+            "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            "imageid": ""
+        },
+        "html": {
+            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "title": "<p><br></p>",
+            "subtitle": "<p><br></p>",
+            "caption": "<p><br></p>",
+            "credit": "<p><br></p>",
+            "text": "",
+            "postertext": "",
+            "tableasHTML": ""
+        },
+        "versionUrn": "urn:pearson:work:b33703aa-d629-4466-8606-cfcf0505e291",
+        "contentUrn": "urn:pearson:entity:a313d0b8-4665-450b-a6ff-be780f1e5cce"
+    },
     "table-imageTextWidthTableImage":{
         "id": "urn:pearson:work:b33703aa-d629-4466-8606-cfcf0505e291",
         "type": "figure",

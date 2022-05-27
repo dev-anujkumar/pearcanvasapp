@@ -41,6 +41,7 @@ describe("KeyboardWrapper Testing", () => {
           classList:  {
             contains: () => "figureCredit"
           },
+          className: [],
           querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
         },
       },
@@ -61,6 +62,7 @@ describe("KeyboardWrapper Testing", () => {
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          className: [],
           querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
         },
       },
@@ -84,9 +86,11 @@ describe("KeyboardWrapper Testing", () => {
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          className: [],
           querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           parentNode: {
             id: QUERY_SELECTOR + "-1",
+            className: [],
             querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           }
         },
@@ -111,6 +115,7 @@ describe("KeyboardWrapper Testing", () => {
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          className: [],
           querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           parentNode: {
             id: QUERY_SELECTOR + "-1",
@@ -138,6 +143,7 @@ describe("KeyboardWrapper Testing", () => {
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          className: [],
           querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
           parentNode: {
             id: "different id",
@@ -160,6 +166,7 @@ describe("KeyboardWrapper Testing", () => {
         // },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          className: [],
           classList:  {
             contains: () => "figureCredit"
           },
@@ -183,6 +190,7 @@ describe("KeyboardWrapper Testing", () => {
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
+          className: [],
           classList:  {
             contains: () => "figureCredit"
           },
