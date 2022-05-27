@@ -1304,8 +1304,8 @@ export const UpdateElementWorkId = () => {
     let newParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = newParentData[slateId];
     let newBodymatter = currentSlateData.contents.bodymatter;
-    const {glossaryFootnoteValue, elementIndex} = store.getState().glossaryFootnoteReducer;
 
+    const {glossaryFootnoteValue, elementIndex} = store.getState().glossaryFootnoteReducer;
     const {elementType} = glossaryFootnoteValue;
     let newElementWorkId = "";
 
