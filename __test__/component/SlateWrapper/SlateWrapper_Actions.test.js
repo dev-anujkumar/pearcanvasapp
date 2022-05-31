@@ -564,7 +564,7 @@ describe('Tests Slate Wrapper Actions', () => {
             expect(payload).toStrictEqual(expectedActions.payload);
         });
     });
-    it('testing------- SWAP ELEMENT ------action - then', () => {
+    xit('testing------- SWAP ELEMENT ------action - then', () => {
         //let store = mockStore(() => initialState);
         const type = "element-authoredtext";
         const index = 2;
@@ -609,7 +609,7 @@ describe('Tests Slate Wrapper Actions', () => {
 
         });
     });
-    it('testing------- SWAP ELEMENT ------action - then- citation element', () => {
+    xit('testing------- SWAP ELEMENT ------action - then- citation element', () => {
         let swappedElementData = {
             "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
             "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
@@ -643,7 +643,7 @@ describe('Tests Slate Wrapper Actions', () => {
 
         });
     });
-    it('testing------- SWAP ELEMENT ------action - catch', () => {
+    xit('testing------- SWAP ELEMENT ------action - catch', () => {
         //let store = mockStore(() => initialState);
         const typee = "element-authoredtext";
         const index = 2;
@@ -1438,7 +1438,7 @@ describe('Tests Slate Wrapper Actions', () => {
         let pagenumber = 1;
         actions.updatePageNumber(pagenumber, elementId, asideDataType2, parentUrn)(dispatch, getState);
     })
-    xit('testing------- SECTION BREAK ------action when aside and element id same', () => {
+    it('testing------- SECTION BREAK ------action when aside and element id same', () => {
         let store = mockStore(() => initialState);
         const type = "SECTION_BREAK";
         const index = 3;
@@ -1474,7 +1474,7 @@ describe('Tests Slate Wrapper Actions', () => {
         });
     });
 
-    xit('testing-------', () => {
+    it('testing-------', () => {
         let store = mockStore(() => initialState);
         const type = "TEXT";
         const index = 3;

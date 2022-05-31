@@ -715,7 +715,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             let showhideTypeVal = "", showHideObject = undefined
             if(showHideElement ||  asideParent?.type === 'showhide'){ /** Glossary-Footnotes inside Show-Hide */
                 showhideTypeVal = asideParent?.sectionType;//findSectionType(shTypeIndex?.toString())
-                let showhideElement = getShowHideElement(tcmBodymatter, innerSH_Index.length, innerSH_Index)
+                let showhideElement = getShowHideElement(tcmBodymatter, innerSH_Index.length, innerSH_Index, elementType)
                 let innerSH_Element = showhideTypeVal && showhideElement?.interactivedata[showhideTypeVal][innerSH_Index]
                 showHideObject = {
                     currentElement: innerSH_Element,
@@ -795,7 +795,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             if(tempIndex.length === 4 && newBodymatter[updatedIndex].type === 'groupedcontent' && elementType === 'element-blockfeature'){
                 newBodymatter[updatedIndex].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
             } else if((tempIndex.length === 3 || tempIndex.length === 4) && newBodymatter[updatedIndex].type === 'element-aside' && elementType === 'element-blockfeature'){
-                newBodymatter[updatedIndex].elementdata.bodymatter[tempIndex[0]] = res.data;
+                newBodymatter[updatedIndex].elementdata.bodymatter[tempIndex[1]] = res.data;
+            } else if(tempIndex.length == 4 && newBodymatter[updatedIndex].type === 'showhide' && elementType === 'element-blockfeature') {
+                newBodymatter[tempIndex[0]].interactivedata.show[tempIndex[2]] = res.data;
             } else{
                 newBodymatter[updatedIndex] = res.data;
             }
