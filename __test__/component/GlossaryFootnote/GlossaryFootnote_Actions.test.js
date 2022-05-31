@@ -101,13 +101,7 @@ jest.mock('../../../src/appstore/store', () => {
                     },
                     parentUrn : {
                         contentUrn : "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184"
-                    },
-                    // showHideObj: {
-                    //     currentElement: {
-                    //         type: "element-aside",
-                    //         subtype: "workedexample"
-                    //     }
-                    // }
+                    }
                 },
                 glossaryFootnoteReducer:{"elementIndex": "0"},
                 markedIndexReducer: {"elementIndex": "0-0-0-0"}
@@ -581,16 +575,6 @@ describe('Tests commentsPanel action', () => {
    
     describe('Testing Actions', () => {
 
-        xit('testing------- handleFigureGlossaryActions  action', () => {
-            store = mockStore(() => initialState);
-            const expectedActions = [
-                { type: 'ADD_FIGURE_GLOSSARY_POPUP', payload: true  },
-                { type: 'SET_FIGURE_GLOSSARY', payload: {} },
-            ];
-    
-            store.dispatch(actions.handleFigureGlossaryActions(true,{}))
-            expect(store.getActions()).toEqual(expectedActions);
-        })
         it('testing------- showWrongImagePopup   action', () => {
             store = mockStore(() => initialState);
             let dispatch = (obj) => {
@@ -638,68 +622,4 @@ describe('Tests commentsPanel action', () => {
         store.dispatch(actions.saveImageDataFromAlfresco(message3))
     });
 
-})
-
-xdescribe('Testing --------- UpdateElementWorkId  function ------',() => {
-    jest.mock('../../../src/appstore/store', () => {
-        return {
-            getState: () => {
-                return {
-                    appStore:{slateLevelData:mockData,
-                        activeElement: {
-                            altText: "",
-                            elementId: "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184",
-                            elementType: "element-interactive",
-                            elementWipType: "figure",
-                            index: 0,
-                            primaryOption: "primary-smartlink",
-                            secondaryOption: "secondary-interactive-smartlink-pdf",
-                            tag: "SL",
-                            toolbar: ["crossLinkingIcon", "assetpopover", "glossary"]
-                        },
-                        parentUrn : {
-                            contentUrn : "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184"
-                        },
-                        // showHideObj: {
-                        //     currentElement: {
-                        //         type: "element-aside",
-                        //         subtype: "workedexample"
-                        //     }
-                        // }
-                    },
-                    glossaryFootnoteReducer:{
-                        "elementIndex": "0",
-                        glossaryFootnoteValue: { elementWorkId: "4343653", elementType:'stanza' },
-                        glossaryFootNoteCurrentValue: "",
-                    },
-                    markedIndexReducer: {"elementIndex": "0-0-0-0"}
-                }
-            },
-            dispatch:(obj)=>{
-                responseData = obj;
-               // console.log("object123456---",obj);
-                return jest.fn();
-            }
-        }
-    })
-    it('Testing UpdateElementWorkId function  --',  () => {
-        // let store2 = mockStore(() => initialState3);
-        let expectedPayload = {
-            "alttext": "",
-            "height": 170,
-            "imageid": "urn:pearson:alfresco:d039c78e-6f36-4c64-9c50-20e0622486b2",
-            "longdescription": "sfdsf",
-            "alttext": "sda",
-            "path": "https://eps.openclass.com/eps/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml",
-            "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-            "title": "Metrodigi with adjusted width-515 height-455 and MF as YES",
-            "width": 148,
-        }
-           const expectedActions = [
-            { type: 'SET_FIGURE_GLOSSARY', payload: expectedPayload },
-            { type: 'ADD_FIGURE_GLOSSARY_POPUP', payload: true  }
-        ];
-        actions.UpdateElementWorkId()
-        // expect(store.getActions()).toEqual(expectedActions);
-    });
 })
