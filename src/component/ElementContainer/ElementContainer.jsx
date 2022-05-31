@@ -479,6 +479,9 @@ class ElementContainer extends Component {
         if(previousElementData.figuretype === 'tableasmarkup'){
             isAltTextLongDescModified = this.props.oldFigureDataForCompare.tableasHTML !== previousElementData.figuredata.tableasHTML
         }
+        if(previousElementData.figuretype === 'image') {
+            isAltTextLongDescModified = this.props.oldFigureDataForCompare !== previousElementData.figureData
+        }
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // Not selecting remove label and number
