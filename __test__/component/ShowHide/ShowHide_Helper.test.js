@@ -133,6 +133,12 @@ describe('1. ShowHide test cases', () => {
             showHideHelper.getShowHideElement(slateBodyMattter, 4, ["0","0","0","0"]);
             expect(spyonGetShowHideElement).toHaveBeenCalled();
         });
+        it('getShowHIdeElement :case 4 incase of blockfeature', () => {
+            const slateBodyMattter = [{elementdata: { bodymatter: [{...showHide}]}}];
+            const spyonGetShowHideElement = jest.spyOn(showHideHelper, "getShowHideElement");
+            showHideHelper.getShowHideElement(slateBodyMattter, 4, ["0","0","0","0"], "element-blockfeature");
+            expect(spyonGetShowHideElement).toHaveBeenCalled();
+        });
         it('getShowHIdeElement :case 5', () => {
             const slateBodyMattter = [{elementdata:{ bodymatter: [{ contents: { bodymatter: [{...showHide}]}}]}}];
             const spyonGetShowHideElement = jest.spyOn(showHideHelper, "getShowHideElement");

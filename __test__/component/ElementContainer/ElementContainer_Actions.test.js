@@ -1024,7 +1024,7 @@ describe('Tests ElementContainer Actions', () => {
         })
     })
 
-    describe('testing------- Table Editor ------action', () => {
+    xdescribe('testing------- Table Editor ------action', () => {
         it('testing------- Table Editor ------action', () => {
             let elementId = "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4ea"
             let response =
@@ -1285,7 +1285,7 @@ describe('Tests ElementContainer Actions', () => {
       
         })
     })
-    describe('catch cases', () => {
+    xdescribe('catch cases', () => {
     it('testing------- ADD COMMENT ------action- catch case', () => {
         let newComment = {
             comment: "test",
@@ -1305,7 +1305,7 @@ describe('Tests ElementContainer Actions', () => {
         return store.dispatch(actions.addComment(newComment.comment, elementId)).catch((error) => {
         });
     })
-    xit('testing------- Delete Element------action-catch case', () => {
+    it('testing------- Delete Element------action-catch case', () => {
         let store = mockStore(() => initialState);
         config.slateManifestURN="urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
         let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0c",

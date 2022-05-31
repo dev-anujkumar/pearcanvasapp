@@ -16,7 +16,8 @@ import { connect } from 'react-redux';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import PopUp from '../PopUp';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
-import { updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions'
+import { updateAudioVideoDataForCompare, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions';
+import { setAutoNumberSettingValue } from '../FigureHeader/AutoNumber_helperFunctions';
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
 class ElementAudioVideo extends Component {
@@ -355,6 +356,8 @@ class ElementAudioVideo extends Component {
      * @description function will be called on image src add and fetch resources from Alfresco
      */
     handleC2MediaClick = (e) => {
+        const dropdownVal = setAutoNumberSettingValue(this.props?.model)
+        this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
         this.props.handleFocus();
         if(hasReviewerRole()){
             return true
@@ -442,7 +445,9 @@ class ElementAudioVideo extends Component {
     }
 
     deleteElementAsset = () => {
-        const element = this.props.model
+        const dropdownVal = setAutoNumberSettingValue(this.props?.model)
+        this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
+        const element = this.props.model;
         this.props.handleFocus();
         if (hasReviewerRole()) {
             return true
@@ -532,6 +537,9 @@ const mapActionToProps = (dispatch) =>{
         },
         saveSelectedAlfrescoElement: (payloadObj) => {
             dispatch(saveSelectedAlfrescoElement(payloadObj))
+        },
+        updateAutoNumberingDropdownForCompare: (value) => {
+            dispatch(updateAutoNumberingDropdownForCompare(value))
         }
     }
 }
