@@ -18,6 +18,50 @@ export default {
                       "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
                       "versionUrn": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
                       "contentUrn": "urn:pearson:entity:e3199d10-bf4e-4abd-95f5-e5b6b53d2e02",
+                      "elementdata": {
+                        "bodymatter":[
+                          {
+                            "id": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b",
+                            "type": "stanza",
+                            "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                            "html": {
+                              "text": "<p><span class=\"poetryLine\" data-id=\"urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3:55721e6a-7408-4eb2-aee2-296d0d0f2981\"><br></span></p>",
+                              "footnotes":{
+                                "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d": []
+                              }
+                            },
+                            "versionUrn": "urn:pearson:work:c5f26743-d2d2-4664-b0df-9ac59e11642b",
+                            "contentUrn": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3",
+                            "status": "wip",
+                            "tcm": false,
+                            "feedback": false,
+                            "comments": false,
+                            "poetrylines": [
+                              {
+                                "id": "urn:pearson:entity:dcac6f18-6c34-43d2-850d-6ff494699fb3:55721e6a-7408-4eb2-aee2-296d0d0f2981",
+                                "type": "line",
+                                "authoredtext": {
+                                  "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                  "text": ""
+                                }
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "groupeddata":{
+                        "bodymatter": [
+                          {
+                            "groupdata":{
+                              "bodymatter":{
+                                "elementData":{
+                                  "bodymatter":[]
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
                       "contents": {
                         "bodymatter": [
                           {
@@ -727,3 +771,125 @@ export default {
       }
   }
 };
+
+export const message = {
+  asset: {
+  "modifiedAt":"2019-03-25T17:36:47.772+0000",
+  "name":"Metrodigi with adjusted width-515 height-455 and MF as YES",
+  "id":"d039c78e-6f36-4c64-9c50-20e0622486b2",
+  "properties":{
+     "avs:jsonString":"{\n\"smartLinkThirdPartyVendorVal\":\"Metrodigi\",\n\"smartLinkOptimizedMobileVal\":\"Yes\",\n\"height\":\"455\",\n\"width\":\"515\",\n\"linkLongDesc\":\"\",\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\"\n}",
+     "avs:url":"https://eps.openclass.com/eps/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml",
+     "cm:versionType":"MINOR",
+     "cm:versionLabel":"1.1",
+     "cm:description":"{\"smartLinkType\":\"3rd Party Interactive\"}",
+     "avs:linkType":"3rd Party Interactive",
+     'exif:pixelXDimension':148,
+     'exif:pixelYDimension':170,
+     "cplg:altText":"sda",
+     "cplg:longDescription": "sfdsf"
+  },
+  "previewUrl":"https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/s/api/node/workspace/SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2/content/thumbnails/imgpreview?c=queue&ph=true",
+  "nodeRef":"workspace://SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2",
+  "thumbnailUrl":"https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/s/api/node/workspace/SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2/content/thumbnails/doclib?c=queue&ph=true",
+  "epsStatus":false,
+  "type":"3rd Party Interactive",
+  "institution-urls":[
+     {
+        "institutionUrl":"https://epspqa.stg-openclass.com/cite-media-stg/",
+        "pdosUrl":"",
+        "contentVersion":"",
+        "instName":"https://epspqa.stg-openclass.com/cite-media-stg",
+        "status":"",
+        "publicationUrl":"",
+        "contentAction":true
+     },
+     {
+        "institutionUrl":"https://epspqa.stg-openclass.com/schoolcontent-stg/",
+        "pdosUrl":"",
+        "contentVersion":"",
+        "instName":"SchoolContent",
+        "status":"",
+        "publicationUrl":"",
+        "contentAction":true
+     }
+  ],
+  "epsUrl":"https://eps.openclass.com/eps/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml"
+  }}
+
+  export const message2 = {
+    asset: {
+    "modifiedAt":"2019-03-25T17:36:47.772+0000",
+    "name":"Metrodigi with adjusted width-515 height-455 and MF as YES",
+    "properties":{
+       "avs:jsonString":"{\n\"smartLinkThirdPartyVendorVal\":\"Metrodigi\",\n\"smartLinkOptimizedMobileVal\":\"Yes\",\n\"height\":\"455\",\n\"width\":\"515\",\n\"linkLongDesc\":\"\",\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\"\n}",
+       "avs:url":"https://eps.openclass.com/eps/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml",
+       "cm:versionType":"MINOR",
+       "cm:versionLabel":"1.1",
+       "cm:description":"{\"smartLinkType\":\"3rd Party Interactive\"}",
+       "avs:linkType":"3rd Party Interactive",
+    },
+    "previewUrl":"https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/s/api/node/workspace/SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2/content/thumbnails/imgpreview?c=queue&ph=true",
+    "nodeRef":"workspace://SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2",
+    "thumbnailUrl":"https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/s/api/node/workspace/SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2/content/thumbnails/doclib?c=queue&ph=true",
+    "epsStatus":false,
+    "type":"3rd Party Interactive",
+    "institution-urls":[
+       {
+          "institutionUrl":"https://epspqa.stg-openclass.com/cite-media-stg/",
+          "pdosUrl":"",
+          "contentVersion":"",
+          "instName":"https://epspqa.stg-openclass.com/cite-media-stg",
+          "status":"",
+          "publicationUrl":"",
+          "contentAction":true
+       },
+       {
+          "institutionUrl":"https://epspqa.stg-openclass.com/schoolcontent-stg/",
+          "pdosUrl":"",
+          "contentVersion":"",
+          "instName":"SchoolContent",
+          "status":"",
+          "publicationUrl":"",
+          "contentAction":true
+       }
+    ],
+    }}
+    export const message3 = {
+      asset: {
+      "modifiedAt":"2019-03-25T17:36:47.772+0000",
+      "name":"Metrodigi with adjusted width-515 height-455 and MF as YES",
+      "properties":{
+         "avs:jsonString":"{\n\"smartLinkThirdPartyVendorVal\":\"Metrodigi\",\n\"smartLinkOptimizedMobileVal\":\"Yes\",\n\"height\":\"455\",\n\"width\":\"515\",\n\"linkLongDesc\":\"\",\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\"\n}",
+         "avs:url":"https://eps.openclass.com/eps/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml",
+         "cm:versionType":"MINOR",
+         "cm:versionLabel":"1.1",
+         "cm:description":"{\"smartLinkType\":\"3rd Party Interactive\"}",
+         "avs:linkType":"3rd Party Interactive",
+      },
+      "previewUrl":"https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/s/api/node/workspace/SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2/content/thumbnails/imgpreview?c=queue&ph=true",
+      "nodeRef":"workspace://SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2",
+      "thumbnailUrl":"https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/s/api/node/workspace/SpacesStore/d039c78e-6f36-4c64-9c50-20e0622486b2/content/thumbnails/doclib?c=queue&ph=true",
+      "epsStatus":false,
+      "type":"3rd Party Interactive",
+      "institution-urls":[
+         {
+            "institutionUrl":"https://epspqa.stg-openclass.com/cite-media-stg/",
+            "pdosUrl":"",
+            "contentVersion":"",
+            "instName":"https://epspqa.stg-openclass.com/cite-media-stg",
+            "status":"",
+            "publicationUrl":"dsfs",
+            "contentAction":true
+         },
+         {
+            "institutionUrl":"https://epspqa.stg-openclass.com/schoolcontent-stg/",
+            "pdosUrl":"",
+            "contentVersion":"",
+            "instName":"SchoolContent",
+            "status":"",
+            "publicationUrl":"",
+            "contentAction":true
+         }
+      ],
+      }}
