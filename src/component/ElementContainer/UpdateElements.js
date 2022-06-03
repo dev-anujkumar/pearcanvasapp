@@ -862,6 +862,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }
             break;
         case elementTypeConstant.FIGURE:
+                const { elementType, primaryOption, secondaryOption } = findElementType(previousElementData, index);
                 switch (previousElementData.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
