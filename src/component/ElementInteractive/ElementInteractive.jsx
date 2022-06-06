@@ -28,8 +28,9 @@ import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } f
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 import {alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action';
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper';
-import { updateSmartLinkDataForCompare } from '../ElementContainer/ElementContainer_Actions';
+import { updateSmartLinkDataForCompare, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
+import { setAutoNumberSettingValue } from '../FigureHeader/AutoNumber_helperFunctions';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -255,7 +256,9 @@ class Interactive extends React.Component {
     }
 
     deleteElementAsset = () => {
-        const element = this.props.model
+        const dropdownVal = setAutoNumberSettingValue(this.props?.model)
+        this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
+        const element = this.props.model;
         this.props.handleFocus();
         if (hasReviewerRole()) {
             return true
@@ -681,6 +684,8 @@ class Interactive extends React.Component {
      * @param {event} e
      */
     handleC2MediaClick = (e) => {
+        const dropdownVal = setAutoNumberSettingValue(this.props?.model);
+        this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
         this.props.handleFocus();
         if(hasReviewerRole()){
             return true
@@ -919,6 +924,9 @@ const mapActionToProps = (dispatch) => {
         },
         saveSelectedAlfrescoElement: (payloadObj) => {
             dispatch(saveSelectedAlfrescoElement(payloadObj))
+        },
+        updateAutoNumberingDropdownForCompare: (value) => {
+            dispatch(updateAutoNumberingDropdownForCompare(value))
         }
     }
 }

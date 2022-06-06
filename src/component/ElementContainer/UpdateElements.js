@@ -862,29 +862,33 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             }
             break;
         case elementTypeConstant.FIGURE:
+                const figureElementData = findElementType(previousElementData, index);
+                const figureElementType = figureElementData?.elementType;
+                const figurePrimaryOption = figureElementData?.primaryOption;
+                const figureSecondaryOption = figureElementData?.secondaryOption;
                 switch (previousElementData.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureData(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        dataToReturn = generateCommonFigureData(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureData(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
-                        dataToReturn = generateAssessmentData(index, previousElementData, elementType, primaryOption, secondaryOption)
+                        dataToReturn = generateAssessmentData(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
 
-                        dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:
-                        dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        dataToReturn = generateCommonFigureDataAT(index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureDataAT(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                 }
                 

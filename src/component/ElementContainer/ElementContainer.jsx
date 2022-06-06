@@ -80,7 +80,6 @@ import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTyp
 import { checkHTMLdataInsideString } from '../../constants/utility'; 
 import { prepareBqHtml } from '../../js/utils';
 import { hideToc } from '../../js/toggleLoader';
-import { findElementType } from '../CanvasWrapper/CanvasWrapper_Actions';
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -478,6 +477,9 @@ class ElementContainer extends Component {
 
         if(previousElementData.figuretype === 'tableasmarkup'){
             isAltTextLongDescModified = this.props.oldFigureDataForCompare.tableasHTML !== previousElementData.figuredata.tableasHTML
+        }
+        if(previousElementData.figuretype === 'image') {
+            isAltTextLongDescModified = this.props.oldFigureDataForCompare !== previousElementData.figureData
         }
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
@@ -1025,7 +1027,6 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
-                            const { elementType, primaryOption, secondaryOption } = findElementType(previousElementData, index);
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true

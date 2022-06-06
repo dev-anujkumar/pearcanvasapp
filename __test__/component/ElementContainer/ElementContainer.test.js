@@ -1346,12 +1346,6 @@ describe('Test for element container component', () => {
             expect(elementContainerInstance.state.isHovered).toBe(false)
             spyhandleOnMouseOut.mockClear()
         })
-        it('Test-getDerivedStateFromError  Function', () => {
-            const spyhandleOnMouseOut = jest.spyOn(elementContainerInstance, 'getDerivedStateFromError')
-            elementContainerInstance.getDerivedStateFromError("");
-            expect(spyhandleOnMouseOut).toHaveBeenCalled()
-            spyhandleOnMouseOut.mockClear()
-        })
     })
     describe('Test- OpenerElement-Functions', () => {
         let openerData=wipData.opener
