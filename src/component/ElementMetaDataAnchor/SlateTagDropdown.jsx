@@ -162,9 +162,9 @@ class SlateTagDropdown extends React.Component {
       'myCloudProxySession': config.myCloudProxySession
     };
     const selectedLOs = this.props.currentSlateLOData;
-    let externalLFUrn = '';
+    let externalLFUrn = [];
     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
-      externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
+      this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
     }
     return {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
