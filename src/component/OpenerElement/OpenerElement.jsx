@@ -12,6 +12,7 @@ import { checkSlateLock } from "../../js/slateLockUtility.js"
 import axios from 'axios';
 import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
+import TinyMceEditor from '../tinyMceEditor';
 
 class OpenerElement extends Component {
 
@@ -504,7 +505,8 @@ class OpenerElement extends Component {
                     </div>
                     <div className="opener-label-box oe-title-box">
                         <div className="opener-title-text">Title</div>
-                        <input className={"element-dropdown-title opener-title" + isDisable} value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} onClick={this.handleToolbarOpener}/>
+                        <TinyMceEditor onOpenerFieldBlur={this.handleOpenerTitleChange} updateElement={this.props.updateElement} permissions={this.props.permissions} element={this.props.element} handleBlur={this.handleBlur} handleEditorFocus={this.props.onOpenerClick} index={`${this.props.index}-2`} placeholder="" className={"element-dropdown-title opener-title" + isDisable} slateLockInfo={this.props.slateLockInfo}  elementId={this.props.elementId}/>
+                        {/* <input className={"element-dropdown-title opener-title" + isDisable} value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur}/> */}
                     </div>
                 </div>
                 {imgSrc?this.renderExistingCOImage():this.renderDefaultCOImage()}

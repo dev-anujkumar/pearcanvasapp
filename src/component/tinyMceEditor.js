@@ -1737,7 +1737,7 @@ export class TinyMceEditor extends Component {
                         editor.targetElm.classList.remove('place-holder');
                     }
                 }
-                if (self.props?.element?.type != 'figure' && self.props?.element?.type !== 'element-aside') {
+                if (self.props?.element?.type != 'figure' && self.props?.element?.type !== 'element-aside' && self.props?.element?.type !== 'openerelement') {
                     items.push(blankLineOption)
                 }
                 callback(items);
@@ -3473,7 +3473,9 @@ export class TinyMceEditor extends Component {
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
                 toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-        } 
+        } else if(this.props?.element?.type === 'openerelement'){
+            toolbar = config.openerElementToolbar
+        }
         // else if (this.props.placeholder === "Code Block Content") {
         //     toolbar = this.setCodeBlockContentToolbar()
         // }

@@ -26,6 +26,12 @@
     color: #6a7070;
     font-weight: bold;
 }
+.opener-title{
+    min-height: 50px !important;
+}
+.opener-title > p.paragraphNumeroUno{
+    margin-top: 0px !important;
+}
 .opener-element-container .pearson-component.opener-image.figureData{
     cursor: copy;
     width: 100%;

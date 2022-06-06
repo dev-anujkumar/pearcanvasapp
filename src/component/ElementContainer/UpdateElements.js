@@ -925,10 +925,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
 }
 
 export const createOpenerElementData = (elementData, elementType, primaryOption, secondaryOption) => {
+    console.log("elementdata1", elementData)
     let dataToReturn = {};
     if(elementData) {
         dataToReturn = {
             ...elementData,
+            html: {
+                title: `<p>${elementData.title.text}</p>`
+            },
             inputType: elementTypes[elementType][primaryOption]['enum'],
             inputSubType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
             slateVersionUrn: config.slateManifestURN,
