@@ -15,8 +15,6 @@ export const requestConfigURI = () => {
     let uri = '';
     if(process.env.NODE_ENV === "development"){
         uri = cypressConfig.sitePointing;
-        // projectDetailsRes.currentOrigin = uri;
-        // this.ifrmaeData();
     }else{
         let originUrl  = window.location.origin;
         if(originUrl === cypressConfig.prodUrl) {
@@ -279,10 +277,18 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
 export const checkHTMLdataInsideString = (htmlNode) => {
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = htmlNode;
-    if (tempDiv.firstChild.innerHTML === "<br>" || tempDiv.firstChild.innerHTML === "</br>" || tempDiv.firstChild.innerHTML === "<br data-mce-bogus=\"1\">") {
-        return '';
-    } else { 
-        return tempDiv?.firstChild?.innerHTML;
+    if (tempDiv?.firstChild && tempDiv?.firstChild?.innerHTML) {
+        if (tempDiv.firstChild.innerHTML === "<br>" || tempDiv.firstChild.innerHTML === "</br>" || tempDiv.firstChild.innerHTML === "<br data-mce-bogus=\"1\">") {
+            return '';
+        } else { 
+            return tempDiv?.firstChild?.innerHTML;
+        }
+    } else {
+        if(tempDiv?.firstChild?.textContent !== '' && String(tempDiv.innerHTML).includes(tempDiv.firstChild.textContent)) {
+            return tempDiv.firstChild.textContent;
+        } else {
+            return '';
+        }
     }
 }
 
@@ -736,4 +742,16 @@ export const removeSpellCheckDOMAttributes = (innerHTML) => {
         }
     }
     return spellCheckDiv?.innerHTML;
+}
+
+export const getDesignType = (classList) => {
+    if(classList.includes("paragraphNumeroUnoIndentLevel1")) {
+        return "indent-level1";
+    } else if(classList.includes("paragraphNumeroUnoIndentLevel2")) {
+        return "indent-level2";
+    } else if(classList.includes("paragraphNumeroUnoIndentLevel3")) {
+        return "indent-level3";
+    } else {
+        return null;
+    }
 }

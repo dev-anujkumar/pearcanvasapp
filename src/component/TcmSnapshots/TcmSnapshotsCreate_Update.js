@@ -71,7 +71,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     */
     if(typeOfElement === SHOWHIDE) {
         containerElement = prepareSnapshots_ShowHide(containerElement, response, elementIndex, currentSlateData);
-        wipData =  containerElement?.showHideObj?.element?.interactivedata[containerElement?.sectionType][tempIndex[2]]  || {};
+        wipData =  containerElement?.showHideObj?.element?.interactivedata?.[containerElement?.sectionType][tempIndex[2]]  || {};
     } 
     else if(typeOfElement === POETRY_ELEMENT) {
         containerElement = prepareSnaphotPoetry(containerElement, response, elementIndex, currentSlateData);
@@ -88,17 +88,6 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     /** latest version for WE/CE/PE/AS/2C*/
     containerElement = await checkContainerElementVersion(containerElement, versionStatus,currentSlateData)
     let oldData = Object.assign({}, response);
-    /** set new slate Manifest in store also */
-    // if(containerElement.slateManifest){
-    //     delete Object.assign(currentParentData, {[containerElement.slateManifest]: currentParentData[currentSlateData.id] })[currentSlateData.id];     
-    //     //currentParentData[containerElement.slateManifest].status = "wip"
-    //     currentParentData[containerElement.slateManifest].id = containerElement.slateManifest
-    //     dispatch({
-    //         type: VERSIONING_SLATEMANIFEST,
-    //         payload: {slateLevelData:currentParentData}
-    //     })
-    // }
-
     if (response.id !== updatedId) {
         if (oldData.poetrylines) {
             oldData.poetrylines = wipData?.poetrylines;
@@ -149,7 +138,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForCreate = async (elementCreateData, type, containerElement, dispatch, index, operationType = null, elmFeedback = null) => {
-    if (elementCreateData.response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementCreateData.response.figuretype)) {
+    if (elementCreateData?.response?.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(elementCreateData?.response?.figuretype)) {
         return false
     }
     if(elementCreateData?.cypressPlusProjectStatus && elementCreateData?.response?.type === ELEMENT_TYPE_PDF){
@@ -268,7 +257,6 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 }
                 break;
             case ELEMENT_LIST:
-            case BLOCKFEATURE:
             case AUTHORED_TEXT:
             case LEARNING_OBJECTIVE:
             case SHOWHIDE:
@@ -291,6 +279,18 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                     }
                 }
                 break;
+            case BLOCKFEATURE:
+                if(eleIndex.length == 2 && bodymatter[eleIndex[0]]?.type === 'element-aside'){
+                    wipData = bodymatter[eleIndex[0]]?.elementdata?.bodymatter[eleIndex[1]]
+                } else if((eleIndex.length == 3 || eleIndex.length == 4) && bodymatter[eleIndex[0]]?.type === 'element-aside'){
+                    wipData = bodymatter[eleIndex[0]]?.elementdata?.bodymatter[eleIndex[0]]
+                } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]]?.type === 'element-blockfeature'){
+                    wipData = bodymatter[eleIndex[0]]
+                } else if((eleIndex.length == 3 || eleIndex.length == 4) && !(bodymatter[eleIndex[0]]?.type === 'element-blockfeature')){
+                    wipData = bodymatter[eleIndex[0]]?.groupeddata?.bodymatter[eleIndex[1]]?.groupdata?.bodymatter[eleIndex[2]]
+                } else {
+                    wipData = bodymatter[eleIndex[0]]
+                }
             case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */           
                 wipData = popupWipData(bodymatter, eleIndex,operationType,wipData)
                 break;
@@ -596,7 +596,7 @@ export const checkContainerElementVersion = async (containerElement, versionStat
     if (currentSlateData && currentSlateData.status && currentSlateData.status === 'approved') {
         let newSlateManifest = await getLatestVersion(currentSlateData.contentUrn);
         containerElement.slateManifest = newSlateManifest ? newSlateManifest : config.slateManifestURN  
-        if (!currentSlateData.popupSlateData) {
+        if (!currentSlateData?.popupSlateData && currentSlateData?.type !== 'popup') {
             config.tcmslatemanifest = newSlateManifest;
         }  
     }

@@ -51,10 +51,6 @@ ajax.send = function (url, cb, method, data, contentType, arnKey, sync, pubApiKe
 
     document.cookie = `CTOOL_APIKEY=${xApiKey}; domain=.pearson.com; path=/; secure=true`;
     x.setRequestHeader('Content-Type', contentType);
-    // x.setRequestHeader('Content-Language', 'en');
-    // x.setRequestHeader('x-apikey', xApiKey);
-    // x.setRequestHeader('PearsonSSOSession', config_object.ssoToken);
-    // x.setRequestHeader('If-Match', IF_MATCH !== "" ? IF_MATCH : "");
     x.setRequestHeader('myCloudProxySession', config_object.myCloudProxySession);
     x.setRequestHeader('accept', 'application/json, text/plain, */*');
     x.setRequestHeader('aws-resource', config_object.AWS_RESOURCE);
@@ -76,27 +72,30 @@ ajax.put = function (url, data, cb, contentType, sync) {
 };
 
 export function publishTitleDelay(project, section, cite, callBack, isPreview) {
-    var content_url = config_object.PROJECT_PREVIEW_ENDPOINT;
-    let content_data = {};
-    content_data["projectManifest"] = project;
-    content_data["sectionManifest"] = section;
-    content_data["citeManifest"] = cite;
-    content_data["requester"] = config_object.userEmail;//"requester": "james.cooney@pearson.com",
-    content_data["timestamp"] = new Date().toISOString();//"timestamp": "2017-04-23T18:25:43.511Z"
-    if (isPreview == true) {
-        content_data["preview"] = true;
-    }
-    ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', config_object.PROJECT_PREVIEW_ARN, false);
-    let parsedResponse = JSON.parse(response.responseText);
+    try {
+        var content_url = config_object.PROJECT_PREVIEW_ENDPOINT;
+        let content_data = {};
+        content_data["projectManifest"] = project;
+        content_data["sectionManifest"] = section;
+        content_data["citeManifest"] = cite;
+        content_data["requester"] = config_object.userEmail;//"requester": "james.cooney@pearson.com",
+        content_data["timestamp"] = new Date().toISOString();//"timestamp": "2017-04-23T18:25:43.511Z"
+        if (isPreview == true) {
+            content_data["preview"] = true;
+        }
+        ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', config_object.PROJECT_PREVIEW_ARN, false);
+        let parsedResponse = JSON.parse(response.responseText);
 
-    if (parsedResponse.data && parsedResponse.data.previewURL) {
-        let previewURL = parsedResponse.data.previewURL;
-        window.open(previewURL, '_blank');
-        if (callBack) { callBack(); }
-    } else {
-        //alert("Title Preview failed to load.");
-        sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true, dialogText:"Title Preview failed to load."}});
-        return false
+        if (parsedResponse.data && parsedResponse.data.previewURL) {
+            let previewURL = parsedResponse.data.previewURL;
+            window.open(previewURL, '_blank');
+            if (callBack) { callBack(); }
+        } else {
+            sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true, dialogText: "Title Preview failed to load." } });
+            return false
+        }
+    } catch (error) {
+        console.log("Error in publishTitleDelay function", error);
     }
 }
 
@@ -138,11 +137,9 @@ export const c4PublishObj = {
             }, 1100);
 
         } else {
-            //alert("Slate Preview failed to load");
             sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true, dialogText:"Slate Preview failed to load"}});
             return false;
         }
-        //}
     },
     publishTitle: function (project, section, cite, callBack, isPreview) {
         _.delay(() => {

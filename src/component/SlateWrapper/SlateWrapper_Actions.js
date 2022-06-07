@@ -19,7 +19,8 @@ import {
     WIRIS_ALT_TEXT_POPUP,
     SLATE_FIGURE_ELEMENTS,
     CYPRESS_PLUS_ENABLED,
-    SET_SLATE_MATTER_TYPE
+    SET_SLATE_MATTER_TYPE,
+    UPDATE_CARET_OFFSET
 } from '../../constants/Action_Constants';
 
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
@@ -618,7 +619,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     }
                     return false;
                 }
-                let newBodymatter = newParentData[slateId].contents.bodymatter;
+                let newBodymatter = newParentData[slateId]?.contents?.bodymatter;
                 if(containerTypeElem === SHOW_HIDE) { /* Swap inner elements of ShowHide */
                     const indexes = elementIndex?.toString().split('-') || [];
                     /* Get the showhide element object from slate data using indexes */
@@ -1418,7 +1419,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     tcmSnapshotParams.elementStatus = responseData[0]?.status
                     let tcmSnapshotPayload = preparePayloadData(tcmSnapshotParams)
                     if (selection?.operationType === 'copy' || (selection?.operationType === 'cut' && responseData[0]?.status === 'wip')) {
-                        callCutCopySnapshotAPI(tcmSnapshotPayload)
+                        callCutCopySnapshotAPI(tcmSnapshotPayload,isAutoNumberingEnabled)
                     }
                 }
                 if (selection?.element?.type === 'element-aside') {
@@ -1509,4 +1510,11 @@ export const cloneContainer = (insertionIndex, manifestUrn,parentUrn,asideData) 
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.error("Error in cloning the container:::", error);
     }
+}
+
+export const saveCaretPosition = (caretPosition) => (dispatch, getState) => {
+    return dispatch({
+        type: UPDATE_CARET_OFFSET,
+        payload: caretPosition
+    });
 }

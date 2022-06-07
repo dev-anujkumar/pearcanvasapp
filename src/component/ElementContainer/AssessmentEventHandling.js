@@ -41,7 +41,6 @@ export const handleElmPortalEvents = (action,eventType) => {
                         window.removeEventListener('message', elmAssessmentUpdate, false);
                         if (intObj?.id && intObj.title && intObj.interactiveType) {
                             /* save item data into store */
-                            //store.dispatch(setNewItemFromElm(intObj));
                             handleRefreshSlate(store.dispatch);
                         }
                     }

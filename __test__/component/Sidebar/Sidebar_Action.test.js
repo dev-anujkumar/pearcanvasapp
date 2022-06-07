@@ -9,6 +9,8 @@ import activeElementData from './SidebarInitialState';
 import * as sidebarAction from '../../../src/component/Sidebar/Sidebar_Action';
 import config from '../../../src/config/config';
 import testData from "./TestData";
+import { CHECK_ASIDE_NUMBER } from '../../../src/constants/Action_Constants'
+import tinymce from 'tinymce/tinymce';
 
 jest.mock('axios');
 jest.mock('../../../src/constants/utility.js', () => ({
@@ -26,9 +28,15 @@ jest.mock('../../../src/config/config.js', () => ({
     elementStatus : { "urn:pearson:work:4b70896d-090a-4566-97f1-30c080a708b5" : 'wip'}
 }))
 const initialState = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
-        activeElement: activeElementData.paragraph
+        activeElement: activeElementData.paragraph,
+        parentUrn: {
+            manifestUrn: "urn:pearson:manifest:86fab86c-16ca-4428-9e38-bc15ebdbee49",
+            contentUrn: "urn:pearson:entity:646f6acc-e6ce-4ac4-ab04-4e526a6cb866",
+            elementType: "element-aside"
+        }
     },
     elementStatusReducer:{},
     tcmReducer:{
@@ -36,6 +44,7 @@ const initialState = {
     }
 }
 const initialState2 = {
+    autoNumberReducer: { isAutoNumberingEnabled: false },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.assessment,
@@ -47,6 +56,7 @@ const initialState2 = {
     }
 }
 const initialState3 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.image
@@ -57,6 +67,7 @@ const initialState3 = {
     }
 }
 const initialState4 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.video
@@ -67,6 +78,7 @@ const initialState4 = {
     }
 }
 const initialState5 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.interactive
@@ -77,6 +89,7 @@ const initialState5 = {
     }
 }
 const initialState6 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.blockcode
@@ -87,6 +100,7 @@ const initialState6 = {
     }
 }
 const initialState7 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.list
@@ -97,6 +111,7 @@ const initialState7 = {
     }
 }
 const initialState8 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.workedexample
@@ -107,6 +122,7 @@ const initialState8 = {
     }
 }
 const initialState9 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.aside 
@@ -117,6 +133,7 @@ const initialState9 = {
     }
 }
 const initialState10 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement:activeElementData.aside_authoredtext
@@ -127,6 +144,7 @@ const initialState10 = {
     }
 }
 const initialState11 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData1,
         activeElement: activeElementData.we_authoredtext
@@ -137,6 +155,7 @@ const initialState11 = {
     }
 }
 const initialState12 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData2,
         activeElement: activeElementData.we_conversiondata,
@@ -152,6 +171,7 @@ const initialState12 = {
     }
 }
 const initialState13 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData2,
         activeElement: activeElementData.Section_ActiveElement,
@@ -167,6 +187,7 @@ const initialState13 = {
     }
 }
 const initialState14 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData3,
         activeElement: activeElementData.Aside_ActiveElement,
@@ -182,6 +203,7 @@ const initialState14 = {
     }
 }
 const initialState15 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData3,
         activeElement: activeElementData.Aside_MMI_ActiveElement,
@@ -197,6 +219,7 @@ const initialState15 = {
     }
 }
 const initialState16 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.SH_ActiveElement,
@@ -209,6 +232,7 @@ const initialState16 = {
     }
 }
 const initialState17 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.SH_Aside,        
@@ -225,6 +249,7 @@ const initialState17 = {
     }
 }
 const initialState18 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.SH_WE_ActiveElement,
@@ -241,6 +266,7 @@ const initialState18 = {
     }
 }
 const initialState19 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData4,
         activeElement: activeElementData.BlockCode_OldInfo,
@@ -253,6 +279,7 @@ const initialState19 = {
 }
 
 const initialState20 = {
+    autoNumberReducer: { isAutoNumberingEnabled: true },
     appStore: {
         slateLevelData: slateData.SlateData5,
         activeElement: activeElementData.image,
@@ -264,11 +291,12 @@ const initialState20 = {
     }
 }
 
-xdescribe('Test - Sidebar_Actions',()=>{
+describe('Test - Sidebar_Actions',()=>{
     describe('Test convertElement- paragraph', () => {
         let store = mockStore(() => initialState);
         it('Test Convert Element', () => {
             store = mockStore(() => initialState);
+            tinymce.activeEditor = {'id' : 'cypress-1'}
             let elementData = {
                 elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
                 elementType: "element-authoredtext",
@@ -282,7 +310,6 @@ xdescribe('Test - Sidebar_Actions',()=>{
             store.dispatch(sidebarAction.conversionElement(elementData));
             expect(spyconversionElement).toHaveBeenCalled()
             spyconversionElement.mockClear()
-    
         });
         it('Test handleElementConversion -else case', () => {
             store = mockStore(() => initialState);
@@ -295,7 +322,6 @@ xdescribe('Test - Sidebar_Actions',()=>{
                 toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "increaseindent", "decreaseindent", "glossary", "assetpopover", "slatetag", "redo"]
             }
             let store = mockStore(() => initialState);
-    
             const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
             store.dispatch(sidebarAction.conversionElement(elementData));
             expect(spyconversionElement).toHaveBeenCalled()
@@ -370,7 +396,6 @@ xdescribe('Test - Sidebar_Actions',()=>{
                 primaryOption: "primary-blockcode-equation",
                 secondaryOption: "secondary-blockcode-language-Default",
                 toolbar:  ["assetpopover", "decreaseindent", "glossary"]
-                
              }
             let store = mockStore(() => initialState4);
             const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
@@ -994,7 +1019,6 @@ xdescribe('Test - Sidebar_Actions',()=>{
         });
     });
     describe('Test convertElement- codelisting MOCK API CALL', () => {
-    
         it('Test convertElement  -we MOCK API CALL', async () => {
             let expectedRes = {
                 status: 200,
@@ -1063,7 +1087,7 @@ describe('Test handleElementConversion- ShowHide in WE-Paragraph to List', () =>
         spyconversionElement.mockClear()
     });
 });
-xdescribe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
+describe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
 
     it('Test convertElement  -we MOCK API CALL', async () => {
         let expectedRes = {
@@ -1144,7 +1168,7 @@ xdescribe('Test convertElement- Paragraph for snapshot MOCK API CALL', () => {
         await store1.dispatch(sidebarAction.convertElement(olddata, elementData, elementinfo, nextStore, ["3"]));
     });
 });
-xdescribe('1 Test convertElement ', () => {
+describe('1 Test convertElement ', () => {
     const showHideObj = { index: "0-0",
         element: { contentUrn: "urn:pearson:entity:808c0c76-1786-455a-8410-4f250384b142" }
     };
@@ -1367,7 +1391,7 @@ xdescribe('1 Test convertElement ', () => {
             expect(spyconversionElement).toHaveBeenCalled()
             spyconversionElement.mockClear()
         });
-        xdescribe('1.10.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
+        describe('1.10.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
             it('1.10.3.1 indexes.length === 4 ', async () => {
                 const { initState, store, showHideObj } = testData?.testcase2;
                 const { oldElementData, newElementData, oldElementInfo } = testData?.testcase17;
@@ -1509,10 +1533,15 @@ describe('3 Test setBCEMetadata ', () => {
 describe('4 Test tcmSnapshotsForConversion  ', () => {
     const { elementConversionData, indexes, appStore } = testData?.testcase14;
     it('4.1 Test response.hasOwnProperty("figuretype") ', () => {
+        let actionStatus={
+            action:"update",
+            status:"",
+            fromWhere:"conversion"
+        }
         config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
         const storeMock = mockStore(() => initialState);
         const spyconversionElement = jest.spyOn(sidebarAction, 'tcmSnapshotsForConversion');
-        sidebarAction.tcmSnapshotsForConversion(elementConversionData,indexes,appStore, storeMock.dispatch); 
+        sidebarAction.tcmSnapshotsForConversion(elementConversionData,indexes,appStore, storeMock.dispatch);
         expect(spyconversionElement).toHaveBeenCalled()
         spyconversionElement.mockClear()
     });
@@ -1599,7 +1628,9 @@ describe('Test - ManifestList conversion', () => {
         }
         const metadata = {
             subtype: 'roman',
-            columnnumber: 1
+            columnnumber: 1,
+            fontstyle:2,
+            iconcolor:2
         }
         const spyFunction = jest.spyOn(sidebarAction, 'updateBLMetaData');
         sidebarAction.updateBLMetaData("urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334", elementData, metadata);
@@ -1614,7 +1645,9 @@ describe('Test - ManifestList conversion', () => {
         }
         const metadata = {
             subtype: 'roman',
-            columnnumber: 1
+            columnnumber: 1,
+            fontstyle:2,
+            iconcolor:2
         }
         const spyFunction = jest.spyOn(sidebarAction, 'updateBLMetaData');
         sidebarAction.updateBLMetaData("urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334", elementData, metadata);
@@ -1629,13 +1662,14 @@ describe('Test - ManifestList conversion', () => {
         }
         const metadata = {
             subtype: 'roman',
-            columnnumber: 1
+            columnnumber: 1,
+            fontstyle:2,
+            iconcolor:2
         }
         const spyFunction = jest.spyOn(sidebarAction, 'updateBLMetaData');
         sidebarAction.updateBLMetaData("urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65334", elementData, metadata);
         expect(spyFunction).toHaveBeenCalled()
     })
-
     it('Test - updateBlockListMetadata - success block', async () => {
         const {initState} = testData?.testcase18;
         config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
@@ -1649,7 +1683,84 @@ describe('Test - ManifestList conversion', () => {
             },
             dataToSend: {
                 columnnumber: 1,
-                slateLevelBLIndex: 0
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                parent:{
+                    type:"showhide"
+                }
+            }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+    it('Test - updateBlockListMetadata1- success block', async () => {
+        const {initState} = testData?.testcase18;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.resolve({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: '',
+            },
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                    type:"showhide"
+            }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+    it('Test - updateBlockListMetadata2- success block', async () => {
+        const {initState} = testData?.testcase18;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.resolve({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: '',
+            },
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                parent:{
+                    type:"showhide",
+                    showHideType:"showhide"
+                }
+            }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+    it('Test - updateBlockListMetadata2- success block', async () => {
+        const {initState} = testData?.testcase18;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.resolve({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: '',
+            },
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                sectionType:"showhide",
             }
         }
         storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
@@ -1669,7 +1780,12 @@ describe('Test - ManifestList conversion', () => {
             },
             dataToSend: {
                 columnnumber: 1,
-                slateLevelBLIndex: 0
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                parent:{
+                    type:"showhide"
+                }
             }
         }
         storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
@@ -1689,7 +1805,13 @@ describe('Test - ManifestList conversion', () => {
             },
             dataToSend: {
                 columnnumber: 1,
-                slateLevelBLIndex: 0
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                sectionType:"showhide",
+                parent:{
+                    type:"showhide"
+                }
             }
         }
         storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
@@ -1709,12 +1831,21 @@ describe('Test - ManifestList conversion', () => {
             },
             dataToSend: {
                 columnnumber: 1,
-                slateLevelBLIndex: 0
+                slateLevelBLIndex: 1
             }
         }
         storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
         expect(spyFunction).toHaveBeenCalled()
         spyFunction.mockClear()
     })
+    it('testing-- enableAsideNumbering  action', () => {
+        let dispatch = (obj) => {
+            expect(obj.type).toBe(CHECK_ASIDE_NUMBER);
+            expect(obj.payload).toEqual({"elementId": undefined, "isAsideNumber": true});
+        };
+        const spyFunction = jest.spyOn(sidebarAction, 'enableAsideNumbering');
+        sidebarAction.enableAsideNumbering(true)(dispatch)
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    })
 });
-

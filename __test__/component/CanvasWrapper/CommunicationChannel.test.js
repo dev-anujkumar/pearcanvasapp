@@ -40,7 +40,13 @@ const initialState = {
             label:{
                 en:'en'
             }
-        }]
+        }],
+        projectLearningFrameworks: {
+            externalLF: [
+                { "urn": 'urn:pearson:goalframework:f35b6132-fab1-4358-848f-70e791b2e797' },
+                { "urn": 'urn:pearson:goalframework:f35b6132-fab1-4358-848f-70e791b2e7979' }
+            ]
+        }
     },
     toolbarReducer:{
         pageNumberToggle:false
@@ -66,7 +72,8 @@ const initialState = {
     },
     autoNumberReducer: {
         isAutoNumberingEnabled: true
-    }
+    },
+
 };
 
 jest.mock('../../../src/auth/openam.js', () => {
@@ -199,6 +206,11 @@ jest.mock('../../../src/component/ElementMetaDataAnchor/ExternalLO_helpers.js', 
         setCurrentSlateLOs: jest.fn(()=>[])
     }
 })
+jest.mock('../../../src/component/FigureHeader/AutoNumber_helperFunctions', () => {
+    return {
+        getContainerEntityUrn: jest.fn().mockImplementation(() => "urn:123")
+    }
+})
 describe('Testing communication channel', () => {
     let store = mockStore(initialState);
     let props = {
@@ -269,7 +281,13 @@ describe('Testing communication channel', () => {
         addNewComment: jest.fn(),
         deleteComment: jest.fn(),
         handleSlateRefresh: jest.fn(),
-        setTocContainersAutoNumberList: jest.fn()
+        setTocContainersAutoNumberList: jest.fn(),
+        projectLearningFrameworks: {
+            externalLF: [
+                { "urn": 'urn:pearson:goalframework:f35b6132-fab1-4358-848f-70e791b2e797' },
+                { "urn": 'urn:pearson:goalframework:f35b6132-fab1-4358-848f-70e791b2e7979' }
+            ]
+        }
     }
     let wrapper = mount(<Provider store={store}><CanvasWrapper {...props} /></Provider>)
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
@@ -1556,7 +1574,18 @@ describe('Testing communication channel', () => {
                                 mimeType: "image"
                             },
                             properties: {},
-                            espUrl:'asf'
+                            espUrl:'asf',
+                            "institution-urls": [
+                                {
+                                    "institutionUrl": "https://epspqa.stg-openclass.com/schoolcontent-stg/",
+                                    "pdosUrl": "https://epspqa.stg-openclass.com/schoolcontent-stg/api/item/75dcdbf1-0571-44d4-b952-da463cc02648/1/file/AAJKMFW0%20%28Working%20Copy%29.jpg",
+                                    "contentVersion": "1.0",
+                                    "instName": "SchoolContent",
+                                    "status": "Published",
+                                    "publicationUrl": "http://us-school-stg.pearsoned.com/school/e259c2c3-dd96-45a7-919c-31a55668db06/AAJKMFW0%20%28Working%20Copy%29.jpg",
+                                    "contentAction": false
+                                }
+                            ]
                         }
                     }
                 }
@@ -2325,6 +2354,21 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spysendingPermissions.mockClear()
     });
+    test('Test for ResetAutoNumberSequence case - IF Condition', () => {
+        let event = {
+            data: {
+                type: "ResetAutoNumberSequence",
+                message:{
+                    currentTocParentContainer: "urn:123",
+                    autoNumberingDetails: {}
+                }
+            }
+        }
+        const spysendingPermissions = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spysendingPermissions.mockClear()
+    });
     test('Test for commentAdded case', () => {
         let event = {
             data: {
@@ -2547,6 +2591,73 @@ describe('Testing communication channel', () => {
                     }]
                 }
             }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    describe("Branch Coverage", () => {
+        it('initTocCommunictionChannel - ELSE Case', () => {
+            window.addEventListener = null;
+            window.attachEvent = jest.fn();
+            const spyinitTocCommunictionChannel = jest.spyOn(channelInstance, 'initTocCommunictionChannel')
+            channelInstance.initTocCommunictionChannel();
+            expect(spyinitTocCommunictionChannel).toHaveBeenCalled()
+            spyinitTocCommunictionChannel.mockClear()
+        })
+    })
+    it("getAssessmentData for cite alignment",()=>{
+        config.tempSlateManifestURN = "urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f6"
+        const event = {
+            data: {
+                type: "getAssessmentData",
+            }
+        };
+        config.slateType="assessment"
+        document.getElementsByClassName = () => {
+            return {
+                length: 1
+            }
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
+            }]
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'cite'
+            }]
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    it("getAssessmentData for cite alignment",()=>{
+        config.slateManifestURN = 'urn:pearson:manifest:39dfa171-7d07-4ef6-a361-129036d0c9f4'
+        const event = {
+            data: {
+                type: "getAssessmentData",
+            }
+        };
+        config.slateType="assessment"
+        config.slateType="assessment"
+        document.getElementsByClassName = () => {
+            return {
+                length: 1
+            }
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
+            }]
+        }
+        document.getElementsByClassName = () => {
+            return [{
+                innerText:'tdx'
+            }]
         }
         const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
         channelInstance.handleIncommingMessages(event);

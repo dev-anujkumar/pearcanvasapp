@@ -146,6 +146,15 @@ describe('Test---Assessment Utility Functions', () => {
         expect(spyFunction).toHaveReturnedWith("test");
         spyFunction.mockClear();
     });
+    it('Test 4---setAssessmentFormat : else case', () => {
+        let model = {
+            elementdata: { assessmentformat: "fpo" }
+        }
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentFormat');
+        assessment_UtiltyFn.setAssessmentFormat(model);
+        expect(spyFunction).toHaveReturnedWith("");
+        spyFunction.mockClear();
+    });
     it('Test 5---setAssessmentElement ', () => {
         let model = {
             elementdata: { assessmentid: "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d" }
@@ -163,6 +172,13 @@ describe('Test---Assessment Utility Functions', () => {
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'hasAssessmentID');
         assessment_UtiltyFn.hasAssessmentID(model);
         expect(spyFunction).toHaveReturnedWith(true)
+        spyFunction.mockClear();
+    });
+    it('Test 6---hasAssessmentID : false case', () => {
+        let model = {}
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'hasAssessmentID');
+        assessment_UtiltyFn.hasAssessmentID(model);
+        expect(spyFunction).toHaveReturnedWith(false)
         spyFunction.mockClear();
     });
     it('Test 7.1---checkFullElmAssessment-If', () => {
@@ -201,8 +217,11 @@ describe('Test---Assessment Utility Functions', () => {
                 }
             }
         }
+        let assessReducer = {
+            id: "id"
+        }
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkEmbeddedElmAssessment');
-        assessment_UtiltyFn.checkEmbeddedElmAssessment(model);
+        assessment_UtiltyFn.checkEmbeddedElmAssessment(model,assessReducer);
         expect(spyFunction).toHaveReturnedWith(true)
         spyFunction.mockClear();
     });
@@ -263,6 +282,11 @@ describe('Test---Assessment Utility Functions', () => {
         expect(spyFunction).toHaveReturnedWith('main title');
         spyFunction.mockClear();
     });
+    it('Test 10---getAssessmentTitle- else', () => {
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'getAssessmentTitle');
+        assessment_UtiltyFn.getAssessmentTitle();
+        spyFunction.mockClear();
+    });
     it('Test 11---setAssessmentItemTitle- IF', () => {
         let model = {
             type: "figure",
@@ -275,6 +299,11 @@ describe('Test---Assessment Utility Functions', () => {
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentItemTitle');
         assessment_UtiltyFn.setAssessmentItemTitle(model);
         expect(spyFunction).toHaveReturnedWith("item's title");
+        spyFunction.mockClear();
+    });
+    it('Test 11---setAssessmentItemTitle- else', () => {
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'setAssessmentItemTitle');
+        assessment_UtiltyFn.setAssessmentItemTitle();
         spyFunction.mockClear();
     });
     it('Test 12---setAssessmentElement -ELSE', () => {
@@ -316,22 +345,61 @@ describe('Test---Assessment Utility Functions', () => {
         expect(spyFunction).toHaveReturnedWith({ "assessmentId": "43208", "itemId": "", "title": "9001 - myvirtual-x/myvirtual-child" })
         spyFunction.mockClear();
     });
-    it('Test 15---checkFigureMetadata Image', () => {
+
+    it('Test 15B---checkFigureInsideTableElement Image for true case', () => { 
+        let element = {
+            "id": "urn:pearson:work:ec14b290-537e-41c4-afad-d4062a6aff7e",
+            "type": "figure",
+            "figuretype": "tableasmarkup",
+            "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+            "titlecontentintitlefield": true,
+            "figuredata": {
+                "schema": "http://schemas.pearson.com/wip-authoring/table/1/definitions/tableasmarkup",
+                "tableasHTML": "<table style=\"border-collapse: collapse; width: 1146px; word-break: normal; outline: none; text-align: left;\" class=\"mce-item-table\" contenteditable=\"false\"><tbody><tr><td style=\"width: 573px; outline: none;\"><img class=\"imageAssetContent\" src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\" width=\"149\" height=\"112\" data-id=\"imageAssetContent:07655e98-e184-407b-9db5-77ee19255e95:8235\" data-mce-src=\"https://cite-media-stg.pearson.com/legacy_paths/07655e98-e184-407b-9db5-77ee19255e95/Hydrangeas.jpg\"/></td><td style=\"width: 573px; outline: none;\"><br></td></tr><tr><td style=\"width: 573px; outline: none;\"><br></td><td style=\"width: 573px; outline: none;\"></td></tr></tbody></table>"
+            },
+           
+        };
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureInsideTableElement');
+        let returnedValue = assessment_UtiltyFn.checkFigureInsideTableElement(element, 'editButton', ['alfresco_crud_access', 'add_multimedia_via_alfresco']);
+        expect(spyFunction).toHaveBeenCalled();
+        expect(returnedValue).toBe(true);
+        // expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+
+    
+    it('Test 15B---checkFigureInsideTableElement Image for false case', () => { 
+        let element = {}
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureInsideTableElement');
+        let returnedValue = assessment_UtiltyFn.checkFigureInsideTableElement(element, 'editButton',["alfresco_crud_access", "add_multimedia_via_alfresco"]);
+        expect(spyFunction).toHaveBeenCalled();
+        expect(returnedValue).toBe(false);
+        spyFunction.mockClear();
+    });
+    it('Test 15---checkFigureMetadata for Image', () => {
         let element = newFigureObj;
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureMetadata');
         assessment_UtiltyFn.checkFigureMetadata(element);
         expect(spyFunction).toHaveReturnedWith(true);
         spyFunction.mockClear();
     });
-    xit('Test 16---checkFigureMetadata Audio/Video', () => {
+    it('Test 16---checkFigureMetadata for Audio/Video', () => {
         let element = audioElementTypeAlfrescoWithData;
+        let buttonType = 'alfrescoExpandButton'
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureMetadata');
-        assessment_UtiltyFn.checkFigureMetadata(element);
+        assessment_UtiltyFn.checkFigureMetadata(element,buttonType);
         expect(spyFunction).toHaveReturnedWith(true);
         spyFunction.mockClear();
     });
-    it('Test 17---checkFigureMetadata interactive', () => {
+    it('Test 17---checkFigureMetadata for interactive', () => {
         let element = Interactive3party;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureMetadata');
+        assessment_UtiltyFn.checkFigureMetadata(element);
+        expect(spyFunction).toHaveReturnedWith(false);
+        spyFunction.mockClear();
+    });
+    it('Test 17---checkFigureMetadata else', () => {
+        let element = {};
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureMetadata');
         assessment_UtiltyFn.checkFigureMetadata(element);
         expect(spyFunction).toHaveReturnedWith(false);

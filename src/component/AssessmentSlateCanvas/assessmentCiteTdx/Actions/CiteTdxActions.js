@@ -17,11 +17,17 @@ export const getCiteTdxData = (assessmentType, assessmentTitle, filterUUID, page
     var assessmentDispatchType = (assessmentType === CITE)? 'GET_CITE_RESOURCES': (assessmentType === TDX)?'GET_TDX_RESOURCES': 'GET_MMI_RESOURCES';
     let pageSize=25;
     const taxonomicTypes = assessmentType === CITE ? CITE.toUpperCase() : assessmentType === TDX ? TDX.toUpperCase() : MMI.toUpperCase();
-
-    let url = `${config.ASSESSMENT_ENDPOINT}assessments/v3/search?taxonomicTypes=${taxonomicTypes}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}&collation.caseSensitivity=false&groupByEntity=true`;
-
+    
+    let url = `${config.ACON_API_ENDPOINT}assessments/search?taxonomicTypes=${taxonomicTypes}&status=approved&name=${searchTitle}&page=${startPage}&pageSize=${pageSize}&sortAttribute=${sortBy}&sortOrder=${sortOrder}&collation.caseSensitivity=false&groupByEntity=true`
     try {
         const res = await axiosGetAPI(url);
+        if(res.data?.hasOwnProperty('assesssments')){
+            res.data={
+                ...res.data,
+                assessments: res.data.assesssments
+            }
+            delete res.data.assesssments
+        }
         dispatch({
             type: assessmentDispatchType,
             payload: {
@@ -105,6 +111,13 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
         const res = await axiosGetAPI(url);
         let taxonomyType = (res.data.taxonomicTypes.length > 0) ? res.data.taxonomicTypes : [];
         let responseName = (res.data.name !== undefined) ? res.data.name : '';
+        if(res.data?.hasOwnProperty('assesssments')){
+            res.data={
+                ...res.data,
+                assessments: res.data.assesssments
+            }
+            delete res.data.assesssments
+        }
         responseName=specialCharacterEncode(responseName);
         assessmentTitle=specialCharacterEncode(assessmentTitle);
         if ((taxonomyType.includes(typeAssessment) == false) || (responseName.toLowerCase().search(assessmentTitle.toLowerCase()) == -1)) {
@@ -202,12 +215,6 @@ export const specialCharacterDecode = (encodedString) => {
     }
     return decodedString;
 }
-
-// const decodeHtmlCharCodes = (str) => {
-//     return str.replace(/(&#(\d+);)/g, (match, capture, charCode) => {
-//         return String.fromCharCode(charCode);
-//     });
-// }
 
 const escapeHtml = (str) => {
     var specialCharList = {

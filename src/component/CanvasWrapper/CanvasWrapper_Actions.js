@@ -30,10 +30,10 @@ import {
     ERROR_API_POPUP,
     SLATE_FIGURE_ELEMENTS,
     OEP_DISCUSSION,
-    UPDATE_AUTONUMBER_MAPPER_KEYS
+    UPDATE_AUTONUMBER_MAPPER_KEYS,
+    PROJECT_LOB_LIST,
+    NO_DISCUSSION_ITEMS
 } from '../../constants/Action_Constants';
-import { SLATE_API_ERROR } from '../../constants/Element_Constants';
-
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
@@ -44,13 +44,12 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { isElmLearnosityAssessment } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { getContainerData } from './../Toolbar/Search/Search_Action.js';
-import { createLabelNumberTitleModel } from '../../constants/utility.js';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import ElementConstants from "../ElementContainer/ElementConstants.js";
 import { isAutoNumberEnabled, fetchProjectFigures, setAutoNumberinBrowser } from '../FigureHeader/AutoNumberActions.js';
@@ -123,9 +122,7 @@ export const findElementType = (element, index) => {
                                 element.figuredata.podwidth = POD_DEFAULT_VALUE
                             }
                         }
-                        //  if (element.subtype == "" || element.subtype == undefined) {                        
                         element.subtype = subType
-                        //  } 
                         altText = element.figuredata.alttext ? element.figuredata.alttext : ""
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         podwidth = element.figuredata.podwidth
@@ -400,8 +397,8 @@ export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReduce
         if (!autoNumber_IndexMapper?.hasOwnProperty(`${customValue}List`)) {
             autoNumber_IndexMapper[`${customValue}List`] = `${customValue}Index`
         }
-        if (!autoNumber_response_ElementType_mapper?.hasOwnProperty(`${customValue}s`)) {
-            autoNumber_response_ElementType_mapper[`${customValue}s`] = `${customValue}List`
+        if (!autoNumber_response_ElementType_mapper?.hasOwnProperty(`${customValue}`)) {
+            autoNumber_response_ElementType_mapper[`${customValue}`] = `${customValue}List`
         }
     });
 
@@ -414,6 +411,50 @@ export const updateAutoNumberLabelKeys = (dropdownOptionsObj, { autoNumberReduce
             autoNumber_response_ElementType_mapper
         }
     })
+}
+export const getDiscussionItemsbyLOB = (lineOfBusiness) => {
+    const discussionURLEndPoint = 'v1/discussion/discussions';
+    // 'https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1/discussion/discussions'
+    const discussionUrl = `${config.REACT_APP_API_URL}${discussionURLEndPoint}`;
+    return axios.post(discussionUrl, {
+        "lineOfBusinesses": [
+            (lineOfBusiness === "english" ? OEP_DISCUSSION : lineOfBusiness)
+        ]
+    },
+        {
+            headers: {
+                "Content-Type": "application/json",
+                'myCloudProxySession': config.myCloudProxySession
+            }
+        })
+}
+
+export const getLOBDiscussionItems = (lineOfBusiness)  => async (dispatch) => {
+    try {
+        const LOBDiscussionItemsResponse = await getDiscussionItemsbyLOB(lineOfBusiness)
+        if (Array.isArray(LOBDiscussionItemsResponse?.data)) {
+            dispatch({
+                type: UPDATE_DISCUSSION_ITEMS,
+                payload: LOBDiscussionItemsResponse.data
+            })
+        }
+    }
+    catch (error) {
+        console.error("Error in getting Discussion items", error)
+        if(error?.response?.status === 404){
+            dispatch({
+                type: NO_DISCUSSION_ITEMS,
+                payload: true
+            });
+        }
+    }
+}
+
+export const resetLOBDiscussionItems = ()  => async (dispatch) => {
+    dispatch({
+        type: "UPDATE_DISCUSSION_ITEMS",
+        payload: []
+    })  
 }
 
 export const getProjectDetails = () => (dispatch, getState) => {
@@ -499,7 +540,6 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (usageTypeResponse => {
-                //console.log("the usage type response is", usageTypeResponse);
                 const data = usageTypeResponse?.data;
                 if(Array.isArray(data)){
                     const usageType = data.map(item => ({label:item.label.en}))
@@ -511,34 +551,10 @@ export const getProjectDetails = () => (dispatch, getState) => {
                 
             }).catch(error => {
             }) 
-
-            
-            
+        
             // call api to get discussion items
             /* If LOB is english, then it will change to onlineenglishproficiency(OEP) */
-            const discussionURLEndPoint = 'v1/discussion/discussions';
-            // 'https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/v1/discussion/discussions'
-            const discussionUrl = `${config.REACT_APP_API_URL}${discussionURLEndPoint}`;
-            return axios.post(discussionUrl, {
-                "lineOfBusinesses" : [
-                    (lineOfBusiness === "english" ? OEP_DISCUSSION : lineOfBusiness)
-                ]
-            },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    // "PearsonSSOSession": config.ssoToken,
-                    'myCloudProxySession': config.myCloudProxySession
-                }
-            }).then (discussionResponse => {
-                if(Array.isArray(discussionResponse?.data)) {
-                    dispatch({
-                        type: UPDATE_DISCUSSION_ITEMS,
-                        payload: discussionResponse.data
-                    })
-                }
-            }).catch(error => {
-            }) 
+            dispatch(getLOBDiscussionItems(lineOfBusiness))
         }
     }).catch(error => {
         console.log("API Failed!!!")
@@ -548,14 +564,10 @@ export const getProjectDetails = () => (dispatch, getState) => {
 
 
 export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload) => (dispatch, getState) => {
-    // if(config.isFetchSlateInProgress){
-    //  return false;
-    // }
     /** [TK-3289]- Fetch Data for All Slates */
     const startTime = performance.now();
     dispatch(fetchAllSlatesData());
     /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
-    // sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
     localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
     if (config.totalPageCount <= page) {
@@ -822,7 +834,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                      * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be 
                      * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate 
                      */
-                    // let appData =  appData1 && appData1.id? appData1.id : appData1;
                     let appData =  config.lastActiveElementId;
                     if (page === 0) {
                         if (appData) {
@@ -870,8 +881,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateWrapperNode.scrollTop = 0;
                         }
                     }
-                    //}
-                    // config.isFetchSlateInProgress = false;
                 }else{
                     console.log("incorrect data comming...")
                 }
@@ -1303,7 +1312,7 @@ export const appendCreatedElement = async (paramObj, responseData) => {
     let _slateObject = newslateData[slateManifestURN]
 
     if(parentElement.type === "popup"){
-        let targetPopupElement=_slateObject.contents.bodymatter[popupElementIndex[0]];
+        let targetPopupElement=_slateObject?.contents?.bodymatter[popupElementIndex[0]];
         switch(popupElementIndex?.length) {
             case 3:
                 targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]]
@@ -1468,7 +1477,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
             };
             let slateData = {
                 currentParentData:newParentData,
-                bodymatter: currentSlateData.contents.bodymatter,
+                bodymatter: currentSlateData?.contents?.bodymatter,
                 response: response.data,
                 cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             };
@@ -1733,7 +1742,7 @@ export const fetchProjectLFs = () => dispatch => {
         console.log('Error in fetching Learning Framework linked to the project>>>> ', error)
         dispatch({
             type: PROJECT_LEARNING_FRAMEWORKS,
-            payload: {}
+            payload: {apiStatus: {}}
         });
     })
 
@@ -1773,4 +1782,29 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
         type: OWNERS_SUBSCRIBED_SLATE,
         payload: showPopup
     })
+}
+
+const getLOBList = () => {
+    // "https://10.11.7.24:8081/cypress-api/v1/project-taxonomy/lob_details"
+	return axios.get(`${config.REACT_APP_API_URL}v1/project-taxonomy/lob_details`, {
+		headers: {
+			"ApiKey": config.STRUCTURE_APIKEY,
+            "myCloudProxySession": config.myCloudProxySession,
+			"Content-Type": "application/json",
+			"x-Roles": "LearningAdmin",
+		}
+	})
+}
+export const fetchLOBList = () => async (dispatch) => {
+	try {
+		const response = await getLOBList();
+		if (response.status === 200) {
+			dispatch({
+                type: PROJECT_LOB_LIST,
+                payload: response.data.details.listOfLob
+            });
+				}
+	} catch (error) {
+		console.error("Error in fetching the list of Line of Business from the project", error);
+	}
 }

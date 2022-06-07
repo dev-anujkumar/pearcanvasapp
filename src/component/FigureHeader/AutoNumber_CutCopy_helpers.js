@@ -1,13 +1,12 @@
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { containerElementTypes, containerElements } from './AutoNumberConstants';
-import { getImagesInsideSlates } from './slateLevelMediaMapper';
-import { getAsideElementsWrtKey } from './slateLevelMediaMapper';
+import { getImagesInsideSlates, getAsideElementsWrtKey } from './slateLevelMediaMapper';
 import {
     SLATE_FIGURE_ELEMENTS,
     GET_ALL_AUTO_NUMBER_ELEMENTS
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
-import { checkElementExistenceInOtherSlates } from './AutoNumberCreate_helper';
+import { checkElementExistenceInOtherSlates, addElementInPopupSlate } from './AutoNumberCreate_helper';
 import config from '../../config/config';
 
 
@@ -57,7 +56,7 @@ export const handleAutoNumberingOnCopyPaste = async (params) => {
     } = params
     const numberedElements = getState().autoNumberReducer.autoNumberedElements;
     const slateAncestors = getState().appStore.currentSlateAncestorData
-    const autoNumber_ElementTypeKey = getState().autoNumberReducer.autoNumber_ElementTypeKey
+    const autoNumber_ElementTypeKey = getState()?.autoNumberReducer.autoNumber_ElementTypeKey
     if (isAutoNumberingEnabled) {
         //reset indexes of images on a slate after cut/copy operation
         const bodyMatter = currentSlateData.contents.bodymatter
@@ -174,8 +173,18 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
                     getAutoNumberSequence(numberedElements, dispatch);
                 }
             }
+            let {isPopupSlate} = getState().autoNumberReducer.popupParentSlateData;
             // This function will insert the selectedElement in numbered element
-            checkElementExistenceInOtherSlates(selectedElement, config.slateEntityURN, getState, dispatch);
+            if(isPopupSlate){
+                const { autoNumber_ElementTypeKey, autoNumberedElements } = getState().autoNumberReducer;
+                const listType = autoNumber_ElementTypeKey[selectedElement?.displayedlabel];
+                const labelType = selectedElement?.displayedlabel;
+                let slateAncestorData = getState().appStore.currentSlateAncestorData;
+                let elementsList = autoNumberedElements[listType];
+                addElementInPopupSlate(selectedElement, elementsList, slateAncestorData, autoNumberedElements, listType, labelType, getState, dispatch);
+            } else {
+                checkElementExistenceInOtherSlates(selectedElement, config.slateEntityURN, getState, dispatch);
+            }
         }
     }
 }

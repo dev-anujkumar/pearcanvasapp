@@ -5,8 +5,7 @@ import '../../styles/MarkIndexPopup/MarkIndexPopup.css';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import config from '../../config/config';
-import { setFormattingToolbar } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import { saveGlossaryAndFootnote } from "../GlossaryFootnotePopup/GlossaryFootnote_Actions";
+import { setFormattingToolbar, saveGlossaryAndFootnote } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import { getGlossaryFootnoteId } from '../../js/glossaryFootnote';
 import { markedIndexPopupOverGlossary, getCrossReferenceValues } from '../MarkIndexPopup/MarkIndex_Action';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor"
@@ -70,7 +69,8 @@ componentWillMount() {
 
     if (!hasReviewerRole()) {
       const { markedIndexValue } = this.props;
-      let { elementWorkId, elementType, markIndexid, type, elementSubType, typeWithPopup, poetryField } = markedIndexValue;
+      const markedIndexValues = {...markedIndexValue};
+      let { elementWorkId, elementType, markIndexid, type, elementSubType, typeWithPopup, poetryField } = markedIndexValues;
       let firstLevel = null;
       let secondLevel = null;
       let defaultValue = document.createElement('p')
@@ -100,7 +100,7 @@ componentWillMount() {
 
   getCrossRefData = () => {
     let crossRefValues = document.querySelector('#markedindex-cross-reference').innerHTML;
-    crossRefValues = crossRefValues.replace('<br data-mce-bogus="1">', '')
+    crossRefValues = crossRefValues?.replace('<br data-mce-bogus="1">', '')
     let crossReferences = "<p></p>";
     if(crossRefValues){
       let crossRefArray = crossRefValues.split(',');

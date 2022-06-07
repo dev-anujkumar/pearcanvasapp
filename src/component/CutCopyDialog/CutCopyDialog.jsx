@@ -1,12 +1,17 @@
 import React from 'react'
+import store from '../../appstore/store';
 import config from './../../config/config';
+import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions';
+
 const CutCopyDialog = props => {
 
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
+    const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "element-aside", 'citations', 'element-citation', 'poetry', 'stanza'];
+    let allowToShowOptions = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.element?.type) ? false : true;
     return (
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">
-                {!config.isPopupSlate && renderCutCopyOption(props)}
+                {allowToShowOptions && renderCutCopyOption(props)}
                 <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
             
@@ -49,7 +54,23 @@ export const performCutCopy = (event, componentProps, type) => {
         tcmFlag: componentProps?.tcmFlag
     }
     componentProps.setElementDetails(elementDetailsToSet)
-    componentProps.toggleCopyMenu(false)
+    componentProps.toggleCopyMenu(false);
+    const popupParentData = store.getState().autoNumberReducer?.popupParentSlateData;
+    const isPopupSlate = popupParentData?.isPopupSlate;
+    const parentData = store.getState().appStore?.slateLevelData;
+    const newParentData = JSON.parse(JSON.stringify(parentData));
+    const slateStatus = newParentData[config.slateManifestURN]?.status;
+    let data = {
+        contentUrn: isPopupSlate ? popupParentData?.contentUrn : '',
+        versionUrn: isPopupSlate ? popupParentData?.versionUrn : '',
+        index: componentProps?.index,
+        isPopupSlate: isPopupSlate ? popupParentData?.isPopupSlate : false,
+        parentSlateEntityUrn: isPopupSlate ? popupParentData?.parentSlateEntityUrn : Object.values(componentProps?.slateLevelData)[0]?.contentUrn,
+        parentSlateId: isPopupSlate ? popupParentData?.parentSlateId : Object.keys(componentProps?.slateLevelData)[0],
+        operationType: type,
+        isSlateApproved: slateStatus === 'approved' ? true : false
+    }
+    popupCutCopyParentData(data);
 }
 
 export const copyToClipBoard = (e, _props) => {

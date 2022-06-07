@@ -32,7 +32,7 @@ const KeyboardUpDown = (props) => {
         if (element) {
             dispatch(selectElement(element.id));
             // firstElement child as we done need text nodes;
-            const childElement = element.firstElementChild;
+            let childElement = element.firstElementChild;
 
             const scrollTo = element.getBoundingClientRect().top - divHeight / 3;
             parentNode.scrollBy(0, scrollTo);
@@ -51,8 +51,21 @@ const KeyboardUpDown = (props) => {
                     const span = document.createElement('span');
                     span.id = "f-e-s"
                     span.innerHTML = "<br>";
-                    childElement.firstChild.appendChild(span);
+                    if(childElement.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')){
+                        childElement.appendChild(span);
+                    } else {
+                        if (childElement.className?.includes('floating')){
+                            childElement = childElement.firstChild // text content is wrap in P inside div therefore append in childElement's firstchild i.e P
+                        }
+                        if (childElement.firstChild?.nodeName == 'P' || childElement.firstChild?.nodeName == 'SPAN') {
+                            childElement.firstChild.appendChild(span)
+                        } else {
+                    childElement.appendChild(span) // text content is wrap in single P therefore append directly in childElement
+                    }
+                    }
                     span.click();
+                    tinymceChild.click();
+                    tinymceChild.focus();
                 }
                 else if(lastChild.id === "f-e-s") {
                     if(lastChild?.previousSibling?.nodeName !== 'SUP') {

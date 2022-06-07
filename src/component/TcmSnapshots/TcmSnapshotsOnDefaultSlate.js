@@ -19,7 +19,7 @@ const {
 }
     = TcmConstants;
 
-export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type,index, isPopupSlate,operationType=null) => {
+export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type, index, isPopupSlate, operationType = null, popupCutCopyParentData = null) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     /* For WE creation*/
@@ -32,7 +32,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     }
     /* For Poetry creation (not on update) */
     else if (wipData.type === POETRY_ELEMENT) {
-        tcmSnapshotsCreatePoetry(snapshotsData, defaultKeys, index, isPopupSlate, containerElement);
+        tcmSnapshotsCreatePoetry(snapshotsData, defaultKeys, index, isPopupSlate, containerElement, popupCutCopyParentData);
     }
     /* action on Section break in WE*/
     else if (type === SECTION_BREAK || wipData.type === WE_MANIFEST) {
@@ -40,19 +40,19 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     }
     /* action on PE and CG */
     else if (wipData.type === CITATION_GROUP || wipData.type === POETRY_ELEMENT) {
-        tcmSnapshotsCitationPoetry(containerElement, snapshotsData, defaultKeys, index, isPopupSlate);
+        tcmSnapshotsCitationPoetry(containerElement, snapshotsData, defaultKeys, index, isPopupSlate, popupCutCopyParentData);
     }
     /* action on element in WE/PE/CG/2C */
     /* stanza create inside poetry inside containers */
     else if (poetryData || asideData || parentUrn || (showHideObj && Object.keys(showHideObj)?.length > 0)) {
-        tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType)
+        tcmSnapshotsInContainerElements(containerElement, snapshotsData, defaultKeys, index, isPopupSlate, operationType, popupCutCopyParentData)
     }
     /* action on Multi-column */
     else if (wipData.type === MULTI_COLUMN) {
         tcmSnapshotsMultiColumn(containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType);
     }
     else {
-        let elementDetails = setElementTypeAndUrn(elementId, tag, "", "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate);
+        let elementDetails = setElementTypeAndUrn(elementId, tag, "", "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, undefined, {}, actionStatus, popupCutCopyParentData);
         prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
     }
 }
@@ -257,7 +257,7 @@ export const tcmSnapshotsCreateShowHide = (snapshotsData, defaultKeys, index, is
     }
 }
 
-export const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn, showHideObj }) => {
+export const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPopupSlate, { asideData, parentUrn, showHideObj }, popupCutCopyParentData) => {
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
    const poetryElement = {
         element: wipData
@@ -277,7 +277,7 @@ export const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPo
     wipData.contents.bodymatter.map((item) => {
         elementId.childId = item.id;
         tag.childTag = fetchElementsTag(item); 
-        const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn, showHideObj });
+        const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn, showHideObj }, actionStatus, popupCutCopyParentData);
         prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
     })
 }
@@ -318,7 +318,7 @@ export const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, 
  * @param {Object} snapshotsData - Initial Snapshots data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-export const tcmSnapshotsCitationPoetry = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate) => {
+export const tcmSnapshotsCitationPoetry = (containerElement, snapshotsData, defaultKeys, index, isPopupSlate, popupCutCopyParentData) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     let isHead = "", parentUrnToSend={};
@@ -342,7 +342,7 @@ export const tcmSnapshotsCitationPoetry = (containerElement, snapshotsData, defa
     wipData.contents.bodymatter.map((item) => {
         elementId.childId = item.id;
         tag.childTag = fetchElementsTag(item);
-        elementDetails = setElementTypeAndUrn(elementId, tag, isHead,parentUrnToSend,-1,popupInContainer,slateManifestVersioning, isPopupSlate, parentObj, containerElement);
+        elementDetails = setElementTypeAndUrn(elementId, tag, isHead,parentUrnToSend,-1,popupInContainer,slateManifestVersioning, isPopupSlate, parentObj, containerElement, actionStatus, popupCutCopyParentData);
         prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
     })
 }
@@ -354,7 +354,7 @@ export const tcmSnapshotsCitationPoetry = (containerElement, snapshotsData, defa
  * @param {Object} containerElement - Element Parent Data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys,index, isPopupSlate, operationType) => {
+export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData, defaultKeys, index, isPopupSlate, operationType, popupCutCopyParentData) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
@@ -422,7 +422,7 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
     if (isCgInSh) {
         elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, containerElement);
     } else {
-        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn, showHideObj });
+        elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn && parentUrn.manifestUrn ? parentUrn.manifestUrn : "", parentUrn ? parentUrn.columnIndex : -1, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn, showHideObj }, actionStatus, popupCutCopyParentData);
     }
     prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
 }

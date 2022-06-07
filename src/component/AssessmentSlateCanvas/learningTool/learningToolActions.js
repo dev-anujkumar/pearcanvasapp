@@ -188,19 +188,18 @@ export const linkDisable = () => {
   * @discription This action is dispached to fetch dropdown values for Learning Systems 
   */
 export const fetchLearningTemplates = () => async dispatch => {
-  // let url = 'https://10.11.7.24:8081/cypress-api/v1/content/assessment/learningobjectivetemplate';  
   let url = `${config.REACT_APP_API_URL}v1/content/assessment/learningobjectivetemplate`;
-  const resp = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      // 'PearsonSSOSession': config.ssoToken
-      'myCloudProxySession': config.myCloudProxySession
-    }
-  })
   try {
-    const res = await resp.json();
-    res && res.length > 0 && dispatch(fetchLearningSystems(res));
+    const resp = await axios(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'PearsonSSOSession': config.ssoToken
+        'myCloudProxySession': config.myCloudProxySession
+      }
+    });
+    let {data} = resp;
+    data && data.length > 0 && dispatch(fetchLearningSystems(data));
   } catch (error) {
     showError(error, 'showAppTypeValues', dispatch);
   }

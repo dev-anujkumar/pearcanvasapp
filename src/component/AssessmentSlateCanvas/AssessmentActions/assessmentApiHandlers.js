@@ -274,16 +274,15 @@ const AssessmentAPIHandlers = {
                 latestItemTitle: itemTitle
             }
             await dispatch(fetchAssessmentItems(responseData.entityUrn, {assessmentData, assessmentItemData: {...assessmentItemData, updatedItem: itemData },dispatch}));
-            //dispatch(fetchAssessmentVersions(responseData.entityUrn, 'assessmentItem', responseData.dateCreated, assessmentData, { ...assessmentItemData, updatedItem: itemData }));
         }
     },
     latestAssessmentItemHandler: (responseData, args, dispatch) =>{
         const {
             assessmentData, assessmentItemData
         } = args;
-        const itemTitle = responseData?.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : "";
+        const itemTitle = responseData?.name ? specialCharacterDecode(responseData.name) : responseData?.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : "";
         const updatedItem = {
-            oldItemId: assessmentItemData.itemId,
+            oldItemId: assessmentItemData?.itemId,
             latestItemId: responseData?.versionUrn,
             latestItemTitle: itemTitle
         }

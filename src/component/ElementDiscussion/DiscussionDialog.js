@@ -3,6 +3,10 @@ import { useSelector } from "react-redux";
 import { discussionCloseIcon, searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
 import { Tooltip } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import clsx from "clsx";
 
 //Function for display tooltip in title
 const TitleTooltip = withStyles({
@@ -22,22 +26,30 @@ const getSelectedItemFromId = (id) => {
   return undefined;
 };
 
+// handle LOB dropdown select menu position
+const LOBDropdownMenuStyles = {
+  top: '-252px',
+  left: '-16px',
+  width: '125px',
+  height: '211px',
+}
+
 const DiscussionDialog = ({
   showDialog = false,
   elemendId='',
   itemId = undefined,
   selectDiscussion = () => {},
   closeDialog = () => {},
+  getLOBDiscussionItems,
+  resetLOBDiscussionItems
 }) => {
-  const discussionItems = useSelector(
-    (state) => state.projectInfo.discussionItems
-  );
-
-  const [selectedDiscussion, setSelectedDiscussion] = useState(
-    getSelectedItemFromId(itemId)
-  );
+  const discussionItems = useSelector((state) => state.projectInfo.discussionItems);
+  const options = useSelector((state) => state.projectInfo.LOBList)
+  const showDiscussionLOBDropdown = useSelector((state) => state.projectInfo.showDiscussionLOBDropdown)
+  const [selectedDiscussion, setSelectedDiscussion] = useState(getSelectedItemFromId(itemId));
   const [filteredItems, setFilteredItems] = useState(discussionItems);
   const [searchText, setSearchText] = useState("");
+  const [defaultLOBDropdownValue, setLOBDropdownValue] = useState("select");
 
   useEffect(() => {
     if (showDialog) {
@@ -45,21 +57,54 @@ const DiscussionDialog = ({
       setFilteredItems(discussionItems);
       setSearchText("");
     }
-  }, [showDialog]);
+  }, [showDialog,discussionItems]);
+
+  // function to set LOB value selected and fetch discussion items for selected LOB
+  const setSelectedLOBValue = (value) => {
+    setLOBDropdownValue(value);
+    getLOBDiscussionItems(value);
+  }
+
+  //function to reset LOB dropdown value to "select" and close dialog
+  const resetSelectedLOBValue = () => {
+    setLOBDropdownValue("select");
+    closeDialog();
+    if(showDiscussionLOBDropdown === true){
+      resetLOBDiscussionItems()
+    }
+  }
+
+  const CustomDropDownIcon = withStyles()(
+    ({ className, classes, ...rest }) => {
+      return (
+        <KeyboardArrowDownIcon
+          {...rest}
+          className={clsx(className, classes.selectIcon)}
+        />
+      );
+    }
+  );
 
   return (
     <div
       className={`modalDiscussion ${showDialog? 'displayBlockDiscussion' : 'displayNoneDiscussion'}`}
     >
       <div className="popupContainerDiscussion">
-        <div
-          className="popupDiscussion"
-        >
+        <div className="popupDiscussion">
           <div className="headingContainerDiscussion">
             <div className="headingTextDiscussion">Select a Discussion Item</div>
-            <div onClick={() =>  closeDialog()} className="closeIconDiscussion">{discussionCloseIcon}</div>
+            <div onClick={() => resetSelectedLOBValue()} className="closeIconDiscussion">{discussionCloseIcon}</div>
           </div>
-            <div className="searchContainerDiscussion">
+          <div className={showDiscussionLOBDropdown ? "LOBDropdownAndSearchboxContainer" : ""}>
+            {showDiscussionLOBDropdown && <div className="LOBDropdownContainer"><div className="LOB-label">LOB</div>
+            <div className="LOBDropdown" >
+              <Select MenuProps={{style: LOBDropdownMenuStyles}} className={defaultLOBDropdownValue === "select" ? "selectInDropdown" : "LOBInDropdown"} value={defaultLOBDropdownValue} IconComponent={CustomDropDownIcon} onChange={(e) => setSelectedLOBValue(e.target.value)}>
+                <MenuItem value="select" className="selectOption">Select</MenuItem>
+                {options.map((x) => (<MenuItem className="LOBMenuList" value={x.lineOfBusiness}>{x.label}</MenuItem>))}
+              </Select>
+            </div>
+          </div>}
+            <div className={showDiscussionLOBDropdown ? "searchContainerDiscussionWithLOBDropdown" : "searchContainerDiscussion"}>
               {searchDisussion}
               <input
                 value={searchText}
@@ -80,6 +125,7 @@ const DiscussionDialog = ({
                 placeholder="Search By Discussion ID or Title"
               ></input>
             </div>
+          </div>
 
           {/* <span className="helpingText">Showing 1-25 of 345 </span> */}
           <div className="borderDivDiscussion"></div>
@@ -135,8 +181,7 @@ const DiscussionDialog = ({
             </div>
             <div
               onClick={() => {
-                closeDialog();
-                // setSelectedDiscussion(undefined);
+                resetSelectedLOBValue();
               }}
               className="cancelDiscussion"
             >
@@ -145,7 +190,7 @@ const DiscussionDialog = ({
             <div
               onClick={() => {
                 if (typeof selectedDiscussion === "object") {
-                  closeDialog();
+                  resetSelectedLOBValue();
                   selectDiscussion(selectedDiscussion);
                 }
               }}

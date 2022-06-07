@@ -140,9 +140,6 @@ class HtmlDiff {
                 this.content.push(text);
             } else {
                 if (specialCaseOpeningTagRegex.test(words[0])) {
-                    // let matchedTag = words[0].match(specialCaseOpeningTagRegex);
-                    // matchedTag = '<' + matchedTag[0].replace(/(<|>| )/g, '') + '>';
-                    // this.specialTagDiffStack.push(matchedTag);
                     this.specialTagDiffStack.push(words[0]);
                     if(assetId) {
                         specialCaseTagInjection = '<ins class="mod" '+" asset-id="+assetId+'>';
@@ -167,14 +164,6 @@ class HtmlDiff {
                         specialCaseTagInjection = '</ins>';
                         specialCaseTagInjectionIsbefore = true;
                     }
-
-                  //  if(openingTag === null) {	
-                       // if(words[1] && /<(span [^>]*data-id="[^"]*"[^>]*)[\>\s]+/i.test(words[1])) {
-                    //        specialCaseTagInjection = '<ins class="mod">';
-                     //   }	
-                  //      words.shift();	
-                  //  }
-
                     if (tag === 'del') {
                         words.shift();
 

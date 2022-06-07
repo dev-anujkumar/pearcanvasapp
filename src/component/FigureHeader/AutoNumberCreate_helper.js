@@ -4,10 +4,9 @@ import {
     UPDATE_POPUP_PARENT_SLATE
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
-import { containerBodyMatter } from './slateLevelMediaMapper';
 import { containerElements, autoNumber_ElementTypeToStoreKeysMapper, displayLabelsForContainer } from './AutoNumberConstants';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
-import { getImagesInsideSlates, getAutoNumberedElementsOnSlate, getAsideElementsWrtKey, getPopupDataInsideContainer } from './slateLevelMediaMapper';
+import { getImagesInsideSlates, getAutoNumberedElementsOnSlate, getAsideElementsWrtKey, getPopupDataInsideContainer, containerBodyMatter } from './slateLevelMediaMapper';
 
 export const updateCreatedElementInAutonumberList = (mediaType, mediaList, autoNumberedElementsObj, dispatch) => {
     dispatch({
@@ -228,7 +227,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
     const listType = autoNumber_ElementTypeToStoreKeysMapper[type];
     const labelType = createdElementData.displayedlabel;
     let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
-    let slateAncestorData = getState().appStore.currentSlateAncestorData;
+    let slateAncestorData = getState()?.appStore.currentSlateAncestorData;
     const popupParentSlateData = getState().autoNumberReducer.popupParentSlateData;
     const slateManifestUrn = popupParentSlateData?.isPopupSlate ? popupParentSlateData?.parentSlateId : config.slateManifestURN;
     let bodyMatter = getState().appStore.slateLevelData[slateManifestUrn]?.contents?.bodymatter;
@@ -297,8 +296,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 item.indexPos = count;
                 count++;
             });
-            let nearestElementObj = findNearestElement(slateElements, elementObj, labelType);
-
+            let nearestElementObj = findNearestElement(slateElements, elementObj, labelType);         
             if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                 let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
                 index = nearestElementObj?.key === 'above' ? index + 1 : index;
@@ -411,7 +409,7 @@ export const appendElementToList = (elementsArr, createdElementData, labelType, 
  * @returns 
  */
 export const getAllSlatesListInsideParent = (inputArr, slatesArr) => {
-    inputArr.forEach(innerObj => {
+    inputArr?.forEach(innerObj => {
         if (innerObj.label === 'module' || innerObj.label === 'appendix') {
             innerObj.contents.forEach(slateData => {
                 slatesArr.push(slateData);
@@ -423,22 +421,42 @@ export const getAllSlatesListInsideParent = (inputArr, slatesArr) => {
 }
 
 /**
+ * Checks for chapters inside part/volume
+ * @param {*} inputArr 
+ * @param {*} slatesArr 
+ * @returns 
+ */
+export const updateSlateData = (allSlateData, chaptersArr) => {
+    allSlateData.forEach(innerObj => {
+        if (innerObj.label === 'volume') {
+            updateSlateData(innerObj?.contents, chaptersArr);
+        } else if (innerObj.label === 'part') {
+            updateSlateData(innerObj?.contents, chaptersArr);
+        } else if (innerObj.label === 'chapter') {
+            chaptersArr.push(innerObj);
+        }
+    })
+    return chaptersArr;
+}
+
+/**
  * Checks nearest same type element in diff slates
  * @param {*} createdElementData 
  * @param {*} slateEntityURN 
  * @returns 
  */
 export const checkElementExistenceInOtherSlates = (createdElementData, slateEntityURN, getState, dispatch) => {
-    const allSlateData = getState().appStore?.allSlateData;
-    const slateAncestorData = getState().appStore?.currentSlateAncestorData;
+    let allSlateData = getState()?.appStore?.allSlateData;
+    const slateAncestorData = getState()?.appStore?.currentSlateAncestorData;
     const parentUrn = getContainerEntityUrn(slateAncestorData);
-    const autoNumber_ElementTypeKey = getState().autoNumberReducer?.autoNumber_ElementTypeKey
-    let autoNumberedElements = getState().autoNumberReducer?.autoNumberedElements;
-    const listType = autoNumber_ElementTypeKey[createdElementData?.displayedlabel];
-    let elementsList = autoNumberedElements[listType];
+    const autoNumber_ElementTypeKey = getState()?.autoNumberReducer?.autoNumber_ElementTypeKey
+    let autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
+    const listType = autoNumber_ElementTypeKey && autoNumber_ElementTypeKey[createdElementData?.displayedlabel];
+    let elementsList = autoNumberedElements?.[listType];
     let parentEntityObject = {};
     let slateKey = '';
     let slatesArr = [];
+    let chaptersArr = [];
     let slateIndex;
     let elementIndex = -1;
     if (parentUrn && allSlateData) {
@@ -447,6 +465,8 @@ export const checkElementExistenceInOtherSlates = (createdElementData, slateEnti
             parentEntityObject = allSlateData[parentUrn.toLowerCase()];
             getAllSlatesListInsideParent(parentEntityObject, slatesArr);
         } else {
+            chaptersArr = updateSlateData(allSlateData['bodymatter'], chaptersArr);
+            allSlateData['bodymatter'] = chaptersArr;
             for (let matterType in allSlateData) {
                 if (allSlateData[matterType] && allSlateData[matterType].length > 0) {
                     let index = allSlateData[matterType].findIndex(parentEntity => parentEntity.entityUrn === parentUrn);

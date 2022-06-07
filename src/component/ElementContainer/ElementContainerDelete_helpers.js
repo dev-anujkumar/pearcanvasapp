@@ -9,6 +9,7 @@ import {
 } from "./../../constants/Action_Constants";
 import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
 import config from '../../config/config';
+import store from '../../appstore/store.js';
 import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning } from '../../constants/IFrameMessageTypes.js';
 import tinymce from 'tinymce'
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
@@ -17,7 +18,7 @@ import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility.js';
 import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update.js';
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
-import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper'; 
+import { getSlateLevelData, updateChapterPopupData, popupCutCopyParentData } from '../FigureHeader/AutoNumberActions';
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -61,7 +62,16 @@ export const onDeleteSuccess = (params) => {
 
     const currentSlateData = newParentData[config.slateManifestURN];
     if (currentSlateData.status === 'approved') {
-        return onSlateApproved(currentSlateData, dispatch, fetchSlateData)  
+        const isAutoNumberingEnabled = getState()?.autoNumberReducer?.isAutoNumberingEnabled;
+        const autoNumberParams = {
+            type,
+            getState,
+            dispatch,
+            contentUrn,
+            isAutoNumberingEnabled,
+            asideData
+        }
+        return onSlateApproved(currentSlateData, dispatch, fetchSlateData, autoNumberParams);
     }
     const args = {
         dispatch,
@@ -73,7 +83,8 @@ export const onDeleteSuccess = (params) => {
         newParentData,
         getState,
         type,
-        contentUrn
+        contentUrn,
+        operationType: 'delete'
     }
     deleteFromStore(args)
     
@@ -112,6 +123,10 @@ export function prepareTCMforDelete(elmId, dispatch, getState) {
     
 }
 
+export const deleteFromPopupInStore = (cutCopyParentData, popupContent) => {
+    updateChapterPopupData(popupContent, cutCopyParentData?.versionUrn);
+}
+
 export const deleteFromStore = async (params) => {
     const {
         dispatch,
@@ -123,11 +138,31 @@ export const deleteFromStore = async (params) => {
         newParentData,
         getState,
         type,
-        contentUrn
+        contentUrn,
+        operationType
     } = params
 
     /* Get the slate bodymatter data */
-    let bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter || [];
+    const cutCopyParentData = getState().autoNumberReducer?.popupCutCopyParentData;
+    const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
+    let bodymatter = [];
+    /* To check if the element is cutted from popup slate */
+    if ((cutCopyParentData?.isPopupSlate && operationType === 'cut') && popupParentSlateData?.isPopupSlate && (cutCopyParentData?.versionUrn === popupParentSlateData?.versionUrn)) {    // popup slate cut & paste on same slate
+        const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
+        deleteFromPopupInStore(cutCopyParentData, popupContent);
+        bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter;
+        /* To check if the cutted element is pasted on popup slate */
+    } else if (cutCopyParentData?.isPopupSlate && operationType === 'cut') {
+        // Call api to get popup slate data
+        const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
+        deleteFromPopupInStore(cutCopyParentData, popupContent);
+        return;
+        /* To check if the cutted element is pasted on popup slate */
+    } else if (popupParentSlateData?.isPopupSlate && operationType === 'cut') {
+        bodymatter = newParentData[popupParentSlateData?.parentSlateId]?.contents?.bodymatter;
+    } else {
+        bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter;
+    }
     const iList = index?.toString()?.split("-") || [];
     /* update the store on /cut/paste of showhide elements */
     if(asideData?.type === SHOWHIDE && iList?.length >= 3) {
@@ -272,7 +307,7 @@ export const deleteFromStore = async (params) => {
     })
     
     /** ---------------------------- Auto-Numbering handling ------------------------------*/
-    const isAutoNumberingEnabled = getState().autoNumberReducer?.isAutoNumberingEnabled;
+    const isAutoNumberingEnabled = getState()?.autoNumberReducer?.isAutoNumberingEnabled;
     const autoNumberParams = {
         type,
         getState,
@@ -337,11 +372,12 @@ export const delInsideWE = (item, asideData, parentUrn, elmId) => {
     }
 }
 
-export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
+export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData, autoNumberParams) => {
     if (currentSlateData.type === "popup") {
         sendDataToIframe({ 'type': TocRefreshVersioning, 'message' :true });
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
+        handleAutoNumberingOnDelete(autoNumberParams);
     }
     else {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -351,7 +387,7 @@ export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
 }
 
 
-export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
+export const prepareTCMSnapshotsForDelete = async (params, operationType = null) => {
     const {
         deleteParentData,
         type,
@@ -366,7 +402,7 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
         isSectionBreak
     } = params
 
-    const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn].contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
+    const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn]?.contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
         //const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
         //const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
@@ -418,7 +454,7 @@ export const prepareTCMSnapshotsForDelete = (params, operationType = null) => {
                 deleteData.wipData = element;
             }
         }
-        tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)
+        await tcmSnapshotsForDelete(deleteData, type, containerElement, operationType)
     }
 }
 
@@ -449,6 +485,11 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     if ((parentType.indexOf(type) === -1) || (type === "element-aside" && parentUrn && elementDeleteData?.wipData?.type === "manifest") ) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
-    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData, actionStatus.action, elementDeleteData.wipData.type);
-    prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"",operationType);
+    containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData, actionStatus.action, elementDeleteData?.wipData?.type);
+    let popupCutCopyParent = store?.getState()?.autoNumberReducer?.popupCutCopyParentData || {};
+    if (currentSlateData?.type === 'popup' && currentSlateData?.status === 'approved' && popupCutCopyParent?.operationType === 'cut' && popupCutCopyParent?.isPopupSlate) {
+        popupCutCopyParent = { ...popupCutCopyParent, versionUrn: containerElement?.slateManifest }
+        popupCutCopyParentData(popupCutCopyParent);
+    }
+    await prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"",operationType);
 }

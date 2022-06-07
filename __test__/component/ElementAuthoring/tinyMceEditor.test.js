@@ -2182,7 +2182,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             }
             let nextEditor = {
                 on: (temp, cb) => { cb(addFootnoteEvent) },
-                selection: {getNode:()=>{return{childNodes:[{}], tagName:'sup',parentNode:{parentNode:{innerHTML:'dummy'}, tagName:'sup'}}}},
+                selection: {getNode:()=>{return{childNodes:[{}], tagName:'sup',parentNode:{parentNode:{innerHTML:'dummy'}, tagName:'sup'}}}, setContent: jest.fn()},
                 setContent: () => { },
                 insertContent: () => {
                     return '<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>'
@@ -4949,6 +4949,11 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             }
         }
         it('Test-33.1-Method--31--handleBlur-POETRY Element', () => {
+            tinymce.activeEditor = {
+                selection: {
+                    getBookmark: jest.fn()
+                }
+            }
             let event = {
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn(),
@@ -4963,6 +4968,11 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             spyhandleBlur.mockClear()
         });
         it('Test-33.2.1-Method--31--handleBlur-BLOCKQUOTE MARGINALIA Element-isctrlPlusV:TRUE', () => {
+            tinymce.activeEditor = {
+                selection: {
+                    getBookmark: jest.fn()
+                }
+            }
             let event = {
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn(),
@@ -5074,6 +5084,11 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             spyhandleBlur.mockClear()
         });
         it('Test-33.3-Method--31--handleBlur-SHOWHIDE Element', () => {
+            tinymce.activeEditor = {
+                    selection: {
+                        getBookmark: jest.fn()
+                    }
+            }
             let event = {
                 preventDefault: jest.fn(),
                 stopPropagation: jest.fn(),
@@ -6487,6 +6502,8 @@ describe('Test function--handleBlankLineArrowKeys', () => {
 
  describe('Testing function--setCalloutToSelection', () => {
     it('setCalloutToSelection', () => {
+        tinymce.activeEditor.selection.getBookmark = jest.fn()
+        tinymce.activeEditor.targetElm.className = []
         let nextEditor = {
             on: (temp, cb) => { cb(event) },
             selection: editor.selection,
@@ -6845,7 +6862,8 @@ describe('Test function--handleBlankLineArrowKeys', () => {
                             querySelectorAll: jest.fn(),
                             classList: {
                                 remove: jest.fn()
-                            }
+                            },
+                            className:[]
                         }
                     }
                 },
@@ -6913,7 +6931,8 @@ describe('Test function--handleBlankLineArrowKeys', () => {
                             querySelectorAll: jest.fn(),
                             classList: {
                                 remove: jest.fn()
-                            }
+                            },
+                            className:[]
                         }
                     }
                 },
@@ -8465,6 +8484,11 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--3--changeTextElements ', () => {
+        tinymce.activeEditor = {
+            selection: {
+                getBookmark: jest.fn()
+            }
+        }
         let event = {
             target: {
                 getContent: () => {
@@ -8722,24 +8746,18 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        document.createElement = () => {
-            return {
-                className: () => { },
-                innerText: () => { }
-            }
-        }
-        const bqElement = {
-            elementdata:{
-                type: "blockquote"
-            }
-        }
-        const spyFN = jest.spyOn(instance2, 'processBlockquoteHtml');
-        const spyFunction2 = jest.spyOn(instance2, 'generateHiddenElement');
+        const spyFunction2 = jest.spyOn(document, 'createElement');
         spyFunction2.mockImplementationOnce(() => {
-            return {}
+            return {
+                classList:{
+                    add: jest.fn()
+                },
+                setAttribute: jest.fn(),
+                style:{}
+            }
         })
-        instance2.processBlockquoteHtml({}, bqElement, true);
-        expect(spyFN).toHaveBeenCalled();
+        let hiddleBlock = instance2.generateHiddenElement();
+        expect(hiddleBlock.innerHTML).toEqual("hidden");
     })
     it('Test-X-Method--6--setToolbarByElementType', () => {
         let event = {

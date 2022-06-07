@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { removeBlankTags, prepareDialogueDom } from '../../constants/utility';
+import { prepareDialogueDom } from '../../constants/utility';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 import TinyMceEditor from "../tinyMceEditor";
 

@@ -106,7 +106,8 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
                             "title": {
                                 "en": audioDataResponse?.data?.data[0]?.title?.en
                             },
-                            "format": audioDataResponse?.data?.data[0]?.format
+                            "format": audioDataResponse?.data?.data[0]?.format,
+                            "slateManifestURN": config.slateManifestURN
                         }
                     }
                     config.CYPRESS_PLUS_WINDOW.postMessage(obj, urlCypress)
@@ -140,7 +141,10 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
             currentProjectId: config.projectUrn,
             slateEntityUrn: config.slateEntityURN
         }
-        var narrativeAudioUrn = storeData.audioReducer.audioData.data[0].narrativeAudioUrn
+        var narrativeAudioUrn = '';
+        if (storeData?.audioReducer?.audioData?.data && storeData?.audioReducer?.audioData?.data.length) {
+            narrativeAudioUrn = storeData.audioReducer.audioData.data[0].narrativeAudioUrn
+        }
         let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateData.slateEntityUrn}/narrativeAudio/${narrativeAudioUrn}`;
 
         try {

@@ -11,7 +11,7 @@ import {
 import config from '../../config/config.js'
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
-import { getLatestVersion, slateLinkDetails } from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import { slateLinkDetails } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 let currentlySearching = false;
 let searchterm = "";
 
@@ -63,60 +63,6 @@ export const assetIdForSnapshot = (assetID) => {
     }
   }
 }
-
-// export const getCurrentlyLinkedImage = (id, cb) => {
-
-//   let url = config.NARRATIVE_API_ENDPOINT+"entity/" + id + "/versions";
-//   let currentlyLinkedData = {};
-
-//   sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-
-//   return axios.get(url,{
-//     headers: {
-//       'Content-Type': 'application/json',
-//       ApiKey: config.STRUCTURE_APIKEY,
-//       PearsonSSOSession: config.ssoToken
-//     }
-//   }).then((res) => {
-//     if (res.data.length) {
-
-//       let workId = res.data[res.data.length - 1].versionUrn;
-
-//       let workUrl = config.NARRATIVE_API_ENDPOINT+"v2/" + workId + "/content"
-//       axios.get(workUrl, {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           ApiKey: config.STRUCTURE_APIKEY,
-//           PearsonSSOSession: config.ssoToken
-//         }
-//       }).then((res1) => {
-//         sendDataToIframe({'type': HideLoader,'message': { status: false }});
-//         currentlyLinkedData.id=res1.data.id;
-//         currentlyLinkedData.title=res1.data.title.text;
-//         cb(currentlyLinkedData)
-//       }).catch((err) => {
-//         sendDataToIframe({'type': HideLoader,'message': { status: false }});
-//         cb(currentlyLinkedData);
-//         console.log("err from narrative api", err)
-//       })
-
-//     }
-//     else{
-//       sendDataToIframe({'type': HideLoader,'message': { status: false }});
-//       cb(currentlyLinkedData);
-//     }
-
-//   }).catch((err) => {
-//     sendDataToIframe({'type': HideLoader,'message': { status: false }});
-//     cb(currentlyLinkedData);
-//     console.log("err from vesion api", err)
-//   })
-
-//   // return cb(mockData.images.filter((value, key) => {
-//   //   return value.entityUrn == id
-//   // }))
-// }
-
 /**
  * Get images from manifest Api
  */
@@ -230,7 +176,6 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
       }
       
     })
-
     let data = await response?.json()
     if (data.length && response?.status == 200) {
       let latestIndex = 0;
@@ -255,7 +200,6 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
         console.error("err from narrative api 1", err1)
       }
     }
-
   } catch (err) {
     try {
       currentlyLinkedData = await getElementVersionContent(id)
@@ -286,8 +230,9 @@ export const getElementVersionContent = async (elementId) =>{
       })    
       let data = await response.json()
           sendDataToIframe({'type': HideLoader,'message': { status: false }});
-          currentlyLinkedData.id=data.id;
-          currentlyLinkedData.title=data.title.text;
+          currentlyLinkedData["id"] = data?.id ? data.id : "";
+          currentlyLinkedData["title"] = data?.title?.text ? data.title.text : "";
+          currentlyLinkedData["caption"] = data?.captions?.text ? data.captions.text : "";
           return currentlyLinkedData
     } catch (err) {
       sendDataToIframe({'type': HideLoader,'message': { status: false }});        

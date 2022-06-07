@@ -7,7 +7,7 @@ import * as slateWrapperConstants from "./SlateWrapperConstants"
 //Helper methods
 import { sendDataToIframe, replaceWirisClassAndAttr, getShowhideChildUrns } from '../../constants/utility.js';
 import { tcmSnapshotsForCreate, prepareSnapshots_ShowHide} from '../TcmSnapshots/TcmSnapshotsCreate_Update';
-import { SET_SELECTION } from './../../constants/Action_Constants.js';
+import { SET_SELECTION, SET_POPUP_PARENT_CUT_COPY } from './../../constants/Action_Constants.js';
 import { deleteFromStore, prepareTCMSnapshotsForDelete } from './../ElementContainer/ElementContainerDelete_helpers.js';
 import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
@@ -69,7 +69,6 @@ export const onPasteSuccess = async (params) => {
             cutcopyParentData = deleteElm.cutCopyParentUrn.slateLevelData;
         }
 
-        // if(getState().selectionReducer.selection.sourceSlateEntityUrn !== config.slateEntityURN) {
         if((cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type !=='popup') {
             const tcmDeleteArgs = {
                 deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutcopyParentData)) : newParentData,
@@ -82,7 +81,7 @@ export const onPasteSuccess = async (params) => {
                 poetryData: deleteElm.poetryData,
                 cutCopyParentUrn: {
                     ...deleteElm.cutCopyParentUrn,
-                    manifestUrn: deleteElm.cutCopyParentUrn.sourceSlateManifestUrn
+                    manifestUrn: deleteElm.cutCopyParentUrn?.sourceSlateManifestUrn
                 },
                 element: responseData
             }
@@ -99,8 +98,9 @@ export const onPasteSuccess = async (params) => {
             poetryData: deleteElm.poetryData,
             newParentData,
             type: deleteElm.type,
+            operationType: operationType
         }
-        deleteFromStore(deleteParams)
+        await deleteFromStore(deleteParams)
 
     }
 
@@ -169,6 +169,9 @@ export const onPasteSuccess = async (params) => {
         sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         return false;
     }
+    if (operationType === 'cut') {
+        dispatch({ type: SET_POPUP_PARENT_CUT_COPY, payload: {} });
+    }
     /* Paste Aside/WE/CG/Poetry into S/H */
     const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP, POETRY_ELEMENT];
     if (asideData?.type === SHOW_HIDE && containersInSH.includes(responseData?.type)) {
@@ -232,7 +235,6 @@ export const onPasteSuccess = async (params) => {
                         newIndex = indexes;
                     }
                     if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest" && selcetIndex.length === 5 ) { /* paste inner level elements inside 2C/Aside */
-                        //item?.groupeddata?.bodymatter[selcetIndex[1]]?.groupdata?.bodymatter[selcetIndex[2]]?.elementdata?.bodymatter[selcetIndex[3]]?.contents.bodymatter?.splice(cutIndex, 0, responseData);
                         item?.groupeddata?.bodymatter?.[selcetIndex[1]]?.groupdata?.bodymatter?.[selcetIndex[2]]?.elementdata?.bodymatter?.map(item_L0 => {
                             if(item_L0?.id === parentUrn.manifestUrn) { /* 2/3C:WE:SectionBreak: Paste Element */
                                 item_L0?.contents.bodymatter?.splice(cutIndex, 0, responseData)
@@ -414,7 +416,11 @@ export const checkElementExistence = async (slateEntityUrn = '', elementEntity =
         await axiosObject.get(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${slateEntityUrn}/elementids`)
             .then(res => {
                 if (res && res.status == 200) {
-                    bodymatter = (Object.values(res.data)[0]).contents.bodymatter || [];
+                    if (Object.values(res?.data)[0]?.type === 'popup') {
+                        bodymatter = (Object.values(res.data)[0])?.popupdata?.bodymatter || [];
+                    } else {
+                        bodymatter = (Object.values(res.data)[0])?.contents?.bodymatter || [];
+                    }
                 }
             })
             .catch(error => {

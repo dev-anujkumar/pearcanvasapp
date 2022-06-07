@@ -3,11 +3,10 @@ import { connect } from 'react-redux';
 import ElementContainerWrapper from "../HOCs/ElementContainerHOC";
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, guid } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
-import { guid } from '../../constants/utility.js';
 import { POETRY_SOURCE } from '../../constants/Element_Constants.js';
 
 let random = guid();

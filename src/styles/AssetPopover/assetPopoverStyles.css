@@ -159,6 +159,7 @@
     padding: 8px;
     border-radius: 4px;
     background-color: #005a70;
+    position: relative;
   }
   
   .modalSubHeader {
@@ -212,6 +213,7 @@
     margin-top: 24px;
     padding-left: 15px;
     color: #858585;
+    margin-bottom: 5px;
   }
   
   .currentlyLinkedHeader {
@@ -368,18 +370,32 @@
   }
   .modalInput{
     display: flex;
-    align-items: center;
+    margin-top: 3px;
+  }
+  .modalAssetDetails{
+    display: flex;
+    flex-direction: column;
+    margin-left: 8px;
   }
   .modalText{
     display: flex;
-    margin: 5px;
     font-size: 14px;
+    line-height: 20px;
     font-family: sans-serif;
     align-items: center;
     overflow-wrap: anywhere;
   }
+  .modalCaption{
+    display: flex;
+    font-size: 12px;
+    line-height: 20px;
+    font-family: sans-serif;
+    word-wrap: break-word;
+    color: #333333;
+  }
   .modalInputField{
     display: flex;
+    margin-bottom: 12px;
   }
 
 .modalBody::-webkit-scrollbar-thumb {

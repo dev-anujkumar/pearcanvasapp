@@ -2,23 +2,22 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 // IMPORT - Components //
-import TinyMceEditor from "../tinyMceEditor"
 import config from '../../config/config';
 import axios from 'axios';
 import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
-import {AUDIO,VIDEO,DEFAULT_ASSET,DEFAULT_VIDEO_POSTER_IMAGE} from './../../constants/Element_Constants';
-//import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
-import { hasReviewerRole, getLabelNumberTitleHTML, sendDataToIframe } from '../../constants/utility.js'
+import { DEFAULT_VIDEO_POSTER_IMAGE } from './../../constants/Element_Constants';
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import {alfrescoPopup, saveSelectedAssetData  , saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import PopUp from '../PopUp';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
-import { updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions'
+import { updateAudioVideoDataForCompare, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions';
+import { setAutoNumberSettingValue } from '../FigureHeader/AutoNumber_helperFunctions';
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
 class ElementAudioVideo extends Component {
@@ -281,11 +280,6 @@ class ElementAudioVideo extends Component {
                     this.updateAlfrescoSiteUrl()
                 }
             }
-            //let alfrescoData = config?.alfrescoMetaData?.alfresco;
-            // if(this.props.isCiteChanged){
-            //     this.setState({alfrescoSiteData: this.props.changedSiteData })
-            // }
-           
             // to blank the elementId and asset data after update
             // let payloadObj = {
             //     asset: {}, 
@@ -362,6 +356,8 @@ class ElementAudioVideo extends Component {
      * @description function will be called on image src add and fetch resources from Alfresco
      */
     handleC2MediaClick = (e) => {
+        const dropdownVal = setAutoNumberSettingValue(this.props?.model)
+        this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
         this.props.handleFocus();
         if(hasReviewerRole()){
             return true
@@ -449,7 +445,9 @@ class ElementAudioVideo extends Component {
     }
 
     deleteElementAsset = () => {
-        const element = this.props.model
+        const dropdownVal = setAutoNumberSettingValue(this.props?.model)
+        this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
+        const element = this.props.model;
         this.props.handleFocus();
         if (hasReviewerRole()) {
             return true
@@ -539,6 +537,9 @@ const mapActionToProps = (dispatch) =>{
         },
         saveSelectedAlfrescoElement: (payloadObj) => {
             dispatch(saveSelectedAlfrescoElement(payloadObj))
+        },
+        updateAutoNumberingDropdownForCompare: (value) => {
+            dispatch(updateAutoNumberingDropdownForCompare(value))
         }
     }
 }

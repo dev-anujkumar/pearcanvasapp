@@ -1,42 +1,32 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, createRef } from 'react';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
 import FigureImageAsset from './FigureImageAsset.jsx';
 import FigureTableAsset from './FigureTableAsset.jsx';
 import BlockMathCode from './BlockMathCode.jsx';
 // IMPORT - Assets //
-import {
-    DEFAULT_IMAGE_DATA_SOURCE,
-    DEFAULT_IMAGE_SOURCE
-} from '../../constants/Element_Constants';
+import { DEFAULT_IMAGE_SOURCE, labelHtmlData } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
+import { updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action';
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
-import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
-import { labelHtmlData } from '../../constants/Element_Constants';
 import PopUp from '../PopUp';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormControl from '@material-ui/core/FormControl'
-import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions.js';
+import { setAutoNumberSettingValue, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions.js';
 import FigureHeader from '../FigureHeader/FigureHeader.jsx';
 import { IMAGE, TABLE, MATH_IMAGE, TABLE_AS_MARKUP, MATH_ML, BLOCK_CODE } from './ElementFigure_Constants'
 import { launchTableSPA } from './ElementFigure_Utility';
 import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx';
-import { createRef } from 'react';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
-//const BLANK_NUMBER_LABEL_OPTIONS = ['Default Auto-number', 'Override number only'];
 const BLANK_NUMBER_LABEL_OPTIONS = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
 const imageFigureTypes = ["image","mathImage","table","tableasmarkup","authoredtext","codelisting"];
 const blockMathCodeTypes = ["authoredtext","codelisting"];
@@ -168,6 +158,8 @@ class FigureImage extends Component {
 */
 
     deleteFigureResource = () => {
+        const dropdownVal = setAutoNumberSettingValue(this.props?.model)
+        this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
         this.props.handleFocus();
         if (hasReviewerRole()) {
             return true
@@ -408,6 +400,8 @@ class FigureImage extends Component {
      * @description function will be called on image src add and fetch resources
      */
     addFigureResource = (e) => {
+        const dropdownVal = setAutoNumberSettingValue(this.props?.model)
+        this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
         if (e) {
             e.stopPropagation();
         }
@@ -707,6 +701,9 @@ const mapActionToProps = (dispatch) => {
         },
         saveSelectedAlfrescoElement: (payloadObj) => {
             dispatch(saveSelectedAlfrescoElement(payloadObj))
+        },
+        updateAutoNumberingDropdownForCompare: (value) => {
+            dispatch(updateAutoNumberingDropdownForCompare(value))
         }
     }
 }

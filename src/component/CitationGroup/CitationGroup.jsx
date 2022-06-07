@@ -7,10 +7,9 @@ import CGTinyMCE from './CGTinyMCE.jsx'
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
 import './../../styles/CitationGroup/CitationGroup.css';
-import { guid } from '../../constants/utility.js';
+import { guid, sendDataToIframe } from '../../constants/utility.js';
 import ElementSaprator from '../ElementSaprator';
 import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import { CITATION_SOURCE } from '../../constants/Element_Constants.js';

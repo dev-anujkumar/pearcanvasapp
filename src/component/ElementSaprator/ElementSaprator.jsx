@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-import { hasReviewerRole, sendDataToIframe, hasProjectPermission, isSubscriberRole, isOwnerRole } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe, hasProjectPermission, isSubscriberRole } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
@@ -136,7 +136,9 @@ export function ElementSaprator(props) {
         let sourceComp = 'source' in props ? props.source : '';
         let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
         let pasteValidation = getPasteValidated(props, sourceComp, inputType);
-        if (!config.isPopupSlate && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation) {
+        const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "element-aside", "popup", 'citations', 'element-citation', 'poetry', 'stanza'];
+        let allowToShowPasteIcon = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.elementSelection?.element?.type) ? false : true;
+        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
                     <Tooltip direction='paste' tooltipText='Paste element'>
@@ -160,7 +162,7 @@ export function ElementSaprator(props) {
 
         const insertionIndex = firstOne ? index : index + 1
         return (
-            <div className={`elemDiv-expand paste-button-wrapper}`} onClickCapture={onClickCapture} >
+            <div className={'elemDiv-expand'} onClickCapture={onClickCapture} >
                 <Tooltip direction='poc' tooltipText='Paste from Word'>
                     <Button type="powerpaste" onClick={() => props.handleCopyPastePopup(true, insertionIndex, parentUrn, asideData)} />
                 </Tooltip>

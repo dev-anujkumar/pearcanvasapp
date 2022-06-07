@@ -152,6 +152,16 @@ export const checkFigureMetadata = (element, buttonType = null) => {
     return false;
 }
 
+
+export const checkFigureInsideTableElement = (element, buttonType = null, permissions) => {
+    let editPermission = permissions.filter(p => ["alfresco_crud_access", "add_multimedia_via_alfresco"].includes(p));
+    let tableasHTMLValue = String(element?.figuredata?.tableasHTML)
+    if(element.figuretype === 'tableasmarkup' && tableasHTMLValue.includes('class="imageAssetContent"') && editPermission.length === 2){
+        return true;
+    }
+    return false;
+}
+
 /*** @description - This is the function to check if an elm embedded assessment has update available */
 export const checkElmAssessmentStatus = (assessmentId, props) => {
     if (assessmentId && props && props.assessmentReducer && props.assessmentReducer[assessmentId] && props.assessmentReducer[assessmentId].showUpdateStatus == true) {

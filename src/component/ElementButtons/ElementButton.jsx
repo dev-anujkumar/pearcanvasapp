@@ -11,8 +11,7 @@ import {
     workedExampleIcon,
     sectionBreakElement, 
     assessmentIcon, 
-    openerElement, 
-    noteFlag , 
+    openerElement,
     tcmIcon, 
     addNote,
     viewNote,
@@ -214,6 +213,13 @@ class ElementButton extends Component {
                     {editIcon}
                 </span>
                 break;
+            case ButtonTypes.EDIT_TE_BUTTON:
+                buttonJSX = <div  className='te-btn'>
+                <Tooltip className='tooltip te-btn' direction='picker-for-table' tooltipText="Edit Alfresco Metadata">
+                <span className={`btn-element small edit-button ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''}`} title="" onClick={clickHandlerFn}> {editIcon} </span>
+                </Tooltip>
+                </div>
+                break;
             case ButtonTypes.APPROVE_TICK_ICON:
                 buttonJSX = <span className={`btn-element small approve-icon ${btnClassName}`} onClick={clickHandlerFn}>
                     {approvedIcon}
@@ -227,6 +233,13 @@ class ElementButton extends Component {
                 break;
             case ButtonTypes.ALFRESCO_METADATA:
                 buttonJSX = <span className= {`btn-element alfresco-metadata-icon  ${isSubscribersSlate ? 'subscriberSlate' :''} ${btnClassName}`} onClick={clickHandlerFn} title="Expand in Alfresco" ><img src={alfrescoMetadata} /></span>
+                break;
+            case ButtonTypes.ALFRESCO_TE_METADATA:
+                buttonJSX = <div  className='expand-te-btn'>
+                <Tooltip direction='picker-for-table' tooltipText="Expand in Alfresco">
+                <span className= {`btn-element alfresco-metadata-icon  ${isSubscribersSlate ? 'subscriberSlate' :''} ${btnClassName}`} onClick={clickHandlerFn} title="" ><img src={alfrescoMetadata} /></span>
+                </Tooltip>
+                </div>
                 break;
             case ButtonTypes.STAGE_DIRECTION:
                 buttonJSX = <span className={`btn-element text-elem`} onClick={clickHandlerFn}>

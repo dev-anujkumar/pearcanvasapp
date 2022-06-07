@@ -20,7 +20,7 @@ import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues } from './CanvasWrapper_Actions';
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -41,6 +41,7 @@ import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Ac
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import {markedIndexPopup} from '../MarkIndexPopup/MarkIndex_Action';
 import { fetchProjectFigures, setTocContainersAutoNumberList } from '../FigureHeader/AutoNumberActions';
+import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -274,7 +275,8 @@ const mapStateToProps = state => {
         markedIndexValue: state.markedIndexReducer.markedIndexValue,
         markedIndexGlossary: state.markedIndexReducer.markedIndexGlossary,
         alfrescoReducer: state.alfrescoReducer,
-        currentSlateAncestorData: state.appStore.currentSlateAncestorData
+        currentSlateAncestorData: state.appStore.currentSlateAncestorData,
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
     };
 };
 
@@ -342,6 +344,8 @@ export default connect(
         deleteComment,
         cypressPlusEnabled,
         setSlateMatterType,
-        updateFigureDropdownValues
+        updateFigureDropdownValues,
+        savePopupParentSlateData,
+        fetchLOBList,
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
