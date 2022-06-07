@@ -148,6 +148,7 @@ module.exports = {
         contentBase: path.join(__dirname, 'dist'),
         // Enable gzip compression for everything served:
         compress: true,
+        allowedHosts: ['local-dev.pearson.com'],
         https: true,
         open: true,
         overlay: true,
