@@ -10,6 +10,7 @@ import FigureHeader from '../../../src/component/FigureHeader/FigureHeader';
 
 
 config.figureFieldsPlaceholders = ['Number', 'Label Name', 'Title', 'Caption', 'Credit']
+config.smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table', 'fpo']
 
 let initialState = {
     keyboardReducer : {
@@ -518,7 +519,7 @@ let initialState = {
             "longDesc": "",
             "podwidth": "",
             "secondaryOption": "secondary-image-figure-width",
-            "elementId": "urn:pearson:work:9ae1cd21-343b-4784-a6bd-3fe50974b0c1",
+            "elementId": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
             "index": 0,
             "elementWipType": "figure",
             "toolbar": [
@@ -766,7 +767,9 @@ let initialState = {
 };
 
 
+
 describe('Testing FigureHeader component', () => {
+    
     let props = {
         "model": {
             "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
@@ -811,6 +814,7 @@ describe('Testing FigureHeader component', () => {
             "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
             "displayedlabel": "Figure",
             "numberedandlabel": true,
+            "manualoverride": {"overridenumbervalue": '100'},
             "indexPos": "2",
             "parentDetails": [],
             "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
@@ -1007,7 +1011,29 @@ describe('Testing FigureHeader component', () => {
                 }
             }
         },
-        "activeElement": {},
+        "activeElement": {
+            "elementType": "figure",
+            "primaryOption": "primary-image-figure",
+            "altText": "",
+            "longDesc": "",
+            "podwidth": "",
+            "secondaryOption": "secondary-image-figure-width",
+            "elementId": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+            "index": 0,
+            "elementWipType": "figure",
+            "toolbar": [
+                "insertMedia",
+                "formatSelector",
+                "crossLinkingIcon",
+                "assetpopover",
+                "glossary",
+                "decreaseindent",
+                "alignment",
+                "calloutIcon",
+                "IndexEntry"
+            ],
+            "tag": "Fg"
+        },
         "autoNumberElementsIndex": {
             "figureImageIndex": {
                 "urn:pearson:entity:eedc9f81-c954-44ec-93f4-16119a610b56": {
@@ -1046,7 +1072,6 @@ describe('Testing FigureHeader component', () => {
             }
         }
     }
-
     
     // let store = mockStore(initialState);
     // let figureHeaderWrapper;
@@ -1054,13 +1079,830 @@ describe('Testing FigureHeader component', () => {
     //     let figureHeaderWrapper = mount(<Provider store={store}><FigureHeader {...props} /></Provider>);
     // });
 
+    let store = mockStore(initialState);
+
     it('renders without crashing', () => {
-        let store = mockStore(initialState);
-        let figureHeaderWrapper = shallow(<Provider store={store}><FigureHeader {...props} /></Provider>);
-        console.log('figureHeaderWrapper : ',figureHeaderWrapper)
+        let figureHeaderWrapper = mount(<Provider store={store}><FigureHeader {...props} /></Provider>);
+        // let componentInstance = figureHeaderWrapper.find('FigureHeader').instance();
+        // console.log('componentInstance : ',componentInstance)
         expect(figureHeaderWrapper).toHaveLength(1);
     })
 
+    it('For Audio type with oldSettings : Resume numbering & newSettings : Remove label & number case ', () => {
+        let props2 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "audio",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {
+                    "resumenumbervalue": 100
+                },
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props2} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    
+    it('For Audio type with oldSettings : Resume numbering & newSettings : Override label & number case ', () => {
+        let props2 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "audio",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {
+                    "resumenumbervalue": 100
+                },
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props2} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(3).simulate('click');
+    })
+
+    it('For Audio type with oldSettings : Override label & number newSettings : Remove label & number case ', () => {
+        let props2 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "audio",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100', "overridelabelvalue": 'Audio'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props2} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    
+    it('For Audio type with oldSettings : Override label & number newSettings : Remove label & number case ', () => {
+        let props2 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "audio",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100', "overridelabelvalue": 'Audio'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props2} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    it('For Audio type with oldSettings : Override label & number case for changeLabelValue ', () => {
+        let props2 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "audio",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props2} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+        figureHeaderWrapper2.find('div.figure-label').simulate('click');
+        figureHeaderWrapper2.find('.figure-dropdown ul li').at(3).simulate('click');
+    })
+
+
+    it('For Audio type with oldSettings : Override label & overridelabelvalue is absent case ', () => {
+        let props2 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "audio",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props2} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+
+    it('For Video type ', () => {
+        let props2 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "video",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props2} /></Provider>);
+        // expect(figureLabelDropdownVal).toBeDefined();
+    })
+
+    it('For getting defaultElementLabel when figuretype is not mentioned case ', () => {
+        let props2 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100', "overridelabelvalue": 'updatedAudio'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props2} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    
+    it('For getting defaultElementLabel when figuretype is not mentioned case ', () => {
+        let props2 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100', "overridelabelvalue": 'updatedAudio'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props2} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    
+    it('For Video type when displayedLabel field is absent ', () => {
+        let props2 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "video",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "numberedandlabel": true,
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props2} /></Provider>);
+        // expect(figureLabelDropdownVal).toBeDefined();
+    })
+
+
+    it('For Interactive type ', () => {
+    
+        let props3 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "interactive",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+    
+        let figureHeaderWrapper3 = mount(<Provider store={store}><FigureHeader {...props3} /></Provider>);
+        // expect(figureLabelDropdownVal).toBeDefined();
+    
+    })
+
+    
+    it('For tableasmarkup type ', () => {
+        let props4 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "tableasmarkup",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper4 = mount(<Provider store={store}><FigureHeader {...props4} /></Provider>);
+        // expect(figureLabelDropdownVal).toBeDefined();
+    })
+
+    it('For authoredtext type ', () => {
+        let props5 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "authoredtext",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper5 = mount(<Provider store={store}><FigureHeader {...props5} /></Provider>);
+        // expect(figureLabelDropdownVal).toBeDefined();
+    })
+
+    it('For codelisting type ', () => {
+        let props6 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "codelisting",
+                "subtype": "imageTextWidth",
+                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                "titlecontentintitlefield": true,
+                "alignment": "text-width",
+                "title": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": "Fugure with resume numbering"
+                },
+                "captions": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "credits": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "figuredata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    "imageid": "",
+                    "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                    "height": "422",
+                    "width": "680",
+                    "podwidth": ""
+                },
+                "html": {
+                    "title": "<p>Fugure with resume numbering</p>",
+                    "text": "",
+                    "postertext": "",
+                    "captions": "<p></p>",
+                    "credits": "<p></p>",
+                    "footnotes": {},
+                    "assetsPopover": {},
+                    "glossaryentries": {},
+                    "indexEntries": {}
+                },
+                "versionUrn": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "contentUrn": "urn:pearson:entity:9fbb85f1-3992-4252-b50f-35e5674bb174",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
+
+        let figureHeaderWrapper6 = mount(<Provider store={store}><FigureHeader {...props6} /></Provider>);
+        // expect(figureLabelDropdownVal).toBeDefined();
+    })
+
+
+    
 })
 
 
