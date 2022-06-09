@@ -26,7 +26,7 @@ import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } f
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
-import { ShowLoader, CanvasActiveElement, AddOrViewComment } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
@@ -77,7 +77,7 @@ import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_he
 import { getSlateLevelData, updateChapterPopupData } from '../FigureHeader/AutoNumberActions';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumber_ElementSubTypeToCeateKeysMapper, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes';
-import { checkHTMLdataInsideString } from '../../constants/utility'; 
+import { checkHTMLdataInsideString, getCookieByName } from '../../constants/utility'; 
 import { prepareBqHtml } from '../../js/utils';
 import { hideToc } from '../../js/toggleLoader';
 const {
@@ -1393,11 +1393,17 @@ class ElementContainer extends Component {
         e.stopPropagation();
         this.props.showBlocker(true);
         showTocBlocker();
-        this.setState({
-            popup,
-            showDeleteElemPopup: true,
-            sectionBreak: sectionBreak ? sectionBreak : null
-        });
+        const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+        console.log('disableDeleteWarnings',disableDeleteWarnings);
+        if(disableDeleteWarnings) {
+            console.log("Delete element directly without showing popup");
+        } else {
+            this.setState({
+                popup,
+                showDeleteElemPopup: true,
+                sectionBreak: sectionBreak ? sectionBreak : null
+            });
+        }
     }
 
     /**
@@ -1458,6 +1464,7 @@ class ElementContainer extends Component {
         }
         this.handleCommentPopup(false, e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } });
         // api needs to run from here
         if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {// || element.type === elementTypeConstant.SHOW_HIDE
             this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
