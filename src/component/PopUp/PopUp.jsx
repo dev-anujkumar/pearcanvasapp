@@ -126,26 +126,25 @@ class PopUp extends React.Component {
                     <span className="save-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>OK</span>
                 </div>
             )
-        } else
-            if(props.alfrescoExpansionPopup){
-                return null;
-            }
-            if (props.showDeleteElemPopup) {
-                if (props.isOwnerSlate) {
-                    return (
-                        <div className={`dialog-buttons ${props.assessmentClass}`}>
-                            <span className="lo-save-button" onClick={props.deleteElement}>{props.proceedButton}</span>
-                            <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
-                        </div>
-                    )
-                }
+        } else if (props.alfrescoExpansionPopup) {
+            return null;
+        }
+        if (props.showDeleteElemPopup) {
+            if (props.isOwnerSlate) {
                 return (
                     <div className={`dialog-buttons ${props.assessmentClass}`}>
-                        <span className="save-button" onClick={props.deleteElement}>{props.yesButton}</span>
+                        <span className="lo-save-button" onClick={props.deleteElement}>{props.proceedButton}</span>
                         <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                     </div>
                 )
             }
+            return (
+                <div className={`dialog-buttons ${props.assessmentClass}`}>
+                    <span className="save-button" onClick={props.deleteElement}>{props.yesButton}</span>
+                    <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
         if (props.isSplitSlatePopup || props.sytaxHighlight) {
             return (
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
