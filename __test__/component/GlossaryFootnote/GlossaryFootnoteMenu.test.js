@@ -52,8 +52,8 @@ let props2 = {
         "type": "image"
     },
     markedIndexGlossaryData : {
-        markedIndexEntryURN:"",
-        isDiffrence: true
+        markedIndexEntryURN:"sdfsdf",
+        isDifference : true
     }
 };
 jest.mock('../../../src/component/AudioTinyMceGlossary', () => {
@@ -93,5 +93,16 @@ describe('Testing Save content function',() => {
     const instance = wrapper.find('GlossaryFootnoteMenu').instance();
     it('renders saveContent function correctly', () => {
         instance.saveContent()
+     });
+     it('renders saveContent function correctly', () => {
+        instance.props.markedIndexGlossaryData.markedIndexEntryURN = ''
+        instance.saveContent()
+     });
+     it('renders saveContent function correctly', () => {
+        props2.audioGlossaryData = {}
+        let wrapper2 = mount(<Provider store={store2}><GlossaryFootnoteMenu {...props2} /></Provider>)
+        const instance2 = wrapper2.find('GlossaryFootnoteMenu').instance();
+        instance2.props.markedIndexGlossaryData.markedIndexEntryURN = 'asd'
+        instance2.saveContent()
      });
 })
