@@ -32,10 +32,19 @@ jest.mock('../../../src/js/toggleLoader', () => ({
 }))
 jest.mock('../../../src/constants/utility.js', () => {
     return { sendDataToIframe: jest.fn(),
-     hasReviewerRole: ()=>{
-         return false
-     },
-     guid: jest.fn()}
+    getLabelNumberTitleHTML: () => {
+        return jest.fn()
+    },
+    hasReviewerRole: () => {
+        return false
+    },
+    sendDataToIframe: () => {
+        return jest.fn()
+    },
+    createLabelNumberTitleModel: () => {
+        return jest.fn()
+    },
+    guid: jest.fn()}
  })
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -55,7 +64,10 @@ const store = mockStore({
         editor: true,
         Permission: false
     },
-    autoNumberReducer: mockAutoNumberReducerEmpty
+    autoNumberReducer: mockAutoNumberReducerEmpty,
+    toolbarReducer: {
+        spellCheckToggle: true
+    }
 
 });
 
@@ -66,7 +78,7 @@ describe('Testing Opener component with props', () => {
             userId: 'c5Test01'
         },
         element : openerElementData,
-        onClick : ()=>{},
+        handleFocus : ()=>{},
         permissions: [],
         updateElement: ()=>{},
         accessDenied: jest.fn(),
@@ -146,7 +158,6 @@ describe('Testing Opener component with props', () => {
         const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
         let openerElementInstance = openerComponent.find('OpenerElement').instance()
         let event={ target: { value: '1234567890!!!' } }
-        openerComponent.find('input.element-dropdown-title.opener-title').simulate('change', event);
         expect(openerElementInstance.handleOpenerTitleChange(event))
         expect(openerElementInstance.state.title).toBe('1234567890!!!')
         
@@ -543,6 +554,10 @@ describe('Testing Opener component with props', () => {
     it("Test-handleToolbarOpener else case ", () => {
         const props = {
             element : openerElementData,
+            slateLockInfo: {
+                isLocked: true,
+                userId: 'c5Test01'
+            },
         }
         const event = {
             stopPropagation() { },
@@ -583,7 +598,11 @@ describe('Testing Opener component with props', () => {
                 element: openerElementData,
                 actions: {
                     updateFunction: jest.fn(),
-                }
+                },
+                slateLockInfo: {
+                    isLocked: true,
+                    userId: 'c5Test01'
+                },
             }
             const event = {
                 stopPropagation() { },
@@ -757,7 +776,11 @@ describe('Testing Opener component with props', () => {
         })
         describe('testing label, number, title, imageId field for undefined values', () => {
             const props = {
-                element : openerElementData
+                element : openerElementData,
+                slateLockInfo: {
+                    isLocked: true,
+                    userId: 'c5Test01'
+                },
             }
             getOpenerContent.mockImplementation(() => undefined)
             getOpenerImageSource.mockImplementation(() => undefined)
@@ -777,7 +800,11 @@ describe('Testing Opener component with props', () => {
         })
         describe('componentDidUpdate', () => {
             const props = {
-                element : openerElementData
+                element : openerElementData,
+                slateLockInfo: {
+                    isLocked: true,
+                    userId: 'c5Test01'
+                },
             }
             const mDataHeaderPos = { top: 100 };
             const mHeaderPos = { height: 50 };
