@@ -111,7 +111,8 @@ class ElementContainer extends Component {
             figureUrl: "",
             assetsPopupStatus: false,
             isActive: false,
-            showBlockCodeElemPopup: false
+            showBlockCodeElemPopup: false,
+            warningPopupCheckbox: false
         };
 
 
@@ -1394,9 +1395,9 @@ class ElementContainer extends Component {
         this.props.showBlocker(true);
         showTocBlocker();
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
-        console.log('disableDeleteWarnings',disableDeleteWarnings);
+        // if disableDeleteWarnings present in cookie then call delete element directly without showing popup
         if(disableDeleteWarnings) {
-            console.log("Delete element directly without showing popup");
+            this.deleteElement(e);
         } else {
             this.setState({
                 popup,
@@ -1464,7 +1465,7 @@ class ElementContainer extends Component {
         }
         this.handleCommentPopup(false, e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } });
+        if(this.state.warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } }); 
         // api needs to run from here
         if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {// || element.type === elementTypeConstant.SHOW_HIDE
             this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
@@ -1473,7 +1474,8 @@ class ElementContainer extends Component {
             this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
         }
         this.setState({
-            sectionBreak: null
+            sectionBreak: null,
+            warningPopupCheckbox: false
         })
     }
 
@@ -1613,6 +1615,12 @@ class ElementContainer extends Component {
             assetsPopupStatus: status,
             position: position
         })
+    }
+    
+    handleWarningPopupCheckbox = (event) => {
+        this.setState({
+            warningPopupCheckbox: event?.target?.checked
+        });
     }
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element
@@ -2240,6 +2248,8 @@ class ElementContainer extends Component {
                         projectUsers={this.props.projectUsers}
                         comment={this.state.comment}
                         showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
+                        handleCheckboxPopup ={this.handleWarningPopupCheckbox}
+                        warningPopupCheckbox={this.state.warningPopupCheckbox}
                     />}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
@@ -2457,7 +2467,8 @@ class ElementContainer extends Component {
             showAlfrescoExpansionPopup: false,
             showBlockCodeElemPopup: false,
             showAlfrescoExpansionPopup: false,
-            comment: ""
+            comment: "",
+            warningPopupCheckbox: false
         });
         if (this.props.isBlockerActive) {
             this.props.showBlocker(false)
