@@ -396,7 +396,8 @@ class OpenerElement extends Component {
         }
 
         titleHTML = titleHTML.replace(/class="paragraphNumeroUno"/g, "").replace("<p >", '').replace(/<br>/g, '').replace("</p>", '')
-        let labelNumberTitleHTML = createLabelNumberTitleModel(label, number, titleHTML);          
+        let labelNumberTitleHTML = createLabelNumberTitleModel(label, number, titleHTML);  
+        labelNumberTitleHTML = labelNumberTitleHTML.replace(/&nbsp;/g, ' ')
         if(element.html.title === labelNumberTitleHTML){
             flag = false
         }
