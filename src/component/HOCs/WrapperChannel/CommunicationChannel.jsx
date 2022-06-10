@@ -410,9 +410,9 @@ function CommunicationChannel(WrappedComponent) {
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
                 'myCloudProxySession': config.myCloudProxySession
             };
-            let externalLFUrn = '';
+            let externalLFUrn = [];
             if (projectLearningFrameworks?.externalLF?.length) {
-                externalLFUrn = projectLearningFrameworks.externalLF[0].urn;
+              projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
             }
             let assessmentuRN = "";
             let assessmentType = "";
