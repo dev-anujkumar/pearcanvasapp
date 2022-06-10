@@ -154,14 +154,6 @@ describe('Testing Opener component with props', () => {
             expect(openerElementInstance.numberValidatorHandler(event)).toBe(true)
         })
     })
-    it('Changing input title', () => {
-        const openerComponent = mount( <Provider store={store}><OpenerElement {...props} /></Provider> )
-        let openerElementInstance = openerComponent.find('OpenerElement').instance()
-        let event={ target: { value: '1234567890!!!' } }
-        expect(openerElementInstance.handleOpenerTitleChange(event))
-        expect(openerElementInstance.state.title).toBe('1234567890!!!')
-        
-    })
     describe('Test-HandleC2MediaClick function',()=>{
         const props = {
             slateLockInfo: {

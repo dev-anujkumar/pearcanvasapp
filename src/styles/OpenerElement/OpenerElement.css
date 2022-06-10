@@ -30,7 +30,11 @@
     min-height: 50px !important;
 }
 .opener-title > p.paragraphNumeroUno{
-    margin-top: 0px !important;
+    margin: 0px 4px 0px -5px !important;
+    font-family: sans-serif;
+    font-size: 15px;
+    overflow: hidden;
+    overflow-wrap: normal;
 }
 .opener-element-container .pearson-component.opener-image.figureData{
     cursor: copy;
