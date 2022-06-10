@@ -31,7 +31,7 @@
 }
 .opener-title > p.paragraphNumeroUno{
     margin: 0px 4px 0px -5px !important;
-    font-family: sans-serif;
+    font-family: sans-serif !important;
     font-size: 15px;
     overflow: hidden;
     overflow-wrap: normal;
