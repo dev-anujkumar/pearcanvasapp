@@ -290,3 +290,56 @@
     font-family: 'Open Sans', sans-serif;
     transition: opacity 1s;
 }
+.tooltip .tooltip-comment,
+.tooltip .tooltip-view-comment,
+.tooltip .tooltip-flag{
+    top: 135%;
+    margin-left: -55px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 2px;
+    padding: 4px 8px 3px;
+    height: 23px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    position: absolute;
+    transition: opacity 1s;
+}
+.tooltip .tooltip-comment{
+    width: 88px;
+    left: 60%;
+}
+.tooltip .tooltip-view-comment{
+    width: 90px;
+    left: 50%;
+}
+    .tooltip .tooltip-flag{
+     width: 105px;
+     left: 10%;
+}
+
+.add-comment-btn .tooltip .tooltip-comment,
+.flag-te-btn .tooltip .tooltip-flag,
+.view-comment-btn .tooltip .tooltip-view-comment {
+    margin-left: -65px !important;
+}
+.tooltip .tooltip-comment::after,
+.tooltip .tooltip-flag::after,
+.tooltip .tooltip-view-comment::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;
+    left: 76%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}
+
+.add-comment-btn .tooltip .tooltip-comment::after,
+.flag-te-btn .tooltip .tooltip-flag::after,
+.view-comment-btn .tooltip .tooltip-view-comment::after {
+left: 71% !important;
+}
