@@ -56,7 +56,7 @@ let cypressConfig = {
     deCharacterToolbar: ['insertMedia', 'formatSelector', 'crossLinkingIcon', 'bold', 'assetpopover', 'footnote', 'glossary', 'decreaseindent','alignment','calloutIcon', 'IndexEntry'],
     playScriptToolbar:['insertMedia','formatSelector','decreaseindent','increaseindent','crossLinkingIcon', 'footnote', 'assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
     blockListToolbar:['formatSelector','alignment', 'IndexEntry','glossary','footnote','crossLinkingIcon'],
-    openerElementToolbar: ['undo', 'redo', 'strikethrough', 'insertMedia','formatSelector','casechange', 'alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote', 'assetpopover', 'mathml','chemml', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent', 'slatetag', 'calloutIcon',],
+    openerElementToolbar: ['undo', 'redo', 'insertMedia','formatSelector','casechange', 'alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote', 'assetpopover', 'mathml','chemml', 'inlinecode', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent', 'slatetag', 'calloutIcon',],
     APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
     editorRefID:"",
     releaseCallCount: 0,

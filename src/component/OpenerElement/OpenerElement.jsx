@@ -348,33 +348,12 @@ class OpenerElement extends Component {
             numberDOM = document.getElementById(`cypress-${this.props.index}-1`),
             titleDOM = document.getElementById(`cypress-${this.props.index}-2`)
 
-        let labelText = labelDOM ? labelDOM.innerText : "",
-            numberText = numberDOM ? numberDOM.innerText : "",
-            titleText = titleDOM ? titleDOM.innerText : ""
-
         let labelHTML = labelDOM ? labelDOM.innerHTML : "",
             numberHTML = numberDOM ? numberDOM.innerHTML : "",
             titleHTML = titleDOM ? titleDOM.innerHTML : ""
 
-        /**
-         * [BG-411]|7 - validate before making blur call
-         */
-        const classList = event?.currentTarget && event?.currentTarget?.classList || titleDOM && titleDOM?.classList || [];
         let flag = true;
-        if (classList.length > 0 
-            && (classList.contains("opener-title") || classList.contains("opener-number"))
-            && (this.state.label === labelText)
-            && (this.state.number === numberText)
-            && (titleText === titleDOM?.textContent)) {
-            flag = false;
-        }
-        else if ((classList.length === 0) 
-        && this.state.label === labelText
-        && this.state.number === numberText
-        && titleText === titleDOM?.textContent
-        && this.state.imgSrc!==event?.imgSrc) {
-            flag = false
-        }
+
         let element = this.props.element;
         let { label, number, imgSrc, imageId } = this.state;
         label = event?.target && event?.target?.innerText ? ((event?.target?.innerText === 'No Label') ? "" : event?.target?.innerText) : (label === 'No Label' ? '' : label);
@@ -398,7 +377,7 @@ class OpenerElement extends Component {
         titleHTML = titleHTML.replace(/class="paragraphNumeroUno"/g, "").replace("<p >", '').replace(/<br>/g, '').replace("</p>", '')
         let labelNumberTitleHTML = createLabelNumberTitleModel(label, number, titleHTML);  
         labelNumberTitleHTML = labelNumberTitleHTML.replace(/&nbsp;/g, ' ')
-        if(element.html.title === labelNumberTitleHTML){
+        if(element.html.title === labelNumberTitleHTML  && this.state.imgSrc!==event?.imgSrc){
             flag = false
         }
 
