@@ -358,7 +358,7 @@ class OpenerElement extends Component {
 
         let element = this.props.element;
         let { label, number, imgSrc, imageId } = this.state;
-        label = event?.target && event?.target?.innerText ? ((event?.target?.innerText === 'No Label') ? "" : event?.target?.innerText) : (label === 'No Label' ? '' : label);
+        label = event?.target && event.target.innerText ? ((event.target.innerText === 'No Label') ? "" : event.target.innerText) : (label === 'No Label' ? '' : label);
         imgSrc = event?.imgSrc || imgSrc;
         imageId = event?.imageId || imageId;
 
@@ -379,7 +379,7 @@ class OpenerElement extends Component {
         titleHTML = titleHTML.replace(/class="paragraphNumeroUno"/g, "").replace("<p >", '').replace(/<br>/g, '').replace("</p>", '')
         let labelNumberTitleHTML = createLabelNumberTitleModel(label, number, titleHTML);  
         labelNumberTitleHTML = labelNumberTitleHTML.replace(/&nbsp;/g, ' ')
-        if(element.html.title === labelNumberTitleHTML  && this.state.imgSrc!==event?.imgSrc){
+        if(element?.html.title === labelNumberTitleHTML  && this.state.imgSrc!==event?.imgSrc){
             flag = false
         }
 
