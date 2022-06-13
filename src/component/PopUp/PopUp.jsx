@@ -126,7 +126,7 @@ class PopUp extends React.Component {
         this.props.openInNewWindow(id)
     }
 
-    /**Functions for PopUp Buttons Focus, Blur, Click, Keydown*/
+    /**Function to set initial state of focused button based on props*/
     setFocus = (props) => {
         if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup) {
             return PRIMARY_BUTTON;
@@ -135,18 +135,22 @@ class PopUp extends React.Component {
         }
     }
 
+    /**Function to focus element by adding class to elements class list */
     focusElement = (value) => {
         document.querySelector(`[option=${value}]`)?.classList?.add(value);
     }
 
+    /**Function to remove focus of element by removing class from elements class list */
     blurElement = (value) => {
         document.querySelector(`[option=${value}]`)?.classList?.remove(value);
     }
 
+    /**Function to perform click event on element which is currently focused */
     clickElement = (value) => {
         document.querySelector(`[option=${value}]`)?.click();
     }
 
+    /**Function to handle keyboard event of Enter, Left & Right arrow keys */
     handleKeyDown = (e) => {
         if(e.keyCode === 13) {
             this.clickElement(this.state.focusedButton);
