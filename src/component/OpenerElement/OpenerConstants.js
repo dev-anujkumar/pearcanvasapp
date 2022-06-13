@@ -1,5 +1,5 @@
-export const labelOptions = ["No Label", "Chapter", "Ch", "Lesson", "Part", "Unit", "Workshop"]
-
+export const labelOptions = ["No Label" ,"Chapter", "Ch", "Lesson", "Part", "Unit", "Workshop"]
+export const moduleLabelOptions = ["No Label", "Module" ,"Lesson Part" ,"Chapter", "Ch", "Lesson", "Part", "Unit", "Workshop"]
 /**
  * Extracts and returns title, number and label from titleText to populate opener element.
  * @param {*} textSemantics Info of position of title, number and label

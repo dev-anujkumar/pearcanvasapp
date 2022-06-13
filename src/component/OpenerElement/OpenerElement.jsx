@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { labelOptions, getOpenerContent, getOpenerImageSource } from './OpenerConstants'
+import { labelOptions, getOpenerContent, getOpenerImageSource, moduleLabelOptions } from './OpenerConstants'
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 
 import '../../styles/OpenerElement/OpenerElement.css'
@@ -235,7 +235,8 @@ class OpenerElement extends Component {
      */
     renderLabelDropdown = () => {
         const { showLabelDropdown } = this.state
-        const openerLabelOptions = labelOptions.map((value, index) => {
+        const openerElementLabelOptions = this.props.setSlateParent === "module" ? moduleLabelOptions : labelOptions
+        const openerLabelOptions = openerElementLabelOptions.map((value, index) => {
             return <li key={index} data-value={value} onClick={this.handleOpenerLabelChange}>{value}</li>
         })
         if(showLabelDropdown){
@@ -522,7 +523,8 @@ const mapStateToProps = (state) => {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         alfrescoElementId : state.alfrescoReducer.elementId,
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
-        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        setSlateParent :  state.appStore.setSlateParent
     }
 }
 
