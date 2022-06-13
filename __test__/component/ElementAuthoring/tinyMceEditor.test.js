@@ -2026,6 +2026,21 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             spysetInstanceToolbar.mockClear()
         })
     });
+    it('Test-15.4-Method--13--setInstanceToolbar  --OPENER Toolbar', () => {
+        component.setProps({
+            ...props,
+            permissions: ["login", "logout"],
+            tagName: "opener",
+            elementId: "work:urn",
+            element: { type: "openerelement" },
+            placeholder: ""
+        })
+        component.update();
+        const spysetInstanceToolbar = jest.spyOn(instance, 'setInstanceToolbar')
+        instance.setInstanceToolbar();
+        expect(spysetInstanceToolbar).toHaveBeenCalled();
+        spysetInstanceToolbar.mockClear()
+    })
     it('Test-16-Method--14--setToolbarByElementType', () => {
         component.setProps({
             ...props,

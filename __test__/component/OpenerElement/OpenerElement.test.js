@@ -42,7 +42,7 @@ jest.mock('../../../src/constants/utility.js', () => {
         return jest.fn()
     },
     createLabelNumberTitleModel: () => {
-        return jest.fn()
+        return ""
     },
     guid: jest.fn()}
  })
@@ -67,7 +67,7 @@ const store = mockStore({
     autoNumberReducer: mockAutoNumberReducerEmpty,
     toolbarReducer: {
         spellCheckToggle: true
-    }
+    },
 
 });
 
@@ -457,7 +457,6 @@ describe('Testing Opener component with props', () => {
                 classList: { contains: jest.fn(()=>{return true}), length: 2, value: "element-dropdown-title opener-number" }
             }
         }
-        
         const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
         const OpenerInstance = openerComponent.find('OpenerElement').instance();
         OpenerInstance.setState({
@@ -498,7 +497,6 @@ describe('Testing Opener component with props', () => {
                 innerText: 'No Label'
             }
         }
-        
         const openerComponent = mount(<Provider store={store}><OpenerElement {...props} /></Provider>)
         const OpenerInstance = openerComponent.find('OpenerElement').instance();
         OpenerInstance.setState({
