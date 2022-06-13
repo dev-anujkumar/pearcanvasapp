@@ -153,7 +153,10 @@
     border: solid 1px #434343;
 }
 
-.tooltip .tooltip-picker {
+.tooltip .tooltip-picker,
+.tooltip .tooltip-comment,
+.tooltip .tooltip-view-comment,
+.tooltip .tooltip-flag {
     width: 90px;
     top: 135%;
     left: 13%;
@@ -169,6 +172,24 @@
     font-family: 'Open Sans', sans-serif;
     position: absolute;
     transition: opacity 1s;
+}
+
+.tooltip .tooltip-comment {
+    width: 88px;
+    left: 60%;
+    top: 115%;
+}
+
+.tooltip .tooltip-view-comment {
+    width: 100px;
+    left: 20%;
+    top: 115%;
+}
+
+.tooltip .tooltip-flag {
+    width: 105px;
+    left: 10%;
+    top: 115%;
 }
 
 .tooltip .tooltip-picker-for-table {
@@ -189,7 +210,10 @@
     transition: opacity 1s;
 }
 
-.expand-te-btn .tooltip .tooltip-picker-for-table {
+.expand-te-btn .tooltip .tooltip-picker-for-table,
+.add-comment-btn .tooltip .tooltip-comment,
+.flag-te-btn .tooltip .tooltip-flag,
+.view-comment-btn .tooltip .tooltip-view-comment {
     margin-left: -65px !important;
 }
 
@@ -204,14 +228,21 @@
     border-color: transparent transparent black transparent;
 }
 
-.expand-te-btn .tooltip .tooltip-picker-for-table::after {
-  left: 71% !important;
+.expand-te-btn .tooltip .tooltip-picker-for-table::after,
+.add-comment-btn .tooltip .tooltip-comment::after,
+.flag-te-btn .tooltip .tooltip-flag::after,
+.view-comment-btn .tooltip .tooltip-view-comment::after {
+    left: 71% !important;
 }
 
-.tooltip .hide{
+.tooltip .hide {
     display: none;
 }
-.tooltip .tooltip-picker::after {
+
+.tooltip .tooltip-picker::after,
+.tooltip .tooltip-comment::after,
+.tooltip .tooltip-flag::after,
+.tooltip .tooltip-view-comment::after {
     content: " ";
     position: absolute;
     bottom: 100%;
@@ -245,6 +276,7 @@
     position: absolute;
     transition: opacity 1s;
 }
+
 .tooltip .tooltip-paste::after,
 .tooltip .tooltip-poc::after {
     content: " ";
@@ -256,6 +288,7 @@
     border-style: solid;
     border-color: transparent transparent black transparent;
 }
+
 .tooltip .tooltip-poc {
     width: 98px;
     top: 110%;
@@ -277,6 +310,7 @@
 .container-aside .tooltip .tooltip-poc {
     margin-left: -65px;
 }
+
 .tooltip .tooltip-enhance {
     width: 158px;
     top: 30px;
@@ -289,57 +323,4 @@
     text-align: center;
     font-family: 'Open Sans', sans-serif;
     transition: opacity 1s;
-}
-.tooltip .tooltip-comment,
-.tooltip .tooltip-view-comment,
-.tooltip .tooltip-flag{
-    top: 135%;
-    margin-left: -55px;
-    font-size: 10px;
-    font-weight: 600;
-    border-radius: 2px;
-    padding: 4px 8px 3px;
-    height: 23px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    font-family: 'Open Sans', sans-serif;
-    position: absolute;
-    transition: opacity 1s;
-}
-.tooltip .tooltip-comment{
-    width: 88px;
-    left: 60%;
-}
-.tooltip .tooltip-view-comment{
-    width: 90px;
-    left: 50%;
-}
-    .tooltip .tooltip-flag{
-     width: 105px;
-     left: 10%;
-}
-
-.add-comment-btn .tooltip .tooltip-comment,
-.flag-te-btn .tooltip .tooltip-flag,
-.view-comment-btn .tooltip .tooltip-view-comment {
-    margin-left: -65px !important;
-}
-.tooltip .tooltip-comment::after,
-.tooltip .tooltip-flag::after,
-.tooltip .tooltip-view-comment::after {
-    content: " ";
-    position: absolute;
-    bottom: 100%;
-    left: 76%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent black transparent;
-}
-
-.add-comment-btn .tooltip .tooltip-comment::after,
-.flag-te-btn .tooltip .tooltip-flag::after,
-.view-comment-btn .tooltip .tooltip-view-comment::after {
-left: 71% !important;
 }
