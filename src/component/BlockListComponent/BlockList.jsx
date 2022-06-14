@@ -29,8 +29,8 @@ const BlockList = (props) => {
             let indexT = item?.type === 'manifestlist' ? `${props?.indexTemp}${parentIndex}-${index}-` : '';
             let indexToPass = `${typeof (props?.index) === 'number' ? props?.index : props?.index?.split('-')[0]}-${props?.indexTemp}${parentIndex}-${index}`;
             let parentManifestListItem = manifestList[parentIndex];
-            let normalIndex = typeof (indexToPass) === 'string' ? (indexToPass).replaceAll('-', '') : indexToPass;
-            let normalIndexLength = normalIndex.length
+            let normalIndex = typeof (props.index) === 'string' ? (props.index).replaceAll('-', '') : props.index;
+            let normalIndexLength = normalIndex.length;
             asideData.parentManifestList = props.element;
             asideData.grandParentManifestList = props.grandParentManifestList;
             let placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 3 ? "Press Shift+Tab to move out" : "Type something...";
