@@ -155,6 +155,10 @@ class PopUp extends React.Component {
         if(e.keyCode === 13) {
             this.clickElement(this.state.focusedButton);
         }
+        if(e.keyCode === 27) {
+            const element = document.querySelector(`[option=${SECONDARY_BUTTON}]`) !== null ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : document.querySelector(`[option=${PRIMARY_BUTTON}]`);
+            element?.click();
+        }
         if (e.keyCode === 37 && this.state.focusedButton === PRIMARY_BUTTON) {
             this.setState({
                 focusedButton: SECONDARY_BUTTON
