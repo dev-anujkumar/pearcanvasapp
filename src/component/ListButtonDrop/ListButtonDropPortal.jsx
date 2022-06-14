@@ -187,9 +187,11 @@ class ListButtonDropPortal extends Component {
             }
             else if (blockListData && Object.keys(blockListData).length){
                 let metaDataBlockList;
-                if(this?.props?.asideData.parent && this?.props?.asideData.parent.type==="showhide"){
-                    let indexes = activeElement.index.split("-");
+                let indexes = activeElement.index.split("-");
+                if(this?.props?.asideData.parent && this?.props?.asideData.parent.type === "showhide"){
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[this?.props?.asideData?.parent?.showHideType][indexes[2]]);
+                }else if(this?.props?.asideData.parent && this?.props?.asideData.parent.type === "element-aside"){
+                    metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymater[indexes[2]]);
                 }else{
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[activeElement.index.split("-")[0]]);
                 }
@@ -243,6 +245,7 @@ class ListButtonDropPortal extends Component {
      */
     render() {
         const { children } = this.props;
+        console.log("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",this.props.slateData, this.props.activeElement,this.props.asideData)
         this.getListDropPopUpState(this.props.slateData, this.props.activeElement)
         return ReactDOM.createPortal(
             children(this.selectedOption, this.startValue, this.inputRef),

@@ -1513,7 +1513,8 @@ export class TinyMceEditor extends Component {
     }
 
     createNestedBlockList(){
-        if (!isNestingLimitReached(this.props.index,this.props.asideData)) {
+        const {index,asideData, parentElement} = this.props
+        if (!isNestingLimitReached(index, asideData, parentElement)) {
            let blockListData = checkBlockListElement(this.props, "TAB");
             if (blockListData && Object.keys(blockListData).length) {
                 const { parentData, indexToinsert } = blockListData;
