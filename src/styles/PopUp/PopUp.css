@@ -809,7 +809,7 @@ del{
   font-family: 'Dancing Script', cursive !important;
   font-size: 1.5em !important;
 }
-.cancel-button.tcm.disable{
+.cancel-button.tcm.disable, .lo-save-button.tcm.disable{
   pointer-events: none !important;
   color: gray !important;
 }

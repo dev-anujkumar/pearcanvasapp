@@ -137,6 +137,7 @@ class OpenerElement extends Component {
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     const citeNodeRef = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
                     let messageObj = {
+                        appName:'cypress',
                         citeName: citeName,
                         citeNodeRef: citeNodeRef,
                         elementId: this.props.elementId
@@ -186,6 +187,7 @@ class OpenerElement extends Component {
         if (globalAlfrescoPath && globalAlfrescoPath.nodeRef) {
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
                 let messageObj = {
+                    appName:'cypress',
                     citeName: globalAlfrescoPath?.repoName,
                     citeNodeRef: globalAlfrescoPath?.nodeRef,
                     elementId: this.props.elementId
