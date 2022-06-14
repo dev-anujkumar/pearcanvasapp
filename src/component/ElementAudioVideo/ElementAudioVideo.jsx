@@ -399,7 +399,7 @@ class ElementAudioVideo extends Component {
                     const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
                     const alfrescoSite = locationSiteDataTitle ? locationSiteDataTitle : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
-                    let messageObj = { citeName: citeName, 
+                    let messageObj = {appName:'cypress', citeName: citeName, 
                         citeNodeRef: nodeRefs, 
                         elementId: this.props.elementId,
                         currentAsset }

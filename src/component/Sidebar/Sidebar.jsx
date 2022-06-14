@@ -981,6 +981,7 @@ class Sidebar extends Component {
                         dialogText={this.props.tcmSnapshotData.contentDifference}
                         elementData={this.props.elementData}
                         tcmStatus = {this.props.tcmStatus}
+                        permissions = {this.props.permissions}
                     />}
                 {this.state.updateAssessmentTypePopup && this.props?.activeElement?.primaryOption === 'primary-single-assessment'  && this.showUpdateAssessmentTypePopup()}
             </>
