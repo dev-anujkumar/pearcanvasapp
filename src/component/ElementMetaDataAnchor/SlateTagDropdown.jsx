@@ -266,7 +266,7 @@ class SlateTagDropdown extends React.Component {
 
   openAssessmentExternalPopup = (popupType) => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs, defaultLF
     } = this.prepareExtFrameworkData();
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
@@ -313,7 +313,8 @@ class SlateTagDropdown extends React.Component {
             'chapterContainerUrn': '',
             'currentSlateLF': currentSlateLF,
             'assessmentUrn': assessmentuRN,
-            'previewData': previewData
+            'previewData': previewData,
+            'defaultLF': defaultLF
         }
       })
     }
