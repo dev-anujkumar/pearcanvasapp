@@ -549,7 +549,11 @@ export class TinyMceEditor extends Component {
                     clickedY = coOrds?.top + coOrds?.height / 2;
                     let elementId = tinymce.activeEditor ? tinymce.activeEditor.id : '';
                     let blockqt = document.querySelector('#' + elementId + ' blockquote p.paragraphNummerEins');
+                    let opener = document.querySelector('#' + elementId + ' opener p.paragraphNummerEins');
                     if (!blockqt || blockqt.innerText.trim()) {
+                        editor.selection.setContent('<span id="specialChar"></span>');
+                    }
+                    if (!opener || opener.innerText.trim()) {
                         editor.selection.setContent('<span id="specialChar"></span>');
                     }
                     setTimeout(() => {
