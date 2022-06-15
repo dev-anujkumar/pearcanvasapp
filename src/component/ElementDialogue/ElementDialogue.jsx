@@ -7,7 +7,7 @@ import "../../styles/ElementDialogue/DialogueStyles.css"
 import { connect } from 'react-redux';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
-import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex } from '../../constants/utility.js';
+import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex, getCookieByName } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
 import PopUp from '../PopUp';
@@ -170,6 +170,25 @@ class ElementDialogue extends React.PureComponent {
         }
     }
 
+    // function to be called on click of dialogue inner elements delete button 
+    handleDialogueInnerElementsDelete = (e, index, element) => {
+        e.stopPropagation();
+        const stateValues = {
+            popup: false,
+            psElementIndex: index,
+            oldPSData: element
+        }
+        this.showCanvasBlocker();
+        const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+        if (disableDeleteWarnings) {
+            this.setState({...stateValues}, () => {
+                this.deleteElement();
+            });     
+        } else {
+            this.setState({ popup: true, ...stateValues });
+        }
+    }
+
     renderButtons = (index, buttonClass, labelText, element) => {
         if ((this.props.elemBorderToggle !== undefined && this.props.elemBorderToggle) || this.props.borderToggle == 'active') {
             return (
@@ -183,13 +202,7 @@ class ElementDialogue extends React.PureComponent {
                         this.props.permissions && this.props.permissions.includes('elements_add_remove') ?
                             (<Button
                                 type="delete-element"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    this.showCanvasBlocker();
-                                    this.setState({ 
-                                        popup: true, psElementIndex: index, oldPSData: element
-                                     });
-                                }}
+                                onClick={(e) => this.handleDialogueInnerElementsDelete(e, index, element)}
                             />)
                             : null
                     }
