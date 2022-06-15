@@ -94,15 +94,53 @@ describe('Testing Save content function',() => {
     it('renders saveContent function correctly', () => {
         instance.saveContent()
      });
-     it('renders saveContent function correctly', () => {
+     it('renders saveContent function correctly : MarkedIndexEntryUrn is not given', () => {
         instance.props.markedIndexGlossaryData.markedIndexEntryURN = ''
         instance.saveContent()
      });
-     it('renders saveContent function correctly', () => {
+     it('renders saveContent function correctly when audioGlossaryData is empty', () => {
         props2.audioGlossaryData = {}
         let wrapper2 = mount(<Provider store={store2}><GlossaryFootnoteMenu {...props2} /></Provider>)
         const instance2 = wrapper2.find('GlossaryFootnoteMenu').instance();
         instance2.props.markedIndexGlossaryData.markedIndexEntryURN = 'asd'
         instance2.saveContent()
      });
+
+     it('renders saveContent function correctly GloassaryData', () => {
+        props2.figureGlossaryData = {}
+        props2.audioGlossaryData = {}
+        let wrapper2 = mount(<Provider store={store2}><GlossaryFootnoteMenu {...props2} /></Provider>)
+        const instance2 = wrapper2.find('GlossaryFootnoteMenu').instance();
+        document.querySelector = (id) => {
+            if(id === '#glossary-editor > div > p') {
+            return {
+                innerHTML: 'sdfsdf ffsd&nbsp; <strong>vfsf</strong>'
+            }
+        } else if(id === '#glossary-editor-attacher > div > p') {
+            return {
+                innerHTML: 'sdfsdf ffsd&nbsp; <strong>vfsf</strong>'
+            }
+        }
+        }
+        instance2.saveContent()
+     });
+     it('renders saveContent function correctly GloassaryData conditional coverage', () => {
+        props2.figureGlossaryData = {}
+        props2.audioGlossaryData = {}
+        let wrapper2 = mount(<Provider store={store2}><GlossaryFootnoteMenu {...props2} /></Provider>)
+        const instance2 = wrapper2.find('GlossaryFootnoteMenu').instance();
+        document.querySelector = (id) => {
+            if(id === '#glossary-editor > div > p') {
+            return {
+                innerHTML: '<p></p>'
+            }
+        } else if(id === '#glossary-editor-attacher > div > p') {
+            return {
+                innerHTML: '<p></p>'
+            }
+        }
+        }
+        instance2.saveContent()
+     });
+
 })
