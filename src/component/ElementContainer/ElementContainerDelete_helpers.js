@@ -146,6 +146,7 @@ export const deleteFromStore = async (params) => {
     const cutCopyParentData = getState().autoNumberReducer?.popupCutCopyParentData;
     const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
     let bodymatter = [];
+    const indexes = asideData?.index?.toString()?.split("-") || [];
     /* To check if the element is cutted from popup slate */
     if ((cutCopyParentData?.isPopupSlate && operationType === 'cut') && popupParentSlateData?.isPopupSlate && (cutCopyParentData?.versionUrn === popupParentSlateData?.versionUrn)) {    // popup slate cut & paste on same slate
         const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
@@ -288,12 +289,17 @@ export const deleteFromStore = async (params) => {
                 }
             } else if (asideData?.parent?.type === 'showhide' && element.id === asideData?.parent?.id && asideData?.type === "manifestlist") {
                 let section = asideData?.parent?.showHideType;
-                const indexes = asideData?.index?.toString()?.split("-") || [];
                 if (section && indexes.length >= 3) {
                     let blElemInSh = element.interactivedata[section][indexes[2]];
                     deleteBlockListElement(elmId, blElemInSh);
                 }
-            } else if (element?.type === "manifestlist") {
+            } else if (element?.type === "element-aside" && element?.elementdata?.bodymatter[indexes[1]].type === "manifestlist"){
+                let blEleminAS = element?.elementdata?.bodymatter[indexes[1]];
+                deleteBlockListElement(elmId, blEleminAS);
+            } else if (element?.type === "element-aside" && element?.elementdata?.bodymatter[indexes[1]]?.contents.bodymatter[indexes[2]]){
+                let blEleminWE = element?.elementdata?.bodymatter[indexes[1]]?.contents.bodymatter[indexes[2]];
+                deleteBlockListElement(elmId, blEleminWE);
+            }else if (element?.type === "manifestlist") {
                 deleteBlockListElement(elmId, element)
             }
         })

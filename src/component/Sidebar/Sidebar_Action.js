@@ -701,7 +701,13 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             if ((dataToUpdate?.asideData?.parent?.type && dataToUpdate.asideData.parent.type === "showhide" && dataToUpdate?.asideData?.parent?.showHideType) || (dataToUpdate?.asideData?.type && dataToUpdate.asideData.type === "showhide" && dataToUpdate?.asideData?.sectionType)) {
                 let showHideSection = dataToUpdate?.asideData?.parent?.showHideType ? dataToUpdate.asideData.parent.showHideType : dataToUpdate.asideData.sectionType;
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].interactivedata[showHideSection][slateLevelBLIndex[2]], dataToSend)
-            } //For BL on Slate Level i.e Slate->BL
+            } // For Nested BL inside AS i.e Slate->AS->BL 
+            else if((dataToUpdate?.slateLevelBLIndex?.length)%2 === 0 && parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].type === "element-aside"){
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].elementdata.bodymatter[slateLevelBLIndex[1]], dataToSend)
+            } // For Nested BL inside AS i.e Slate->WE(body)->BL 
+            else if(parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].type === "element-aside"){
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].elementdata.bodymatter[slateLevelBLIndex[1]].contents.bodymatter[slateLevelBLIndex[2]], dataToSend)
+            }//For BL on Slate Level i.e Slate->BL
             else {
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]], dataToSend)
             }

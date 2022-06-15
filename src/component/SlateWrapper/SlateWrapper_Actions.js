@@ -309,7 +309,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             }else if(parentElementType === 'element-aside'){
                 initialdata =  newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter;
-                 if (indexes.length === 4 ) { // For AS/WE Block list on 1 level nesting
+                 if (indexes.length === 4 ) { // For AS/WE(header) Block list on 1 level nesting
                     initialdata.splice(index, 0, createdElementData)
                 }
                 else if (indexes.length === 6) { // Block list on 2 level nesting
