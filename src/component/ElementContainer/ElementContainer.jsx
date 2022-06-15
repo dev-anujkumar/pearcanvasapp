@@ -2084,6 +2084,8 @@ class ElementContainer extends Component {
                         assetsPopupStatus = {this.state.assetsPopupStatus}
                         closeAssetsPopup = {this.handleAssetsPopupLocation}
                         position={this.state.position}
+                        handleCheckboxPopup ={this.handleWarningPopupCheckbox}
+                        warningPopupCheckbox={this.state.warningPopupCheckbox}
                     />;
                     labelText = 'PS'
                     break;

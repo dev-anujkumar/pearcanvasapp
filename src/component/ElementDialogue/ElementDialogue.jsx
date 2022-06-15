@@ -15,6 +15,7 @@ import { hideBlocker, showTocBlocker } from '../../js/toggleLoader';
 import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx'
+import { DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
@@ -51,6 +52,7 @@ class ElementDialogue extends React.PureComponent {
     }
 
     deleteElement = () => {
+        const { warningPopupCheckbox } = this.props;
         const { psElementIndex, oldPSData } = this.state;
         const dialogueContent = oldPSData.html.dialogueContent;
         dialogueContent.splice(psElementIndex, 1);
@@ -61,12 +63,14 @@ class ElementDialogue extends React.PureComponent {
                 dialogueContent
             }
         }
+        if(warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } });
         this.callUpdateApi(newPsElement);
         this.closePopup();
     }
     closePopup = () => {
         this.setState({ popup: false });
         this.props.showBlocker(false)
+        this.props.handleCheckboxPopup({ event: { target: { checked: false } } })
         hideBlocker();
     }
     /*** @description - This function is to disable all components 
@@ -173,19 +177,21 @@ class ElementDialogue extends React.PureComponent {
     // function to be called on click of dialogue inner elements delete button 
     handleDialogueInnerElementsDelete = (e, index, element) => {
         e.stopPropagation();
-        const stateValues = {
-            popup: false,
-            psElementIndex: index,
-            oldPSData: element
-        }
         this.showCanvasBlocker();
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
         if (disableDeleteWarnings) {
-            this.setState({...stateValues}, () => {
+            this.setState({
+                psElementIndex: index,
+                oldPSData: element
+            }, () => {
                 this.deleteElement();
-            });     
+            });
         } else {
-            this.setState({ popup: true, ...stateValues });
+            this.setState({
+                popup: true,
+                psElementIndex: index,
+                oldPSData: element
+            });
         }
     }
 
@@ -308,6 +314,7 @@ class ElementDialogue extends React.PureComponent {
 
 
     render() {
+        const {handleCheckboxPopup, warningPopupCheckbox} = this.props;
         const copmpProps = {
             permissions: this.props.permissions,
             element: this.props.element,
@@ -387,6 +394,8 @@ class ElementDialogue extends React.PureComponent {
                         showDeleteElemPopup={true}
                         deleteElement={this.deleteElement}
                         togglePopup={this.closePopup}
+                        handleCheckboxPopup ={handleCheckboxPopup}
+                        warningPopupCheckbox={warningPopupCheckbox}
                 />}
                 </div>
                 : ''
