@@ -262,10 +262,11 @@ class PopUp extends React.Component {
             )
         }
         if (props.isTCMCanvasPopup) {
+            console.log('TCM EDITOR PERMISSION', this.props.permissions?.includes('trackchanges_approve_reject'), "TCM STATUS", props.tcmStatus)
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
-                    <span option={PRIMARY_BUTTON} className={`cancel-button tcm ${props.tcmStatus === false && "disable"}`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
-                    <span option={SECONDARY_BUTTON} className="lo-save-button tcm" onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button tcm ${(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) && "disable"}`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
+                    <span option={PRIMARY_BUTTON} className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
                 </div>
             )
         }

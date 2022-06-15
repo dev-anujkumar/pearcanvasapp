@@ -135,7 +135,7 @@ function AlfrescoPopup(props) {
         let locationSiteDataNodeRef = alfrescoLocationData?.nodeRef ? alfrescoLocationData.nodeRef : alfrescoLocationData?.guid
         locationSiteDataNodeRef = locationSiteDataNodeRef ? locationSiteDataNodeRef : alfrescoData.guid;
         const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
-        let messageObj = { citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef, elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,  calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote}
+        let messageObj = {appName:'cypress', citeName: locationSiteDataTitle ? locationSiteDataTitle : alfrescoData.title, citeNodeRef: locationSiteDataNodeRef, elementId: props.alfrescoElementId, editor, calledFromGlossaryFootnote: props.calledFromGlossaryFootnote,  calledFromImageGlossaryFootnote: props.calledFromImageGlossaryFootnote}
         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
         const messageDataToSave = {
             id: props.alfrescoElementId,

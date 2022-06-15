@@ -718,7 +718,7 @@ class Interactive extends React.Component {
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
-                    let messageObj = { citeName: citeName, 
+                    let messageObj = { appName:'cypress',citeName: citeName, 
                         citeNodeRef: citeNodeRef, 
                         elementId: this.props.elementId,
                         currentAsset
