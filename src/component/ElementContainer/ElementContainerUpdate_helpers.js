@@ -136,7 +136,7 @@ export const updateElementInStore = (paramsObj) => {
 
     /* update the store on update of showhide elements inside container elements */
     if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
-        const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList);
+        const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList, updatedData.type );
         updateShowhideElements(sh_Object, updatedData, iList, { isAutoNumberingEnabled, autoNumberSettingsOption });
     } else
     if (parentElement && parentElement.type === "citations") {

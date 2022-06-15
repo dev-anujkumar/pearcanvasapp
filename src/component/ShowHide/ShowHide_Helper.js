@@ -117,7 +117,7 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList, element
 				sh_Element =  _slateBodyMatter[iList[0]];
                 break;
 			case 4: /* AS/WE-Head:SH:Element */
-				sh_Element = elementType === "element-blockfeature" ?  _slateBodyMatter[iList[0]] : _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
+				sh_Element = elementType === ElementConstants.BLOCKFEATURE ?  _slateBodyMatter[iList[0]] : _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
                 break;
 			case 5:
 				sh_Element =  _slateBodyMatter[iList[0]].type === ElementConstants.MULTI_COLUMN ? 
@@ -295,9 +295,9 @@ export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeE
                 shAtIndex = indexLength - 1;
         }
         /* Get the SH element to update footnote and glossery of inner element */
-        let sh_Object = getShowHideElement(bodymatter, shAtIndex, indexes);
+        let sh_Object = getShowHideElement(bodymatter, shAtIndex, indexes,activeElemType);
         if(sh_Object?.type === ElementConstants.SHOW_HIDE && sectionType && shAtIndex) {
-            const elementInSH = sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]];
+            const elementInSH = activeElemType === ElementConstants.BLOCKFEATURE ? sh_Object.interactivedata[sectionType][indexes[shAtIndex - 2]] : sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]];
             /* Folloing condition is to get element where Footnote and Glossery added */
             if(typeof (resData) === "string" && resData === "GetElementWithFnGlry_SH") {
                 /** @function onGlossaryFnUpdateSuccessInShowHide - Being reused to get element when - */
@@ -305,10 +305,18 @@ export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeE
                 return elementInSH;
             }
             /* Update the slate level data to update redux store */
-            sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]] = {
-                ...elementInSH,
-                html: {...elementInSH?.html, ...resData?.html},
-                elementdata: resData?.elementdata 
+            if( activeElemType === ElementConstants.BLOCKFEATURE){
+                sh_Object.interactivedata[sectionType][indexes[shAtIndex - 2]] = {
+                    ...elementInSH,
+                    html: {...elementInSH?.html, ...resData?.html},
+                    elementdata: resData?.elementdata 
+                }
+            }else{
+                sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]] = {
+                    ...elementInSH,
+                    html: {...elementInSH?.html, ...resData?.html},
+                    elementdata: resData?.elementdata
+                }
             }
         }
         return bodymatter;

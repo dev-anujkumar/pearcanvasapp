@@ -42,6 +42,8 @@ import splitIcon from '../../images/ElementButtons/splitIcon.png'
 import expandIcon from '../../images/ElementButtons/expandIcon.png'
 import colorPalette from '../../images/ElementButtons/colorPalette.png'
 import colorText from '../../images/ElementButtons/colorText.svg'
+import add2 from '../../images/ElementButtons/add2.svg'
+import Shape from '../../images/ElementButtons/Shape.svg'
 import closeContainer from '../../images/ElementButtons/container_close.png';
 import pasteIcon from '../../images/ElementButtons/contentPaste.png'
 import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
@@ -65,9 +67,13 @@ class ElementButton extends Component {
                 buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
                 break;
             case buttonTypes.ADD_COMMENT:
-                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' :''} ${elementTypeClassName}`} title="note" onClick={clickHandlerFn}>
-                    {addNote}
-                    </span>
+                buttonJSX = <div className='add-comment-btn'>
+                    <Tooltip direction='comment' tooltipText="Add Comment">
+                        <span className={`btn-element small add-comment ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
+                            <img src={add2} />
+                        </span>
+                    </Tooltip>
+                </div>
                 break;
             case buttonTypes.EDIT_BUTTON_CYPRESSSPLUS:
                 buttonJSX = <Tooltip direction='picker' tooltipText="Edit in Cypress+"><span className={`btn-element small ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
@@ -75,9 +81,13 @@ class ElementButton extends Component {
                 </span></Tooltip>
                 break;
             case buttonTypes.VIEW_COMMENT:
-                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="note" onClick={(e)=>clickHandlerFn(e,elementId)}>
-                    {viewNote}
-                    </span>
+                buttonJSX = <div className='view-comment-btn'>
+                    <Tooltip direction='view-comment' tooltipText="Go To Comment">
+                        <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} onClick={(e) => clickHandlerFn(e, elementId)}>
+                            <img src={Shape} />
+                        </span>
+                    </Tooltip>
+                </div>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
                 buttonJSX = <span className={`btn-element element-label ${btnClassName} ${elementTypeClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
@@ -255,9 +265,13 @@ class ElementButton extends Component {
                 buttonJSX = <span className={`btn-element element-label-clickable-button ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.COMMENT_FLAGGED:
-                buttonJSX = <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} title="flag" onClick={(e) => clickHandlerFn(e, elementId)}>
-                    {commentFlagged}
-                </span>
+                buttonJSX = <div className='flag-te-btn'>
+                    <Tooltip direction='flag' tooltipText="Flagged Comment">
+                        <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} onClick={(e) => clickHandlerFn(e, elementId)}>
+                            {commentFlagged}
+                        </span>
+                    </Tooltip>
+                </div>
                 break;
         }
         return buttonJSX

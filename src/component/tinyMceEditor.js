@@ -35,10 +35,9 @@ import { getParentPosition} from './CutCopyDialog/copyUtil';
 
 import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, checkActiveElement }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
-import ElementConstants, { allowedFigureTypesForTCM } from './ElementContainer/ElementConstants';
+import ElementConstants from './ElementContainer/ElementConstants';
 import { moveCursor } from './Keyboard/KeyboardWrapper.jsx';
 import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
-import {prepareBqHtml} from '../../src/js/utils.js'
 
 let context = {};
 let clickedX = 0;
@@ -1737,7 +1736,7 @@ export class TinyMceEditor extends Component {
                         editor.targetElm.classList.remove('place-holder');
                     }
                 }
-                if (self.props?.element?.type != 'figure' && self.props?.element?.type !== 'element-aside') {
+                if (self.props?.element?.type != 'figure' && self.props?.element?.type !== 'element-aside' && self.props?.element?.type !== 'openerelement') {
                     items.push(blankLineOption)
                 }
                 callback(items);
@@ -3389,7 +3388,7 @@ export class TinyMceEditor extends Component {
          document.removeEventListener("visibilitychange", () => { this.props?.saveCaretPosition('') });
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
-            if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && this.props.element.type && this.props.element.type === "figure" && !allowedFigureTypesForTCM.includes(this.props.element.figuretype)))) {
+            if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && this.props.element.type && this.props.element.type === "figure" && this.props.element.figuretype !== "interactive" && !(tinymce.activeEditor?.targetElm?.className?.includes("figureLabel"))))) {
                 removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                 tinymce.remove(`#${ed_id}`)
                 tinymce.$('.wrs_modal_desktop').remove();
@@ -3473,7 +3472,9 @@ export class TinyMceEditor extends Component {
         }
         else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
                 toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-        } 
+        } else if(this.props?.element?.type === 'openerelement'){
+            toolbar = config.openerElementToolbar
+        }
         // else if (this.props.placeholder === "Code Block Content") {
         //     toolbar = this.setCodeBlockContentToolbar()
         // }

@@ -62,7 +62,16 @@ export const onDeleteSuccess = (params) => {
 
     const currentSlateData = newParentData[config.slateManifestURN];
     if (currentSlateData.status === 'approved') {
-        return onSlateApproved(currentSlateData, dispatch, fetchSlateData)  
+        const isAutoNumberingEnabled = getState()?.autoNumberReducer?.isAutoNumberingEnabled;
+        const autoNumberParams = {
+            type,
+            getState,
+            dispatch,
+            contentUrn,
+            isAutoNumberingEnabled,
+            asideData
+        }
+        return onSlateApproved(currentSlateData, dispatch, fetchSlateData, autoNumberParams);
     }
     const args = {
         dispatch,
@@ -363,11 +372,12 @@ export const delInsideWE = (item, asideData, parentUrn, elmId) => {
     }
 }
 
-export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData) => {
+export const onSlateApproved = (currentSlateData, dispatch, fetchSlateData, autoNumberParams) => {
     if (currentSlateData.type === "popup") {
         sendDataToIframe({ 'type': TocRefreshVersioning, 'message' :true });
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
+        handleAutoNumberingOnDelete(autoNumberParams);
     }
     else {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })

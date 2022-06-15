@@ -768,7 +768,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         if (showHideElement || asideParent?.type === 'showhide'  && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry')) {/** Glossary-Footnotes inside Show-Hide */
             newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
             if(tempIndex.length == 4 && asideParent?.type === 'showhide' && elementType === 'element-blockfeature'){
-                newBodymatter[tempIndex[0]].interactivedata.show[tempIndex[0]] = res.data;
+                newBodymatter[tempIndex[0]].interactivedata.show[tempIndex[2]] = res.data;
             }
         } else if ((tempIndex.length == 5 || tempIndex.length == 6) && elementType == 'figure' && asideParent?.type === 'element-aside' && asideParent?.parent?.type === 'showhide') {
             let elementInSH = newBodymatter[tempIndex[0]].interactivedata[asideParent?.parent?.showHideType][tempIndex[2]];
@@ -794,7 +794,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             let updatedIndex = index.split('-')[0];
             if(tempIndex.length === 4 && newBodymatter[updatedIndex].type === 'groupedcontent' && elementType === 'element-blockfeature'){
                 newBodymatter[updatedIndex].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
-            } else if((tempIndex.length === 3 || tempIndex.length === 4) && newBodymatter[updatedIndex].type === 'element-aside' && elementType === 'element-blockfeature'){
+            } else if((tempIndex.length === 3 || tempIndex.length === 4) && newBodymatter[updatedIndex].type === 'element-aside'){
                 newBodymatter[updatedIndex].elementdata.bodymatter[tempIndex[1]] = res.data;
             } else if(tempIndex.length == 4 && newBodymatter[updatedIndex].type === 'showhide' && elementType === 'element-blockfeature') {
                 newBodymatter[tempIndex[0]].interactivedata.show[tempIndex[2]] = res.data;

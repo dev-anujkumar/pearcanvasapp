@@ -190,6 +190,7 @@ class ElementFigure extends Component {
                 const alfrescoSite = locationSiteDataTitle ? locationSiteDataTitle : alfrescoSiteName
                 const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                 let messageObj = {
+                    appName:'cypress',
                     citeName: citeName,
                     citeNodeRef: nodeRefs, 
                     elementId: this.props.elementId,
