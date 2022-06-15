@@ -704,7 +704,7 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             } // For Nested BL inside AS i.e Slate->AS->BL 
             else if((dataToUpdate?.slateLevelBLIndex?.length)%2 === 0 && parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].type === "element-aside"){
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].elementdata.bodymatter[slateLevelBLIndex[1]], dataToSend)
-            } // For Nested BL inside AS i.e Slate->WE(body)->BL 
+            } // For Nested BL inside AS i.e Slate->WE(Body)->BL 
             else if(parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].type === "element-aside"){
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].elementdata.bodymatter[slateLevelBLIndex[1]].contents.bodymatter[slateLevelBLIndex[2]], dataToSend)
             }//For BL on Slate Level i.e Slate->BL
