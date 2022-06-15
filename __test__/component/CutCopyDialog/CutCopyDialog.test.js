@@ -40,6 +40,7 @@ describe("CutCopyDialog - Component testing", () => {
         toggleCopyMenu: jest.fn(),
         copyClickedX: 3,
         copyClickedY: 3,
+        slateLevelData: {}
     }
     const wrapper = shallow(<CutCopyDialog {...props} />);
     it('The menu box is mounted', () => {

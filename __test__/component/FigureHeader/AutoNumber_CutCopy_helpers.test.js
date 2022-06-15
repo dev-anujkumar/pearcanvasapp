@@ -13,7 +13,8 @@ describe('-----------------Testing AutoNumber_CutCopy_helpers-----------------',
                 autoNumberElementsIndex: mockIndexedElements,
                 slateFigureList: slateFigures2,
                 autoNumberOption: '',
-                autoNumber_ElementTypeKey: mock_autoNumber_ElementTypeKey
+                autoNumber_ElementTypeKey: mock_autoNumber_ElementTypeKey,
+                popupParentSlateData: { isPopupSlate: true}
             },
             appStore: {
                 currentSlateAncestorData: slateAncestorChapter
@@ -28,7 +29,7 @@ describe('-----------------Testing AutoNumber_CutCopy_helpers-----------------',
         tocContainerSlateList: ["urn:pearson:entity:35303acf-be7a-4538-a605-7176d417c6ea","urn:pearson:entity:62ad9ae9-1170-45aa-8ba5-85225cb27664"],
         currentSlateData
     }
-    it('Test-1---handleAutoNumberingOnCopyPaste---', async () => {
+    xit('Test-1---handleAutoNumberingOnCopyPaste---', async () => {
         params.operationType = 'cut';
         params.selectedElement = selectedElement[0];
         const spyFunction = jest.spyOn(autoNumber_cutcopyFunctions, 'handleAutoNumberingOnCopyPaste');

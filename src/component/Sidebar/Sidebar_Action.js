@@ -482,41 +482,45 @@ function prepareDataForConversionTcm(updatedDataID, getState, dispatch,versionid
  * @param {Function} dispatch to dispatch tcmSnapshots
 */
 export const tcmSnapshotsForConversion = async (elementConversionData,indexes,appStore,dispatch) => {
-    const { oldElementData, response, currentSlateData } = elementConversionData
-    if (response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(response.figuretype)) {
-        return false
+    try{
+        const { oldElementData, response, currentSlateData } = elementConversionData
+        if (response.hasOwnProperty("figuretype") && !allowedFigureTypesForTCM.includes(response.figuretype)) {
+            return false
+        }
+        let actionStatus = {
+            action:"update",
+            status:"",
+            fromWhere:"conversion"
+        }
+        let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
+        let convertSlate = convertAppStore[config.slateManifestURN];
+        let convertBodymatter = convertSlate.contents.bodymatter;
+        let convertParentData = fetchParentData(convertBodymatter,indexes, appStore.showHideObj, response);
+        let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
+        /** latest version for WE/CE/PE/AS/2C*/
+        convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
+        /** 
+        * @description For SHOWHIDE Element - create showHideObj/AsideData/parentUrn to prepare 
+        * snapshots of showhide element
+        * @param {String} typeOfElement
+        */
+        const typeOfElement = convertParentData?.asideData?.grandParent?.asideData?.type;
+        if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
+            convertParentData = prepareSnapshots_ShowHide(convertParentData, response, indexes);
+        }
+        if (oldElementData.id !== response.id) {
+            oldElementData.id = response.id
+            oldElementData.versionUrn = response.id
+            let actionStatusVersioning = Object.assign({}, actionStatus);
+            actionStatusVersioning.action="create"
+            actionStatusVersioning.status ="accepted"
+            prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "",indexes);
+        }
+       
+        prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes);
+    } catch(error){
+        console.log("Error: ", error)
     }
-    let actionStatus = {
-        action:"update",
-        status:"",
-        fromWhere:"conversion"
-    }
-    let convertAppStore = JSON.parse(JSON.stringify(appStore.slateLevelData));
-    let convertSlate = convertAppStore[config.slateManifestURN];
-    let convertBodymatter = convertSlate.contents.bodymatter;
-    let convertParentData = fetchParentData(convertBodymatter,indexes, appStore.showHideObj, response);
-    let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
-    /** latest version for WE/CE/PE/AS/2C*/
-    convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
-    /** 
-    * @description For SHOWHIDE Element - create showHideObj/AsideData/parentUrn to prepare 
-    * snapshots of showhide element
-    * @param {String} typeOfElement
-    */
-    const typeOfElement = convertParentData?.asideData?.grandParent?.asideData?.type;
-    if([ELEMENT_ASIDE, MULTI_COLUMN].includes(typeOfElement)) {
-        convertParentData = prepareSnapshots_ShowHide(convertParentData, response, indexes);
-    }
-    if (oldElementData.id !== response.id) {
-        oldElementData.id = response.id
-        oldElementData.versionUrn = response.id
-        let actionStatusVersioning = Object.assign({}, actionStatus);
-        actionStatusVersioning.action="create"
-        actionStatusVersioning.status ="accepted"
-        prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "",indexes);
-    }
-   
-    prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes);
 }
 
 const prepareAssessmentDataForConversion = (oldElementData, format) => {

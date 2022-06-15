@@ -10,6 +10,7 @@ import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
+import { updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
@@ -157,6 +158,8 @@ class FigureImage extends Component {
 */
 
     deleteFigureResource = () => {
+        const dropdownVal = setAutoNumberSettingValue(this.props?.model)
+        this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
         this.props.handleFocus();
         if (hasReviewerRole()) {
             return true
@@ -358,6 +361,7 @@ class FigureImage extends Component {
                     const alfrescoSite = locationSiteDataTitle ? locationSiteDataTitle : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     let messageObj = {
+                        appName:'cypress',
                         citeName: citeName,
                         citeNodeRef: nodeRefs,
                         elementId: this.props.elementId,
@@ -397,6 +401,8 @@ class FigureImage extends Component {
      * @description function will be called on image src add and fetch resources
      */
     addFigureResource = (e) => {
+        const dropdownVal = setAutoNumberSettingValue(this.props?.model)
+        this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
         if (e) {
             e.stopPropagation();
         }
@@ -696,6 +702,9 @@ const mapActionToProps = (dispatch) => {
         },
         saveSelectedAlfrescoElement: (payloadObj) => {
             dispatch(saveSelectedAlfrescoElement(payloadObj))
+        },
+        updateAutoNumberingDropdownForCompare: (value) => {
+            dispatch(updateAutoNumberingDropdownForCompare(value))
         }
     }
 }

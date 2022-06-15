@@ -20,6 +20,6 @@ describe('Testing BlockList Helper', () => {
         fetchLiClassName('unordered');
     })
     it('Testing BlockList Helper function for default case', () => {
-        fetchLiClassName('');
+        fetchLiClassName('test');
     })
 });

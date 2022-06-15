@@ -14,75 +14,85 @@ import {
 const initialState = {
     isAutoNumberingEnabled: false,
     autoNumberedElements: {
-        imagesList: [],
-        tablesList: [],
-        equationsList: [],
-        audiosList: [],
-        videosList: [],
-        asidesList: [],
-        workedExamplesList: [],
+        imageList: [],
+        tableList: [],
+        equationList: [],
+        audioList: [],
+        videoList: [],
+        asideList: [],
+        workedExampleList: [],
         interactiveList: [],
-        exhibitsList: []
+        exhibitList: []
     },
     autoNumberingDetails: {},
     autoNumberElementsIndex: {
         figureImageIndex: {},
         tableIndex: {},
-        equationsIndex: {},
+        equationIndex: {},
         audioIndex: {},
         videoIndex: {},
         asideIndex: {},
         workedExampleIndex: {},
         interactiveIndex: {},
-        exhibitsIndex: {}
+        exhibitIndex: {}
     },
     slateFigureList:[],
     autoNumberOption: '',
     popupParentSlateData: {},
+    popupCutCopyParentData: {},
     tocContainerSlateList:[],
     autoNumber_KeyMapper: {
         'Figure': 'figureImageIndex',
         'Table': 'tableIndex',
-        'Equation': 'equationsIndex',
+        'Equation': 'equationIndex',
         'Audio': 'audioIndex',
         'Video': 'videoIndex',
         "Interactive": 'interactiveIndex',
         "Aside": "asideIndex",
         "Worked Example": "workedExampleIndex",
-        'Exhibit': 'exhibitsIndex'
+        'Exhibit': 'exhibitIndex'
     },
     autoNumber_ElementTypeKey: {
-        'Figure': 'imagesList',
-        'Table': 'tablesList',
-        'Equation': 'equationsList',
-        'Audio': 'audiosList',
-        'Video': 'videosList',
+        'Figure': 'imageList',
+        'Table': 'tableList',
+        'Equation': 'equationList',
+        'Audio': 'audioList',
+        'Video': 'videoList',
         'Interactive': 'interactiveList',
-        "Aside": "asidesList",
-        "Worked Example": "workedExamplesList",
-        'Exhibit': 'exhibitsList'
+        "Aside": "asideList",
+        "Worked Example": "workedExampleList",
+        'Exhibit': 'exhibitList'
     },
     autoNumber_response_ElementType_mapper: {
-        "figures": "imagesList",
-        "tables": "tablesList",
-        "equations": "equationsList",
-        "audios": "audiosList",
-        "videos": "videosList",
-        "interactives": "interactiveList",
-        "asides": "asidesList",
-        "workedexamples": "workedExamplesList",
-        'exhibits': 'exhibitsList'
+        "figure": "imageList",
+        "table": "tableList",
+        "equation": "equationList",
+        "audio": "audioList",
+        "video": "videoList",
+        "interactive": "interactiveList",
+        "aside": "asideList",
+        "workedexample": "workedExampleList",
+        'exhibit': 'exhibitList'
     },
     autoNumber_IndexMapper: {
-        'imagesList': 'figureImageIndex',
-        'tablesList': 'tableIndex',
-        'equationsList': 'equationsIndex',
-        'audiosList': 'audioIndex',
-        'videosList': 'videoIndex',
+        'imageList': 'figureImageIndex',
+        'tableList': 'tableIndex',
+        'equationList': 'equationIndex',
+        'audioList': 'audioIndex',
+        'videoList': 'videoIndex',
         'interactiveList': 'interactiveIndex',
-        'asidesList': 'asideIndex',
-        'workedExamplesList': 'workedExampleIndex',
-        'exhibitsList': 'exhibitsIndex'
+        'asideList': 'asideIndex',
+        'workedExampleList': 'workedExampleIndex',
+        'exhibitList': 'exhibitIndex'
+    },
+    autoNumber_FigureTypeKey_Mapper: {
+        'image': 'IMAGE',
+        'video': 'AUDIO',
+        'audio': 'VIDEO',
+        'interactive': 'INTERACTIVE',
+        'tableasmarkup': 'TABLE',
+        "authoredtext": 'AUTHOREDTEXT',
+        'codelisting': 'CODELISTING',
     },
     popupElementsData: []
 }
@@ -102,20 +112,20 @@ describe('testing for autoNumberReducer file --->', () => {
         let output = {
             ...initialState,
             autoNumberedElements: {
-                imagesList: [],
-                tablesList: [],
-                equationsList: [],
-                audiosList: {id: 1},
-                videosList:[],
+                imageList: [],
+                tableList: [],
+                equationList: [],
+                audioList: {id: 1},
+                videoList:[],
                 interactiveList: [],
-                asidesList:[],
-                workedExamplesList:[],
-                exhibitsList: [],
+                asideList:[],
+                workedExampleList:[],
+                exhibitList: [],
             }
         };
         let mockData = {
             numberedElements : { 
-                audiosList: {id: 1}
+                audioList: {id: 1}
             }
         }
         let result = autoNumberReducer(initialState, {
@@ -160,13 +170,13 @@ describe('testing for autoNumberReducer file --->', () => {
             autoNumberElementsIndex: { 
                 figureImageIndex: {},
                 tableIndex: {},
-                equationsIndex: {},
+                equationIndex: {},
                 audioIndex: {id:2},
                 videoIndex: {},
                 interactiveIndex: {},
                 workedExampleIndex:{},
                 asideIndex:{},
-                exhibitsIndex: {}
+                exhibitIndex: {}
             }
         };
         let mockData = {
@@ -184,19 +194,19 @@ describe('testing for autoNumberReducer file --->', () => {
         let output = {
             ...initialState,
             autoNumberedElements: {
-                imagesList: [],
-                tablesList: [],
-                equationsList: [],
-                audiosList:[],
-                videosList:[5],
+                imageList: [],
+                tableList: [],
+                equationList: [],
+                audioList:[],
+                videoList:[5],
                 interactiveList: [],
-                asidesList:[],
-                workedExamplesList:[],
-                exhibitsList:[]
+                asideList:[],
+                workedExampleList:[],
+                exhibitList:[]
             }, 
         };
 
-        const data = {mediaType: 'videosList', mediaList: [5]}
+        const data = {mediaType: 'videoList', mediaList: [5]}
 
         expect(autoNumberReducer(initialState, {
             type: UPDATE_AUTO_NUMBER_ELEMENTS_LIST,

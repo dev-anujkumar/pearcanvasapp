@@ -10,7 +10,7 @@ const middlewares = [thunk];
 import config from "../../../src/config/config.js"
 import wipData from './wipData';
 import { singleAssessmentElmDefault } from '../../../fixtures/ElementSingleAssessmentTestData'
-import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
+import { mockAutoNumberReducerEmpty, mockAutoNumberReducerEmpty1 } from '../FigureHeader/AutoNumberApiTestData';
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("innerText")) {
     Object.defineProperty(global.Element.prototype, 'innerText', {
@@ -44,7 +44,13 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     getLabelNumberTitleHTML: jest.fn(() => ({'formattedLabel': ''})),
     getTitleSubtitleModel: jest.fn(()=> ''),
     isSubscriberRole:jest.fn(()=>{return true}),
-    removeSpellCheckDOMAttributes: jest.fn(() => '')
+    removeSpellCheckDOMAttributes: jest.fn(() => ''),
+    checkHTMLdataInsideString: () => {
+        return ({
+            toLowerCase: jest.fn(),
+            replace: jest.fn()
+        })
+    },
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
@@ -248,6 +254,135 @@ const store = mockStore({
     autoNumberReducer: mockAutoNumberReducerEmpty
 });
 
+const store2 = mockStore({
+    appStore: {
+        activeElement: {
+            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+            elementType: "element-authoredtext",
+            elementWipType: "element-authoredtext",
+            primaryOption: "primary-heading",
+            secondaryOption: "secondary-heading-1",
+            index: "1-0",
+            tag: "H1",
+            toolbar: ['bold']
+        },
+        permissions: [
+            "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
+            "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
+            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+        ],
+        multipleColumnData: [
+            {
+                containerId: "urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e", 
+                columnIndex: "C1", 
+                columnId: "urn:pearson:manifest:73c11fa8-acec-4b8e-b435-0ec6cb3e5912"
+            },
+            {
+                containerId: "urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffedser3422", 
+                columnIndex: "C2",
+                columnId: "urn:pearson:manifest:73c11fa8-acec-4b8e-b435-0ec6cb3e5922"
+            }
+        ],
+        usageTypeListData: {
+            usageTypeList: []
+        },
+        oldFigureDataForCompare: {
+            path: "test"
+        },
+        oldSmartLinkDataForCompare: {
+            interactiveid: 'test id'
+        },
+        oldAudioVideoDataForCompare: {
+            videoid: 'id'
+        }
+    },
+    slateLockReducer: {
+        slateLockInfo: {
+            isLocked: false,
+            timestamp: "",
+            userId: ""
+        }
+    },
+    commentsPanelReducer: {
+        allComments: comments
+    },
+    toolbarReducer: {
+        elemBorderToggle: "true"
+    },
+    metadataReducer: {
+        currentSlateLOData: ""
+    },
+    learningToolReducer: {
+        shouldHitApi: false,
+        learningToolTypeValue: '',
+        apiResponse: [],
+        showErrorMsg: true, //should be false
+        showLTBody: false,
+        learningTypeSelected: false,
+        showDisFilterValues: false,
+        selectedResultFormApi: '',
+        resultIsSelected: false,
+        toggleLT: false,
+        linkButtonDisable: true,
+        apiResponseForDis: [],
+        learningToolDisValue: '',
+        numberOfRows: 25
+    },
+    glossaryFootnoteReducer:{
+        glossaryFootnoteValue: { "type": "", "popUpStatus": false }
+    },
+    tcmReducer:{
+        tcmSnapshot:[]
+    },
+    elementStatusReducer: {
+        'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
+        "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
+        "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
+        "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
+
+    },
+    searchReducer: {
+        searchTerm: "",
+        parentId: "",
+        deeplink: true,
+        scroll: false,
+        scrollTop: 0
+    },
+    commentSearchReducer: {
+        commentSearchTerm: "",
+        parentId: "",
+        scroll: false,
+        scrollTop: 0
+    },
+    selectionReducer: {
+        selection: {
+            activeAnimation: true,
+            deleteElm: {id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", type: "element-authoredtext", parentUrn: undefined, asideData: undefined, contentUrn: "urn:pearson:entity:da9f3f72-2cc7-4567-8fb9-9a887c360979"},
+            element: {id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1"},
+            inputSubType: "NA",
+            inputType: "AUTHORED_TEXT",
+            operationType: "copy",
+            sourceElementIndex: 2,
+            sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+            sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
+        }
+    },
+    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    },
+    assessmentReducer: {},
+    markedIndexReducer: {
+        markedIndexCurrentValue: {},
+        markedIndexValue: { "type": "", "popUpStatus": false }
+    },
+    autoNumberReducer: mockAutoNumberReducerEmpty1
+});
+
 config["elementStatus"] = {}
 
 describe('Test for element container component', () => {
@@ -294,7 +429,27 @@ describe('Test for element container component', () => {
             elementContainer.update();
             expect(elementContainerInstance).toBeDefined();
         })
-        it('Render Element Container ----->BlockQuote-Pullquote', () => {
+        it('Render Element Container ----->BlockQuote', () => {
+            let props = {
+                element: wipData.marginalia,
+                permissions: [],
+                activeElement: {
+                    elementId: "urn:pearson:work:5d489bfe-ef76-4193-b07a-62d9d393fe93",
+                    elementType: "element-authoredtext",
+                    elementWipType: "element-blockfeature",
+                    index: 2,
+                    primaryOption: "primary-blockquote",
+                    secondaryOption: "secondary-pullquote",
+                    tag: "BQ",
+                    toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
+                }
+            }; 
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Pullquote', () => {
 
             let props = {
                 element: wipData.pullquote,
@@ -348,8 +503,40 @@ describe('Test for element container component', () => {
         })
         it('Render Element Container ----->handleBlur', () => {
             let props = {
-                element: wipData.figure,
-                permissions: []
+                element: wipData.poetry,
+                permissions: [],
+                parentElement: {
+                    type: "groupedcontent",
+                    groupeddata: {
+                        "bodymatter": [
+                            {
+                                "type": "stanza",
+                                "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
+                                "id": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                                "contentUrn": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5",
+                                "versionUrn": "urn:pearson:work:e1b59ae0-b04a-4b6e-a1a4-33e21077u97",
+                                "slateUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+                                "poetrylines": [
+                                    {
+                                        "type": "line",
+                                        "id": "urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5:f2f5300e-34fa-4d87-82c1-29e33bf5fu67",
+                                        "authoredtext": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                            "text": ""
+                                        }
+                                    },
+                                ],
+                                "html": {
+                                    "title": "<p></p>",
+                                    "subtitle": "<p></p>",
+                                    "captions": "<p></p>",
+                                    "credits": "<p></p>",
+                                    "text": "<span><br /></span>"
+                                }
+                            }
+                        ]
+                    }
+                }
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -716,10 +903,12 @@ describe('Test for element container component', () => {
         it('Render Element Container ----->Figure Element-Image', () => {
             let props = {
                 element: wipData.figure,
-                permissions: []
+                permissions: [],
+                showHideType: true
             };
             let parentElement = {
-                contentUrn:"67"
+                contentUrn:"67",
+                showHideType: true
             }
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -980,7 +1169,7 @@ describe('Test for element container component', () => {
     })
     describe('Test- Add Comment Functions', () => {
         let props = {
-            element: wipData.paragraph,
+            element: wipData.tableasmarkup,
             permissions: [
                 "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
                 "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
@@ -1055,11 +1244,16 @@ describe('Test for element container component', () => {
                 "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
                 "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing","access-to-cypress+","notes_relpying",
             ],
-            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"
+            parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+            slateLockInfo: {
+                userId: "vtyhg123",
+                isLocked: true
+            }
         };
         let event= {
             stopPropagation:()=>{}
         }
+        config.userId="vtyhg123"
         config.isCypressPlusEnabled=true
         config.SHOW_CYPRESS_PLUS=true
         let elementId = 'urn:perason:work:1234567' 
@@ -1072,6 +1266,14 @@ describe('Test for element container component', () => {
             elementContainer.update();
             expect(spyhandleEditInCypressPlus).toHaveBeenCalledWith(event,elementId)
             spyhandleEditInCypressPlus.mockClear()
+        })
+        it('Test-addOrViewComment Function', () => {
+            const spyaddOrViewComment = jest.spyOn(elementContainerInstance, 'addOrViewComment')
+            elementContainerInstance.addOrViewComment(event,elementId, "AddOrViewComment");
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyaddOrViewComment).toHaveBeenCalledWith(event,elementId, "AddOrViewComment")
+            spyaddOrViewComment.mockClear()
         })
        
     })
@@ -1121,12 +1323,11 @@ describe('Test for element container component', () => {
             expect(spyopenAssetPopoverPopUp).toHaveBeenCalledWith(true)
             spyopenAssetPopoverPopUp.mockClear()
         })
-        xit('Test-showDeleteElemPopup  Function', () => {
+        it('Test-showDeleteElemPopup  Function', () => {
             const spyshowDeleteElemPopup = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup')
             elementContainerInstance.showDeleteElemPopup(event,true,true);
             elementContainerInstance.forceUpdate();
             elementContainer.update();
-            expect(spyshowDeleteElemPopup).toHaveBeenCalledWith(true)
             expect(elementContainerInstance.state.showDeleteElemPopup).toBe(true)
             expect(elementContainerInstance.state.popup).toBe(true)
             spyshowDeleteElemPopup.mockClear()
@@ -1242,7 +1443,7 @@ describe('Test for element container component', () => {
             let e = {
                 target: {
                     getAttribute:  ()=> {
-                        return 'primary';
+                        return 'data-value';
                     }
                 }
             }
@@ -1472,7 +1673,9 @@ describe('Test for element container component', () => {
                 showBlocker: jest.fn(),
                 isBlockerActive: true,
                 asideData: {},
-                parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                parentUrn: {
+                    elementType: "group"
+                },
                 index:0,
                 deleteElement: jest.fn(),
                 parentElement:{
@@ -1789,6 +1992,9 @@ describe('Test-Other Functions', () => {
         asideData: {},
         parentUrn:"urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
         index:0,
+        autoNumberOption: {
+            entityUrn: "test",
+        },
         deleteElement: jest.fn(),
         searchParent : "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
         multipleColumnData: [{containerId: "urn:pearson:manifest:0beacb79-ee4c-4c26-abcc-dd973c6893c9", columnIndex: "C3", columnId: "urn:pearson:manifest:73c11fa8-acec-4b8e-b435-0ec6cb3e5912"}]
@@ -2084,6 +2290,83 @@ describe('Test-Other Functions', () => {
         expect(spyreplaceUnwantedtags).toHaveReturnedWith(undefined);
         spyreplaceUnwantedtags.mockClear()
     })
+    it("Test - figureDifference: difference in content -- autonumbering true -- if", () => {
+        const previousElementData = {
+            html: {
+                text: '<p></p>'
+            },
+            "numberedandlabel":true,
+            figuretype: "tableasmarkup",
+            figuredata: {
+                tableasHTML: "123",
+            },
+            manualoverride: {
+                overridelabelvalue: true
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "startnumber" || attr === "numbered" || attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifference = jest.spyOn(elementContainerInstance, 'figureDifference')
+        elementContainerInstance.figureDifference(0, previousElementData);
+        expect(spyfigureDifference).toHaveBeenCalled();
+        expect(spyfigureDifference).toHaveReturnedWith(true);
+        spyfigureDifference.mockClear()
+    })
+    it("Test - figureDifference: difference in content -- autonumbering true -- else", () => {
+        const previousElementData = {
+            html: {
+                text: '<p></p>'
+            },
+            "numberedandlabel":true,
+            figuretype: "tableasmarkup",
+            figuredata: {
+                tableasHTML: "123",
+            },
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "startnumber" || attr === "numbered" || attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifference = jest.spyOn(elementContainerInstance, 'figureDifference')
+        elementContainerInstance.figureDifference(0, previousElementData);
+        expect(spyfigureDifference).toHaveBeenCalled();
+        expect(spyfigureDifference).toHaveReturnedWith(true);
+        spyfigureDifference.mockClear()
+    })
+    it("Test - figureDifference: difference in content -- autonumbering false", () => {
+        let elementContainer = mount(<Provider store={store2}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        const previousElementData = {
+            html: {
+                text: '<p></p>'
+            },
+            "numberedandlabel":true,
+            figuretype: "tableasmarkup",
+            figuredata: {
+                tableasHTML: "123"
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "startnumber" || attr === "numbered" || attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifference = jest.spyOn(elementContainerInstance, 'figureDifference')
+        elementContainerInstance.figureDifference(0, previousElementData);
+        expect(spyfigureDifference).toHaveBeenCalled();
+        expect(spyfigureDifference).toHaveReturnedWith(true);
+        spyfigureDifference.mockClear()
+    })
     it("Test - figureDifferenceBlockCode: difference in content", () => {
         const previousElementData = {
             html: {
@@ -2093,6 +2376,37 @@ describe('Test-Other Functions', () => {
                 startNumber: 1,
                 numbered: 1,
                 syntaxhighlighting: false
+            },
+            figuretype: "tableasmarkup",
+            numberedandlabel: true
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "startnumber" || attr === "numbered" || attr === "syntaxhighlighting") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'figureDifferenceBlockCode')
+        elementContainerInstance.figureDifferenceBlockCode(1, previousElementData);
+        expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
+        expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
+        spyfigureDifferenceBlockCode.mockClear()
+    })
+    it("Test - figureDifferenceBlockCode: difference in content -- autonumbering true", () => {
+        const previousElementData = {
+            html: {
+                preformattedtext: '<p></p>'
+            },
+            figuredata: {
+                startNumber: 1,
+                numbered: 1,
+                syntaxhighlighting: false
+            },
+            figuretype: "tableasmarkup",
+            numberedandlabel: true,
+            manualoverride: {
+                overridelabelvalue: true
             }
         }
         document.querySelector = () => {
@@ -2108,20 +2422,104 @@ describe('Test-Other Functions', () => {
         expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
         spyfigureDifferenceBlockCode.mockClear()
     })
-    it("Test - aside: difference in content", () => {
+    it("Test - figureDifferenceBlockCode: difference in content -- autonumbering false", () => {
+        let elementContainer = mount(<Provider store={store2}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         const previousElementData = {
             html: {
-                text: '<p></p>'
+                preformattedtext: '<p></p>'
             },
-            "numberedandlabel":true
-         }
+            figuredata: {
+                startNumber: 1,
+                numbered: 1,
+                syntaxhighlighting: false
+            },
+            figuretype: "tableasmarkup"
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "startnumber" || attr === "numbered" || attr === "syntaxhighlighting") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'figureDifferenceBlockCode')
+        elementContainerInstance.figureDifferenceBlockCode(1, previousElementData);
+        expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
+        expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
+        spyfigureDifferenceBlockCode.mockClear()
+    })
+    it("Test - aside: difference in content -- autonumbring true - if", () => {
+        const previousElementData = {
+            html: {
+                text: '<p></p>',
+                title: "test"
+            },
+            "manualoverride":true,
+            "numberedandlabel": true,
+        }
+        const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'asideDifference')
+        elementContainerInstance.asideDifference(0, previousElementData);
+        expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
+        expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(false);
+        spyfigureDifferenceBlockCode.mockClear()
+    })
+    it("Test - aside: difference in content -- autonumbring true - else", () => {
+        const previousElementData = {
+            html: {
+                text: '<p></p>',
+                title: "test"
+            },
+            "manualoverride":true,
+        }
         const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'asideDifference')
         elementContainerInstance.asideDifference(0, previousElementData);
         expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
         expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
         spyfigureDifferenceBlockCode.mockClear()
     })
-    it("Test - figureDifferenceInteractive - pdf interactive type: difference in content", () => {
+    it("Test - aside: difference in content -- autonumbering false", () => {
+        let elementContainer = mount(<Provider store={store2}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        const previousElementData = {
+            html: {
+                text: '<p></p>'
+            },
+         }
+        const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'asideDifference')
+        elementContainerInstance.asideDifference(0, previousElementData);
+        expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
+        expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(false);
+        spyfigureDifferenceBlockCode.mockClear()
+    })
+    it("Test - figureDifferenceInteractive - pdf interactive type: difference in content -- autonumbering true", () => {
+        const previousElementData = {
+            html: {
+                title: '<p></p>',
+                postertext: "<p>test</p>"
+            },
+            figuredata: {
+                interactivetype: "pdf"
+            },
+            figuretype: "image",
+            numberedandlabel: true
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceInteractive = jest.spyOn(elementContainerInstance, 'figureDifferenceInteractive')
+        elementContainerInstance.figureDifferenceInteractive(1, previousElementData);
+        expect(spyfigureDifferenceInteractive).toHaveBeenCalled();
+        expect(spyfigureDifferenceInteractive).toHaveReturnedWith(true);
+        spyfigureDifferenceInteractive.mockClear()
+    })
+    it("Test - figureDifferenceInteractive - pdf interactive type: difference in content -- autonumbering false", () => {
+        let elementContainer = mount(<Provider store={store2}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         const previousElementData = {
             html: {
                 title: '<p></p>',
@@ -2143,6 +2541,162 @@ describe('Test-Other Functions', () => {
         expect(spyfigureDifferenceInteractive).toHaveBeenCalled();
         expect(spyfigureDifferenceInteractive).toHaveReturnedWith(true);
         spyfigureDifferenceInteractive.mockClear()
+    })
+    it("Test - figureDifferenceAT - pdf interactive type: difference in content -- autonumbering true - if", () => {
+        const previousElementData = {
+            html: {
+                title: '<p></p>',
+                postertext: "<p>test</p>"
+            },
+            figuredata: {
+                interactivetype: "pdf"
+            },
+            figuretype: "image",
+            numberedandlabel: true
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceAT = jest.spyOn(elementContainerInstance, 'figureDifferenceAT')
+        elementContainerInstance.figureDifferenceAT(1, previousElementData);
+        expect(spyfigureDifferenceAT).toHaveBeenCalled();
+        expect(spyfigureDifferenceAT).toHaveReturnedWith(false);
+        spyfigureDifferenceAT.mockClear()
+    })
+    it("Test - figureDifferenceAT - pdf interactive type: difference in content -- autonumbering true - else", () => {
+        const previousElementData = {
+            html: {
+                title: '<p></p>',
+                postertext: "<p>test</p>"
+            },
+            figuredata: {
+                interactivetype: "pdf"
+            },
+            figuretype: "image",
+            numberedandlabel: true,
+            manualoverride: {
+                overridelabelvalue: true
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceAT = jest.spyOn(elementContainerInstance, 'figureDifferenceAT')
+        elementContainerInstance.figureDifferenceAT(1, previousElementData);
+        expect(spyfigureDifferenceAT).toHaveBeenCalled();
+        expect(spyfigureDifferenceAT).toHaveReturnedWith(true);
+        spyfigureDifferenceAT.mockClear()
+    })
+    it("Test - figureDifferenceAT - pdf interactive type: difference in content -- autonumbering false", () => {
+        let elementContainer = mount(<Provider store={store2}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        const previousElementData = {
+            html: {
+                title: '<p></p>',
+                postertext: "<p>test</p>"
+            },
+            figuredata: {
+                interactivetype: "pdf"
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceAT = jest.spyOn(elementContainerInstance, 'figureDifferenceAT')
+        elementContainerInstance.figureDifferenceAT(1, previousElementData);
+        expect(spyfigureDifferenceAT).toHaveBeenCalled();
+        expect(spyfigureDifferenceAT).toHaveReturnedWith(false);
+        spyfigureDifferenceAT.mockClear()
+    })
+    it("Test - figureDifferenceAudioVideo - pdf interactive type: difference in content -- autonumbering true - if", () => {
+        const previousElementData = {
+            html: {
+                title: '<p></p>',
+                postertext: "<p>test</p>"
+            },
+            figuredata: {
+                interactivetype: "pdf"
+            },
+            figuretype: "image",
+            numberedandlabel: true
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceAudioVideo = jest.spyOn(elementContainerInstance, 'figureDifferenceAudioVideo')
+        elementContainerInstance.figureDifferenceAudioVideo(1, previousElementData);
+        expect(spyfigureDifferenceAudioVideo).toHaveBeenCalled();
+        expect(spyfigureDifferenceAudioVideo).toHaveReturnedWith(true);
+        spyfigureDifferenceAudioVideo.mockClear()
+    })
+    it("Test - figureDifferenceAudioVideo - pdf interactive type: difference in content -- autonumbering true - else", () => {
+        const previousElementData = {
+            html: {
+                title: '<p></p>',
+                postertext: "<p>test</p>"
+            },
+            figuredata: {
+                interactivetype: "pdf"
+            },
+            figuretype: "image",
+            numberedandlabel: true,
+            manualoverride: {
+                overridelabelvalue: true
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceAudioVideo = jest.spyOn(elementContainerInstance, 'figureDifferenceAudioVideo')
+        elementContainerInstance.figureDifferenceAudioVideo(1, previousElementData);
+        expect(spyfigureDifferenceAudioVideo).toHaveBeenCalled();
+        expect(spyfigureDifferenceAudioVideo).toHaveReturnedWith(true);
+        spyfigureDifferenceAudioVideo.mockClear()
+    })
+    it("Test - figureDifferenceAudioVideo - pdf interactive type: difference in content -- autonumbering false", () => {
+        let elementContainer = mount(<Provider store={store2}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        const previousElementData = {
+            html: {
+                title: '<p></p>',
+                postertext: "<p>test</p>"
+            },
+            figuredata: {
+                interactivetype: "pdf"
+            }
+        }
+        document.querySelector = () => {
+            return {
+                getAttribute: (attr) => {
+                    if(attr === "podwidth") return "1"
+                } 
+            }
+        }
+        const spyfigureDifferenceAudioVideo = jest.spyOn(elementContainerInstance, 'figureDifferenceAudioVideo')
+        elementContainerInstance.figureDifferenceAudioVideo(1, previousElementData);
+        expect(spyfigureDifferenceAudioVideo).toHaveBeenCalled();
+        expect(spyfigureDifferenceAudioVideo).toHaveReturnedWith(true);
+        spyfigureDifferenceAudioVideo.mockClear()
     })
     xit("Test - handleTCM: isSavingElement false", () => {
         const eventObj = {
@@ -2317,7 +2871,7 @@ describe('Test-Other Functions', () => {
         spysetBorderToggle.mockClear()
     })
     
-    xit('Render and Update three column test click event', () => {
+    it('Render and Update three column test click event', () => {
         let props = {
             onClickCapture: jest.fn(),
             element: wipData.threeMulticolumn
@@ -2325,11 +2879,10 @@ describe('Test-Other Functions', () => {
         const elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
         let element = wipData.threeMulticolumn;
+        const spyrenderMultipleColumnLabels  = jest.spyOn(elementContainerInstance, 'renderMultipleColumnLabels') 
         elementContainerInstance.renderMultipleColumnLabels(element);
-        const spyUpdateColumnValues  = jest.spyOn(elementContainerInstance, 'updateColumnValues') 
-        elementContainer.find('span.element-label-clickable-button').at(0).simulate('click');
-        expect(spyUpdateColumnValues).toHaveBeenCalled();
-        spyUpdateColumnValues.mockClear();
+        expect(spyrenderMultipleColumnLabels).toHaveBeenCalled();
+        spyrenderMultipleColumnLabels.mockClear();
       });
 
       it('updateColumnValues function', () => {
@@ -2403,7 +2956,58 @@ describe('Test-Other Functions', () => {
         elementContainerInstance2.setElementDetails(elementDetails);
     });
 
+    it('setElementDetails method - with parentUrn and element type groupedcontent -- else', () => {
+        let props4 = {
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: {
+                contentUrn: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319z'
+            }
+        };
+        let elementContainer2 = mount(<Provider store={store}><ElementContainer {...props4} /></Provider>);
+        const elementContainerInstance2 = elementContainer2.find('ElementContainer').instance();
+        const elementDetails = {
+            element: {
+                type: 'element-list',
+                html: {
+                    text: ''
+                },
+                elementdata: {
+                    type: ''
+                },
+            },
+            operationType: 'cut'
+        }
+        elementContainerInstance2.setElementDetails(elementDetails);
+    });
+
     it('handleEditButton method - element - figure', () => {
+        let props5 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                figuretype: 'tableasmarkup',
+                type: 'figure',
+                figuredata: {
+                    imageid: 'urn:pearson:alfresco:f3fbd8cd-6e1b-464a-8a20-c62d4b9f31r'
+                },
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
+        const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
+        const event = {stopPropagation: jest.fn()};
+        elementContainerInstance3.handleEditButton(event);
+    });
+
+    it('handleEditButton method - element - figure -- else case', () => {
         let props5 = {
             element: {
                 id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
@@ -2447,7 +3051,7 @@ describe('Test-Other Functions', () => {
         let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
         const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
         const element = {type: 'element-authoredtext'};
-        elementContainerInstance3.handleTCMLaunch({}, element);
+        elementContainerInstance3.handleTCMLaunch(event, element);
     });
 
     it('handleTCMLaunch method - else block', () => {
@@ -2463,9 +3067,12 @@ describe('Test-Other Functions', () => {
             updateElement: jest.fn(),
             parentUrn: null
         };
+        let event = {
+            stopPropagation: jest.fn()
+        }
         let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
         const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
-        elementContainerInstance3.handleTCMLaunch({}, {});
+        elementContainerInstance3.handleTCMLaunch(event, {});
     });
 
     it('checkTCMStatus method', () => {
@@ -2868,13 +3475,63 @@ describe('Test-Other Functions', () => {
         expect(spychangeInPodwidth).toHaveBeenCalled();
         spychangeInPodwidth.mockClear()
     })
+    it("handleAudioPopupLocation function", () => {
+        const spyhandleAudioPopupLocation = jest.spyOn(elementContainerInstance, 'handleAudioPopupLocation')
+        elementContainerInstance.handleAudioPopupLocation(true, {});
+        expect(spyhandleAudioPopupLocation).toHaveBeenCalled();
+        spyhandleAudioPopupLocation.mockClear()
+    });
     it("handleAssetsPopupLocation function", () => {
         const spyhandleAssetsPopupLocation = jest.spyOn(elementContainerInstance, 'handleAssetsPopupLocation')
         elementContainerInstance.handleAssetsPopupLocation(true, {});
         expect(spyhandleAssetsPopupLocation).toHaveBeenCalled();
         spyhandleAssetsPopupLocation.mockClear()
     });
+    it("handleAutonumberAfterUpdate function", () => {
+        const previousElementData = {
+            manualoverride: {
+                overridelabelvalue: true,
+                displayedlabel: "test"
+            }
+        }
+        let updateData=wipData.paragraphUpdate
+        let dataToSend ={updateData, numberedandlabel: false, displayedlabel: "test"} 
+        const spyhandleAutonumberAfterUpdate = jest.spyOn(elementContainerInstance, 'handleAutonumberAfterUpdate')
+        elementContainerInstance.handleAutonumberAfterUpdate(previousElementData, dataToSend, null, null, null);
+        expect(spyhandleAutonumberAfterUpdate).toHaveBeenCalled();
+        spyhandleAutonumberAfterUpdate.mockClear()
+    });
 
+    it("handleAutonumberAfterUpdate function -- else", () => {
+        let elementContainer = mount(<Provider store={store2}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        const previousElementData = {
+            manualoverride: {
+            },
+            numberedandlabel: false
+        }
+        let updateData=wipData.paragraphUpdate
+        let dataToSend ={updateData, numberedandlabel: false} 
+        const spyhandleAutonumberAfterUpdate = jest.spyOn(elementContainerInstance, 'handleAutonumberAfterUpdate')
+        elementContainerInstance.handleAutonumberAfterUpdate(previousElementData, dataToSend, null, null, null);
+        expect(spyhandleAutonumberAfterUpdate).toHaveBeenCalled();
+        spyhandleAutonumberAfterUpdate.mockClear()
+    });
+
+    it("handleAutonumberAfterUpdate function -- else if", () => {
+        let elementContainer = mount(<Provider store={store2}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+        const previousElementData = {
+            numberedandlabel: true
+        }
+        let updateData=wipData.paragraphUpdate
+        let dataToSend ={updateData} 
+        const spyhandleAutonumberAfterUpdate = jest.spyOn(elementContainerInstance, 'handleAutonumberAfterUpdate')
+        elementContainerInstance.handleAutonumberAfterUpdate(previousElementData, dataToSend, null, null, null);
+        expect(spyhandleAutonumberAfterUpdate).toHaveBeenCalled();
+        spyhandleAutonumberAfterUpdate.mockClear()
+    });
+    
     it('showAlfrescoExpansionPopup method for TE ', () => {
         let props7 = {
             element: {
