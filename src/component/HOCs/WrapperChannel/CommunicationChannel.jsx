@@ -411,8 +411,10 @@ function CommunicationChannel(WrappedComponent) {
                 'myCloudProxySession': config.myCloudProxySession
             };
             let externalLFUrn = [];
+            let defaultLF = "";
             if (projectLearningFrameworks?.externalLF?.length) {
-              projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
+                defaultLF = projectLearningFrameworks.externalLF[0].urn; // Currently we are considering first LF as default
+                projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
             }
             let assessmentuRN = "";
             let assessmentType = "";
@@ -455,7 +457,8 @@ function CommunicationChannel(WrappedComponent) {
                     'chapterContainerUrn': '',
                     'currentSlateLF': currentSlateLF,
                     'assessmentUrn': assessmentuRN,
-                    'previewData': previewData
+                    'previewData': previewData,
+                    'defaultLF': defaultLF
                 }
             })
         }

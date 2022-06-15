@@ -163,18 +163,20 @@ class SlateTagDropdown extends React.Component {
     };
     const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = [];
+    let defaultLF = "";
     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
+      defaultLF = this.props.projectLearningFrameworks.externalLF[0].urn; // Currently we are considering first LF as default
       this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
     }
     return {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo, defaultLF
     }
   }
 
   /** Launch External LO Popup from Canvas*/
   launchExternalFrameworkPopup = (e) => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo, defaultLF
     } = this.prepareExtFrameworkData();
 
     const currentSlateLF=this.props.currentSlateLF;
@@ -200,7 +202,8 @@ class SlateTagDropdown extends React.Component {
           'chapterContainerUrn': '',
           'currentSlateLF': currentSlateLF,
           'projectSharingRole': projectSharingRole,
-          'isSubscribed': isSubscribed
+          'isSubscribed': isSubscribed,
+          'defaultLF': defaultLF
         }
       })
 
