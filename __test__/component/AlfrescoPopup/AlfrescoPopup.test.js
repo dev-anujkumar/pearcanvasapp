@@ -5,10 +5,24 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import AlfrescoPopup from "../../../src/component/AlfrescoPopup/AlfrescoPopup.jsx";
 
+//Constants
+const PRIMARY_BUTTON = "primary";
+
 jest.mock('../../../src/constants/utility.js', () => {
     return {
         sendDataToIframe: () => {
             return "testing"
+        },
+        getPrimaryButtonClass: (selectedOption, focusedButton) => {
+            if(selectedOption !== '' && focusedButton === PRIMARY_BUTTON) {
+                return "active-button-class primary";
+            } else if(selectedOption !== '' && focusedButton !== PRIMARY_BUTTON) {
+                return "active-button-class";
+            } else if(selectedOption === '' && focusedButton === PRIMARY_BUTTON) {
+                return "primary";
+            } else {
+                return null;
+            }
         }
     }
 })

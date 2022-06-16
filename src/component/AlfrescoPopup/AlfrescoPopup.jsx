@@ -13,7 +13,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import '../../styles/AlfrescoPopup/AlfrescoPopup.css'
 import config from '../../config/config'
-import { sendDataToIframe } from '../../constants/utility';
+import { sendDataToIframe, getPrimaryButtonClass } from '../../constants/utility';
 import axios from 'axios';
 import { alfrescoPopup, saveSelectedAlfrescoElement } from "../AlfrescoPopup/Alfresco_Action";
 import { connect } from 'react-redux';
@@ -177,19 +177,6 @@ function AlfrescoPopup(props) {
             });
     }
 
-    /**Function to retun class to apply based on selectedOption & focused Button*/
-    const getPrimaryButtonClass = () => {
-        if(selectedOption !== '' && focusedButton.current === PRIMARY_BUTTON) {
-            return "active-button-class primary";
-        } else if(selectedOption !== '' && focusedButton.current !== PRIMARY_BUTTON) {
-            return "active-button-class";
-        } else if(selectedOption === '' && focusedButton.current === PRIMARY_BUTTON) {
-            return "primary";
-        } else {
-            return null;
-        }
-    }
-
     return (
         <div id="alfresco-picker">
             <Dialog
@@ -231,7 +218,7 @@ function AlfrescoPopup(props) {
                         ref={primaryButton}
                         variant="outlined"
                         disabled={selectedOption === ''}
-                        className={getPrimaryButtonClass()}
+                        className={getPrimaryButtonClass(selectedOption, focusedButton.current)}
                         onClick={sendSelectedData}>
                         Select
                     </Button>

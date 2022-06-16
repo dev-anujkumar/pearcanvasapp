@@ -9,6 +9,7 @@ import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
 // DECLARATION - const or variables 
+const PRIMARY_BUTTON = "primary";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const requestConfigURI = () => {
@@ -751,6 +752,19 @@ export const getDesignType = (classList) => {
         return "indent-level2";
     } else if(classList.includes("paragraphNumeroUnoIndentLevel3")) {
         return "indent-level3";
+    } else {
+        return null;
+    }
+}
+
+/**Function to retun class to apply based on selectedOption & focused Button for AlfrescoPopup Component 'Select' button*/
+export const getPrimaryButtonClass = (selectedOption, focusedButton) => {
+    if(selectedOption !== '' && focusedButton === PRIMARY_BUTTON) {
+        return "active-button-class primary";
+    } else if(selectedOption !== '' && focusedButton !== PRIMARY_BUTTON) {
+        return "active-button-class";
+    } else if(selectedOption === '' && focusedButton === PRIMARY_BUTTON) {
+        return "primary";
     } else {
         return null;
     }
