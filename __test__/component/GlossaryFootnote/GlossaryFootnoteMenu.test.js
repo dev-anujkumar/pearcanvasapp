@@ -77,10 +77,10 @@ describe('Testing GlossaryFootnote menu component with props', () => {
         instance.saveContent()
      });
     it('renders glossaryFootnoteDifference function correctly', () => {
-        let newTerm = 'abc'
-        let oldTerm = 'cde'
-        let newDef = 'aaa'
-        let oldDef = 'bbb'
+        let newTerm = '<p audio-id="ac6d869a-539f-4856-83ee-0fbcc24ab85c" audio-path="https://cite-media-stg.pearson.com/legacy_paths/ac6d869a-539f-4856-83ee-0fbcc24ab85c/media628cff8ee21c9.mp3">sdfsdf ffsd&nbsp; <strong>vfsf sdfs</strong></p>'
+        let oldTerm = '<p audio-id="ac6d869a-539f-4856-83ee-0fbcc24ab85c" audio-path="https://cite-media-stg.pearson.com/legacy_paths/ac6d869a-539f-4856-83ee-0fbcc24ab85c/media628cff8ee21c9.mp3">sdfsdf ffsd&nbsp;fdfd <strong>vfsf</strong></p>'
+        let newDef = '<p><img /><img />dsffssd&nbsp;</p> '
+        let oldDef = '<p><img /><img/></p>'
         let type = 'glossary'
         instance.glossaryFootnoteDifference(newTerm, newDef, oldTerm, oldDef, type)
         type = 'footnote'
@@ -132,7 +132,7 @@ describe('Testing Save content function',() => {
         document.querySelector = (id) => {
             if(id === '#glossary-editor > div > p') {
             return {
-                innerHTML: '<p></p>'
+                innerHTML: '<p><p className="Wirisformula">sdfs</p></p>'
             }
         } else if(id === '#glossary-editor-attacher > div > p') {
             return {
