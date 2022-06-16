@@ -24,6 +24,7 @@ export const handleC2MediaClick = (props) => {
                 const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                 const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
                 let messageObj = {
+                    appName:'cypress',
                     citeName: citeName,
                     citeNodeRef: citeNodeRef,
                     elementId: props.element.id
