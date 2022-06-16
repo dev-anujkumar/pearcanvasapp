@@ -1116,7 +1116,8 @@ ol li.listItemNumeroUnoLowerRoman {
   opacity: 1;
   width: 12px;
   color: #FFFFFF;
-  border-color: #AAAAAA;
+  border: 1px solid rgba(170,170,170, 1);
   border-radius: 2px;
   margin-right:6px;
+  margin-top: 2px;
 }
