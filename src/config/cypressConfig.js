@@ -1,6 +1,6 @@
 let cypressConfig = {
     ssoToken: "7WpBpWgu4SZMGX3Zav05HbfEj6JCGSAd6F99ZnvJ1S8VuOfuVrGZNE1tFctKNcRYPHAU4b4vP0fCwep6UXmxW0TqzUqDVbYSurqTEGaFTbc3ZQj94Z",
-    myCloudProxySession:"HbYQ5RJAprwyHfCknkoKjGeyntKPKq3koJQJfHmmUGR0Y2GO0PYsOcMXBBrNq5vDqu5dgB5kExVfjvtpdiQx0GPzBeWLbJnKZm05zxErvP4FaGlywS",
+    myCloudProxySession:"PilpXKVfaH0t4Spy7wTeSaitoXfeN2c6L7QPZDvY2hhPJLwEbDFYACKQpVwKirL3PMR9AGOec9a91C4escwMupBpGdBjbBfYaPXMAGjESaRDBpLDk3",
     projectUrn: "urn:pearson:distributable:cbcd2b0c-7a44-423d-9b8a-61be2dd7b9d1",
     projectEntityUrn:"urn:pearson:entity:b22320ea-3141-45ab-b45a-63b65886fe49",
     slateEntityURN : "urn:pearson:entity:5c77d3b2-bcad-4470-ba8f-018730070bf1",
@@ -97,7 +97,9 @@ let cypressConfig = {
     fullName:'c5test01',
     isCypressPlusEnabled:true,
     CYPRESS_PLUS_WINDOW:'',
-    updateInlineImage: false
+    updateInlineImage: false,
+    figureDataToBeFetched:false,
+    parentOfParentItem:[]
 }
 
 
