@@ -17,12 +17,15 @@ jest.mock('../../../src/constants/utility.js', () => {
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-let initialState={
+let initialState = {
     alfrescoReducer: {
-        elementId: 5
+        elementId: 5,
+        isInlineEditorOpen: false,
+        locationData: "",
+        calledFromGlossaryFootnote: false,
+        calledFromImageGlossaryFootnote: false
     }
 }
-// const store = createStore(() => ({}))
 
 describe('Testing AlfrescoPopup component', () => {
     let store = mockStore(initialState);
@@ -34,10 +37,9 @@ describe('Testing AlfrescoPopup component', () => {
         style: {
             width: 360,
             height: 208
-          }
+        }
     }
     it('AlfrescoPopup Container', () => {
-        
         const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);   
         wrapper.find("AlfrescoPopup");
     })
