@@ -51,7 +51,7 @@ function AlfrescoPopup(props) {
     const [selectedOption, setOption] = React.useState('');
     const [projectMetadata, setMetaData] = React.useState()
     const classes = useStyles();
-    const focusedButton = useRef(PRIMARY_BUTTON);
+    const focusedButton = useRef(SECONDARY_BUTTON);
     const primaryButton = useRef(null);
     const secondaryButton = useRef(null);
 
@@ -92,7 +92,7 @@ function AlfrescoPopup(props) {
             clickElement(focusedButton.current);
         }
         if(e.keyCode === 27) {
-            handleClose();
+            clickElement(SECONDARY_BUTTON);
         }
         if (e.keyCode === 37 && focusedButton.current === PRIMARY_BUTTON) {
             setFocusedButton(SECONDARY_BUTTON);
@@ -225,8 +225,9 @@ function AlfrescoPopup(props) {
                     </Select>
                 </FormControl>
                 <DialogActions>
-                    <Button ref={secondaryButton} variant="outlined" className="active-button-class" onClick={handleClose}>Cancel</Button>
+                    <Button id={SECONDARY_BUTTON} ref={secondaryButton} variant="outlined" className="active-button-class secondary" onClick={handleClose}>Cancel</Button>
                     <Button
+                        id={PRIMARY_BUTTON}
                         ref={primaryButton}
                         variant="outlined"
                         disabled={selectedOption === ''}
