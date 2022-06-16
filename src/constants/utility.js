@@ -9,7 +9,8 @@ import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
 // DECLARATION - const or variables 
-const PRIMARY_BUTTON = "primary";
+export const PRIMARY_BUTTON = "primary";
+export const SECONDARY_BUTTON = "secondary";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const requestConfigURI = () => {

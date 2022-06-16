@@ -13,14 +13,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import '../../styles/AlfrescoPopup/AlfrescoPopup.css'
 import config from '../../config/config'
-import { sendDataToIframe, getPrimaryButtonClass } from '../../constants/utility';
+import { sendDataToIframe, getPrimaryButtonClass, PRIMARY_BUTTON, SECONDARY_BUTTON } from '../../constants/utility';
 import axios from 'axios';
 import { alfrescoPopup, saveSelectedAlfrescoElement } from "../AlfrescoPopup/Alfresco_Action";
 import { connect } from 'react-redux';
-
-//Constants
-const PRIMARY_BUTTON = "primary";
-const SECONDARY_BUTTON = "secondary";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {

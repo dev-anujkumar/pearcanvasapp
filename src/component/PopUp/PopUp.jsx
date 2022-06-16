@@ -14,10 +14,8 @@ import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
+import { PRIMARY_BUTTON, SECONDARY_BUTTON } from '../../../src/constants/utility.js';
 
-//Constants
-const PRIMARY_BUTTON = "primary";
-const SECONDARY_BUTTON = "secondary";
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
