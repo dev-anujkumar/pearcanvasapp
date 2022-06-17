@@ -126,7 +126,7 @@ class PopUp extends React.Component {
 
     /**Function to set initial state of focused button based on props*/
     setFocus = (props) => {
-        if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup) {
+        if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup || props.isTCMCanvasPopup) {
             return PRIMARY_BUTTON;
         } else {
             return SECONDARY_BUTTON;
@@ -263,8 +263,8 @@ class PopUp extends React.Component {
             console.log('TCM EDITOR PERMISSION', this.props.permissions?.includes('trackchanges_approve_reject'), "TCM STATUS", props.tcmStatus)
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
-                    <span option={SECONDARY_BUTTON} className={`cancel-button tcm ${(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) && "disable"}`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
-                    <span option={PRIMARY_BUTTON} className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
+                    <span option={PRIMARY_BUTTON} className={`cancel-button tcm ${(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) && "disable"}`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
+                    <span option={SECONDARY_BUTTON} className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
                 </div>
             )
         }
