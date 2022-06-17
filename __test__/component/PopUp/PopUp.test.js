@@ -183,4 +183,64 @@ describe('Testing PopUp component', () => {
         component.find('img').simulate('click');
         expect(component.instance().props.alfrescoExpansionPopup).toEqual(true);
     });
+    describe("Testing method handleKeyDown()", () => {
+        it("Test handleKeyDown method for keyCode=13", () => {
+            let props = {
+                togglePopup:jest.fn(),
+                showDeleteElemPopup:true,
+                isOwnerSlate:true
+            }
+            let wrapper = mount(<PopUp {...props}/>);
+            let instance = wrapper.find('PopUp').instance();
+            let e = {
+                keyCode: 13
+            }
+            instance.handleKeyDown(e);
+            expect(wrapper.instance().props.showDeleteElemPopup).toEqual(true);
+            expect(wrapper.instance().props.isOwnerSlate).toEqual(true);
+        });
+        it("Test handleKeyDown method for keyCode=27", () => {
+            let props = {
+                togglePopup:jest.fn(),
+                showDeleteElemPopup:true,
+                isOwnerSlate:true
+            }
+            let wrapper = mount(<PopUp {...props}/>);
+            let instance = wrapper.find('PopUp').instance();
+            let e = {
+                keyCode: 27
+            }
+            instance.handleKeyDown(e);
+            expect(wrapper.instance().props.showDeleteElemPopup).toEqual(true);
+            expect(wrapper.instance().props.isOwnerSlate).toEqual(true);
+        });
+        it("Test handleKeyDown method for keyCode=37", () => {
+            let props = {
+                isSplitSlatePopup:true,
+                togglePopup:jest.fn()
+            }
+            let wrapper = mount(<PopUp {...props}/>);
+            let instance = wrapper.find('PopUp').instance();
+            let e = {
+                keyCode: 37
+            }
+            wrapper.setState({ focusedButton: 'primary' });
+            instance.handleKeyDown(e);
+            expect(wrapper.instance().props.isSplitSlatePopup).toEqual(true);
+        });
+        it("Test handleKeyDown method for keyCode=39", () => {
+            let props = {
+                isSplitSlatePopup:true,
+                togglePopup:jest.fn()
+            }
+            let wrapper = mount(<PopUp {...props}/>);
+            let instance = wrapper.find('PopUp').instance();
+            let e = {
+                keyCode: 39
+            }
+            wrapper.setState({ focusedButton: 'secondary' });
+            instance.handleKeyDown(e);
+            expect(wrapper.instance().props.isSplitSlatePopup).toEqual(true);
+        });
+    });
 })

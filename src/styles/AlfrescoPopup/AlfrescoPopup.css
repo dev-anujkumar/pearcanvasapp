@@ -157,3 +157,17 @@ background-color: #f7f7f7 !important;
         top: 219px !important;
       }
   }
+
+/**Popup Buttons Focus Classes */
+.primary {
+  outline-style: solid !important;
+  outline-color: #005A70 !important;
+  outline-width: 2.5px !important;
+  outline-offset: 2.5px !important;
+}
+
+.secondary {
+  outline-style: solid !important;
+  outline-color: #ececec !important;
+  outline-width: 3.5px !important;
+}

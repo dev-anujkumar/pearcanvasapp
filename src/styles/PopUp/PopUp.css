@@ -1097,6 +1097,21 @@ ol li.listItemNumeroUnoLowerRoman {
   margin-right: 2px;
 }
 
+/**Popup Buttons Focus Classes Start*/
+.primary {
+  outline-style: solid;
+  outline-color: #005A70;
+  outline-width: 2.5px;
+  outline-offset: 2.5px;
+}
+
+.secondary {
+  outline-style: solid;
+  outline-color: #ececec;
+  outline-offset: 1px;
+}
+/**Popup Buttons Focus Classes End*/
+
 .popup-checkbox-message {
   display: flex ;
   flex-direction: row;

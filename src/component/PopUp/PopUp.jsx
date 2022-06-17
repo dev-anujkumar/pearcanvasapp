@@ -14,6 +14,8 @@ import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
+import { PRIMARY_BUTTON, SECONDARY_BUTTON } from '../../../src/constants/utility.js';
+
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -23,7 +25,8 @@ class PopUp extends React.Component {
         super(props);
         this.state = {
             wordPasteProceed: false,
-            isChecked: false
+            isChecked: false,
+            focusedButton: this.setFocus(props)
         };
         this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
@@ -64,6 +67,10 @@ class PopUp extends React.Component {
                 refVal.processGlossaryFootnotes(e)
             });
         }
+        /** Add Event Listner on Popup Buttons */
+        window.addEventListener('keydown', this.handleKeyDown);
+        /**  Focus on Popup PRIMARY Button or SECONDARY Button*/
+        this.focusElement(this.state.focusedButton);
     }
 
     componentWillUnmount() {
@@ -76,6 +83,8 @@ class PopUp extends React.Component {
             hideBlocker();
             this.props.hideCanvasBlocker(false)
         }
+        /** Remove Event Listner on Popup Buttons */
+        window.removeEventListener('keydown', this.handleKeyDown);
     }
 
     /**  Function to open the TCM SPA on click of glossary and footnotes*/
@@ -114,6 +123,55 @@ class PopUp extends React.Component {
         let id = imgId.substring(imgId.indexOf(":") + 1, imgId.lastIndexOf(":"));
         this.props.openInNewWindow(id)
     }
+
+    /**Function to set initial state of focused button based on props*/
+    setFocus = (props) => {
+        if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup) {
+            return PRIMARY_BUTTON;
+        } else {
+            return SECONDARY_BUTTON;
+        }
+    }
+
+    /**Function to focus element by adding class to elements class list */
+    focusElement = (value) => {
+        document.querySelector(`[option=${value}]`)?.classList?.add(value);
+    }
+
+    /**Function to remove focus of element by removing class from elements class list */
+    blurElement = (value) => {
+        document.querySelector(`[option=${value}]`)?.classList?.remove(value);
+    }
+
+    /**Function to perform click event on element which is currently focused */
+    clickElement = (value) => {
+        document.querySelector(`[option=${value}]`)?.click();
+    }
+
+    /**Function to handle keyboard event of Enter, Left & Right arrow keys */
+    handleKeyDown = (e) => {
+        if(e.keyCode === 13) {
+            this.clickElement(this.state.focusedButton);
+        }
+        if(e.keyCode === 27) {
+            const element = document.querySelector(`[option=${SECONDARY_BUTTON}]`) !== null ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : document.querySelector(`[option=${PRIMARY_BUTTON}]`);
+            element?.click();
+        }
+        if (e.keyCode === 37 && this.state.focusedButton === PRIMARY_BUTTON) {
+            this.setState({
+                focusedButton: SECONDARY_BUTTON
+            })
+            this.blurElement(PRIMARY_BUTTON);
+            this.focusElement(SECONDARY_BUTTON);
+        } else if (e.keyCode === 39 && this.state.focusedButton === SECONDARY_BUTTON) {
+            this.setState({
+                focusedButton: PRIMARY_BUTTON
+            })
+            this.blurElement(SECONDARY_BUTTON);
+            this.focusElement(PRIMARY_BUTTON);
+        }
+    }
+
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
     * @param {event} 
@@ -123,82 +181,81 @@ class PopUp extends React.Component {
             showBlocker(true); showTocBlocker();
             return (
                 <div className={`dialog-buttons ${props.slateLockClass}`}>
-                    <span className="save-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>OK</span>
+                    <span option={PRIMARY_BUTTON} className="save-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>OK</span>
                 </div>
             )
-        } else
-            if(props.alfrescoExpansionPopup){
-                return null;
-            }
-            if (props.showDeleteElemPopup) {
-                if (props.isOwnerSlate) {
-                    return (
-                        <div className={`dialog-buttons ${props.assessmentClass}`}>
-                            <span className="lo-save-button" onClick={props.deleteElement}>{props.proceedButton}</span>
-                            <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
-                        </div>
-                    )
-                }
+        } else if (props.alfrescoExpansionPopup) {
+            return null;
+        }
+        if (props.showDeleteElemPopup) {
+            if (props.isOwnerSlate) {
                 return (
                     <div className={`dialog-buttons ${props.assessmentClass}`}>
-                        <span className="save-button" onClick={props.deleteElement}>{props.yesButton}</span>
-                        <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                        <span option={PRIMARY_BUTTON} className="lo-save-button" onClick={props.deleteElement}>{props.proceedButton}</span>
+                        <span option={SECONDARY_BUTTON} className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                     </div>
                 )
             }
+            return (
+                <div className={`dialog-buttons ${props.assessmentClass}`}>
+                    <span option={PRIMARY_BUTTON} className="save-button" onClick={props.deleteElement}>{props.yesButton}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
         if (props.isSplitSlatePopup || props.sytaxHighlight) {
             return (
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
-                    <span className={`save-button ${props.splitSlateClass}`} onClick={props.confirmCallback}>Yes</span>
-                    <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={props.confirmCallback}>Yes</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
         }
         if (props.assessmentAndInteractive) {
             return (
                 <div className={`dialog-buttons ${props.assessmentAndInteractive}`}>
-                    <span className={`save-button ${props.splitSlateClass}`} onClick={() => { props.handleC2Click(document.getElementById("inputUUID").value) }}>Ok</span>
-                    <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(e, false)}>Cancel</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={() => { props.handleC2Click(document.getElementById("inputUUID").value) }}>Ok</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(e, false)}>Cancel</span>
                 </div>
             )
         }
         if (props.imageGlossary) {
             return (
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
-                    <span className={`save-button ${props.splitSlateClass}`} onClick={props.removeImageContent}>Ok</span>
-                    <span className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={props.removeImageContent}>Ok</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
         }
         if (props.isElmUpdatePopup) {
             return (
                 <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
-                    <span className={`save-button ${props.isElmUpdateClass}`} onClick={(e) => props.updateElmAssessment(e)}>Update</span>
-                    <span className={`cancel-button ${props.isElmUpdateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.isElmUpdateClass}`} onClick={(e) => props.updateElmAssessment(e)}>Update</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.isElmUpdateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
         }
         if (props.isDeleteAssetPopup) {
             return (
                 <div className={`dialog-buttons ${props.isDeleteAssetClass}`}>
-                    <span className={`save-button `} onClick={(e) => props.deleteAssetHandler(e)}>Yes</span>
-                    <span className={`cancel-button `} id='close-container' onClick={(e) => props.togglePopup(false, e)}>No</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button `} onClick={(e) => props.deleteAssetHandler(e)}>Yes</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button `} id='close-container' onClick={(e) => props.togglePopup(false, e)}>No</span>
                 </div>
             )
         }
         if (props.WordPastePopup) {
             return (
                 <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
-                    <span className={`powerpaste-save-button ${this.state.wordPasteProceed ? '' : "disabled"}`} onClick={props.handlePowerPaste}>Proceed</span>
-                    <span className="powerpaste-cancel-button" onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
+                    <span option={PRIMARY_BUTTON} className={`powerpaste-save-button ${this.state.wordPasteProceed ? '' : "disabled"}`} onClick={props.handlePowerPaste}>Proceed</span>
+                    <span option={SECONDARY_BUTTON} className="powerpaste-cancel-button" onClick={() => props.handleCopyPastePopup(false)}>Cancel</span>
                 </div>
             )
         }
         if (props.LOPopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span className={`lo-save-button`} onClick={(e) => props.yesButtonHandler(e)}>{props.yesButton}</span>
-                    <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                    <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.yesButtonHandler(e)}>{props.yesButton}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
         }
@@ -206,45 +263,45 @@ class PopUp extends React.Component {
             console.log('TCM EDITOR PERMISSION', this.props.permissions?.includes('trackchanges_approve_reject'), "TCM STATUS", props.tcmStatus)
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
-                    <span className={`cancel-button tcm ${(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) && "disable"}`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
-                    <span className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button tcm ${(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) && "disable"}`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
+                    <span option={PRIMARY_BUTTON} className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
                 </div>
             )
         }
         if (props.AssessmentPopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span className={`lo-save-button`} onClick={(e) => props.agree(false, e)}>{props.yesButton}</span>
-                    <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                    <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.agree(false, e)}>{props.yesButton}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
         }
         if (props.UsagePopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span className={`lo-save-button`} onClick={(e) => props.agree(true,e)}>{props.proceedButton}</span>
-                    <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                    <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.agree(true,e)}>{props.proceedButton}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
         }
         if (props.isOwnersSlate) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span className={`lo-save-button`} onClick={(e) => props.proceed(this.state.isChecked, false, e)}>{props.proceedButton}</span>
-                    <span className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                    <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.proceed(this.state.isChecked, false, e)}>{props.proceedButton}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
         } else if (props.isSubscribersSlate) {
             return (
                 <div className={`subscriberSlate-buttons`}>
-                    <span className="lo-save-button" onClick={(e) => props.togglePopup(false, e)}>OK</span>
+                    <span option={PRIMARY_BUTTON} className="lo-save-button" onClick={(e) => props.togglePopup(false, e)}>OK</span>
                 </div>
             )
         }
         if(props.showBlockCodeElemPopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span className="lo-save-button" onClick={(e) => props.togglePopup(false, e)}>OK</span>
+                    <span option={PRIMARY_BUTTON} className="lo-save-button" onClick={(e) => props.togglePopup(false, e)}>OK</span>
                 </div>
             )
         }
@@ -252,8 +309,8 @@ class PopUp extends React.Component {
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
-                    <span className="save-button" onClick={props.saveContent}>{props.saveButtonText}</span>
-                    <span className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                    <span option={PRIMARY_BUTTON} className="save-button" onClick={props.saveContent}>{props.saveButtonText}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
                 </div>
             )
         }
