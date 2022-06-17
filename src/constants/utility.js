@@ -770,3 +770,21 @@ export const getPrimaryButtonClass = (selectedOption, focusedButton) => {
         return null;
     }
 }
+
+// function to get cookie value by key name
+export const getCookieByName = (name) => {
+    var value = " " + document.cookie;
+    var cStart = value.indexOf(" " + name + "=");
+    if (cStart === -1) {
+        value = null;
+    }
+    else {
+        cStart = value.indexOf("=", cStart) + 1;
+        var cEnd = value.indexOf(";", cStart);
+        if (cEnd === -1) {
+            cEnd = value.length;
+        }
+        value = unescape(value.substring(cStart, cEnd));
+    }
+    return value;
+}

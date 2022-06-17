@@ -1097,7 +1097,7 @@ ol li.listItemNumeroUnoLowerRoman {
   margin-right: 2px;
 }
 
-/**Popup Buttons Focus Classes */
+/**Popup Buttons Focus Classes Start*/
 .primary {
   outline-style: solid;
   outline-color: #005A70;
@@ -1109,4 +1109,30 @@ ol li.listItemNumeroUnoLowerRoman {
   outline-style: solid;
   outline-color: #ececec;
   outline-offset: 1px;
+}
+/**Popup Buttons Focus Classes End*/
+
+.popup-checkbox-message {
+  display: flex ;
+  flex-direction: row;
+  margin-top: 13px;
+}
+
+.popup-checkbox-text {
+  opacity: 1;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
+  color: #252525;
+  font-size: 10px;
+  width: 89px;
+}
+
+.popup-checkbox {
+  opacity: 1;
+  width: 12px;
+  color: #FFFFFF;
+  border: 1px solid rgba(170,170,170, 1);
+  border-radius: 2px;
+  margin-right:6px;
+  margin-top: 2px;
 }
