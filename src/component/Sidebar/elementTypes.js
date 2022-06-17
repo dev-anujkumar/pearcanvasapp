@@ -877,13 +877,13 @@ export default {
     "openerelement": {
         "primary-openerelement": {
             text: 'Opener Element',
-            enum: 'openerelement',
+            enum: 'OPENER_ELEMENT',
             dropdownDisabled: true,
             subtype: {
                 'secondary-openerelement': {
                     text: 'Opener Element',
                     labelText: 'OE',
-                    enum: 'openerelement',
+                    enum: 'OPENER_ELEMENT',
                 }
             },
             attributes: {

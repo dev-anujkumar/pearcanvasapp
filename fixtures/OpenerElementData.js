@@ -21,6 +21,9 @@ export const openerElementData = {
             }
         ]
     },
+    "html": {
+       "title": `<p><label>Label&nbsp;</label><number>Number&nbsp;</number>Title</p>`
+    },
     "backgroundimage": {
         "path": "https://d12m40tknrppbi.cloudfront.net/cite/images/ch11_chapter_header.jpg",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
