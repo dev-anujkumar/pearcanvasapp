@@ -8,6 +8,11 @@ const mockStore = configureMockStore(middlewares);
 import config from '../../../src/config/config';
 import FigureHeader from '../../../src/component/FigureHeader/FigureHeader';
 
+jest.mock('../../../src/component/tinyMceEditor.js', () => {
+    return function () {
+        return (<div>null</div>)
+    }
+})
 
 config.figureFieldsPlaceholders = ['Number', 'Label Name', 'Title', 'Caption', 'Credit']
 config.smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table', 'fpo']
@@ -1831,8 +1836,388 @@ describe('Testing FigureHeader component', () => {
        
     })
 
+    it('For Audio type with audiocustom case ', () => {
+        let props8 = {
+            ...props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "audio",
+                "subtype": "imageTextWidth",
+                "figureDropdownData" : {
+                    "id": "urn:pearson:entity:88538afc-3158-4a10-9c31-83bb7aad19be",
+                    "audio": [
+                        "Audio"
+                    ],
+                    "audioCustom": [
+                        "Audio123"
+                    ],
+                },
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100', "overridelabelvalue": 'Audio'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            }
+        }
 
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props8} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    it('For Audio type with audiocustom 2 case ', () => {
+        let props9 = {
+            props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "audio",
+                "subtype": "imageTextWidth",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            },
+            "index": 2,
+            "elementId": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+            "slateLockInfo": {
+                "isLocked": false,
+                "userId": ""
+            },
+            "figureDropdownData": {
+                "id": "urn:pearson:entity:88538afc-3158-4a10-9c31-83bb7aad19be",
+                "audio": [
+                    "Audio"
+                ],
+                "audioCustom": [
+                    "Audio123"
+                ],
+            },
+            "isAutoNumberingEnabled": false,
+            "selectedElement": "cypress-keyboard-1",
+            "figureHtmlData": {
+                "formattedLabel": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedNumber": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedTitle": "<p class=\"paragraphNumeroUno\">Fugure with resume numbering</p>"
+            },
+            "figLabelClass": "heading4ImageTextWidthNumberLabel",
+            "figTitleClass": "heading4ImageTextWidthTitle",
+            "autoNumberOption": {
+                "entityUrn": "urn:pearson:entity:fe82b9bd-cfed-43aa-b2a9-20ea01bee381",
+                "option": "Default Auto-number"
+            },
+            
+        }
+        
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props9} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    it('For Video type with videocustom case ', () => {
+        let props9 = {
+            props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "image",
+                "subtype": "imageTextWidth",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            },
+            "index": 2,
+            "elementId": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+            "slateLockInfo": {
+                "isLocked": false,
+                "userId": ""
+            },
+            "figureDropdownData": {
+                "id": "urn:pearson:entity:88538afc-3158-4a10-9c31-83bb7aad19be",
+                "video": [
+                    "Video"
+                ],
+                "videoCustom": [
+                    "Video123"
+                ],
+            },
+            "isAutoNumberingEnabled": false,
+            "selectedElement": "cypress-keyboard-1",
+            "figureHtmlData": {
+                "formattedLabel": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedNumber": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedTitle": "<p class=\"paragraphNumeroUno\">Fugure with resume numbering</p>"
+            },
+            "figLabelClass": "heading4ImageTextWidthNumberLabel",
+            "figTitleClass": "heading4ImageTextWidthTitle",
+            "autoNumberOption": {
+                "entityUrn": "urn:pearson:entity:fe82b9bd-cfed-43aa-b2a9-20ea01bee381",
+                "option": "Default Auto-number"
+            },
+        }
+        
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props9} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    it('For Video type with videocustom case ', () => {
+        let props9 = {
+            props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "video",
+                "subtype": "imageTextWidth",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            },
+            "index": 2,
+            "elementId": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+            "slateLockInfo": {
+                "isLocked": false,
+                "userId": ""
+            },
+            "figureDropdownData": {
+                "id": "urn:pearson:entity:88538afc-3158-4a10-9c31-83bb7aad19be",
+                "video": [
+                    "Video"
+                ],
+                "videoCustom": [
+                    "Video123"
+                ],
+            },
+            "isAutoNumberingEnabled": false,
+            "selectedElement": "cypress-keyboard-1",
+            "figureHtmlData": {
+                "formattedLabel": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedNumber": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedTitle": "<p class=\"paragraphNumeroUno\">Fugure with resume numbering</p>"
+            },
+            "figLabelClass": "heading4ImageTextWidthNumberLabel",
+            "figTitleClass": "heading4ImageTextWidthTitle",
+            "autoNumberOption": {
+                "entityUrn": "urn:pearson:entity:fe82b9bd-cfed-43aa-b2a9-20ea01bee381",
+                "option": "Default Auto-number"
+            },
+        }
+        
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props9} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    it('For Interactive type with videocustom case ', () => {
+        let props9 = {
+            props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "interactive",
+                "subtype": "imageTextWidth",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            },
+            "index": 2,
+            "elementId": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+            "slateLockInfo": {
+                "isLocked": false,
+                "userId": ""
+            },
+            "figureDropdownData": {
+                "id": "urn:pearson:entity:88538afc-3158-4a10-9c31-83bb7aad19be",
+                "interactive": [
+                    "Interactive"
+                ],
+                "interactiveCustom": [
+                    "interactive123"
+                ],
+            },
+            "isAutoNumberingEnabled": false,
+            "selectedElement": "cypress-keyboard-1",
+            "figureHtmlData": {
+                "formattedLabel": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedNumber": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedTitle": "<p class=\"paragraphNumeroUno\">Fugure with resume numbering</p>"
+            },
+            "figLabelClass": "heading4ImageTextWidthNumberLabel",
+            "figTitleClass": "heading4ImageTextWidthTitle",
+            "autoNumberOption": {
+                "entityUrn": "urn:pearson:entity:fe82b9bd-cfed-43aa-b2a9-20ea01bee381",
+                "option": "Default Auto-number"
+            },
+            
+        }
+        
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props9} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    it('For tableasmarkup type with tableasmarkupCustom case ', () => {
+        let props9 = {
+            props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "tableasmarkup",
+                "subtype": "imageTextWidth",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100'},
+                "indexPos": "2",
+                "parentDetails": [],
+                "slateEntityUrn": "urn:pearson:entity:3abd09e0-d847-426b-accd-f1f992d22f80"
+            },
+            "index": 2,
+            "elementId": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+            "slateLockInfo": {
+                "isLocked": false,
+                "userId": ""
+            },
+            "figureDropdownData": {
+                "id": "urn:pearson:entity:88538afc-3158-4a10-9c31-83bb7aad19be",
+                "tableasmarkup": [
+                    "Table"
+                ],
+                "tableasmarkupCustom": [
+                    "tableasmarkup123"
+                ],
+            },
+            "isAutoNumberingEnabled": false,
+            "selectedElement": "cypress-keyboard-1",
+            "figureHtmlData": {
+                "formattedLabel": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedNumber": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedTitle": "<p class=\"paragraphNumeroUno\">Fugure with resume numbering</p>"
+            },
+            "figLabelClass": "heading4ImageTextWidthNumberLabel",
+            "figTitleClass": "heading4ImageTextWidthTitle",
+            "autoNumberOption": {
+                "entityUrn": "urn:pearson:entity:fe82b9bd-cfed-43aa-b2a9-20ea01bee381",
+                "option": "Default Auto-number"
+            },
+            
+        }
     
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props9} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    it('For mathml type with mathmlCustom case ', () => {
+        let props9 = {
+            props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "authoredtext",
+                "subtype": "imageTextWidth",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100'},
+                "indexPos": "2",
+            },
+            "index": 2,
+            "elementId": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+            "slateLockInfo": {
+                "isLocked": false,
+                "userId": ""
+            },
+            "figureDropdownData": {
+                "id": "urn:pearson:entity:88538afc-3158-4a10-9c31-83bb7aad19be",
+                "mathml": [
+                    "Equation"
+                ],
+                "mathmlCustom": [
+                    "mathmlCustom123"
+                ],
+            },
+            "isAutoNumberingEnabled": false,
+            "selectedElement": "cypress-keyboard-1",
+            "figureHtmlData": {
+                "formattedLabel": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedNumber": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedTitle": "<p class=\"paragraphNumeroUno\">Fugure with resume numbering</p>"
+            },
+            "figLabelClass": "heading4ImageTextWidthNumberLabel",
+            "figTitleClass": "heading4ImageTextWidthTitle",
+            "autoNumberOption": {
+                "entityUrn": "urn:pearson:entity:fe82b9bd-cfed-43aa-b2a9-20ea01bee381",
+                "option": "Default Auto-number"
+            },
+            
+        }
+        
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props9} /></Provider>);
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
+    it('For preformattedtext type with preformattedtextCustom case ', () => {
+        let props9 = {
+            props,
+            "model": {
+                "id": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+                "type": "figure",
+                "figuretype": "codelisting",
+                "subtype": "imageTextWidth",
+                "displayedlabel": "Figure",
+                "numberedandlabel": true,
+                "manualoverride": {"overridenumbervalue": '100'},
+                "indexPos": "2",
+            },
+            "index": 2,
+            "elementId": "urn:pearson:work:1b799167-c369-4560-834a-4cbc95c6206d",
+            "slateLockInfo": {
+                "isLocked": false,
+                "userId": ""
+            },
+            "figureDropdownData": {
+                "id": "urn:pearson:entity:88538afc-3158-4a10-9c31-83bb7aad19be",
+                "preformattedtextCustom": [
+                    "preformattedtextCustom123"
+                ],
+                "preformattedtext": [
+                    "Exhibit"
+                ],
+            },
+            "isAutoNumberingEnabled": false,
+            "selectedElement": "cypress-keyboard-1",
+            "figureHtmlData": {
+                "formattedLabel": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedNumber": "<p class=\"paragraphNumeroUno\"><br/></p>",
+                "formattedTitle": "<p class=\"paragraphNumeroUno\">Fugure with resume numbering</p>"
+            },
+            "figLabelClass": "heading4ImageTextWidthNumberLabel",
+            "figTitleClass": "heading4ImageTextWidthTitle",
+            "autoNumberOption": {
+                "entityUrn": "urn:pearson:entity:fe82b9bd-cfed-43aa-b2a9-20ea01bee381",
+                "option": "Default Auto-number"
+            },
+        }
+        
+        let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props9} /></Provider>);
+        console.log('figureHeaderWrapper2 : ',figureHeaderWrapper2)
+        figureHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        figureHeaderWrapper2.find('.figure-number-dropdown ul li').at(2).simulate('click');
+    })
+
 })
 
 
