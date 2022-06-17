@@ -1099,16 +1099,18 @@ ol li.listItemNumeroUnoLowerRoman {
 
 /**Popup Buttons Focus Classes Start*/
 .primary {
+  outline-offset: 1.5px;
   outline-style: solid;
   outline-color: #005A70;
-  outline-width: 2.5px;
-  outline-offset: 2.5px;
+  outline-width: 3px;
 }
 
 .secondary {
-  outline-style: solid;
-  outline-color: #ececec;
+  border: 1.5px solid #dcdcdc;
   outline-offset: 1px;
+  outline-style: solid;
+  outline-color: #dcdcdc;
+  outline-width: 3px;
 }
 /**Popup Buttons Focus Classes End*/
 
