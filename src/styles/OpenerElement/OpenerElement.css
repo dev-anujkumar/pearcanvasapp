@@ -33,8 +33,10 @@
     margin: 0px -5px !important;
     font-family: 'Open Sans', sans-serif !important;
     font-size: 15px;
-    overflow: hidden;
-    overflow-wrap: normal;
+    white-space: nowrap;
+}
+.opener-title::-webkit-scrollbar{
+    display: none;
 }
 .opener-element-container .pearson-component.opener-image.figureData{
     cursor: copy;
