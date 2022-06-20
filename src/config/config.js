@@ -35,7 +35,7 @@ let config = {
     EPUB_ENDPOINT:  'https://staging.api.pearson.com/content/tools/transformation/narrative/v1',
     C6PUB_ENDPOINT: 'https://staging.api.pearson.com/content/delivery/publish/v2/',
     C6PUB_API_KEY: '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
-    WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://localhost:4000',
+    WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://local-dev.pearson.com:4000',
     LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr` :"http://localhost:5000",
     ALFRESCO_CITE_API: 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000',
     IDENTITY_URL: "/auth",
