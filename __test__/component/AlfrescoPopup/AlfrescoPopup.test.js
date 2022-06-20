@@ -66,39 +66,37 @@ describe('Testing AlfrescoPopup component', () => {
     describe("Testing handleKeyDown() Method", () => {
         it("Testing handleKeyDown() for keyCode=39 ", () => {
             const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);
-            const cancelButton = wrapper.find("button#secondary");
+            const cancelButton = wrapper.find("button.secondary");
             expect(cancelButton.hasClass('secondary'));
             let event = new KeyboardEvent('keydown', {keyCode: 39});
             document.dispatchEvent(event);
-            const saveButton = wrapper.find("button#primary");
-            expect(saveButton.hasClass('primary'));
         });
 
         it("Testing handleKeyDown() for keyCode=37 ", () => {
             const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);
-            const cancelButton = wrapper.find("button#secondary");
+            const cancelButton = wrapper.find("button.secondary");
             expect(cancelButton.hasClass('secondary'));
             let event = new KeyboardEvent('keydown', {keyCode: 39});
             document.dispatchEvent(event);
-            const saveButton = wrapper.find("button#primary");
-            expect(saveButton.hasClass('primary'));
             event = new KeyboardEvent('keydown', {keyCode: 37});
             document.dispatchEvent(event);
-            expect(wrapper.find("button#secondary").hasClass('secondary'));
+            expect(wrapper.find("button.secondary").hasClass('secondary'));
         });
 
         it("Testing handleKeyDown() for keyCode=13 ", () => {
             const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);
+            const spy = jest.spyOn(document, 'dispatchEvent');
             let event = new KeyboardEvent('keydown', {keyCode: 13});
             document.dispatchEvent(event);
-            expect(wrapper.props().children.props.handleCloseAlfrescoPicker).toBeCalled();
+            expect(spy).toBeCalled();
         });
 
         it("Testing handleKeyDown() for keyCode=27 ", () => {
             const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);
+            const spy = jest.spyOn(document, 'dispatchEvent');
             let event = new KeyboardEvent('keydown', {keyCode: 27});
             document.dispatchEvent(event);
-            expect(wrapper.props().children.props.handleCloseAlfrescoPicker).toBeCalled();
+            expect(spy).toBeCalled();
         });
     });
 });
