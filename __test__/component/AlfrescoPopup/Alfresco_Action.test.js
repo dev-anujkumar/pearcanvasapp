@@ -1,5 +1,16 @@
 import * as AlfrescoActions from '../../../src/component/AlfrescoPopup/Alfresco_Action';
 import axios from 'axios';
+import config  from '../../../src/config/config';
+
+jest.mock('../../../src/config/config', () => {
+    return {
+        alfrescoMetaData: {
+            alfresco: {
+                nodeRef: "node"
+            }
+        }
+    };
+});
 jest.mock('axios');
 
 describe('Test Actions', () => {
