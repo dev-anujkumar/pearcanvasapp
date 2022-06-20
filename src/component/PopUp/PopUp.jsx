@@ -145,7 +145,16 @@ class PopUp extends React.Component {
 
     /**Function to perform click event on element which is currently focused */
     clickElement = (value) => {
-        document.querySelector(`[option=${value}]`)?.click();
+        //Check if Word Paste Popup Proceed Button is disabled if not disabled then perform then perform click operation
+        if(this.props.WordPastePopup && value === PRIMARY_BUTTON) {
+            const element = document.querySelector(`[option=${value}]`);
+            const isButtonDisabled = element.classList.contains('disabled');
+            if(!isButtonDisabled) {
+                element?.click();
+            }
+        } else {
+            document.querySelector(`[option=${value}]`)?.click();
+        }
     }
 
     /**Function to handle keyboard event of Enter, Left & Right arrow keys */
