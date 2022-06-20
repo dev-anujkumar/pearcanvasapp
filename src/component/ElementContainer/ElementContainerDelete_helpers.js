@@ -293,11 +293,11 @@ export const deleteFromStore = async (params) => {
                     let blElemInSh = element.interactivedata[section][indexes[2]];
                     deleteBlockListElement(elmId, blElemInSh);
                 }
-            } else if (element?.type === "element-aside" && element?.elementdata?.bodymatter[indexes[1]].type === "manifestlist"){
+            } else if (element?.type === "element-aside" && element?.elementdata?.bodymatter[indexes[1]]?.type === "manifestlist"){
                 let blEleminAS = element?.elementdata?.bodymatter[indexes[1]];
                 deleteBlockListElement(elmId, blEleminAS);
-            } else if (element?.type === "element-aside" && element?.elementdata?.bodymatter[indexes[1]]?.contents.bodymatter[indexes[2]]){
-                let blEleminWE = element?.elementdata?.bodymatter[indexes[1]]?.contents.bodymatter[indexes[2]];
+            } else if (element?.type === "element-aside" && element?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist"){
+                let blEleminWE = element?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]];
                 deleteBlockListElement(elmId, blEleminWE);
             }else if (element?.type === "manifestlist") {
                 deleteBlockListElement(elmId, element)

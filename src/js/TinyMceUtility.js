@@ -179,7 +179,7 @@ export const checkBlockListElement = (data, keypressed) => {
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
             let indexes = index.split("-");
             let parentElement = data?.asideData?.parent;
-            if ((parentElement && parentElement.type === "showhide" || data?.parentElement?.type === "element-aside") && data?.asideData.type === "manifestlist") {
+            if ((parentElement && parentElement.type === "showhide" && data?.asideData.type === "manifestlist") || contents.bodymatter[indexes[0]].type === "element-aside") {
                 let indexToinsert = null;
                 let parentData = {};
                 if (keypressed === "TAB") {
@@ -238,7 +238,8 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
 
             if (parentElement && parentElement.type === "showhide" && data.asideData.parentManifestList) {
                 return true;
-            }
+            }if(contents?.bodymatter[indexes[0]]?.type === "element-aside" && data?.asideData?.type === 'manifestlist')
+                return true
             if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
                 return true;
             }
