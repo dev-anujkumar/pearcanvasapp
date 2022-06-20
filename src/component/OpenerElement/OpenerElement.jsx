@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { labelOptions, getOpenerContent, getOpenerImageSource } from './OpenerConstants'
+import { labelOptions, getOpenerContent, getOpenerImageSource, moduleLabelOptions } from './OpenerConstants'
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 
 import '../../styles/OpenerElement/OpenerElement.css'
-import { hasReviewerRole, sendDataToIframe } from '../../constants/utility';
+import { createLabelNumberTitleModel, getLabelNumberTitleHTML, hasReviewerRole, sendDataToIframe } from '../../constants/utility';
 import noImage from '../../images/OpenerElement/no-image.png'
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
@@ -12,6 +12,7 @@ import { checkSlateLock } from "../../js/slateLockUtility.js"
 import axios from 'axios';
 import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
+import TinyMceEditor from '../tinyMceEditor';
 
 class OpenerElement extends Component {
 
@@ -234,7 +235,8 @@ class OpenerElement extends Component {
      */
     renderLabelDropdown = () => {
         const { showLabelDropdown } = this.state
-        const openerLabelOptions = labelOptions.map((value, index) => {
+        const openerElementLabelOptions = this.props.setSlateParent === "module" ? moduleLabelOptions : labelOptions
+        const openerLabelOptions = openerElementLabelOptions.map((value, index) => {
             return <li key={index} data-value={value} onClick={this.handleOpenerLabelChange}>{value}</li>
         })
         if(showLabelDropdown){
@@ -256,16 +258,6 @@ class OpenerElement extends Component {
     handleOpenerNumberChange = e => {
         this.setState({
             number: e.target.value
-        })
-    }
-
-    /**
-     * Handles title model change event
-     * @param {e} event
-     */
-    handleOpenerTitleChange = e => {
-        this.setState({
-            title: e.target.value            
         })
     }
 
@@ -314,7 +306,7 @@ class OpenerElement extends Component {
             e.preventDefault()
             return false
         }
-        this.props.onClick()
+        this.props.handleFocus()
 
     }
 
@@ -355,48 +347,21 @@ class OpenerElement extends Component {
             return false
         }
 
-        /**
-         * [BG-411]|7 - validate before making blur call
-         */
-        const { textsemantics, text } = this.props.element.title;
-        const classList = event.currentTarget && event.currentTarget.classList || [];
-        let flag = true;
-        if (classList.length > 0 
-            && (classList.contains("opener-title") || classList.contains("opener-number"))
-            && (this.state.label === getOpenerContent(textsemantics, "label", text))
-            && (this.state.number === getOpenerContent(textsemantics, "number", text))
-            && (this.state.title === getOpenerContent(textsemantics, "title", text))) {
-            flag = false;
-        }
-        else if ((classList.length === 0) 
-        && this.state.label === getOpenerContent(textsemantics, "label", text)
-        && this.state.number === getOpenerContent(textsemantics, "number", text)
-        && this.state.title === getOpenerContent(textsemantics, "title", text)
-        && this.state.imgSrc!==event.imgSrc) {
-            flag = false
-        }
-        let element = this.props.element;
-        let { label, number, title, imgSrc, imageId } = this.state;
-        label = event.target && event.target.innerText ? ((event.target.innerText === 'No Label') ? "" : event.target.innerText) : (label === 'No Label' ? '' : label);
-        imgSrc = event.imgSrc || imgSrc;
-        imageId = event.imageId || imageId;
+        let labelDOM = document.getElementById(`cypress-${this.props.index}-0`),
+            numberDOM = document.getElementById(`cypress-${this.props.index}-1`),
+            titleDOM = document.getElementById(`cypress-${this.props.index}-2`)
 
-        if(!element.title) {
-            element.title = {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": "",
-                "textsemantics": []
-            };
-        }
-                
-        element.title.text = `${label} ${number} ${title}`;        
-        if(!label){
-            element.title.text = element.title.text.trim();
-            if(!title && number){
-                element.title.text =  `${element.title.text} `;
-            }
-        }
-        element.title.textsemantics = this.createSemantics({label, number});
+        let labelHTML = labelDOM ? labelDOM.innerHTML : "",
+            numberHTML = numberDOM ? numberDOM.innerHTML : "",
+            titleHTML = titleDOM ? titleDOM.innerHTML : ""
+
+        let flag = true;
+
+        let element = this.props.element;
+        let { label, number, imgSrc, imageId } = this.state;
+        label = event?.target && event.target.innerText ? ((event.target.innerText === 'No Label') ? "" : event.target.innerText) : (label === 'No Label' ? '' : label);
+        imgSrc = event?.imgSrc || imgSrc;
+        imageId = event?.imageId || imageId;
 
         if(!element.backgroundimage) {
             element.backgroundimage = {
@@ -412,6 +377,13 @@ class OpenerElement extends Component {
             };
         }
 
+        titleHTML = titleHTML.replace(/class="paragraphNumeroUno"/g, "").replace("<p >", '').replace(/<br>/g, '').replace("</p>", '')
+        let labelNumberTitleHTML = createLabelNumberTitleModel(label, number, titleHTML);  
+        labelNumberTitleHTML = labelNumberTitleHTML.replace(/&nbsp;/g, ' ')
+        if(element?.html.title === labelNumberTitleHTML  && this.state.imgSrc!==event?.imgSrc){
+            flag = false
+        }
+
         let altText = "";
         let longDesc = "";
         if (document.querySelector("[name='alt_text']"))
@@ -425,6 +397,7 @@ class OpenerElement extends Component {
         element.backgroundimage.longdescription = longDesc;
         element.backgroundcolor = this.props.backgroundColor;
         element.textcolor=this.props.textColor;
+        element.html.title = labelNumberTitleHTML;
 
         flag && this.props.updateElement(element);
     }
@@ -487,8 +460,10 @@ class OpenerElement extends Component {
     }
     render() {
         const { imgSrc, width } = this.state
-        const { backgroundColor, slateLockInfo } = this.props
+        const { element, backgroundColor, slateLockInfo } = this.props
+        const openerHtmlData = getLabelNumberTitleHTML(element);
         let isDisable = hasReviewerRole() ? " disable-role" : ""
+
         const styleObj = this.getBGStyle(imgSrc, width)
         return (
             <div className = "opener-element-container" ref={this.setWrapperRef} onClickCapture={(e) => this.handleOpenerClick(slateLockInfo, e)}>
@@ -506,7 +481,7 @@ class OpenerElement extends Component {
                     </div>
                     <div className="opener-label-box oe-title-box">
                         <div className="opener-title-text">Title</div>
-                        <input className={"element-dropdown-title opener-title" + isDisable} value={this.state.title} type="text" onChange={this.handleOpenerTitleChange} onBlur={this.handleBlur} onClick={this.handleToolbarOpener}/>
+                        <TinyMceEditor permissions={this.props.permissions} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.handleBlur} index={`${this.props.index}-2`} tagName='opener' className={"element-dropdown-title opener-title" + isDisable} model={openerHtmlData.formattedTitle} slateLockInfo={this.props.slateLockInfo} elementId={this.props.elementId}/>
                     </div>
                 </div>
                 {imgSrc?this.renderExistingCOImage():this.renderDefaultCOImage()}
@@ -548,7 +523,8 @@ const mapStateToProps = (state) => {
         alfrescoAssetData: state.alfrescoReducer.alfrescoAssetData,
         alfrescoElementId : state.alfrescoReducer.elementId,
         alfrescoListOption: state.alfrescoReducer.alfrescoListOption,
-        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup
+        launchAlfrescoPopup: state.alfrescoReducer.launchAlfrescoPopup,
+        setSlateParent :  state.appStore.setSlateParent
     }
 }
 

@@ -26,7 +26,7 @@ import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } f
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
-import { ShowLoader, CanvasActiveElement, AddOrViewComment } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
@@ -77,7 +77,7 @@ import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_he
 import { getSlateLevelData, updateChapterPopupData } from '../FigureHeader/AutoNumberActions';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumber_ElementSubTypeToCeateKeysMapper, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes';
-import { checkHTMLdataInsideString } from '../../constants/utility'; 
+import { checkHTMLdataInsideString, getCookieByName } from '../../constants/utility'; 
 import { prepareBqHtml } from '../../js/utils';
 import { hideToc } from '../../js/toggleLoader';
 const {
@@ -111,7 +111,8 @@ class ElementContainer extends Component {
             figureUrl: "",
             assetsPopupStatus: false,
             isActive: false,
-            showBlockCodeElemPopup: false
+            showBlockCodeElemPopup: false,
+            warningPopupCheckbox: false
         };
 
 
@@ -1393,11 +1394,17 @@ class ElementContainer extends Component {
         e.stopPropagation();
         this.props.showBlocker(true);
         showTocBlocker();
-        this.setState({
-            popup,
-            showDeleteElemPopup: true,
-            sectionBreak: sectionBreak ? sectionBreak : null
-        });
+        const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+        // if disableDeleteWarnings present in cookie then call delete element directly without showing popup
+        if(disableDeleteWarnings) {
+            this.deleteElement(e);
+        } else {
+            this.setState({
+                popup,
+                showDeleteElemPopup: true,
+                sectionBreak: sectionBreak ? sectionBreak : null
+            });
+        }
     }
 
     /**
@@ -1458,6 +1465,7 @@ class ElementContainer extends Component {
         }
         this.handleCommentPopup(false, e);
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        if(this.state.warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } }); 
         // api needs to run from here
         if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {// || element.type === elementTypeConstant.SHOW_HIDE
             this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
@@ -1466,7 +1474,8 @@ class ElementContainer extends Component {
             this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
         }
         this.setState({
-            sectionBreak: null
+            sectionBreak: null,
+            warningPopupCheckbox: false
         })
     }
 
@@ -1607,6 +1616,12 @@ class ElementContainer extends Component {
             position: position
         })
     }
+    
+    handleWarningPopupCheckbox = (event) => {
+        this.setState({
+            warningPopupCheckbox: event?.target?.checked
+        });
+    }
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element
     * @param {*} tcmData tcm data for elements on the slate
@@ -1722,7 +1737,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.OPENER:
                     const { activeColorIndex, activeTextColorIndex } = this.state
-                    editor = <OpenerElement accessDenied={this.props.accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} textColor={config.textcolors[activeTextColorIndex]} index={index} onClick={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
+                    editor = <OpenerElement accessDenied={this.props.accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} textColor={config.textcolors[activeTextColorIndex]} index={index} handleFocus={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} />
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
@@ -2069,6 +2084,8 @@ class ElementContainer extends Component {
                         assetsPopupStatus = {this.state.assetsPopupStatus}
                         closeAssetsPopup = {this.handleAssetsPopupLocation}
                         position={this.state.position}
+                        handleCheckboxPopup ={this.handleWarningPopupCheckbox}
+                        warningPopupCheckbox={this.state.warningPopupCheckbox}
                     />;
                     labelText = 'PS'
                     break;
@@ -2233,6 +2250,8 @@ class ElementContainer extends Component {
                         projectUsers={this.props.projectUsers}
                         comment={this.state.comment}
                         showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
+                        handleCheckboxPopup ={this.handleWarningPopupCheckbox}
+                        warningPopupCheckbox={this.state.warningPopupCheckbox}
                     />}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
@@ -2450,7 +2469,8 @@ class ElementContainer extends Component {
             showAlfrescoExpansionPopup: false,
             showBlockCodeElemPopup: false,
             showAlfrescoExpansionPopup: false,
-            comment: ""
+            comment: "",
+            warningPopupCheckbox: false
         });
         if (this.props.isBlockerActive) {
             this.props.showBlocker(false)

@@ -66,3 +66,6 @@ export const REFRESH_MESSAGE='refresh on Cypress from Cypress_plus'
 
  //Control Vocabulary constant
  export const SET_CONTROL_VOCAB_DETAILS = 'setControlVocabDetails'
+
+/* Delete Popup Status Message Types */
+export const DISABLE_DELETE_WARNINGS = 'disableDeleteWarnings';
