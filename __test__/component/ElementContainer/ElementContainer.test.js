@@ -32,6 +32,7 @@ jest.mock('./../../../src/component/ElementSaprator', () => {
     return (<div>null</div>)
 })
 jest.mock('./../../../src/constants/utility.js', () => ({
+    getCookieByName: ()=>{return true},
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
     guid: jest.fn(),
@@ -1328,8 +1329,20 @@ describe('Test for element container component', () => {
             elementContainerInstance.showDeleteElemPopup(event,true,true);
             elementContainerInstance.forceUpdate();
             elementContainer.update();
+            expect(elementContainerInstance.state.showDeleteElemPopup).toBe(false)
+            expect(elementContainerInstance.state.popup).toBe(false)
+            spyshowDeleteElemPopup.mockClear()
+        })
+        it('Test-showDeleteElemPopup  Function else', () => {
+            const spyshowDeleteElemPopup = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup')
+            elementContainerInstance.showDeleteElemPopup(event,true,true);
+            elementContainerInstance.setState({
+                showDeleteElemPopup:true,
+            })
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
             expect(elementContainerInstance.state.showDeleteElemPopup).toBe(true)
-            expect(elementContainerInstance.state.popup).toBe(true)
+            expect(elementContainerInstance.state.popup).toBe(false)
             spyshowDeleteElemPopup.mockClear()
         })
         it('Test-handleOnMouseOver  Function', () => {
@@ -1538,6 +1551,9 @@ describe('Test for element container component', () => {
                 "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "split_slate", "full_project_slate_preview", "access_formatting_bar", "elements_add_remove",
                 "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
             ],
+            parentElement:{
+                type:"SHOWHIDE"
+            },
             showBlocker: jest.fn(),
             isBlockerActive: true,
             asideData: {},
@@ -1653,7 +1669,8 @@ describe('Test for element container component', () => {
         }) 
         it('Test-deleteElement Function', () => {
             elementContainerInstance.setState({
-                sectionBreak: true
+                sectionBreak: true,
+                warningPopupCheckbox: true
             })
             const spydeleteElement  = jest.spyOn(elementContainerInstance, 'deleteElement')
             elementContainerInstance.deleteElement(event);
@@ -3487,6 +3504,18 @@ describe('Test-Other Functions', () => {
         expect(spyhandleAssetsPopupLocation).toHaveBeenCalled();
         spyhandleAssetsPopupLocation.mockClear()
     });
+    it("handleWarningPopupCheckbox function", () => {
+        const event = {
+            target:{
+                value:"true"
+            }
+        }
+        const handleWarningPopupCheckbox = jest.spyOn(elementContainerInstance, 'handleWarningPopupCheckbox')
+        elementContainerInstance.handleWarningPopupCheckbox(event);
+        expect(handleWarningPopupCheckbox).toHaveBeenCalled();
+        handleWarningPopupCheckbox.mockClear()
+    });
+
     it("handleAutonumberAfterUpdate function", () => {
         const previousElementData = {
             manualoverride: {

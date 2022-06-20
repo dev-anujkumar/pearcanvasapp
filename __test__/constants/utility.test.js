@@ -5,7 +5,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-import {utility,matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom,labelValueForFiguretype,labelValue,Table, Equation , Exhibit,dropdownValueForFiguretype,dropdownList,subtype,preformattedtext,mathml,image,tableasmarkup } from '../../src/constants/utility.js';
+import {utility,matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom,labelValueForFiguretype,labelValue,Table, Equation , Exhibit,dropdownValueForFiguretype,dropdownList,subtype,preformattedtext,mathml,image,tableasmarkup, getCookieByName} from '../../src/constants/utility.js';
 import cypressConfig from '../../src/config/cypressConfig';
 import { newFigureObj } from '../../fixtures/ElementFigureTestingData.js';
 import { showHide } from '../../fixtures/ElementSHowHideData';
@@ -458,5 +458,13 @@ describe('-----Testing Function  dropdownValueForFiguretype ------------', () =>
         expect(dropdownValueForFiguretype(element, figureDropdownData)).toEqual(["No Label", "Figure", "Table", "Equation", "Custom"]);
 
     })
+    it('Case 1 for getCookieByName function', () => {
+        document.cookie = "DISABLE_DELETE_WARNINGS"; 
+        expect(getCookieByName(document.cookie)).toBe(null);
+      })
 
+    xit('Case 2 for getCookieByName function', () => {
+        document.cookie = "DISABLE_DELETE_WARNINGS";
+        expect(getCookieByName("DELETE").notToBe(null));
+      })
 });
