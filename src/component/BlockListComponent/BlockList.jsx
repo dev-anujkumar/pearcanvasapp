@@ -30,14 +30,13 @@ const BlockList = (props) => {
             let indexToPass = `${typeof (props?.index) === 'number' ? props?.index : props?.index?.split('-')[0]}-${props?.indexTemp}${parentIndex}-${index}`;
             let parentManifestListItem = manifestList[parentIndex];
             let normalIndex = typeof (props.index) === 'string' ? (props.index).replaceAll('-', '') : props.index;
-            let normalIndexLength = normalIndex.length;
             asideData.parentManifestList = props.element;
             asideData.grandParentManifestList = props.grandParentManifestList;
             let placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 3 ? "Press Shift+Tab to move out" : "Type something...";
-            if ((type === "showhide") || (type === "element-aside" && (normalIndexLength)%2 !== 0)) {
+            if ((type === "showhide") || (type === "element-aside" && props.parentElement?.elementdata?.bodymatter[normalIndex[1]]?.contents?.bodymatter[normalIndex[2]].type === 'manifestlist')) {
                  indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
                  placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? "Press Shift+Tab to move out" : "Type something...";
-            }else if(type === "element-aside"){
+            }else if(type === "element-aside" && props.parentElement?.elementdata?.bodymatter[normalIndex[1]]?.type === 'manifestlist'){
                 indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}`}-${props?.indexTemp}${parentIndex}-${index}`;
                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 4 ? "Press Shift+Tab to move out" : "Type something...";
             }else if(props?.parentElement){
