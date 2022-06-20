@@ -1333,18 +1333,7 @@ describe('Test for element container component', () => {
             expect(elementContainerInstance.state.popup).toBe(false)
             spyshowDeleteElemPopup.mockClear()
         })
-        it('Test-showDeleteElemPopup  Function else', () => {
-            const spyshowDeleteElemPopup = jest.spyOn(elementContainerInstance, 'showDeleteElemPopup')
-            elementContainerInstance.showDeleteElemPopup(event,true,true);
-            elementContainerInstance.setState({
-                showDeleteElemPopup:true,
-            })
-            elementContainerInstance.forceUpdate();
-            elementContainer.update();
-            expect(elementContainerInstance.state.showDeleteElemPopup).toBe(true)
-            expect(elementContainerInstance.state.popup).toBe(false)
-            spyshowDeleteElemPopup.mockClear()
-        })
+        
         it('Test-handleOnMouseOver  Function', () => {
             const spyhandleOnMouseOver = jest.spyOn(elementContainerInstance, 'handleOnMouseOver')
             elementContainerInstance.handleOnMouseOver();

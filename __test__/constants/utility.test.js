@@ -462,9 +462,4 @@ describe('-----Testing Function  dropdownValueForFiguretype ------------', () =>
         document.cookie = "DISABLE_DELETE_WARNINGS"; 
         expect(getCookieByName(document.cookie)).toBe(null);
       })
-
-    xit('Case 2 for getCookieByName function', () => {
-        document.cookie = "DISABLE_DELETE_WARNINGS";
-        expect(getCookieByName("DELETE").notToBe(null));
-      })
 });
