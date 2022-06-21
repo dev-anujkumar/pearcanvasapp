@@ -2249,6 +2249,8 @@ class ElementContainer extends Component {
                         isAddComment={this.state.showAlfrescoExpansionPopup ? false : true}
                         projectUsers={this.props.projectUsers}
                         comment={this.state.comment}
+                        figureType={this.props.element.figuretype}
+                        elementType={this.props.element.type}
                         showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
                         handleCheckboxPopup ={this.handleWarningPopupCheckbox}
                         warningPopupCheckbox={this.state.warningPopupCheckbox}

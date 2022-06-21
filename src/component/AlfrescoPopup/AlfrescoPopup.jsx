@@ -207,7 +207,7 @@ function AlfrescoPopup(props) {
                         ))}
                     </Select>
                 </FormControl>
-                <DialogActions>
+                <DialogActions className="alfresco-popup-action-buttons">
                     <Button id={SECONDARY_BUTTON} ref={secondaryButton} variant="outlined" className="active-button-class secondary" onClick={handleClose}>Cancel</Button>
                     <Button
                         id={PRIMARY_BUTTON}

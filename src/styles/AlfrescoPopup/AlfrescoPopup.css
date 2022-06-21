@@ -63,6 +63,9 @@ background-color: #f7f7f7 !important;
 .MuiDialogActions-root{
     margin: 16px !important;
 }
+.alfresco-popup-action-buttons{
+  height: 52px !important;
+}
 .active-button-class{
     color: #005a70 !important;
 }
