@@ -14,7 +14,8 @@ const BlockList = (props) => {
         element: props.element,
         index: props.index
     };
-    asideData = type === ("showhide" || "element-aside") ? { ...asideData, parent: { id, type, contentUrn, showHideType: props?.showHideType } } : asideData;
+    const allowedElements = ["showhide", "element-aside"];
+    asideData = allowedElements.includes(type) ? { ...asideData, parent: { id, type, contentUrn, showHideType: props?.showHideType } } : asideData;
 
     const fetchLi = (subtype) => {
         return manifestList?.map((item, index) => {
