@@ -292,3 +292,6 @@ export const BLOCK_LIST_ELEMENT_EVENT_MAPPING = {
     "ENTER": 3,
     "SHIFT+TAB": 5
 }
+
+/** Not supported TCM revet functionality element types */
+export const notAllowedTCMElementTypes = ['openerelement', 'tableasmarkup', 'manifestlist', 'element-generateLOlist']
