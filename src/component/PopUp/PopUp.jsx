@@ -5,7 +5,7 @@
 import React from 'react';
 import '../../styles/PopUp/PopUp.css';
 import PropTypes from 'prop-types'
-import { SECTION_BREAK_DELETE_TEXT } from '../../constants/Element_Constants'
+import { SECTION_BREAK_DELETE_TEXT, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
 import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
@@ -426,7 +426,7 @@ class PopUp extends React.Component {
             }
             else {
                 return (
-                    <div className="delete-element-text">{config.tcmStatus ? DELETE_INSTRUCTION_FOR_TCM : props.deleteInstruction}</div>
+                    <div className="delete-element-text">{config.tcmStatus && !notAllowedTCMElementTypes.includes(props?.elementType) && !notAllowedTCMElementTypes.includes(props?.figureType) ? DELETE_INSTRUCTION_FOR_TCM : props.deleteInstruction}</div>
                 )
             }
         }
