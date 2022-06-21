@@ -293,6 +293,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             const indexes = blockListDetails.indexOrder.split('-');
             let parentElement = currentSlateData?.contents?.bodymatter[indexes[0]];
             let initialdata = {};
+            // update store for SH,WE(body) if it has Bl inside it and its nesting level
             if((asideData.parent && asideData.parent.type === "showhide") || (parentElement?.type === 'element-aside' && parentElement?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist")){
                  initialdata = parentElement?.type === 'element-aside' ? newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter : newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
                  if (indexes.length === 5) { // Block list on 1 level nesting
@@ -307,7 +308,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else { // level 4 
                     initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
-            }else if(parentElement?.type === 'element-aside'){
+            }// update store for AS/WE(header) if it has Bl inside it and its nesting level
+            else if(parentElement?.type === 'element-aside'){
                 initialdata =  newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter;
                  if (indexes.length === 4 ) { // For AS/WE(header) Block list on 1 level nesting
                     initialdata.splice(index, 0, createdElementData)
