@@ -3676,6 +3676,14 @@ export class TinyMceEditor extends Component {
                 }
         }
 
+        if(!isSameByElementId && e.target?.className?.includes('opener-title')){
+            e.target.setAttribute('contenteditable', false)
+            e.target.classList.add('opener-caret')
+        } else {
+            e.target.parentNode.setAttribute('contenteditable', true)
+            e.target.parentNode.classList.remove('opener-caret')
+        }
+
         /**
          * case - is this is not the same target then
          * first remove all existing non-glossary&footnote tinymce instances keeping contentEditable to true
