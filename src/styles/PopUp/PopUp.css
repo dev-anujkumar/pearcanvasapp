@@ -1126,7 +1126,7 @@ ol li.listItemNumeroUnoLowerRoman {
   font-weight: 400;
   color: #252525;
   font-size: 10px;
-  width: 89px;
+  /* width: 89px; */
 }
 
 .popup-checkbox {
