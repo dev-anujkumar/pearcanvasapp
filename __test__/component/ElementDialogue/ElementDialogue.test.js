@@ -139,7 +139,11 @@ describe('1. Dialogue element test cases', () => {
 		handleFocus: jest.fn(),
 		context: {
 			getElementById: jest.fn()
-		}
+		},
+		warningPopupCheckbox : true,
+		handleCheckboxPopup: jest.fn(),
+		showCanvasBlocker: jest.fn(),
+		onClick: jest.fn(),
 	};
     it('1.1 Dialogue element render successfully', () => {
 		const store = mockStore(initialState);
@@ -313,4 +317,14 @@ describe('1. Dialogue element test cases', () => {
 		expect(spy).toHaveBeenCalled()
 		spy.mockClear()
     });
+	it('1.12 test for handleDialogueInnerElementsDelete', ()=>{
+		document.cookie = "DISABLE_DELETE_WARNINGS=true;domain=pearson.com;path=/;"
+		const compInstance = dialogueInstance(props);
+        expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'handleDialogueInnerElementsDelete')
+		compInstance.handleDialogueInnerElementsDelete(event, 0, props.element);
+		expect(spy).toHaveBeenCalled();
+		spy.mockClear();
+		}
+	)
 });

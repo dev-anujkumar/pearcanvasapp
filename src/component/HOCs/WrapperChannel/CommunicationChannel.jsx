@@ -141,6 +141,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.cypressPlusEnabled( message.isCypressPlusEnabled, config.SHOW_CYPRESS_PLUS,)
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
+                    this.props.fetchUserLocation()
                     this.props.fetchLearnosityContent()
 
                     // call get project api here
@@ -410,9 +411,11 @@ function CommunicationChannel(WrappedComponent) {
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
                 'myCloudProxySession': config.myCloudProxySession
             };
-            let externalLFUrn = '';
+            let externalLFUrn = [];
+            let defaultLF = "";
             if (projectLearningFrameworks?.externalLF?.length) {
-                externalLFUrn = projectLearningFrameworks.externalLF[0].urn;
+                defaultLF = projectLearningFrameworks.externalLF[0].urn; // Currently we are considering first LF as default
+                projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
             }
             let assessmentuRN = "";
             let assessmentType = "";
@@ -455,7 +458,8 @@ function CommunicationChannel(WrappedComponent) {
                     'chapterContainerUrn': '',
                     'currentSlateLF': currentSlateLF,
                     'assessmentUrn': assessmentuRN,
-                    'previewData': previewData
+                    'previewData': previewData,
+                    'defaultLF': defaultLF
                 }
             })
         }

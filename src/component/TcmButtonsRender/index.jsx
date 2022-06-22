@@ -43,7 +43,7 @@ class RenderTCMIcons extends React.Component {
                     <span className="btn-element tcmIcon expand" onClick={(e) => this.handleTCMSPALaunch(e, element.id)}>
                         {<img src={TcmExpandIcon} alt="TcmExpandIcon" />}
                     </span>
-                    <span className="btn-element tcmIcon close" onClick={() => this.props.closeTcmPopup()}>
+                    <span id="tcmIcon close" className="btn-element tcmIcon close" onClick={() => this.props.closeTcmPopup()}>
                         {<img src={TcmCloseIcon} alt="TcmCloseIcon" />}
                     </span>
                 </div>
