@@ -141,6 +141,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.cypressPlusEnabled( message.isCypressPlusEnabled, config.SHOW_CYPRESS_PLUS,)
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
+                    this.props.fetchUserLocation()
                     this.props.fetchLearnosityContent()
 
                     // call get project api here
