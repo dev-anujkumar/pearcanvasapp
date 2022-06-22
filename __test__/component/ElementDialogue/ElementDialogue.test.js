@@ -318,6 +318,7 @@ describe('1. Dialogue element test cases', () => {
 		spy.mockClear()
     });
 	it('1.12 test for handleDialogueInnerElementsDelete', ()=>{
+		document.cookie = "DISABLE_DELETE_WARNINGS=true;domain=pearson.com;path=/;"
 		const compInstance = dialogueInstance(props);
         expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'handleDialogueInnerElementsDelete')
@@ -326,13 +327,4 @@ describe('1. Dialogue element test cases', () => {
 		spy.mockClear();
 		}
 	)
-	xit('onClick Event on renderButtons', () => {
-		const store = mockStore(initialState);
-		const component = mount(
-			<Provider store={store}>
-				<ElementDialogue {...props} />
-			</Provider>
-		);
-		component.find('btn-element').simulate('click');
-    })
 });
