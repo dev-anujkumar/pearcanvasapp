@@ -5191,9 +5191,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     classList : {
                         contains : ()=>{ }
                     },
-                    parentNode: {setAttribute: () => {
-                            return true
-                        },
+                    parentNode: {
                         classList: {remove: () => {}}
                     }
                 },
@@ -5347,9 +5345,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     classList : {
                         contains: () => { return true; },
                     },
-                    parentNode: {setAttribute: () => {
-                        return true
-                        },
+                    parentNode: {
                         classList: {remove: () => {}}
                     }
                 },
@@ -5507,9 +5503,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                         contains: () => { },
                         remove: () => { }
                     },
-                    parentNode: {setAttribute: () => {
-                        return true
-                        },
+                    parentNode: {
                         classList: {remove: () => {}}
                     }
                 },
@@ -5669,9 +5663,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                         contains: () => { },
                         remove: () => { }
                     },
-                    parentNode: {setAttribute: () => {
-                        return true
-                        },
+                    parentNode: {
                         classList: {remove: () => {}}
                     }
                 },
