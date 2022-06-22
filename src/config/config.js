@@ -22,6 +22,7 @@ let config = {
     MANIFEST_APIKEY: 'YFeLXDGqbBj2GZf85jpcZOQCEasAK5hc',
     TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
     TCM_DASHBOARD_URL:  'http://localhost:3000',
+    POPULATE_LOCATION_API_URL: 'https://mycloudtest.pearson.com/',
     //c2 required keys and urls
     CMDS_APIKEY: '5x8gLqCCfkOfgPkFd9YNotcAykeldvVd',
     CMDS_DATABASE:  '?db=qa2',
