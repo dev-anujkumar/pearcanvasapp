@@ -145,15 +145,18 @@ class PopUp extends React.Component {
 
     /**Function to perform click event on element which is currently focused */
     clickElement = (value) => {
+        const element = document.querySelector(`[option=${value}]`);
+        let isButtonDisabled = false;
         //Check if Word Paste Popup Proceed Button is disabled if not disabled then perform click operation
-        if(this.props.WordPastePopup && value === PRIMARY_BUTTON) {
-            const element = document.querySelector(`[option=${value}]`);
-            const isButtonDisabled = element.classList.contains('disabled');
-            if(!isButtonDisabled) {
-                element?.click();
-            }
-        } else {
-            document.querySelector(`[option=${value}]`)?.click();
+        if(this.props.WordPastePopup) {
+            isButtonDisabled = element?.classList?.contains('disabled');
+        }
+        //Check if TCM Canvas Popup Revert Button is disabled if not disabled then perform click operation 
+        else if(this.props.isTCMCanvasPopup) {
+            isButtonDisabled = element?.classList?.contains('disable');
+        }
+        if(element && !isButtonDisabled) {
+            element?.click();
         }
     }
 
@@ -165,7 +168,7 @@ class PopUp extends React.Component {
         if(e.keyCode === 27) {
             let element;
             if(this.props.isTCMCanvasPopup) {
-                element = document.getElementById('close-symbol');
+                element = document.getElementById('tcmIcon close');
             } else {
                 element = document.querySelector(`[option=${SECONDARY_BUTTON}]`) !== null ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : document.querySelector(`[option=${PRIMARY_BUTTON}]`);
             }
@@ -382,7 +385,7 @@ class PopUp extends React.Component {
         }
         else {
             return (
-                <span id="close-symbol" className={`close ${props.assessmentClass}`} onClick={(e) => props.togglePopup(false, e)}>&times;</span>
+                <span className={`close ${props.assessmentClass}`} onClick={(e) => props.togglePopup(false, e)}>&times;</span>
             )
         }
     }
