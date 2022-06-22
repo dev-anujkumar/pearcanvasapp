@@ -3664,11 +3664,9 @@ export class TinyMceEditor extends Component {
                 }
         }
 
-        if(!isSameByElementId && e.target?.className?.includes('opener-title')){
-            e.target.setAttribute('contenteditable', false)
+        if(!isSameByElementId && e?.target?.className?.includes('opener-title')){
             e.target.classList.add('opener-caret')
-        } else {
-            e.target.parentNode.setAttribute('contenteditable', true)
+        } else if(e?.target?.parentNode?.className?.includes('opener-title')) {
             e.target.parentNode.classList.remove('opener-caret')
         }
 
