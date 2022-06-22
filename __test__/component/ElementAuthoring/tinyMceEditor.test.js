@@ -5190,6 +5190,9 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     nodeName: "SUP",
                     classList : {
                         contains : ()=>{ }
+                    },
+                    parentNode: {
+                        classList: {remove: () => {}}
                     }
                 },
                 clipboardData: {
@@ -5341,6 +5344,9 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     nodeName: "SUP",
                     classList : {
                         contains: () => { return true; },
+                    },
+                    parentNode: {
+                        classList: {remove: () => {}}
                     }
                 },
                 clipboardData: {
@@ -5496,6 +5502,9 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     classList: {
                         contains: () => { },
                         remove: () => { }
+                    },
+                    parentNode: {
+                        classList: {remove: () => {}}
                     }
                 },
                 clipboardData: {
@@ -5653,6 +5662,9 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                     classList: {
                         contains: () => { },
                         remove: () => { }
+                    },
+                    parentNode: {
+                        classList: {remove: () => {}}
                     }
                 },
                 clipboardData: {

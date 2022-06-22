@@ -163,7 +163,12 @@ class PopUp extends React.Component {
             this.clickElement(this.state.focusedButton);
         }
         if(e.keyCode === 27) {
-            const element = document.querySelector(`[option=${SECONDARY_BUTTON}]`) !== null ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : document.querySelector(`[option=${PRIMARY_BUTTON}]`);
+            let element;
+            if(this.props.isTCMCanvasPopup) {
+                element = document.getElementById('close-symbol');
+            } else {
+                element = document.querySelector(`[option=${SECONDARY_BUTTON}]`) !== null ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : document.querySelector(`[option=${PRIMARY_BUTTON}]`);
+            }
             element?.click();
         }
         if (e.keyCode === 37 && this.state.focusedButton === PRIMARY_BUTTON) {
@@ -377,7 +382,7 @@ class PopUp extends React.Component {
         }
         else {
             return (
-                <span className={`close ${props.assessmentClass}`} onClick={(e) => props.togglePopup(false, e)}>&times;</span>
+                <span id="close-symbol" className={`close ${props.assessmentClass}`} onClick={(e) => props.togglePopup(false, e)}>&times;</span>
             )
         }
     }

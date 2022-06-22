@@ -291,9 +291,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         /*  Local store update for block list and Text inside block list for multiple levels. */
         else if((type==='MANIFEST_LIST' || type==='TEXT') && blockListDetails!==null){
             const indexes = blockListDetails.indexOrder.split('-');
+            let parentElement = currentSlateData?.contents?.bodymatter[indexes[0]];
             let initialdata = {};
-            if(asideData.parent && asideData.parent.type === "showhide"){
-                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
+            // update store for SH,WE(body) if it has Bl inside it and its nesting level
+            if((asideData.parent && asideData.parent.type === "showhide") || (parentElement?.type === 'element-aside' && parentElement?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist")){
+                 initialdata = parentElement?.type === 'element-aside' ? newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter : newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
                  if (indexes.length === 5) { // Block list on 1 level nesting
                     initialdata.splice(index, 0, createdElementData)
                 }
@@ -305,6 +307,21 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
                 else { // level 4 
                     initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            }// update store for AS/WE(header) if it has Bl inside it and its nesting level
+            else if(parentElement?.type === 'element-aside'){
+                initialdata =  newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter;
+                 if (indexes.length === 4 ) { // For AS/WE(header) Block list on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 6) { // Block list on 2 level nesting
+                    initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 8) { // Block list on 3 level nesting
+                    initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // level 4 
+                    initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }
             else{
@@ -327,8 +344,9 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
          else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="ENTER"){
              const indexes = blockListDetails.indexOrder.split('-');
              let initialdata = {};
-             if(asideData.parent && asideData.parent.type === "showhide"){
-                  initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
+             let parentElement = currentSlateData?.contents?.bodymatter[indexes[0]]
+             if((asideData.parent && asideData.parent.type === "showhide") || (parentElement?.type === 'element-aside' && parentElement?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist")){
+                  initialdata = parentElement?.type === 'element-aside' ? newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter : newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
                  if (indexes.length === 5) { // Block list on 1 level nesting
                      initialdata.splice(index, 0, createdElementData)
                  }
@@ -341,6 +359,18 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                  else { // Manifest List Item on 4 level nesting
                      initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
+             }else if(currentSlateData?.contents?.bodymatter[indexes[0]]?.type === 'element-aside'){
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter;
+                if (indexes.length === 4) { // Block list on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }else if (indexes.length === 6) { // Block list on 2 level nesting
+                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }else if (indexes.length === 8) { // Block list on 3 level nesting
+                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // level 4 
+                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
              }
             else{
                  initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
@@ -362,9 +392,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
          /*  Local store update for manifest list item inside block list for multiple levels. */
           else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="SHIFT+TAB"){
              const indexes = blockListDetails.indexOrder.split('-');
+             console.log("tets",indexes);
              let initialdata = {};
-             if(asideData.parent && asideData.parent.type === "showhide"){
-                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
+             let parentElement = currentSlateData?.contents?.bodymatter[indexes[0]];
+             if((asideData.parent && asideData.parent.type === "showhide") || (parentElement?.type === 'element-aside' && parentElement?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist")) {
+                initialdata = parentElement?.type === 'element-aside' ?  newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter : newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter;
                 if (indexes.length === 7) { // Manifest List Item on 1 level nesting
                     initialdata.splice(index, 0, createdElementData)
                 }
@@ -374,7 +406,18 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else { // Manifest List Item on 3 level nesting
                     initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
-             }
+            }else if(currentSlateData?.contents?.bodymatter[indexes[0]]?.type === 'element-aside'){
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter;
+                if (indexes.length === 6) { // Block list on 2 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 8) { // Block list on 3 level nesting
+                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // level 4 
+                    initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            }
             else{
                  initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
                  if (indexes.length === 5) { // Manifest List Item on 1 level nesting

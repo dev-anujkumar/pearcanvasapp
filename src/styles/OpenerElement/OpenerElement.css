@@ -48,6 +48,9 @@
     padding-bottom: 25px;
     
 }
+.opener-caret {
+    caret-color: transparent !important;
+}
 .opener-element-container .pearson-component.opener-image.figureData>img{
     width: 24%;
 }
