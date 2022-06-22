@@ -1460,8 +1460,8 @@ export class TinyMceEditor extends Component {
                     // restricting SHIFT + TAB operation on first level BL
                     if (index && typeof index === 'string' && index.includes('-') && index.split("-").length <= 3) return;
                     if (index && typeof index === 'string' && index.includes('-') && parentElement && parentElement.type === "showhide" && index.split("-").length <= 5) return;
-                    if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.type === "manifestlist"  && index.split("-").length <= 4 ) return;
-                    if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist"  && index.split("-").length <= 5 ) return;
+                    if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.type === "manifestlist"  && index.split("-").length <= 4 ) return;
+                    if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist"  && index.split("-").length <= 5 ) return;
                     blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
