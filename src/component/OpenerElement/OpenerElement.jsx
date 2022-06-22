@@ -383,6 +383,9 @@ class OpenerElement extends Component {
         if(element?.html.title === labelNumberTitleHTML  && this.state.imgSrc!==event?.imgSrc){
             flag = false
         }
+        if(element?.html.title === '<p><br></p>'){
+            flag = false
+        }
 
         let altText = "";
         let longDesc = "";
