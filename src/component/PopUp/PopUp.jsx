@@ -164,7 +164,7 @@ class PopUp extends React.Component {
         }
         if(e.keyCode === 27) {
             let element;
-            if(props.isTCMCanvasPopup) {
+            if(this.props.isTCMCanvasPopup) {
                 element = document.getElementById('close-symbol');
             } else {
                 element = document.querySelector(`[option=${SECONDARY_BUTTON}]`) !== null ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : document.querySelector(`[option=${PRIMARY_BUTTON}]`);
