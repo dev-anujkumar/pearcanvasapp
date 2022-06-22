@@ -165,7 +165,7 @@ class PopUp extends React.Component {
         if(e.keyCode === 27) {
             let element;
             if(this.props.isTCMCanvasPopup) {
-                element = document.getElementById('close-symbol');
+                element = document.getElementById('tcmIcon close');
             } else {
                 element = document.querySelector(`[option=${SECONDARY_BUTTON}]`) !== null ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : document.querySelector(`[option=${PRIMARY_BUTTON}]`);
             }
@@ -382,7 +382,7 @@ class PopUp extends React.Component {
         }
         else {
             return (
-                <span id="close-symbol" className={`close ${props.assessmentClass}`} onClick={(e) => props.togglePopup(false, e)}>&times;</span>
+                <span className={`close ${props.assessmentClass}`} onClick={(e) => props.togglePopup(false, e)}>&times;</span>
             )
         }
     }
