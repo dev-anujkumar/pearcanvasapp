@@ -1246,7 +1246,7 @@ export const fetchAuthUser = () => dispatch => {
         })
 }
 export const fetchUserLocation = () => {
-    let url = 'https://mycloudtest.pearson.com/auth/json/pearson/users/uthalki?_fields=username,mail,houseIdentifier'
+    let url = `${config.MYCLOUD_END_POINT}/users/${config.userId}?_fields=houseIdentifier`
     return axios.get(url, {
         headers: {
             "Content-Type": "application/json",
