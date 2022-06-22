@@ -14,7 +14,8 @@ const BlockList = (props) => {
         element: props.element,
         index: props.index
     };
-    asideData = (type === "showhide") ? { ...asideData, parent: { id, type, contentUrn, showHideType: props?.showHideType } } : asideData;
+    const allowedElements = ["showhide", "element-aside"];
+    asideData = allowedElements.includes(type) ? { ...asideData, parent: { id, type, contentUrn, showHideType: props?.showHideType } } : asideData;
 
     const fetchLi = (subtype) => {
         return manifestList?.map((item, index) => {
@@ -28,13 +29,19 @@ const BlockList = (props) => {
         return manifestList[parentIndex]?.listitemdata?.bodymatter.map((item, index) => {
             let indexT = item?.type === 'manifestlist' ? `${props?.indexTemp}${parentIndex}-${index}-` : '';
             let indexToPass = `${typeof (props?.index) === 'number' ? props?.index : props?.index?.split('-')[0]}-${props?.indexTemp}${parentIndex}-${index}`;
-           
             let parentManifestListItem = manifestList[parentIndex];
+            let normalIndex = typeof (props.index) === 'string' ? (props.index).replaceAll('-', '') : props.index;
             asideData.parentManifestList = props.element;
             asideData.grandParentManifestList = props.grandParentManifestList;
             let placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 3 ? "Press Shift+Tab to move out" : "Type something...";
-            if (type === "showhide") {
+            if ((type === "showhide") || (type === "element-aside" && props.parentElement?.elementdata?.bodymatter[normalIndex[1]]?.contents?.bodymatter[normalIndex[2]].type === 'manifestlist')) {
                  indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
+                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? "Press Shift+Tab to move out" : "Type something...";
+            }else if(type === "element-aside" && props.parentElement?.elementdata?.bodymatter[normalIndex[1]]?.type === 'manifestlist'){
+                indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}`}-${props?.indexTemp}${parentIndex}-${index}`;
+                placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 4 ? "Press Shift+Tab to move out" : "Type something...";
+            }else if(props?.parentElement){
+                indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
                  placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? "Press Shift+Tab to move out" : "Type something...";
             }
             if(item.type === "element-authoredtext" && item?.html?.text.includes('imageAssetContent')){
