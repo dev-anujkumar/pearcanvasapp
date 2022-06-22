@@ -24,31 +24,29 @@ jest.mock('../../../src/component/AssetPopover/AssetPopover_Actions.js',() => ({
 
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
-        assetPopOverSearch:{
-            showApoSearch : false,                 // Weather show or not the popover window
-            showApoCurrentlyLinked : false,        // Show or not currently linked part of the window
-            showApoBody : false,                   // Show or not APO Body
-            showApoFooter : true,                  // Show or not APO footer
-            figures : [],                          // Array of search Results from API
-            selectedFigureValue : {},              // Name of Selected Figure
-            noSearchResultFound : false,           // If Error or No search results found from API
-            figureIsSelected : false,              // Figure is selected or not
-            apoObject : {},
-            imageData : [],
-            searchTerm : '' ,                        //Figure name to be find
-            currentlyLinkedImageData : {},
-            assetID: "",
-            figures:[],
-            audios: [],
-            videos: [],
-            interactives: [],
-            smartLinkInteractives: [],
-            asides: [],
-            tables: [],
-            workedExamples: [],
-            currentlyLinkedImageData: {
-             title: "test"
-            },
+    assetPopOverSearch: {
+        showApoSearch : false,                 // Weather show or not the popover window
+        showApoCurrentlyLinked : false,        // Show or not currently linked part of the window
+        showApoBody : false,                   // Show or not APO Body
+        showApoFooter : true,                  // Show or not APO footer
+        selectedFigureValue : {},              // Name of Selected Figure
+        noSearchResultFound : false,           // If Error or No search results found from API
+        figureIsSelected : false,              // Figure is selected or not
+        apoObject : {},
+        imageData : [],
+        searchTerm : '' ,                        //Figure name to be find
+        assetID: "",
+        figures:[],
+        audios: [],
+        videos: [],
+        interactives: [],
+        smartLinkInteractives: [],
+        asides: [],
+        tables: [],
+        workedExamples: [],
+        currentlyLinkedImageData: {
+            title: "test"
+        },
     }
 });
 
@@ -69,9 +67,10 @@ beforeEach(() => {
 
 global.fetch = jest.fn().mockImplementation(() => {
     return new Promise((resolve, reject) => {
-      resolve({json:jest.fn(),id:'urn:pearson134'});
-   });
- });
+        resolve({json:jest.fn(),id:'urn:pearson134'});
+    });
+});
+
 //Rendering test cases
 describe('Test Rendering of AssetPopover', () => {
     it('Have 1 input Box', () => {
@@ -85,22 +84,26 @@ describe('Interaction functions test cases', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
         let returnedValue = instance.currentlyLinkedJsx();
         expect(typeof returnedValue).toEqual('object');
-    }),
+    });
+
     it('Testing apoBodyJsx function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
         let returnedValue = instance.apoBodyJsx();
         expect(typeof returnedValue).toEqual('object');
-    }),
+    });
+
     it('Testing selectedFigure function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
         instance.selectedFigure();
         expect(instance.props.selectedFigure).toHaveBeenCalled();
-    }), 
+    });
+
     it('Testing apoSearchClose props function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
         instance.props.apoSearchClose();
         expect(instance.props.apoSearchClose).toHaveBeenCalled();
-    }),  
+    });
+
     it('Testing apoFooterJsx  function', () => {
         let isFigureSelected,
         shouldOpenCurrentlyLinked = true, 
@@ -110,7 +113,7 @@ describe('Interaction functions test cases', () => {
         const instance = tempWrapper.find('AssetPopoverSearch').instance();
         instance.apoFooterJsx(isFigureSelected, shouldOpenCurrentlyLinked, shouldShowApoBody, isSearchResultFound);
         expect(tempWrapper.find('AssetPopoverSearch').props().selectedFigure).not.toHaveBeenCalled();
-    })
+    });
 
     it('Testing apoFooterJsx else function', () => {
         let isFigureSelected,
@@ -122,7 +125,7 @@ describe('Interaction functions test cases', () => {
         tempWrapper.update();
         instance.apoFooterJsx(isFigureSelected, shouldOpenCurrentlyLinked, shouldShowApoBody, isSearchResultFound);
         expect(tempWrapper.find('AssetPopoverSearch').props().searchForFigures).not.toHaveBeenCalled();
-    })
+    });
 
     it('Testing apoFooterJsx else if function', () => {
         let isFigureSelected,
@@ -133,14 +136,14 @@ describe('Interaction functions test cases', () => {
         const instance = tempWrapper.find('AssetPopoverSearch').instance();
         instance.apoFooterJsx(isFigureSelected, shouldOpenCurrentlyLinked, shouldShowApoBody, isSearchResultFound);
         expect(typeof tempWrapper.find('AssetPopoverSearch').props().apoSearchClose).toEqual('function');
-    })
+    });
 
     it('Testing hideAPOOnOuterClick function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
         instance.apoSearchClose = jest.fn()
         instance.hideAPOOnOuterClick();
         expect(instance.apoSearchClose).toHaveBeenCalled();
-    }) 
+    });
 
     it('Testing apoSearchSave function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
@@ -150,13 +153,14 @@ describe('Interaction functions test cases', () => {
         instance.saveAssetLinkedMedia = jest.fn();
         instance.apoSearchSave(apoObject,imageObj);
         expect(instance.saveAssetLinkedMedia).toHaveBeenCalled();
-    }) 
+    });
+
     it('Testing removeLink function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
         instance.apoSearchClose = jest.fn();
         instance.removeLink();
         expect(instance.apoSearchClose).toHaveBeenCalled();
-    })
+    });
 
     it('Testing apoSearchClose  function', () => {
         const instance = wrapper.find('AssetPopoverSearch').instance();
@@ -166,7 +170,7 @@ describe('Interaction functions test cases', () => {
         document.body.appendChild(simpleDiv);
         instance.apoSearchClose()
         expect(instance.props.apoSearchClose).toHaveBeenCalled()
-    })
+    });
 
     it('Testing searchForFigures function', () => {
         let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch {...props}/> </Provider>);
@@ -179,7 +183,7 @@ describe('Interaction functions test cases', () => {
         tempWrapper.update();
         instance.searchForFigures(event, stateImageData);
         expect(instance.props.searchForFigures).toHaveBeenCalled();
-    })
+    });
 
     it('Testing saveAssetLinkedMedia update function', ()=>{
         let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch {...props}/> </Provider>);
@@ -194,7 +198,7 @@ describe('Interaction functions test cases', () => {
         instance.saveAssetLinkedMedia(apoObject,imageObj)
         expect(spysaveAssetLinkedMedia).toHaveBeenCalled()
         spysaveAssetLinkedMedia.mockClear() 
-    })
+    });
 
     it('Testing saveAssetLinkedMedia create function', ()=>{
         let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch {...props}/> </Provider>);
@@ -208,5 +212,5 @@ describe('Interaction functions test cases', () => {
         instance.saveAssetLinkedMedia(apoObject,imageObj)
         expect(spysaveAssetLinkedMedia).toHaveBeenCalled()
         spysaveAssetLinkedMedia.mockClear() 
-    })
-})
+    });
+});
