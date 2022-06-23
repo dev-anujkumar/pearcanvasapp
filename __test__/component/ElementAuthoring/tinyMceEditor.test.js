@@ -5876,6 +5876,9 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                         remove: () => { },
                         contains: () => { return true; }
                     },
+                    className: {
+                        includes: ()=> {}
+                    },
                     setAttribute: () => { },
                     getAttribute: () => { },
                     getElementsByTagName: () => { return {length: 2 } }
