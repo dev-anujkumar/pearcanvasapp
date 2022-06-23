@@ -189,6 +189,19 @@ class PopUp extends React.Component {
         }
     }
 
+    handleImageGlossaryButtonsClick = (e) => {
+        let element = document.getElementById("glossary-asset-close-icon");
+        if(element) {
+            element?.click();
+        }
+        let buttonClicked = e?.target?.attributes['option']?.value;
+        if(buttonClicked === PRIMARY_BUTTON) {
+            this.props.removeImageContent();
+        } else {
+            this.props.togglePopup(false, e);
+        }
+    }
+
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
     * @param {event} 
@@ -239,8 +252,8 @@ class PopUp extends React.Component {
         if (props.imageGlossary) {
             return (
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
-                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={props.removeImageContent}>Ok</span>
-                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => this.handleImageGlossaryButtonsClick(e)}>Ok</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => this.handleImageGlossaryButtonsClick(e)}>Cancel</span>
                 </div>
             )
         }
