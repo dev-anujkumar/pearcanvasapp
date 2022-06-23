@@ -145,15 +145,18 @@ class PopUp extends React.Component {
 
     /**Function to perform click event on element which is currently focused */
     clickElement = (value) => {
+        const element = document.querySelector(`[option=${value}]`);
+        let isButtonDisabled = false;
         //Check if Word Paste Popup Proceed Button is disabled if not disabled then perform click operation
-        if(this.props.WordPastePopup && value === PRIMARY_BUTTON) {
-            const element = document.querySelector(`[option=${value}]`);
-            const isButtonDisabled = element.classList.contains('disabled');
-            if(!isButtonDisabled) {
-                element?.click();
-            }
-        } else {
-            document.querySelector(`[option=${value}]`)?.click();
+        if(this.props.WordPastePopup) {
+            isButtonDisabled = element?.classList?.contains('disabled');
+        }
+        //Check if TCM Canvas Popup Revert Button is disabled if not disabled then perform click operation 
+        else if(this.props.isTCMCanvasPopup) {
+            isButtonDisabled = element?.classList?.contains('disable');
+        }
+        if(element && !isButtonDisabled) {
+            element?.click();
         }
     }
 
@@ -183,6 +186,19 @@ class PopUp extends React.Component {
             })
             this.blurElement(SECONDARY_BUTTON);
             this.focusElement(PRIMARY_BUTTON);
+        }
+    }
+
+    handleImageGlossaryButtonsClick = (e) => {
+        let element = document.getElementById("glossary-asset-close-icon");
+        if(element) {
+            element?.click();
+        }
+        let buttonClicked = e?.target?.attributes['option']?.value;
+        if(buttonClicked === PRIMARY_BUTTON) {
+            this.props.removeImageContent();
+        } else {
+            this.props.togglePopup(false, e);
         }
     }
 
@@ -236,8 +252,8 @@ class PopUp extends React.Component {
         if (props.imageGlossary) {
             return (
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
-                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={props.removeImageContent}>Ok</span>
-                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => props.togglePopup(false, e)}>Cancel</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => this.handleImageGlossaryButtonsClick(e)}>Ok</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => this.handleImageGlossaryButtonsClick(e)}>Cancel</span>
                 </div>
             )
         }

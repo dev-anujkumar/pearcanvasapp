@@ -141,7 +141,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.cypressPlusEnabled( message.isCypressPlusEnabled, config.SHOW_CYPRESS_PLUS,)
                     config.book_title = message.name;
                     this.props.fetchAuthUser()
-                    this.props.fetchUserLocation()
                     this.props.fetchLearnosityContent()
 
                     // call get project api here
@@ -149,6 +148,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
+                    this.props.fetchUserLocation() 
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
