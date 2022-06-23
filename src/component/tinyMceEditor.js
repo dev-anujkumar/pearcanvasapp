@@ -3994,9 +3994,8 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        if ((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
-            this.props.onFigureImageFieldBlur(this.props.index);
-        }else if(this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title){
+        if (((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) || 
+            (this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title)) {
             this.props.onFigureImageFieldBlur(this.props.index);
         }
 

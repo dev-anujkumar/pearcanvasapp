@@ -97,10 +97,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
      */
     if ((anchorNode.tagName === "LI" && !imgElement.length && !anchorNode.textContent) || anchorNode.tagName === "BR" || (nodeNames.includes(anchorNode.tagName))) {
         if ((e.metaKey && e.which === 13) || (e.which === 13)) {
-            // if only mathml image is present in editor //
-            if ((editor.targetElm.textContent.length === 0) ||
-                (editor.targetElm.innerHTML.indexOf('Wirisformula') != -1)) {
-            }
 
             // creating new paragraph //
             let getChildSelection = anchorNode.children.length && anchorNode.children[0].tagName;
@@ -470,9 +466,9 @@ export const updateNestedList = (element) => {
         treelevel = treelevel + 1;
     }
     if (allOlElement[i] && allOlElement[i].getCss("counter-increment") == 'none') {
-        for (var i = 0; i < liClasses.length; i++) {
-            if (liClasses[i] && liClasses[i].indexOf('reset') && liClasses[i].indexOf('reset') !== -1) {
-                lis[i].classList.add("reset");
+        for (var j = 0; j < liClasses.length; j++) {
+            if (liClasses[j] && liClasses[j].indexOf('reset') && liClasses[j].indexOf('reset') !== -1) {
+                lis[j].classList.add("reset");
             }
         }
     }
