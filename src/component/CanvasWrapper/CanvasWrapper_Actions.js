@@ -1824,6 +1824,6 @@ export const fetchUserLocation = () => async () => {
             document.cookie = (Info.houseIdentifier)?`HOUSE_IDENTIFIER=${Info.houseIdentifier};path=/;`:`HOUSE_IDENTIFIER=;path=/;`;
          }
 	} catch (error) {
-		console.error("Error in fetching the list of Line of Business from the project", error);
+		console.error("Error", error);
 	}
 }
