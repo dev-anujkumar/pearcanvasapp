@@ -3198,7 +3198,7 @@ export class TinyMceEditor extends Component {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
                 }
 
-                if(newElement && currentNode && currentNode.className.includes('opener-title')){
+                if(newElement && currentNode && currentNode.className && currentNode.className.includes('opener-title')){
                     currentNode.classList.add('opener-caret')
                 }
 
