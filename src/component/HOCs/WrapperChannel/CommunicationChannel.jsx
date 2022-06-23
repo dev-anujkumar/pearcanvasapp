@@ -148,7 +148,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
-                    // this.props.fetchUserLocation() //Do not remove: needed in future
+                    this.props.fetchUserLocation() 
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);

@@ -1245,21 +1245,6 @@ export const fetchAuthUser = () => dispatch => {
             //dispatch({type: 'FETCH_AUTH_USER_REJECTED', payload: err}) // NOt using
         })
 }
-export const fetchUserLocation = () => {
-    let url = `${config.MYCLOUD_END_POINT}/users/${config.userId}?_fields=houseIdentifier`
-    return axios.get(url, {
-        headers: {
-            "Content-Type": "application/json",
-            'myCloudProxySession': config.myCloudProxySession
-        }
-    }).then((response) => {
-        let Info = response.data;
-		document.cookie = (Info.houseIdentifier)?`HOUSE_IDENTIFIER=${Info.houseIdentifier};path=/;`:`HOUSE_IDENTIFIER=;path=/;`;
-     })
-        .catch(err => {
-            console.error('axios Error', err);
-        })
-}
 export const openPopupSlate = (element, popupId) => dispatch => {
 	if(element){
 		/* dispatch({
@@ -1820,5 +1805,25 @@ export const fetchLOBList = () => async (dispatch) => {
 				}
 	} catch (error) {
 		console.error("Error in fetching the list of Line of Business from the project", error);
+	}
+}
+export const getUserLocation = () => {
+    let url = `${config.MYCLOUD_END_POINT}/users/${config.userId}?_fields=houseIdentifier`
+    return axios.get(url, {
+        headers: {
+            "Content-Type": "application/json",
+            'myCloudProxySession': config.myCloudProxySession
+        }
+    })
+}
+export const fetchUserLocation = () => async () => {
+	try {
+		const response = await getUserLocation();
+		if (response.status === 200){
+            let Info = response.data;
+            document.cookie = (Info.houseIdentifier)?`HOUSE_IDENTIFIER=${Info.houseIdentifier};path=/;`:`HOUSE_IDENTIFIER=;path=/;`;
+         }
+	} catch (error) {
+		console.error("Error", error);
 	}
 }
