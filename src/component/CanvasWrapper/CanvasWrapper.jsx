@@ -300,7 +300,6 @@ export default connect(
         setSlateEntity,
         publishContent,
         fetchAuthUser,
-        fetchUserLocation,
         handleSlateRefresh,
         logout,
         getProjectDetails,
@@ -348,5 +347,6 @@ export default connect(
         updateFigureDropdownValues,
         savePopupParentSlateData,
         fetchLOBList,
+        fetchUserLocation,
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
