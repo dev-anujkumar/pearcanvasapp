@@ -71,7 +71,7 @@ let cypressConfig = {
     CYPRESS_TOC_JAVA_ENDPOINT : 'https://dev-structuredauthoring.pearson.com/cypress/toc-srvr/app/toc-javaapp/',
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/toc-wrapper/index.html` : 'https://local-dev.pearson.com:4000',
     LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr` :"http://localhost:5000",
-    TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"http://localhost:7000/",
+    TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"http://local-dev.pearson.com:7000/",
     TCM_SNAPSHOT_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tctxsnapshot` :"http://localhost:5000/tctxsnapshot",
     TCM_SRVR_STATUS_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tcstats/proj/` :"http://localhost:5000/tcstats/proj/",
     TCM_CANVAS_POPUP_DATA: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tctx` :"http://localhost:5000/tctx",
