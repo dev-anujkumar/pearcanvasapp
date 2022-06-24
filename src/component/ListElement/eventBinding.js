@@ -466,9 +466,9 @@ export const updateNestedList = (element) => {
         treelevel = treelevel + 1;
     }
     if (allOlElement[i] && allOlElement[i].getCss("counter-increment") == 'none') {
-        for (var j = 0; j < liClasses.length; j++) {
-            if (liClasses[j] && liClasses[j].indexOf('reset') && liClasses[j].indexOf('reset') !== -1) {
-                lis[j].classList.add("reset");
+        for (var i = 0; i < liClasses.length; i++) {
+            if (liClasses[i] && liClasses[i].indexOf('reset') && liClasses[i].indexOf('reset') !== -1) {
+                lis[i].classList.add("reset");
             }
         }
     }
