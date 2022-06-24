@@ -52,9 +52,10 @@ export const updateNewVersionElementInStore = (paramObj) => {
     if (asideData?.type == 'showhide') {
         getShowhideParent({ asideData, dispatch, parentElementIndex: elementIndex, fetchSlateData })
     }
-    if (asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType && isBlockListElement) {
+    if (asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType && (isBlockListElement || asideData?.type == "citations")) {
         asideData.indexes = indexes;
         dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+         /* Condition for update title of Approved CG inside S/H */ 
     } else if(isBlockListElement) {
         const parentBlockListId = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].id
         const parentBlockListContentUrn = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].contentUrn
@@ -70,10 +71,6 @@ export const updateNewVersionElementInStore = (paramObj) => {
         } else if ((indexes.length === 4 || indexes.length === 5) && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
             dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }
-    } else if (asideData?.type == "citations" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
-        asideData.indexes = indexes;
-        dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
-        /* Condition for update title of Approved CG inside S/H */ 
     } else if (updatedData?.type == "element-authoredtext" && updatedData?.metaDataField === "formattedTitle" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
         asideData.indexes = indexes;
         asideData.type = 'citations';

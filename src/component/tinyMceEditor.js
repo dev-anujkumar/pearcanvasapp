@@ -1460,8 +1460,8 @@ export class TinyMceEditor extends Component {
                     // restricting SHIFT + TAB operation on first level BL
                     if (index && typeof index === 'string' && index.includes('-') && index.split("-").length <= 3) return;
                     if (index && typeof index === 'string' && index.includes('-') && parentElement && parentElement.type === "showhide" && index.split("-").length <= 5) return;
-                    if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.type === "manifestlist"  && index.split("-").length <= 4 ) return;
-                    if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist"  && index.split("-").length <= 5 ) return;
+                    if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.type === "manifestlist"  && index.split("-").length <= 4 ) return;
+                    if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist"  && index.split("-").length <= 5 ) return;
                     blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
@@ -3198,6 +3198,10 @@ export class TinyMceEditor extends Component {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
                 }
 
+                if(newElement && currentNode && currentNode.className && currentNode.className.includes('opener-title')){
+                    currentNode.classList.add('opener-caret')
+                }
+
                 let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 //PCAT-9077 - duplicate toolbar issue on element creation
                 tinymce.remove()
@@ -3676,6 +3680,10 @@ export class TinyMceEditor extends Component {
                 }
         }
 
+        if(isSameByElementId && e.target && (e.target.className && e.target.className.includes('opener-title') || e.target.parentNode && e.target.parentNode.className && e.target.parentNode.className.includes('opener-title'))) {
+            (e.target.classList.remove('opener-caret') || e.target.parentNode.classList.remove('opener-caret'))
+        }
+
         /**
          * case - is this is not the same target then
          * first remove all existing non-glossary&footnote tinymce instances keeping contentEditable to true
@@ -3988,9 +3996,8 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        if ((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
-            this.props.onFigureImageFieldBlur(this.props.index);
-        }else if(this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title){
+        if (((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) || 
+            (this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title)) {
             this.props.onFigureImageFieldBlur(this.props.index);
         }
 

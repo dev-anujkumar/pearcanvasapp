@@ -114,7 +114,7 @@ describe('Testing Save content function',() => {
         document.querySelector = (id) => {
             if(id === '#glossary-editor > div > p') {
             return {
-                innerHTML: 'sdfsdf ffsd&nbsp; <strong>vfsf</strong>'
+                innerHTML: 'sdfsdf ffsd&nbsp; <strong>vfsf<span id="_mce_caret">dfs</span)"<span id="_mce_caret" data-mce-bogus="1" data-mce-type="format-caret">&#8203;&#65279;</span></strong>'
             }
         } else if(id === '#glossary-editor-attacher > div > p') {
             return {
