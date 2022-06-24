@@ -3198,6 +3198,10 @@ export class TinyMceEditor extends Component {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
                 }
 
+                if(newElement && currentNode && currentNode.className && currentNode.className.includes('opener-title')){
+                    currentNode.classList.add('opener-caret')
+                }
+
                 let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 //PCAT-9077 - duplicate toolbar issue on element creation
                 tinymce.remove()
@@ -3674,6 +3678,10 @@ export class TinyMceEditor extends Component {
                     document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
                     document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
                 }
+        }
+
+        if(isSameByElementId && e.target && (e.target.className && e.target.className.includes('opener-title') || e.target.parentNode && e.target.parentNode.className && e.target.parentNode.className.includes('opener-title'))) {
+            (e.target.classList.remove('opener-caret') || e.target.parentNode.classList.remove('opener-caret'))
         }
 
         /**
