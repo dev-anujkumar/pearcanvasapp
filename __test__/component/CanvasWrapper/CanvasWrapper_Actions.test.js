@@ -3362,12 +3362,14 @@ it('Testing fetchUserLocation - try block', async () => {
                 houseIdentifier: "US-NJ-Hoboken-221 River",
             }
         }
-    const state = {}
-    const store = mockStore(() => state);
-    axios.get = jest.fn(() => Promise.resolve(response));
-    await store.dispatch(canvasActions.fetchUserLocation());
-    const { type } = store.getActions()[0];
-    expect(type).toBe('HOUSE_IDENTIFIER');
+    let dispatch = jest.fn();
+    const spyFunction = jest.spyOn(canvasActions, 'fetchUserLocation');
+    axios.get = jest.fn(() => Promise.resolve(response))
+    canvasActions.fetchUserLocation()(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    expect(dispatch).not.toHaveBeenCalled();
+    spyFunction.mockClear();
+ 
 });
 
 it('Testing fetchUserLocation - catch block', async () => {
@@ -3378,4 +3380,3 @@ it('Testing fetchUserLocation - catch block', async () => {
     await store.dispatch(canvasActions.fetchUserLocation());
     expect(spyFunction).toHaveBeenCalled();
 });
-
