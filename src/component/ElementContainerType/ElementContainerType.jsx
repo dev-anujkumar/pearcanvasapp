@@ -40,6 +40,7 @@ export default function ElementContainerType(props) {
     const renderMenu = (propsData) => {
         let { elementType, text, showPlayscript, showDiscussion, asideData, elementIndex } = props;
         const indexOfElement =  props?.elementIndex ? elementIndex.toString().split('-') : [];
+        const parentIndex = props?.asideData?.index ? props?.asideData?.index.toString().split('-') : [];
         if (!showDiscussion) {
             propsData = propsData.filter( (obj) => {
                 return obj.text !== 'Add Discussion';
@@ -56,7 +57,7 @@ export default function ElementContainerType(props) {
             propsData = propsData.filter( obj => obj.text !== 'Block List');
         }
         /**Block List option hidden for SH which is already in Container like 2C/3C/Aside/WE */
-        if(elementType === 'showhide' && indexOfElement.length > 3) {
+        if((elementType === 'showhide' && indexOfElement.length > 3) || elementType === "element-aside" && parentIndex.length >=3) {
             propsData = propsData.filter( obj => obj.text !== 'Block List');
         }
         /* Not show Popup/SH/Interactive elements inside SH interactive Picker */
