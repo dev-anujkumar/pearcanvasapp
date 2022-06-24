@@ -9,7 +9,7 @@ import config from '../../../src/config/config';
 import FigureHeader from '../../../src/component/FigureHeader/FigureHeader';
 import { initialState, props, props1, props2, props3, props4, props5, props6, props7, 
     props8, props9, props10, props11, props12, props13, props14, props15, props16, props17,
-    props18, props19, props20, props21 } from './figureHeaderDummyData'
+    props18, props19, props20, props21 } from './FigureHeaderMockData'
 
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
