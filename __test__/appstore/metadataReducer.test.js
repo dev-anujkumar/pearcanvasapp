@@ -108,5 +108,33 @@ describe('testing meta data Reducer cases --', () => {
             
         })).toEqual(state5);
     })
+    it('PROJECT_LEARNING_FRAMEWORKS', () => {
+        let state5 = INIT_STATE;
+        state5.cypressLF = {};
+        state5.externalLF = [];
+        expect(metadataReducer(INIT_STATE, {
+            type: 'PROJECT_LEARNING_FRAMEWORKS',
+            payload:true
+            
+        })).toEqual(state5);
+    })
+    it('CURRENT_SLATE_LF', () => {
+        let state5 = INIT_STATE;
+        state5.currentSlateLF = '';
+        expect(metadataReducer(INIT_STATE, {
+            type: 'CURRENT_SLATE_LF',
+            payload:{currentSlateLF:''}
+            
+        })).toEqual(state5);
+    })
+    it('TOGGLE_LO_WARNING_POPUP', () => {
+        let state5 = INIT_STATE;
+        state5.loWarningPopupData = true;
+        expect(metadataReducer(INIT_STATE, {
+            type: 'TOGGLE_LO_WARNING_POPUP',
+            payload:true
+            
+        })).toEqual(state5);
+    })
 });
 
