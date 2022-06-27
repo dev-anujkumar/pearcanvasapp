@@ -13,8 +13,6 @@ import {
     assessmentIcon, 
     openerElement,
     tcmIcon, 
-    addNote,
-    viewNote,
     editInCypressPlus,
     textIcon, 
     imageIcon, 
@@ -58,7 +56,7 @@ class ElementButton extends Component {
   * @param clickHandlerFn Handler method to be called on click event
   *  
   */
-    renderButton = (type, clickHandlerFn, btnClassName = '', elementType) => {
+    renderButton = (type, clickHandlerFn, elementType, btnClassName = '') => {
         let buttonJSX = null
         const elementTypeClassName = (elementType === ElementConstants.BLOCK_LIST) ? elementType : ''; 
         const { labelText,elementId,isSubscribersSlate } = this.props
@@ -282,7 +280,7 @@ class ElementButton extends Component {
         
         return(
             <>
-                {this.renderButton(type, onClick, btnClassName, elementType)}             
+                {this.renderButton(type, onClick, elementType, btnClassName )}             
             </>
         )
     }

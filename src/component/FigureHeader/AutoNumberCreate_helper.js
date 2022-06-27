@@ -276,12 +276,6 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                     index = nearestElementObj?.key === 'above' ? index + 1 : index;
                     elementsList[slateEntityForAutonumber]?.splice(index, 0, createdElementData);
                 }
-            } else if (Object.keys(elementsList).indexOf(slateEntityForAutonumber) > -1 && Object.keys(elementsList[slateEntityForAutonumber]).length === 0) {
-                elementsList = {
-                    ...elementsList,
-                    [slateEntityForAutonumber]: []
-                }
-                elementsList[slateEntityForAutonumber].push(createdElementData);
             } else {
                 elementsList = {
                     ...elementsList,

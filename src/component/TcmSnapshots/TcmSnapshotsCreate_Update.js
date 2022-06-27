@@ -286,7 +286,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                     wipData = bodymatter[eleIndex[0]]?.elementdata?.bodymatter[eleIndex[0]]
                 } else if(eleIndex.length == 3 && bodymatter[eleIndex[0]]?.type === 'element-blockfeature'){
                     wipData = bodymatter[eleIndex[0]]
-                } else if((eleIndex.length == 3 || eleIndex.length == 4) && !(bodymatter[eleIndex[0]]?.type === 'element-blockfeature')){
+                } else if((eleIndex.length == 3 || eleIndex.length == 4) && (bodymatter[eleIndex[0]]?.type !== 'element-blockfeature')){
                     wipData = bodymatter[eleIndex[0]]?.groupeddata?.bodymatter[eleIndex[1]]?.groupdata?.bodymatter[eleIndex[2]]
                 } else {
                     wipData = bodymatter[eleIndex[0]]
