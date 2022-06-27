@@ -1136,4 +1136,5 @@ ol li.listItemNumeroUnoLowerRoman {
   border-radius: 2px;
   margin-right:6px;
   margin-top: 2px;
+  outline: 0;
 }

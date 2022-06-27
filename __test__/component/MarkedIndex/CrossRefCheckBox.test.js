@@ -30,4 +30,14 @@ describe('Testing Markedindex cross-reference component with props', () => {
         wrapper.find('div.checkbox-input input[name="cross"]').simulate('change');
     });
 
+    it('Checking return null condition : ', () => {
+        let props2={
+            selectedData: ['cross'],
+            dropDownList: [],
+            handleSelectedCheckboxValue: jest.fn()
+        }
+        let wrapper2 = mount(<Provider store={store}><CrossRefCheckbox {...props2} /></Provider>);
+        expect(wrapper2).toHaveLength(1);
+    })
+
 });

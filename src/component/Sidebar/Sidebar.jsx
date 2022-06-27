@@ -329,11 +329,9 @@ class Sidebar extends Component {
         });
 
         let active = '';
-        if (data === "fontStyle" && this.state.fontBulletElementDropdown === 'font') {
+        if ((data === "fontStyle" && this.state.fontBulletElementDropdown === 'font') || (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet')) {
             active = 'active';
-        } else if (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet'){
-            active = 'active';
-        }
+        } 
         const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
         
         fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
