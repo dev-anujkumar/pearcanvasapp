@@ -1,5 +1,6 @@
+import { action } from "@storybook/addon-actions";
 import { projectInfo } from "../../src/appstore/projectInfoReducer";
-import { UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS } from "../../src/constants/Action_Constants";
+import { UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS, UPDATE_PROJECT_INFO, UPDATE_USAGE_TYPE, UPDATE_DISCUSSION_ITEMS, UPDATE_LOB_WORKFLOW } from "../../src/constants/Action_Constants";
 
 const INITIAL_STATE = {
     usageType: [],
@@ -12,6 +13,7 @@ const INITIAL_STATE = {
         owner: {}
     },
     isOwnersSubscribedSlateChecked: true,
+    isOwnerKeyExist: false,
     LOBList:[],
     showDiscussionLOBDropdown: false
 }
@@ -21,6 +23,48 @@ describe("Testing LOB permissions", () => {
     it('should return the initial state', () => {
         expect(projectInfo(INITIAL_STATE, {})).toEqual(INITIAL_STATE);
     });
+    it(' UPDATE_PROJECT_INFO', () => {
+        let output = {
+            ...INITIAL_STATE,
+        }
+        expect(projectInfo(INITIAL_STATE, {
+            type:  UPDATE_PROJECT_INFO 
+        })).toEqual(output)
+    });
+    it('UPDATE_USAGE_TYPE', () => {
+        let output = {
+            ...INITIAL_STATE,   
+            usageType: 'OWNER'
+        }
+        let owner = "OWNER";
+        expect(projectInfo(INITIAL_STATE, {
+            type: UPDATE_USAGE_TYPE,
+            payload: owner
+        })).toEqual(output)
+    });
+    it('UPDATE_DISCUSSION_ITEMS', () => {
+        let output = {
+            ...INITIAL_STATE,   
+            discussionItems: 'OWNER'
+        }
+        let owner = "OWNER";
+        expect(projectInfo(INITIAL_STATE, {
+            type: UPDATE_DISCUSSION_ITEMS,
+            payload: owner
+        })).toEqual(output)
+    });
+    it(' UPDATE_LOB_WORKFLOW', () => {
+        let output = {
+            ...INITIAL_STATE,   
+            workflowRole: 'OWNER'
+        }
+        let owner = "OWNER";
+        expect(projectInfo(INITIAL_STATE, {
+            type:  UPDATE_LOB_WORKFLOW,
+            payload: owner
+        })).toEqual(output)
+    });
+    
 
     it('UPDATE_LOB_PERMISSIONS', () => {
         let output = {

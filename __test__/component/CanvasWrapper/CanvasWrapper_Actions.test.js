@@ -3193,6 +3193,37 @@ describe('Test-15 updateFigureDropdownValues', () => {
         expect(dispatch).toHaveBeenCalled();
     })
 })
+describe('Test-16 fetchUserLocation', () => {
+    it('Test fetchUserLocation', () => {
+        let dispatch = jest.fn();
+        let responseData = { data: slateTestData.fetchUserLocation }
+        const spyFunction = jest.spyOn(canvasActions, 'fetchUserLocation')
+        axios.get = jest.fn(() => Promise.resolve(responseData))
+        canvasActions.fetchUserLocation()(dispatch);
+        expect(spyFunction).toHaveBeenCalled();
+        expect(dispatch).not.toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+    it('Test-16 fetchUserLocation - Catch Block', () => {
+        let dispatch = jest.fn();
+        const spyFunction = jest.spyOn(canvasActions, 'fetchUserLocation')
+        axios.get = jest.fn(() => Promise.reject({}))
+        canvasActions.fetchUserLocation()(dispatch);
+        expect(spyFunction).toHaveBeenCalled();
+        expect(dispatch).not.toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+    it('Test-16 fetchUserLocation - then - else cases', () => {
+        let dispatch = jest.fn();
+        let responseData = { data: slateTestData.fetchUserLocation2 }
+        const spyFunction = jest.spyOn(canvasActions, 'fetchUserLocation')
+        axios.get = jest.fn(() => Promise.resolve(responseData))
+        canvasActions.fetchUserLocation()(dispatch);
+        expect(spyFunction).toHaveBeenCalled();
+        expect(dispatch).not.toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+});
 it('Test: setProjectSharingRole function', () => {
     const expectedActions = {
         type: SET_PROJECT_SHARING_ROLE,

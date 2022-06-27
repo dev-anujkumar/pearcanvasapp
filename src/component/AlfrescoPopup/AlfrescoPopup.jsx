@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from "react";
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -13,7 +13,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import '../../styles/AlfrescoPopup/AlfrescoPopup.css'
 import config from '../../config/config'
-import { sendDataToIframe } from '../../constants/utility';
+import { sendDataToIframe, getPrimaryButtonClass, PRIMARY_BUTTON, SECONDARY_BUTTON } from '../../constants/utility';
 import axios from 'axios';
 import { alfrescoPopup, saveSelectedAlfrescoElement } from "../AlfrescoPopup/Alfresco_Action";
 import { connect } from 'react-redux';
@@ -47,6 +47,59 @@ function AlfrescoPopup(props) {
     const [selectedOption, setOption] = React.useState('');
     const [projectMetadata, setMetaData] = React.useState()
     const classes = useStyles();
+    const focusedButton = useRef(SECONDARY_BUTTON);
+    const primaryButton = useRef(null);
+    const secondaryButton = useRef(null);
+
+    useEffect(() => {
+        /** Add Event Listner on Popup Buttons */
+        document.addEventListener('keydown', handleKeyDown);
+
+        /** Remove Event Listner on Popup Buttons */
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        }
+    }, []);
+
+    /**Function to set currently focused button i.e primary or secondary */
+    const setFocusedButton = (value) => {
+        focusedButton.current = value;
+    }
+
+    /**Function to focus element by adding class to elements class list */
+    const focusElement = (element, value) => {
+        element?.classList?.add(value);
+    }
+
+    /**Function to remove focus of element by removing class from elements class list */
+    const blurElement = (element, value) => {
+        element?.classList?.remove(value);
+    }
+
+    /**Function to perform click event on element which is currently focused */
+    const clickElement = (button) => {
+        let element = (button === PRIMARY_BUTTON) ? primaryButton.current : secondaryButton.current;
+        element?.click();
+    }
+
+    /**Function to handle keyboard event of Enter, Left & Right arrow keys */
+    const handleKeyDown = (e) => {
+        if(e.keyCode === 13) {
+            clickElement(focusedButton.current);
+        }
+        if(e.keyCode === 27) {
+            clickElement(SECONDARY_BUTTON);
+        }
+        if (e.keyCode === 37 && focusedButton.current === PRIMARY_BUTTON) {
+            setFocusedButton(SECONDARY_BUTTON);
+            blurElement(primaryButton.current, PRIMARY_BUTTON);
+            focusElement(secondaryButton.current, SECONDARY_BUTTON);
+        } else if (e.keyCode === 39 && focusedButton.current === SECONDARY_BUTTON) {
+            setFocusedButton(PRIMARY_BUTTON);
+            blurElement(secondaryButton.current, SECONDARY_BUTTON);
+            focusElement(primaryButton.current, PRIMARY_BUTTON);
+        }
+    }
 
     const handleClose = () => {
         setOpen(false);
@@ -154,12 +207,14 @@ function AlfrescoPopup(props) {
                         ))}
                     </Select>
                 </FormControl>
-                <DialogActions>
-                    <Button variant="outlined" className="active-button-class" onClick={handleClose}>Cancel</Button>
+                <DialogActions className="alfresco-popup-action-buttons">
+                    <Button id={SECONDARY_BUTTON} ref={secondaryButton} variant="outlined" className="active-button-class secondary" onClick={handleClose}>Cancel</Button>
                     <Button
+                        id={PRIMARY_BUTTON}
+                        ref={primaryButton}
                         variant="outlined"
                         disabled={selectedOption === ''}
-                        className={selectedOption !== '' && 'active-button-class'}
+                        className={getPrimaryButtonClass(selectedOption, focusedButton.current)}
                         onClick={sendSelectedData}>
                         Select
                     </Button>

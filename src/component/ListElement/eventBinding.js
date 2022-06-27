@@ -97,10 +97,6 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
      */
     if ((anchorNode.tagName === "LI" && !imgElement.length && !anchorNode.textContent) || anchorNode.tagName === "BR" || (nodeNames.includes(anchorNode.tagName))) {
         if ((e.metaKey && e.which === 13) || (e.which === 13)) {
-            // if only mathml image is present in editor //
-            if ((editor.targetElm.textContent.length === 0) ||
-                (editor.targetElm.innerHTML.indexOf('Wirisformula') != -1)) {
-            }
 
             // creating new paragraph //
             let getChildSelection = anchorNode.children.length && anchorNode.children[0].tagName;

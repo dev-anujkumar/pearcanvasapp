@@ -551,7 +551,11 @@ export class TinyMceEditor extends Component {
                     clickedY = coOrds?.top + coOrds?.height / 2;
                     let elementId = tinymce.activeEditor ? tinymce.activeEditor.id : '';
                     let blockqt = document.querySelector('#' + elementId + ' blockquote p.paragraphNummerEins');
+                    let opener = document.querySelector('#' + elementId + ' opener p.paragraphNummerEins');
                     if (!blockqt || blockqt.innerText.trim()) {
+                        editor.selection.setContent('<span id="specialChar"></span>');
+                    }
+                    if (!opener || opener.innerText.trim()) {
                         editor.selection.setContent('<span id="specialChar"></span>');
                     }
                     setTimeout(() => {
@@ -1408,12 +1412,21 @@ export class TinyMceEditor extends Component {
             if (blockListData && Object.keys(blockListData).length) {
                 const { index,asideData } = this.props;
                 const getSelectedElement = document.getElementById(`cypress-${index}`);
+                const originalIndex =index && typeof index === 'string' && index.includes('-') && index.split("-");
                 // setting the placeholder when textcontent is cleared from element authored text to prevent placecholder overlapping on backspace delete
-                if (asideData?.parent && asideData?.parent.type === "showhide"){
+                if ((asideData?.parent && asideData?.parent.type === "showhide") || 
+                (this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist")){
                     if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length===5) {
                         getSelectedElement.setAttribute('placeholder', 'Type Something');
                     }
                     if(tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length>5){
+                        getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
+                    }
+                }else if( this.props?.parentElement?.type === "element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.type === "manifestlist"){
+                    if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length=== 4) {
+                        getSelectedElement.setAttribute('placeholder', 'Type Something');
+                    }
+                    if(tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length>4){
                         getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
                     }
                 }else{
@@ -1449,6 +1462,8 @@ export class TinyMceEditor extends Component {
                     // restricting SHIFT + TAB operation on first level BL
                     if (index && typeof index === 'string' && index.includes('-') && index.split("-").length <= 3) return;
                     if (index && typeof index === 'string' && index.includes('-') && parentElement && parentElement.type === "showhide" && index.split("-").length <= 5) return;
+                    if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.type === "manifestlist"  && index.split("-").length <= 4 ) return;
+                    if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist"  && index.split("-").length <= 5 ) return;
                     blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
@@ -1514,7 +1529,8 @@ export class TinyMceEditor extends Component {
     }
 
     createNestedBlockList(){
-        if (!isNestingLimitReached(this.props.index,this.props.asideData)) {
+        const {index,asideData, parentElement} = this.props
+        if (!isNestingLimitReached(index, asideData, parentElement)) {
            let blockListData = checkBlockListElement(this.props, "TAB");
             if (blockListData && Object.keys(blockListData).length) {
                 const { parentData, indexToinsert } = blockListData;
@@ -3184,6 +3200,10 @@ export class TinyMceEditor extends Component {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
                 }
 
+                if(newElement && currentNode && currentNode.className && currentNode.className.includes('opener-title')){
+                    currentNode.classList.add('opener-caret')
+                }
+
                 let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 //PCAT-9077 - duplicate toolbar issue on element creation
                 tinymce.remove()
@@ -3662,6 +3682,10 @@ export class TinyMceEditor extends Component {
                 }
         }
 
+        if(isSameByElementId && e.target && (e.target.className && e.target.className.includes('opener-title') || e.target.parentNode && e.target.parentNode.className && e.target.parentNode.className.includes('opener-title'))) {
+            (e.target.classList.remove('opener-caret') || e.target.parentNode.classList.remove('opener-caret'))
+        }
+
         /**
          * case - is this is not the same target then
          * first remove all existing non-glossary&footnote tinymce instances keeping contentEditable to true
@@ -3974,9 +3998,8 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        if ((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
-            this.props.onFigureImageFieldBlur(this.props.index);
-        }else if(this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title){
+        if (((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) || 
+            (this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title)) {
             this.props.onFigureImageFieldBlur(this.props.index);
         }
 
