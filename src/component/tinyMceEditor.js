@@ -3198,6 +3198,10 @@ export class TinyMceEditor extends Component {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
                 }
 
+                if(newElement && currentNode && currentNode.className && currentNode.className.includes('opener-title')){
+                    currentNode.classList.add('opener-caret')
+                }
+
                 let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 //PCAT-9077 - duplicate toolbar issue on element creation
                 tinymce.remove()
@@ -3676,10 +3680,8 @@ export class TinyMceEditor extends Component {
                 }
         }
 
-        if(!isSameByElementId && e?.target?.className?.includes('opener-title')){
-            e.target.classList.add('opener-caret')
-        } else if(isSameByElementId && e.target && e.target.className && e.target.className.includes('opener-title')) {
-            e.target.classList.remove('opener-caret')
+        if(isSameByElementId && e.target && (e.target.className && e.target.className.includes('opener-title') || e.target.parentNode && e.target.parentNode.className && e.target.parentNode.className.includes('opener-title'))) {
+            (e.target.classList.remove('opener-caret') || e.target.parentNode.classList.remove('opener-caret'))
         }
 
         /**
@@ -3994,9 +3996,8 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        if ((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
-            this.props.onFigureImageFieldBlur(this.props.index);
-        }else if(this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title){
+        if (((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) || 
+            (this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title)) {
             this.props.onFigureImageFieldBlur(this.props.index);
         }
 
