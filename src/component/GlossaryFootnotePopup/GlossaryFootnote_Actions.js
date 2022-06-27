@@ -1225,8 +1225,8 @@ function prepareDataForUpdateTcm(updatedDataID,versionedData, resData) {
  * @param {*} action, type of action to be performed
  */
 export const setFormattingToolbar = (action) => {
-    let tinymceToolbar = document.querySelector('div#tinymceToolbar .tox-toolbar') ? document.querySelector('div#tinymceToolbar .tox-toolbar') : ""
-    let glossaryFootnoteToolbar = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar') : ""
+    let tinymceToolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary') ? document.querySelector('div#tinymceToolbar .tox-toolbar__primary') : ""
+    let glossaryFootnoteToolbar = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar__primary') : ""
     switch (action) {
         case 'enableTinymceToolbar':
             tinymceToolbar && tinymceToolbar.classList.remove("toolbar-disabled");
