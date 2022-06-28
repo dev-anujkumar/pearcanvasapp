@@ -53,7 +53,6 @@ export const addComment = (commentString, elementId) => (dispatch) => {
             headers: {
                 "Content-Type": "application/json",
                 ApiKey: config.STRUCTURE_APIKEY,
-                // PearsonSSOSession: config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -111,7 +110,6 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         {
             headers: {
                 "Content-Type": "application/json",
-                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -208,7 +206,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             {
                 headers: {
                     "Content-Type": "application/json",
-                    // "PearsonSSOSession": config.ssoToken,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }
@@ -382,7 +379,6 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         {
             headers: {
                 "Content-Type": "application/json",
-                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -469,7 +465,6 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         {
             headers: {
                 "Content-Type": "application/json",
-                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -695,7 +690,6 @@ export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            // 'PearsonSSOSession': config.ssoToken,
             'ApiKey': config.APO_API_KEY,
             'myCloudProxySession': config.myCloudProxySession
         }
@@ -926,7 +920,6 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     return axios.put(url, dataToSend, {
         headers: {
             "Content-Type": "application/json",
-            // "PearsonSSOSession": config.ssoToken
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {

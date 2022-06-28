@@ -33,7 +33,6 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
         'X-Roles': 'ContentPlanningAdmin',
         'Content-Type': 'application/json',
         'apikey': config.STRUCTURE_APIKEY,
-        // 'pearsonssosession': config.ssoToken,
         'myCloudProxySession': config.myCloudProxySession
       }
     }
@@ -77,7 +76,6 @@ export const openLTFunction = (taxonomyId) => dispatch => {
         'X-Roles': 'ContentPlanningAdmin',
         'Content-Type': 'application/json',
         'apikey': config.STRUCTURE_APIKEY,
-        // 'pearsonssosession': config.ssoToken,
         'myCloudProxySession': config.myCloudProxySession
       }
     }
@@ -194,7 +192,6 @@ export const fetchLearningTemplates = () => async dispatch => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // 'PearsonSSOSession': config.ssoToken
         'myCloudProxySession': config.myCloudProxySession
       }
     });

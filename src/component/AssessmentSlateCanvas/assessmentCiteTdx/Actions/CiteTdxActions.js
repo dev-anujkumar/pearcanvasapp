@@ -71,7 +71,6 @@ export const getSingleAssessmentData = (currentAssessmentSelected) => (dispatch,
     let url =`${config.REACT_APP_API_URL}v1/slate/assessment/${currentAssessmentSelected}/items`;
     return axios.get(url, {
           headers:  {
-            // PearsonSSOSession: config.ssoToken,
             myCloudProxySession: config.myCloudProxySession
         }
     }).then((res) => {
@@ -159,7 +158,6 @@ export function getMCQGuidedData(workUrn) {
         let responseData = axios.get(`${config.ASSESSMENT_ENDPOINT}assessmentitem/v2/${workUrn}/content`,
             {
                 headers: {
-                    // "PearsonSSOSession": config.ssoToken,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             });
