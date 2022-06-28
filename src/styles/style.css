@@ -219,12 +219,12 @@ i.fa.fa-asterisk,.fa .fa-bookmark {
     pointer-events: none !important;
 }
 
-#toolbarGlossaryFootnote .tox-toolbar.disable {
+#toolbarGlossaryFootnote .tox-toolbar.disable, #toolbarGlossaryFootnote .tox-toolbar_primary.disable {
     opacity: 0.4;
     cursor: not-allowed !important;
 }
 
-#toolbarGlossaryFootnote .tox-toolbar.disable button.tox-tbtn {
+#toolbarGlossaryFootnote .tox-toolbar.disable button.tox-tbtn, #toolbarGlossaryFootnote .tox-toolbar_primary.disable button.tox-tbtn {
     pointer-events: none !important;
 }
 

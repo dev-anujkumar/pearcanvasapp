@@ -1242,13 +1242,13 @@ export const setFormattingToolbar = (action) => {
             glossaryFootnoteToolbar && glossaryFootnoteToolbar.classList.add("disable");
             break;
         case 'removeTinymceSuperscript':
-            let tinymceSuperscript = document.querySelector('div#tinymceToolbar .tox-toolbar button[title="Superscript"]') ? document.querySelector('div#tinymceToolbar .tox-toolbar button[title="Superscript"]') : ""
+            let tinymceSuperscript = document.querySelector('div#tinymceToolbar .tox-toolbar_primary button[title="Superscript"]') ? document.querySelector('div#tinymceToolbar .tox-toolbar button[title="Superscript"]') : ""
             tinymceSuperscript && tinymceSuperscript.removeAttribute('aria-pressed')
             tinymceSuperscript && tinymceSuperscript.classList.remove('tox-tbtn--enabled')
             tinymceSuperscript && tinymceSuperscript.classList.add('tox-tbtn--select')
             break;
         case 'removeGlossaryFootnoteSuperscript':
-            let isSuperscriptButton = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar button[title="Superscript"]') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar button[title="Superscript"]') : ""
+            let isSuperscriptButton = document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar_primary button[title="Superscript"]') ? document.querySelector('div#toolbarGlossaryFootnote .tox-toolbar button[title="Superscript"]') : ""
             isSuperscriptButton && isSuperscriptButton.removeAttribute('aria-pressed')
             isSuperscriptButton && isSuperscriptButton.classList.remove('tox-tbtn--enabled')
             isSuperscriptButton && isSuperscriptButton.classList.add('tox-tbtn--select')
