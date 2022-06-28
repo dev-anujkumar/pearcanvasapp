@@ -3680,10 +3680,8 @@ export class TinyMceEditor extends Component {
                 }
         }
 
-        if(!isSameByElementId && e?.target?.className?.includes('opener-title')){
-            e.target.classList.add('opener-caret')
-        } else if(isSameByElementId && e.target.className.includes('opener-title')) {
-            e.target.classList.remove('opener-caret')
+        if(isSameByElementId && e.target && (e.target.className && e.target.className.includes('opener-title') || e.target.parentNode && e.target.parentNode.className && e.target.parentNode.className.includes('opener-title'))) {
+            (e.target.classList.remove('opener-caret') || e.target.parentNode.classList.remove('opener-caret'))
         }
 
         /**
