@@ -1,3 +1,4 @@
+import { SET_ELEMENT_STATUS } from "../constants/Action_Constants"
 const INITIAL_STATE = {}
 
 const INITIAL_ACTION = {
@@ -7,7 +8,7 @@ const INITIAL_ACTION = {
 
 const elementStatusReducer = (state = INITIAL_STATE, action = INITIAL_ACTION) => {
     
-    if (action.type === 'SET_ELEMENT_STATUS') {
+    if (action.type === SET_ELEMENT_STATUS) {
         if (action.payload.clearEntries) {
             return {}
         }

@@ -9,6 +9,8 @@ import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
 // DECLARATION - const or variables 
+export const PRIMARY_BUTTON = "primary";
+export const SECONDARY_BUTTON = "secondary";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const requestConfigURI = () => {
@@ -754,4 +756,35 @@ export const getDesignType = (classList) => {
     } else {
         return null;
     }
+}
+
+/**Function to retun class to apply based on selectedOption & focused Button for AlfrescoPopup Component 'Select' button*/
+export const getPrimaryButtonClass = (selectedOption, focusedButton) => {
+    if(selectedOption !== '' && focusedButton === PRIMARY_BUTTON) {
+        return "active-button-class primary";
+    } else if(selectedOption !== '' && focusedButton !== PRIMARY_BUTTON) {
+        return "active-button-class";
+    } else if(selectedOption === '' && focusedButton === PRIMARY_BUTTON) {
+        return "primary";
+    } else {
+        return null;
+    }
+}
+
+// function to get cookie value by key name
+export const getCookieByName = (name) => {
+    var value = " " + document.cookie;
+    var cStart = value.indexOf(" " + name + "=");
+    if (cStart === -1) {
+        value = null;
+    }
+    else {
+        cStart = value.indexOf("=", cStart) + 1;
+        var cEnd = value.indexOf(";", cStart);
+        if (cEnd === -1) {
+            cEnd = value.length;
+        }
+        value = unescape(value.substring(cStart, cEnd));
+    }
+    return value;
 }

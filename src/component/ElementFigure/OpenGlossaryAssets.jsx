@@ -20,7 +20,8 @@ class OpenGlossaryAssets extends Component {
             tabValue: "",
             figureGlossaryData: {},
             audioGlossaryData: {},
-            positionOfPopup: {}
+            positionOfPopup: {},
+            imageGlossaryPopupStatus: false
         }
         this.wrapperRef = React.createRef();
     }
@@ -37,6 +38,9 @@ class OpenGlossaryAssets extends Component {
     */
      openImageConfirmationBox = () => {
         this.props.showRemoveImageGlossaryPopup(true)
+        this.setState({
+            imageGlossaryPopupStatus: true
+        });
     }
 
     componentDidMount() {
@@ -100,7 +104,7 @@ class OpenGlossaryAssets extends Component {
     * @description - handleClickOutside function responsible for closing the dropdown whenever clicked outside.
     */
     handleClickOutside = (event) => {
-        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target) && !this.state.imageGlossaryPopupStatus) {
             this.props.closeAssetsPopup();
         }
     }
@@ -162,7 +166,7 @@ class OpenGlossaryAssets extends Component {
                         }
                     </div>
                     <div className="close-icon-image">
-                      <span className="close-icon" onClick={() => this.props.closeAssetsPopup(false)}>{audioNarrationCloseIcon}</span>
+                      <span id="glossary-asset-close-icon" className="close-icon" onClick={() => this.props.closeAssetsPopup(false)}>{audioNarrationCloseIcon}</span>
                     </div>
                 </div>
                 
@@ -186,10 +190,10 @@ class OpenGlossaryAssets extends Component {
 
                         <div className="remove-button">
                             {!hasReviewerRole() &&
-                                <button className="remove-text" onClick={() => this.openAudioConfirmationBox(true)} className="audioRemoveButton audioRemoveRound">Remove</button>
+                                <button onClick={() => this.openAudioConfirmationBox(true)} className="remove-text audioRemoveButton audioRemoveRound">Remove</button>
                             }
                             {
-                                <button className="remove-text"  onClick={() => this.handleReplaceAudioButton()} className="audioReplaceeButton audioRemoveRound">Replace</button>
+                                <button onClick={() => this.handleReplaceAudioButton()} className="remove-text audioReplaceeButton audioRemoveRound">Replace</button>
                             }
                         </div>
 
@@ -217,10 +221,10 @@ class OpenGlossaryAssets extends Component {
                         <div className="remove-button">
 
                             {!hasReviewerRole() &&
-                                <button className="remove-text" onClick={ this.openImageConfirmationBox} className="audioRemoveButton audioRemoveRound">Remove</button>
+                                <button onClick={() => this.openImageConfirmationBox()} className="remove-text audioRemoveButton audioRemoveRound">Remove</button>
                             }
                             {
-                                <button className="remove-text" onClick={() => this.handleReplaceImageButton()} className="audioReplaceeButton audioRemoveRound">Replace</button>
+                                <button onClick={() => this.handleReplaceImageButton()} className="remove-text audioReplaceeButton audioRemoveRound">Replace</button>
                             }
                         </div>
                     </div>

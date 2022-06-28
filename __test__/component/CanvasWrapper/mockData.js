@@ -1466,6 +1466,21 @@ export const slateTestData = {
         email: "c5test01@dummy.com",
         userId: "c5test01"
     },
+    fetchUserLocationResponse: {
+            id : "uthalki",
+            username: "uthalki",
+            mail: [
+                "kira.marbit@pedev.com"
+            ],
+            houseIdentifier: [
+                "US-NJ-Hoboken-221 River"
+            ]
+        },
+    fetchUserLocationResponse2: {
+        houseIdentifier: [
+            "US-NJ-Hoboken-221 River"
+        ]
+    },
     setActiveElementPayload: {
         citationGroup: {
             elementType: 'citations',

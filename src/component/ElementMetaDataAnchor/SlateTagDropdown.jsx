@@ -162,19 +162,21 @@ class SlateTagDropdown extends React.Component {
       'myCloudProxySession': config.myCloudProxySession
     };
     const selectedLOs = this.props.currentSlateLOData;
-    let externalLFUrn = '';
+    let externalLFUrn = [];
+    let defaultLF = "";
     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
-      externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
+      defaultLF = this.props.projectLearningFrameworks.externalLF[0].urn; // Currently we are considering first LF as default
+      this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
     }
     return {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo, defaultLF
     }
   }
 
   /** Launch External LO Popup from Canvas*/
   launchExternalFrameworkPopup = (e) => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo, defaultLF
     } = this.prepareExtFrameworkData();
 
     const currentSlateLF=this.props.currentSlateLF;
@@ -200,7 +202,8 @@ class SlateTagDropdown extends React.Component {
           'chapterContainerUrn': '',
           'currentSlateLF': currentSlateLF,
           'projectSharingRole': projectSharingRole,
-          'isSubscribed': isSubscribed
+          'isSubscribed': isSubscribed,
+          'defaultLF': defaultLF
         }
       })
 
@@ -263,7 +266,7 @@ class SlateTagDropdown extends React.Component {
 
   openAssessmentExternalPopup = (popupType) => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs, defaultLF
     } = this.prepareExtFrameworkData();
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
@@ -310,7 +313,8 @@ class SlateTagDropdown extends React.Component {
             'chapterContainerUrn': '',
             'currentSlateLF': currentSlateLF,
             'assessmentUrn': assessmentuRN,
-            'previewData': previewData
+            'previewData': previewData,
+            'defaultLF': defaultLF
         }
       })
     }

@@ -212,7 +212,7 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
 const checkCurrentSlateUrn = (allSlatesData) => {
     const slateUrns = [config.slateManifestURN, config.slateEntityURN, config.tempSlateManifestURN, config.tempSlateEntityURN]
     for (let index in slateUrns) {
-        if (allSlatesData.includes(slateUrns[index])) {
+        if (slateUrns[index] && allSlatesData.includes(slateUrns[index])) {
             return true;
         }
     }

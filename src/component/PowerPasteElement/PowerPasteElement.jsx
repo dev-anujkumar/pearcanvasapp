@@ -45,7 +45,7 @@ const PowerPasteElement = (props) => {
     powerpaste_word_import: 'clean',
     powerpaste_html_import: 'clean',
     smart_paste: false,
-    auto_focus: `textarea-${props.index}`,
+    // auto_focus: `textarea-${props.index}`,
     paste_preprocess: (plugin, data) => pastePreProcess(data),
     paste_postprocess: (plugin, data) => pastePostProcess(data, props),
     setup: (editor) => {

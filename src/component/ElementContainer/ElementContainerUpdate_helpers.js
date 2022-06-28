@@ -52,9 +52,10 @@ export const updateNewVersionElementInStore = (paramObj) => {
     if (asideData?.type == 'showhide') {
         getShowhideParent({ asideData, dispatch, parentElementIndex: elementIndex, fetchSlateData })
     }
-    if (asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType && isBlockListElement) {
+    if (asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType && (isBlockListElement || asideData?.type == "citations")) {
         asideData.indexes = indexes;
         dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+         /* Condition for update title of Approved CG inside S/H */ 
     } else if(isBlockListElement) {
         const parentBlockListId = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].id
         const parentBlockListContentUrn = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].contentUrn
@@ -70,10 +71,6 @@ export const updateNewVersionElementInStore = (paramObj) => {
         } else if ((indexes.length === 4 || indexes.length === 5) && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
             dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }
-    } else if (asideData?.type == "citations" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
-        asideData.indexes = indexes;
-        dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
-        /* Condition for update title of Approved CG inside S/H */ 
     } else if (updatedData?.type == "element-authoredtext" && updatedData?.metaDataField === "formattedTitle" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
         asideData.indexes = indexes;
         asideData.type = 'citations';
@@ -625,9 +622,8 @@ export const updateElementInStore = (paramsObj) => {
                 })
             }
             else if(isBlockListElement){
-                let indexes;
+                let indexes = parentElement.index.split("-")
                 if(asideData.parent && asideData.parent.type==="showhide"){
-                    indexes = parentElement.index.split("-")
                     if(indexes.length===5){
                         _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
                     }
@@ -639,6 +635,34 @@ export const updateElementInStore = (paramsObj) => {
                     }
                     else{
                         _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
+                    }
+                }// check the update of BL in Aside/WE header and according to the BL's length update the updated data
+                else if( _slateBodyMatter[indexes[0]]?.type === "element-aside" && _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].type === "manifestlist"){
+                    if(indexes.length===4){
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]] = updatedData
+                    }
+                    else if(indexes.length===6){
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]] = updatedData
+                    }
+                    else if(indexes.length===8){
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]] = updatedData
+                    }
+                    else{
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]] = updatedData
+                    }
+                }// check the update of BL in WE body and according to the BL's length update the updated data
+                else if(_slateBodyMatter[indexes[0]]?.type === "element-aside" && _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].type === "manifestlist"){
+                    if(indexes.length===5){
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                    }
+                    else if(indexes.length===7){
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                    }
+                    else if(indexes.length===9){
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                    }
+                    else{
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
                     }
                 }
                 else{
