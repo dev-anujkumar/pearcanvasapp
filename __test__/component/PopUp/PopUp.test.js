@@ -183,6 +183,22 @@ describe('Testing PopUp component', () => {
         component.find('img').simulate('click');
         expect(component.instance().props.alfrescoExpansionPopup).toEqual(true);
     });
+
+    it('testCase for renderDeleteWarningPopupCheckbox',() => {
+        let props = {
+            warningPopupCheckbox:true,
+            showDeleteElemPopup: true,
+            handleCheckboxPopup:jest.fn()
+        }
+        const event = {
+            target: { value: 'the-value' }
+          };
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.popup-checkbox').simulate('change', event);
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.warningPopupCheckbox).toEqual(true);
+    });
+    
     describe("Testing method handleKeyDown()", () => {
         it("Test handleKeyDown method for keyCode=13", () => {
             let props = {
