@@ -324,7 +324,8 @@ describe('Testing Event Binding Methods', () => {
             }
         }
         let element = {
-            type: "element-list"
+            type: "element-list",
+            subtype: "element-list"
         }
         let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(false);
