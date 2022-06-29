@@ -162,10 +162,70 @@ describe('Interaction functions test cases', () => {
         expect(instance.saveAssetLinkedMedia).toHaveBeenCalled();
     });
 
-    it('Testing removeLink function', () => {
+    it('Testing removeLink function - if condition', () => {
+        jest.spyOn(document, 'getElementById').mockImplementationOnce(() => {
+            return 'cypress-1'
+        })
+        jest.spyOn(tinymce, '$').mockImplementationOnce(() => {
+            return {
+                find: jest.fn(() => {
+                    return {
+                        length: true
+                    }
+                })
+            }
+        }).mockImplementationOnce(() => {
+            return {
+                find: jest.fn(() => {
+                    let arr = new Array();
+                    arr.push({
+                        focus: jest.fn()
+                    })
+                    return arr
+                })
+            }
+        }).mockImplementationOnce(() => {
+            return {
+                find: jest.fn(() => {
+                    let arr = new Array();
+                    arr.push({
+                        blur: jest.fn()
+                    })
+                    return arr
+                })
+            }
+        })
+        tinymce.activeEditor = { 'id': 'cypress-1' }
         const instance = wrapper.find('AssetPopoverSearch').instance();
         instance.apoSearchClose = jest.fn();
+        jest.useFakeTimers();
         instance.removeLink();
+        jest.advanceTimersByTime(1000);
+        expect(instance.apoSearchClose).toHaveBeenCalled();
+    });
+
+    it('Testing removeLink function - else condition', () => {
+        jest.spyOn(document, 'getElementById').mockImplementationOnce(() => {
+            return {
+                focus: jest.fn(),
+                blur: jest.fn()
+            }
+        })
+        jest.spyOn(tinymce, '$').mockImplementationOnce(() => {
+            return {
+                find: jest.fn(() => {
+                    return {
+                        length: false
+                    }
+                })
+            }
+        })
+        tinymce.activeEditor = { 'id': 'cypress-1' }
+        const instance = wrapper.find('AssetPopoverSearch').instance();
+        instance.apoSearchClose = jest.fn();
+        jest.useFakeTimers();
+        instance.removeLink();
+        jest.advanceTimersByTime(1000);
         expect(instance.apoSearchClose).toHaveBeenCalled();
     });
 
@@ -192,7 +252,7 @@ describe('Interaction functions test cases', () => {
         expect(instance.props.searchForFigures).toHaveBeenCalled();
     });
 
-    it('Testing saveAssetLinkedMedia update function', () => {
+    it('Testing saveAssetLinkedMedia update function - if condition', () => {
         jest.spyOn(document, 'getElementById').mockImplementationOnce(() => {
             return {
                 focus: jest.fn(),
@@ -237,6 +297,52 @@ describe('Interaction functions test cases', () => {
                         blur: jest.fn()
                     })
                     return arr
+                })
+            }
+        })
+        let tempWrapper = mount(<Provider store={store}><AssetPopoverSearch {...props} /> </Provider>);
+        const instance = tempWrapper.find('AssetPopoverSearch').instance();
+        const spysaveAssetLinkedMedia = jest.spyOn(instance, 'saveAssetLinkedMedia')
+        let apoObject = { 'assetId': 'urn:work:1b4234nb234bv523b4v52b3v45' }, imageObj = { 'entityUrn': 'urn:entity:12gdh1g34g12v12h34512' }
+        tinymce.activeEditor = { 'id': 'cypress-1' }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.setAttribute('id', 'cypress-1');
+        simpleDiv.innerHTML = '<abbr asset-id="urn:work:1b4234nb234bv523b4v52b3v45"> Hello </abbr>';
+        document.body.appendChild(simpleDiv);
+        jest.useFakeTimers();
+        instance.saveAssetLinkedMedia(apoObject, imageObj)
+        jest.advanceTimersByTime(1000);
+        expect(spysaveAssetLinkedMedia).toHaveBeenCalled()
+        spysaveAssetLinkedMedia.mockClear()
+    });
+
+    it('Testing saveAssetLinkedMedia update function - else condition', () => {
+        jest.spyOn(document, 'getElementById').mockImplementationOnce(() => {
+            return {
+                focus: jest.fn(),
+                querySelector: jest.fn(() => {
+                    return {
+                        innerHTML: "innerHTML"
+                    }
+                })
+            }
+        }).mockImplementationOnce(() => {
+            return true
+        }).mockImplementationOnce(() => {
+            return {
+                outerHTML: "outerHTML"
+            }
+        }).mockImplementationOnce(() => {
+            return {
+                blur: jest.fn()
+            }
+        })
+        jest.spyOn(tinymce, '$').mockImplementationOnce(() => {
+            return {
+                find: jest.fn(() => {
+                    return {
+                        length: false
+                    }
                 })
             }
         })
