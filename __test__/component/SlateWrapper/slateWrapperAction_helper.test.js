@@ -676,6 +676,42 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         helperMethods.onPasteSuccess(params);
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
+    it("onPasteSuccess - poetryData - pasteInShowhide", async () => {
+        const responseData2 = {
+            id: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d',
+            type: 'element',
+            subtype: '',
+            schema: 'http://schemas.pearson.com/wip-authoring/element/1',
+            elementdata: {
+                schema: 'http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext',
+                text: ''
+            },
+            html: { text: '<p class="paragraphNumeroUno"><br></p>' },
+            comments: false,
+            tcm: true,
+            versionUrn: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a',
+            contentUrn: 'urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527'
+        }
+        const store = mockStore(() => initialState);
+        const params = {
+            element:{
+                type: "showhide",
+                interactivedata :{
+                    type: 'showhide',
+                    // sectionType: {
+                    //     type: 'showhide'
+                    // }
+            }
+            },
+            responseData: responseData2,
+            cutIndex: 1,
+            dispatch: jest.fn(),
+            getState: store.getState,
+        }
+        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
+        helperMethods.onPasteSuccess(params);
+        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
+    });
     xit("onPasteSuccess - No poetryData - parentUrn ", async () => {
         const store = mockStore(() => initialState);
         const params = {
@@ -983,6 +1019,49 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
         expect(spyPrepareDataForTcmCreate).toHaveReturnedWith(undefined);
     });
+    it('testing------- prepareDataForTcmCreate for showTcmIconInAside ------function', () => {
+        const store = mockStore(() => initialState)
+        const type = "CONTAINER";
+        let createdElementData1 = {
+            type: "element-aside",
+            id: 2,
+            elementdata: {
+                bodymatter: [
+                    { type: "showhide" },
+
+                    {
+                        type: "manifest",
+                        contents: {
+                            bodymatter: [{ type: "showhide" }, { type: "different" }]
+                        }
+                    },
+                    { type: "different" }
+                ]
+            }
+        }
+        const spyPrepareDataForTcmCreate = jest.spyOn(helperMethods, 'prepareDataForTcmCreate')
+        helperMethods.prepareDataForTcmCreate(type, createdElementData1, store.getState, store.dispatch)
+        expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
+    });
+    it('testing------- prepareDataForTcmCreate for  showTcmIconInMultiCol ------function', () => {
+        const store = mockStore(() => initialState)
+        const type = "MULTI_COLUMN_3C";
+        let createdElementData5 = {
+            groupeddata: {
+                bodymatter: [
+                    {
+                        groupdata: {
+                            bodymatter: [{ type: "element-aside" }, { type: "showhide" }, { type: "different" }]
+                        }
+                    }
+                ]
+            },
+            type: "groupedcontent"
+        };
+        const spyPrepareDataForTcmCreate = jest.spyOn(helperMethods, 'prepareDataForTcmCreate')
+        helperMethods.prepareDataForTcmCreate(type, createdElementData5, store.getState, store.dispatch)
+        expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
+    });
 
     it('testing------- prepareDataForTcmCreate for citation ------function', () => {
         
@@ -1018,6 +1097,17 @@ describe('Tests Slate Wrapper Action helper methods', () => {
     
         const spyPrepareDataForTcmCreate = jest.spyOn(helperMethods, 'prepareDataForTcmCreate')
         helperMethods.prepareDataForTcmCreate(type, createdElementData, store.getState, store.dispatch)
+        expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
+        expect(spyPrepareDataForTcmCreate).toHaveReturnedWith(undefined);
+    });
+    it('testing------- prepareDataForTcmCreate for SHOW_HIDE ------function', () => {
+        const store = mockStore(() => initialState);
+        const type = "SHOW_HIDE";
+        let createdElementData6 = {
+            interactivedata: "data"
+        };
+        const spyPrepareDataForTcmCreate = jest.spyOn(helperMethods, 'prepareDataForTcmCreate')
+        helperMethods.prepareDataForTcmCreate(type, createdElementData6, store.getState, store.dispatch)
         expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
         expect(spyPrepareDataForTcmCreate).toHaveReturnedWith(undefined);
     });
