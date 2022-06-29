@@ -32,6 +32,8 @@ export class ReactEditor extends React.Component {
       fixed_toolbar_container: '#toolbarGlossaryFootnote',
       paste_preprocess: this.pastePreProcess,
       paste_postprocess: this.pastePostProcess,
+      skin: false,
+      content_css: false,
       setup: (editor) => {
         if (this.props.permissions && this.props.permissions.includes('authoring_mathml')) {  // when user doesn't have edit permission
           this.setChemistryFormulaIcon(editor);
