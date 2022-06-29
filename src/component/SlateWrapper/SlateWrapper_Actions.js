@@ -61,6 +61,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
+        "slateVersionUrn" : config.slateManifestURN,
+        "projectEntityUrn": config.projectEntityUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type
     };
