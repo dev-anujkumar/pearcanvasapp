@@ -7,6 +7,30 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
         return (<div>null</div>)
     }
 })
+jest.mock('./../../../src/component/CanvasWrapper/CanvasWrapper_Actions', () => {
+  return { 
+    getLOBDiscussionItems: ()=>{
+        return jest.fn()
+    },
+    resetLOBDiscussionItems: ()=>{
+        return jest.fn()
+    },
+}
+})
+jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions', () => {
+  return { 
+    updateElement: ()=>{
+        return jest.fn()
+    }
+}
+})
+jest.mock('../../../src/constants/utility.js', () => {
+  return {
+      hasReviewerRole: () => {
+          return false
+      },
+  }
+});
 const middlewares = [thunk];
 import configureMockStore from "redux-mock-store";
 import { Provider } from "react-redux";
@@ -27,11 +51,27 @@ const initialState = {
 };
 
 const props = {
-    element:{
-        html: {
-            title: "I am label of discussion"
-        }
+  element: {
+    html: {
+      title: "I am label of discussion"
+    },
+    blockdata: {
+      itemid: "test",
+      importeddiscussiontitle: "test",
+      usagetype: "test",
+      smartlink: "test",
+      lineOfBusiness: "LOB"
     }
+  },
+  permissions: "test",
+  handleEditorFocus: "test",
+  index: "test",
+  slateLockInfo: "test",
+  elementId: "test",
+  hasReviewerRole: jest.fn(),
+  getLOBDiscussionItems: jest.fn(),
+  resetLOBDiscussionItems: jest.fn(),
+  updateElement: jest.fn()
 }
 
 describe("Element Discussion is being rendered", () => {
@@ -66,11 +106,11 @@ describe("Element Discussion is being rendered", () => {
   });
   it("renders exact value of class without crashing", () => {
     
-    const usageTypeDropDown = ConnectedDiscussion.find(
-      ".singleAssessment_Dropdown_activeDropdown"
-    ).childAt(0);
+    const usageTypeDropDown = ConnectedDiscussion.find(".singleAssessment_Dropdown_activeDropdown").childAt(0);
     usageTypeDropDown.simulate("click");
-    const wrapper = ConnectedDiscussion.find(".slate_assessment_type_dropdown_options");
+    const wrapper = ConnectedDiscussion.find(".slate_assessment_type_dropdown_options").simulate('click');
     expect(wrapper).toHaveLength(1);
+    const wrapper2 = ConnectedDiscussion.find(".discussionImage").simulate('click');
+    expect(wrapper2).toHaveLength(1);
   });
 });

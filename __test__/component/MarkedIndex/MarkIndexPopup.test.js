@@ -19,7 +19,8 @@ jest.mock('../../../src/component/GlossaryFootnotePopup/GlossaryFootnote_Actions
         saveGlossaryAndFootnote: () => {
             return;
         },
-        setFormattingToolbar: () => { return; }
+        setFormattingToolbar: () => { return; },
+        UpdateElementWorkId: jest.fn()
     }
 })
 
@@ -91,7 +92,28 @@ describe('Testing Markedindex component with props', () => {
     it('componentWillUnmount Event', () => {
         MarkIndexPopupInstance.componentWillUnmount()
     })
+    it("toolbarHandling onFocus -- if", () => {
+        wrapper.find('#index-secondlevel-attacher').at(0).simulate('focus', null, 'remove');
+    });
+    it("toolbarHandling onFocus -- if", () => {
+        let e = {
+            relatedTarget: {classList: ""},
+            stopPropagation: jest.fn()
+        }
+        wrapper.find('#index-secondlevel-attacher').at(0).simulate('blur', e, 'add');
+    });
+
     it('Test handleClickOutside', () => {
+        let props = {
+            permissions: [],
+            showGlossaaryFootnote: jest.fn(),
+            markedIndexValue: { "type": "", "popUpStatus": false, poetryField: undefined, elementType: '123', elementWorkId: '123', markIndexid: '123', firstLevel: 'v', secondLevel: '22', elementSubType: 'sds', typeWithPopup: 'markedIndex' },
+            showingToastMessage: jest.fn(),
+            markedIndexCurrentValue: { firstLevel: 'imageAssetContent', crossReferences: ['test1', 'test2'] },
+            showMarkedIndexPopup: jest.fn(),
+        }
+        let wrapper = mount(<Provider store={store}>< PrintIndexPopup {...props} /></Provider>);
+        let MarkIndexPopupInstance = wrapper.find('PrintIndexPopup').instance();
         jest.spyOn(MarkIndexPopupInstance, 'handleClickOutside')
         MarkIndexPopupInstance.handleClickOutside(e);
     })
@@ -101,7 +123,8 @@ describe('Testing Markedindex component with props', () => {
             showGlossaaryFootnote: jest.fn(),
             showingToastMessage: jest.fn(),
             markedIndexCurrentValue: { firstLevel: 'imageAssetContent', crossReferences: ['test1', 'test2'] },
-            showMarkedIndexPopup: jest.fn()
+            showMarkedIndexPopup: jest.fn(),
+            markedIndexData: {markedIndexValue: {isNewIndex: "2"}}
         }
         let wrapper = mount(<Provider store={store1}>< PrintIndexPopup {...props} /></Provider>);
         let MarkIndexPopupInstance = wrapper.find('PrintIndexPopup').instance();
@@ -119,6 +142,28 @@ describe('Testing Markedindex component with props', () => {
         type = 'footnote'
         MarkIndexPopupInstance.markedIndexValueDifference(newTerm, newDef, oldTerm, oldDef, oldCrossRef, newCrossRef)
     });
+    it('Test-closePopUp function -- if case', () => {
+        const spyclosePopUp = jest.spyOn(MarkIndexPopupInstance, 'closePopUp')
+        MarkIndexPopupInstance.closePopUp()
+        expect(spyclosePopUp).toHaveBeenCalled()
+        spyclosePopUp.mockClear()
+    })
+    it('Test-closePopUp function -- else case', () => {
+        let props = {
+            permissions: [],
+            showGlossaaryFootnote: jest.fn(),
+            showingToastMessage: jest.fn(),
+            markedIndexCurrentValue: { firstLevel: 'imageAssetContent', crossReferences: ['test1', 'test2'] },
+            showMarkedIndexPopup: jest.fn(),
+            markedIndexData: {markedIndexValue: {isNewIndex: "2"}}
+        }
+        let wrapper = mount(<Provider store={store1}>< PrintIndexPopup {...props} /></Provider>);
+        let MarkIndexPopupInstance = wrapper.find('PrintIndexPopup').instance();
+        const spyclosePopUp = jest.spyOn(MarkIndexPopupInstance, 'closePopUp')
+        MarkIndexPopupInstance.closePopUp()
+        expect(spyclosePopUp).toHaveBeenCalled()
+        spyclosePopUp.mockClear()
+    })
 })
 describe('Testing toolbarHandling Function', () => {
     let props = {
