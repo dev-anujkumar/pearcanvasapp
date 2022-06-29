@@ -3511,7 +3511,7 @@ export default {
 					isNumbered: true,
 					startNumber: 1
 				},
-				activeElement: {index: "0-0-0-0"},
+				activeElement: {"tag":"P","elementType":"element-authoredtext","primaryOption":"primary-paragraph","secondaryOption":"secondary-paragraph","elementId":"urn:pearson:work:839f0d4f-332d-4be6-af03-86fa72ff4fb8","index":"0-0-0-0","elementWipType":"element-authoredtext"},
 				slateLevelData:{
 					"urn:pearson:manifest:e5042835-1c9c-485d-ac89-c96a9a86473f":{
 					   "id":"urn:pearson:manifest:e5042835-1c9c-485d-ac89-c96a9a86473f",
@@ -3609,6 +3609,112 @@ export default {
 								   "0",
 								   "0"
 								]
+							 }
+						  ],
+						  "schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+					   },
+					   "status":"wip",
+					   "pageNo":0,
+					   "pageCount":1,
+					   "pageLimit":25,
+					   "numberedandlabel":true
+					}
+				 },
+			}
+		},
+		store: {},
+		dataToUpdate: {
+			"isNumbered": true,
+			"startNumber": 1
+		},
+		currentSlateData: {
+			id: "urn:pearson:manifest:e5042835-1c9c-485d-ac89-c96a9a86473f",
+			contents:{
+				bodymatter: [
+					{
+						contentUrn: "urn:pearson:entity:04726058-a365-476c-aae6-4608b12fb5eb",
+						contents: {
+							bodymatter: []
+						},
+						id: "urn:pearson:manifest:43014725-efad-4056-ab61-a7b2e5ad6b2e",
+						index: 0,
+						numberedline: false,
+						schema: "http://schemas.pearson.com/wip-authoring/poetry/1",
+					},
+				],
+				schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+				title: {schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", text: "Slate intro"}
+			},
+			pageCount: 0,
+			pageLimit: 25,
+			pageNo: 0,
+			schema: "http://schemas.pearson.com/wip-authoring/intro/1",
+			status: "wip",
+			type: "chapterintro",
+			contentUrn: "urn:pearson:entity:4657ec09-bde4-42e0-bebf-acba344829c5",
+			versionUrn: "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333"
+		},
+	},
+	testcase24:{
+		initState: {
+			appStore:{
+				dataToUpdate: {
+					isNumbered: true,
+					startNumber: 1
+				},
+				activeElement: {"tag":"P","elementType":"element-authoredtext","primaryOption":"primary-paragraph","secondaryOption":"secondary-paragraph","elementId":"urn:pearson:work:839f0d4f-332d-4be6-af03-86fa72ff4fb8","index":"0-0-0-0-0","elementWipType":"element-authoredtext"},
+				slateLevelData : {
+					"urn:pearson:manifest:e5042835-1c9c-485d-ac89-c96a9a86473f":{
+					   "id":"urn:pearson:manifest:e5042835-1c9c-485d-ac89-c96a9a86473f",
+					   "type":"chapterintro",
+					   "schema":"http://schemas.pearson.com/wip-authoring/intro/1",
+					   "versionUrn":"urn:pearson:manifest:e5042835-1c9c-485d-ac89-c96a9a86473f",
+					   "contentUrn":"urn:pearson:entity:04726058-a365-476c-aae6-4608b12fb5eb",
+					   "contents":{
+						  "bodymatter":[
+							 {
+								"id":"urn:pearson:manifest:045cde04-a001-47e0-9720-76fda6510d7b",
+								"type":"manifestlist",
+								"subtype":"decimal",
+								"schema":"http://schemas.pearson.com/wip-authoring/list/1",
+								"versionUrn":"urn:pearson:manifest:045cde04-a001-47e0-9720-76fda6510d7b",
+								"contentUrn":"urn:pearson:entity:cfad7e8f-0c35-4429-9e09-5bfff8824fc1",
+								"listdata":{
+								   "bodymatter":[
+									  {
+										 "id":"urn:pearson:manifest:ca64b7a5-2c4b-423d-8a37-0cebdecfef46",
+										 "type":"manifestlistitem",
+										 "schema":"http://schemas.pearson.com/wip-authoring/list/1",
+										 "versionUrn":"urn:pearson:manifest:ca64b7a5-2c4b-423d-8a37-0cebdecfef46",
+										 "contentUrn":"urn:pearson:entity:774efdd9-d15f-4b50-ac54-bfdf0a87b1e9",
+										 "listitemdata":{
+											"bodymatter":[
+											   {
+												  "id":"urn:pearson:work:1a6c1bb8-9745-4206-94b0-2d31d74ad0fc",
+												  "type":"element-authoredtext",
+												  "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+												  "elementdata":{
+													 "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+													 "text":""
+												  },
+												  "html":{
+													 "text":"<p class=\"paragraphNumeroUno\"><br></p>"
+												  },
+												  "versionUrn":"urn:pearson:work:1a6c1bb8-9745-4206-94b0-2d31d74ad0fc",
+												  "contentUrn":"urn:pearson:entity:b89a9fed-a4d9-4312-8fe6-aeabd08e84ba",
+												  "status":"wip",
+												  "index":"0-0-0"
+											   }
+											]
+										 }
+									  }
+								   ]
+								},
+								"listtype":"ordered",
+								"startNumber":1,
+								"columnnumber":1,
+								"iconcolor":"iconColor1",
+								"fontstyle":"fontStyle1"
 							 }
 						  ],
 						  "schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
