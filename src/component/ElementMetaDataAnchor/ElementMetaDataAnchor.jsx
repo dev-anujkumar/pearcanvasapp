@@ -148,18 +148,20 @@ export class ElementMetaDataAnchor extends Component {
       'myCloudProxySession': config.myCloudProxySession
     };
     const selectedLOs = this.props.currentSlateLOData;
-    let externalLFUrn = '';
+    let externalLFUrn = [];
+    let defaultLF = "";
     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
-      externalLFUrn = this.props.projectLearningFrameworks.externalLF[0].urn;
+      defaultLF = this.props.projectLearningFrameworks.externalLF[0].urn; // Currently we are considering first LF as default
+      this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
     }
     return {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo,defaultLF
     }
   }
 
   launchExternalFrameworkPopup = () => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo,defaultLF
     } = this.prepareExtFrameworkData();
     const currentSlateLF=this.props.currentSlateLF;
       sendDataToIframe({
@@ -175,7 +177,8 @@ export class ElementMetaDataAnchor extends Component {
           'externalLFUrn': externalLFUrn,
           'currentSlateId': slateManifestURN,
           'chapterContainerUrn': '',
-          'currentSlateLF': currentSlateLF
+          'currentSlateLF': currentSlateLF,
+          'defaultLF':defaultLF
         }
       })
   } 
