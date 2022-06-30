@@ -176,16 +176,19 @@
 .tooltip .tooltip-comment {
     top: 26px;
     left: 12px;
+    height: auto;
 }
 .tooltip .tooltip-view-comment {
     top: 26px;
     left: 42px;
+    height: auto;
 }
 
 .tooltip .tooltip-flag {
     width: 105px;
     top: 26px;
     left: 1%;
+    height: auto;
 }
 
 .tooltip .tooltip-picker-for-table {
