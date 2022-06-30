@@ -170,9 +170,9 @@ background-color: #f7f7f7 !important;
 }
 
 .secondary {
-  border: 1.5px solid #dcdcdc !important;
-  outline-offset: 1px !important;
+  border: 1.5px solid #005A70 !important;
+  outline-offset: 1.5px !important;
   outline-style: solid !important;
-  outline-color: #dcdcdc !important;
+  outline-color: #005A70 !important;
   outline-width: 3px !important;
 }
