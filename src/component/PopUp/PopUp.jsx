@@ -126,10 +126,18 @@ class PopUp extends React.Component {
 
     /**Function to set initial state of focused button based on props*/
     setFocus = (props) => {
-        if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup || props.isTCMCanvasPopup) {
-            return PRIMARY_BUTTON;
+        if(props.isTCMCanvasPopup) {
+            if(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) {
+                return SECONDARY_BUTTON
+            } else {
+                return PRIMARY_BUTTON
+            }
         } else {
-            return SECONDARY_BUTTON;
+            if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup ) {
+                return PRIMARY_BUTTON;
+            } else {
+                return SECONDARY_BUTTON;
+            }
         }
     }
 
@@ -175,17 +183,23 @@ class PopUp extends React.Component {
             element?.click();
         }
         if (e.keyCode === 37 && this.state.focusedButton === PRIMARY_BUTTON) {
-            this.setState({
-                focusedButton: SECONDARY_BUTTON
-            })
-            this.blurElement(PRIMARY_BUTTON);
-            this.focusElement(SECONDARY_BUTTON);
+            const element = document.querySelector(`[option=${SECONDARY_BUTTON}]`)
+            if(element && element?.classList) {
+                this.setState({
+                    focusedButton: SECONDARY_BUTTON
+                })
+                this.blurElement(PRIMARY_BUTTON);
+                this.focusElement(SECONDARY_BUTTON);
+            }
         } else if (e.keyCode === 39 && this.state.focusedButton === SECONDARY_BUTTON) {
-            this.setState({
-                focusedButton: PRIMARY_BUTTON
-            })
-            this.blurElement(SECONDARY_BUTTON);
-            this.focusElement(PRIMARY_BUTTON);
+            const element = document.querySelector(`[option=${PRIMARY_BUTTON}]`)
+            if(element && element?.classList) {
+                this.setState({
+                    focusedButton: PRIMARY_BUTTON
+                })
+                this.blurElement(SECONDARY_BUTTON);
+                this.focusElement(PRIMARY_BUTTON);
+            }
         }
     }
 
@@ -291,12 +305,21 @@ class PopUp extends React.Component {
         }
         if (props.isTCMCanvasPopup) {
             console.log('TCM EDITOR PERMISSION', this.props.permissions?.includes('trackchanges_approve_reject'), "TCM STATUS", props.tcmStatus)
-            return (
-                <div className={`dialog-buttons ${props.assessmentClass}`}>
-                    <span option={PRIMARY_BUTTON} className={`cancel-button tcm ${(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) && "disable"}`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
-                    <span option={SECONDARY_BUTTON} className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
-                </div>
-            )
+            if(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) {
+                return (
+                    <div className={`dialog-buttons ${props.assessmentClass}`}>
+                        <span className={`cancel-button tcm disable`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
+                        <span option={SECONDARY_BUTTON} className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
+                    </div>
+                )
+            } else {
+                return (
+                    <div className={`dialog-buttons ${props.assessmentClass}`}>
+                        <span option={PRIMARY_BUTTON} className={`cancel-button tcm`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
+                        <span option={SECONDARY_BUTTON} className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
+                    </div>
+                )
+            }
         }
         if (props.AssessmentPopup) {
             return (
