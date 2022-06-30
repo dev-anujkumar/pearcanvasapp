@@ -1,5 +1,6 @@
 .tooltip {
     position: relative;
+    display: inline-block;
     /* border-bottom: 1px dotted black; */
 }
 
@@ -179,14 +180,14 @@
     height: auto;
 }
 .tooltip .tooltip-view-comment {
-    top: 26px;
+    top: 24px;
     left: 42px;
     height: auto;
 }
 
 .tooltip .tooltip-flag {
     width: 105px;
-    top: 26px;
+    top: 24px;
     left: 1%;
     height: auto;
 }
@@ -194,7 +195,7 @@
 .tooltip .tooltip-picker-for-table {
     /* width: 120px; */
     width: max-content;
-    top: 125%;
+    top: 112%;
     margin-left: -85px;
     font-size: 10px;
     font-weight: 600;
@@ -333,4 +334,7 @@
 .view-comment-btn>.tooltip>.btn-element.small,
 .flag-te-btn>.tooltip>.btn-element.small{
     display: inline-block;
+}
+.add-comment-btn>.tooltip, .view-comment-btn>.tooltip, .flag-te-btn>.tooltip{
+    display: inline;
 }
