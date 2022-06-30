@@ -92,7 +92,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             default:
                 return {
                     "projectUrn": config.projectUrn,
-                    "entityUrn": cutCopyParentUrn? cutCopyParentUrn.contentUrn: parentUrn ? parentUrn.contentUrn : config.slateEntityURN,
+                    "entityUrn": contentUrn,
                     "workUrn": elmId
                 }
         }

@@ -19,7 +19,7 @@ const {
 }
     = TcmConstants;
 
-export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type, index, isPopupSlate, operationType = null, popupCutCopyParentData = null) => {
+export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, containerElement, type, index, isPopupSlate, operationType = null, popupCutCopyParentData = null, deletedElementVersionUrn="") => {
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     /* For WE creation*/
@@ -53,7 +53,12 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     }
     else {
         let elementDetails = setElementTypeAndUrn(elementId, tag, "", "", undefined, popupInContainer, slateManifestVersioning, isPopupSlate, undefined, {}, actionStatus, popupCutCopyParentData);
-        prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
+        // This is the case of deleting an element after versioning without update it
+        if((actionStatus.action.toLowerCase() === "delete") && (deletedElementVersionUrn !== "") && (deletedElementVersionUrn !== elementDetails.elementUrn)){
+            wipData.id = deletedElementVersionUrn;
+            wipData.versionUrn = deletedElementVersionUrn;
+        }
+        prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index, "");
     }
 }
 /**
