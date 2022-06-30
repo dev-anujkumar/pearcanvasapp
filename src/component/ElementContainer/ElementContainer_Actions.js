@@ -180,7 +180,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             parentElement
         }
         updateStoreInCanvas(helperArgs)
-        let updatedData1 = JSON.parse(JSON.stringify(updatedData))
+        let updatedData1 = JSON.parse(JSON.stringify(updatedData));
+        updatedData1.projectEntityUrn = config.projectEntityUrn;
+        updatedData1.slateEntityUrn = updatedData?.elementParentEntityUrn
         const data = {
             slateLevelData,
             index: elementIndex
@@ -189,6 +191,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         if(blockListData && Object.keys(blockListData).length > 0) {
             const { parentData } = blockListData;
             updatedData1.elementParentEntityUrn = parentData?.contentUrn;
+            updatedData1.slateEntityUrn = parentData?.contentUrn 
         }
         if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
             updatedData1 = {
@@ -199,7 +202,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 html: {
                     ...updatedData1.html,
                     text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"
-                }
+                },
+                projectEntityUrn: config.projectEntityUrn,
+                slateEntityUrn : updatedData?.elementParentEntityUrn
             }
         }
         try {
