@@ -58,7 +58,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
             wipData.id = deletedElementVersionUrn;
             wipData.versionUrn = deletedElementVersionUrn;
         }
-        prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index, "");
+        prepareAndSendTcmData(elementDetails, wipData, defaultKeys, actionStatus,index);
     }
 }
 /**
