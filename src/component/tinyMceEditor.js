@@ -11,7 +11,7 @@ import "tinymce/plugins/lists/plugin.min.js";
 import "tinymce/plugins/advlist/plugin.min.js";
 import "tinymce/plugins/paste/plugin.min.js";
 // Commenting icons import related to latest tinymce version
-// import 'tinymce/icons/default/icons.min.js';
+import 'tinymce/icons/default/icons.min.js';
 import { EditorConfig, FormatSelectors, elementTypeOptions, insertMediaSelectors } from '../config/EditorConfig';
 import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
@@ -94,6 +94,8 @@ export class TinyMceEditor extends Component {
             paste_preprocess: this.pastePreProcess,
             paste_postprocess: this.pastePostProcess,
             force_p_newlines: false,
+            skin: false,
+            content_css: false,
             setup: (editor) => {
                 if (this.props.permissions && this.props.permissions.includes('authoring_mathml')) {
                     this.setChemistryFormulaIcon(editor);
@@ -3996,9 +3998,8 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        if ((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) {
-            this.props.onFigureImageFieldBlur(this.props.index);
-        }else if(this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title){
+        if (((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) || 
+            (this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title)) {
             this.props.onFigureImageFieldBlur(this.props.index);
         }
 

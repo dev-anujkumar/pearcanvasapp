@@ -95,11 +95,11 @@ describe('-----------------Testing Search Actions-----------------', () => {
             let dispatch = (obj) => {
                 expect(obj.type).toBe(SET_SEARCH_URN);
                 expect(obj.payload.apiStatus).toEqual(200);
-                // expect(obj.payload.usageTypeList).toEqual(MockUsageTypeList_Data);
+                expect(obj.payload.usageTypeList).toEqual(MockUsageTypeList_Data);
                 expect(obj.payload.entityType).toEqual(entityType);
             }
             const spyFunction = jest.spyOn(actions, 'setScroll');
-            //axios.get = jest.fn(() => Promise.resolve(responseData));
+            axios.get = jest.fn(() => Promise.resolve(responseData));
             actions.setScroll(entityType)(dispatch);
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
@@ -112,11 +112,11 @@ describe('-----------------Testing Search Actions-----------------', () => {
             let dispatch = (obj) => {
                 expect(obj.type).toBe(SET_SEARCH_URN);
                 expect(obj.payload.apiStatus).toEqual(200);
-                // expect(obj.payload.usageTypeList).toEqual(MockUsageTypeList_Data);
+                expect(obj.payload.usageTypeList).toEqual(MockUsageTypeList_Data);
                 expect(obj.payload.entityType).toEqual(entityType);
             }
             const spyFunction = jest.spyOn(actions, 'setScroll');
-            //axios.get = jest.fn(() => Promise.resolve(responseData));
+            axios.get = jest.fn(() => Promise.resolve(responseData));
             actions.setScroll(entityType)(dispatch);
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
@@ -137,60 +137,17 @@ describe('-----------------Testing Search Actions-----------------', () => {
             spyFunction.mockClear();
         });
     });
-    xdescribe('Testing------- getCommentElements', () => {
-        xit('Testing------- getCommentElements-Then', async () => {
-            let responseData = {
-                data: mockdata,
-                payload: ""
-            }
-            let expectedResult = {
-                type: SET_COMMENT_SEARCH_URN,
-                payload, parent, scroll: false, scrollTop: 0
-            }
-            let dispatch = (obj) => {
-                if (obj && obj.type === SET_COMMENT_SEARCH_URN) {
-                    expect(obj.payload.scroll).toEqual(false);
-                    expect(obj.payload.scrollTop).toEqual(0);
-                }
-            }
-            const spyFunction = jest.spyOn(actions, 'getCommentElements');
-            axios.get = await jest.fn(() => Promise.resolve(responseData));
-            actions.getCommentElements()(dispatch);
-            axios.get.mockImplementation(() => Promise.resolve(responseData));
-            global.fetch = jest.fn().mockImplementationOnce(() => {
-                return new Promise((resolve, reject) => {
-                    resolve({ json: jest.fn(() => responseData) });
-                });
-            });
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
+
+    describe('Testing------- getContainerData', () => {
+        it('testing 1------- getContainerData passing no argument for else case ------', () => {
+            const spygetContainerData = jest.spyOn(actions, 'getContainerData');
+            actions.getContainerData();
+            expect(spygetContainerData).toHaveBeenCalled();
         });
-        it('Testing------- getCommentElements-Catch', () => {
-            let dispatch = (obj) => {
-                if (obj && obj.type === SET_COMMENT_SEARCH_URN) {
-                    expect(obj.payload.scroll).toEqual(true);
-                }
-            }
-            const spyFunction = jest.spyOn(actions, 'getCommentElements');
-            axios.get = jest.fn(() => Promise.reject({}));
-            actions.getCommentElements()(dispatch);
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
-        });
-        it('testing------- getCommentElements passing slateEntityUrn and elementEntity  ------', () => {
-            const slateEntityUrn = 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e';
-            let mock = new MockAdapter(axiosMock);
-            const responseData = {
-                status: 200,
-                data: {}
-            };
-            mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`).reply(200, responseData);
-            const spygetCommentElements = jest.spyOn(actions, 'getCommentElements');
-            actions.getCommentElements(slateEntityUrn, elementEntity);
-            expect(spygetCommentElements).toHaveBeenCalled();
-        });
+    });
     
-        it('testing------- getCommentElements passing no argument for else case ------', () => {
+    describe('Testing------- getCommentElements', () => {
+        it('testing 1------- getCommentElements passing no argument for else case ------', () => {
             const spygetCommentElements = jest.spyOn(actions, 'getCommentElements');
             actions.getCommentElements();
             expect(spygetCommentElements).toHaveBeenCalled();
