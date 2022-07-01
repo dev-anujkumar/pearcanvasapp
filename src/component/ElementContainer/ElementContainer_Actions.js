@@ -191,7 +191,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         if(blockListData && Object.keys(blockListData).length > 0) {
             const { parentData } = blockListData;
             updatedData1.elementParentEntityUrn = parentData?.contentUrn;
-            updatedData1.slateEntityUrn = parentData?.contentUrn 
+            updatedData1.slateEntityUrn = parentData?.contentUrn ?? updatedData?.elementParentEntityUrn
         }
         if (showHideType && showHideType === "postertextobject" && !(updatedData1.elementdata.text.trim().length || updatedData1.html.text.match(/<img/))) {
             updatedData1 = {
