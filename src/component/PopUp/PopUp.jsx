@@ -211,7 +211,7 @@ class PopUp extends React.Component {
     }
 
     handleImageGlossaryButtonsClick = (e) => {
-        closeGlossaryAssetPopup();
+        this.closeGlossaryAssetPopup();
         let buttonClicked = e?.target?.attributes['option']?.value;
         if(buttonClicked === PRIMARY_BUTTON) {
             this.props.removeImageContent();
@@ -221,7 +221,7 @@ class PopUp extends React.Component {
     }
 
     handleAudioGlossaryButtonsClick = (e) => {
-        closeGlossaryAssetPopup();
+        this.closeGlossaryAssetPopup();
         let buttonClicked = e?.target?.attributes['option']?.value;
         if(buttonClicked === PRIMARY_BUTTON) {
             this.props.saveContent();
