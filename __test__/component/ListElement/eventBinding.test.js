@@ -61,6 +61,15 @@ describe('Testing Event Binding Methods', () => {
         expect(elem.classList.contains('tox-tbtn--enabled')).toEqual(true);
     });
 
+    it('highlightListIcon test OL',() => {
+        const elem = document.createElement('div');
+        elem.setAttribute('title','Ordered List');
+        document.body.append(elem);
+        const context = { element : {subtype : 'decimal'}, currentElement: {subType: 'disc'}}
+        highlightListIcon(context); 
+        expect(elem.classList.contains('tox-tbtn--enabled')).toEqual(false);
+    });
+
     it('Test positionListDrop Call', () => {
         let event = {
             target: {
@@ -2075,6 +2084,242 @@ describe('Testing Event Binding Methods', () => {
         let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(undefined);
     });
+    it('Test bindKeyDownEvent for which is 8 startnode tagname is li ', () => {
+        let editor = {
+            selection: {
+                getSel: () => {
+                    return {
+                        anchorNode: {
+                            tagName: 'LI',
+                            parentNode: {
+                                tagName: 'div',
+                                classList: ['class']
+                            },
+                            querySelectorAll: () => {
+                                return {
+                                    length: 1
+                                }
+                            },
+                            children: [{
+                                tagName: 'span'
+                            }
+                            ],
+                            nextSibling: {
+                                tagName: 'LI'
+                            },
+                            closest: (temp) => {
+                                if (temp === 'ol') {
+                                    return {
+                                        getAttribute: () => {
+                                            return '0';
+                                        },
+                                        findChildren: () => {
+                                            return {
+                                                indexOf: () => {
+                                                    return 0
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    return {
+                                        getAttribute: () => {
+                                            return '1';
+                                        },
+                                        findChildren: () => {
+                                            return {
+                                                indexOf: () => {
+                                                    return 0
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            remove: () => { },
+                            data: [1, 2],
+                            findChildren: (temp) => {
+                                if (temp === 'ol') {
+                                    return {
+                                        length: 0
+                                    }
+                                } else {
+                                    return {
+                                        length: 1
+                                    }
+                                }
+                            },
+                            classList: {
+                                add: () => { }
+                            }
+                        },
+                        focusOffset: 0
+                    }
+                },
+                getRng: (temp) => {
+                    if (temp) {
+                        return {
+                            startContainer: 1,
+                            endContainer: 1
+                        }
+                    } else {
+                        return {
+                            startContainer: {
+                                tagName: 'li',
+                                closest: (temp) => {
+                                    if (temp === 'ol') {
+                                        return {
+                                            getAttribute: () => {
+                                                return '0';
+                                            },
+                                            findChildren: () => {
+                                                return {
+                                                    indexOf: () => {
+                                                        return 0
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        return {
+                                            getAttribute: () => {
+                                                return '1';
+                                            },
+                                            findChildren: () => {
+                                                return {
+                                                    indexOf: () => {
+                                                        return 0
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                            },
+                            endContainer: {
+                                tagName: 'li',
+                                closest: (temp) => {
+                                    if (temp === 'ol') {
+                                        return {
+                                            getAttribute: () => {
+                                                return '0';
+                                            },
+                                            findChildren: () => {
+                                                return {
+                                                    indexOf: () => {
+                                                        return 0
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        return {
+                                            getAttribute: () => {
+                                                return '1';
+                                            },
+                                            findChildren: () => {
+                                                return {
+                                                    indexOf: () => {
+                                                        return 0
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                            }
+                        }
+                    }
+                }
+            },
+            targetElm: {
+                findChildren: (temp) => {
+                    if (temp !== 'ol') {
+                        return {
+                            length: 1
+                        }
+                    } else {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                textContent: {
+                    length: 1
+                },
+                innerHTML: {
+                    indexOf: () => {
+                        return 0
+                    }
+                },
+                querySelectorAll: () => {
+                    return {
+                        length: 1
+                    };
+                },
+                childNodes: [{}]
+            },
+            editorCommands: {
+                commands: {
+                    exec: {
+                        indent: () => { },
+                        outdent: () => { }
+                    }
+                }
+            }
+        };
+        let event = {
+            target: {
+                querySelectorAll: (temp) => {
+                    if (temp === 'ol') {
+                        return []
+                    } else {
+                        return [
+                            {
+                                getAttribute: (tempPara) => {
+                                    if (tempPara === 'treelevel') {
+                                        return 1;
+                                    } else {
+                                        return undefined;
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                closest: () => {
+                    return false
+                }
+            },
+            metaKey: true,
+            which: 8,
+            shiftKey: true,
+            stopImmediatePropagation: () => { },
+            stopPropagation: () => { },
+            preventDefault: () => { }
+        }
+        document.getElementById = () => {
+            return {
+                closest: () => {
+                    return {
+                        nextSibling: {
+                            querySelector: () => {
+                                return {
+                                    click: () => { }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
+        expect(result).toEqual(undefined);
+    });
+
     it('Test bindKeyDownEvent for which is 8 and tagname is "li" ', () => {
         let editor = {
             selection: {
@@ -2447,6 +2692,162 @@ describe('Testing Event Binding Methods', () => {
         let result = bindKeyDownEvent(editor, event1, element);
         expect(result).toEqual(undefined);
     });
+    it('Test bindKeyDownEvent for getElementsByTagName', () => {
+        let editor = {
+            selection: {
+                getSel: () => {
+                    return {
+                        anchorNode: {
+                            getElementsByTagName: () => {
+                                return []
+                            },
+                            tagName: 'li',
+                            querySelectorAll: () => {
+                                return {
+                                    length: 1
+                                }
+                            },
+                            parentNode: {
+                                tagName: 'div',
+                                classList: ['class']
+                            },
+                            closest: (temp) => {
+                                if (temp === 'ol') {
+                                    return false
+                                    // return {
+                                    //     getAttribute: () => {
+                                    //         return false;
+                                    //     },
+                                    //     findChildren: () => {
+                                    //         return {
+                                    //             indexOf: () => {
+                                    //                 return 0
+                                    //             }
+                                    //         }
+                                    //     }
+                                    // }
+                                } else if(temp === 'li') {
+                                    return {
+                                        closest: (temp) => {
+                                            if(temp === 'ol'){
+                                                return false
+                                            } else {
+                                                return {
+                                                    findChildren: () => {
+                                                        return {
+                                                            indexOf: () => {
+                                                                return 0
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    return {
+                                        getAttribute: () => {
+                                            return '1';
+                                        },
+                                        findChildren: () => {
+                                            return {
+                                                indexOf: () => {
+                                                    return 0
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                        }
+                    }
+                },
+                getRng: () => {
+                    return {
+                        startContainer: {
+                            tagName:'LI'
+                        },
+                        endContainer: {
+                            tagName:'LI'
+                        }
+                    }
+                }
+            },
+            targetElm: {
+                findChildren: (temp) => {
+                    if (temp !== 'ol') {
+                        return {
+                            length: 1
+                        }
+                    } else {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                querySelectorAll: () => {
+                    return {
+                        length: 1
+                    }
+                },
+                childNodes: [{}]
+            }
+        };
+        let event = {
+            target: {
+                querySelectorAll: (temp) => {
+                    if (temp === 'ol') {
+                        return []
+                    } else {
+                        return [
+                            {
+                                getAttribute: (tempPara) => {
+                                    if (tempPara === 'treelevel') {
+                                        return 1;
+                                    } else {
+                                        return undefined;
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                closest: () => {}
+            },
+            metaKey: ()=> { },
+            which : 9,
+            stopImmediatePropagation: () => { },
+            stopPropagation: () => { },
+            preventDefault: () => { }
+        }
+        document.getElementById = () => { 
+            return {
+                closest: () => {
+                    return {
+                        nextSibling: {
+                            querySelector: () => {
+                                return {
+                                    click: () => { }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        window.tinymce = {
+            activeEditor: {
+                id: ''
+            }
+        }
+        let element = {
+            type: "element-list",
+            subtype: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
+        expect(result).toEqual(false);
+    });
+
     it('Test updateNestedList', () => {
         let element = {
             querySelectorAll: (temp) => {
@@ -2903,6 +3304,112 @@ it('Test updateNestedList for switch for decimal', () => {
                         },
                         removeAllClass: () => {}
                     }]
+                }
+            }
+        }
+        let result = updateNestedList(element);
+        expect(result).toEqual(undefined);
+    });
+    
+    it('Test updateNestedList for switch for disc', () => {
+        let element = {
+            querySelectorAll: (temp) => {
+                if (temp === 'ol') {
+                    return [ {
+                        getAttribute: (temp) => {
+                            if (temp === 'treelevel') {
+                                return 2
+                            } else {
+                                return 'none'
+                            }
+                        },
+                        classList: {
+                            add: () => { }
+                        },
+                        parents: (temp) => {
+                            if (temp === 'ol') {
+                                return {
+                                    getAttribute: (temp) => {
+                                        if (temp === 'treelevel') {
+                                            return 0
+                                        }
+                                    }
+                                }
+                            } else {
+                                return {
+                                    getAttribute: (temp) => {
+                                        if (temp === 'treelevel') {
+                                            return 2
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        setAttribute: () => {},
+                        removeAttribute: () => {},
+                        style: {
+                            counterIncrement: null
+                        },
+                        children: [{
+                            removeAllClass: () => {},
+                            classList: {
+                                add: () => {}
+                            }
+                        }],
+                        getCss: () => {
+                            return 'none'
+                        },
+                        removeAllClass: () => {}
+                    }]
+                } else {
+                    return [
+                        {
+                        getAttribute: (temp) => {
+                            if (temp === 'treelevel') {
+                                return 2
+                            } else {
+                                return 'disc'
+                            }
+                        },
+                        classList: {
+                            add: () => { }
+                        },
+                        parents: (temp) => {
+                            if (temp === 'ol') {
+                                return {
+                                    getAttribute: (temp) => {
+                                        if (temp === 'treelevel') {
+                                            return 0
+                                        }
+                                    }
+                                }
+                            } else {
+                                return {
+                                    getAttribute: (temp) => {
+                                        if (temp === 'treelevel') {
+                                            return 2
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        setAttribute: () => {},
+                        removeAttribute: () => {},
+                        style: {
+                            counterIncrement: null
+                        },
+                        children: [{
+                            removeAllClass: () => {},
+                            classList: {
+                                add: () => {}
+                            }
+                        }],
+                        getCss: () => {
+                            return 'none'
+                        },
+                        removeAllClass: () => {}
+                    }
+                ]
                 }
             }
         }
