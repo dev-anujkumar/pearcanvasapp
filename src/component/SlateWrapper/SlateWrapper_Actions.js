@@ -63,6 +63,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
         "slateVersionUrn" : slateVersionUrn,
+        "immediateSlateEntityUrn" : config.slateEntityURN,
+        "immediateSlateVersionUrn": config.slateManifestURN,
         "projectEntityUrn": config.projectEntityUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type
