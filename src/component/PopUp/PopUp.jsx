@@ -326,7 +326,6 @@ class PopUp extends React.Component {
             )
         }
         if (props.isTCMCanvasPopup) {
-            console.log('TCM EDITOR PERMISSION', this.props.permissions?.includes('trackchanges_approve_reject'), "TCM STATUS", props.tcmStatus)
             if(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) {
                 return (
                     <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -659,7 +658,7 @@ class PopUp extends React.Component {
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : ''}>
+                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}

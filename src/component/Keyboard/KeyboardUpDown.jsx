@@ -116,7 +116,7 @@ const KeyboardUpDown = (props) => {
     }
 
     const handleKeyDown = (event) => {
-        if (event.keyCode === 38 || event.keyCode === 40) {
+        if ((event.keyCode === 38 || event.keyCode === 40) && event.target.offsetParent.id !== 'popup-visible') {
 
             const allInteractiveElements = document.querySelectorAll(`[id^='${QUERY_SELECTOR}-']`);
             if (activeElement) {
