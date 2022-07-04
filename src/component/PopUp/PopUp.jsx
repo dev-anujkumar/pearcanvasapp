@@ -203,14 +203,28 @@ class PopUp extends React.Component {
         }
     }
 
-    handleImageGlossaryButtonsClick = (e) => {
+    closeGlossaryAssetPopup = () => {
         let element = document.getElementById("glossary-asset-close-icon");
         if(element) {
             element?.click();
         }
+    }
+
+    handleImageGlossaryButtonsClick = (e) => {
+        this.closeGlossaryAssetPopup();
         let buttonClicked = e?.target?.attributes['option']?.value;
         if(buttonClicked === PRIMARY_BUTTON) {
             this.props.removeImageContent();
+        } else {
+            this.props.togglePopup(false, e);
+        }
+    }
+
+    handleAudioGlossaryButtonsClick = (e) => {
+        this.closeGlossaryAssetPopup();
+        let buttonClicked = e?.target?.attributes['option']?.value;
+        if(buttonClicked === PRIMARY_BUTTON) {
+            this.props.saveContent();
         } else {
             this.props.togglePopup(false, e);
         }
@@ -268,6 +282,14 @@ class PopUp extends React.Component {
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
                     <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => this.handleImageGlossaryButtonsClick(e)}>Ok</span>
                     <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => this.handleImageGlossaryButtonsClick(e)}>Cancel</span>
+                </div>
+            )
+        }
+        if (props.openRemovePopUp) {
+            return (
+                <div className={`dialog-buttons ${props.splitSlateClass}`}>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => this.handleAudioGlossaryButtonsClick(e)}>Ok</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => this.handleAudioGlossaryButtonsClick(e)}>Cancel</span>
                 </div>
             )
         }
