@@ -1182,6 +1182,7 @@ class SlateWrapper extends Component {
             showTocBlocker()
             return (
                 <PopUp
+                    openRemovePopUp={this.props.openRemovePopUp}
                     dialogText={dialogText}
                     active={true}
                     removeConfirmation={true}

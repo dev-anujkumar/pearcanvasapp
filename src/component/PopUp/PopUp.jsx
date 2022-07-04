@@ -203,14 +203,28 @@ class PopUp extends React.Component {
         }
     }
 
-    handleImageGlossaryButtonsClick = (e) => {
+    closeGlossaryAssetPopup = () => {
         let element = document.getElementById("glossary-asset-close-icon");
         if(element) {
             element?.click();
         }
+    }
+
+    handleImageGlossaryButtonsClick = (e) => {
+        this.closeGlossaryAssetPopup();
         let buttonClicked = e?.target?.attributes['option']?.value;
         if(buttonClicked === PRIMARY_BUTTON) {
             this.props.removeImageContent();
+        } else {
+            this.props.togglePopup(false, e);
+        }
+    }
+
+    handleAudioGlossaryButtonsClick = (e) => {
+        this.closeGlossaryAssetPopup();
+        let buttonClicked = e?.target?.attributes['option']?.value;
+        if(buttonClicked === PRIMARY_BUTTON) {
+            this.props.saveContent();
         } else {
             this.props.togglePopup(false, e);
         }
@@ -271,6 +285,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if (props.openRemovePopUp) {
+            return (
+                <div className={`dialog-buttons ${props.splitSlateClass}`}>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => this.handleAudioGlossaryButtonsClick(e)}>Ok</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => this.handleAudioGlossaryButtonsClick(e)}>Cancel</span>
+                </div>
+            )
+        }
         if (props.isElmUpdatePopup) {
             return (
                 <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
@@ -304,7 +326,6 @@ class PopUp extends React.Component {
             )
         }
         if (props.isTCMCanvasPopup) {
-            console.log('TCM EDITOR PERMISSION', this.props.permissions?.includes('trackchanges_approve_reject'), "TCM STATUS", props.tcmStatus)
             if(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) {
                 return (
                     <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -637,7 +658,7 @@ class PopUp extends React.Component {
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : ''}>
+                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
