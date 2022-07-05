@@ -1397,7 +1397,11 @@ class ElementContainer extends Component {
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
         // if disableDeleteWarnings present in cookie then call delete element directly without showing popup
         if(disableDeleteWarnings) {
-            this.deleteElement(e);
+            this.setState({
+                sectionBreak: sectionBreak ? sectionBreak : null
+            }, () => {
+                this.deleteElement(e);
+            })
         } else {
             this.setState({
                 popup,
