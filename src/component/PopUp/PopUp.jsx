@@ -52,12 +52,6 @@ class PopUp extends React.Component {
 
     componentDidMount() {
         const refVal = this
-        /**  Event Listner for close the popup on enter*/
-        this.modelRef.current.addEventListener("keypress", (event) => {
-            if (event.which == "13") {
-                document.querySelector(".save-button").click();
-            }
-        });
         if (this.modelRef && this.modelRef.current && this.modelRef.current.querySelector("input, textarea")) {
             this.modelRef.current.querySelector("input, textarea").focus();
         }
@@ -68,23 +62,21 @@ class PopUp extends React.Component {
             });
         }
         /** Add Event Listner on Popup Buttons */
-        window.addEventListener('keydown', this.handleKeyDown);
+        this.modelRef.current.click();
+        this.modelRef.current.focus();
+        this.modelRef.current.addEventListener('keydown', this.handleKeyDown);
         /**  Focus on Popup PRIMARY Button or SECONDARY Button*/
         this.focusElement(this.state.focusedButton);
     }
 
     componentWillUnmount() {
-        this.modelRef.current.removeEventListener("keypress", (event) => {
-            if (event.which == "13") {
-                document.querySelector(".save-button").click();
-            }
-        });
         if (this.props.showConfirmation) {
             hideBlocker();
             this.props.hideCanvasBlocker(false)
         }
         /** Remove Event Listner on Popup Buttons */
-        window.removeEventListener('keydown', this.handleKeyDown);
+        this.modelRef.current.blur();
+        this.modelRef.current.removeEventListener('keydown', this.handleKeyDown);
     }
 
     /**  Function to open the TCM SPA on click of glossary and footnotes*/
