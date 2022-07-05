@@ -62,7 +62,7 @@ const {
  * @param {Object} containerElement - Element Parent Data
  * @param {String} type - type of element
 */
-export const prepareTcmSnapshots = async (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null) => {
+export const prepareTcmSnapshots = async (wipData, actionStatus, containerElement, type, index, elmFeedback = null,operationType=null, deletedElementVersionUrn = "") => {
     
     const { parentElement, slateManifest,popupslateManifest,cutCopyParentUrn } = containerElement
     /* Get the aside data from store for 2C:WE:Section-Break */
@@ -162,7 +162,7 @@ export const prepareTcmSnapshots = async (wipData, actionStatus, containerElemen
     }
     /** TCM Snapshots on Default Slate - Section/I.S. */
     else {
-        tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type,index, "",operationType, popupCutCopyParentData)
+        tcmSnapshotsOnDefaultSlate(snapshotsData, defaultKeys, containerElement, type,index, "",operationType, popupCutCopyParentData, deletedElementVersionUrn)
     }
 }
 
