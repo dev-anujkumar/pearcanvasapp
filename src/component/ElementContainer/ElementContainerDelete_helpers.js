@@ -407,13 +407,12 @@ export const prepareTCMSnapshotsForDelete = async (params, operationType = null)
         cutCopyParentUrn,
         showHideObj,
         element,
-        isSectionBreak
+        isSectionBreak,
+        deleteElemData
     } = params
 
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn]?.contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
-        //const showHideCondition = showHideObj?.currentElement?.contentUrn === contentUrn && type !== "showhide"
-        //const wipData = showHideCondition ? showHideObj.currentElement : fetchElementWipData(deleteBodymatter, index, type, contentUrn, "delete")
         let wipData={}
         if(showHideObj?.currentElement?.type === 'element-aside' && isSectionBreak?.type === 'manifest'){
             wipData = isSectionBreak
@@ -435,7 +434,8 @@ export const prepareTCMSnapshotsForDelete = async (params, operationType = null)
             wipData: wipData && Object.keys(wipData).length > 0 ? wipData : element, /** Inside Multi-Column->Aside/WE */
             currentParentData: deleteParentData,
             bodymatter: deleteBodymatter,
-            index
+            index,
+            deletedElementVersionUrn: deleteElemData.versionUrn
         }
         /** 
         * @description For SHOWHIDE Element - prepare parent element data
@@ -499,5 +499,5 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         popupCutCopyParent = { ...popupCutCopyParent, versionUrn: containerElement?.slateManifest }
         popupCutCopyParentData(popupCutCopyParent);
     }
-    await prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"",operationType);
+    await prepareTcmSnapshots(elementDeleteData.wipData, actionStatus, containerElement, type,elementDeleteData.index,"",operationType, elementDeleteData.deletedElementVersionUrn);
 }

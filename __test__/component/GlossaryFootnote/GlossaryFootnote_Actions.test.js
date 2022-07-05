@@ -31,6 +31,9 @@ let  initialState = {
             toolbar: ["crossLinkingIcon", "assetpopover", "glossary"]
         }
     },
+    asideData: {
+        type: 'showhide'
+    },
     glossaryFootnoteReducer: {"elementIndex" : "0"},
     glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
     markedIndexReducer: {"elementIndex": '0-0'}
@@ -102,6 +105,9 @@ jest.mock('../../../src/appstore/store', () => {
                     parentUrn : {
                         contentUrn : "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184"
                     }
+                },
+                asideData: {
+                    type: 'showhide'
                 },
                 glossaryFootnoteReducer:{"elementIndex": "0"},
                 markedIndexReducer: {"elementIndex": "0-0-0-0"}
@@ -242,6 +248,13 @@ describe('Tests commentsPanel action', () => {
                         return {innerHTML:'tests'}
                     }
         await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','GLOSSARY','apple','fruit','image', 'term', 'popup'); 
+       });
+       it('testing new func ===> image -- else', async () => {
+        document.querySelector = () => { return false; }
+        document.getElementById = ()=>{
+                        return {innerHTML:'tests'}
+                    }
+        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','GLOSSARY','apple','fruit','image', 'term', ''); 
        });
        it('testing new func ===> ?????', async () => {
         document.querySelector = () => { return false; }

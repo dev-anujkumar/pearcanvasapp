@@ -175,27 +175,27 @@
 }
 
 .tooltip .tooltip-comment {
-    width: 88px;
-    left: 60%;
-    top: 123%;
+    top: 26px;
+    left: 12px;
+    height: auto;
 }
-
 .tooltip .tooltip-view-comment {
-    width: 100px;
-    left: 20%;
-    top: 123%;
+    top: 24px;
+    left: 42px;
+    height: auto;
 }
 
 .tooltip .tooltip-flag {
     width: 105px;
-    left: 10%;
-    top: 123%;
+    top: 24px;
+    left: 1%;
+    height: auto;
 }
 
 .tooltip .tooltip-picker-for-table {
     /* width: 120px; */
     width: max-content;
-    top: 125%;
+    top: 112%;
     margin-left: -85px;
     font-size: 10px;
     font-weight: 600;
@@ -212,9 +212,11 @@
 
 .expand-te-btn .tooltip .tooltip-picker-for-table,
 .add-comment-btn .tooltip .tooltip-comment,
-.flag-te-btn .tooltip .tooltip-flag,
-.view-comment-btn .tooltip .tooltip-view-comment {
+.flag-te-btn .tooltip .tooltip-flag {
     margin-left: -65px !important;
+}
+.view-comment-btn .tooltip .tooltip-view-comment {
+    margin-left: -95px !important;
 }
 
 .tooltip .tooltip-picker-for-table::after {
@@ -324,9 +326,15 @@
     font-family: 'Open Sans', sans-serif;
     transition: opacity 1s;
 }
+
+.add-comment-btn>.btn-element.small{
+    padding: 2px 4.5px;
+    display: inline-block;
+} 
+.view-comment-btn>.tooltip>.btn-element.small,
+.flag-te-btn>.tooltip>.btn-element.small{
+    display: inline-block;
+}
 .add-comment-btn>.tooltip, .view-comment-btn>.tooltip, .flag-te-btn>.tooltip{
     display: inline;
-}
-.add-comment-btn>.tooltip>.btn-element.small{
-    padding: 2px 4.5px;
 }
