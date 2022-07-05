@@ -2633,7 +2633,6 @@ export class TinyMceEditor extends Component {
         let elementId = ""
         let selectedElement = editor.selection.getNode();
         if (selectedElement.tagName.toLowerCase() === 'sup' || (selectedElement.tagName.toLowerCase() === 'a' && selectedElement.parentNode.tagName.toLowerCase() === 'sup')) {
-            console.log("1")
             let parentNode = selectedElement.parentNode;
             let endPosition = true;
             if (selectedElement.tagName.toLowerCase() === 'a') {
@@ -2662,7 +2661,6 @@ export class TinyMceEditor extends Component {
             parentNode.innerHTML = newParentInnerHtml;
         }
         if (this.props.element.type === "popup") {
-            console.log("2")
             if ((this.props.popupField === "formatted-title" || this.props.popupField === "formatted-subtitle") && !this.props.currentElement) {
                 let footNoteSpan = document.getElementById('footnote-attacher');
                 if (!footNoteSpan) {
@@ -2675,7 +2673,6 @@ export class TinyMceEditor extends Component {
             }
         }
         else if (this.props.element.type === "poetry") {
-            console.log("3")
             let tempIndex = this.props.index.split('-');
             let indexesLen = tempIndex.length;
             if (indexesLen === 2) {
@@ -2722,7 +2719,6 @@ export class TinyMceEditor extends Component {
             }
         }
         else {
-            console.log("4")
             elementId = this.props.elementId
             let footNoteSpan = document.getElementById('footnote-attacher');
             if (!footNoteSpan) {
@@ -4097,6 +4093,8 @@ export class TinyMceEditor extends Component {
                 if (this.props?.citationAsideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" && this.props?.currentElement?.type === "element-authoredtext") {
                     cgTitleFieldData.asideData = this.props.citationAsideData;
                     cgTitleFieldData.parentElement = this.props.parentElement;
+                }else if (this.props?.asideData?.type === "groupedcontent" || this.props?.asideData?.parent?.type === "groupedcontent" || this.props?.asideData?.grandParent?.asideData?.parent?.type === "groupedcontent" ){
+                    config.isMultiColumnDataSaved = true;
                 }
                 setTimeout(() => {
                     this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType, eventTarget, cgTitleFieldData);

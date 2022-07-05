@@ -242,6 +242,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         config.savingInProgress = false
         config.popupCreationCallInProgress = false
         config.isSavingElement = false
+        config.isMultiColumnDataSaved= false
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         console.error("updateElement Api fail", error);

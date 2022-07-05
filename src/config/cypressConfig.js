@@ -101,7 +101,8 @@ let cypressConfig = {
     CYPRESS_PLUS_WINDOW:'',
     updateInlineImage: false,
     figureDataToBeFetched:false,
-    parentOfParentItem:[]
+    parentOfParentItem:[],
+    isMultiColumnDataSaved: false
 }
 
 
