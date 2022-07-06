@@ -61,10 +61,12 @@ class PopUp extends React.Component {
                 refVal.processGlossaryFootnotes(e)
             });
         }
-        /** Add Event Listner on Popup Buttons */
-        this.modelRef.current.click();
-        this.modelRef.current.focus();
-        this.modelRef.current.addEventListener('keydown', this.handleKeyDown);
+        if(this.modelRef && this.modelRef.current) {
+            /** Focus on Modal Component when it gets Open */
+            this.modelRef.current.focus();
+            /** Add Event Listener on Popup Buttons */
+            this.modelRef.current.addEventListener('keydown', this.handleKeyDown);
+        }
         /**  Focus on Popup PRIMARY Button or SECONDARY Button*/
         this.focusElement(this.state.focusedButton);
     }
@@ -74,9 +76,10 @@ class PopUp extends React.Component {
             hideBlocker();
             this.props.hideCanvasBlocker(false)
         }
-        /** Remove Event Listner on Popup Buttons */
-        this.modelRef.current.blur();
-        this.modelRef.current.removeEventListener('keydown', this.handleKeyDown);
+        if(this.modelRef && this.modelRef.current) {
+            /** Remove Event Listener on Popup Buttons */
+            this.modelRef.current.removeEventListener('keydown', this.handleKeyDown);
+        }
     }
 
     /**  Function to open the TCM SPA on click of glossary and footnotes*/
