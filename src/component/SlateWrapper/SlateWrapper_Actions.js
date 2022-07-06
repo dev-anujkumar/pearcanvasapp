@@ -58,9 +58,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
     localStorage.setItem('newElement', 1);
     let slateEntityUrn = parentUrn && parentUrn.contentUrn || popupSlateData && popupSlateData.contentUrn || poetryData && poetryData.contentUrn || config.slateEntityURN
+    let slateVersionUrn = parentUrn && parentUrn.manifestUrn|| popupSlateData && popupSlateData.manifestUrn || poetryData && poetryData.parentUrn || config.slateManifestURN
     let _requestData = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn":slateEntityUrn,
+        "slateVersionUrn" : slateVersionUrn,
+        "immediateSlateEntityUrn" : config.slateEntityURN,
+        "immediateSlateVersionUrn": config.slateManifestURN,
+        "projectEntityUrn": config.projectEntityUrn,
         "index": outerAsideIndex ? outerAsideIndex : index,
         "type": type
     };
