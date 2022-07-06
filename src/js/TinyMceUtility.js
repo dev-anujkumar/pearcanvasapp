@@ -179,7 +179,7 @@ export const checkBlockListElement = (data, keypressed) => {
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
             let indexes = index.split("-");
             let parentElement = data?.asideData?.parent;
-            if ((parentElement && parentElement.type === "showhide" && data?.asideData.type === "manifestlist") || contents?.bodymatter[indexes[0]]?.type === "element-aside") {
+            if ((parentElement && parentElement.type === "showhide" && data?.asideData.type === "manifestlist") || contents?.bodymatter[indexes[0]]?.type === "element-aside" || (parentElement && parentElement.type === "groupedcontent")) {
                 let indexToinsert = null;
                 let parentData = {};
                 if (keypressed === "TAB") {
@@ -215,7 +215,7 @@ export const checkBlockListElement = (data, keypressed) => {
 
 export const isNestingLimitReached = (index,asideData,parentElement) => {
     let BLOCK_LIST_NESTING_LIMIT = 4  // This is default block list nesting limit.
-    if(asideData.parent && asideData.parent.type === "showhide" || parentElement?.type === "element-aside" ) BLOCK_LIST_NESTING_LIMIT = 5;
+    if(asideData.parent && asideData.parent.type === "showhide" || parentElement?.type === "element-aside" || asideData.parent.type === "groupedcontent") BLOCK_LIST_NESTING_LIMIT = 5;
     if(typeof index === 'string' && index.includes('-') && index.split("-").length< BLOCK_LIST_NESTING_LIMIT * 2){
         return false;
     }
@@ -240,6 +240,8 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
                 return true;
             }if(contents?.bodymatter[indexes[0]]?.type === "element-aside" && data?.asideData?.type === 'manifestlist')
                 return true
+            if (parentElement && parentElement.type === "groupedcontent" && data.asideData.parentManifestList)
+                return true;  
             if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
                 return true;
             }

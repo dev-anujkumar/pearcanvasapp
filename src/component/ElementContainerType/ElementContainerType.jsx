@@ -52,7 +52,7 @@ export default function ElementContainerType(props) {
             });
         }
         /**Block List option only visible on Slate Level & inside SH */
-        const blocklistAllowedIn = ['','showhide',"element-aside"];
+        const blocklistAllowedIn = ['','showhide',"element-aside", "group"];
         if (blocklistAllowedIn.indexOf(elementType) === -1 || config.isPopupSlate) {
             propsData = propsData.filter( obj => obj.text !== 'Block List');
         }

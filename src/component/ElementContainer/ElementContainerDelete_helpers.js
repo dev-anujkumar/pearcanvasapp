@@ -287,7 +287,7 @@ export const deleteFromStore = async (params) => {
                 if (element.id === parentUrn.manifestUrn) {
                     element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
                 }
-            } else if (asideData?.parent?.type === 'showhide' && element.id === asideData?.parent?.id && asideData?.type === "manifestlist") {
+            } else if ((asideData?.parent?.type === 'showhide' || asideData?.parent?.type === 'groupedcontent') && element.id === asideData?.parent?.id && asideData?.type === "manifestlist") {
                 let section = asideData?.parent?.showHideType;
                 if (section && indexes.length >= 3) {
                     let blElemInSh = element.interactivedata[section][indexes[2]];
@@ -301,6 +301,10 @@ export const deleteFromStore = async (params) => {
             else if (element?.type === "element-aside" && element?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist"){
                 let blEleminWE = element?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]];
                 deleteBlockListElement(elmId, blEleminWE);
+            }
+            else if (element?.type === "groupedcontent" && element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.type === "manifestlist"){
+                let blEleminAS = element?.groupeddata?.bodymatter[indexes[1]].groupdata?.bodymatter[indexes[2]];
+                deleteBlockListElement(elmId, blEleminAS);
             }else if (element?.type === "manifestlist") {
                 deleteBlockListElement(elmId, element)
             }

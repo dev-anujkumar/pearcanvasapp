@@ -195,6 +195,8 @@ class ListButtonDropPortal extends Component {
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,parentElement.elementdata?.bodymatter[indexes[1]]);
                 }else if(parentElement.type ==="element-aside" && parentElement.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist"){
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,parentElement.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]);
+                }else if(this?.props?.asideData.parent && this?.props?.asideData.parent.type === 'groupedcontent'){
+                    metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,parentElement.groupeddata?.bodymatter[indexes[1]].groupdata?.bodymatter[indexes[2]]);
                 }else{
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[activeElement.index.split("-")[0]]);
                 }
