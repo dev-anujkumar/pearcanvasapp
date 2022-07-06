@@ -1037,6 +1037,157 @@ describe('Testing Event Binding Methods', () => {
         let result = bindKeyDownEvent(editor, event, element,callback);
         expect(result).toEqual(false);
     });
+    it('Test bindKeyDownEvent for tagname STRONG', () => {
+        let callback = jest.fn();
+        let editor = {
+            selection: {
+                getSel: () => {
+                    return {
+                        anchorNode: {
+                            firstChild: {
+                                nodeName:'BR'
+                            },
+                            tagName: 'STRONG',
+                            querySelectorAll: () => {
+                                return {
+                                    length: 1
+                                }
+                            },
+                            parentNode: {
+                                tagName: 'LI',
+                                classList: ['class'],
+                                hasAttribute: () => {
+                                    return false
+                                },
+                                innerText: {
+                                    trim: () => { return " "}
+                                },
+                                parentNode: {
+                                    tagName: 'LI',
+                                    classList: ['class'],
+                                    hasAttribute: () => {
+                                        return false
+                                    },
+                                    innerText: {
+                                        trim: () => { return " "}
+                                    },
+                                    nodeName:'LI',
+                                    remove: jest.fn()
+                                },
+                            },
+                            children: [{
+                                tagName: 'span'
+                            }
+                            ],
+                            nextSibling: null,
+                            closest: (temp) => {
+                                if (temp === 'ol') {
+                                    return {
+                                        getAttribute: () => {
+                                            return '0';
+                                        }
+                                    }
+                                } else {
+                                    return {
+                                        getAttribute: () => {
+                                            return '1';
+                                        }
+                                    }
+                                }
+                            },
+                            remove: () => { },
+                            hasAttribute: () => {
+                                return true
+                            }
+                        }
+                    }
+                },
+                getRng: () => {
+                    return {
+                        startContainer: 'Test',
+                        endContainer: 'Test'
+                    }
+                }
+            },
+            targetElm: {
+                findChildren: (temp) => {
+                    if (temp !== 'ol') {
+                        return {
+                            length: 1
+                        }
+                    } else {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                textContent: {
+                    length: 1
+                },
+                innerHTML: {
+                    indexOf: () => {
+                        return 0
+                    }
+                },
+                querySelectorAll: (id) => {
+                    if(id === 'li') {
+                    return {
+                        length: 0
+                    };
+                }
+                }
+            }
+        };
+        let event = {
+            target: {
+                querySelectorAll: (temp) => {
+                    if (temp === 'ol') {
+                        return []
+                    } else {
+                        return [
+                            {
+                                getAttribute: (tempPara) => {
+                                    if (tempPara === 'treelevel') {
+                                        return 1;
+                                    } else {
+                                        return undefined;
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                closest: () => {
+                    return false
+                }
+            },
+            metaKey: false,
+            which: 13,
+            stopImmediatePropagation: () => { },
+            stopPropagation: () => { },
+            preventDefault: () => { }
+        }
+        document.getElementById = () => {
+            return {
+                closest: () => {
+                    return {
+                        nextSibling: {
+                            querySelector: () => {
+                                return {
+                                    click: () => { }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element,callback);
+        expect(result).toEqual(false);
+    });
     it('Test bindKeyDownEvent for shift key false and element is not element-list ', () => {
         let editor = {
             selection: {
@@ -1525,7 +1676,7 @@ describe('Testing Event Binding Methods', () => {
                             }
                             ],
                             nextSibling: {
-                                tagName: 'LI'
+                                tagName: 'UL'
                             },
                             closest: (temp) => {
                                 if (temp === 'ol') {
@@ -2521,7 +2672,203 @@ describe('Testing Event Binding Methods', () => {
                 }
             },
             metaKey: true,
-            which: 8,
+            which: 13,
+            shiftKey: true,
+            stopImmediatePropagation: () => { },
+            stopPropagation: () => { },
+            preventDefault: () => { }
+        }
+        document.getElementById = () => {
+            return {
+                closest: () => {
+                    return {
+                        nextSibling: {
+                            querySelector: () => {
+                                return {
+                                    click: () => { }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
+        expect(result).toEqual(undefined);
+    });
+    it('Test bindKeyDownEvent for which is 8 and tagname is "li" ', () => {
+        let editor = {
+            selection: {
+                getSel: () => {
+                    return {
+                        anchorNode: {
+                            tagName: 'li',
+                            parentNode: {
+                                tagName: 'div',
+                                classList: ['class']
+                            },
+                            querySelectorAll: () => {
+                                return {
+                                    length: 1
+                                }
+                            },
+                            children: [{
+                                tagName: 'span'
+                            }
+                            ],
+                            nextSibling: {
+                                tagName: 'BR',
+                                nextSibling: {
+                                    tagName: 'UL'
+                                },
+                            },
+                            closest: (temp) => {
+                                if (temp === 'ul') {
+                                    return {
+                                        getAttribute: () => {
+                                            return '0';
+                                        },
+                                        findChildren: () => {
+                                            return {
+                                                indexOf: () => {
+                                                    return 0
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    return {
+                                        getAttribute: () => {
+                                            return '1';
+                                        },
+                                        findChildren: () => {
+                                            return {
+                                                indexOf: () => {
+                                                    return 0
+                                                }
+                                            }
+                                        },
+                                        closest: (temp1) => {
+                                            if (temp1 === 'ul') {
+                                                return {
+                                                    getAttribute: () => {
+                                                        return '0';
+                                                    },
+                                                    findChildren: () => {
+                                                        return {
+                                                            indexOf: () => {
+                                                                return 0
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            remove: () => { },
+                            data: [1, 2],
+                            findChildren: (temp) => {
+                                if (temp === 'ol') {
+                                    return {
+                                        length: 0
+                                    }
+                                } else {
+                                    return {
+                                        length: 1
+                                    }
+                                }
+                            },
+                            classList: {
+                                add: () => { }
+                            }
+                        },
+                        focusOffset: 0
+                    }
+                },
+                getRng: (temp) => {
+                    if (temp) {
+                        return {
+                            startContainer: 1,
+                            endContainer: 1
+                        }
+                    } else {
+                        return {
+                            startContainer: {
+                                tagName: 'LI'
+                            },
+                            endContainer: {
+                                tagName: 'LI'
+                            }
+                        }
+                    }
+                }
+            },
+            targetElm: {
+                findChildren: (temp) => {
+                    if (temp !== 'ol') {
+                        return {
+                            length: 1
+                        }
+                    } else {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                textContent: {
+                    length: 1
+                },
+                innerHTML: {
+                    indexOf: () => {
+                        return 0
+                    }
+                },
+                querySelectorAll: () => {
+                    return {
+                        length: 1
+                    };
+                },
+                childNodes: [{}]
+            },
+            editorCommands: {
+                commands: {
+                    exec: {
+                        indent: () => { },
+                        outdent: () => { }
+                    }
+                }
+            }
+        };
+        let event = {
+            target: {
+                querySelectorAll: (temp) => {
+                    if (temp === 'ol') {
+                        return []
+                    } else {
+                        return [
+                            {
+                                getAttribute: (tempPara) => {
+                                    if (tempPara === 'treelevel') {
+                                        return 1;
+                                    } else {
+                                        return undefined;
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                closest: () => {
+                    return false
+                }
+            },
+            metaKey: true,
+            which: 13,
             shiftKey: true,
             stopImmediatePropagation: () => { },
             stopPropagation: () => { },
@@ -2548,6 +2895,201 @@ describe('Testing Event Binding Methods', () => {
         let result = bindKeyDownEvent(editor, event, element);
         expect(result).toEqual(false);
     });
+
+    it('Test bindKeyDownEvent for which is 8 and tagname is "li and shift key is false" ', () => {
+        let editor = {
+            selection: {
+                getSel: () => {
+                    return {
+                        anchorNode: {
+                            tagName: 'li',
+                            parentNode: {
+                                tagName: 'div',
+                                classList: ['class']
+                            },
+                            querySelectorAll: () => {
+                                return {
+                                    length: 1
+                                }
+                            },
+                            children: [{
+                                tagName: 'span'
+                            }
+                            ],
+                            nextSibling: {
+                                tagName: 'BR',
+                            },
+                            closest: (temp) => {
+                                if (temp === 'ul') {
+                                    return {
+                                        getAttribute: () => {
+                                            return '0';
+                                        },
+                                        findChildren: () => {
+                                            return {
+                                                indexOf: () => {
+                                                    return 0
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    return {
+                                        getAttribute: () => {
+                                            return false;
+                                        },
+                                        findChildren: () => {
+                                            return {
+                                                indexOf: () => {
+                                                    return 0
+                                                }
+                                            }
+                                        },
+                                        closest: (temp1) => {
+                                            if (temp1 === 'ul') {
+                                                return {
+                                                    getAttribute: () => {
+                                                        return '0';
+                                                    },
+                                                    findChildren: () => {
+                                                        return {
+                                                            indexOf: () => {
+                                                                return 0
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            remove: () => { },
+                            data: [1, 2],
+                            findChildren: (temp) => {
+                                if (temp === 'ol') {
+                                    return {
+                                        length: 0
+                                    }
+                                } else {
+                                    return {
+                                        length: 1
+                                    }
+                                }
+                            },
+                            classList: {
+                                add: () => { }
+                            }
+                        },
+                        focusOffset: 0
+                    }
+                },
+                getRng: (temp) => {
+                    if (temp) {
+                        return {
+                            startContainer: 1,
+                            endContainer: 1
+                        }
+                    } else {
+                        return {
+                            startContainer: {
+                                tagName: 'LI'
+                            },
+                            endContainer: {
+                                tagName: 'LI'
+                            }
+                        }
+                    }
+                }
+            },
+            targetElm: {
+                findChildren: (temp) => {
+                    if (temp !== 'ol') {
+                        return {
+                            length: 1
+                        }
+                    } else {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                textContent: {
+                    length: 1
+                },
+                innerHTML: {
+                    indexOf: () => {
+                        return 0
+                    }
+                },
+                querySelectorAll: () => {
+                    return {
+                        length: 1
+                    };
+                },
+                childNodes: [{}]
+            },
+            editorCommands: {
+                commands: {
+                    exec: {
+                        indent: () => { },
+                        outdent: () => { }
+                    }
+                }
+            }
+        };
+        let event = {
+            target: {
+                querySelectorAll: (temp) => {
+                    if (temp === 'ol') {
+                        return []
+                    } else {
+                        return [
+                            {
+                                getAttribute: (tempPara) => {
+                                    if (tempPara === 'treelevel') {
+                                        return 1;
+                                    } else {
+                                        return undefined;
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                closest: () => {
+                    return false
+                }
+            },
+            metaKey: true,
+            which: 8,
+            shiftKey: false,
+            stopImmediatePropagation: () => { },
+            stopPropagation: () => { },
+            preventDefault: () => { }
+        }
+        document.getElementById = () => {
+            return {
+                closest: () => {
+                    return {
+                        nextSibling: {
+                            querySelector: () => {
+                                return {
+                                    click: () => { }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
+        expect(result).toEqual(undefined);
+    });
+
     it('Test bindKeyDownEvent for key code is 90 ', () => {
         let editor = {
             selection: {
