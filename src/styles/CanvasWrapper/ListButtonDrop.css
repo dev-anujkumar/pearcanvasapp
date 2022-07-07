@@ -35,6 +35,7 @@ i.fa.fa-list-ul:before {
     display: block;
     width: 280px;
     height: 260px;
+    z-index: 9999;
 }
 
 #listDropWrapper .fr-popup {
