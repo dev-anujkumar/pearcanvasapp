@@ -2705,7 +2705,7 @@ describe('Testing Event Binding Methods', () => {
                 getSel: () => {
                     return {
                         anchorNode: {
-                            tagName: 'li',
+                            tagName: 'LI',
                             parentNode: {
                                 tagName: 'div',
                                 classList: ['class']
@@ -2723,6 +2723,202 @@ describe('Testing Event Binding Methods', () => {
                                 tagName: 'BR',
                                 nextSibling: {
                                     tagName: 'UL'
+                                },
+                            },
+                            closest: (temp) => {
+                                if (temp === 'ul') {
+                                    return {
+                                        getAttribute: () => {
+                                            return '0';
+                                        },
+                                        findChildren: () => {
+                                            return {
+                                                indexOf: () => {
+                                                    return 0
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    return {
+                                        getAttribute: () => {
+                                            return '1';
+                                        },
+                                        findChildren: () => {
+                                            return {
+                                                indexOf: () => {
+                                                    return 0
+                                                }
+                                            }
+                                        },
+                                        closest: (temp1) => {
+                                            if (temp1 === 'ul') {
+                                                return {
+                                                    getAttribute: () => {
+                                                        return '0';
+                                                    },
+                                                    findChildren: () => {
+                                                        return {
+                                                            indexOf: () => {
+                                                                return 0
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            remove: () => { },
+                            data: [1, 2],
+                            findChildren: (temp) => {
+                                if (temp === 'ol') {
+                                    return {
+                                        length: 0
+                                    }
+                                } else {
+                                    return {
+                                        length: 1
+                                    }
+                                }
+                            },
+                            classList: {
+                                add: () => { }
+                            }
+                        },
+                        focusOffset: 0
+                    }
+                },
+                getRng: (temp) => {
+                    if (temp) {
+                        return {
+                            startContainer: 1,
+                            endContainer: 1
+                        }
+                    } else {
+                        return {
+                            startContainer: {
+                                tagName: 'LI'
+                            },
+                            endContainer: {
+                                tagName: 'LI'
+                            }
+                        }
+                    }
+                }
+            },
+            targetElm: {
+                findChildren: (temp) => {
+                    if (temp !== 'ol') {
+                        return {
+                            length: 1
+                        }
+                    } else {
+                        return {
+                            length: 1
+                        }
+                    }
+                },
+                textContent: {
+                    length: 1
+                },
+                innerHTML: {
+                    indexOf: () => {
+                        return 0
+                    }
+                },
+                querySelectorAll: () => {
+                    return {
+                        length: 1
+                    };
+                },
+                childNodes: [{}]
+            },
+            editorCommands: {
+                commands: {
+                    exec: {
+                        indent: () => { },
+                        outdent: () => { }
+                    }
+                }
+            }
+        };
+        let event = {
+            target: {
+                querySelectorAll: (temp) => {
+                    if (temp === 'ol') {
+                        return []
+                    } else {
+                        return [
+                            {
+                                getAttribute: (tempPara) => {
+                                    if (tempPara === 'treelevel') {
+                                        return 1;
+                                    } else {
+                                        return undefined;
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                closest: () => {
+                    return false
+                }
+            },
+            metaKey: true,
+            which: 13,
+            shiftKey: true,
+            stopImmediatePropagation: () => { },
+            stopPropagation: () => { },
+            preventDefault: () => { }
+        }
+        document.getElementById = () => {
+            return {
+                closest: () => {
+                    return {
+                        nextSibling: {
+                            querySelector: () => {
+                                return {
+                                    click: () => { }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        let element = {
+            type: "element-list"
+        }
+        let result = bindKeyDownEvent(editor, event, element);
+        expect(result).toEqual(false);
+    });
+    it('Test bindKeyDownEvent for which is 8 and tagname is "li" ', () => {
+        let editor = {
+            selection: {
+                getSel: () => {
+                    return {
+                        anchorNode: {
+                            tagName: 'LI',
+                            parentNode: {
+                                tagName: 'div',
+                                classList: ['class']
+                            },
+                            querySelectorAll: () => {
+                                return {
+                                    length: 1
+                                }
+                            },
+                            children: [{
+                                tagName: 'span'
+                            }
+                            ],
+                            nextSibling: {
+                                tagName: 'BR',
+                                nextSibling: {
+                                    tagName: 'LI'
                                 },
                             },
                             closest: (temp) => {
