@@ -329,7 +329,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }
-            else if(parentElement?.type === 'groupedcontent'){
+            else if(asideData.parent && asideData.parent.type === "groupedcontent"){
                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
                 if (indexes.length === 5) { // Block list on 1 level nesting
                    initialdata.splice(index, 0, createdElementData)

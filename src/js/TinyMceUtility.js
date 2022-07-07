@@ -179,7 +179,7 @@ export const checkBlockListElement = (data, keypressed) => {
         if (contents && contents.bodymatter && contents.bodymatter.length && typeof index === 'string' && index.includes('-')) {
             let indexes = index.split("-");
             let parentElement = data?.asideData?.parent;
-            if ((parentElement && parentElement.type === "showhide" || contents?.bodymatter[indexes[0]]?.type === "element-aside" || parentElement && parentElement.type === "groupedcontent") && data?.asideData.type === "manifestlist") {
+            if ((parentElement && parentElement.type === "showhide" || contents?.bodymatter[indexes[0]]?.type === "element-aside" || parentElement && parentElement.type === "groupedcontent") && data?.asideData?.type === "manifestlist") {
                 let indexToinsert = null;
                 let parentData = {};
                 if (keypressed === "TAB") {

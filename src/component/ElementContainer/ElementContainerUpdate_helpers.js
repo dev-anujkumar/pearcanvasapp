@@ -164,7 +164,7 @@ export const updateElementInStore = (paramsObj) => {
                 }
             }
         }
-    } else if (parentElement && parentElement.type === "groupedcontent") {
+    } else if (parentElement && parentElement.type === "groupedcontent" && asideData?.type !== 'manifestlist') {
         const indexes = elementIndex.split("-")
         let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
         /** Updation of AutoNumbered Elements */
@@ -193,7 +193,7 @@ export const updateElementInStore = (paramsObj) => {
                 }
             }
         })
-    } else if(asideData?.parent?.type === "groupedcontent") {
+    } else if(asideData?.parent?.type === "groupedcontent" && asideData?.type !== 'manifestlist') {
         /** updation of aside and WE elements inside multicolumn */
         /* 2C:AS/WE:PS */
         const indexes = elementIndex?.split("-");
@@ -636,7 +636,7 @@ export const updateElementInStore = (paramsObj) => {
                     else{
                         _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
                     }
-                }if(asideData.parent && asideData.parent.type==="groupedcontent"){
+                }if(asideData.parent && asideData.parent.type==="groupedcontent" && asideData?.type === 'manifestlist'){
                     if(indexes.length===5){
                         _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
                     }

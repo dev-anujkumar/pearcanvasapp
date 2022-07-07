@@ -287,7 +287,7 @@ export const deleteFromStore = async (params) => {
                 if (element.id === parentUrn.manifestUrn) {
                     element.contents.bodymatter.splice([innerIndex[1] - 1], 1)
                 }
-            } else if ((asideData?.parent?.type === 'showhide' || asideData?.parent?.type === 'groupedcontent') && element.id === asideData?.parent?.id && asideData?.type === "manifestlist") {
+            } else if ((asideData?.parent?.type === 'showhide') && element.id === asideData?.parent?.id && asideData?.type === "manifestlist") {
                 let section = asideData?.parent?.showHideType;
                 if (section && indexes.length >= 3) {
                     let blElemInSh = element.interactivedata[section][indexes[2]];
