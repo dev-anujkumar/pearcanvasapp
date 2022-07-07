@@ -936,7 +936,6 @@ export const processAndStoreUpdatedResponse = async (params) => {
     customEvent.trigger('glossaryFootnoteSave', responseData.id); 
     customEvent.trigger('markedIndexSave', responseData.id); 
     config.popupCreationCallInProgress = false;
-    config.isMultiColumnDataSaved = false
     showLinkToast(document.getElementById('link-notification'))
 }
 

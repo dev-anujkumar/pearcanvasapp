@@ -102,7 +102,6 @@ let cypressConfig = {
     updateInlineImage: false,
     figureDataToBeFetched:false,
     parentOfParentItem:[],
-    isMultiColumnDataSaved: false
 }
 
 
