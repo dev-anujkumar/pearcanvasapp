@@ -4102,8 +4102,6 @@ export class TinyMceEditor extends Component {
                 if (this.props?.citationAsideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" && this.props?.currentElement?.type === "element-authoredtext") {
                     cgTitleFieldData.asideData = this.props.citationAsideData;
                     cgTitleFieldData.parentElement = this.props.parentElement;
-                }else if (this.props?.asideData?.type === "groupedcontent" || this.props?.asideData?.parent?.type === "groupedcontent" || this.props?.asideData?.grandParent?.asideData?.parent?.type === "groupedcontent" ){
-                    config.isMultiColumnDataSaved = true;
                 }
                 setTimeout(() => {
                     this.props.handleBlur(forceupdate, this.props.currentElement, this.props.index, showHideType, eventTarget, cgTitleFieldData);
