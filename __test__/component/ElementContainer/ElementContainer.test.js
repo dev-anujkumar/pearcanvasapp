@@ -11,6 +11,7 @@ import config from "../../../src/config/config.js"
 import wipData from './wipData';
 import { singleAssessmentElmDefault } from '../../../fixtures/ElementSingleAssessmentTestData'
 import { mockAutoNumberReducerEmpty, mockAutoNumberReducerEmpty1 } from '../FigureHeader/AutoNumberApiTestData';
+import ElementContainerContext from '../../../src/component/ElementContainer/ElementContainerContext';
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("innerText")) {
     Object.defineProperty(global.Element.prototype, 'innerText', {
@@ -3565,4 +3566,13 @@ describe('Test-Other Functions', () => {
         const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
         elementContainerInstance5.handleAlfrescoMetadataWindow({stopPropagation: jest.fn()});
     });
+    it('TestCase for ElementContainerContext ', () => {
+    const wrapper = mount(
+        <ElementContainerContext.Provider>
+            <Provider store={store}>
+                <ElementContainer {...props} />
+            </Provider>
+        </ElementContainerContext.Provider>);
+         wrapper.find('ElementContainer').instance();
+        });
 })
