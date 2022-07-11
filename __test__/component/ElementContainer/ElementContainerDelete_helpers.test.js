@@ -620,7 +620,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 index : 0,
                 poetryData : null,
                 cutCopyParentUrn : null,
-                showHideObj : {}
+                showHideObj : {},
+                deleteElemData: {
+                    versionUrn:"dfsfsdg"
+                }
             }
            
             const spyprepareTCMSnapshotsForDelete = jest.spyOn(deleteHelpers, "prepareTCMSnapshotsForDelete")
@@ -644,6 +647,9 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                     currentElement: {
                         type: 'element-aside'
                     }
+                },
+                deleteElemData: {
+                    versionUrn:"dfsfsdg"
                 }
             }
            
@@ -664,7 +670,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 index : 7,
                 poetryData : null,
                 cutCopyParentUrn : null,
-                showHideObj: {}
+                showHideObj: {},
+                deleteElemData: {
+                    versionUrn:"dfsfsdg"
+                }
             }
            
             const spyprepareTCMSnapshotsForDelete = jest.spyOn(deleteHelpers, "prepareTCMSnapshotsForDelete")
@@ -685,7 +694,10 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 poetryData : null,
                 cutCopyParentUrn : null,
                 showHideObj: {},
-                cutCopyParentUrn : {id : 'urn:pearson:work:11' }
+                cutCopyParentUrn : {id : 'urn:pearson:work:11' },
+                deleteElemData: {
+                    versionUrn:"dfsfsdg"
+                }
             }
            
             const spyprepareTCMSnapshotsForDelete = jest.spyOn(deleteHelpers, "prepareTCMSnapshotsForDelete")
