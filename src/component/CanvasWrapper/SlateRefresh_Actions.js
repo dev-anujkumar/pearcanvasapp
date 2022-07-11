@@ -12,7 +12,6 @@ export const handleSlateRefresh = (id,cb) => (dispatch, getState) => {
      axios.get(url,{ 
         headers: {
         "Content-Type": "application/json",
-        // "PearsonSSOSession": config.ssoToken,
         'myCloudProxySession': config.myCloudProxySession
     }
     }).then((res) => {

@@ -86,7 +86,6 @@ export const searchForFiguresAction = (searchTerm, stateImageData) => {
     return dispatch => fetch(config.REACT_APP_API_URL + 'v1/slate/' + versionUrn + '/assets', {
       method: 'GET',
       headers: {
-        // 'pearsonssosession': config.ssoToken
         myCloudProxySession: config.myCloudProxySession
       }
     }).then(res => res.json()).then(
@@ -144,7 +143,6 @@ export async function getAssetPopoverId(workUrn) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 'PearsonSSOSession': config.ssoToken,
         'apikey': config.APO_API_KEY,
         myCloudProxySession: config.myCloudProxySession
       }
@@ -170,7 +168,6 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // 'PearsonSSOSession': config.ssoToken,
         'apikey': config.APO_API_KEY,
         myCloudProxySession: config.myCloudProxySession
       }
@@ -223,7 +220,6 @@ export const getElementVersionContent = async (elementId) =>{
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          // 'PearsonSSOSession': config.ssoToken,
           'apikey': config.APO_API_KEY,
           myCloudProxySession: config.myCloudProxySession
         }
