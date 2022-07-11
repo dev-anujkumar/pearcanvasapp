@@ -178,7 +178,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             parentElement
         }
         updateStoreInCanvas(helperArgs)
-        let updatedData1 = JSON.parse(JSON.stringify(updatedData))
+        let updatedData1 = JSON.parse(JSON.stringify(updatedData));
+        updatedData1.projectEntityUrn = config.projectEntityUrn;
+        updatedData1.immediateSlateEntityUrn = config.slateEntityURN;
+        updatedData1.immediateSlateVersionUrn = config.slateManifestURN;
         const data = {
             slateLevelData,
             index: elementIndex
@@ -197,7 +200,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 html: {
                     ...updatedData1.html,
                     text : "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>"
-                }
+                },
+                projectEntityUrn: config.projectEntityUrn,
+                immediateSlateEntityUrn :  config.slateEntityURN,
+                immediateSlateVersionUrn : config.slateManifestURN
             }
         }
         try {

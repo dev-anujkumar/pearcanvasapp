@@ -52,12 +52,6 @@ class PopUp extends React.Component {
 
     componentDidMount() {
         const refVal = this
-        /**  Event Listner for close the popup on enter*/
-        this.modelRef.current.addEventListener("keypress", (event) => {
-            if (event.which == "13") {
-                document.querySelector(".save-button").click();
-            }
-        });
         if (this.modelRef && this.modelRef.current && this.modelRef.current.querySelector("input, textarea")) {
             this.modelRef.current.querySelector("input, textarea").focus();
         }
@@ -67,24 +61,25 @@ class PopUp extends React.Component {
                 refVal.processGlossaryFootnotes(e)
             });
         }
-        /** Add Event Listner on Popup Buttons */
-        window.addEventListener('keydown', this.handleKeyDown);
+        if(this.modelRef && this.modelRef.current) {
+            /** Focus on Modal Component when it gets Open */
+            this.modelRef.current.focus();
+            /** Add Event Listener on Popup Buttons */
+            this.modelRef.current.addEventListener('keydown', this.handleKeyDown);
+        }
         /**  Focus on Popup PRIMARY Button or SECONDARY Button*/
         this.focusElement(this.state.focusedButton);
     }
 
     componentWillUnmount() {
-        this.modelRef.current.removeEventListener("keypress", (event) => {
-            if (event.which == "13") {
-                document.querySelector(".save-button").click();
-            }
-        });
         if (this.props.showConfirmation) {
             hideBlocker();
             this.props.hideCanvasBlocker(false)
         }
-        /** Remove Event Listner on Popup Buttons */
-        window.removeEventListener('keydown', this.handleKeyDown);
+        if(this.modelRef && this.modelRef.current) {
+            /** Remove Event Listener on Popup Buttons */
+            this.modelRef.current.removeEventListener('keydown', this.handleKeyDown);
+        }
     }
 
     /**  Function to open the TCM SPA on click of glossary and footnotes*/
@@ -126,10 +121,18 @@ class PopUp extends React.Component {
 
     /**Function to set initial state of focused button based on props*/
     setFocus = (props) => {
-        if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup || props.isTCMCanvasPopup) {
-            return PRIMARY_BUTTON;
+        if(props.isTCMCanvasPopup) {
+            if(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) {
+                return SECONDARY_BUTTON
+            } else {
+                return PRIMARY_BUTTON
+            }
         } else {
-            return SECONDARY_BUTTON;
+            if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup ) {
+                return PRIMARY_BUTTON;
+            } else {
+                return SECONDARY_BUTTON;
+            }
         }
     }
 
@@ -175,28 +178,48 @@ class PopUp extends React.Component {
             element?.click();
         }
         if (e.keyCode === 37 && this.state.focusedButton === PRIMARY_BUTTON) {
-            this.setState({
-                focusedButton: SECONDARY_BUTTON
-            })
-            this.blurElement(PRIMARY_BUTTON);
-            this.focusElement(SECONDARY_BUTTON);
+            const element = document.querySelector(`[option=${SECONDARY_BUTTON}]`)
+            if(element && element?.classList) {
+                this.setState({
+                    focusedButton: SECONDARY_BUTTON
+                })
+                this.blurElement(PRIMARY_BUTTON);
+                this.focusElement(SECONDARY_BUTTON);
+            }
         } else if (e.keyCode === 39 && this.state.focusedButton === SECONDARY_BUTTON) {
-            this.setState({
-                focusedButton: PRIMARY_BUTTON
-            })
-            this.blurElement(SECONDARY_BUTTON);
-            this.focusElement(PRIMARY_BUTTON);
+            const element = document.querySelector(`[option=${PRIMARY_BUTTON}]`)
+            if(element && element?.classList) {
+                this.setState({
+                    focusedButton: PRIMARY_BUTTON
+                })
+                this.blurElement(SECONDARY_BUTTON);
+                this.focusElement(PRIMARY_BUTTON);
+            }
         }
     }
 
-    handleImageGlossaryButtonsClick = (e) => {
+    closeGlossaryAssetPopup = () => {
         let element = document.getElementById("glossary-asset-close-icon");
         if(element) {
             element?.click();
         }
+    }
+
+    handleImageGlossaryButtonsClick = (e) => {
+        this.closeGlossaryAssetPopup();
         let buttonClicked = e?.target?.attributes['option']?.value;
         if(buttonClicked === PRIMARY_BUTTON) {
             this.props.removeImageContent();
+        } else {
+            this.props.togglePopup(false, e);
+        }
+    }
+
+    handleAudioGlossaryButtonsClick = (e) => {
+        this.closeGlossaryAssetPopup();
+        let buttonClicked = e?.target?.attributes['option']?.value;
+        if(buttonClicked === PRIMARY_BUTTON) {
+            this.props.saveContent();
         } else {
             this.props.togglePopup(false, e);
         }
@@ -257,6 +280,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if (props.openRemovePopUp) {
+            return (
+                <div className={`dialog-buttons ${props.splitSlateClass}`}>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => this.handleAudioGlossaryButtonsClick(e)}>Ok</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => this.handleAudioGlossaryButtonsClick(e)}>Cancel</span>
+                </div>
+            )
+        }
         if (props.isElmUpdatePopup) {
             return (
                 <div className={`dialog-buttons ${props.isElmUpdateClass}`}>
@@ -290,13 +321,21 @@ class PopUp extends React.Component {
             )
         }
         if (props.isTCMCanvasPopup) {
-            console.log('TCM EDITOR PERMISSION', this.props.permissions?.includes('trackchanges_approve_reject'), "TCM STATUS", props.tcmStatus)
-            return (
-                <div className={`dialog-buttons ${props.assessmentClass}`}>
-                    <span option={PRIMARY_BUTTON} className={`cancel-button tcm ${(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) && "disable"}`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
-                    <span option={SECONDARY_BUTTON} className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
-                </div>
-            )
+            if(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) {
+                return (
+                    <div className={`dialog-buttons ${props.assessmentClass}`}>
+                        <span className={`cancel-button tcm disable`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
+                        <span option={SECONDARY_BUTTON} className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
+                    </div>
+                )
+            } else {
+                return (
+                    <div className={`dialog-buttons ${props.assessmentClass}`}>
+                        <span option={PRIMARY_BUTTON} className={`cancel-button tcm`} onClick={() => props.tcmButtonHandler('Reject', props.tcmSnapshotData, props.elementData)}>Revert</span>
+                        <span option={SECONDARY_BUTTON} className={`lo-save-button tcm ${!this.props.permissions?.includes('trackchanges_approve_reject') && "disable"}`} onClick={() => props.tcmButtonHandler('Accept', props.tcmSnapshotData, props.elementData)}>Accept</span>
+                    </div>
+                )
+            }
         }
         if (props.AssessmentPopup) {
             return (
@@ -614,7 +653,7 @@ class PopUp extends React.Component {
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : ''}>
+                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}

@@ -2221,5 +2221,8 @@ export const snapshotsData = {
     },
     elementId: {
         parentId: "test"
+    },
+    actionStatus: {
+        action:"Test"
     }
 }

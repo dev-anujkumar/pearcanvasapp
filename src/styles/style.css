@@ -499,3 +499,15 @@ div[title='Ignore all']{
 .mce-spellchecker-annotation{
     background-position: bottom !important;
 }
+
+.tox .tox-collection__item {
+    flex-direction: row-reverse !important;
+}
+
+.tox-collection__item-checkmark {
+    margin-left: 0px !important;
+}
+
+.tox-collection__group .tox-collection__item-icon svg {
+    display: none !important;
+}
