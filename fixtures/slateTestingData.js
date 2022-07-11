@@ -5723,7 +5723,6 @@ export const updateBL_IN_2C_3C ={
                     "id":"urn:pearson:manifest:cf179ea5-0a5f-4dd7-b937-403cec80d43c",
                     "type":"groupedcontent",
                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
-                    "designtype":"workedexample1",
                     "groupeddata":{
                        "bodymatter":[
                           {
@@ -5845,7 +5844,6 @@ export const updateBL_IN_2C_3C2 ={
                     "id":"urn:pearson:manifest:cf179ea5-0a5f-4dd7-b937-403cec80d43c",
                     "type":"groupedcontent",
                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
-                    "designtype":"workedexample1",
                     "groupeddata":{
                        "bodymatter":[
                           {
@@ -6011,8 +6009,7 @@ export const updateBL_IN_2C_3C3 ={
                     "id":"urn:pearson:manifest:cf179ea5-0a5f-4dd7-b937-403cec80d43c",
                     "type":"groupedcontent",
                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
-                    "designtype":"workedexample1",
-                    "groupdeddata":{
+                    "groupeddata":{
                        "bodymatter":[
                           {
                              "id":"urn:pearson:manifest:2e293ec5-92df-4d2c-9000-3dabfb273721",

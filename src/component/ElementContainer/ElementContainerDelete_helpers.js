@@ -302,7 +302,7 @@ export const deleteFromStore = async (params) => {
                 let blEleminWE = element?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]];
                 deleteBlockListElement(elmId, blEleminWE);
             }else if (element?.type === "groupedcontent" && element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.type === "manifestlist"){
-                let blEleminAS = element?.groupeddata?.bodymatter[indexes[1]].groupdata?.bodymatter[indexes[2]];
+                let blEleminAS = element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]];
                 deleteBlockListElement(elmId, blEleminAS); // check multicolumn has a blocklist inside it and then delete
             }else if (element?.type === "manifestlist") {
                 deleteBlockListElement(elmId, element)
