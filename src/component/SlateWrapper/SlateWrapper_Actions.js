@@ -91,7 +91,6 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         {
             headers: {
                 "Content-Type": "application/json",
-                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -582,7 +581,6 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         const response = await axios.post(url, JSON.stringify(_requestData), {
             headers: {
                 "Content-Type": "application/json",
-                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })
@@ -688,7 +686,6 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         {
             headers: {
                 "Content-Type": "application/json",
-                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })
@@ -909,7 +906,6 @@ export const handleSplitSlate = (newSlateObj) => (dispatch, getState) => {
         {
             headers: {
                 "Content-Type": "application/json",
-                // "PearsonSSOSession": config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -1029,7 +1025,6 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                     'Content-Type': 'application/json',
                     'Cache-Control': 'no-cache',
                     'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
-                    // "PearsonSSOSession": config.ssoToken,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }
@@ -1074,7 +1069,6 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
                     'Content-Type': 'application/json',
                     'Cache-Control': 'no-cache',
                     'ApiKey': config.OPENER_ELEMENT_COREAPI_KEY,
-                    // "PearsonSSOSession": config.ssoToken,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }
@@ -1175,7 +1169,6 @@ export const getPageNumber = (elementID) => (dispatch, getState) => {
     let url = `${config.PAGE_NUMBER_UPDATE_ENDPOINT}/v2/pageNumberMapping/${elementID}`;
     return axios.get(url, {
         headers: {
-            // PearsonSSOSession: config.ssoToken,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
@@ -1241,7 +1234,6 @@ const fetchContainerData = (entityURN, manifestURN, isPopup) => {
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
-            // "PearsonSSOSession": config.ssoToken,
             'myCloudProxySession': config.myCloudProxySession
         }
 })
@@ -1465,7 +1457,6 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 {
                     headers: {
                         "Content-Type": "application/json",
-                        // "PearsonSSOSession": config.ssoToken,
                         'myCloudProxySession': config.myCloudProxySession
                     }
                 }
@@ -1578,7 +1569,6 @@ export const cloneContainer = (insertionIndex, manifestUrn,parentUrn,asideData) 
                     "ApiKey": config.STRUCTURE_APIKEY,
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    // "PearsonSSOSession": config.ssoToken,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }
