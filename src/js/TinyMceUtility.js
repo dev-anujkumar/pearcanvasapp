@@ -214,7 +214,7 @@ export const checkBlockListElement = (data, keypressed) => {
 
 export const isNestingLimitReached = (index,asideData,parentElement) => {
     let BLOCK_LIST_NESTING_LIMIT = 4  // This is default block list nesting limit.
-    if(asideData.parent && asideData.parent.type === "showhide" || parentElement?.type === "element-aside" || asideData.parent.type === "groupedcontent") BLOCK_LIST_NESTING_LIMIT = 5;
+    if(asideData.parent && asideData.parent.type === "showhide" || parentElement?.type === "element-aside" || asideData.parent?.type === "groupedcontent") BLOCK_LIST_NESTING_LIMIT = 5;
     if(typeof index === 'string' && index.includes('-') && index.split("-").length< BLOCK_LIST_NESTING_LIMIT * 2){
         return false;
     }
