@@ -14,7 +14,7 @@ const BlockList = (props) => {
         element: props.element,
         index: props.index
     };
-    const allowedElements = ["showhide", "element-aside"];
+    const allowedElements = ["showhide", "element-aside", "groupedcontent"];
     asideData = allowedElements.includes(type) ? { ...asideData, parent: { id, type, contentUrn, showHideType: props?.showHideType } } : asideData;
 
     const fetchLi = (subtype) => {
@@ -40,6 +40,9 @@ const BlockList = (props) => {
             }else if(type === "element-aside" && props.parentElement?.elementdata?.bodymatter[normalIndex[1]]?.type === 'manifestlist'){
                 indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}`}-${props?.indexTemp}${parentIndex}-${index}`;
                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 4 ? "Press Shift+Tab to move out" : "Type something...";
+            }else if(type === "groupedcontent" && props?.parentElement?.groupeddata?.bodymatter[normalIndex[1]]?.groupdata?.bodymatter[normalIndex[2]]?.type === 'manifestlist'){
+                indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
+                placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? "Press Shift+Tab to move out" : "Type something...";
             }else if(props?.parentElement){
                 indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
                  placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? "Press Shift+Tab to move out" : "Type something...";

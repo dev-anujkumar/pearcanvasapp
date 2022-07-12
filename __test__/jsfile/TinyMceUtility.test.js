@@ -429,7 +429,22 @@ describe('Testing TinyMceUtility', () => {
 
     it('Test - isNestingLimitReached - else block', () => {
         let asideData = {
-            type: 'showhide'
+            parent: {
+                type: 'showhide'
+            }
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
+        const indexes = "1-0-1"
+        tinyMceFn.isNestingLimitReached(indexes,asideData);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - isNestingLimitReached - else block', () => {
+        let asideData = {
+            parent: {
+                type: 'groupedcontent'
+            }
         }
         const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
         const indexes = "1-0-1"
@@ -445,13 +460,89 @@ describe('Testing TinyMceUtility', () => {
         spyFunc.mockClear();
     })
 
+    it('Test - checkBlockListElement - if block - TAB keypressed', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
+        const data = {
+            asideData:{
+                parent:{
+                    type:"showhide"
+                },
+                type: 'manifestlist'
+            },
+            slateLevelData: {
+                'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                    contents: {
+                        bodymatter: [{
+                            type: 'manifestlist'
+                        }]
+                    }
+                }
+            },
+            index: "0-0-1"
+        }
+        tinyMceFn.checkBlockListElement(data, 'TAB');
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
     it('Test - checkBlockListElement - if block - ENTER keypressed', () => {
         const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
         const data = {
             asideData:{
                 parent:{
                     type:"showhide"
+                },
+                type: 'manifestlist'
+            },
+            slateLevelData: {
+                'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                    contents: {
+                        bodymatter: [{
+                            type: 'manifestlist'
+                        }]
+                    }
                 }
+            },
+            index: "0-0-1"
+        }
+        tinyMceFn.checkBlockListElement(data, 'ENTER');
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - checkBlockListElement - if block - SHIFT+TAB keypressed', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
+        const data = {
+            asideData:{
+                parent:{
+                    type:"showhide"
+                },
+                type: 'manifestlist'
+            },
+            slateLevelData: {
+                'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                    contents: {
+                        bodymatter: [{
+                            type: 'manifestlist'
+                        }]
+                    }
+                }
+            },
+            index: "0-0-1"
+        }
+        tinyMceFn.checkBlockListElement(data, 'SHIFT+TAB');
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - checkBlockListElement - if block - ENTER keypressed', () => {
+        const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');
+        const data = {
+            asideData:{
+                parent:{
+                    type:"groupeddata"
+                },
+                type: 'manifestlist'
             },
             slateLevelData: {
                 'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
@@ -571,8 +662,36 @@ describe('Testing TinyMceUtility', () => {
                 asideData:{
                     parent:{
                         type:"showhide"
-                    }
+                    },
+                    parentManifestList: {}
+                }
+            },
+        index:'0-0-1'
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isElementInsideBlocklist');
+        tinyMceFn.isElementInsideBlocklist(activeElement, slateLevelData);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - isElementInsideBlocklist - slateLevelData', () => {
+        const slateLevelData = {
+            'urn:pearson:manifest:8ad8a4f1-8f76-4e6c-912f-4ffe56a23d8e': {
+                contents: {
+                    bodymatter: [{
+                        type: 'manifestlist'
+                    }]
+                }
             }
+        }
+        const activeElement={
+            data:{
+                asideData:{
+                    parent:{
+                        type:"groupedcontent"
+                    },
+                    parentManifestList: {}
+                }
             },
         index:'0-0-1'
         }

@@ -1415,7 +1415,8 @@ export class TinyMceEditor extends Component {
                 const originalIndex =index && typeof index === 'string' && index.includes('-') && index.split("-");
                 // setting the placeholder when textcontent is cleared from element authored text to prevent placecholder overlapping on backspace delete
                 if ((asideData?.parent && asideData?.parent.type === "showhide") || 
-                (this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist")){
+                (this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist") || 
+                (this.props?.parentElement?.type ==="groupedcontent" && this.props?.parentElement?.groupeddata?.bodymatter[originalIndex[1]]?.groupdata?.bodymatter[originalIndex[2]]?.type === "manifestlist")){
                     if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length===5) {
                         getSelectedElement.setAttribute('placeholder', 'Type Something');
                     }
@@ -1423,6 +1424,13 @@ export class TinyMceEditor extends Component {
                         getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
                     }
                 }else if( this.props?.parentElement?.type === "element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.type === "manifestlist"){
+                    if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length=== 4) {
+                        getSelectedElement.setAttribute('placeholder', 'Type Something');
+                    }
+                    if(tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length>4){
+                        getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
+                    }
+                }else if( this.props?.parentElement?.type === "groupedcontent" && this.props?.parentElement?.groupeddata?.bodymatter[originalIndex[1]]?.groupdata?.bodymatter[originalIndex[2]]?.type === "manifestlist"){
                     if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length=== 4) {
                         getSelectedElement.setAttribute('placeholder', 'Type Something');
                     }
@@ -1452,7 +1460,7 @@ export class TinyMceEditor extends Component {
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData?.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "ENTER" });
+                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData && parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "ENTER" });
                     }
                 } else if (key === 9 && e.shiftKey) {
                     // SHIFT + TAB key press handling for BlockList element
@@ -1464,6 +1472,7 @@ export class TinyMceEditor extends Component {
                     if (index && typeof index === 'string' && index.includes('-') && parentElement && parentElement.type === "showhide" && index.split("-").length <= 5) return;
                     if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.type === "manifestlist"  && index.split("-").length <= 4 ) return;
                     if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist"  && index.split("-").length <= 5 ) return;
+                    if(index && typeof index === 'string' && index.includes('-') && parentElement && parentElement.type === "groupedcontent" && this.props?.parentElement?.groupeddata?.bodymatter[originalIndex[1]]?.groupdata?.bodymatter[originalIndex[2]]?.type === "manifestlist" && index.split("-").length <= 5) return;
                     blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
