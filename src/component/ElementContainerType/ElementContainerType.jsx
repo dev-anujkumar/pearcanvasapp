@@ -53,7 +53,7 @@ export default function ElementContainerType(props) {
         }
         /**Block List option only visible on Slate Level & inside SH */
         const blocklistAllowedIn = ['','showhide',"element-aside"];
-        if (blocklistAllowedIn.indexOf(elementType) === -1 || config.isPopupSlate) {
+        if (blocklistAllowedIn.indexOf(elementType) === -1) {
             propsData = propsData.filter( obj => obj.text !== 'Block List');
         }
         /**Block List option hidden for SH which is already in Container like 2C/3C/Aside/WE */
