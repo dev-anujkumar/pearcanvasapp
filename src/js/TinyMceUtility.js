@@ -110,7 +110,6 @@ function handleSiteOptionsDropdown (alfrescoPath, id) {
                 'Accept': 'application/json',
                 'ApiKey': config.CMDS_APIKEY,
                 'Content-Type': 'application/json',
-                // 'PearsonSSOSession': SSOToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })

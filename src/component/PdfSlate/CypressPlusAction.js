@@ -26,7 +26,6 @@ const startPdfConversion = (wUrn) => {
       {
         headers: {
           "Content-Type": "application/json",
-          // PearsonSSOSession: config.ssoToken
           'myCloudProxySession': config.myCloudProxySession
         }
       }
@@ -42,7 +41,6 @@ const pdfConversionStatus = async () => {
     const res = await axios.get(`${config.REACT_APP_API_URL}v1/cypress-plus-api/conversion-status/project/${config.projectUrn}/manifest/${config.slateManifestURN}/entity/${config.slateEntityURN}`, {
       headers: {
         "Content-Type": "application/json",
-        // PearsonSSOSession: config.ssoToken
         'myCloudProxySession': config.myCloudProxySession
       }
     }, { validateStatus: false })

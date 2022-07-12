@@ -408,7 +408,6 @@ export const checkElementExistence = async (slateEntityUrn = '', elementEntity =
         const axiosObject = axios.create({
             headers: {
                 'Content-Type': 'application/json',
-                // 'PearsonSSOSession': config.ssoToken,
                 'myCloudProxySession': config.myCloudProxySession
             }
         });
@@ -691,7 +690,6 @@ export const fetchStatusAndPaste = async (params) => {
                         "ApiKey": config.STRUCTURE_APIKEY,
                         "Accept": "application/json",
                         "Content-Type": "application/json",
-                        // "PearsonSSOSession": config.ssoToken,
                         'myCloudProxySession': config.myCloudProxySession
                     }
                 }

@@ -17,7 +17,6 @@ import store from '../../appstore/store'
 const commonHeaders = {
     "ApiKey": config.STRUCTURE_APIKEY,
     "Content-Type": "application/json",
-    // "PearsonSSOSession": config.ssoToken
     'myCloudProxySession': config.myCloudProxySession
 }
 
@@ -31,7 +30,6 @@ export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
         const headers = {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": "application/json",
-            // "PearsonSSOSession": config.ssoToken
             'myCloudProxySession': config.myCloudProxySession
         }
         const figureUrl = getAPIUrl(currentParentUrn);
@@ -174,7 +172,6 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
         const response = await axios.get(apiUrl, {
             headers: {
                 "Content-Type": "application/json",
-                // "PearsonSSOSession": config.ssoToken
                 'myCloudProxySession': config.myCloudProxySession
             }
         })

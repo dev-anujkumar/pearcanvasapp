@@ -30,5 +30,21 @@ describe('Testing Markedindex cross-reference component with props', () => {
         });
         wrapper.find('div.markedindex-secondlevel-label').simulate('click');
     });
-
 })
+describe('Testing Markedindex cross-reference component with props', () => {
+    let props={
+        crossRefValue: [1,2]
+    }
+    let wrapper = mount(<Provider store={store}><CrossReference {...props} /></Provider>);
+    it('Test Focus on para', () => {
+        jest.setTimeout(200);
+        jest.spyOn(document, 'getElementById').mockImplementation(() => {
+            return {click: jest.fn(),
+               innerHTML: '<br data-mce-bogus="1"> <br data-mce-bogus="1"> <br data-mce-bogus="1">'
+            }
+        });
+        wrapper.find('#cross-ref').at(0).simulate('click');
+    });
+    });
+
+
