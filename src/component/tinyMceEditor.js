@@ -2851,7 +2851,7 @@ export class TinyMceEditor extends Component {
         let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
         let strongTag = dfn.closest('strong');
         if (strongTag) {
-            dfn.innerHTML = `<strong>${dfn.innerHTML}</strong>`
+            dfn.innerHTML = '<strong>' + dfn.innerHTML + '</strong>'
             if (strongTag.textContent === dfn.textContent) {
                 let innerHTML = strongTag.innerHTML;
                 strongTag.outerHTML = innerHTML;
@@ -2866,7 +2866,7 @@ export class TinyMceEditor extends Component {
         let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
         let codeTag = dfn.closest('code');
         if (codeTag) {
-            dfn.innerHTML = `<code>${dfn.innerHTML}</code>`
+            dfn.innerHTML = '<code>' + dfn.innerHTML + '</code>'
             if (codeTag.textContent === dfn.textContent) {
                 let innerHTML = codeTag.innerHTML;
                 codeTag.outerHTML = innerHTML;
