@@ -636,7 +636,7 @@ export const updateElementInStore = (paramsObj) => {
                     else{
                         _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
                     }
-                }if(asideData.parent && asideData.parent.type==="groupedcontent" && asideData?.type === 'manifestlist'){
+                }else if(asideData.parent && asideData.parent.type==="groupedcontent" && asideData?.type === 'manifestlist'){
                     if(indexes.length===5){
                         _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
                     }
