@@ -2851,7 +2851,7 @@ export class TinyMceEditor extends Component {
         let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
         let strongTag = dfn.closest('strong');
         if (strongTag) {
-            dfn.innerHTML = '<strong>' + dfn.innerHTML + '</strong>'
+            dfn.innerHTML = `<strong>${dfn.innerHTML}</strong>`
             if (strongTag.textContent === dfn.textContent) {
                 let innerHTML = strongTag.innerHTML;
                 strongTag.outerHTML = innerHTML;
@@ -2967,8 +2967,8 @@ export class TinyMceEditor extends Component {
             this.handleGlossaryForBold(activeElement, res.data.id);
             this.handleGlossaryForCode(activeElement, res.data.id);
             let dfn = activeElement.querySelector(`dfn[data-uri="${res.data.id}"]`);
-            window.dfn = dfn
-            this.glossaryTermText = dfn.innerHTML
+            // this.glossaryTermText = dfn.innerHTML
+            this.glossaryTermText = `<p>${dfn.innerHTML}</p>` || "<p></p>"
             this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
         })
@@ -2983,9 +2983,9 @@ export class TinyMceEditor extends Component {
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let term = null;
         let definition = null;
-        let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
+        // let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
         // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
-        term = `<p>${termText}</p>` || "<p></p>"
+        term = glossaryTermText
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
