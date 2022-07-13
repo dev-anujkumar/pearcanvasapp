@@ -2276,7 +2276,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
     })
     describe("update BL methods",()=>{
         config.slateManifestURN = "urn:pearson:manifest:e5042835-1c9c-485d-ac89-c96a9a86473f";
-        xit("updateElementInStore - update BL element inside S/H - l5", () => {
+        it("updateElementInStore - update BL element inside S/H - l5", () => {
             let store = mockStore(() => initialState4);
             let args = { 
                 updatedData: {
@@ -2460,7 +2460,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateElementInStore).toHaveBeenCalled()
             spyupdateElementInStore.mockClear()
         })
-        xit("updateElementInStore - update BL element inside S/H - l7", () => {
+        it("updateElementInStore - update BL element inside S/H - l7", () => {
             let store = mockStore(() => initialState5);
             let args = { 
                 updatedData: {
@@ -2920,7 +2920,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateElementInStore).toHaveBeenCalled()
             spyupdateElementInStore.mockClear()
         })
-        xit("updateElementInStore - update BL element inside S/H - l9", () => {
+        it("updateElementInStore - update BL element inside S/H - l9", () => {
             let store = mockStore(() => initialState6);
             let args = { 
                 updatedData: {
@@ -3374,7 +3374,7 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateElementInStore).toHaveBeenCalled()
             spyupdateElementInStore.mockClear()
         })
-        xit("updateElementInStore - update BL element inside S/H - l11", () => {
+        it("updateElementInStore - update BL element inside S/H - l11", () => {
             let store = mockStore(() => initialState6);
             let args = { 
                 updatedData: {
