@@ -478,8 +478,8 @@ export const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultK
     let elementDetails;
     const { wipData, elementId, tag, actionStatus,popupInContainer,slateManifestVersioning } = snapshotsData;
     const { parentUrn } = containerElement
-    wipData.groupeddata.bodymatter.map((item, eleIndex) => {
-        item.groupdata.bodymatter.map((ele) => {
+    wipData.groupeddata?.bodymatter?.map((item, eleIndex) => {
+        item.groupdata?.bodymatter?.map((ele) => {
             if(ele?.type === SHOWHIDE || ele?.type === POETRY_ELEMENT) {
                tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType);
             } else
