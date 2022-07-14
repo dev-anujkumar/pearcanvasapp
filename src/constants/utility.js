@@ -796,7 +796,6 @@ export const getCookieByName = (name) => {
 
 export const handleUnwantedFormattingTags = (element) => {
     let pastedTagsData = '';
-    console.log(element, "document")
     if (MATCH_CLASSES_DATA.some(el => element?.innerHTML?.match(el))) {
         let document = element?.querySelectorAll('p,h1,h2,h3,h4,h5,h6,li')
         for (let i = 0; i < document?.length; i++) {
@@ -815,7 +814,6 @@ export const handleUnwantedFormattingTags = (element) => {
         removedUnwantedTags = removedUnwantedTags.includes("</ol>") ? removedUnwantedTags?.replace(/<ol>/g, '')?.replace(/<*\/ol>/g, ' ') : removedUnwantedTags
         pastedTagsData = removedUnwantedTags;
     }
-    console.log(pastedTagsData, "document!!!")
     return pastedTagsData;
 }
 

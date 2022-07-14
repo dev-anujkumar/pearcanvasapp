@@ -2371,7 +2371,6 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            console.log("test", args.content)
             if ((this.props?.element?.type === "element-authoredtext") && !this.props?.element?.elementdata?.headers && (this.props?.element?.elementdata?.designtype !== 'handwritingstyle')) {
                 args.content = handleTextToRetainFormatting(args.content, testElement)
             } else {
