@@ -16,7 +16,7 @@ const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>', '</p>', '</ul>', '</ol>', '</li>']
 export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '</em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>']
 export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<img', '</abbr>', '</dfn>', "</a>", 'class="answerLineContent"', 'class="calloutOne"', 'class="calloutTwo"', 'class="calloutThree"', 'class="calloutFour"']
-export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="heading1NummerEins"']
+export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"']
 
 export const requestConfigURI = () => {
     let uri = '';
