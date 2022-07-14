@@ -806,7 +806,7 @@ export const handleUnwantedFormattingTags = (element) => {
         let removedUnwantedTags = element?.innerHTML?.includes("</h1>") ? element?.innerHTML?.replace(/<h1>/g, ' ')?.replace(/<*\/h1>/g, '') : element?.innerHTML
         removedUnwantedTags = removedUnwantedTags.includes("</p>") ? removedUnwantedTags?.replace(/<p>/g, '')?.replace(/<*\/p>/g, ' ') : removedUnwantedTags
         removedUnwantedTags = removedUnwantedTags.includes("</h2>") ? removedUnwantedTags?.replace(/<h2>/g, '')?.replace(/<*\/h2>/g, ' ') : removedUnwantedTags
-        removedUnwantedTags = removedUnwantedTags.includes("</h3>") ? removedUnwantedTags?.replace(/<h3>/g, '')?.replace(/<*\/h2>/g, ' ') : removedUnwantedTags
+        removedUnwantedTags = removedUnwantedTags.includes("</h3>") ? removedUnwantedTags?.replace(/<h3>/g, '')?.replace(/<*\/h3>/g, ' ') : removedUnwantedTags
         removedUnwantedTags = removedUnwantedTags.includes("</h4>") ? removedUnwantedTags?.replace(/<h4>/g, '')?.replace(/<*\/h4>/g, ' ') : removedUnwantedTags
         removedUnwantedTags = removedUnwantedTags.includes("</h5>") ? removedUnwantedTags?.replace(/<h5>/g, '')?.replace(/<*\/h5>/g, ' ') : removedUnwantedTags
         removedUnwantedTags = removedUnwantedTags.includes("</h6>") ? removedUnwantedTags?.replace(/<h6>/g, '')?.replace(/<*\/h6>/g, ' ') : removedUnwantedTags
