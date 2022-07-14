@@ -237,7 +237,7 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
 
             if ((parentElement && parentElement.type === "showhide" && data.asideData.parentManifestList) || (config.isPopupSlate && parentElement?.type === "showhide")) {
                 return true;
-            }if((contents?.bodymatter[indexes[0]]?.type === ("element-aside" || "popup") && data?.asideData?.type === 'manifestlist') || (config.isPopupSlate && parentElement?.type === 'element-aside'))
+            }if((contents?.bodymatter[indexes[0]]?.type === "element-aside" && data?.asideData?.type === 'manifestlist') || (config.isPopupSlate && parentElement?.type === 'element-aside'))
                 return true
             if ((parentElement && parentElement.type === "groupedcontent" && data.asideData.parentManifestList) || (config.isPopupSlate && parentElement?.type === "groupedcontent"))
                 return true;  
