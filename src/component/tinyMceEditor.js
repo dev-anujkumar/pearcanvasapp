@@ -2785,6 +2785,66 @@ export class TinyMceEditor extends Component {
         this.props.learningObjectiveOperations(text);
     }
 
+    // Handle Glossary for Subscript
+    handleGlossaryForSubscript = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let subTag = dfn.closest('sub');
+        if (subTag) {
+            dfn.innerHTML = '<sub>' + dfn.innerHTML + '</sub>'
+            if (subTag.textContent === dfn.textContent) {
+                let innerHTML = subTag.innerHTML;
+                subTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(subTag.parentNode, dfn);
+            }
+        }
+    }
+
+    // Handle Glossary for Subscript
+    handleGlossaryForSuperscript = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let supTag = dfn.closest('sup');
+        if (supTag) {
+            dfn.innerHTML = '<sup>' + dfn.innerHTML + '</sup>'
+            if (supTag.textContent === dfn.textContent) {
+                let innerHTML = supTag.innerHTML;
+                supTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(supTag.parentNode, dfn);
+            }
+        }
+    }
+
+    // Handle Glossary for Strikethrough
+    handleGlossaryForStrikethrough = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let sTag = dfn.closest('s');
+        if (sTag) {
+            dfn.innerHTML = '<s>' + dfn.innerHTML + '</s>'
+            if (sTag.textContent === dfn.textContent) {
+                let innerHTML = sTag.innerHTML;
+                sTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(sTag.parentNode, dfn);
+            }
+        }
+    }
+
+    // Handle Glossary for Underline
+    handleGlossaryForUnderline = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let uTag = dfn.closest('u');
+        if (uTag) {
+            dfn.innerHTML = '<u>' + dfn.innerHTML + '</u>'
+            if (uTag.textContent === dfn.textContent) {
+                let innerHTML = uTag.innerHTML;
+                uTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(uTag.parentNode, dfn);
+            }
+        }
+    }
+
     // Handle Glossary for Italic
     handleGlossaryForItalic = (activeElement, dataURIId) => {
         let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
@@ -2796,6 +2856,21 @@ export class TinyMceEditor extends Component {
                 emTag.outerHTML = innerHTML;
             } else {
                 spanHandlers.splitOnTag(emTag.parentNode, dfn);
+            }
+        }
+    }
+
+    // Handle Glossary for Bold
+    handleGlossaryForBold = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let strongTag = dfn.closest('strong');
+        if (strongTag) {
+            dfn.innerHTML = '<strong>' + dfn.innerHTML + '</strong>'
+            if (strongTag.textContent === dfn.textContent) {
+                let innerHTML = strongTag.innerHTML;
+                strongTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(strongTag.parentNode, dfn);
             }
         }
     }
@@ -2886,7 +2961,7 @@ export class TinyMceEditor extends Component {
         }
         let selectedText = window.getSelection().toString()
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        this.glossaryTermText = selectedText;
+        // this.glossaryTermText = selectedText;
         if (selectedText.trim() === "") {
             return false
         }
@@ -2898,8 +2973,16 @@ export class TinyMceEditor extends Component {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
             editor.selection.setContent(insertionText);
+            this.handleGlossaryForSubscript(activeElement, res.data.id);
+            this.handleGlossaryForSuperscript(activeElement, res.data.id);
+            this.handleGlossaryForStrikethrough(activeElement, res.data.id);
+            this.handleGlossaryForUnderline(activeElement, res.data.id);
             this.handleGlossaryForItalic(activeElement, res.data.id);
+            this.handleGlossaryForBold(activeElement, res.data.id);
             this.handleGlossaryForCode(activeElement, res.data.id);
+            let dfn = activeElement.querySelector(`dfn[data-uri="${res.data.id}"]`);
+            // this.glossaryTermText = dfn.innerHTML
+            this.glossaryTermText = `<p>${dfn.innerHTML}</p>` || "<p></p>"
             this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
         })
@@ -2914,9 +2997,9 @@ export class TinyMceEditor extends Component {
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let term = null;
         let definition = null;
-        let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
+        // let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
         // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
-        term = `<p>${termText}</p>` || "<p></p>"
+        term = glossaryTermText
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
