@@ -237,7 +237,7 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
 
             if (parentElement && parentElement.type === "showhide" && data.asideData.parentManifestList) {
                 return true;
-            }if(contents?.bodymatter[indexes[0]]?.type === "element-aside" && data?.asideData?.type === 'manifestlist')
+            }if(contents?.bodymatter[indexes[0]]?.type === ("element-aside" || "popup") && data?.asideData?.type === 'manifestlist')
                 return true
             if (parentElement && parentElement.type === "groupedcontent" && data.asideData.parentManifestList)
                 return true;  
