@@ -2786,7 +2786,7 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    // Handle Glossary for Subscript
+    // Handle Glossary for Superscript
     handleGlossaryForSuperscript = (activeElement, dataURIId) => {
         let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
         let supTag = dfn.closest('sup');
@@ -2981,11 +2981,10 @@ export class TinyMceEditor extends Component {
         const { glossaryFootnoteValue, poetryField } = this.props;
         let { elementType, glossaryfootnoteid, type, elementSubType, glossaryTermText } = glossaryFootnoteValue;
         let typeWithPopup = this.props.element ? this.props.element.type : "";
-        let term = null;
+        let term = glossaryTermText;
         let definition = null;
-        // let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
-        // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
-        term = glossaryTermText
+        // commented after allowing flow of formatting tags from canvas to glossary term
+        // let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;'); 
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
