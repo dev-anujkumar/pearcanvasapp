@@ -485,6 +485,8 @@ export const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultK
             } else
             if(ele?.type === "element-aside") {
                tcmSnapshotsAsideWE(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType)
+            } else if(ele?.type === 'manifestlist') {
+                return false;
             } else {
                 elementId.columnId =  item.id;
                 elementId.childId = ele.id;

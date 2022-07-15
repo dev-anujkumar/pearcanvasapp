@@ -328,6 +328,21 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }
+            else if(asideData.parent && asideData.parent.type === "groupedcontent"){
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter;
+                if (indexes.length === 5) { // Block list on 1 level nesting
+                   initialdata.splice(index, 0, createdElementData)
+               }
+               else if (indexes.length === 7) { // Block list on 2 level nesting
+                   initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+               }
+               else if (indexes.length === 9) { // Block list on 3 level nesting
+                   initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+               }
+               else { // level 4 
+                   initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+               }
+            }
             else{
                 let initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter;
                 if (indexes.length === 3) { // Block list on 1 level nesting
@@ -376,6 +391,21 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
              }
+             else if(asideData.parent && asideData.parent.type === "groupedcontent"){
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter;
+                if (indexes.length === 5) { // Block list on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 7) { // Manifest List Item on 2 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 9) { // Manifest List Item on 3 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // Manifest List Item on 4 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+             }
             else{
                  initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].listdata.bodymatter;
                  if (indexes.length === 3) { // Manifest List Item on 1 level nesting
@@ -420,6 +450,18 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
                 else { // level 4 
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            }
+            else if(asideData.parent && asideData.parent.type === 'groupedcontent'){
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter;
+                if (indexes.length === 7) { // Manifest List Item on 1 level nesting
+                    initialdata.splice(index, 0, createdElementData)
+                }
+                else if (indexes.length === 9) { // Manifest List Item on 2 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+                else { // Manifest List Item on 3 level nesting
+                    initialdata[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }
             else{
