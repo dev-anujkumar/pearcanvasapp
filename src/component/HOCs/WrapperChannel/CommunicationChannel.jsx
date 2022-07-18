@@ -1034,7 +1034,11 @@ function CommunicationChannel(WrappedComponent) {
                     'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
                 }
                 if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (config.slateType == "section" || config.slateType == SLATE_TYPE_PDF)) {
-                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO } })
+                    let externalLFUrn = []
+                    if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
+                        this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
+                    }
+                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO,externalLFUrn:externalLFUrn } })
                 }
                 else if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "container-introduction") {
                     sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys_LO } })
