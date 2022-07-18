@@ -184,7 +184,7 @@ describe('-----------------Testing Search Actions-----------------', () => {
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         })
-        it('Elseif condition check', () => {
+        it('Else if condition check', () => {
             let scrollArgs = {
                 type : 'SET_COMMENT_SEARCH_URN',
                 scrollTop : 0
