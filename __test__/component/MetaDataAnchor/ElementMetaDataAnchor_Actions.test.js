@@ -1,4 +1,4 @@
-import { currentSlateLO, updateLastAlignedLO, isLOExist, setCurrentModule, currentSlateLOMath,reRenderLO, currentSlateLOType, toggleLOWarningPopup } from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { currentSlateLO, updateLastAlignedLO, isLOExist, setCurrentModule, currentSlateLOMath,reRenderLO, currentSlateLOType, toggleLOWarningPopup, fetchDefaultLF, showSlateLockPopup } from '../../../src/component/ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 
@@ -213,3 +213,25 @@ describe('Testing Actions', () => {
     expect(store.getActions()).toEqual(expectedActions);
   })
 });
+it('testing showSlateLockPopup function', () => {
+  const showPopup = true
+  const expectedActions =
+    [{
+      'payload': showPopup,
+      'type': "SHOW_SLATE_LOCK_POPUP",
+    }]
+  let store = mockStore();
+  store.dispatch(showSlateLockPopup(showPopup));
+  expect(store.getActions()).toEqual(expectedActions);
+})
+it('testing fetchDefaultLF function', () => {
+  const defaultLearningFrameWork = 'TestLFUrn'
+  const expectedActions =
+    [{
+      'payload': { "defaultLF": defaultLearningFrameWork},
+      'type': "DEFAULT_LF",
+    }]
+  let store = mockStore();
+  store.dispatch(fetchDefaultLF(defaultLearningFrameWork));
+  expect(store.getActions()).toEqual(expectedActions);
+})

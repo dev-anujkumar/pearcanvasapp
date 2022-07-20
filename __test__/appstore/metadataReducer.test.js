@@ -6,6 +6,7 @@ const INIT_STATE = {
     slateTagEnable: false,
     showModule:false,
     currentSlateLODataMath:"",
+    defaultLF: "",
     showSlateLockPopup:false,
     isRenderMetdataLO:false,
     projectLearningFrameworks:{
