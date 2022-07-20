@@ -2518,8 +2518,8 @@ export class TinyMceEditor extends Component {
      */
     handleIndent = (e, editor, content, type, selectedNode) => {
         let className = null;
-        let blockListData = isElementInsideBlocklist({index:this.props.index,data:this.props}, this.props.slateLevelData);
-        if(!blockListData){
+        const { isBlockList} = this.props
+        if(!isBlockList){
             if (type && type === 'stanza' && selectedNode) {
                 className = selectedNode.className;
             }
@@ -2533,7 +2533,7 @@ export class TinyMceEditor extends Component {
                 content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
             }
         }
-        if (blockListData) {
+        if (isBlockList) {
             content = content.replace(/40px\b/, "0px");
             setTimeout(() => {
                 this.createNestedBlockList();
