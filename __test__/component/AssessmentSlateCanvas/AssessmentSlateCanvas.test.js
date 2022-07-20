@@ -35,7 +35,12 @@ let initialState = {
             usageTypeList: MockUsageTypeList_Data
         }
     },
-    assessmentReducer: {}
+    assessmentReducer: {},
+    metadataReducer: {
+        projectLearningFrameworks: {
+            externalLF: [{ urn: "external:urn" }]
+        }
+    }
 };
 let props = {
     handleFocus: jest.fn(),

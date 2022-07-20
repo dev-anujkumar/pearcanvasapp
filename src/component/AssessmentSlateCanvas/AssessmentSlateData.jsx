@@ -130,7 +130,11 @@ class AssessmentSlateData extends Component {
             };
             let assessmentId = nextProps && nextProps.model && nextProps.model.elementdata.assessmentid.length > 0 ? nextProps.model.elementdata.assessmentid : '';
             if (assessmentId != "") {
-                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentId, apiKeys_LO } });
+                let externalLFUrn = []
+                if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
+                    this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
+                }
+                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentId, apiKeys_LO, externalLFUrn:externalLFUrn } });
             }
             else { //set tag to grey heresss                 
                 let newMessage = { assessmentResponseMsg: false };
@@ -816,7 +820,8 @@ const mapStateToProps = state => {
     return {
         usageTypeList: state.appStore.usageTypeListData.usageTypeList,
         assessmentReducer: state.assessmentReducer,
-        isLearnosityProject: state.appStore.isLearnosityProjectInfo
+        isLearnosityProject: state.appStore.isLearnosityProjectInfo,
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
     };
 };
 
