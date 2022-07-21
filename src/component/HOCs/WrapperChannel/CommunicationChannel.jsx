@@ -457,7 +457,7 @@ function CommunicationChannel(WrappedComponent) {
                     'currentSlateId': slateManifestURN,
                     'chapterContainerUrn': '',
                     'currentSlateLF': currentSlateLF,
-                    'assessmentUrn': assessmentuRN,
+                    'assessmentUrn': config.assessmentId,
                     'previewData': previewData,
                     'defaultLF': defaultLF
                 }
@@ -805,7 +805,7 @@ function CommunicationChannel(WrappedComponent) {
                 localStorage.setItem('lastAlignedLos', JSON.stringify({...lastAlignedLosToSlates,...newAlignment}));
             }
         }
-        handleLOData = (message) => {
+        handleLOData = (message, updatedData) => {
             if (message.statusForSave) {
                 message.loObj ? this.props.currentSlateLOMath([message.loObj.label.en]) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
@@ -853,7 +853,6 @@ function CommunicationChannel(WrappedComponent) {
                     }
                     this.props.updateElement(requestPayload)
                 }
-
             }
         }
 
