@@ -6,6 +6,8 @@ import configureMockStore from 'redux-mock-store';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import RootCiteTdxComponent from '../../../../src/component/AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
+import CiteComponentError from '../../../../src/component/AssessmentSlateCanvas/assessmentCiteTdx/Components/CiteError/CiteComponentError'
+
 let initialState = {
     citeTdxReducer:{ 
         currentAssessmentSelected:{
@@ -23,6 +25,13 @@ describe('Cite/TDX single root component test', () => {
         getCiteTdxData:jest.fn()
 
     }
+    
+    beforeAll(() => {
+        const CiteComponentErrorComponent = shallow(<CiteComponentError><h1>wassup</h1></CiteComponentError>)
+        CiteComponentErrorComponent.instance().componentDidCatch('oh nooos an error')
+        CiteComponentErrorComponent.update()
+      })
+
     const component = mount(<Provider store={store}><RootCiteTdxComponent {...props}/></Provider>)
     let componentInstance = component.find('RootCiteTdxComponent').instance();
     const spyPageNo = jest.spyOn(componentInstance, 'getCurrentPageNo')
