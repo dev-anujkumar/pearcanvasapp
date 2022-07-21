@@ -98,6 +98,11 @@ let initialState = {
             assessmentEntityUrn: "urn:pearson:entity:c785c0f6-6fc7-4f51-855c-0677738a9d86",
             latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565"
         }
+    },
+    metadataReducer: {
+        projectLearningFrameworks: {
+            externalLF: [{ urn: "external:urn" }]
+        }
     }
 };
 let expectedRes2 = {

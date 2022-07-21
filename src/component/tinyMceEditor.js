@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -1415,7 +1415,8 @@ export class TinyMceEditor extends Component {
                 const originalIndex =index && typeof index === 'string' && index.includes('-') && index.split("-");
                 // setting the placeholder when textcontent is cleared from element authored text to prevent placecholder overlapping on backspace delete
                 if ((asideData?.parent && asideData?.parent.type === "showhide") || 
-                (this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist")){
+                (this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist") || 
+                (this.props?.parentElement?.type ==="groupedcontent" && this.props?.parentElement?.groupeddata?.bodymatter[originalIndex[1]]?.groupdata?.bodymatter[originalIndex[2]]?.type === "manifestlist")){
                     if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length===5) {
                         getSelectedElement.setAttribute('placeholder', 'Type Something');
                     }
@@ -1423,6 +1424,13 @@ export class TinyMceEditor extends Component {
                         getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
                     }
                 }else if( this.props?.parentElement?.type === "element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.type === "manifestlist"){
+                    if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length=== 4) {
+                        getSelectedElement.setAttribute('placeholder', 'Type Something');
+                    }
+                    if(tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length>4){
+                        getSelectedElement.setAttribute('placeholder', 'Press Shift+Tab to move out');
+                    }
+                }else if( this.props?.parentElement?.type === "groupedcontent" && this.props?.parentElement?.groupeddata?.bodymatter[originalIndex[1]]?.groupdata?.bodymatter[originalIndex[2]]?.type === "manifestlist"){
                     if (tinymce?.activeEditor?.selection?.getNode()?.textContent?.length === 2 && index.split("-").length=== 4) {
                         getSelectedElement.setAttribute('placeholder', 'Type Something');
                     }
@@ -1452,7 +1460,7 @@ export class TinyMceEditor extends Component {
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "ENTER" });
+                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData && parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "ENTER" });
                     }
                 } else if (key === 9 && e.shiftKey) {
                     // SHIFT + TAB key press handling for BlockList element
@@ -1464,11 +1472,12 @@ export class TinyMceEditor extends Component {
                     if (index && typeof index === 'string' && index.includes('-') && parentElement && parentElement.type === "showhide" && index.split("-").length <= 5) return;
                     if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.type === "manifestlist"  && index.split("-").length <= 4 ) return;
                     if(index && typeof index === 'string' && index.includes('-') && this.props?.parentElement?.type ==="element-aside" && this.props?.parentElement?.elementdata?.bodymatter[originalIndex[1]]?.contents?.bodymatter[originalIndex[2]]?.type === "manifestlist"  && index.split("-").length <= 5 ) return;
+                    if(index && typeof index === 'string' && index.includes('-') && parentElement && parentElement.type === "groupedcontent" && this.props?.parentElement?.groupeddata?.bodymatter[originalIndex[1]]?.groupdata?.bodymatter[originalIndex[2]]?.type === "manifestlist" && index.split("-").length <= 5) return;
                     blockListData = checkBlockListElement(this.props, "SHIFT+TAB");
                     if (blockListData && Object.keys(blockListData).length) {
                         const { parentData, indexToinsert } = blockListData;
                         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "SHIFT+TAB" });
+                        this.props.createElement(MANIFEST_LIST_ITEM, indexToinsert, { contentUrn: parentData?.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "SHIFT+TAB" });
                     }
                 } else {
                     // TAB key press handling for BlockList element
@@ -1489,13 +1498,13 @@ export class TinyMceEditor extends Component {
                         if (parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id !== id) { // If it is not the only point insdie the block list then only delete it.
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, this.props.asideData, {}, deleteItemIndex, {}, {}, null);
+                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, this.props.asideData, parentData?.contentUrn, deleteItemIndex, {}, {}, null);
                             getSelectedElement.setAttribute('placeholder', '');
                         }
                         if(parentData?.listitemdata?.bodymatter?.length > 1 && parentData?.listitemdata?.bodymatter[0].id === id && parentData?.listitemdata?.bodymatter[1].type === "element-authoredtext"){ // This case will delete the element only if the next element is a element authored text and it will ove the same next child to deleted position.
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, this.props.asideData, {}, deleteItemIndex, {}, {}, null);
+                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, this.props.asideData, parentData?.contentUrn, deleteItemIndex, {}, {}, null);
                             getSelectedElement.setAttribute('placeholder', '');
                         }
                     }
@@ -1518,7 +1527,7 @@ export class TinyMceEditor extends Component {
                         } else { //Deletes the text element in which backspace is pressed.
                             const deleteItemIndex = parentData?.listitemdata?.bodymatter.findIndex(listItem => listItem.id === id);
                             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, this.props.asideData, {}, deleteItemIndex, {}, {}, null);
+                            this.props.deleteElement(id, type, { contentUrn: parentData?.contentUrn }, this.props.asideData, parentData?.contentUrn, deleteItemIndex, {}, {}, null);
                             getSelectedElement.setAttribute('placeholder', '');
                         }
                     }
@@ -1535,7 +1544,7 @@ export class TinyMceEditor extends Component {
             if (blockListData && Object.keys(blockListData).length) {
                 const { parentData, indexToinsert } = blockListData;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
+                this.props.createElement(MANIFEST_LIST, indexToinsert, { contentUrn: parentData?.contentUrn }, this.props.asideData, null, null, null, null, { indexOrder: this.props.index, eventType: "TAB" });
             }
         }
     }
@@ -2362,8 +2371,12 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            let tempContent = testElement.innerText.replace(/&/g, "&amp;");
-            args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            if ((this.props?.element?.type === "element-authoredtext") && !this.props?.element?.elementdata?.headers && (this.props?.element?.elementdata?.designtype !== 'handwritingstyle')) {
+                args.content = handleTextToRetainFormatting(args.content, testElement)
+            } else {
+                let tempContent = testElement.innerText.replace(/&/g, "&amp;");
+                args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            }
         } else {
             args.content = tinymce.activeEditor.selection.getContent();
         }
@@ -2505,8 +2518,8 @@ export class TinyMceEditor extends Component {
      */
     handleIndent = (e, editor, content, type, selectedNode) => {
         let className = null;
-        let blockListData = isElementInsideBlocklist({index:this.props.index,data:this.props}, this.props.slateLevelData);
-        if(!blockListData){
+        const { isBlockList} = this.props
+        if(!isBlockList){
             if (type && type === 'stanza' && selectedNode) {
                 className = selectedNode.className;
             }
@@ -2520,7 +2533,7 @@ export class TinyMceEditor extends Component {
                 content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
             }
         }
-        if (blockListData) {
+        if (isBlockList) {
             content = content.replace(/40px\b/, "0px");
             setTimeout(() => {
                 this.createNestedBlockList();
@@ -2771,6 +2784,66 @@ export class TinyMceEditor extends Component {
         this.props.learningObjectiveOperations(text);
     }
 
+    // Handle Glossary for Subscript
+    handleGlossaryForSubscript = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let subTag = dfn.closest('sub');
+        if (subTag) {
+            dfn.innerHTML = '<sub>' + dfn.innerHTML + '</sub>'
+            if (subTag.textContent === dfn.textContent) {
+                let innerHTML = subTag.innerHTML;
+                subTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(subTag.parentNode, dfn);
+            }
+        }
+    }
+
+    // Handle Glossary for Superscript
+    handleGlossaryForSuperscript = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let supTag = dfn.closest('sup');
+        if (supTag) {
+            dfn.innerHTML = '<sup>' + dfn.innerHTML + '</sup>'
+            if (supTag.textContent === dfn.textContent) {
+                let innerHTML = supTag.innerHTML;
+                supTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(supTag.parentNode, dfn);
+            }
+        }
+    }
+
+    // Handle Glossary for Strikethrough
+    handleGlossaryForStrikethrough = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let sTag = dfn.closest('s');
+        if (sTag) {
+            dfn.innerHTML = '<s>' + dfn.innerHTML + '</s>'
+            if (sTag.textContent === dfn.textContent) {
+                let innerHTML = sTag.innerHTML;
+                sTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(sTag.parentNode, dfn);
+            }
+        }
+    }
+
+    // Handle Glossary for Underline
+    handleGlossaryForUnderline = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let uTag = dfn.closest('u');
+        if (uTag) {
+            dfn.innerHTML = '<u>' + dfn.innerHTML + '</u>'
+            if (uTag.textContent === dfn.textContent) {
+                let innerHTML = uTag.innerHTML;
+                uTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(uTag.parentNode, dfn);
+            }
+        }
+    }
+
     // Handle Glossary for Italic
     handleGlossaryForItalic = (activeElement, dataURIId) => {
         let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
@@ -2782,6 +2855,21 @@ export class TinyMceEditor extends Component {
                 emTag.outerHTML = innerHTML;
             } else {
                 spanHandlers.splitOnTag(emTag.parentNode, dfn);
+            }
+        }
+    }
+
+    // Handle Glossary for Bold
+    handleGlossaryForBold = (activeElement, dataURIId) => {
+        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
+        let strongTag = dfn.closest('strong');
+        if (strongTag) {
+            dfn.innerHTML = '<strong>' + dfn.innerHTML + '</strong>'
+            if (strongTag.textContent === dfn.textContent) {
+                let innerHTML = strongTag.innerHTML;
+                strongTag.outerHTML = innerHTML;
+            } else {
+                spanHandlers.splitOnTag(strongTag.parentNode, dfn);
             }
         }
     }
@@ -2872,7 +2960,7 @@ export class TinyMceEditor extends Component {
         }
         let selectedText = window.getSelection().toString()
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        this.glossaryTermText = selectedText;
+        // this.glossaryTermText = selectedText;
         if (selectedText.trim() === "") {
             return false
         }
@@ -2884,8 +2972,16 @@ export class TinyMceEditor extends Component {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
             editor.selection.setContent(insertionText);
+            this.handleGlossaryForSubscript(activeElement, res.data.id);
+            this.handleGlossaryForSuperscript(activeElement, res.data.id);
+            this.handleGlossaryForStrikethrough(activeElement, res.data.id);
+            this.handleGlossaryForUnderline(activeElement, res.data.id);
             this.handleGlossaryForItalic(activeElement, res.data.id);
+            this.handleGlossaryForBold(activeElement, res.data.id);
             this.handleGlossaryForCode(activeElement, res.data.id);
+            let dfn = activeElement.querySelector(`dfn[data-uri="${res.data.id}"]`);
+            // this.glossaryTermText = dfn.innerHTML
+            this.glossaryTermText = `<p>${dfn.innerHTML}</p>` || "<p></p>"
             this.toggleGlossaryandFootnotePopup(true, "Glossary", res.data && res.data.id || null, () => { this.toggleGlossaryandFootnoteIcon(true); });
             this.saveContent()
         })
@@ -2898,11 +2994,10 @@ export class TinyMceEditor extends Component {
         const { glossaryFootnoteValue, poetryField } = this.props;
         let { elementType, glossaryfootnoteid, type, elementSubType, glossaryTermText } = glossaryFootnoteValue;
         let typeWithPopup = this.props.element ? this.props.element.type : "";
-        let term = null;
+        let term = glossaryTermText;
         let definition = null;
-        let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
-        // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
-        term = `<p>${termText}</p>` || "<p></p>"
+        // commented after allowing flow of formatting tags from canvas to glossary term
+        // let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;'); 
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")

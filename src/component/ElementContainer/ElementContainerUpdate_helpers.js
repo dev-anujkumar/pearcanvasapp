@@ -164,7 +164,7 @@ export const updateElementInStore = (paramsObj) => {
                 }
             }
         }
-    } else if (parentElement && parentElement.type === "groupedcontent") {
+    } else if (parentElement && parentElement.type === "groupedcontent" && asideData?.type !== 'manifestlist') {
         const indexes = elementIndex.split("-")
         let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
         /** Updation of AutoNumbered Elements */
@@ -193,7 +193,7 @@ export const updateElementInStore = (paramsObj) => {
                 }
             }
         })
-    } else if(asideData?.parent?.type === "groupedcontent") {
+    } else if(asideData?.parent?.type === "groupedcontent" && asideData?.type !== 'manifestlist') {
         /** updation of aside and WE elements inside multicolumn */
         /* 2C:AS/WE:PS */
         const indexes = elementIndex?.split("-");
@@ -636,7 +636,21 @@ export const updateElementInStore = (paramsObj) => {
                     else{
                         _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
                     }
-                }// check the update of BL in Aside/WE header and according to the BL's length update the updated data
+                }else if(asideData.parent && asideData.parent.type==="groupedcontent" && asideData?.type === 'manifestlist'){
+                    if(indexes.length===5){
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                    }
+                    else if(indexes.length===7){
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                    }
+                    else if(indexes.length===9){
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                    }
+                    else{
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
+                    }
+                } // check the update of BL in multicolumn and according to the BL's length update the updated data
+                // check the update of BL in Aside/WE header and according to the BL's length update the updated data
                 else if( _slateBodyMatter[indexes[0]]?.type === "element-aside" && _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].type === "manifestlist"){
                     if(indexes.length===4){
                         _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]] = updatedData

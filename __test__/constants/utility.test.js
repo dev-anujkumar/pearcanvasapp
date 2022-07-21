@@ -5,7 +5,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-import {utility,matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom,labelValueForFiguretype,labelValue,Table, Equation , Exhibit,dropdownValueForFiguretype,dropdownList,subtype,preformattedtext,mathml,image,tableasmarkup, getCookieByName} from '../../src/constants/utility.js';
+import {utility,matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom,labelValueForFiguretype,labelValue,Table, Equation , Exhibit,dropdownValueForFiguretype,dropdownList,subtype,preformattedtext,mathml,image,tableasmarkup, getCookieByName, handleTextToRetainFormatting} from '../../src/constants/utility.js';
 import cypressConfig from '../../src/config/cypressConfig';
 import { newFigureObj } from '../../fixtures/ElementFigureTestingData.js';
 import { showHide } from '../../fixtures/ElementSHowHideData';
@@ -463,3 +463,48 @@ describe('-----Testing Function  dropdownValueForFiguretype ------------', () =>
         expect(getCookieByName(document.cookie)).toBe(null);
       })
 });
+
+describe('Testing Function - handleTextToRetainFormatting', () => {
+    it('Case 1', () => {
+        let htmlData = "<u>Why</u> do we use it? It is a long <strong><em><u>established</u></em></strong> fact that a <strong><em><s>reader</s></em></strong> will be <sup>distracted</sup> by the readable"
+        let elemData = '<div> <u>Why</u> do we use it? It is a long <strong><em><u>established</u></em></strong> fact that a <strong><em><s>reader</s></em></strong> will be <sup>distracted</sup> by the readable </div>'
+        let result = handleTextToRetainFormatting(htmlData, elemData);
+        expect(result).toBe("<u>Why</u> do we use it? It is a long <strong><em><u>established</u></em></strong> fact that a <strong><em><s>reader</s></em></strong> will be <sup>distracted</sup> by the readable");
+    })
+    it('Case 2', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<h1 class="heading1NummerEins"><em>Why</em> we use it?</h1> <p>do</p>';
+        let htmlData = '<h1 class="heading1NummerEins"><em>Why</em> we use it?</h1> <p>do</p>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        expect(result).toBe(' <em>Why</em> we use it? do');
+    })
+    it('Case 3 handleUnwantedFormattingTags', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>';
+        let htmlData = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        expect(result).toBe(' <em>Why</em> we use it? do  h  h3 h4 h5 h6  li ul ol ');
+    })
+    it('Case 4 handleUnwantedFormattingTags else', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<ol><em>we</em> use it hey</ol>';
+        let htmlData = '<ol>we use it hey</ol>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        expect(result).toBe('<em>we</em> use it hey ');
+    })
+    it('Case 5', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<h1 class="heading1NummerEins"><em>Why</em> <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello</h1> <p>do</p>';
+        let htmlData = '<h1 class="heading1NummerEins"><em>Why</em> <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello</h1> <p>do</p>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        expect(result).toBe(' <em>Why</em> <strong>we</strong> <em>use</em> <s>it</s> hello do');
+    })
+    it('Case 6 ', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<a>use it hey</a>';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<a>use it hey</a>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        expect(result).toBe('use it hey');
+    })
+})

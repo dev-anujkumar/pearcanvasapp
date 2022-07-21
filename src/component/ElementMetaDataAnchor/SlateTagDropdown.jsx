@@ -163,23 +163,22 @@ class SlateTagDropdown extends React.Component {
     };
     const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = [];
-    let defaultLF = "";
     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
-      defaultLF = this.props.projectLearningFrameworks.externalLF[0].urn; // Currently we are considering first LF as default
       this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
     }
     return {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo, defaultLF
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     }
   }
 
   /** Launch External LO Popup from Canvas*/
   launchExternalFrameworkPopup = (e) => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo, defaultLF
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     } = this.prepareExtFrameworkData();
 
     const currentSlateLF=this.props.currentSlateLF;
+    const defaultLF=this.props.defaultLF;
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
    if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
@@ -266,11 +265,12 @@ class SlateTagDropdown extends React.Component {
 
   openAssessmentExternalPopup = (popupType) => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs, defaultLF
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
     } = this.prepareExtFrameworkData();
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
     const currentSlateLF=this.props.currentSlateLF;
+    const defaultLF=this.props.defaultLF;
     let assessmentuRN="";
     let assessmentType="";
     let assessmentTypeLO="";
@@ -395,7 +395,8 @@ const mapStateToProps = (state) => {
         currentSlateLF:state.metadataReducer.currentSlateLF,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
-        lastAlignedExternalLO:state.metadataReducer.lastAlignedExternalLO
+        lastAlignedExternalLO:state.metadataReducer.lastAlignedExternalLO,
+        defaultLF: state.metadataReducer.defaultLF
     }
 }
 const mapActionToProps = {
