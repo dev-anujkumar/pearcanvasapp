@@ -186,6 +186,7 @@ export const UPDATE_LOB_WORKFLOW = 'UPDATE_LOB_WORKFLOW'
 export const OEP_DISCUSSION = 'onlineenglishproficiency'
 export const PROJECT_LOB_LIST = "PROJECT_LOB_LIST";
 export const NO_DISCUSSION_ITEMS = "NO_DISCUSSION_ITEMS";
+export const DEFAULT_LF = 'DEFAULT_LF'
 
 export const UPDATE_CARET_OFFSET = 'UPDATE_CARET_OFFSET';
 
