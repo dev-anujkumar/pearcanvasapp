@@ -2371,7 +2371,7 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            if ((this.props?.element?.type === "element-authoredtext") && !this.props?.element?.elementdata?.headers && (this.props?.element?.elementdata?.designtype !== 'handwritingstyle')) {
+            if ((this.props?.element?.type === "element-authoredtext") && !this.props?.element?.elementdata?.headers && (this.props?.element?.elementdata?.designtype !== 'handwritingstyle') && this.props?.asideData?.type !== "manifestlist") {
                 args.content = handleTextToRetainFormatting(args.content, testElement)
             } else {
                 let tempContent = testElement.innerText.replace(/&/g, "&amp;");
