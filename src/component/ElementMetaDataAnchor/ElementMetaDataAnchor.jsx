@@ -149,21 +149,20 @@ export class ElementMetaDataAnchor extends Component {
     };
     const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = [];
-    let defaultLF = "";
     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
-      defaultLF = this.props.projectLearningFrameworks.externalLF[0].urn; // Currently we are considering first LF as default
       this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
     }
     return {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo,defaultLF
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     }
   }
 
   launchExternalFrameworkPopup = () => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo,defaultLF
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     } = this.prepareExtFrameworkData();
     const currentSlateLF=this.props.currentSlateLF;
+    const defaultLF=this.props.defaultLF;
       sendDataToIframe({
         'type': OpenLOPopup,
         'message': {
@@ -209,7 +208,8 @@ const mapStateToProps = (state) => {
     currentSlateLOData: state.metadataReducer.currentSlateLOData,
     lastAlignedExternalLO: state.metadataReducer.lastAlignedExternalLO,
     currentSlateLODataMath: state.metadataReducer.currentSlateLODataMath,
-    projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
+    projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
+    defaultLF: state.metadataReducer.defaultLF
   }
 }
 export default connect(mapStateToProps)(ElementMetaDataAnchor);

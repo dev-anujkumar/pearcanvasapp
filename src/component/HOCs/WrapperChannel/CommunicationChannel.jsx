@@ -149,6 +149,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.fetchProjectLFs()
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
                     this.props.fetchUserLocation() 
+                    this.props.fetchDefaultLF(message.defaultLearningFramework)
                     break;
                 case 'permissionsDetails':
                     this.handlePermissioning(message);
@@ -401,7 +402,7 @@ function CommunicationChannel(WrappedComponent) {
             This Function is used to get AssessmentData For Aligned Willow Framework
          */
         getAssessmentForWillowAlignment = () => {
-            const {currentSlateLOData, projectLearningFrameworks, currentSlateLF } = this.props
+            const {currentSlateLOData, projectLearningFrameworks, currentSlateLF, defaultLF } = this.props
             let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             let apiKeys_LO = {
                 'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
@@ -412,9 +413,7 @@ function CommunicationChannel(WrappedComponent) {
                 'myCloudProxySession': config.myCloudProxySession
             };
             let externalLFUrn = [];
-            let defaultLF = "";
             if (projectLearningFrameworks?.externalLF?.length) {
-                defaultLF = projectLearningFrameworks.externalLF[0].urn; // Currently we are considering first LF as default
                 projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
             }
             let assessmentuRN = "";

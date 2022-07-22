@@ -24,7 +24,7 @@ import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
-import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType,updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
+import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType,updateLastAlignedLO, fetchDefaultLF } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
 import { fetchAudioNarrationForContainer ,audioGlossaryPopup, saveDataFromAlfresco, showWrongAudioPopup} from '../AudioNarration/AudioNarration_Actions'
@@ -276,7 +276,8 @@ const mapStateToProps = state => {
         markedIndexGlossary: state.markedIndexReducer.markedIndexGlossary,
         alfrescoReducer: state.alfrescoReducer,
         currentSlateAncestorData: state.appStore.currentSlateAncestorData,
-        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks
+        projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
+        defaultLF: state.metadataReducer.defaultLF
     };
 };
 
@@ -348,5 +349,6 @@ export default connect(
         savePopupParentSlateData,
         fetchLOBList,
         fetchUserLocation,
+        fetchDefaultLF
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
