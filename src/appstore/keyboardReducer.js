@@ -1,10 +1,9 @@
-
+import {SELECT_ELEMENT} from "../constants/Action_Constants";
 const initialState =  {
     selectedElement: 'cypress-keyboard-1',
     cursorPosition : 0,
     elementList : []
 }
-const SELECT_ELEMENT = 'SELECT_ELEMENT';
 export const selectElement = (elementId) => ({
     type: SELECT_ELEMENT,
     payload: elementId
