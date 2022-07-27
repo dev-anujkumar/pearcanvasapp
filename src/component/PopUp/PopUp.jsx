@@ -201,7 +201,7 @@ class PopUp extends React.Component {
             }
         } else if (e.keyCode === 39 && this.state.focusedButton === SECONDARY_BUTTON) {
             const element = document.querySelector(`[option=${PRIMARY_BUTTON}]`)
-            if(element && element?.classList) {
+            if(element && element?.classList && !element.classList.contains('disabled')) {
                 this.setState({
                     focusedButton: PRIMARY_BUTTON
                 })
