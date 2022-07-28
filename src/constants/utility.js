@@ -839,3 +839,10 @@ export const handleTextToRetainFormatting = (pastedContent, testElement) => {
     }
     return pastedContent;
 }
+
+// function to handle tinymce editor plugins based on config variable values
+export const handleTinymceEditorPlugins = (plugins) => {
+    let editorPlugins = plugins;
+    if (config.ENABLE_WIRIS_PLUGIN) editorPlugins = `${editorPlugins} tiny_mce_wiris`;
+    return editorPlugins;
+}

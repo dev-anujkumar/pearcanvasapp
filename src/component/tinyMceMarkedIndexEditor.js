@@ -6,7 +6,7 @@ import { GlossaryFootnoteEditorConfig } from '../config/EditorConfig';
 import {
   tinymceFormulaIcon, tinymceFormulaChemistryIcon, bold, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, code
 } from '../images/TinyMce/TinyMce.jsx';
-import { hasReviewerRole, hasProjectPermission } from '../constants/utility.js'
+import { hasReviewerRole, hasProjectPermission, handleTinymceEditorPlugins } from '../constants/utility.js'
 import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import { getWirisAltText } from '../js/utils';
 import { setFormattingToolbar } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
@@ -24,7 +24,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     this.editorConfig = {
       toolbar: GlossaryFootnoteEditorConfig.toolbar,
       formats: GlossaryFootnoteEditorConfig.formats,
-      plugins: "placeholder tiny_mce_wiris paste",
+      plugins: handleTinymceEditorPlugins("placeholder paste"),
       menubar: false,
       selector: '#markedindex-0',
       inline: true,
