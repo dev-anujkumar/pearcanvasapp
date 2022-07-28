@@ -9,9 +9,10 @@ import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 
 const BlockMathCode = (props) => {
     let { processedText, posterText } = props?.figureTypeData
+    const replacePosterText = posterText?.replace("<p>", '')?.replace("</p>", '');
     let elementType = props?.model?.figuretype
     let { divClass, placeHolder, tagName, tinyMceClass } = BLOCK_MATH_CODE_CLASSES[`${elementType}`]
-    let model = (elementType === BLOCK_CODE ? processedText : posterText);
+    let model = (elementType === BLOCK_CODE ? processedText : replacePosterText);
 
     return (
         <KeyboardWrapper index={`${props.index}-3`} enable={props.isEnableKeyboard}>
