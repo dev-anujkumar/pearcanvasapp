@@ -597,10 +597,3 @@ margin-left:6px;
       left: -515px;
     }
   }
-
-.disbable-audio {
-  pointer-events: none;
-  opacity: 0.6;
-  cursor: not-allowed;
-  color: gray;
-}
