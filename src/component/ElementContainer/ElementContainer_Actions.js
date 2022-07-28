@@ -233,6 +233,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             showHideObj
         }
         processAndStoreUpdatedResponse(updateArgs)
+        config.isPreviousLOAssociation = updatedData1?.elementdata?.loAssocation ?? config.isPreviousLOAssociation;
     }
     catch(error) {
         dispatch({type: ERROR_POPUP, payload:{show: true}})

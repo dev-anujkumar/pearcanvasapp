@@ -13,7 +13,7 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
-import { ALREADY_USED_SLATE_TOC } from '../../SlateWrapper/SlateWrapperConstants'
+import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../../constants/Element_Constants.js';
 import { SLATE_TYPE_PDF, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -202,8 +202,19 @@ function CommunicationChannel(WrappedComponent) {
                         showBlocker: false
                     });
                     if(message.hasOwnProperty('slateTagEnabled')){
+                        config.isPreviousLOAssociation = this.props.isSlateTagEnable
+                        let dataToSend = this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
                         let messageData = {assessmentResponseMsg:message.slateTagEnabled}
                         this.props.isLOExist(messageData);
+                        if (config.parentEntityUrn !== ("Front Matter" || "Back Matter") && config.slateType == "assessment" && dataToSend?.elementdata && config.isPreviousLOAssociation !== message.slateTagEnabled) {
+                                dataToSend.inputType = ELEMENT_ASSESSMENT,
+                                dataToSend.inputSubType = "NA",
+                                dataToSend.index = "0",
+                                dataToSend.elementParentEntityUrn = config.slateEntityURN,
+                                dataToSend.elementdata.loAssociation = message.slateTagEnabled,
+                                dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
+                                this.props.updateElement(dataToSend, 0 );
+                        }
                     }
                     break;
                 case 'slatePreview':
@@ -392,7 +403,7 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 }
                 case "getAssessmentData":
-                    this.getAssessmentForWillowAlignment();
+                    this.getAssessmentForWillowAlignment(message);
                     break;
             }
         }
@@ -401,7 +412,7 @@ function CommunicationChannel(WrappedComponent) {
         /**
             This Function is used to get AssessmentData For Aligned Willow Framework
          */
-        getAssessmentForWillowAlignment = () => {
+        getAssessmentForWillowAlignment = (message) => {
             const {currentSlateLOData, projectLearningFrameworks, currentSlateLF, defaultLF } = this.props
             let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             let apiKeys_LO = {
@@ -451,12 +462,12 @@ function CommunicationChannel(WrappedComponent) {
                     'isLOExist': true,
                     'editAction': '',
                     'selectedLOs': currentSlateLOData,
-                    'apiConstants': apiKeys_LO,
+                    'apiConstants': message.apiKeys_LO ?? apiKeys_LO,
                     'externalLFUrn': externalLFUrn,
                     'currentSlateId': slateManifestURN,
                     'chapterContainerUrn': '',
                     'currentSlateLF': currentSlateLF,
-                    'assessmentUrn': config.assessmentId,
+                    'assessmentUrn': message.assessmentUrn ?? config.assessmentId,
                     'previewData': previewData,
                     'defaultLF': defaultLF
                 }

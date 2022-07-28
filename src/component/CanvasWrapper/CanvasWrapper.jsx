@@ -277,7 +277,8 @@ const mapStateToProps = state => {
         alfrescoReducer: state.alfrescoReducer,
         currentSlateAncestorData: state.appStore.currentSlateAncestorData,
         projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
-        defaultLF: state.metadataReducer.defaultLF
+        defaultLF: state.metadataReducer.defaultLF,
+        isSlateTagEnable: state.metadataReducer.slateTagEnable,
     };
 };
 

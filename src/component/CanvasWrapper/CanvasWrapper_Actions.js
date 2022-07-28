@@ -652,13 +652,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             }
         }
         if(config.slateType == "assessment"){
-                let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
-                    sendDataToIframe({
-                        'type': "UpdatedAssessmentId",
-                        'message': {currentAssessmentId: slateBodymatter[0].elementdata.assessmentid}
-                    })
-                    config.assessmentId= slateBodymatter[0].elementdata.assessmentid
-                }
+            let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
+                sendDataToIframe({
+                    'type': "UpdatedAssessmentId",
+                    'message': {currentAssessmentId: slateBodymatter[0].elementdata.assessmentid}
+                })
+                config.assessmentId= slateBodymatter[0].elementdata.assessmentid
+            }
         /** ---- Check if current slate is Double Spread PDF ---- */
         const isCypressPlusProject = getState()?.appStore?.isCypressPlusEnabled
         if (isCypressPlusProject && config.slateType == 'pdfslate' && slateData && slateData.data[newVersionManifestId]) {
