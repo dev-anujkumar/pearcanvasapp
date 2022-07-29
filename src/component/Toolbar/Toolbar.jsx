@@ -137,7 +137,7 @@ const _Toolbar = props => {
                     (props.addAudio && (!hasReviewerRole())) &&
                     <div className={isToolBarBlocked ? `audio-block ${accessToolbar} ${isToolBarBlocked}` : `audio-block ${accessToolbar}`}>
                         <div className="audioicon">
-                            <div className="audio audioicon" title="Audio Tag" onClick={() => {
+                            <div className={`audio audioicon ${config.isCypressPlusEnabled ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
                                 if (checkSlateLock(props.slateLockInfo)) {
                                     return false
                                 }
@@ -158,7 +158,7 @@ const _Toolbar = props => {
                     (props.openAudio) &&
                     <div className="audio-block">
                         <div className="audioicon">
-                            <div className="audio audioicon" title="Audio Tag" onClick={() => {
+                            <div className={`audio audioicon ${config.isCypressPlusEnabled ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
                                 if (checkSlateLock(props.slateLockInfo)) {
                                     return false
                                 }
