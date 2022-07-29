@@ -57,7 +57,7 @@ jest.mock('../../../src/constants/utility.js',()=>{
             })
         },
         removeUnoClass: () => {
-            return jest.fn()
+            return {replace: jest.fn()}
         },
         dropdownValueAtIntialize: () => {
             return jest.fn()
