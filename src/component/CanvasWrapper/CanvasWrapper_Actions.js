@@ -651,7 +651,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
         }
-        if(config.slateType == "assessment"){
+        if(config.slateType == "assessment" && newVersionManifestId && slateData?.data[newVersionManifestId] && slateData?.data[newVersionManifestId]?.contents?.bodymatter[0]?.elementdata){
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
                 config.assessmentId= slateBodymatter[0].elementdata.assessmentid
             }
