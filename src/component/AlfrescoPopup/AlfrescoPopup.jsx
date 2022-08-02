@@ -197,7 +197,9 @@ function AlfrescoPopup(props) {
                         MenuProps={MenuProps}
                         onClose={() => {
                             setTimeout(() => {
-                                document.activeElement.blur();
+                                if (document && document.activeElement) {
+                                    document.activeElement.blur();
+                                }
                             }, 0)
                         }}
                     >
