@@ -115,7 +115,7 @@ class SlateTagDropdown extends React.Component {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': true, 'apiConstants': apiKeys_LO } })
         }
         else if (e.target.innerText == AddLearningObjectiveAssessmentDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys_LO,'assessmentUrn':config.assessmentId, 'previewData': previewData } })
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys_LO,'assessmentUrn':config.assessmentId ?? assessmentuRN, 'previewData': previewData } })
         }
         else if (e.target.innerText == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO } })
@@ -312,7 +312,7 @@ class SlateTagDropdown extends React.Component {
             'currentSlateId': slateManifestURN,
             'chapterContainerUrn': '',
             'currentSlateLF': currentSlateLF,
-            'assessmentUrn':  config.assessmentId,
+            'assessmentUrn':  config.assessmentId ?? assessmentuRN,
             'previewData': previewData,
             'defaultLF': defaultLF
         }
@@ -332,7 +332,7 @@ class SlateTagDropdown extends React.Component {
             'currentSlateId': slateManifestURN,
             'chapterContainerUrn': '',
             'currentSlateLF': currentSlateLF,
-            'assessmentUrn': config.assessmentId,
+            'assessmentUrn': config.assessmentId ?? assessmentuRN,
             'previewData': previewData,
             'projectSharingRole': projectSharingRole,
             'isSubscribed': isSubscribed
