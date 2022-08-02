@@ -207,7 +207,7 @@ function CommunicationChannel(WrappedComponent) {
                         let messageData = {assessmentResponseMsg:message.slateTagEnabled}
                         this.props.isLOExist(messageData);
                         if (config.parentEntityUrn !== ("Front Matter" || "Back Matter") && config.slateType === "assessment") {
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { AssessmentSlateTagStatus : message.slateTagEnabled } });
+                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { AssessmentSlateTagStatus : message.slateTagEnabled, assessmentId: config.assessmentId } });
                             if(dataToSend?.elementdata && config.isPreviousLOAssociation !== message.slateTagEnabled){
                                 dataToSend.inputType = ELEMENT_ASSESSMENT,
                                 dataToSend.inputSubType = "NA",
