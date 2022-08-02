@@ -85,7 +85,7 @@ function AlfrescoPopup(props) {
 
     /**Function to handle keyboard event of Enter, Left & Right arrow keys */
     const handleKeyDown = (e) => {
-        if(e.keyCode === 13 && menuRef.current === null) {
+        if(e.keyCode === 13 && (menuRef && !menuRef.current)) {
             clickElement(focusedButton.current);
         }
         if(e.keyCode === 27) {
@@ -95,7 +95,7 @@ function AlfrescoPopup(props) {
             setFocusedButton(SECONDARY_BUTTON);
             blurElement(primaryButton.current, PRIMARY_BUTTON);
             focusElement(secondaryButton.current, SECONDARY_BUTTON);
-        } else if (e.keyCode === 39 && focusedButton.current === SECONDARY_BUTTON && (primaryButton && primaryButton.current && !primaryButton.current.classList.contains('disable'))) {
+        } else if (e.keyCode === 39 && focusedButton.current === SECONDARY_BUTTON && (primaryButton && primaryButton.current && primaryButton.current.classList && !primaryButton.current.classList.contains('disable'))) {
             setFocusedButton(PRIMARY_BUTTON);
             blurElement(secondaryButton.current, SECONDARY_BUTTON);
             focusElement(primaryButton.current, PRIMARY_BUTTON);
