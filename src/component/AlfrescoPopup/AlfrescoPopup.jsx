@@ -89,11 +89,11 @@ function AlfrescoPopup(props) {
             clickElement(focusedButton.current);
         } else if (e.keyCode === 27) {
             clickElement(SECONDARY_BUTTON);
-        } else if (e.keyCode === 37 && focusedButton.current === PRIMARY_BUTTON) {
+        } else if (e.keyCode === 37 && focusedButton && focusedButton.current && focusedButton.current === PRIMARY_BUTTON) {
             setFocusedButton(SECONDARY_BUTTON);
             blurElement(primaryButton.current, PRIMARY_BUTTON);
             focusElement(secondaryButton.current, SECONDARY_BUTTON);
-        } else if (e.keyCode === 39 && focusedButton.current === SECONDARY_BUTTON && (primaryButton && primaryButton.current && primaryButton.current.classList && !primaryButton.current.classList.contains('disable'))) {
+        } else if (e.keyCode === 39 && focusedButton && focusedButton.current && focusedButton.current === SECONDARY_BUTTON && (primaryButton && primaryButton.current && primaryButton.current.classList && !primaryButton.current.classList.contains('disable'))) {
             setFocusedButton(PRIMARY_BUTTON);
             blurElement(secondaryButton.current, SECONDARY_BUTTON);
             focusElement(primaryButton.current, PRIMARY_BUTTON);
