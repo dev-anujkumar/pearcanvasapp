@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import AlfrescoPopup from "../../../src/component/AlfrescoPopup/AlfrescoPopup.jsx";
+import Select from '@material-ui/core/Select';
 
 //Constants
 const PRIMARY_BUTTON = "primary";
@@ -37,7 +38,9 @@ let initialState = {
         locationData: "",
         calledFromGlossaryFootnote: false,
         calledFromImageGlossaryFootnote: false
-    }
+    },
+    alfrescoPopup: jest.fn(),
+    saveSelectedAlfrescoElement: jest.fn()
 }
 
 describe('Testing AlfrescoPopup component', () => {
@@ -55,7 +58,9 @@ describe('Testing AlfrescoPopup component', () => {
             width: 360,
             height: 208
         },
-        handleCloseAlfrescoPicker: jest.fn()
+        handleCloseAlfrescoPicker: jest.fn(),
+        alfrescoPopup: jest.fn(),
+        saveSelectedAlfrescoElement: jest.fn()
     }
 
     it('AlfrescoPopup Container', () => {
@@ -98,5 +103,18 @@ describe('Testing AlfrescoPopup component', () => {
             document.dispatchEvent(event);
             expect(spy).toBeCalled();
         });
+        it('AlfrescoPopup handleClose',() => {
+            const mockFn = jest.fn()
+            const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);
+            const button = wrapper.find('button.secondary').at(0)
+            button.simulate('click')
+            expect(mockFn).toBeTruthy()
+        })
+        it('AlfrescoPopup handleChange',() => {
+            const handleChange = jest.fn()
+            const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);
+            wrapper.find(Select).at(0).props().onChange({ target: { value: 'c5-media-poc' } });
+            expect(handleChange).toBeTruthy();
+        })
     });
 });
