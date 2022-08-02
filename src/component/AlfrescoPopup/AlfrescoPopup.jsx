@@ -87,11 +87,9 @@ function AlfrescoPopup(props) {
     const handleKeyDown = (e) => {
         if(e.keyCode === 13 && (menuRef && !menuRef.current)) {
             clickElement(focusedButton.current);
-        }
-        if(e.keyCode === 27) {
+        } else if (e.keyCode === 27) {
             clickElement(SECONDARY_BUTTON);
-        }
-        if (e.keyCode === 37 && focusedButton.current === PRIMARY_BUTTON) {
+        } else if (e.keyCode === 37 && focusedButton.current === PRIMARY_BUTTON) {
             setFocusedButton(SECONDARY_BUTTON);
             blurElement(primaryButton.current, PRIMARY_BUTTON);
             focusElement(secondaryButton.current, SECONDARY_BUTTON);
