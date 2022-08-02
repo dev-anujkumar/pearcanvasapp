@@ -50,6 +50,7 @@ function AlfrescoPopup(props) {
     const focusedButton = useRef(SECONDARY_BUTTON);
     const primaryButton = useRef(null);
     const secondaryButton = useRef(null);
+    const menuRef = useRef(null);
 
     useEffect(() => {
         /** Add Event Listner on Popup Buttons */
@@ -84,17 +85,15 @@ function AlfrescoPopup(props) {
 
     /**Function to handle keyboard event of Enter, Left & Right arrow keys */
     const handleKeyDown = (e) => {
-        if(e.keyCode === 13) {
+        if(e.keyCode === 13 && (menuRef && !menuRef.current)) {
             clickElement(focusedButton.current);
-        }
-        if(e.keyCode === 27) {
+        } else if (e.keyCode === 27) {
             clickElement(SECONDARY_BUTTON);
-        }
-        if (e.keyCode === 37 && focusedButton.current === PRIMARY_BUTTON) {
+        } else if (e.keyCode === 37 && focusedButton && focusedButton.current && focusedButton.current === PRIMARY_BUTTON) {
             setFocusedButton(SECONDARY_BUTTON);
             blurElement(primaryButton.current, PRIMARY_BUTTON);
             focusElement(secondaryButton.current, SECONDARY_BUTTON);
-        } else if (e.keyCode === 39 && focusedButton.current === SECONDARY_BUTTON) {
+        } else if (e.keyCode === 39 && focusedButton && focusedButton.current && focusedButton.current === SECONDARY_BUTTON && (primaryButton && primaryButton.current && primaryButton.current.classList && !primaryButton.current.classList.contains('disable'))) {
             setFocusedButton(PRIMARY_BUTTON);
             blurElement(secondaryButton.current, SECONDARY_BUTTON);
             focusElement(primaryButton.current, PRIMARY_BUTTON);
@@ -196,9 +195,17 @@ function AlfrescoPopup(props) {
                         labelId="filled-age-native-simple"
                         IconComponent={ExpandMoreIcon}
                         MenuProps={MenuProps}
+                        onClose={() => {
+                            setTimeout(() => {
+                                if (document && document.activeElement) {
+                                    document.activeElement.blur();
+                                }
+                            }, 0)
+                        }}
                     >
                         {props.alfrescoListOption.map((values, index) => (
                         <MenuItem 
+                            ref={menuRef} 
                             key={index} 
                             value={values.entry.id}
                             className={classes.dropdownItem}
@@ -212,8 +219,7 @@ function AlfrescoPopup(props) {
                         id={PRIMARY_BUTTON}
                         ref={primaryButton}
                         variant="outlined"
-                        disabled={selectedOption === ''}
-                        className={getPrimaryButtonClass(selectedOption, focusedButton.current)}
+                        className={`select-button ${selectedOption !== '' ? '' : 'disable'}`}
                         onClick={sendSelectedData}>
                         Select
                     </Button>
