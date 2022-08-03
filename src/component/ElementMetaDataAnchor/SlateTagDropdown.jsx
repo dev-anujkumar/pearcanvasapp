@@ -294,7 +294,8 @@ class SlateTagDropdown extends React.Component {
         previewUrl:config.PREVIEW_ASSESSMENT_LO_ENDPOINT,
         bookId: config.citeUrn,
         assessmentUrn:assessmentuRN,
-        assessmentType: assessmentTypeLO
+        assessmentType: assessmentTypeLO,
+        projectEntityUrn:config.projectEntityUrn
     }
     sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
     sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
