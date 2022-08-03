@@ -207,14 +207,15 @@ function CommunicationChannel(WrappedComponent) {
                         let messageData = {assessmentResponseMsg:message.slateTagEnabled}
                         this.props.isLOExist(messageData);
                         if (config.parentEntityUrn !== ("Front Matter" || "Back Matter") && config.slateType === "assessment") {
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { AssessmentSlateTagStatus : message.slateTagEnabled, assessmentId: config.assessmentId } });
-                            if(dataToSend?.elementdata && config.isPreviousLOAssociation !== message.slateTagEnabled){
-                                dataToSend.inputType = ELEMENT_ASSESSMENT,
-                                dataToSend.inputSubType = "NA",
-                                dataToSend.index = "0",
-                                dataToSend.elementParentEntityUrn = config.slateEntityURN,
-                                dataToSend.elementdata.loAssociation = message.slateTagEnabled,
-                                dataToSend.slateVersionUrn = config.slateManifestURN,
+                            let assessmentUrn = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ?? config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled } });
+                            if(dataToSend?.elementdata){
+                                dataToSend.inputType = ELEMENT_ASSESSMENT
+                                dataToSend.inputSubType = "NA"
+                                dataToSend.index = "0"
+                                dataToSend.elementParentEntityUrn = config.slateEntityURN
+                                dataToSend.elementdata.loAssociation = message.slateTagEnabled
+                                dataToSend.slateVersionUrn = config.slateManifestURN
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
                                 this.props.updateElement(dataToSend, 0 );
                             }
