@@ -102,6 +102,7 @@ let cypressConfig = {
     updateInlineImage: false,
     figureDataToBeFetched:false,
     parentOfParentItem:[],
+    assessmentId: "",
 }
 
 

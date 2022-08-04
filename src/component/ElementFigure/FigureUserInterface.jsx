@@ -549,6 +549,8 @@ class FigureUserInterface extends Component {
         let captionsHtml = removeUnoClass(element.html?.captions);
         let creditsHtml = removeUnoClass(element.html?.credits);
 
+        captionsHtml = captionsHtml?.replace("<p>", '')?.replace("</p>", '');
+        creditsHtml = creditsHtml?.replace("<p>", '')?.replace("</p>", '');
         return (
             <div className="figureElement">
                 <div className='figure-image-wrapper'>

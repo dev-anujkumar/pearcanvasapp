@@ -233,6 +233,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             showHideObj
         }
         processAndStoreUpdatedResponse(updateArgs)
+        config.assessmentId = response?.data?.elementdata?.assessmentId ?? ''
     }
     catch(error) {
         dispatch({type: ERROR_POPUP, payload:{show: true}})

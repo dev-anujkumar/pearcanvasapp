@@ -153,6 +153,7 @@ export const ELM_NEW_ITEM_DATA = "ELM_NEW_ITEM_DATA"
 export const SET_USAGE_TYPE = "SET_USAGE_TYPE"
 export const SET_INTERACTIVE_METADATA = "SET_INTERACTIVE_METADATA"
 export const SET_ELM_PICKER_MSG = "SET_ELM_PICKER_MSG"
+export const SELECT_ELEMENT = 'SELECT_ELEMENT'
 /* --------------- Selection Constants ------------------------*/
 export const SET_SELECTION = 'SET_SELECTION'
 
@@ -186,6 +187,7 @@ export const UPDATE_LOB_WORKFLOW = 'UPDATE_LOB_WORKFLOW'
 export const OEP_DISCUSSION = 'onlineenglishproficiency'
 export const PROJECT_LOB_LIST = "PROJECT_LOB_LIST";
 export const NO_DISCUSSION_ITEMS = "NO_DISCUSSION_ITEMS";
+export const DEFAULT_LF = 'DEFAULT_LF'
 
 export const UPDATE_CARET_OFFSET = 'UPDATE_CARET_OFFSET';
 

@@ -14,6 +14,8 @@ import {
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent, fetchAssessmentItems } from './assessmentActions.js';
 import { hideBlocker} from '../../../js/toggleLoader';
+import { sendDataToIframe } from '../../../constants/utility.js';
+import config from '../../../config/config.js';
 const AssessmentAPIHandlers = {
     /** @description This function prepares list of Assessment UsageTypes from api-response */
     prepareUsageTypeData: (res) => {
@@ -374,6 +376,10 @@ const AssessmentAPIHandlers = {
                 currentWorkUrn: currentWorkUrn,
                 dataForUpdate: dataForUpdate
             }
+        })
+        sendDataToIframe({
+            'type': 'newAssessmentDetails',
+            'message': { assessmentId: currentWorkUrn, containerUrn: config.slateManifestURN}
         })
     },
     /** @description This function dispatches latest metadata for interactive to store */

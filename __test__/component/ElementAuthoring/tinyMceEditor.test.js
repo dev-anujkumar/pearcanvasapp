@@ -9563,6 +9563,1638 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
             expect(spyFN).toHaveBeenCalled();
         })
     })
+    it('Test-X-Method--handleGlossaryForBold if', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'strong') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test",
+                    textContent: "test",
+                    outerHTML: "<p>test</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForBold');
+        instance2.handleGlossaryForBold(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForBold else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'strong') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForBold');
+        instance2.handleGlossaryForBold(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForBold else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'strong') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return false
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForBold');
+        instance2.handleGlossaryForBold(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForUnderline if', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'u') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test",
+                    textContent: "test",
+                    outerHTML: "<p>test</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForUnderline');
+        instance2.handleGlossaryForUnderline(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForUnderline else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'u') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForUnderline');
+        instance2.handleGlossaryForUnderline(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForUnderline else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'u') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return false
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForUnderline');
+        instance2.handleGlossaryForUnderline(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForStrikethrough if', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 's') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test",
+                    textContent: "test",
+                    outerHTML: "<p>test</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForStrikethrough');
+        instance2.handleGlossaryForStrikethrough(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForStrikethrough else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 's') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForStrikethrough');
+        instance2.handleGlossaryForStrikethrough(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForStrikethrough else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 's') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return false
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForStrikethrough');
+        instance2.handleGlossaryForStrikethrough(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForSuperscript if', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'sup') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test",
+                    textContent: "test",
+                    outerHTML: "<p>test</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSuperscript');
+        instance2.handleGlossaryForSuperscript(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForSuperscript else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'sup') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSuperscript');
+        instance2.handleGlossaryForSuperscript(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForSuperscript else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'sup') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return false
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSuperscript');
+        instance2.handleGlossaryForSuperscript(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForSubscript if', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'sub') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test",
+                    textContent: "test",
+                    outerHTML: "<p>test</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSubscript');
+        instance2.handleGlossaryForSubscript(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForSubscript else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'sub') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSubscript');
+        instance2.handleGlossaryForSubscript(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleGlossaryForSubscript else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'sub') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return false
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSubscript');
+        instance2.handleGlossaryForSubscript(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleMarkedIndexForItalic if', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'em') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test",
+                    textContent: "test",
+                    outerHTML: "<p>test</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleMarkedIndexForItalic');
+        instance2.handleMarkedIndexForItalic(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleMarkedIndexForItalic else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'em') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return {
+                            textContent: "test",
+                            innerHTML: "test",
+                            outerHTML: "<p>test</p>"
+                        }
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleMarkedIndexForItalic');
+        instance2.handleMarkedIndexForItalic(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
+    it('Test-X-Method--handleMarkedIndexForItalic else', () => {
+        let event = {
+            target: {
+                getContent: () => {
+                    return "Test"
+                }
+            },
+            command: 'outdent',
+            preventDefault: () => { }
+        }
+        let newEditor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: (elem) => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
+            },
+            selection: selectEditor,
+            dom: domObj,
+            ui: {
+                registry: {
+                    addToggleButton: (sel, cbObj) => {
+                        if (sel === 'em') {
+                            cbObj.onSetup({ setActive: () => { } });
+                            cbObj.onAction();
+                        }
+                    }
+                }
+            },
+            undoManager: {
+                transact: (cb) => cb()
+            },
+            setContent: () => { },
+        }
+        tinymce.$ = () => {
+            return {
+                each: (cb) => { cb() },
+                find: () => {
+                    return {
+                        length: 2,
+                        each: (cb) => { cb() },
+                        removeClass: () => { },
+                        append: () => { },
+                        remove: () => { },
+                        attr: () => {
+                            return {
+                                attr: () => { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        config.toolBarList = ['undo']
+        document.createElement = () => {
+            return {
+                className: () => { },
+                innerText: () => { }
+            }
+        }
+        let activeElement = {
+            querySelector : () => {
+                return {
+                    innerHTML: "test1",
+                    textContent: "test1",
+                    outerHTML: "<p>test1</p>",
+                    closest: () => {
+                        return false
+                    }
+                }
+            }
+        }
+        const spyFN = jest.spyOn(instance2, 'handleMarkedIndexForItalic');
+        instance2.handleMarkedIndexForItalic(activeElement, "testid");
+        expect(spyFN).toHaveBeenCalled();
+    })
 }); 
 describe('------------------------------Test TINY_MCE_EDITOR case: Heading 4------------------------------', () => {
     let editor = {

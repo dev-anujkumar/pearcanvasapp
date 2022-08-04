@@ -235,13 +235,13 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
             const indexes = index.split("-");
             let parentElement = data?.asideData?.parent;
 
-            if (parentElement && parentElement.type === "showhide" && data.asideData.parentManifestList) {
+            if ((parentElement && parentElement.type === "showhide" && data.asideData.parentManifestList) || (config.isPopupSlate && parentElement?.type === "showhide")) {
                 return true;
-            }if(contents?.bodymatter[indexes[0]]?.type === "element-aside" && data?.asideData?.type === 'manifestlist')
+            }if((contents?.bodymatter[indexes[0]]?.type === "element-aside" && data?.asideData?.type === 'manifestlist') || (config.isPopupSlate && parentElement?.type === 'element-aside'))
                 return true
-            if (parentElement && parentElement.type === "groupedcontent" && data.asideData.parentManifestList)
+            if ((parentElement && parentElement.type === "groupedcontent" && data.asideData.parentManifestList) || (config.isPopupSlate && parentElement?.type === "groupedcontent"))
                 return true;  
-            if (indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) {
+            if ((indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) ||  (config.isPopupSlate && data?.asideData?.type === MANIFEST_LIST)) {
                 return true;
             }
         }

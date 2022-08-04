@@ -651,6 +651,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
         }
+        if(config.slateType == "assessment" && newVersionManifestId && slateData?.data[newVersionManifestId] && slateData?.data[newVersionManifestId]?.contents?.bodymatter[0]?.elementdata){
+            let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
+                config.assessmentId= slateBodymatter[0].elementdata.assessmentid
+            }
         /** ---- Check if current slate is Double Spread PDF ---- */
         const isCypressPlusProject = getState()?.appStore?.isCypressPlusEnabled
         if (isCypressPlusProject && config.slateType == 'pdfslate' && slateData && slateData.data[newVersionManifestId]) {
@@ -922,7 +926,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         dispatch({type: ERROR_API_POPUP, payload:{show: true,message:SLATE_API_ERROR}})
         console.error('Error in fetch Slate api', err);
     })
-   
 };
 
 export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => {

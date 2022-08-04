@@ -13,6 +13,11 @@ export const PRIMARY_BUTTON = "primary";
 export const SECONDARY_BUTTON = "secondary";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
+export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>', '</p>', '</ul>', '</ol>', '</li>']
+export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '</em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>']
+export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<img', '</abbr>', '</dfn>', "</a>", 'class="answerLineContent"', 'class="calloutOne"', 'class="calloutTwo"', 'class="calloutThree"', 'class="calloutFour"', 'class="markedForIndex"']
+export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"', 'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"', 'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"', 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
+
 export const requestConfigURI = () => {
     let uri = '';
     if(process.env.NODE_ENV === "development"){
@@ -787,4 +792,57 @@ export const getCookieByName = (name) => {
         value = unescape(value.substring(cStart, cEnd));
     }
     return value;
+}
+
+export const handleUnwantedFormattingTags = (element) => {
+    let pastedTagsData = '';
+    if (MATCH_CLASSES_DATA.some(el => element?.innerHTML?.match(el))) {
+        let document = element?.querySelectorAll('p,h1,h2,h3,h4,h5,h6,li')
+        for (let i = 0; i < document?.length; i++) {
+            pastedTagsData = pastedTagsData + " " + document[i]?.innerHTML
+        }
+    } else {
+        let removedUnwantedTags = element?.innerHTML?.includes("</h1>") ? element?.innerHTML?.replace(/<h1>/g, ' ')?.replace(/<*\/h1>/g, '') : element?.innerHTML
+        removedUnwantedTags = removedUnwantedTags.includes("</p>") ? removedUnwantedTags?.replace(/<p>/g, '')?.replace(/<*\/p>/g, ' ') : removedUnwantedTags
+        removedUnwantedTags = removedUnwantedTags.includes("</h2>") ? removedUnwantedTags?.replace(/<h2>/g, '')?.replace(/<*\/h2>/g, ' ') : removedUnwantedTags
+        removedUnwantedTags = removedUnwantedTags.includes("</h3>") ? removedUnwantedTags?.replace(/<h3>/g, '')?.replace(/<*\/h3>/g, ' ') : removedUnwantedTags
+        removedUnwantedTags = removedUnwantedTags.includes("</h4>") ? removedUnwantedTags?.replace(/<h4>/g, '')?.replace(/<*\/h4>/g, ' ') : removedUnwantedTags
+        removedUnwantedTags = removedUnwantedTags.includes("</h5>") ? removedUnwantedTags?.replace(/<h5>/g, '')?.replace(/<*\/h5>/g, ' ') : removedUnwantedTags
+        removedUnwantedTags = removedUnwantedTags.includes("</h6>") ? removedUnwantedTags?.replace(/<h6>/g, '')?.replace(/<*\/h6>/g, ' ') : removedUnwantedTags
+        removedUnwantedTags = removedUnwantedTags.includes("</li>") ? removedUnwantedTags?.replace(/<li>/g, '')?.replace(/<*\/li>/g, ' ') : removedUnwantedTags
+        removedUnwantedTags = removedUnwantedTags.includes("</ul>") ? removedUnwantedTags?.replace(/<ul>/g, '')?.replace(/<*\/ul>/g, ' ') : removedUnwantedTags
+        removedUnwantedTags = removedUnwantedTags.includes("</ol>") ? removedUnwantedTags?.replace(/<ol>/g, '')?.replace(/<*\/ol>/g, ' ') : removedUnwantedTags
+        pastedTagsData = removedUnwantedTags;
+    }
+    return pastedTagsData;
+}
+
+export const handleTextToRetainFormatting = (pastedContent, testElement) => {
+    let tempData = pastedContent;
+    if (MATCH_HTML_TAGS.some(el => tempData.match(el))) {
+        tempData = handleUnwantedFormattingTags(testElement)
+    }
+    let convertTag = tempData?.includes('<b>') ? tempData?.replace(/<b>/g, "<strong>")?.replace(/<*\/b>/g, "</strong>") : tempData
+    convertTag = convertTag?.includes('<span id=\"specialChar\"></span>') ? convertTag?.replace("<span id=\"specialChar\"></span>", '') : convertTag
+    convertTag = convertTag?.includes('<strike>') ? convertTag?.replace(/<strike>/g, '<s>')?.replace(/<*\/strike>/g, '</s>') : convertTag
+    const updatedText = convertTag.includes('<i>') ? convertTag?.replace(/<i>/g, "<em>")?.replace(/<*\/i>/g, "</em>") : convertTag
+    
+    if (NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
+        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
+        pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    } else if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
+        pastedContent = updatedText;
+    }
+    else {
+        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
+        pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    return pastedContent;
+}
+
+// function to handle tinymce editor plugins based on config variable values
+export const handleTinymceEditorPlugins = (plugins) => {
+    let editorPlugins = plugins;
+    if (config.ENABLE_WIRIS_PLUGIN) editorPlugins = `${editorPlugins} tiny_mce_wiris`;
+    return editorPlugins;
 }

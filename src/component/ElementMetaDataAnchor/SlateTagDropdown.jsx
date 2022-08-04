@@ -102,7 +102,7 @@ class SlateTagDropdown extends React.Component {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveSlate, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': isLOExist, 'editAction': '' } });
         }
         else if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType === 'assessment') {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys_LO,'assessmentUrn':assessmentuRN,'previewData': previewData,'isSubscribed':isSubscribed } });
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': ViewLearningObjectiveAssessment, 'data': currentSlateLOData, 'chapterContainerUrn': config.parentContainerUrn, 'isLOExist': true, 'editAction': '','apiConstants':apiKeys_LO,'assessmentUrn': assessmentuRN ,'previewData': previewData,'isSubscribed':isSubscribed } });
         }
         else if(checkSlateLock(this.props.slateLockInfo)){
             this.props.showSlateLockPopup(true);
@@ -115,7 +115,7 @@ class SlateTagDropdown extends React.Component {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddEditLearningObjective, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': isLOExist, 'editAction': true, 'apiConstants': apiKeys_LO } })
         }
         else if (e.target.innerText == AddLearningObjectiveAssessmentDropdown && this.props.permissions.includes('lo_edit_metadata')) {
-            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys_LO,'assessmentUrn':assessmentuRN, 'previewData': previewData } })
+            sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': AddLearningObjectiveAssessment, 'data': currentSlateLOData, 'currentSlateId': config.slateManifestURN, 'chapterContainerUrn': config.parentContainerUrn, 'projectTitle': document.cookie.split(',')[3].split(':')[1], 'isLOExist': true, 'editAction': true, 'apiConstants': apiKeys_LO,'assessmentUrn':  assessmentuRN, 'previewData': previewData } })
         }
         else if (e.target.innerText == UnlinkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
             sendDataToIframe({ 'type': OpenLOPopup, 'message': { 'text': UnlinkSlate, 'data': currentSlateLOData, 'currentSlateId': slateManifestURN, 'chapterContainerUrn': '', 'isLOExist': true, 'editAction': '', 'apiConstants': apiKeys_LO } })
@@ -163,23 +163,22 @@ class SlateTagDropdown extends React.Component {
     };
     const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = [];
-    let defaultLF = "";
     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
-      defaultLF = this.props.projectLearningFrameworks.externalLF[0].urn; // Currently we are considering first LF as default
       this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
     }
     return {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo, defaultLF
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     }
   }
 
   /** Launch External LO Popup from Canvas*/
   launchExternalFrameworkPopup = (e) => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo, defaultLF
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     } = this.prepareExtFrameworkData();
 
     const currentSlateLF=this.props.currentSlateLF;
+    const defaultLF=this.props.defaultLF;
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
    if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
@@ -266,11 +265,12 @@ class SlateTagDropdown extends React.Component {
 
   openAssessmentExternalPopup = (popupType) => {
     const {
-      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs, defaultLF
+      slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
     } = this.prepareExtFrameworkData();
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
     const currentSlateLF=this.props.currentSlateLF;
+    const defaultLF=this.props.defaultLF;
     let assessmentuRN="";
     let assessmentType="";
     let assessmentTypeLO="";
@@ -294,7 +294,8 @@ class SlateTagDropdown extends React.Component {
         previewUrl:config.PREVIEW_ASSESSMENT_LO_ENDPOINT,
         bookId: config.citeUrn,
         assessmentUrn:assessmentuRN,
-        assessmentType: assessmentTypeLO
+        assessmentType: assessmentTypeLO,
+        projectEntityUrn:config.projectEntityUrn
     }
     sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
     sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
@@ -312,7 +313,7 @@ class SlateTagDropdown extends React.Component {
             'currentSlateId': slateManifestURN,
             'chapterContainerUrn': '',
             'currentSlateLF': currentSlateLF,
-            'assessmentUrn': assessmentuRN,
+            'assessmentUrn':  assessmentuRN,
             'previewData': previewData,
             'defaultLF': defaultLF
         }
@@ -332,7 +333,7 @@ class SlateTagDropdown extends React.Component {
             'currentSlateId': slateManifestURN,
             'chapterContainerUrn': '',
             'currentSlateLF': currentSlateLF,
-            'assessmentUrn': assessmentuRN,
+            'assessmentUrn':  assessmentuRN,
             'previewData': previewData,
             'projectSharingRole': projectSharingRole,
             'isSubscribed': isSubscribed
@@ -395,7 +396,8 @@ const mapStateToProps = (state) => {
         currentSlateLF:state.metadataReducer.currentSlateLF,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
-        lastAlignedExternalLO:state.metadataReducer.lastAlignedExternalLO
+        lastAlignedExternalLO:state.metadataReducer.lastAlignedExternalLO,
+        defaultLF: state.metadataReducer.defaultLF
     }
 }
 const mapActionToProps = {

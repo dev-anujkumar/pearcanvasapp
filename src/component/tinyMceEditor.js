@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -287,10 +287,10 @@ export class TinyMceEditor extends Component {
      * @returns {String} Tinymce plugins list
      */
     handleTinymcePlugins = () => {
-        const { spellCheckToggle } = this.props;
         let plugins = EditorConfig.plugins;
         // adding tinymce spellchecker plugin if spell checker option is active from project settings
         if (this.tinymceSpellCheckStatus()) plugins = `${plugins} spellchecker`;
+        plugins = handleTinymceEditorPlugins(plugins)
         return plugins;
     }
 
@@ -2371,8 +2371,12 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            let tempContent = testElement.innerText.replace(/&/g, "&amp;");
-            args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            if ((this.props?.element?.type === "element-authoredtext") && !this.props?.element?.elementdata?.headers && (this.props?.element?.elementdata?.designtype !== 'handwritingstyle') && this.props?.asideData?.type !== "manifestlist") {
+                args.content = handleTextToRetainFormatting(args.content, testElement)
+            } else {
+                let tempContent = testElement.innerText.replace(/&/g, "&amp;");
+                args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            }
         } else {
             args.content = tinymce.activeEditor.selection.getContent();
         }
@@ -2514,8 +2518,8 @@ export class TinyMceEditor extends Component {
      */
     handleIndent = (e, editor, content, type, selectedNode) => {
         let className = null;
-        let blockListData = isElementInsideBlocklist({index:this.props.index,data:this.props}, this.props.slateLevelData);
-        if(!blockListData){
+        const { isBlockList} = this.props
+        if(!isBlockList){
             if (type && type === 'stanza' && selectedNode) {
                 className = selectedNode.className;
             }
@@ -2529,7 +2533,7 @@ export class TinyMceEditor extends Component {
                 content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
             }
         }
-        if (blockListData) {
+        if (isBlockList) {
             content = content.replace(/40px\b/, "0px");
             setTimeout(() => {
                 this.createNestedBlockList();
@@ -2795,7 +2799,7 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    // Handle Glossary for Subscript
+    // Handle Glossary for Superscript
     handleGlossaryForSuperscript = (activeElement, dataURIId) => {
         let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
         let supTag = dfn.closest('sup');
@@ -2990,11 +2994,10 @@ export class TinyMceEditor extends Component {
         const { glossaryFootnoteValue, poetryField } = this.props;
         let { elementType, glossaryfootnoteid, type, elementSubType, glossaryTermText } = glossaryFootnoteValue;
         let typeWithPopup = this.props.element ? this.props.element.type : "";
-        let term = null;
+        let term = glossaryTermText;
         let definition = null;
-        // let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
-        // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
-        term = glossaryTermText
+        // commented after allowing flow of formatting tags from canvas to glossary term
+        // let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;'); 
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition.replace(/<br data-mce-bogus="1">/g, "")
