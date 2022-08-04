@@ -35,7 +35,14 @@ let initialState = {
     alfrescoReducer: {
         elementId: 5,
         isInlineEditorOpen: false,
-        locationData: "",
+        locationData: {
+            role: 'SiteCoordinator',
+            visibility: 'MODERATED',
+            guid: '6eb551b3-a5d0-46c6-a389-5a773ee2b772',
+            id: 'cite-patterns-content-design',
+            preset: 'site-dashboard',
+            title: 'CITE Patterns Content Design'
+        },
         calledFromGlossaryFootnote: false,
         calledFromImageGlossaryFootnote: false
     },
@@ -53,6 +60,11 @@ describe('Testing AlfrescoPopup component', () => {
             locationData: "",
             calledFromGlossaryFootnote: false,
             calledFromImageGlossaryFootnote: false
+        },
+        alfrescoPath: {
+            alfresco:{},
+            etag: "etagvalue",
+            id:"test",
         },
         style: {
             width: 360,
