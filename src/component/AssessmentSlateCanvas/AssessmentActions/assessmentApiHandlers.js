@@ -377,10 +377,6 @@ const AssessmentAPIHandlers = {
                 dataForUpdate: dataForUpdate
             }
         })
-        sendDataToIframe({
-            'type': 'newAssessmentDetails',
-            'message': { assessmentId: currentWorkUrn, containerUrn: config.slateManifestURN}
-        })
     },
     /** @description This function dispatches latest metadata for interactive to store */
     dispatchInteractiveMetadata: (currentWorkUrn, dataForUpdate, dispatch) => {

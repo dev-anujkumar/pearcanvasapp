@@ -234,8 +234,13 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         processAndStoreUpdatedResponse(updateArgs)
             if (updatedData.type == "element-assessment") {
-                sendDataToIframe({ 'type': 'UpdatedAssessmentId', 'message': { currentAssessmentId: response?.data?.elementdata?.assessmentid } });
-                config.assessmentId = response?.data?.elementdata?.assessmentid;
+                let newAssessmentId = response?.data?.elementdata?.assessmentid;
+                sendDataToIframe({ 'type': 'UpdatedAssessmentId', 'message': { currentAssessmentId: newAssessmentId } });
+                config.assessmentId = newAssessmentId;
+                sendDataToIframe({
+                    'type': 'newAssessmentDetails',
+                    'message': { assessmentId: newAssessmentId, containerUrn: config.slateManifestURN}
+                })
             }
     }
     catch(error) {
