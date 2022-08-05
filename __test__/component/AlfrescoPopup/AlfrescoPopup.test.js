@@ -60,7 +60,8 @@ describe('Testing AlfrescoPopup component', () => {
         },
         handleCloseAlfrescoPicker: jest.fn(),
         alfrescoPopup: jest.fn(),
-        saveSelectedAlfrescoElement: jest.fn()
+        saveSelectedAlfrescoElement: jest.fn(),
+        alfrescoPath:{}
     }
 
     it('AlfrescoPopup Container', () => {
