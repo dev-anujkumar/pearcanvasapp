@@ -233,7 +233,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             showHideObj
         }
         processAndStoreUpdatedResponse(updateArgs)
-        config.assessmentId = response?.data?.elementdata?.assessmentId ?? ''
+            if (updatedData.type == "element-assessment") {
+                sendDataToIframe({ 'type': 'UpdatedAssessmentId', 'message': { currentAssessmentId: response?.data?.elementdata?.assessmentid } });
+                config.assessmentId = response?.data?.elementdata?.assessmentid;
+            }
     }
     catch(error) {
         dispatch({type: ERROR_POPUP, payload:{show: true}})

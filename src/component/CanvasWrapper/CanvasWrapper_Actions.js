@@ -653,7 +653,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
         if(config.slateType == "assessment" && newVersionManifestId && slateData?.data[newVersionManifestId] && slateData?.data[newVersionManifestId]?.contents?.bodymatter[0]?.elementdata){
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
-                config.assessmentId= slateBodymatter[0].elementdata.assessmentid
+                config.assessmentId= slateBodymatter[0].elementdata.assessmentid;
+                sendDataToIframe({ 'type': 'UpdatedAssessmentId', 'message': { currentAssessmentId: config.assessmentId}});
             }
         /** ---- Check if current slate is Double Spread PDF ---- */
         const isCypressPlusProject = getState()?.appStore?.isCypressPlusEnabled
