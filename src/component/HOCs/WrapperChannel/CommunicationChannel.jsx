@@ -214,7 +214,7 @@ function CommunicationChannel(WrappedComponent) {
                                 dataToSend.inputSubType = "NA"
                                 dataToSend.index = "0"
                                 dataToSend.elementParentEntityUrn = config.slateEntityURN
-                                dataToSend.elementdata.loAssociation = message.slateTagEnabled
+                                dataToSend.elementdata.loAssociation = false //message.slateTagEnabled
                                 dataToSend.slateVersionUrn = config.slateManifestURN
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
                                 this.props.updateElement(dataToSend, 0 );
