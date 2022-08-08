@@ -835,9 +835,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 dataToReturn["metaDataField"] = "formattedTitle"
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
             } 
-            else if(asideData?.type==="manifestlist" && parentElement && parentElement?.type === "showhide" && showHideType){
-                let manifestListItemIndex = asideData.index.split('-');
-                dataToReturn["elementParentEntityUrn"] = asideData?.parentManifestList?.listdata?.bodymatter[manifestListItemIndex[manifestListItemIndex.length-2]]?.contentUrn
+            else if(asideData?.type==="manifestlist" && (parentElement && (parentElement?.type === "showhide" && showHideType) || parentElement?.type === "groupedcontent") || asideData?.parent?.type === 'element-aside' || config.isPopupSlate) {
+                dataToReturn["elementParentEntityUrn"] = containerContext?.props?.parentManifestListItem?.contentUrn
             }
             else if(parentElement && parentElement.type === "showhide" && showHideType){
                 const poetryElementTypes = ['poetry', 'stanza', 'element-authoredtext'];
