@@ -412,7 +412,7 @@ describe('Testing ListButtonDropPortal component', () => {
         spygetListDropPopUpState.mockClear()
     })
 
-    it("Test 0 - getListDropPopUpState - groupedcontent - element-aside - showhide", () => {
+    it("Test - getListDropPopUpState - groupedcontent - element-aside - showhide", () => {
         const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
         const slateData = {
             "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
@@ -471,7 +471,7 @@ describe('Testing ListButtonDropPortal component', () => {
         spygetListDropPopUpState.mockClear()
     })
 
-    it("Test 0(2) - getListDropPopUpState - groupedcontent - element-aside - manifest - showhide", () => {
+    it("Test - getListDropPopUpState - groupedcontent - element-aside - manifest - showhide", () => {
         const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
         const slateData = {
             "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
@@ -530,7 +530,7 @@ describe('Testing ListButtonDropPortal component', () => {
         spygetListDropPopUpState.mockClear()
     })
     
-    it("Test 0(2) - getListDropPopUpState - groupedcontent - element-aside - manifest - showhide", () => {
+    it("Test - getListDropPopUpState - groupedcontent - element-aside - manifest - showhide", () => {
         const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
         const slateData = {
             "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
@@ -589,7 +589,7 @@ describe('Testing ListButtonDropPortal component', () => {
         spygetListDropPopUpState.mockClear()
     })
     
-    it("Test 1 - getListDropPopUpState - groupedcontent - manifest - groupedconten", () => {
+    it("Test - getListDropPopUpState - groupedcontent - manifest - groupedconten", () => {
         const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
         const slateData = {
             "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
@@ -636,7 +636,7 @@ describe('Testing ListButtonDropPortal component', () => {
         spygetListDropPopUpState.mockClear()
     })
 
-    it("Test 2 - getListDropPopUpState - groupedcontent - manifest - groupedconten", () => {
+    it("Test - getListDropPopUpState - groupedcontent - manifest - groupedconten", () => {
         const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
         const slateData = {
             "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
@@ -683,7 +683,7 @@ describe('Testing ListButtonDropPortal component', () => {
         spygetListDropPopUpState.mockClear()
     })
 
-    it("Test 3 - getListDropPopUpState - groupedcontent - showhide", () => {
+    it("Test - getListDropPopUpState - groupedcontent - showhide", () => {
         const spygetListDropPopUpState = jest.spyOn(ListButtonDropPortalInstance, 'getListDropPopUpState')
         const slateData = {
             "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
