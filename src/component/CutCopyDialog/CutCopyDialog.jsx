@@ -6,7 +6,7 @@ import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions';
 const CutCopyDialog = props => {
 
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
-    const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "element-aside", 'citations', 'element-citation', 'poetry', 'stanza'];
+    const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", 'citations', 'element-citation', 'poetry', 'stanza'];
     let allowToShowOptions = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.element?.type) ? false : true;
     return (
         <div style={positionStyle} className="copy-menu-container">
