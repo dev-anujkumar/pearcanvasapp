@@ -71,6 +71,19 @@ class PopUp extends React.Component {
         this.focusElement(this.state.focusedButton);
     }
 
+    componentDidUpdate() {
+        //On Paste Success Focus on Secondary Button
+        if (this.state.wordPasteProceed) {
+            const secondaryButton = document.querySelector(`[option=${SECONDARY_BUTTON}]`)
+            if (secondaryButton && secondaryButton.classList && secondaryButton.classList.contains('secondary')) {
+                setTimeout(() => {
+                    secondaryButton.tabIndex = "-1";
+                    secondaryButton.focus();
+                }, 0);
+            }
+        }
+    }
+
     componentWillUnmount() {
         if (this.props.showConfirmation) {
             hideBlocker();
@@ -188,7 +201,7 @@ class PopUp extends React.Component {
             }
         } else if (e.keyCode === 39 && this.state.focusedButton === SECONDARY_BUTTON) {
             const element = document.querySelector(`[option=${PRIMARY_BUTTON}]`)
-            if(element && element?.classList) {
+            if(element && element?.classList && !element.classList.contains('disabled')) {
                 this.setState({
                     focusedButton: PRIMARY_BUTTON
                 })

@@ -233,6 +233,15 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             showHideObj
         }
         processAndStoreUpdatedResponse(updateArgs)
+            if (updatedData.type == "element-assessment") {
+                let newAssessmentId = response?.data?.elementdata?.assessmentid;
+                sendDataToIframe({ 'type': 'UpdatedAssessmentId', 'message': { currentAssessmentId: newAssessmentId } });
+                config.assessmentId = newAssessmentId;
+                sendDataToIframe({
+                    'type': 'newAssessmentDetails',
+                    'message': { assessmentId: newAssessmentId, containerUrn: config.slateManifestURN}
+                })
+            }
     }
     catch(error) {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
