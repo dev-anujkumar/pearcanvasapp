@@ -11,7 +11,8 @@ jest.mock('../../../src/constants/utility.js', () => {
     return {
         hasReviewerRole: () => {
             return false
-        }
+        },
+        handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
     }
 })
 

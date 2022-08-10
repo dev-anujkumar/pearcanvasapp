@@ -103,7 +103,8 @@ jest.mock('../../../src/js/toggleLoader', () => ({
 }))
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
-    hasReviewerRole: ()=>{ return false}
+    hasReviewerRole: ()=>{ return false},
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 jest.mock('../../../src/js/header.js', () => ({
     logout: jest.fn()

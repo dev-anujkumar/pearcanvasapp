@@ -67,7 +67,8 @@ jest.mock('../../../src/constants/utility.js', () => {
             return true
         },
         guid: jest.fn(),
-        removeBlankTags: jest.fn()
+        removeBlankTags: jest.fn(),
+        handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {
