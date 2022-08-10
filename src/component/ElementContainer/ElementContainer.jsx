@@ -2266,8 +2266,6 @@ class ElementContainer extends Component {
                         showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
                         handleCheckboxPopup ={this.handleWarningPopupCheckbox}
                         warningPopupCheckbox={this.state.warningPopupCheckbox}
-                        handleListElementWarningPopupCheckbox ={this.handleListElementWarningPopupCheckbox}
-                        listElementWarningPopupCheckbox={this.state.listElementWarningPopupCheckbox}
                     />}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
