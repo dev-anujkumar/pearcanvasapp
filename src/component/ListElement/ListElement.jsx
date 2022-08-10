@@ -37,7 +37,7 @@ export class ListElement extends Component {
     }
 
     render() {
-        const { className, model, element, slateLockInfo, showHideType } = this.props
+        const { className, model, element, slateLockInfo, showHideType, listElementWarningPopupCheckbox, handleListElementWarningPopupCheckbox } = this.props
         //***************************************************************
         //************ this is to cover wip conversion case *************
         let wipModel = null;
@@ -61,6 +61,8 @@ export class ListElement extends Component {
                         tocDeleteClass={'listConfirmation'}
                         saveButtonText={"Yes"}
                         saveContent={this.listWarningConfirmation}
+                        handleListElementWarningPopupCheckbox={handleListElementWarningPopupCheckbox}
+                        listElementWarningPopupCheckbox={listElementWarningPopupCheckbox}
                     />
                 }
                 <KeyboardWrapper enable index={this.props.index}>

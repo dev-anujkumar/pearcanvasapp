@@ -650,13 +650,24 @@ class PopUp extends React.Component {
     }
 
     // function to render checkbox inside delete element warning popup
-    renderDeleteWarningPopupCheckbox = (props) => {
-        return (
-            <div className='popup-checkbox-message'>
-                <input className='popup-checkbox' type="checkbox" value={props.warningPopupCheckbox} checked={props.warningPopupCheckbox} onChange={(event) => props?.handleCheckboxPopup(event)} />
-                <p className='popup-checkbox-text'>Don't ask me again</p>
-            </div>
-        )
+    renderPopupCheckbox = (props) => {
+        if (props.showDeleteElemPopup) {
+            return (
+                <div className='popup-checkbox-message'>
+                    <input className='popup-checkbox' type="checkbox" value={props.warningPopupCheckbox} checked={props.warningPopupCheckbox} onChange={(event) => props?.handleCheckboxPopup(event)} />
+                    <p className='popup-checkbox-text'>Don't ask me again</p>
+                </div>
+            )
+        } else if (props.listConfirmation) {
+            return (
+                <div className='popup-checkbox-message'>
+                    <input className='popup-checkbox' type="checkbox" value={props.listElementWarningPopupCheckbox} checked={props.listElementWarningPopupCheckbox} onChange={(event) => props?.handleListElementWarningPopupCheckbox(event)} />
+                    <p className='popup-checkbox-text'>Don't ask me again</p>
+                </div>
+            )
+        } else {
+            return null
+        }
     }
 
     render() {
@@ -670,7 +681,7 @@ class PopUp extends React.Component {
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
-                                {this.props.showDeleteElemPopup && this.renderDeleteWarningPopupCheckbox(this.props)}
+                                {this.renderPopupCheckbox(this.props)}
                                 <div className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
