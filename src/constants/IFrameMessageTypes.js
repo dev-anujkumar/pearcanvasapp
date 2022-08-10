@@ -69,3 +69,4 @@ export const REFRESH_MESSAGE='refresh on Cypress from Cypress_plus'
 
 /* Delete Popup Status Message Types */
 export const DISABLE_DELETE_WARNINGS = 'disableDeleteWarnings';
+export const DISABLE_LIST_ELMENT_WARNING = 'disableListElmentWarning'
