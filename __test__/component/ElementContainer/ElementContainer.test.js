@@ -3505,6 +3505,17 @@ describe('Test-Other Functions', () => {
         expect(handleWarningPopupCheckbox).toHaveBeenCalled();
         handleWarningPopupCheckbox.mockClear()
     });
+    it("handleListElementWarningPopupCheckbox function", () => {
+        const event = {
+            target:{
+                value:"true"
+            }
+        }
+        const handleListElementWarningPopupCheckbox = jest.spyOn(elementContainerInstance, 'handleListElementWarningPopupCheckbox')
+        elementContainerInstance.handleListElementWarningPopupCheckbox(event);
+        expect(handleListElementWarningPopupCheckbox).toHaveBeenCalled();
+        handleListElementWarningPopupCheckbox.mockClear()
+    });
 
     it("handleAutonumberAfterUpdate function", () => {
         const previousElementData = {
