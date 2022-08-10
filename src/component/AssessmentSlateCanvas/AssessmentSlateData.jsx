@@ -128,13 +128,13 @@ class AssessmentSlateData extends Component {
                 'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
             };
-            let assessmentUrn = nextProps && nextProps.model && nextProps.model.elementdata.assessmentid.length > 0 ? nextProps.model.elementdata.assessmentid : '';
-            if (assessmentUrn != "") {
+            let assessmentId = nextProps && nextProps.model && nextProps.model.elementdata.assessmentid.length > 0 ? nextProps.model.elementdata.assessmentid : '';
+            if (assessmentId != "") {
                 let externalLFUrn = []
                 if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                     this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
                 }
-                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentUrn, apiKeys_LO, externalLFUrn:externalLFUrn } });
+                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentId, apiKeys_LO, externalLFUrn:externalLFUrn } });
             }
             else { //set tag to grey heresss                 
                 let newMessage = { assessmentResponseMsg: false };

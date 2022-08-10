@@ -62,7 +62,6 @@ let config = {
     AWS_RESOURCE : 'lambda',
     PROJECT_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
     SLATE_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
-    isPreviousLOAssociation: false,
     ENABLE_WIRIS_PLUGIN: true
     
 };
