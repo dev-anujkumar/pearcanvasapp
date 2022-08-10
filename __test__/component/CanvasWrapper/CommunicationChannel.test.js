@@ -2612,6 +2612,10 @@ describe('Testing communication channel', () => {
         const event = {
             data: {
                 type: "getAssessmentData",
+                message:{
+                    apiKeys_LO:{}
+                }
+
             }
         };
         config.slateType="assessment"
@@ -2640,6 +2644,9 @@ describe('Testing communication channel', () => {
         const event = {
             data: {
                 type: "getAssessmentData",
+                message:{
+                    apiKeys_LO:{}
+                }
             }
         };
         config.slateType="assessment"

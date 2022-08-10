@@ -8,7 +8,8 @@ import config from '../../../src/config/config';
 const mockStore = configureMockStore(middlewares);
 let initialState = {}
 jest.mock('../../../src/constants/utility.js', () => ({
-    sendDataToIframe: jest.fn()
+    sendDataToIframe: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 config.projectUrn = "urn:pearson:distributable:ff18cbc0-ab3f-4c7e-9ed0-84eb34f4e126";
 describe('TCM snapshot Action test case', () => {

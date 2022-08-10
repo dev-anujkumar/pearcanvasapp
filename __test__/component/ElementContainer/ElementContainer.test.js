@@ -53,6 +53,7 @@ jest.mock('./../../../src/constants/utility.js', () => ({
             replace: jest.fn()
         })
     },
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],

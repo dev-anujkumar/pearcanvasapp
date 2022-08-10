@@ -455,7 +455,8 @@ describe('Testing functions', () => {
                 },
                 isOwnerRole:()=>{
                     return false
-                }
+                },
+                handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
             }
         })
         let props = {

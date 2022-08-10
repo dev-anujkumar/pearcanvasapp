@@ -15,7 +15,8 @@ import {
 import { tempFiguresForResults, disciplines, selectedResult, apiList } from '../../../../fixtures/learningTool'
 jest.mock('axios');
 jest.mock('../../../../src/constants/utility.js', () => ({
-    sendDataToIframe: jest.fn()
+    sendDataToIframe: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }));
 
 describe('TestS Learning_Tool_ActionS', () => {

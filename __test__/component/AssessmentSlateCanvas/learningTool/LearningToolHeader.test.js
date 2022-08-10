@@ -4,7 +4,8 @@ import LearningToolHeader from '../../../../src/component/AssessmentSlateCanvas/
 import { apiList, disciplines } from '../../../../fixtures/learningTool'
 
 jest.mock('../../../../src/constants/utility.js', () => ({
-    hasReviewerRole: jest.fn()
+    hasReviewerRole: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }));
 describe('Testing Learning Tool LearningToolHeader component', () => {
     describe('Dropdown Menus Testing', () => {
