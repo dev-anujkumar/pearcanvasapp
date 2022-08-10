@@ -37,6 +37,8 @@ export class ListElement extends Component {
             disableHeader(false)
         }
         this.setState({popup : value, listType : type})
+        //when Popup is opened or closed reset the checkbox value
+        this.props?.handleListElementWarningPopupCheckbox({ target: { checked: false } })
     }
 
     render() {
