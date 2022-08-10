@@ -8,7 +8,7 @@ import { showTocBlocker, showBlocker, hideTocBlocker,disableHeader } from '../..
 import '../../styles/ListElement/style.css'
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 import { sendDataToIframe } from '../../constants/utility.js';
-import { DISABLE_LIST_ELMENT_WARNING } from '../../constants/IFrameMessageTypes.js';
+import { DISABLE_LIST_ELEMENT_WARNING } from '../../constants/IFrameMessageTypes.js';
 
 export class ListElement extends Component {
     constructor(props) {
@@ -21,7 +21,7 @@ export class ListElement extends Component {
     }
 
     listWarningConfirmation = () => {
-        if (this.props.listElementWarningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_LIST_ELMENT_WARNING, 'message': { disableListElmentWarning: true } });
+        if (this.props.listElementWarningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_LIST_ELEMENT_WARNING, 'message': { disableListElementWarning: true } });
         this.props.onListSelect(this.state.listType, "");
         this.togglePopup(false,null)
     }

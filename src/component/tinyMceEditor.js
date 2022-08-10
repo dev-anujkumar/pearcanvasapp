@@ -350,8 +350,8 @@ export class TinyMceEditor extends Component {
         if ((this.props.element && this.props.element.type === "element-list" && this.props.element.elementdata.listtype === type) ||
             (this.props.currentElement && this.props.currentElement.type === "element-list" && this.props.currentElement.elementdata.listtype === type)) {
             //Check if disable list element warning popup flag is true
-            const disableListElmentWarning = getCookieByName("DISABLE_LIST_ELMENT_WARNING");
-            if (disableListElmentWarning) {
+            const disableListElementWarning = getCookieByName("DISABLE_LIST_ELEMENT_WARNING");
+            if (disableListElementWarning) {
                 this.props.onListSelect(subType, "");
             } else {
                 this.toggleConfirmationPopup(true, this.props.element.subtype || this.props.currentElement.subtype);
