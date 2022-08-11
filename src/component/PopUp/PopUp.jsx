@@ -14,7 +14,7 @@ import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
-import { PRIMARY_BUTTON, SECONDARY_BUTTON } from '../../../src/constants/utility.js';
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE } from '../../../src/constants/utility.js';
 
 /**
 * @description - PopUp is a class based component. It is defined simply
@@ -655,14 +655,14 @@ class PopUp extends React.Component {
             return (
                 <div className='popup-checkbox-message'>
                     <input className='popup-checkbox' type="checkbox" value={props.warningPopupCheckbox} checked={props.warningPopupCheckbox} onChange={(event) => props?.handleCheckboxPopup(event)} />
-                    <p className='popup-checkbox-text'>Don't ask me again</p>
+                    <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
                 </div>
             )
         } else if (props.listConfirmation) {
             return (
                 <div className='popup-checkbox-message'>
                     <input className='popup-checkbox' type="checkbox" value={props.listElementWarningPopupCheckbox} checked={props.listElementWarningPopupCheckbox} onChange={(event) => props?.handleListElementWarningPopupCheckbox(event)} />
-                    <p className='popup-checkbox-text'>Don't ask me again</p>
+                    <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
                 </div>
             )
         } else {
