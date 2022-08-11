@@ -346,11 +346,6 @@ export default {
                     labelText: 'BCE',
                     enum: 'HTML'
                 },
-                'secondary-blockcode-language-json': {
-                    text: 'JSON',
-                    labelText: 'BCE',
-                    enum: 'JSON'
-                },
                 'secondary-blockcode-language-java': {
                     text: 'Java',
                     labelText: 'BCE',
@@ -360,6 +355,11 @@ export default {
                     text: 'Javascript',
                     labelText: 'BCE',
                     enum: 'JAVA_SCRIPT'
+                },
+                'secondary-blockcode-language-json': {
+                    text: 'JSON',
+                    labelText: 'BCE',
+                    enum: 'JSON'
                 },
                 'secondary-blockcode-language-kotlin': {
                     text: 'Kotlin',
@@ -386,15 +386,15 @@ export default {
                     labelText: 'BCE',
                     enum: 'OBJECTIVE_C'
                 },
-                'secondary-blockcode-language-php': {
-                    text: 'PHP',
-                    labelText: 'BCE',
-                    enum: 'PHP'
-                },
                 'secondary-blockcode-language-perl': {
                     text: 'Perl',
                     labelText: 'BCE',
                     enum: 'PERL'
+                },
+                'secondary-blockcode-language-php': {
+                    text: 'PHP',
+                    labelText: 'BCE',
+                    enum: 'PHP'
                 },
                 'secondary-blockcode-language-python': {
                     text: 'Python',
@@ -411,16 +411,6 @@ export default {
                     labelText: 'BCE',
                     enum: 'RUBY'
                 },
-                'secondary-blockcode-language-sml': {
-                    text: 'SML',
-                    labelText: 'BCE',
-                    enum: 'SML'
-                },
-                'secondary-blockcode-language-sql': {
-                    text: 'SQL',
-                    labelText: 'BCE',
-                    enum: 'SQL'
-                },
                 'secondary-blockcode-language-scala': {
                     text: 'Scala',
                     labelText: 'BCE',
@@ -430,6 +420,16 @@ export default {
                     text: 'Shell Session',
                     labelText: 'BCE',
                     enum: 'SHELL_SESSION'
+                },
+                'secondary-blockcode-language-sml': {
+                    text: 'SML',
+                    labelText: 'BCE',
+                    enum: 'SML'
+                },
+                'secondary-blockcode-language-sql': {
+                    text: 'SQL',
+                    labelText: 'BCE',
+                    enum: 'SQL'
                 },
                 'secondary-blockcode-language-swift': {
                     text: 'Swift',
