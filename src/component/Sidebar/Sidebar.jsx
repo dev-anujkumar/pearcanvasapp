@@ -517,7 +517,6 @@ class Sidebar extends Component {
                                     variant="outlined"
                                     inputProps={{
                                         ...params.inputProps,
-                                        autoComplete: 'new-password', // disable autocomplete and autofill
                                     }}
                                 />
                             )}
