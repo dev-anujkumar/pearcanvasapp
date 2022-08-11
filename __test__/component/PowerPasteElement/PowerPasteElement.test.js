@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import tinyMCE from 'tinymce/tinymce';
 import PowerPasteElement from '../../../src/component/PowerPasteElement/PowerPasteElement.jsx';
-import { pastePreProcess, pastePostProcess, setupKeydownEvent } from '../../../src/component/PowerPasteElement/PowerPasteElement.jsx';
+import { pastePreProcess, pastePostProcess, setupKeydownEvent, editorFocus, editorBlur, editorClick } from '../../../src/component/PowerPasteElement/PowerPasteElement.jsx';
 import { nodePara1, nodePara2, nodeUL, nodeOLWithStyle, nodeOL, nodeIMG, nodeHEADING } from '../../../fixtures/PowerPasteData.js';
 
 describe('Testing FigureUserInterface component', () => {
@@ -233,6 +233,74 @@ describe('Testing FigureUserInterface component', () => {
             }
         }
         let result = setupKeydownEvent(nextEditor);
+        expect(result).toBe(undefined);
+    })
+
+    it('Test-12 setupKeydownEvent conditional coverage', () => {
+        let event = {
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn(),
+            stopImmediatePropagation: jest.fn(),
+            keyCode: 27
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            undoManager: {
+                clear: jest.fn()
+            }
+        }
+        jest.spyOn(document, 'querySelector').mockReturnValue({
+            click: jest.fn()
+        })
+        let result = setupKeydownEvent(nextEditor);
+        expect(result).toBe(undefined);
+    })
+
+    it('Test-13 editorFocus conditional coverage', () => {
+        let event = {
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn(),
+            stopImmediatePropagation: jest.fn()
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            undoManager: {
+                clear: jest.fn()
+            }
+        }
+        let result = editorFocus(nextEditor);
+        expect(result).toBe(undefined);
+    })
+
+    it('Test-14 editorBlur conditional coverage', () => {
+        let event = {
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn(),
+            stopImmediatePropagation: jest.fn()
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            undoManager: {
+                clear: jest.fn()
+            }
+        }
+        let result = editorBlur(nextEditor);
+        expect(result).toBe(undefined);
+    })
+
+    it('Test-15 editorClick conditional coverage', () => {
+        let event = {
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn(),
+            stopImmediatePropagation: jest.fn()
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            undoManager: {
+                clear: jest.fn()
+            }
+        }
+        let result = editorClick(nextEditor);
         expect(result).toBe(undefined);
     })
 });
