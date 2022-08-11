@@ -18,7 +18,8 @@ jest.mock('../../../src/constants/utility.js', () => {
     hasReviewerRole: ()=>{
         return false
     },
-    guid: jest.fn()}
+    guid: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )}
 })
 
 const initialState = {

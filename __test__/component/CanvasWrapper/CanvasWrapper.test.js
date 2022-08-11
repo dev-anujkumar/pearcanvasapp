@@ -36,7 +36,8 @@ jest.mock('../../../src/constants/utility.js', () => {
         },
         isSubscriberRole:()=>{
             return true;
-        }
+        },
+        handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
     }
 })
 jest.mock('../../../src/component/CommentsPanel', () => {

@@ -74,7 +74,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     createTitleSubtitleModel: jest.fn(),
     createLabelNumberTitleModel: jest.fn(),
     removeBlankTags: jest.fn(),
-    removeUnoClass: jest.fn()
+    removeUnoClass: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 jest.mock('../../../src/config/config.js', () => ({
     slateManifestURN: "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i",
