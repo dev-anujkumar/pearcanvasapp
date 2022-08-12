@@ -2670,7 +2670,7 @@ class ElementContainer extends Component {
             }
             
         } else if(element.type === DISCUSSION_INTERACTIVE) {
-            window.open("https://stg-discussionauthoring.pearson.com/");
+            window.open(config.EDIT_DISCUSSION_SPA_URL);
         }
         else {
             let fullAssessment = checkFullElmAssessment(element);
