@@ -137,9 +137,14 @@ export function ElementSaprator(props) {
         let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
         let pasteValidation = getPasteValidated(props, sourceComp, inputType);
         const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "popup", 'citations', 'element-citation', 'poetry', 'stanza'];
-        console.log("tttttttttttttttttttttttttt",type, props.elementSelection, props);
+        let isChildElementNotAcceptedInPopup = false;
+        let parentBodymatter = props.elementSelection?.element?.elementdata?.bodymatter;
+        if(config.isPopupSlate && props.elementSelection?.element?.type === 'element-aside' && parentBodymatter?.length > 0){
+            let asideNotAcceptedTypes=['poetry', 'stanza', 'popup'];
+            isChildElementNotAcceptedInPopup = parentBodymatter.some((element) => asideNotAcceptedTypes.includes(element?.type))
+        }
         let allowToShowPasteIcon = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.elementSelection?.element?.type) ? false : true;
-        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation) {
+        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation && !isChildElementNotAcceptedInPopup) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
                     <Tooltip direction='paste' tooltipText='Paste element'>
