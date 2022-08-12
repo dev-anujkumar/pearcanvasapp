@@ -4,7 +4,7 @@ import React from 'react';
 import * as assessment_UtiltyFn from '../../../../src/component/AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { newFigureObj } from '../../../../fixtures/ElementFigureTestingData';
 import { audioElementTypeAlfrescoWithData } from '../../../../fixtures/ElementAudioVideoTestingData';
-import { Interactive3party, interactiveElm } from '../../../../fixtures/ElementInteractiveTesting';
+import { Interactive3party, interactiveDisscussion, interactiveElm } from '../../../../fixtures/ElementInteractiveTesting';
 
 describe('Test---Assessment Utility Functions', () => {
     describe('Test 1---setAssessmentTitle Function', () => {
@@ -416,6 +416,20 @@ describe('Test---Assessment Utility Functions', () => {
         let element = {};
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
         assessment_UtiltyFn.checkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(false);
+        spyFunction.mockClear();
+    });
+    it('Test 18---checkDiscussionInteractive', () => {
+        let element = interactiveDisscussion;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkDiscussionInteractive');
+        assessment_UtiltyFn.checkDiscussionInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+    it('Test 18---checkDiscussionInteractive', () => {
+        let element = {};
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkDiscussionInteractive');
+        assessment_UtiltyFn.checkDiscussionInteractive(element);
         expect(spyFunction).toHaveReturnedWith(false);
         spyFunction.mockClear();
     });
