@@ -17,7 +17,8 @@ global.document = (new JSDOM()).window.Element;
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
-    getLabelNumberTitleHTML: jest.fn()
+    getLabelNumberTitleHTML: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshotsCreate_Update.js', () => ({
     prepareSnapshots_ShowHide: jest.fn(),
@@ -420,7 +421,8 @@ describe('Tests ElementContainer Actions', () => {
 
             }
             jest.mock('../../../src/constants/utility.js', () => ({
-                hasReviewerRole: () => {return true}
+                hasReviewerRole: () => {return true},
+                handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
             }))
             const spyupdateElement = jest.spyOn(actions, 'updateElement')
             actions.updateElement(updatedData, 0, parentUrn, asideData, "postertextobject")(store.dispatch, store.getState)

@@ -19,6 +19,9 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
 class Sidebar extends Component {
     constructor(props) {
         super(props);
@@ -387,7 +390,7 @@ class Sidebar extends Component {
 
     /**@description function handles the secondaryoption change dropdown */
     handleSecondaryOptionChange = e => {
-        let value = e.target.getAttribute('data-value').toLowerCase();
+        let value = e.target.querySelector('span[data-value]').getAttribute('data-value').toLowerCase();
         let elementTypeList = elementList[this.state.activeElementType];
         let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
         if (value === this.state.activeSecondaryOption) {
@@ -441,6 +444,7 @@ class Sidebar extends Component {
     }
     secondaryOption = () => {
         let secondaryOptions = '';
+        let secondaryQueriedOptions = [];
         let enableColumn3SecondaryOption = false;
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
@@ -462,6 +466,7 @@ class Sidebar extends Component {
                         addClass = 'learnosity-disabled';
                         showLearnosityDropdown = true;
                     }
+                    secondaryQueriedOptions.push({...secondaryOptionObject[item], item})
                     return <li key={item} data-value={item} className={`${addClass}`} onClick={this.handleSecondaryOptionChange}>
                         {secondaryOptionObject[item].text}
                     </li>;
@@ -487,8 +492,37 @@ class Sidebar extends Component {
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
                     <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
-                        {secondaryOptionObject[this.state.activeSecondaryOption].text}
-                        {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
+                        <Autocomplete
+                            disablePortal
+                            disableClearable
+                            id="language-select-demo"
+                            style={{ width: 210 }}
+                            ListboxProps={{ style: { maxHeight: "865px"}}}
+                            value={secondaryOptionObject[this.state.activeSecondaryOption]}
+                            options={secondaryQueriedOptions}
+                            onChange={this.handleSecondaryOptionChange}
+                            getOptionLabel={(option) => option.text}
+                            renderOption={(option) => (
+                                <React.Fragment>
+                                    <span key={option.item} data-value={option.item}>
+                                        {option.text}
+                                    </span>
+                                </React.Fragment>
+                            )}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    fullWidth
+                                    placeholder="Select"
+                                    variant="outlined"
+                                    inputProps={{
+                                        ...params.inputProps,
+                                    }}
+                                />
+                            )}
+                        />
+
+                        {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span></span>}
                     </div>
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}

@@ -13,7 +13,8 @@ global.document = (new JSDOM()).window.Element;
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
-    replaceWirisClassAndAttr: jest.fn()
+    replaceWirisClassAndAttr: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 jest.mock('../../../src/component/FigureHeader/AutoNumber_DeleteAndSwap_helpers.js', () => ({
     handleAutoNumberingOnDelete: jest.fn(),

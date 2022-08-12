@@ -83,6 +83,7 @@ const logoutWithModernOpenAM = () => {
     deleteCookie('PearsonSSOSession', 'pearson.com');
     deleteCookie('myCloudProxySession', 'pearson.com');
     deleteCookie('DISABLE_DELETE_WARNINGS', 'pearson.com');
+    deleteCookie('DISABLE_LIST_ELEMENT_WARNING', 'pearson.com');
     removeAllLocal();
 };
 

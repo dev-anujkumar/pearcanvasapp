@@ -44,7 +44,8 @@ jest.mock('../../../src/constants/utility.js', () => {
     createLabelNumberTitleModel: () => {
         return ""
     },
-    guid: jest.fn()}
+    guid: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )}
  })
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
