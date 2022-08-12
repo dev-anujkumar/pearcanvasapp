@@ -68,7 +68,10 @@ jest.mock('../../../src/constants/utility.js', () => {
         },
         guid: jest.fn(),
         removeBlankTags: jest.fn(),
-        handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
+        handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
+        getCookieByName: () => {
+            return true
+        }
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {
