@@ -108,8 +108,12 @@ describe('Test for Sidebar component', () => {
 
         target = {
             target: {
-                getAttribute: function(dataValue) {
-                    return 'secondary-image-figure-width';
+                querySelector: ()=>{
+                    return {
+                        getAttribute: function(dataValue) {
+                            return 'secondary-image-figure-width';
+                        }
+                    }
                 }
             }
         }
@@ -1016,7 +1020,11 @@ describe('Test for Sidebar component', () => {
             const sidebarInstance = sidebar.find('Sidebar').instance();
             let event = {
                 target: {
-                    getAttribute: () => 'secondary-single-assessment-puf'
+                    querySelector: ()=>{
+                        return {
+                            getAttribute: () => 'secondary-single-assessment-puf'
+                        }
+                    } 
                 }
             }
             const spyHandleSecondaryOptionChange = jest.spyOn(sidebarInstance, 'handleSecondaryOptionChange');
@@ -1058,7 +1066,11 @@ describe('Test for Sidebar component', () => {
             const sidebarInstance = sidebar.find('Sidebar').instance();
             let event = {
                 target: {
-                    getAttribute: () => 'secondary-single-assessment-puf'
+                    querySelector: ()=>{
+                        return {
+                            getAttribute: () => 'secondary-single-assessment-puf'
+                        }
+                    }
                 }
             }
             document.querySelector = () => {
@@ -1105,7 +1117,11 @@ describe('Test for Sidebar component', () => {
             const sidebarInstance = sidebar.find('Sidebar').instance();
             let event = {
                 target: {
-                    getAttribute: () => 'secondary-single-assessment-puf'
+                    querySelector: ()=>{
+                        return {
+                            getAttribute: () => 'secondary-single-assessment-puf'
+                        }
+                    }
                 }
             }
             document.querySelector = () => {
