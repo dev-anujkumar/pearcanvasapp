@@ -54,10 +54,38 @@ describe('Testing Element Blockquote component', () => {
         },
         className: 'test'
     }
+    let props1 = {
+        borderToggle: "showBorder",
+        btnClassName: "",
+        deleteElement: jest.fn(),
+        elemBorderToggle: true,
+        elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083180",
+        elementIndex: 0,
+        elementSepratorProps: jest.fn(),
+        handleBlur: jest.fn(),
+        index: 0,
+        labelText: "SD",
+        model: { text: "<blockquote class='blockquoteMarginalia'><p class='paragraphNummerEins'><br></p><p class='' contenteditable='true' data-placeholder='Attribution Text'></p></blockquote>" },
+        permissions: [],
+        slateLockInfo: { isLocked: false, userId: "" },
+        type: undefined,
+        updatePageNumber: undefined,
+        userRole: "admin",
+        activeElement: {
+            elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083180"
+        },
+        className: 'test'
+    }
     let elementAudioVideo = mount(<Provider store={elementAudioVideoData} >
         <ElementBlockquote  {...props} />
     </Provider>);
     it('renders without crashing', () => {
         expect(elementAudioVideo).toHaveLength(1);
+    })
+    let elementAudioVideo1 = mount(<Provider store={elementAudioVideoData} >
+        <ElementBlockquote  {...props1} />
+    </Provider>);
+    it('renders without crashing', () => {
+        expect(elementAudioVideo1).toHaveLength(1);
     })
 });

@@ -2,7 +2,8 @@ import config from '../../src/config/config.js';
 import * as actions from '../../src/js/getAllSlatesData.js';
 import {allSlatesData,returnAllSlateData} from '../../fixtures/AllSlatesTestData';
 jest.mock('../../src/constants/utility.js', () => ({
-    sendDataToIframe: jest.fn()
+    sendDataToIframe: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 
 
