@@ -8,8 +8,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserJSPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+//const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+//const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const USEHASH = '[contenthash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
@@ -105,10 +106,10 @@ module.exports = {
             filename: "[name].css",
             chunkFilename: "[id].css"
         }),
-        new ScriptExtHtmlWebpackPlugin({
-            //To add defer property in script tags
-            defaultAttribute: 'defer'
-        }),
+        // new ScriptExtHtmlWebpackPlugin({
+        //     //To add defer property in script tags
+        //     defaultAttribute: 'defer'
+        // }),
         new CopyPlugin({ 
             patterns:[
             {
@@ -150,7 +151,7 @@ module.exports = {
                 parallel: true,
                 sourceMap: true
             }),
-            new OptimizeCSSAssetsPlugin({})
+            new CssMinimizerPlugin({})
         ]
     }
 }

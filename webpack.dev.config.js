@@ -6,7 +6,7 @@ const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+//const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const BrotliPlugin = require('brotli-webpack-plugin');
 const USEHASH = '[hash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
@@ -21,10 +21,10 @@ const plugin = [
         template: path.join(__dirname, 'src/index.html'),
         excludeChunks: ['server']
     }),
-    new ScriptExtHtmlWebpackPlugin({
-        //To add defer property in script tags
-        defaultAttribute: 'defer'
-    }),
+    // new ScriptExtHtmlWebpackPlugin({
+    //     //To add defer property in script tags
+    //     defaultAttribute: 'defer'
+    // }),
     new CopyPlugin({ 
         patterns:[
         {
@@ -38,7 +38,7 @@ const plugin = [
     ]}
     ),
     // To prevent vendor hash id to change everytime
-    new webpack.HashedModuleIdsPlugin(),
+   // new webpack.HashedModuleIdsPlugin(),
     // This doesn't work with [contenthash] or [chunkhash] and uncomment it if HMR is needed
     new webpack.HotModuleReplacementPlugin(),
     new WebpackMd5Hash(),
