@@ -15,7 +15,7 @@ import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT } from '../SlateWrapper/Sla
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE } from '../../../src/constants/utility.js';
-import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './Popup_helpers';
+import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
 
 /**
 * @description - PopUp is a class based component. It is defined simply

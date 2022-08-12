@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 
 //Helper methods and constants
 import powerPasteHelpers from "./powerpaste_helpers.js";
-import { SECONDARY_BUTTON, focusPopupButtons, blurPopupButtons } from '../PopUp/Popup_helpers.js';
+import { SECONDARY_BUTTON, focusPopupButtons, blurPopupButtons } from '../PopUp/PopUp_helpers.js';
 
 // Tinymce library and plugins
 import tinymce from 'tinymce/tinymce';
