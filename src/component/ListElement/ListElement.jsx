@@ -7,6 +7,8 @@ import { showTocBlocker, showBlocker, hideTocBlocker,disableHeader } from '../..
 // IMPORT - Assets //
 import '../../styles/ListElement/style.css'
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
+import { sendDataToIframe } from '../../constants/utility.js';
+import { DISABLE_LIST_ELEMENT_WARNING } from '../../constants/IFrameMessageTypes.js';
 
 export class ListElement extends Component {
     constructor(props) {
@@ -18,7 +20,8 @@ export class ListElement extends Component {
         this.onFocus = this.onFocus.bind(this);
     }
 
-    listWarningConfirmation = ()=>{
+    listWarningConfirmation = () => {
+        if (this.props.listElementWarningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_LIST_ELEMENT_WARNING, 'message': { disableListElementWarning: true } });
         this.props.onListSelect(this.state.listType, "");
         this.togglePopup(false,null)
     }
@@ -34,10 +37,12 @@ export class ListElement extends Component {
             disableHeader(false)
         }
         this.setState({popup : value, listType : type})
+        //when Popup is opened or closed reset the checkbox value
+        this.props?.handleListElementWarningPopupCheckbox({ target: { checked: false } })
     }
 
     render() {
-        const { className, model, element, slateLockInfo, showHideType } = this.props
+        const { className, model, element, slateLockInfo, showHideType, listElementWarningPopupCheckbox, handleListElementWarningPopupCheckbox } = this.props
         //***************************************************************
         //************ this is to cover wip conversion case *************
         let wipModel = null;
@@ -61,6 +66,8 @@ export class ListElement extends Component {
                         tocDeleteClass={'listConfirmation'}
                         saveButtonText={"Yes"}
                         saveContent={this.listWarningConfirmation}
+                        handleListElementWarningPopupCheckbox={handleListElementWarningPopupCheckbox}
+                        listElementWarningPopupCheckbox={listElementWarningPopupCheckbox}
                     />
                 }
                 <KeyboardWrapper enable index={this.props.index}>

@@ -26,7 +26,8 @@ if (!global.Element.prototype.hasOwnProperty("innerText")) {
 
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
-    hasReviewerRole: jest.fn()
+    hasReviewerRole: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 // jest.mock('../../../src/component/AssessmentSlateCanvas/elm/RootElmComponent.jsx', () => {
 //     return function () {
