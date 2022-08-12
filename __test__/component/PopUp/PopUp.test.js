@@ -198,6 +198,21 @@ describe('Testing PopUp component', () => {
         const component = mount(<PopUp {...props}/>);
         expect(component.instance().props.warningPopupCheckbox).toEqual(true);
     });
+
+    it('testCase for renderDeleteWarningPopupCheckbox',() => {
+        let props = {
+            listElementWarningPopupCheckbox:true,
+            listConfirmation:true,
+            handleListElementWarningPopupCheckbox:jest.fn()
+        }
+        const event = {
+            target: { value: 'the-value' }
+        };
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.popup-checkbox').simulate('change', event);
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.listElementWarningPopupCheckbox).toEqual(true);
+    });
     
     describe("Testing method handleKeyDown()", () => {
         it("Test handleKeyDown method for keyCode=13", () => {
