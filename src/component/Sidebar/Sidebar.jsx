@@ -390,7 +390,12 @@ class Sidebar extends Component {
 
     /**@description function handles the secondaryoption change dropdown */
     handleSecondaryOptionChange = e => {
-        let value = e.target.querySelector('span[data-value]').getAttribute('data-value').toLowerCase();
+        let value;  
+        if(e.target.tagName == "LI" ){
+            value = e.target.querySelector('span[data-value]').getAttribute('data-value').toLowerCase();
+        }else if (e.target.tagName == "SPAN" ){
+            value = e.target.getAttribute('data-value').toLowerCase();
+        }
         let elementTypeList = elementList[this.state.activeElementType];
         let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
         if (value === this.state.activeSecondaryOption) {
@@ -496,6 +501,7 @@ class Sidebar extends Component {
                             disablePortal
                             disableClearable
                             id="language-select-demo"
+                            noOptionsText={''}
                             style={{ width: 210 }}
                             ListboxProps={{ style: { maxHeight: "865px"}}}
                             value={secondaryOptionObject[this.state.activeSecondaryOption]}
