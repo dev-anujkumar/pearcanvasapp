@@ -393,7 +393,7 @@ class Sidebar extends Component {
         let value;  
         if(e?.target?.tagName == "LI" ){
             value = e?.target?.querySelector('span[data-value]')?.getAttribute('data-value')?.toLowerCase();
-        }else if (e?.target?.tagName == "SPAN" ){
+        } else {
             value = e?.target?.getAttribute('data-value')?.toLowerCase();
         }
         let elementTypeList = elementList[this.state.activeElementType];
