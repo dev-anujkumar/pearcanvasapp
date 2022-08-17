@@ -11,6 +11,7 @@ import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements
 // DECLARATION - const or variables 
 export const PRIMARY_BUTTON = "primary";
 export const SECONDARY_BUTTON = "secondary";
+export const CHECKBOX_MESSAGE = "Don't ask me again";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>', '</p>', '</ul>', '</ol>', '</li>']

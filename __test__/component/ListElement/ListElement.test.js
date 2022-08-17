@@ -21,7 +21,9 @@ describe('ListElement', () => {
       isLocked: false,
       userId: 'c5Test02'
     },
-    showBlocker: jest.fn()
+    showBlocker: jest.fn(),
+    listElementWarningPopupCheckbox: true,
+    handleListElementWarningPopupCheckbox: jest.fn()
   }
   const mockStore = configureMockStore(middlewares);
   let initialState = {

@@ -14,8 +14,8 @@ import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
-import { PRIMARY_BUTTON, SECONDARY_BUTTON } from '../../../src/constants/utility.js';
-import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './Popup_helpers';
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE } from '../../../src/constants/utility.js';
+import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
 
 /**
 * @description - PopUp is a class based component. It is defined simply
@@ -641,13 +641,24 @@ class PopUp extends React.Component {
     }
 
     // function to render checkbox inside delete element warning popup
-    renderDeleteWarningPopupCheckbox = (props) => {
-        return (
-            <div className='popup-checkbox-message'>
-                <input className='popup-checkbox' type="checkbox" value={props.warningPopupCheckbox} checked={props.warningPopupCheckbox} onChange={(event) => props?.handleCheckboxPopup(event)} />
-                <p className='popup-checkbox-text'>Don't ask me again</p>
-            </div>
-        )
+    renderPopupCheckbox = (props) => {
+        if (props.showDeleteElemPopup) {
+            return (
+                <div className='popup-checkbox-message'>
+                    <input className='popup-checkbox' type="checkbox" value={props.warningPopupCheckbox} checked={props.warningPopupCheckbox} onChange={(event) => props?.handleCheckboxPopup(event)} />
+                    <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
+                </div>
+            )
+        } else if (props.listConfirmation) {
+            return (
+                <div className='popup-checkbox-message'>
+                    <input className='popup-checkbox' type="checkbox" value={props.listElementWarningPopupCheckbox} checked={props.listElementWarningPopupCheckbox} onChange={(event) => props?.handleListElementWarningPopupCheckbox(event)} />
+                    <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
+                </div>
+            )
+        } else {
+            return null
+        }
     }
 
     render() {
@@ -661,8 +672,8 @@ class PopUp extends React.Component {
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
-                                {this.props.showDeleteElemPopup && this.renderDeleteWarningPopupCheckbox(this.props)}
-                                <div className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`} ref={this.wordPastePopupTextAreaRef}>
+                                {this.renderPopupCheckbox(this.props)}
+                                <div className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
                                 {!isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
