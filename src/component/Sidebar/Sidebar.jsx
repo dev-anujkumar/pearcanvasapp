@@ -501,9 +501,9 @@ class Sidebar extends Component {
                             disablePortal
                             disableClearable
                             id="language-select-demo"
-                            noOptionsText={''}
+                            noOptionsText={'No result found'}
                             style={{ width: 210 }}
-                            ListboxProps={{ style: { maxHeight: "865px"}}}
+                            ListboxProps={{ style: { maxHeight: "270px"}}}
                             value={secondaryOptionObject[this.state.activeSecondaryOption]}
                             options={secondaryQueriedOptions}
                             onChange={this.handleSecondaryOptionChange}
