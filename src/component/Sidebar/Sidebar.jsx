@@ -390,7 +390,7 @@ class Sidebar extends Component {
 
     /**@description function handles the secondaryoption change dropdown */
     handleSecondaryOptionChange = e => {
-        let value;  
+        let value = '';
         if(e?.target?.tagName == "LI" ){
             value = e?.target?.querySelector('span[data-value]')?.getAttribute('data-value')?.toLowerCase();
         } else {
@@ -449,7 +449,7 @@ class Sidebar extends Component {
     }
     secondaryOption = () => {
         let secondaryOptions = '';
-        let secondaryQueriedOptions = [];
+        let languageDropdownOptions = [];
         let enableColumn3SecondaryOption = false;
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
@@ -471,7 +471,7 @@ class Sidebar extends Component {
                         addClass = 'learnosity-disabled';
                         showLearnosityDropdown = true;
                     }
-                    secondaryQueriedOptions.push({...secondaryOptionObject[item], item})
+                    languageDropdownOptions.push({...secondaryOptionObject[item], item});
                     return <li key={item} data-value={item} className={`${addClass}`} onClick={this.handleSecondaryOptionChange}>
                         {secondaryOptionObject[item].text}
                     </li>;
@@ -496,16 +496,19 @@ class Sidebar extends Component {
                 const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
-                    <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                        {secondaryOptionObject[this.state.activeSecondaryOption].text}
+                        {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
+                    </div>) : (<div className={`element-dropdown-title bce ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         <Autocomplete
                             disablePortal
                             disableClearable
                             id="language-select-demo"
                             noOptionsText={'No result found'}
                             style={{ width: 210 }}
-                            ListboxProps={{ style: { maxHeight: "270px"}}}
+                            ListboxProps={{ style: { maxHeight: "270px" } }}
                             value={secondaryOptionObject[this.state.activeSecondaryOption]}
-                            options={secondaryQueriedOptions}
+                            options={languageDropdownOptions}
                             onChange={this.handleSecondaryOptionChange}
                             getOptionLabel={(option) => option.text}
                             renderOption={(option) => (
@@ -527,9 +530,7 @@ class Sidebar extends Component {
                                 />
                             )}
                         />
-
-                        {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span></span>}
-                    </div>
+                    </div>)}
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
                     </ul>
