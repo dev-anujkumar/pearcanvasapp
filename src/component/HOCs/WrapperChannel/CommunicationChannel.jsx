@@ -821,7 +821,7 @@ function CommunicationChannel(WrappedComponent) {
                 localStorage.setItem('lastAlignedLos', JSON.stringify({...lastAlignedLosToSlates,...newAlignment}));
             }
         }
-        handleLOData = (message, updatedData) => {
+        handleLOData = (message) => {
             if (message.statusForSave) {
                 message.loObj ? this.props.currentSlateLOMath([message.loObj.label.en]) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
