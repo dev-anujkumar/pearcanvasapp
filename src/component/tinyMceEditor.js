@@ -362,7 +362,6 @@ export class TinyMceEditor extends Component {
     }
 
     toggleConfirmationPopup = (value, type) => {
-        console.log(`Inside toggleConfirmationPopup value : ${value} type : ${type}`)
         this.props.togglePopup(value, type)
     }
 
