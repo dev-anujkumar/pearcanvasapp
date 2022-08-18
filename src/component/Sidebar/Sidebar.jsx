@@ -391,7 +391,8 @@ class Sidebar extends Component {
     /**@description function handles the secondaryoption change dropdown */
     handleSecondaryOptionChange = e => {
         let value = '';
-        if(e?.target?.tagName == "LI" ){
+        // This if condition satisfied when we select any option from BCE dropdown
+        if(e?.target?.tagName == "LI" && e?.target?.querySelector('span[data-value]')?.tagName == "SPAN"){
             value = e?.target?.querySelector('span[data-value]')?.getAttribute('data-value')?.toLowerCase();
         } else {
             value = e?.target?.getAttribute('data-value')?.toLowerCase();
