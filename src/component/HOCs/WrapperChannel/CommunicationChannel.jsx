@@ -208,7 +208,7 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.isLOExist(messageData);
                         if (config.parentEntityUrn !== ("Front Matter" || "Back Matter") && config.slateType === "assessment") {
                             let assessmentUrn = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ?? config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled } });
+                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ?? config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: config.slateManifestURN } });
                             if(dataToSend?.elementdata){
                                 dataToSend.inputType = ELEMENT_ASSESSMENT
                                 dataToSend.inputSubType = "NA"
