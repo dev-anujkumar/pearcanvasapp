@@ -1922,6 +1922,49 @@ describe('Testing communication channel', () => {
             expect(channelInstance.state.showBlocker).toBe(false)
             spyhandleIncommingMessages.mockClear()
         })
+        test('Test for cancelCEPopup case - slateTagEnabled block for assessment slate', () => {
+            config.slateType = 'assessment'
+            document.getElementsByClassName = () => {
+                return [{
+                    innerText:'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
+                }]
+            }
+            let event = {
+                data: {
+                    type: "cancelCEPopup",
+                    message: {
+                        slateTagEnabled: ''
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            expect(channelInstance.state.showBlocker).toBe(false)
+            spyhandleIncommingMessages.mockClear()
+        })
+        test('Test for cancelCEPopup case - slateTagEnabled block for assessment slate when no assessment Urn present on UI', () => {
+            config.slateType = 'assessment'
+            config.assessmentId = "urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8"
+            document.getElementsByClassName = () => {
+                return [{
+                    innerText:undefined
+                }]
+            }
+            let event = {
+                data: {
+                    type: "cancelCEPopup",
+                    message: {
+                        slateTagEnabled: ''
+                    }
+                }
+            }
+            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+            channelInstance.handleIncommingMessages(event);
+            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+            expect(channelInstance.state.showBlocker).toBe(false)
+            spyhandleIncommingMessages.mockClear()
+        })
     })
     test('Test for pageLink  if case - updatePageLink - if case', () => {
         let event = {
