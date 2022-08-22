@@ -371,6 +371,7 @@ img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage
  .mce-item-table caption{
      border: none !important;
      outline: none !important;
+     color: #000 !important;
  }
  .mce-item-table th{
     text-align: center ;
