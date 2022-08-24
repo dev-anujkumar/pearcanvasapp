@@ -673,7 +673,7 @@ class PopUp extends React.Component {
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
                                 {this.renderPopupCheckbox(this.props)}
-                                <div className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
+                                <div ref={this.wordPastePopupTextAreaRef} className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
                                 {!isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}
