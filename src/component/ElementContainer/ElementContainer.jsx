@@ -218,7 +218,7 @@ class ElementContainer extends Component {
 
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
-            this.HandleTimer();
+            this.handleUnduOptionTimer();
         }
     }
 
@@ -1471,7 +1471,7 @@ class ElementContainer extends Component {
         this.props.storeDeleteElementKeys({});
     }
 
-    HandleTimer = () => {
+    handleUnduOptionTimer = () => {
         let { parentElement } = this.props;
         const { id, type, index, elements, containerElements, parentUrn, asideData, contentUrn, poetryData } = this.props.deletedKeysValue
         document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
@@ -1571,7 +1571,7 @@ class ElementContainer extends Component {
         
         if(this.state.warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } }); 
         // api needs to run from here
-        if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {// || element.type === elementTypeConstant.SHOW_HIDE
+        if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {
             if (disableDeleteWarnings) {
                 this.showHideTimer = setTimeout(() => {
                     this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
@@ -2418,7 +2418,7 @@ class ElementContainer extends Component {
                             this.state.showUnduButton && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
                                 <p> {labelText} has been deleted. </p>
                                 <p className='undu-button' onClick={() => this.handleUnduElement()}> Undu </p>
-                                <Button type='toast-close-icon' onClick={() => this.HandleTimer()} />
+                                <Button type='toast-close-icon' onClick={() => this.handleUnduOptionTimer()} />
                             </div>
                         }
                         {
