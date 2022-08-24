@@ -333,6 +333,7 @@ class ElementAsideContainer extends Component {
                     permissions={this.props.permissions}
                     userRole={this.props.userRole}
                     handleCopyPastePopup={this.props.handleCopyPastePopup}
+                    handleUnduOption = {this.props.handleUnduOption}
                 />
                 <Sortable
                     options={{
@@ -499,6 +500,7 @@ class ElementAsideContainer extends Component {
                                         elementSepratorProps={this.props.elementSepratorProps}
                                         splithandlerfunction={this.props.splithandlerfunction}
                                         pasteElement={this.props.pasteElement}
+                                        handleUnduOption = {this.props.handleUnduOption}
                                     >
                                     </ElementContainer>
                                     <ElementSaprator
@@ -516,6 +518,7 @@ class ElementAsideContainer extends Component {
                                         pasteElement={this.props.pasteElement}
                                         source={ASIDE_SOURCE}
                                         handleCopyPastePopup={this.props.handleCopyPastePopup}
+                                        dataId = {element.id}
                                     />
                                 </React.Fragment>
                             )

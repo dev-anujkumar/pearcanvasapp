@@ -96,6 +96,7 @@ export class CitationGroup extends Component {
                                     parentElement = {this.context.element}
                                     userRole={this.props.userRole}
                                     asideData={asideData}
+                                    handleUnduOption = {this.props.handleUnduOption}
                                 >
                                 </ElementContainer>
                                 {
@@ -111,6 +112,7 @@ export class CitationGroup extends Component {
                                         userRole={this.props.userRole}
                                         pasteElement={this.props.pasteElement}
                                         source={CITATION_SOURCE}
+                                        dataId = {element.id}
                                     />
                                 }
                               

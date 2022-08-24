@@ -18,7 +18,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
     const elementIndex = eleIndex?.toString()?.split('-')
     const { cutCopyParentUrn, parentUrn, parentElement, asideData, showHideObj, isSectionBreak } = containerElements
     const _requestData = prepareDeleteRequestData(type, { elementId, elementIndex, parentElement, parentUrn, activeElement, cutCopyParentUrn, isSectionBreak })
-    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+    // sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {

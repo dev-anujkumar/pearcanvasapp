@@ -538,3 +538,11 @@ export const commentFlagged = (() => {
         </svg>  
     )
 })()
+
+export const closeIcon = (function () {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path fill="#fff" fillRule="nonzero" d="M20 5.611L18.389 4 12 10.389 5.611 4 4 5.611 10.389 12 4 18.389 5.611 20 12 13.611 18.389 20 20 18.389 13.611 12z" />
+        </svg>
+    )
+})();
