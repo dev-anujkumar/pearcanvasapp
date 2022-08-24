@@ -18,7 +18,12 @@ export const isSecondaryButtonFocused = () => {
 
 /**Function to focus element by adding class to elements class list */
 export const focusElement = (value) => {
-    document.querySelector(`[option=${value}]`)?.classList?.add(value);
+    const button = document.querySelector(`[option=${value}]`) ? document.querySelector(`[option=${value}]`) : null;
+    if (button && button.classList) {
+        button.classList.add(value);
+        button.tabIndex = '-1';
+        button.focus();
+    }
 }
 
 /**Function to remove focus of element by removing class from elements class list */
@@ -26,6 +31,7 @@ export const blurElement = (value) => {
     const button = document.querySelector(`[option=${value}]`) ? document.querySelector(`[option=${value}]`) : null;
     if (button && button.classList) {
         button.classList.remove(value);
+        button.tabIndex = '0';
         button.blur();
     }
 }
