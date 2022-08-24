@@ -23,11 +23,18 @@ export const focusElement = (value) => {
 
 /**Function to remove focus of element by removing class from elements class list */
 export const blurElement = (value) => {
-    document.querySelector(`[option=${value}]`)?.classList?.remove(value);
+    const button = document.querySelector(`[option=${value}]`) ? document.querySelector(`[option=${value}]`) : null;
+    if (button && button.classList) {
+        button.classList.remove(value);
+        button.blur();
+    }
 }
 
 //Focus Popup Buttons
 export const focusPopupButtons = () => {
+    if (isPrimaryButtonFocused() || isSecondaryButtonFocused()) {
+        return
+    }
     const secondaryButton = document.querySelector(`[option=${SECONDARY_BUTTON}]`) ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : null;
     if (secondaryButton && secondaryButton.classList) {
         setTimeout(() => {
