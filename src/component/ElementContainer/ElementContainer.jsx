@@ -182,7 +182,6 @@ class ElementContainer extends Component {
             this.setState({ showCopyPopup: false })
         });
         document.addEventListener("mousedown", this.handleClickOutside);
-        config.savingInProgress = false
     }
 
     componentDidUpdate() {
@@ -231,7 +230,6 @@ class ElementContainer extends Component {
         handleElmPortalEvents('remove');/** Remove Elm-Assessment Update eventListener */
         handlePostMsgOnAddAssess("", "", "", "remove", "")
         document.removeEventListener("mousedown", this.handleClickOutside);
-        config.savingInProgress = false
     }
 
     componentWillReceiveProps(newProps) {
@@ -1453,10 +1451,11 @@ class ElementContainer extends Component {
 
     handleUnduElement = () => {
         const deletedElm = document.querySelector(`[data-id="${this.state.unduElement}"]`);
-        deletedElm.classList.remove("hideElement");
+        deletedElm?.classList?.remove("hideElement");
         const sapratorElm = document.getElementById(`${this.state.unduElement}`)
-        sapratorElm.classList.remove("hideElement");
-
+        sapratorElm?.classList?.remove("hideElement");
+        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
         clearTimeout(this.timer)
         clearTimeout(this.showHideTimer)
         clearTimeout(this.toastTimer)
@@ -1475,7 +1474,8 @@ class ElementContainer extends Component {
     HandleTimer = () => {
         let { parentElement } = this.props;
         const { id, type, index, elements, containerElements, parentUrn, asideData, contentUrn, poetryData } = this.props.deletedKeysValue
-
+        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
         clearTimeout(this.timer)
         clearTimeout(this.showHideTimer)
         clearTimeout(this.toastTimer)
@@ -1559,10 +1559,11 @@ class ElementContainer extends Component {
                 unduElement: id
             })
             const deletedElm = document.querySelector(`[data-id="${id}"]`);
-            deletedElm.classList.add("hideElement");
+            deletedElm?.classList?.add("hideElement");
             const sapratorElm = document.getElementById(`${id}`)
-            sapratorElm.classList.add("hideElement");
-            config.savingInProgress = true
+            sapratorElm?.classList?.add("hideElement");
+            document.getElementById('previous-slate-button')?.classList?.add('stop-event')
+            document.getElementById('next-slate-button')?.classList?.add('stop-event')
             this.props.storeDeleteElementKeys(object);  
         } else {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -2414,7 +2415,7 @@ class ElementContainer extends Component {
                     }
                 </div >
                         {
-                            this.state.showUnduButton && <div ref={this.wrapperRef} className='delete-toastMsg overlap' id="1233">
+                            this.state.showUnduButton && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
                                 <p> {labelText} has been deleted. </p>
                                 <p className='undu-button' onClick={() => this.handleUnduElement()}> Undu </p>
                                 <Button type='toast-close-icon' onClick={() => this.HandleTimer()} />
