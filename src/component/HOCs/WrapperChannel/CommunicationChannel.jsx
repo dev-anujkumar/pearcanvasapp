@@ -279,7 +279,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.togglePageNumberAction()
                     break;
                 case 'GetActiveSlate':
-                    sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN } });
+                    sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN, slateManifestURN: config.slateManifestURN } });
                     break;
                 case 'statusForExtLOSave':
                     this.handleExtLOData(message);

@@ -181,7 +181,7 @@ export class CanvasWrapper extends Component {
                             <div className="artboard-parent">
                                 {/*Prev Button */}
                                 {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container prev-btn ${config.disablePrev ? 'disabled':""}`}>
-                                    <div className='navigation-content'>
+                                    <div className='navigation-content' id = "previous-slate-button">
                                         <div className='navigation-button back' onClick={() => this.handleNavClick("back")}>
                                             <div className='navigation-icon'>{prevIcon}</div>
                                         </div>
@@ -204,7 +204,7 @@ export class CanvasWrapper extends Component {
                                     </div>
                                 }
                                  {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container next-btn ${config.disableNext ? 'disabled':""}`}>
-                                    <div className='navigation-content' >
+                                    <div className='navigation-content' id = "next-slate-button" >
                                         <div className='navigation-button next' onClick={() => this.handleNavClick("next")}>
                                             <div className='navigation-icon'>{nextIcon}</div>
                                         </div>

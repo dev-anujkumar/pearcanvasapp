@@ -1082,6 +1082,7 @@ class SlateWrapper extends Component {
                                             pasteElement={this.props.pasteElement}
                                             handleCopyPastePopup={this.handleCopyPastePopup}
                                             source={TEXT_SOURCE}
+                                            dataId = {element.id}
                                         />
                                         : null
                                     }

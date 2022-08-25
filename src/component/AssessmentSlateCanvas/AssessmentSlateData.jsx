@@ -69,7 +69,7 @@ class AssessmentSlateData extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.getAssessmentDataPopup !== prevProps.getAssessmentDataPopup) {
-            this.sendDataAssessment(this.props);
+            this.sendDataAssessment(this.props, true);
         }
         const { activeAssessmentType } = this.state;
         const { assessmentSlateObj, assessmentReducer } = this.props;
@@ -118,7 +118,7 @@ class AssessmentSlateData extends Component {
     }
     /**--------------------- This section consists of LO in AS related methods --------------------*/
     /*** @description - This function is to handle LO Data in AS */
-    sendDataAssessment(nextProps) {
+    sendDataAssessment(nextProps, isElementUpdate) {
         if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "assessment") {
             let apiKeys_LO = {
                 'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
@@ -134,7 +134,7 @@ class AssessmentSlateData extends Component {
                 if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                     this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
                 }
-                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentUrn, apiKeys_LO, externalLFUrn:externalLFUrn } });
+                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentUrn, apiKeys_LO, externalLFUrn:externalLFUrn, isElementUpdate } });
             }
             else { //set tag to grey heresss                 
                 let newMessage = { assessmentResponseMsg: false };

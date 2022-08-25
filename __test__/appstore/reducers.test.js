@@ -46,7 +46,11 @@ import {
     UPDATE_OLD_SMARTLINK_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     UPDATE_TABLE_ELEMENT_ASSET_DATA,
-    UPDATE_TABLE_ELEMENT_EDITED_DATA
+    UPDATE_TABLE_ELEMENT_EDITED_DATA,
+    DELETE_ELEMENT_KEYS,
+    SET_JOINED_PDF_STATUS,
+    SET_SLATE_MATTER_TYPE,
+    UPDATE_CARET_OFFSET
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -764,6 +768,47 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         expect(reducer(initialState, {
             type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
             payload: {}
+        })).toEqual(output);
+    });
+
+    it('case 50- DELETE_ELEMENT_KEYS ', () => {
+        let output = {
+            ...initialState,
+            deletedElementKeysData: {}
+        }
+        expect(reducer(initialState, {
+            type: DELETE_ELEMENT_KEYS,
+            payload: {}
+        })).toEqual(output);
+    });
+    it('case 51- SET_JOINED_PDF_STATUS ', () => {
+        let output = {
+            ...initialState,
+            isJoinedPdfSlate: false
+        }
+        expect(reducer(initialState, {
+            type: SET_JOINED_PDF_STATUS,
+            payload: false
+        })).toEqual(output);
+    });
+    it('case 52- SET_SLATE_MATTER_TYPE ', () => {
+        let output = {
+            ...initialState,
+            slateMatterType: {}
+        }
+        expect(reducer(initialState, {
+            type: SET_SLATE_MATTER_TYPE,
+            payload: {}
+        })).toEqual(output);
+    });
+    it('case 53- UPDATE_CARET_OFFSET ', () => {
+        let output = {
+            ...initialState,
+            caretPosition: ""
+        }
+        expect(reducer(initialState, {
+            type: UPDATE_CARET_OFFSET,
+            payload: ""
         })).toEqual(output);
     });
 });
