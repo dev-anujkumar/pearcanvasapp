@@ -17,7 +17,8 @@ global.document = (new JSDOM()).window.Element;
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
-    getLabelNumberTitleHTML: jest.fn()
+    getLabelNumberTitleHTML: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshotsCreate_Update.js', () => ({
     prepareSnapshots_ShowHide: jest.fn(),
@@ -420,11 +421,57 @@ describe('Tests ElementContainer Actions', () => {
 
             }
             jest.mock('../../../src/constants/utility.js', () => ({
-                hasReviewerRole: () => {return true}
+                hasReviewerRole: () => {return true},
+                handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
             }))
             const spyupdateElement = jest.spyOn(actions, 'updateElement')
             actions.updateElement(updatedData, 0, parentUrn, asideData, "postertextobject")(store.dispatch, store.getState)
             expect(spyupdateElement).toHaveBeenCalled()
+        })
+        it('testing------- Update Element -----action---Assessment slate', () => {
+            
+            let store = mockStore(() => initialState);
+            
+            const updatedData = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-assessment",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: updatedData
+                });
+            });
+            let parentUrn = {
+                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                elementType: "element-authoredtext"
+            }
+           config.tcmStatus= true
+            let asideData = {
+                type: "element-authoredtext",
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+
+            }
+            const spyupdateElement = jest.spyOn(actions, 'updateElement')
+            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
+                expect(spyupdateElement).toHaveBeenCalled()
+            });
         })
     })
 

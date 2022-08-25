@@ -112,7 +112,7 @@ const ShowHideUiBlock = (props) => {
 			handleFocus = {props.handleFocus}
 			elementSepratorProps={props.elementSepratorProps}
 			splithandlerfunction={props.splithandlerfunction}
-			handleUnduOption = {props.handleUnduOption}
+			handleUndoOption = {props.handleUndoOption}
 		/>
 	}
 

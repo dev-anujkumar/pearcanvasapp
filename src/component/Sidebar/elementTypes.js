@@ -306,70 +306,85 @@ export default {
                     labelText: 'BCE',
                     enum: 'SELECT'
                 },
-                'secondary-blockcode-language-c++': {
-                    text: 'C++',
+                'secondary-blockcode-language-apache': {
+                    text: 'Apache',
                     labelText: 'BCE',
-                    enum: 'C_PLUS'
-                },
-                'secondary-blockcode-language-java': {
-                    text: 'Java',
-                    labelText: 'BCE',
-                    enum: 'JAVA'
+                    enum: 'APACHE'
                 },
                 'secondary-blockcode-language-c': {
                     text: 'C',
                     labelText: 'BCE',
                     enum: 'C'
                 },
-                'secondary-blockcode-language-python': {
-                    text: 'Python',
+                'secondary-blockcode-language-c#': {
+                    text: 'C#',
                     labelText: 'BCE',
-                    enum: 'PYTHON'
+                    enum: 'C_SHARP'
                 },
-                'secondary-blockcode-language-javascript': {
-                    text: 'Javascript',
+                'secondary-blockcode-language-c++': {
+                    text: 'C++',
                     labelText: 'BCE',
-                    enum: 'JAVA_SCRIPT'
-                },
-                'secondary-blockcode-language-html': {
-                    text: 'HTML',
-                    labelText: 'BCE',
-                    enum: 'HTML'
+                    enum: 'C_PLUS'
                 },
                 'secondary-blockcode-language-css': {
                     text: 'CSS',
                     labelText: 'BCE',
                     enum: 'CSS'
                 },
-                'secondary-blockcode-language-apache': {
-                    text: 'Apache',
+                'secondary-blockcode-language-glsl': {
+                    text: 'GLSL',
                     labelText: 'BCE',
-                    enum: 'APACHE'
+                    enum: 'GLSL'
                 },
-                'secondary-blockcode-language-c#': {
-                    text: 'C#',
+                'secondary-blockcode-language-go': {
+                    text: 'GO',
                     labelText: 'BCE',
-                    enum: 'C_SHARP'
+                    enum: 'GO'
+                },
+                'secondary-blockcode-language-html': {
+                    text: 'HTML',
+                    labelText: 'BCE',
+                    enum: 'HTML'
+                },
+                'secondary-blockcode-language-java': {
+                    text: 'Java',
+                    labelText: 'BCE',
+                    enum: 'JAVA'
+                },
+                'secondary-blockcode-language-javascript': {
+                    text: 'Javascript',
+                    labelText: 'BCE',
+                    enum: 'JAVA_SCRIPT'
                 },
                 'secondary-blockcode-language-json': {
                     text: 'JSON',
                     labelText: 'BCE',
                     enum: 'JSON'
                 },
-                'secondary-blockcode-language-makefile': {
-                    text: 'Makefile',
-                    labelText: 'BCE',
-                    enum: 'MAKE_FILE'
-                },
                 'secondary-blockcode-language-kotlin': {
                     text: 'Kotlin',
                     labelText: 'BCE',
                     enum: 'KOTLIN'
                 },
-                'secondary-blockcode-language-r': {
-                    text: 'R',
+                'secondary-blockcode-language-lisp': {
+                    text: 'Lisp',
                     labelText: 'BCE',
-                    enum: 'R'
+                    enum: 'LISP'
+                },
+                'secondary-blockcode-language-makefile': {
+                    text: 'Makefile',
+                    labelText: 'BCE',
+                    enum: 'MAKE_FILE'
+                },
+                'secondary-blockcode-language-matlab': {
+                    text: 'Matlab',
+                    labelText: 'BCE',
+                    enum: 'MATLAB'
+                },
+                'secondary-blockcode-language-objective_c': {
+                    text: 'Objective C',
+                    labelText: 'BCE',
+                    enum: 'OBJECTIVE_C'
                 },
                 'secondary-blockcode-language-perl': {
                     text: 'Perl',
@@ -381,25 +396,20 @@ export default {
                     labelText: 'BCE',
                     enum: 'PHP'
                 },
-                'secondary-blockcode-language-go': {
-                    text: 'GO',
+                'secondary-blockcode-language-python': {
+                    text: 'Python',
                     labelText: 'BCE',
-                    enum: 'GO'
+                    enum: 'PYTHON'
+                },
+                'secondary-blockcode-language-r': {
+                    text: 'R',
+                    labelText: 'BCE',
+                    enum: 'R'
                 },
                 'secondary-blockcode-language-ruby': {
                     text: 'Ruby',
                     labelText: 'BCE',
                     enum: 'RUBY'
-                },
-                'secondary-blockcode-language-lisp': {
-                    text: 'Lisp',
-                    labelText: 'BCE',
-                    enum: 'LISP'
-                },
-                'secondary-blockcode-language-objective_c': {
-                    text: 'Objective C',
-                    labelText: 'BCE',
-                    enum: 'OBJECTIVE_C'
                 },
                 'secondary-blockcode-language-scala': {
                     text: 'Scala',
@@ -411,6 +421,11 @@ export default {
                     labelText: 'BCE',
                     enum: 'SHELL_SESSION'
                 },
+                'secondary-blockcode-language-sml': {
+                    text: 'SML',
+                    labelText: 'BCE',
+                    enum: 'SML'
+                },
                 'secondary-blockcode-language-sql': {
                     text: 'SQL',
                     labelText: 'BCE',
@@ -421,31 +436,16 @@ export default {
                     labelText: 'BCE',
                     enum: 'SWIFT'
                 },
-                'secondary-blockcode-language-xml': {
-                    text: 'XML',
-                    labelText: 'BCE',
-                    enum: 'XML'
-                },
-                'secondary-blockcode-language-matlab': {
-                    text: 'Matlab',
-                    labelText: 'BCE',
-                    enum: 'MATLAB'
-                },
-                'secondary-blockcode-language-glsl': {
-                    text: 'GLSL',
-                    labelText: 'BCE',
-                    enum: 'GLSL'
-                },
-                'secondary-blockcode-language-sml': {
-                    text: 'SML',
-                    labelText: 'BCE',
-                    enum: 'SML'
-                },
                 'secondary-blockcode-language-verilog': {
                     text: 'Verilog',
                     labelText: 'BCE',
                     enum: 'VERILOG'
-                }
+                },
+                'secondary-blockcode-language-xml': {
+                    text: 'XML',
+                    labelText: 'BCE',
+                    enum: 'XML'
+                },      
             }
         },
         'primary-editor-table-equation': {

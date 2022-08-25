@@ -172,11 +172,33 @@
 .bl .comment-flag {
     margin-bottom:10px !important;
 }
-
 .bl .add-comment{
-    height: 19px;
+    min-height: 12px;
+    max-height: 22.2px;
     padding-top: 0px;
 }
+.bl .flag-comment{
+    min-height: 12px;
+    max-height: 22.2px;
+    padding-top: 0px;
+    width: fit-content;
+}
+.bl .tooltip .tooltip-comment{
+    position: relative;
+    left: 19px;
+    top: 1px;
+}
+.bl .tooltip .tooltip-flag{
+    position: relative;
+    left: 35px;
+    top: 1px;
+}
+.bl .tooltip .tooltip-view-comment{
+    position: relative;
+    left: 42px;
+    top: 1px;
+}
+
 
 /* .element-container{
     padding: 1px 8px !important; 
@@ -333,7 +355,7 @@ p.blockquoteTextCredit.mce-edit-focus.place-holder:focus::before {
     font-family: 'Open Sans', sans-serif;
     margin-right: 28px;
   }
-  .delete-toastMsg .undu-button {
+  .delete-toastMsg .undo-button {
     font-size: 14px;
     font-family: 'Open Sans', sans-serif;
     color:#8AB4F7;

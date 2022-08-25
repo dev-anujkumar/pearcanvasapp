@@ -13,7 +13,7 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
-import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT } from '../../SlateWrapper/SlateWrapperConstants'
+import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT  } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../../constants/Element_Constants.js';
 import { SLATE_TYPE_PDF, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -208,7 +208,7 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.isLOExist(messageData);
                         if (config.parentEntityUrn !== ("Front Matter" || "Back Matter") && config.slateType === "assessment") {
                             let assessmentUrn = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ?? config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled } });
+                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ?? config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: config.slateManifestURN } });
                             if(dataToSend?.elementdata){
                                 dataToSend.inputType = ELEMENT_ASSESSMENT
                                 dataToSend.inputSubType = "NA"
@@ -279,7 +279,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.togglePageNumberAction()
                     break;
                 case 'GetActiveSlate':
-                    sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN } });
+                    sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN, slateManifestURN: config.slateManifestURN } });
                     break;
                 case 'statusForExtLOSave':
                     this.handleExtLOData(message);
@@ -821,7 +821,7 @@ function CommunicationChannel(WrappedComponent) {
                 localStorage.setItem('lastAlignedLos', JSON.stringify({...lastAlignedLosToSlates,...newAlignment}));
             }
         }
-        handleLOData = (message, updatedData) => {
+        handleLOData = (message) => {
             if (message.statusForSave) {
                 message.loObj ? this.props.currentSlateLOMath([message.loObj.label.en]) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {

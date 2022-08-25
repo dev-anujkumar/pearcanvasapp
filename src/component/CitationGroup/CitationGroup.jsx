@@ -96,7 +96,7 @@ export class CitationGroup extends Component {
                                     parentElement = {this.context.element}
                                     userRole={this.props.userRole}
                                     asideData={asideData}
-                                    handleUnduOption = {this.props.handleUnduOption}
+                                    handleUndoOption = {this.props.handleUndoOption}
                                 >
                                 </ElementContainer>
                                 {

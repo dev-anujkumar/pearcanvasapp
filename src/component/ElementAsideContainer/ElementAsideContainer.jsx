@@ -333,7 +333,7 @@ class ElementAsideContainer extends Component {
                     permissions={this.props.permissions}
                     userRole={this.props.userRole}
                     handleCopyPastePopup={this.props.handleCopyPastePopup}
-                    handleUnduOption = {this.props.handleUnduOption}
+                    handleUndoOption = {this.props.handleUndoOption}
                 />
                 <Sortable
                     options={{
@@ -500,7 +500,7 @@ class ElementAsideContainer extends Component {
                                         elementSepratorProps={this.props.elementSepratorProps}
                                         splithandlerfunction={this.props.splithandlerfunction}
                                         pasteElement={this.props.pasteElement}
-                                        handleUnduOption = {this.props.handleUnduOption}
+                                        handleUndoOption = {this.props.handleUndoOption}
                                     >
                                     </ElementContainer>
                                     <ElementSaprator

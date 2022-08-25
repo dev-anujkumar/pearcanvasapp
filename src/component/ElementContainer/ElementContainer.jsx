@@ -113,9 +113,10 @@ class ElementContainer extends Component {
             isActive: false,
             showBlockCodeElemPopup: false,
             warningPopupCheckbox: false,
-            showUnduButton : false,
-            unduElement: "",
-            showActionUndone : false 
+            showUndoButton : false,
+            undoElement: "",
+            showActionUndone : false,
+            listElementWarningPopupCheckbox: false
         };
         this.wrapperRef = React.createRef();
 
@@ -218,7 +219,7 @@ class ElementContainer extends Component {
 
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
-            this.handleUnduOptionTimer();
+            this.handleUndoOptionTimer();
         }
     }
 
@@ -1413,7 +1414,7 @@ class ElementContainer extends Component {
                 showActionUndone: false
             }, () => {
                 this.deleteElement(e);
-                this.handleUnduOption(true);
+                this.handleUndoOption(true);
             })
         } else {
             this.setState({
@@ -1437,22 +1438,22 @@ class ElementContainer extends Component {
         });
     }
 
-    handleUnduOption = (status) => {
+    handleUndoOption = (status) => {
         this.setState({
-            showUnduButton: status,
+            showUndoButton: status,
             showActionUndone: false
         })
         this.toastTimer = setTimeout(() => {
             this.setState({
-                showUnduButton: false
+                showUndoButton: false
             })  
         }, 6000);
     }
 
-    handleUnduElement = () => {
-        const deletedElm = document.querySelector(`[data-id="${this.state.unduElement}"]`);
+    handleUndoElement = () => {
+        const deletedElm = document.querySelector(`[data-id="${this.state.undoElement}"]`);
         deletedElm?.classList?.remove("hideElement");
-        const sapratorElm = document.getElementById(`${this.state.unduElement}`)
+        const sapratorElm = document.getElementById(`${this.state.undoElement}`)
         sapratorElm?.classList?.remove("hideElement");
         document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
         document.getElementById('next-slate-button')?.classList?.remove('stop-event')
@@ -1460,7 +1461,7 @@ class ElementContainer extends Component {
         clearTimeout(this.showHideTimer)
         clearTimeout(this.toastTimer)
         this.setState({
-            showUnduButton: false,
+            showUndoButton: false,
             showActionUndone: true
         })
         this.toastUndoneTimer = setTimeout(() => {
@@ -1471,7 +1472,7 @@ class ElementContainer extends Component {
         this.props.storeDeleteElementKeys({});
     }
 
-    handleUnduOptionTimer = () => {
+    handleUndoOptionTimer = () => {
         let { parentElement } = this.props;
         const { id, type, index, elements, containerElements, parentUrn, asideData, contentUrn, poetryData } = this.props.deletedKeysValue
         document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
@@ -1480,7 +1481,7 @@ class ElementContainer extends Component {
         clearTimeout(this.showHideTimer)
         clearTimeout(this.toastTimer)
         this.setState({
-            showUnduButton: false
+            showUndoButton: false
         })
         if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {
             this.props.deleteElementAction(id, type, index, elements, containerElements, this.props.showBlocker);
@@ -1556,7 +1557,7 @@ class ElementContainer extends Component {
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
         if(disableDeleteWarnings) {
             this.setState({
-                unduElement: id
+                undoElement: id
             })
             const deletedElm = document.querySelector(`[data-id="${id}"]`);
             deletedElm?.classList?.add("hideElement");
@@ -1738,6 +1739,13 @@ class ElementContainer extends Component {
             warningPopupCheckbox: event?.target?.checked
         });
     }
+
+    handleListElementWarningPopupCheckbox = (event) => {
+        this.setState({
+            listElementWarningPopupCheckbox: event?.target?.checked
+        });
+    }
+
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element
     * @param {*} tcmData tcm data for elements on the slate
@@ -1896,7 +1904,7 @@ class ElementContainer extends Component {
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} markedIndexValue={this.props.markedIndexValue} openMarkedIndexPopUp={this.openMarkedIndexPopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} markedIndexValue={this.props.markedIndexValue} openMarkedIndexPopUp={this.openMarkedIndexPopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType} handleListElementWarningPopupCheckbox={this.handleListElementWarningPopupCheckbox} listElementWarningPopupCheckbox={this.state.listElementWarningPopupCheckbox} />;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -1936,7 +1944,7 @@ class ElementContainer extends Component {
                         markedIndexPopup= {this.props.markedIndexPopup}
                         showHideType = {this.props.showHideType}
                         handleCopyPastePopup={this.props.handleCopyPastePopup}
-                        handleUnduOption = {this.handleUnduOption}
+                        handleUndoOption = {this.handleUndoOption}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1966,7 +1974,7 @@ class ElementContainer extends Component {
                         handleAudioPopupLocation={this.handleAudioPopupLocation}
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
                         parentElement={this.props?.parentElement}
-                        handleUnduOption = {this.handleUnduOption}
+                        handleUndoOption = {this.handleUndoOption}
                     />;
                     labelText = 'Pop'
                     break;
@@ -2008,7 +2016,7 @@ class ElementContainer extends Component {
                         handleCommentspanel={handleCommentspanel}
                         pasteElement={this.props.pasteElement}
                         splithandlerfunction={splithandlerfunction}
-                        handleUnduOption = {this.handleUnduOption}
+                        handleUndoOption = {this.handleUndoOption}
                     />;
                     labelText = 'SH'
                     break;
@@ -2033,7 +2041,7 @@ class ElementContainer extends Component {
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
-                        handleUnduOption: this.handleUnduOption
+                        handleUndoOption: this.handleUndoOption
                     }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement}
                         />
                     </CitationGroupContext.Provider >;
@@ -2093,7 +2101,7 @@ class ElementContainer extends Component {
                         parentUrn={this.props?.parentUrn}
                         parentElement={this.props.parentElement}
                         showHideType = {this.props.showHideType}
-                        handleUnduOption = {this.handleUnduOption}
+                        handleUndoOption = {this.handleUndoOption}
                     />
                     labelText = 'PE'
                     break;
@@ -2124,7 +2132,7 @@ class ElementContainer extends Component {
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         handleAudioPopupLocation={this.handleAudioPopupLocation}
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
-                        handleUnduOption = {this.handleUnduOption}
+                        handleUndoOption = {this.handleUndoOption}
                     />
                     labelText = 'ST'
                     break;
@@ -2148,7 +2156,7 @@ class ElementContainer extends Component {
                             handleFocus: this.handleFocus,
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
-                            handleUnduOption:this.handleUnduOption,
+                            handleUndoOption:this.handleUndoOption,
                             splithandlerfunction: this.props.splithandlerfunction,
                         }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup} />
                         </MultiColumnContext.Provider>;
@@ -2170,7 +2178,7 @@ class ElementContainer extends Component {
                             handleFocus: this.handleFocus,
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
-                            handleUnduOption: this.handleUnduOption,
+                            handleUndoOption: this.handleUndoOption,
                             splithandlerfunction: this.props.splithandlerfunction,
                         }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup} />
                         </MultiColumnContext.Provider>;
@@ -2210,7 +2218,7 @@ class ElementContainer extends Component {
                         position={this.state.position}
                         handleCheckboxPopup ={this.handleWarningPopupCheckbox}
                         warningPopupCheckbox={this.state.warningPopupCheckbox}
-                        handleUnduOption = {this.handleUnduOption}
+                        handleUndoOption = {this.handleUndoOption}
                     />;
                     labelText = 'PS'
                     break;
@@ -2380,7 +2388,7 @@ class ElementContainer extends Component {
                         showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
                         handleCheckboxPopup ={this.handleWarningPopupCheckbox}
                         warningPopupCheckbox={this.state.warningPopupCheckbox}
-                        handleUnduOption = {this.handleUnduOption}
+                        handleUndoOption = {this.handleUndoOption}
                     />}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
@@ -2415,10 +2423,10 @@ class ElementContainer extends Component {
                     }
                 </div >
                         {
-                            this.state.showUnduButton && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
+                            this.state.showUndoButton && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
                                 <p> {labelText} has been deleted. </p>
-                                <p className='undu-button' onClick={() => this.handleUnduElement()}> Undu </p>
-                                <Button type='toast-close-icon' onClick={() => this.handleUnduOptionTimer()} />
+                                <p className='undo-button' onClick={() => this.handleUndoElement()}> Undo </p>
+                                <Button type='toast-close-icon' onClick={() => this.handleUndoOptionTimer()} />
                             </div>
                         }
                         {

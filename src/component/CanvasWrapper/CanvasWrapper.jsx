@@ -278,7 +278,7 @@ const mapStateToProps = state => {
         currentSlateAncestorData: state.appStore.currentSlateAncestorData,
         projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
         defaultLF: state.metadataReducer.defaultLF,
-        isSlateTagEnable: state.metadataReducer.slateTagEnable,
+        isSlateTagEnable: state.metadataReducer.slateTagEnable
     };
 };
 

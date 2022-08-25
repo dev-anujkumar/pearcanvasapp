@@ -14,7 +14,8 @@ import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
-import { PRIMARY_BUTTON, SECONDARY_BUTTON } from '../../../src/constants/utility.js';
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE } from '../../../src/constants/utility.js';
+import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
 
 /**
 * @description - PopUp is a class based component. It is defined simply
@@ -31,6 +32,7 @@ class PopUp extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
         this.contentRef = React.createRef();
+        this.wordPastePopupTextAreaRef = React.createRef();
         this.processGlossaryFootnotes = this.processGlossaryFootnotes.bind(this)
     }
 
@@ -68,19 +70,9 @@ class PopUp extends React.Component {
             this.modelRef.current.addEventListener('keydown', this.handleKeyDown);
         }
         /**  Focus on Popup PRIMARY Button or SECONDARY Button*/
-        this.focusElement(this.state.focusedButton);
-    }
-
-    componentDidUpdate() {
-        //On Paste Success Focus on Secondary Button
-        if (this.state.wordPasteProceed) {
-            const secondaryButton = document.querySelector(`[option=${SECONDARY_BUTTON}]`)
-            if (secondaryButton && secondaryButton.classList && secondaryButton.classList.contains('secondary')) {
-                setTimeout(() => {
-                    secondaryButton.tabIndex = "-1";
-                    secondaryButton.focus();
-                }, 0);
-            }
+        focusElement(this.state.focusedButton);
+        if (this.props.WordPastePopup) {
+            document.addEventListener('mousedown', this.handleClickOutside);
         }
     }
 
@@ -92,6 +84,15 @@ class PopUp extends React.Component {
         if(this.modelRef && this.modelRef.current) {
             /** Remove Event Listener on Popup Buttons */
             this.modelRef.current.removeEventListener('keydown', this.handleKeyDown);
+        }
+        if (this.props.WordPastePopup) {
+            document.removeEventListener('mousedown', this.handleClickOutside);
+        }
+    }
+
+    handleClickOutside = (event) => {
+        if (this.wordPastePopupTextAreaRef && !this.wordPastePopupTextAreaRef.current.contains(event.target)) {
+            focusPopupButtons();
         }
     }
 
@@ -149,16 +150,6 @@ class PopUp extends React.Component {
         }
     }
 
-    /**Function to focus element by adding class to elements class list */
-    focusElement = (value) => {
-        document.querySelector(`[option=${value}]`)?.classList?.add(value);
-    }
-
-    /**Function to remove focus of element by removing class from elements class list */
-    blurElement = (value) => {
-        document.querySelector(`[option=${value}]`)?.classList?.remove(value);
-    }
-
     /**Function to perform click event on element which is currently focused */
     clickElement = (value) => {
         const element = document.querySelector(`[option=${value}]`);
@@ -190,23 +181,23 @@ class PopUp extends React.Component {
             }
             element?.click();
         }
-        if (e.keyCode === 37 && this.state.focusedButton === PRIMARY_BUTTON) {
+        if (e.keyCode === 37 && (this.state.focusedButton === PRIMARY_BUTTON || isPrimaryButtonFocused())) {
             const element = document.querySelector(`[option=${SECONDARY_BUTTON}]`)
             if(element && element?.classList) {
                 this.setState({
                     focusedButton: SECONDARY_BUTTON
                 })
-                this.blurElement(PRIMARY_BUTTON);
-                this.focusElement(SECONDARY_BUTTON);
+                blurElement(PRIMARY_BUTTON);
+                focusElement(SECONDARY_BUTTON);
             }
-        } else if (e.keyCode === 39 && this.state.focusedButton === SECONDARY_BUTTON) {
+        } else if (e.keyCode === 39 && (this.state.focusedButton === SECONDARY_BUTTON || isSecondaryButtonFocused())) {
             const element = document.querySelector(`[option=${PRIMARY_BUTTON}]`)
             if(element && element?.classList && !element.classList.contains('disabled')) {
                 this.setState({
                     focusedButton: PRIMARY_BUTTON
                 })
-                this.blurElement(SECONDARY_BUTTON);
-                this.focusElement(PRIMARY_BUTTON);
+                blurElement(SECONDARY_BUTTON);
+                focusElement(PRIMARY_BUTTON);
             }
         }
     }
@@ -650,13 +641,24 @@ class PopUp extends React.Component {
     }
 
     // function to render checkbox inside delete element warning popup
-    renderDeleteWarningPopupCheckbox = (props) => {
-        return (
-            <div className='popup-checkbox-message'>
-                <input className='popup-checkbox' type="checkbox" value={props.warningPopupCheckbox} checked={props.warningPopupCheckbox} onChange={(event) => props?.handleCheckboxPopup(event)} />
-                <p className='popup-checkbox-text'>Don't ask me again</p>
-            </div>
-        )
+    renderPopupCheckbox = (props) => {
+        if (props.showDeleteElemPopup) {
+            return (
+                <div className='popup-checkbox-message'>
+                    <input className='popup-checkbox' type="checkbox" value={props.warningPopupCheckbox} checked={props.warningPopupCheckbox} onChange={(event) => props?.handleCheckboxPopup(event)} />
+                    <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
+                </div>
+            )
+        } else if (props.listConfirmation) {
+            return (
+                <div className='popup-checkbox-message'>
+                    <input className='popup-checkbox' type="checkbox" value={props.listElementWarningPopupCheckbox} checked={props.listElementWarningPopupCheckbox} onChange={(event) => props?.handleListElementWarningPopupCheckbox(event)} />
+                    <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
+                </div>
+            )
+        } else {
+            return null
+        }
     }
 
     render() {
@@ -670,8 +672,8 @@ class PopUp extends React.Component {
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}
-                                {this.props.showDeleteElemPopup && this.renderDeleteWarningPopupCheckbox(this.props)}
-                                <div className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
+                                {this.renderPopupCheckbox(this.props)}
+                                <div ref={this.wordPastePopupTextAreaRef} className={this.props.isWordPastePopup ? 'dialog-input-poc' : `dialog-input ${assessmentClass}`}>
                                     {this.renderInputBox(this.props)}
                                 </div>
                                 {!isTCMCanvasPopup && <div className="popup-note-message">{this.props.note ? this.props.note : ''}</div>}

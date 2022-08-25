@@ -120,7 +120,7 @@ class MultipleColumnContainer extends PureComponent {
                                 elementSepratorProps={this.context.elementSepratorProps}
                                 splithandlerfunction={this.context.splithandlerfunction}
                                 pasteElement={this.props.pasteElement}
-                                handleUnduOption = {this.props.handleUnduOption}
+                                handleUndoOption = {this.props.handleUndoOption}
                             />
                             <ElementSaprator
                                 index={index}

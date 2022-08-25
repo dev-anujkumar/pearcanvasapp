@@ -34,7 +34,8 @@ jest.mock('../../../src/constants/Action_Constants', ()=> {
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
-    guid: jest.fn()
+    guid: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 
 jest.mock('../../../src/config/config.js', () => ({

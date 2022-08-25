@@ -213,7 +213,7 @@ class ElementPoetry extends Component {
                                 showDeleteElemPopup={this.props.showDeleteElemPopup}
                                 parentElement = {this.props.element}
                                 onListSelect={this.props.onListSelect}
-                                handleUnduOption = {this.props.handleUnduOption}
+                                handleUndoOption = {this.props.handleUndoOption}
                                 userRole={this.props.userRole}>
                             </ElementContainer>
                             <ElementSaprator

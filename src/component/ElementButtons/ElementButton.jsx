@@ -266,7 +266,7 @@ class ElementButton extends Component {
             case buttonTypes.COMMENT_FLAGGED:
                 buttonJSX = <div className='flag-te-btn'>
                     <Tooltip direction='flag' tooltipText="Flagged Comment">
-                        <span className={`btn-element small add-comment ${btnClassName} ${elementTypeClassName}`} onClick={(e) => clickHandlerFn(e, elementId)}>
+                        <span className={`btn-element small flag-comment ${btnClassName} ${elementTypeClassName}`} onClick={(e) => clickHandlerFn(e, elementId)}>
                             {commentFlagged}
                         </span>
                     </Tooltip>

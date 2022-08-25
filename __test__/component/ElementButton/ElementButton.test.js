@@ -26,7 +26,7 @@ describe('Testing Button component with props', () => {
 })
     it('render comment-flag Button component  ', () => {
         const component = mount(<Button type={buttonTypes.COMMENT_FLAGGED} labelText="UL" />);
-        expect(component.find('span.btn-element').hasClass('add-comment')).toBe(true);
+        expect(component.find('span.btn-element').hasClass('flag-comment')).toBe(true);
         expect(component.find('svg#Capa_1').exists()).toBe(false);
     })
     it('render element-label Button component  ', () => {
