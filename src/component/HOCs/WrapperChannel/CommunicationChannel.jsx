@@ -475,7 +475,8 @@ function CommunicationChannel(WrappedComponent) {
                     'currentSlateLF': currentSlateLF,
                     'assessmentUrn': message.assessmentUrn ?? config.assessmentId,
                     'previewData': previewData,
-                    'defaultLF': defaultLF
+                    'defaultLF': defaultLF,
+                    'loSpa_Source': message.loSpa_Source
                 }
             })
         }
