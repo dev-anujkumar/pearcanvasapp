@@ -67,7 +67,11 @@ jest.mock('../../../src/constants/utility.js', () => {
             return true
         },
         guid: jest.fn(),
-        removeBlankTags: jest.fn()
+        removeBlankTags: jest.fn(),
+        handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
+        getCookieByName: () => {
+            return true
+        }
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {

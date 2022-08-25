@@ -10,6 +10,7 @@ const mockStore = configureMockStore( middlewares );
 
 jest.mock('../../../src/constants/utility.js', () => ({
   sendDataToIframe: jest.fn(),
+  handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 
 jest.mock('axios');

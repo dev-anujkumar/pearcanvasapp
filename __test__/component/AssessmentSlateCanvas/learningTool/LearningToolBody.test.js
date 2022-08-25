@@ -4,7 +4,8 @@ import LearningToolBody from '../../../../src/component/AssessmentSlateCanvas/le
 import { tempFiguresForResults, selectedResult, apiList } from '../../../../fixtures/learningTool'
 
 jest.mock('../../../../src/constants/utility.js', () => ({
-    hasReviewerRole: jest.fn()
+    hasReviewerRole: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }));
 describe('Testing Learning Tool LearningToolBody component', () => {
     describe('Dropdown Menus Testing-With Results', () => {

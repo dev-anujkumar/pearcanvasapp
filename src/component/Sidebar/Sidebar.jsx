@@ -19,6 +19,9 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
 class Sidebar extends Component {
     constructor(props) {
         super(props);
@@ -387,7 +390,13 @@ class Sidebar extends Component {
 
     /**@description function handles the secondaryoption change dropdown */
     handleSecondaryOptionChange = e => {
-        let value = e.target.getAttribute('data-value').toLowerCase();
+        let value = '';
+        // This if condition satisfied when we select any option from BCE dropdown
+        if(e?.target?.tagName == "LI" && e?.target?.querySelector('span[data-value]')?.tagName == "SPAN"){
+            value = e?.target?.querySelector('span[data-value]')?.getAttribute('data-value')?.toLowerCase();
+        } else {
+            value = e?.target?.getAttribute('data-value')?.toLowerCase();
+        }
         let elementTypeList = elementList[this.state.activeElementType];
         let labelText = elementTypeList[this.state.activePrimaryOption].subtype[value].labelText;
         if (value === this.state.activeSecondaryOption) {
@@ -441,6 +450,7 @@ class Sidebar extends Component {
     }
     secondaryOption = () => {
         let secondaryOptions = '';
+        let languageDropdownOptions = [];
         let enableColumn3SecondaryOption = false;
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
@@ -462,6 +472,7 @@ class Sidebar extends Component {
                         addClass = 'learnosity-disabled';
                         showLearnosityDropdown = true;
                     }
+                    languageDropdownOptions.push({...secondaryOptionObject[item], item});
                     return <li key={item} data-value={item} className={`${addClass}`} onClick={this.handleSecondaryOptionChange}>
                         {secondaryOptionObject[item].text}
                     </li>;
@@ -486,10 +497,41 @@ class Sidebar extends Component {
                 const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
-                    <div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
-                    </div>
+                    </div>) : (<div className={`element-dropdown-title bce ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                        <Autocomplete
+                            disablePortal
+                            disableClearable
+                            id="language-select-demo"
+                            noOptionsText={'No result found'}
+                            style={{ width: 210 }}
+                            ListboxProps={{ style: { maxHeight: "270px" } }}
+                            value={secondaryOptionObject[this.state.activeSecondaryOption]}
+                            options={languageDropdownOptions}
+                            onChange={this.handleSecondaryOptionChange}
+                            getOptionLabel={(option) => option.text}
+                            renderOption={(option) => (
+                                <React.Fragment>
+                                    <span key={option.item} data-value={option.item}>
+                                        {option.text}
+                                    </span>
+                                </React.Fragment>
+                            )}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    fullWidth
+                                    placeholder="Select"
+                                    variant="outlined"
+                                    inputProps={{
+                                        ...params.inputProps,
+                                    }}
+                                />
+                            )}
+                        />
+                    </div>)}
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
                     </ul>
