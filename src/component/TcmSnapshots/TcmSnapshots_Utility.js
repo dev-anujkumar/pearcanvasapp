@@ -571,7 +571,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
     } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' && popupCutCopyParentData?.isPopupSlate ) {            // operation cut from popup slate to normal slate 
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
-    } else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
+    } else if (config.isPopupSlate && !tag?.isMultiColumnInPopup && !(containerElement?.cutCopyParentUrn)) {                //POP:BODY:WE:BODY:P
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${slateManifestVersioning?slateManifestVersioning:config.slateManifestURN}+${elementId}`;
     }
