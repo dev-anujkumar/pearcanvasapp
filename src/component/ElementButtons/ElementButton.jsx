@@ -33,7 +33,8 @@ import {
     elmInteractiveIcon,
     editIcon,
     approvedIcon,
-    commentFlagged
+    commentFlagged,
+    closeIcon
 } from '../../images/ElementButtons/ElementButtons.jsx';
 import deleteIcon from '../../images/ElementButtons/deleteIcon.png'
 import splitIcon from '../../images/ElementButtons/splitIcon.png'
@@ -269,6 +270,11 @@ class ElementButton extends Component {
                             {commentFlagged}
                         </span>
                     </Tooltip>
+                </div>
+               break;
+            case ButtonTypes.TOAST_CLOSE_ICON:
+                buttonJSX = <div className={`toast-close-icon`} onClick={clickHandlerFn}>
+                    {closeIcon}
                 </div>
                 break;
         }

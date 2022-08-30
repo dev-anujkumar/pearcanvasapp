@@ -108,7 +108,7 @@ describe('Test for Sidebar component', () => {
 
         target = {
             target: {
-                getAttribute: function(dataValue) {
+                getAttribute: function (dataValue) {
                     return 'secondary-image-figure-width';
                 }
             }

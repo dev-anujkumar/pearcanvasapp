@@ -352,7 +352,7 @@ export class TinyMceEditor extends Component {
             //Check if disable list element warning popup flag is true
             const disableListElementWarning = getCookieByName("DISABLE_LIST_ELEMENT_WARNING");
             if (disableListElementWarning) {
-                this.props.onListSelect(subType, "");
+                this.props.onListSelect(this.props.element.subtype || this.props.currentElement.subtype, "");
             } else {
                 this.toggleConfirmationPopup(true, this.props.element.subtype || this.props.currentElement.subtype);
             }
@@ -998,6 +998,8 @@ export class TinyMceEditor extends Component {
                 let lastCont = '';
                 if(['<br data-mce-bogus="1">', '<br>'].includes(this.lastContent) && this.props.element.type === 'element-aside'){
                     lastCont = activeElement.innerHTML;
+                } else if (['<br data-mce-bogus="1">'].includes(activeElement.innerHTML) && this.props.element.type === 'openerelement') {
+                    activeElement.innerHTML = '<p class="paragraphNumeroUno"><br></p>';
                 } else {
                     lastCont = this.lastContent;
                 }
