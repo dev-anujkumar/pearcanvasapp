@@ -2814,7 +2814,7 @@ class ElementContainer extends Component {
                 this.handleFigurePopup(true);
             }
             
-        } else if(element.type === DISCUSSION_INTERACTIVE) {
+        } else if(element?.type === DISCUSSION_INTERACTIVE) {
             window.open(config.EDIT_DISCUSSION_SPA_URL);
         }
         else {
