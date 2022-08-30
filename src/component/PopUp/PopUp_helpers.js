@@ -18,16 +18,29 @@ export const isSecondaryButtonFocused = () => {
 
 /**Function to focus element by adding class to elements class list */
 export const focusElement = (value) => {
-    document.querySelector(`[option=${value}]`)?.classList?.add(value);
+    const button = document.querySelector(`[option=${value}]`) ? document.querySelector(`[option=${value}]`) : null;
+    if (button && button.classList) {
+        button.classList.add(value);
+        button.tabIndex = '-1';
+        button.focus();
+    }
 }
 
 /**Function to remove focus of element by removing class from elements class list */
 export const blurElement = (value) => {
-    document.querySelector(`[option=${value}]`)?.classList?.remove(value);
+    const button = document.querySelector(`[option=${value}]`) ? document.querySelector(`[option=${value}]`) : null;
+    if (button && button.classList) {
+        button.classList.remove(value);
+        button.tabIndex = '0';
+        button.blur();
+    }
 }
 
 //Focus Popup Buttons
 export const focusPopupButtons = () => {
+    if (isPrimaryButtonFocused() || isSecondaryButtonFocused()) {
+        return
+    }
     const secondaryButton = document.querySelector(`[option=${SECONDARY_BUTTON}]`) ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : null;
     if (secondaryButton && secondaryButton.classList) {
         setTimeout(() => {

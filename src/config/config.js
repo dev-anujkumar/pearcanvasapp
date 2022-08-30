@@ -62,8 +62,8 @@ let config = {
     AWS_RESOURCE : 'lambda',
     PROJECT_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
     SLATE_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
-    ENABLE_WIRIS_PLUGIN: true
-    
+    ENABLE_WIRIS_PLUGIN: true,
+    EDIT_DISCUSSION_SPA_URL: 'https://stg-discussionauthoring.pearson.com/'
 };
 
 if (process.env.NODE_ENV === "development") {

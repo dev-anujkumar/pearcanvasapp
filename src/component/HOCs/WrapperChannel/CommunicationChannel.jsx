@@ -279,7 +279,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.togglePageNumberAction()
                     break;
                 case 'GetActiveSlate':
-                    sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN } });
+                    sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN, slateManifestURN: config.slateManifestURN } });
                     break;
                 case 'statusForExtLOSave':
                     this.handleExtLOData(message);
@@ -475,7 +475,8 @@ function CommunicationChannel(WrappedComponent) {
                     'currentSlateLF': currentSlateLF,
                     'assessmentUrn': message.assessmentUrn ?? config.assessmentId,
                     'previewData': previewData,
-                    'defaultLF': defaultLF
+                    'defaultLF': defaultLF,
+                    'loSpa_Source': message.loSpa_Source
                 }
             })
         }

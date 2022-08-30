@@ -838,6 +838,7 @@ a.paragraphNumeroUnoFootnote del{
 .dialog-window.tcm-canvas-popup ul{
   list-style-type:none !important;
   color: black;
+  padding: 0px 0px 0px 20px;
 }
 
 /* added css to show blank instead of blankline */

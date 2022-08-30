@@ -998,6 +998,8 @@ export class TinyMceEditor extends Component {
                 let lastCont = '';
                 if(['<br data-mce-bogus="1">', '<br>'].includes(this.lastContent) && this.props.element.type === 'element-aside'){
                     lastCont = activeElement.innerHTML;
+                } else if (['<br data-mce-bogus="1">'].includes(activeElement.innerHTML) && this.props.element.type === 'openerelement') {
+                    activeElement.innerHTML = '<p class="paragraphNumeroUno"><br></p>';
                 } else {
                     lastCont = this.lastContent;
                 }
