@@ -866,7 +866,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         if (slateWrapperNode) {
                             slateWrapperNode.scrollTop = 0;
                         }
-                        if (src.get('q')) {
+                        if (src && src.get('q') && currentParentData) {
                             const newSlateData = JSON.parse(JSON.stringify(currentParentData));
                             const commentElementData = newSlateData?.contents?.bodymatter;
                             let currentElement = commentElementData?.filter(element => element.id === src.get('q'))
