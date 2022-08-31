@@ -680,7 +680,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 delete Object.assign(newslateData, {[Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];     
                 config.slateManifestURN= Object.values(slateData.data)[0].id
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
-                newslateData[config.tempSlateManifestURN] = Object.values(slateData.data)[0];
                 return dispatch({
                     type: AUTHORING_ELEMENT_UPDATE,
                     payload: {

@@ -36,11 +36,11 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         const slateId = config.slateManifestURN;
         const parentData = store.getState().appStore.slateLevelData;
         let newParentData = JSON.parse(JSON.stringify(parentData));
-        // let currentSlateData = newParentData[config.slateManifestURN];
+        let currentSlateData = newParentData[config.slateManifestURN];
         const showHideElement = store.getState().appStore?.showHideObj;
-        // if(currentSlateData?.type==="popup" && currentSlateData.status === "approved" && (config.isCreateFootnote || config.isCreateGlossary)){
-        //     return false;
-        // }
+        if(currentSlateData?.type==="popup" && currentSlateData.status === "approved" && config.isCreateFootnote){
+            return false;
+        }
         let newBodymatter = newParentData[slateId]?.contents?.bodymatter;
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
@@ -1161,7 +1161,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let newPopupParentData = JSON.parse(JSON.stringify(popupParentData));
         let currentPopupSlateData = newPopupParentData[config.slateManifestURN];
         let newPopupSlateData = newParentData[config.tempSlateManifestURN]
-        if(currentPopupSlateData.type==="popup" && newPopupSlateData.status === 'approved'){
+        if(currentPopupSlateData && currentPopupSlateData.type==="popup" && newPopupSlateData && newPopupSlateData.status === 'approved' && config.glossaryCreated){
             store.dispatch({
                 type: UPDATE_FOOTNOTEGLOSSARY,
                 payload: {
@@ -1176,6 +1176,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
             })
         }
+        config.glossaryCreated = false
 
         sendDataToIframe({'type': HideLoader,'message': { status: false }});
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner
