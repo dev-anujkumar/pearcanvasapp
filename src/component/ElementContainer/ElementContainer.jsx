@@ -185,7 +185,7 @@ class ElementContainer extends Component {
         document.addEventListener("mousedown", this.handleClickOutside);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         let divObj = 0;
         if (this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
             divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
@@ -215,11 +215,19 @@ class ElementContainer extends Component {
                 document.getElementById('slateWrapper').scrollTop = divObj;
             }
         }
+
+        if (prevProps.closeUndoTimer !== this.props.closeUndoTimer && this.state.showUndoButton) {
+            if (this.props.closeUndoTimer) {
+                this.handleUndoOptionTimer();
+            }
+        }
     }
 
     handleClickOutside = (event) => {
-        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
-            this.handleUndoOptionTimer();
+        if (this.state.showUndoButton) {
+            if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+                this.handleUndoOptionTimer();
+            }
         }
     }
 
@@ -1491,6 +1499,7 @@ class ElementContainer extends Component {
 
         }
         this.props.storeDeleteElementKeys({});
+        sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
     }
 
     handleActionUndoneTimer = () => {
@@ -1556,6 +1565,7 @@ class ElementContainer extends Component {
         this.handleCommentPopup(false, e);
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
         if(disableDeleteWarnings) {
+            sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: true } });
             this.setState({
                 undoElement: id
             })
@@ -1576,6 +1586,9 @@ class ElementContainer extends Component {
             if (disableDeleteWarnings) {
                 this.showHideTimer = setTimeout(() => {
                     this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
+                    sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
+                    document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+                    document.getElementById('next-slate-button')?.classList?.remove('stop-event')
                 }, 6000)
             } else {
                 this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
@@ -1585,6 +1598,9 @@ class ElementContainer extends Component {
             if (disableDeleteWarnings) {
                 this.timer = setTimeout(() => {
                     this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
+                    sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
+                    document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+                    document.getElementById('next-slate-button')?.classList?.remove('stop-event')
                 }, 6000)
             } else {
                 this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
@@ -1945,6 +1961,7 @@ class ElementContainer extends Component {
                         showHideType = {this.props.showHideType}
                         handleCopyPastePopup={this.props.handleCopyPastePopup}
                         handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1975,6 +1992,7 @@ class ElementContainer extends Component {
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
                         parentElement={this.props?.parentElement}
                         handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />;
                     labelText = 'Pop'
                     break;
@@ -2017,6 +2035,7 @@ class ElementContainer extends Component {
                         pasteElement={this.props.pasteElement}
                         splithandlerfunction={splithandlerfunction}
                         handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />;
                     labelText = 'SH'
                     break;
@@ -2042,7 +2061,7 @@ class ElementContainer extends Component {
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
                         handleUndoOption: this.handleUndoOption
-                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement}
+                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} closeUndoTimer = {this.props.closeUndoTimer}
                         />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
@@ -2102,6 +2121,7 @@ class ElementContainer extends Component {
                         parentElement={this.props.parentElement}
                         showHideType = {this.props.showHideType}
                         handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />
                     labelText = 'PE'
                     break;
@@ -2133,6 +2153,7 @@ class ElementContainer extends Component {
                         handleAudioPopupLocation={this.handleAudioPopupLocation}
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
                         handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />
                     labelText = 'ST'
                     break;
@@ -2158,7 +2179,7 @@ class ElementContainer extends Component {
                             deleteElement: this.deleteElement,
                             handleUndoOption:this.handleUndoOption,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup}  closeUndoTimer = {this.props.closeUndoTimer} />
                         </MultiColumnContext.Provider>;
                     } else {
                         labelText = MULTI_COLUMN_2C.ELEMENT_TAG_NAME
@@ -2180,7 +2201,7 @@ class ElementContainer extends Component {
                             deleteElement: this.deleteElement,
                             handleUndoOption: this.handleUndoOption,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup}  closeUndoTimer = {this.props.closeUndoTimer}/>
                         </MultiColumnContext.Provider>;
                     }
                     break;
@@ -2219,6 +2240,7 @@ class ElementContainer extends Component {
                         handleCheckboxPopup ={this.handleWarningPopupCheckbox}
                         warningPopupCheckbox={this.state.warningPopupCheckbox}
                         handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />;
                     labelText = 'PS'
                     break;
@@ -2389,6 +2411,7 @@ class ElementContainer extends Component {
                         handleCheckboxPopup ={this.handleWarningPopupCheckbox}
                         warningPopupCheckbox={this.state.warningPopupCheckbox}
                         handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp

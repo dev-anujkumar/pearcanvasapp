@@ -334,6 +334,7 @@ class ElementAsideContainer extends Component {
                     userRole={this.props.userRole}
                     handleCopyPastePopup={this.props.handleCopyPastePopup}
                     handleUndoOption = {this.props.handleUndoOption}
+                    closeUndoTimer = {this.props.closeUndoTimer}
                 />
                 <Sortable
                     options={{
@@ -501,6 +502,7 @@ class ElementAsideContainer extends Component {
                                         splithandlerfunction={this.props.splithandlerfunction}
                                         pasteElement={this.props.pasteElement}
                                         handleUndoOption = {this.props.handleUndoOption}
+                                        closeUndoTimer = {this.props.closeUndoTimer}
                                     >
                                     </ElementContainer>
                                     <ElementSaprator

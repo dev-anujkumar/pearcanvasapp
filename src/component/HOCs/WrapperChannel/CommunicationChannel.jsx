@@ -188,6 +188,11 @@ function CommunicationChannel(WrappedComponent) {
                 case 'refreshSlate':
                     this.handleRefreshSlate();
                     break;
+                case 'closeUndoTimer' : 
+                    this.setState({
+                        closeUndoTimer: message.status
+                    })
+                    break;
                 case 'cancelCEPopup':
                     if (this.props.currentSlateLOData?.length > 0) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
@@ -1210,7 +1215,7 @@ function CommunicationChannel(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}/>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )

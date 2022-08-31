@@ -397,6 +397,7 @@ class ElementDialogue extends React.PureComponent {
                         handleCheckboxPopup ={handleCheckboxPopup}
                         warningPopupCheckbox={warningPopupCheckbox}
                         handleUndoOption = {this.props.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                 />}
                 </div>
                 : ''
