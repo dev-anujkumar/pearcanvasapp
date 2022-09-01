@@ -1463,8 +1463,6 @@ class ElementContainer extends Component {
         deletedElm?.classList?.remove("hideElement");
         const sapratorElm = document.getElementById(`${this.state.undoElement}`)
         sapratorElm?.classList?.remove("hideElement");
-        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
-        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
         clearTimeout(this.timer)
         clearTimeout(this.showHideTimer)
         clearTimeout(this.toastTimer)
@@ -1477,14 +1475,13 @@ class ElementContainer extends Component {
                 showActionUndone: false
             }) 
         }, 2000);
+        config.savingInProgress = false
         this.props.storeDeleteElementKeys({});
     }
 
     handleUndoOptionTimer = () => {
         let { parentElement } = this.props;
         const { id, type, index, elements, containerElements, parentUrn, asideData, contentUrn, poetryData } = this.props.deletedKeysValue
-        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
-        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
         clearTimeout(this.timer)
         clearTimeout(this.showHideTimer)
         clearTimeout(this.toastTimer)
@@ -1500,6 +1497,9 @@ class ElementContainer extends Component {
         }
         this.props.storeDeleteElementKeys({});
         sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
+        setTimeout(()=> {
+            config.savingInProgress = false
+        }, 500)
     }
 
     handleActionUndoneTimer = () => {
@@ -1516,7 +1516,7 @@ class ElementContainer extends Component {
         let { parentUrn, asideData, element, poetryData, parentElement, showHideType, index } = this.props;
         //let { contentUrn } = this.props.element
         //let index = this.props.index
-
+        if(config.savingInProgress) return false
         if (this.state.sectionBreak) {
             parentUrn = {
                 elementType: element.type,
@@ -1573,8 +1573,7 @@ class ElementContainer extends Component {
             deletedElm?.classList?.add("hideElement");
             const sapratorElm = document.getElementById(`${id}`)
             sapratorElm?.classList?.add("hideElement");
-            document.getElementById('previous-slate-button')?.classList?.add('stop-event')
-            document.getElementById('next-slate-button')?.classList?.add('stop-event')
+            config.savingInProgress = true;
             this.props.storeDeleteElementKeys(object);  
         } else {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
@@ -1587,8 +1586,7 @@ class ElementContainer extends Component {
                 this.showHideTimer = setTimeout(() => {
                     this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
-                    document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
-                    document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+                    config.savingInProgress = false
                 }, 6000)
             } else {
                 this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
@@ -1599,8 +1597,7 @@ class ElementContainer extends Component {
                 this.timer = setTimeout(() => {
                     this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
-                    document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
-                    document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+                    config.savingInProgress = false
                 }, 6000)
             } else {
                 this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);

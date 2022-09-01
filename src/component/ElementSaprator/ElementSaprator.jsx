@@ -123,6 +123,7 @@ export function ElementSaprator(props) {
      * @description: OnClick handler for split slate button
      */
     const splitSlateClickHandler = () => {
+        if(config.savingInProgress) return false
         if(props.openAudio){
             props.showAudioSplitPopup(true , props.index)
         }
