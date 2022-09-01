@@ -1455,7 +1455,7 @@ class ElementContainer extends Component {
             this.setState({
                 showUndoButton: false
             })  
-        }, 6000);
+        }, 5000);
     }
 
     handleUndoElement = () => {
@@ -1587,7 +1587,7 @@ class ElementContainer extends Component {
                     this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
                     config.savingInProgress = false
-                }, 6000)
+                }, 5000)
             } else {
                 this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
             }  
@@ -1598,7 +1598,7 @@ class ElementContainer extends Component {
                     this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
                     config.savingInProgress = false
-                }, 6000)
+                }, 5000)
             } else {
                 this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
             } 
