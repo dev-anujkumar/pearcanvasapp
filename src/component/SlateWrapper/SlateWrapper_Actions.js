@@ -1242,7 +1242,7 @@ const fetchContainerData = (entityURN, manifestURN, isPopup) => {
 
 export const pasteElement = (params) => async (dispatch, getState) => {
     let selection = getState().selectionReducer.selection || {};
-
+    let allComments = getState().commentsPanelReducer.allComments;
     if(Object.keys(selection).length > 0 && 'element' in selection) {
         const {
             index,
@@ -1536,6 +1536,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                         const node2 = node1?.querySelector(`.paragraphNummerEins`)
                         node2?.focus()
                     }, 200)
+                }
+                let anyOpenComment = allComments?.filter(({ commentOnEntity }) => commentOnEntity === selection.element.id).length > 0
+                if((selection.operationType === 'cut') && (anyOpenComment) ) {
+                    sendDataToIframe({'type': 'refreshCM', 'message': {status: true}})
                 }
             }
         }
