@@ -584,27 +584,3 @@ export const interactiveElm = {
 	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
 	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
 }
-export const interactiveDisscussion = {
-	"id": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
-	"type": "discussion",
-	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
-	"blockdata": {
-        "itemid": "test",
-        "importeddiscussiontitle": "test",
-        "usagetype": "test",
-        "smartlink": "test",
-        "lineOfBusiness": "LOB"
-    },
-	"html": {
-		"title": "<p></p>",
-		"subtitle": "<p>title added</p>",
-		"text": "",
-		"postertext": "",
-		"captions": "<p></p>",
-		"credits": "<p></p>",
-		"footnotes": {},
-		"glossaryentries": {}
-	},
-	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
-	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
-}

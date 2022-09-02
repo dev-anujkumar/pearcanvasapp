@@ -3038,26 +3038,6 @@ describe('Test-Other Functions', () => {
         elementContainerInstance3.handleEditButton(event);
     });
 
-    it('handleEditButton method - element - discussion', () => {
-        let props5 = {
-            element: {
-                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
-                figuretype: 'image',
-                type: 'discussion',
-            },
-            permissions: [],
-            showBlocker: jest.fn(),
-            index: 0,
-            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
-            updateElement: jest.fn(),
-            parentUrn: null
-        };
-        let elementContainer3 = mount(<Provider store={store}><ElementContainer {...props5} /></Provider>);
-        const elementContainerInstance3 = elementContainer3.find('ElementContainer').instance();
-        const event = {stopPropagation: jest.fn()};
-        elementContainerInstance3.handleEditButton(event);
-    });
-
     it('handleTCMLaunch method - if block', () => {
         config.isPopupSlate = false;
         let props5 = {
