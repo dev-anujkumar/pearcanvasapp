@@ -2637,15 +2637,6 @@ class ElementContainer extends Component {
      */
     handleCommentPopup = (popup, event) => {
         event.stopPropagation();
-        if (this.state.warningPopupCheckbox && popup) {
-            this.setState({
-                showUndoButton: true
-            })
-        } else {
-            this.setState({
-                showUndoButton: false
-            })
-        }
         if (popup) {
             this.props.showBlocker(true);
             showTocBlocker();
