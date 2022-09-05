@@ -558,7 +558,7 @@ export class TinyMceEditor extends Component {
                     let elementId = tinymce.activeEditor ? tinymce.activeEditor.id : '';
                     let blockqt = document.querySelector('#' + elementId + ' blockquote p.paragraphNummerEins');
                     let opener = document.querySelector('#' + elementId + ' opener p.paragraphNummerEins');
-                    let smartlinkElementCheck = e?.target?.targetElm?.className?.includes('hyperLinkText')
+                    const smartlinkElementCheck = e?.target?.targetElm?.className?.includes('hyperLinkText')
                     if ((!blockqt || blockqt.innerText.trim()) && !smartlinkElementCheck) {
                         editor.selection.setContent('<span id="specialChar"></span>');
                     }
