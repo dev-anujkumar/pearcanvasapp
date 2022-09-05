@@ -2951,6 +2951,7 @@ export class TinyMceEditor extends Component {
         if (this.props.element.type === "element-dialogue") {
             elementId = this.props.element.id;
         }
+        config.glossaryCreated = true
         let sText = editor.selection.getContent();
         let parser = new DOMParser();
         let htmlDoc = parser.parseFromString(sText, 'text/html');

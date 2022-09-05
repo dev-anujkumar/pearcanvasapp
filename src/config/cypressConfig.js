@@ -103,6 +103,7 @@ let cypressConfig = {
     figureDataToBeFetched:false,
     parentOfParentItem:[],
     assessmentId: "",
+    glossaryCreated: false
 }
 
 
