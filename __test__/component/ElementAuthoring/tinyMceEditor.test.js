@@ -1629,6 +1629,18 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 },
                 setContent: () => { },
             }
+            document.querySelector = (selector) =>{
+                if(selector== '.panel_syntax_highlighting .switch input'){
+                    return {
+                        checked:true
+                    }
+                }
+            }
+            component.setProps({
+                ...props,
+                element: { type: "openerelement" }
+            })
+            component.update();
             const getContent = jest.spyOn(event.target, 'getContent');
             instance.editorBeforeExecCommand(nextEditor);
             expect(getContent).toHaveBeenCalled()
