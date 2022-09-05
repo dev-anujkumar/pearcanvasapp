@@ -861,9 +861,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         });    
 
                         let slateWrapperNode = document.getElementById('slateWrapper');
+                        let searchString = window.location.search;
+                        let src = new URLSearchParams(searchString);
                         if (slateWrapperNode) {
                             slateWrapperNode.scrollTop = 0;
                         }
+                        if (src && src.get('q') && currentParentData) {
+                            const newSlateData = JSON.parse(JSON.stringify(currentParentData));
+                            const commentElementData = newSlateData?.contents?.bodymatter;
+                            let currentElement = commentElementData?.filter(element => element.id === src.get('q'))
+                            dispatch(setActiveElement(currentElement[0]));
+                        }  
                     }
                 }else{
                     console.log("incorrect data comming...")

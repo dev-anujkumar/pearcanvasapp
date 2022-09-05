@@ -113,6 +113,7 @@ const ShowHideUiBlock = (props) => {
 			elementSepratorProps={props.elementSepratorProps}
 			splithandlerfunction={props.splithandlerfunction}
 			handleUndoOption = {props.handleUndoOption}
+			closeUndoTimer = {props.closeUndoTimer}
 		/>
 	}
 

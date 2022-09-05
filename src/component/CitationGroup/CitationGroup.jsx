@@ -97,6 +97,7 @@ export class CitationGroup extends Component {
                                     userRole={this.props.userRole}
                                     asideData={asideData}
                                     handleUndoOption = {this.props.handleUndoOption}
+                                    closeUndoTimer = {this.props.closeUndoTimer}
                                 >
                                 </ElementContainer>
                                 {

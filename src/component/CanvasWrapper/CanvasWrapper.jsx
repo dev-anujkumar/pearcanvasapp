@@ -193,7 +193,7 @@ export class CanvasWrapper extends Component {
                                     {this.props.showApoSearch ? <AssetPopoverSearch showBlocker={this.props.showCanvasBlocker}/> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked}/>
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked} closeUndoTimer = {this.props.closeUndoTimer}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}

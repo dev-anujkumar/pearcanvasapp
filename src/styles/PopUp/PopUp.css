@@ -1098,6 +1098,10 @@ ol li.listItemNumeroUnoLowerRoman {
   margin-right: 2px;
 }
 
+.disable-mouse-click {
+  pointer-events: none;
+}
+
 /**Popup Buttons Focus Classes Start*/
 .primary {
   outline-offset: 1.5px;

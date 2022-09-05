@@ -214,6 +214,7 @@ class ElementPoetry extends Component {
                                 parentElement = {this.props.element}
                                 onListSelect={this.props.onListSelect}
                                 handleUndoOption = {this.props.handleUndoOption}
+                                closeUndoTimer = {this.props.closeUndoTimer}
                                 userRole={this.props.userRole}>
                             </ElementContainer>
                             <ElementSaprator
