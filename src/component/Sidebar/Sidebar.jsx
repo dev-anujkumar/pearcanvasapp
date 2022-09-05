@@ -388,6 +388,12 @@ class Sidebar extends Component {
         })
     }
 
+    handleSecondaryLanguageChange = (e,value) =>{
+        const selectedValue = value?.item;
+        const labelText = value?.labelText;
+        this.setSecondary(selectedValue, labelText);
+    }
+
     /**@description function handles the secondaryoption change dropdown */
     handleSecondaryOptionChange = e => {
         let value = '';
@@ -494,6 +500,8 @@ class Sidebar extends Component {
                 if (this.state.usageType === "") {
                     disabled = "disabled";
                 }
+                //Removing Select option from dropdown values
+                if (languageDropdownOptions.length )  languageDropdownOptions = languageDropdownOptions.filter(option => option.text !== 'Select')
                 const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
@@ -508,22 +516,15 @@ class Sidebar extends Component {
                             noOptionsText={'No result found'}
                             style={{ width: 210 }}
                             ListboxProps={{ style: { maxHeight: "270px" } }}
-                            value={secondaryOptionObject[this.state.activeSecondaryOption]}
+                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? '' : secondaryOptionObject[this.state.activeSecondaryOption]}
                             options={languageDropdownOptions}
-                            onChange={this.handleSecondaryOptionChange}
+                            onChange={(e,value)=>{this.handleSecondaryLanguageChange(e,value)}}
                             getOptionLabel={(option) => option.text}
-                            renderOption={(option) => (
-                                <React.Fragment>
-                                    <span key={option.item} data-value={option.item}>
-                                        {option.text}
-                                    </span>
-                                </React.Fragment>
-                            )}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     fullWidth
-                                    placeholder="Select"
+                                    placeholder="Select & Search"
                                     variant="outlined"
                                     inputProps={{
                                         ...params.inputProps,
