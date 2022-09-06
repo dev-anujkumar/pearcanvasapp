@@ -58,7 +58,6 @@ export const SECONDARY_SINGLE_ASSESSMENT = 'secondary-single-assessment-'
 export const PRIMARY_SLATE_ASSESSMENT = 'primary-assessment-slate'
 export const SECONDARY_SLATE_ASSESSMENT = 'secondary-assessment-'
 export const FIGURE_INTERACTIVE = "interactive"
-export const DISCUSSION_INTERACTIVE = "discussion"
 export const SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY = 'secondary-single-assessment-learnosity'
 export const DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
 export const SLATE_TYPE_ASSESSMENT = "assessment";

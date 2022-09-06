@@ -621,6 +621,11 @@ export class TinyMceEditor extends Component {
                     }
                     break;
                 case 'Strikethrough':
+                    if (this.props.element.type === 'openerelement' || headingElement || elementType === 'Pullquote' || elementType === 'Blockquote' || elementType === 'Learning Objective Item' || attributionElement || (activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    break;
                 case 'Underline':
                 case 'Bold':
                     if (headingElement || elementType === 'Pullquote' || elementType === 'Blockquote' || elementType === 'Learning Objective Item' || attributionElement || (activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked)) {
@@ -2951,6 +2956,7 @@ export class TinyMceEditor extends Component {
         if (this.props.element.type === "element-dialogue") {
             elementId = this.props.element.id;
         }
+        config.glossaryCreated = true
         let sText = editor.selection.getContent();
         let parser = new DOMParser();
         let htmlDoc = parser.parseFromString(sText, 'text/html');

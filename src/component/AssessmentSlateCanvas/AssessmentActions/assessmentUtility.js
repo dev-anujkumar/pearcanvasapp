@@ -2,7 +2,7 @@
  * Module - assessmentUtility
  * Description - This file contains utility functions related to assessments (full and embedded)
  */
-import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY, ELM_INT, FIGURE_INTERACTIVE, DEFAULT_IMAGE_SOURCE, DISCUSSION_INTERACTIVE } from '../AssessmentSlateConstants.js';
+import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY, ELM_INT, FIGURE_INTERACTIVE, DEFAULT_IMAGE_SOURCE } from '../AssessmentSlateConstants.js';
 import {AUDIO ,VIDEO} from '../../../constants/Element_Constants.js';
 /** This is a function to set Assessment Title for Embedded Assessment
  * * @param model - object containig element data
@@ -157,17 +157,6 @@ export const checkFigureInsideTableElement = (element, buttonType = null, permis
     let editPermission = permissions.filter(p => ["alfresco_crud_access", "add_multimedia_via_alfresco"].includes(p));
     let tableasHTMLValue = String(element?.figuredata?.tableasHTML)
     if(element.figuretype === 'tableasmarkup' && tableasHTMLValue.includes('class="imageAssetContent"') && editPermission.length === 2){
-        return true;
-    }
-    return false;
-}
-
-/***
-* @description - This is the function to check if an interactive is discussion interactive
-* @param element - element's details
-*/
-export const checkDiscussionInteractive = (element) => {
-    if (element?.type === DISCUSSION_INTERACTIVE && element?.blockdata?.itemid) {
         return true;
     }
     return false;

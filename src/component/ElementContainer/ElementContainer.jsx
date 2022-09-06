@@ -51,10 +51,10 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement, checkDiscussionInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, DISCUSSION_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
@@ -2335,7 +2335,7 @@ class ElementContainer extends Component {
             normalText: TE_POP_UP_NORMAL_TEXT,
             renderImages : this.props.tableElementAssetData
         }
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton', this.props.permissions) || checkDiscussionInteractive(element);
+        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton', this.props.permissions);
         let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton', this.props.permissions);
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
@@ -2866,10 +2866,7 @@ class ElementContainer extends Component {
                 this.handleFigurePopup(true);
             }
             
-        } else if(element?.type === DISCUSSION_INTERACTIVE) {
-            window.open(config.EDIT_DISCUSSION_SPA_URL);
-        }
-        else {
+        } else {
             let fullAssessment = checkFullElmAssessment(element);
             let embeddedAssessment = checkEmbeddedElmAssessment(element);
             const isInteractive = checkInteractive(element);
