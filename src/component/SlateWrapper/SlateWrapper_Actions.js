@@ -1537,7 +1537,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                         node2?.focus()
                     }, 200)
                 }
-                let anyOpenComment = allComments?.filter(({ commentOnEntity }) => commentOnEntity === selection.element.id).length > 0
+                let anyOpenComment = allComments?.filter(({ commentOnEntity }) => commentOnEntity === selection?.element?.id).length > 0
                 if((selection.operationType === 'cut') && (anyOpenComment) ) {
                     sendDataToIframe({'type': 'refreshCM', 'message': {status: true}})
                 }
