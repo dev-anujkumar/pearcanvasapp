@@ -29,7 +29,7 @@ const PowerPasteElement = (props) => {
       focusPopupButtons();
     })
     return () => {
-      tinymce.activeEditor.destroy?.()
+      tinymce.activeEditor?.destroy?.()
     }
   }, [])
 

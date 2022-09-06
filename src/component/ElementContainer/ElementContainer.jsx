@@ -116,7 +116,8 @@ class ElementContainer extends Component {
             showUndoButton : false,
             undoElement: "",
             showActionUndone : false,
-            listElementWarningPopupCheckbox: false
+            listElementWarningPopupCheckbox: false,
+            showFirstTimeUndo : false
         };
         this.wrapperRef = React.createRef();
 
@@ -1428,7 +1429,8 @@ class ElementContainer extends Component {
             this.setState({
                 popup,
                 showDeleteElemPopup: true,
-                sectionBreak: sectionBreak ? sectionBreak : null
+                sectionBreak: sectionBreak ? sectionBreak : null,
+                showFirstTimeUndo: true
             });
         }
     }
@@ -1465,6 +1467,10 @@ class ElementContainer extends Component {
         sapratorElm?.classList?.remove("hideElement");
         document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
         document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+        const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon')
+        for (const elm of multipleElement) {
+            elm.classList.remove('stop-event')
+        }
         clearTimeout(this.timer)
         clearTimeout(this.showHideTimer)
         clearTimeout(this.toastTimer)
@@ -1477,7 +1483,6 @@ class ElementContainer extends Component {
                 showActionUndone: false
             }) 
         }, 2000);
-        // config.savingInProgress = false
         this.props.storeDeleteElementKeys({});
     }
 
@@ -1501,9 +1506,12 @@ class ElementContainer extends Component {
         }
         this.props.storeDeleteElementKeys({});
         sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
-        /* setTimeout(()=> {
-              config.savingInProgress = false
-          }, 500) */
+        setTimeout(() => {
+            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon')
+            for (const elm of multipleElement) {
+                elm.classList.remove('stop-event')
+            }
+        }, 300)
     }
 
     handleActionUndoneTimer = () => {
@@ -1520,7 +1528,12 @@ class ElementContainer extends Component {
         let { parentUrn, asideData, element, poetryData, parentElement, showHideType, index } = this.props;
         //let { contentUrn } = this.props.element
         //let index = this.props.index
-        if(config.savingInProgress) return false
+
+        if (this.state.warningPopupCheckbox && this.state.showFirstTimeUndo) {
+            this.setState({
+                showUndoButton: true
+            })
+        }
         if (this.state.sectionBreak) {
             parentUrn = {
                 elementType: element.type,
@@ -1568,7 +1581,7 @@ class ElementContainer extends Component {
         }
         this.handleCommentPopup(false, e);
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
-        if(disableDeleteWarnings) {
+        if(disableDeleteWarnings || this.state.warningPopupCheckbox) {
             sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: true } });
             this.setState({
                 undoElement: id
@@ -1579,8 +1592,11 @@ class ElementContainer extends Component {
             sapratorElm?.classList?.add("hideElement");
             document.getElementById('previous-slate-button')?.classList?.add('stop-event')
             document.getElementById('next-slate-button')?.classList?.add('stop-event')
-            // config.savingInProgress = true;
-            this.props.storeDeleteElementKeys(object);  
+            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon')
+            for (const elm of multipleElement) {
+                elm.classList.add('stop-event')
+            }
+            this.props.storeDeleteElementKeys(object); 
         } else {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         }
@@ -1588,26 +1604,32 @@ class ElementContainer extends Component {
         if(this.state.warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } }); 
         // api needs to run from here
         if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {
-            if (disableDeleteWarnings) {
+            if (disableDeleteWarnings || this.state.warningPopupCheckbox) {
                 this.showHideTimer = setTimeout(() => {
                     this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
                     document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
                     document.getElementById('next-slate-button')?.classList?.remove('stop-event')
-                    // config.savingInProgress = false
+                    const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon')
+                    for (const elm of multipleElement) {
+                        elm.classList.remove('stop-event')
+                    }
                 }, 5000)
             } else {
                 this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
             }  
         }
         else {
-            if (disableDeleteWarnings) {
+            if (disableDeleteWarnings || this.state.warningPopupCheckbox) {
                 this.timer = setTimeout(() => {
                     this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
                     document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
                     document.getElementById('next-slate-button')?.classList?.remove('stop-event')
-                    // config.savingInProgress = false
+                    const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon')
+                    for (const elm of multipleElement) {
+                        elm.classList.remove('stop-event')
+                    }
                 }, 5000)
             } else {
                 this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
