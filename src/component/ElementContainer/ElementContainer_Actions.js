@@ -236,7 +236,6 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         if (updatedData.type == "element-assessment") {
             let newAssessmentId = response?.data?.elementdata?.assessmentid;
             config.assessmentId = newAssessmentId;
-            sendDataToIframe({ 'type': 'UpdatedAssessmentId', 'message': { currentAssessmentId: newAssessmentId } });
         }    
     }
     catch(error) {
