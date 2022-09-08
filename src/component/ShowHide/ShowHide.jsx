@@ -56,7 +56,15 @@ class ShowHide extends React.Component {
 	}
 
 	render() {
-		const { index } = this.props || {};
+		const { index, element, asideData, parentUrn, sectionType } = this.props || {};
+		const elementLineage = {
+			...element ,
+		   grandParent: {
+			   asideData,
+			   parentUrn
+		   },
+		   sectionType
+	   }
 		return (
 			<div className="show-hide-component">
 				{/* Show Section of Component*/}
@@ -65,6 +73,7 @@ class ShowHide extends React.Component {
 					sectionType = {"show"}
 					sepratorIndex = {`${index}-0-0`}
 					onSortUpdate = {this.onSortUpdate}
+					asideData = {elementLineage}
 					{...this.props}
 				/>
 				{/* Reveal Answer Component*/}
@@ -75,6 +84,7 @@ class ShowHide extends React.Component {
 					sectionType = {"hide"}
 					sepratorIndex = {`${index}-2-0`}
 					onSortUpdate = {this.onSortUpdate}
+					asideData = {elementLineage}
 					{...this.props}
 				/>
 			</div>

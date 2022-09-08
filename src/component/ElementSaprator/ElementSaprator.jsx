@@ -139,10 +139,9 @@ export function ElementSaprator(props) {
         let pasteValidation = getPasteValidated(props, sourceComp, inputType);
         const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "popup", 'citations', 'element-citation', 'poetry', 'stanza'];
         let isChildElementNotAcceptedInPopup = false;
-        let parentBodymatter = props.elementSelection?.element?.elementdata?.bodymatter;
-        if(config.isPopupSlate && props.elementSelection?.element?.type === 'element-aside' && parentBodymatter?.length > 0){
-            let asideNotAcceptedTypes=['poetry', 'stanza', 'popup'];
-            isChildElementNotAcceptedInPopup = parentBodymatter.some((element) => asideNotAcceptedTypes.includes(element?.type))
+        if(config.isPopupSlate && props.elementSelection?.element?.type === 'element-aside'){
+            let asideNotAcceptedTypes=['poetry', 'stanza', 'popup', 'showhide', 'groupedcontent'];
+            isChildElementNotAcceptedInPopup = asideNotAcceptedTypes.includes(props?.asideData?.type)
         }
         let allowToShowPasteIcon = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.elementSelection?.element?.type) ? false : true;
         if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation && !isChildElementNotAcceptedInPopup) {
