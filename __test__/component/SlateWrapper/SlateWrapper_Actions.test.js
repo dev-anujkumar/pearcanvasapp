@@ -6279,6 +6279,61 @@ describe('Tests Slate Wrapper Actions', () => {
         expect(spypasteElement).toHaveBeenCalled()
     });
 
+    it('pasteElement  action - with element-aside selection element type and create element API with copy operation type', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
+                        contents: {
+                            bodymatter: [{
+                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
+                                contents: {
+                                    bodymatter: []
+                                }
+                            }]
+                        }
+                    }
+                },
+                popupSlateData: {
+                    type: ""
+                },
+            },
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            selectionReducer: {
+                selection: {
+                    activeAnimation: true,
+                    element: { id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", figuretype: " ", type: "element-aside", schema: "http://schemas.pearson.com/wip-authoring/element/1" },
+                    inputSubType: "NA",
+                    inputType: "AUTHORED_TEXT",
+                    operationType: "copy",
+                    sourceElementIndex: '2',
+                    sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
+                    sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6",
+                    sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
+                }
+            },
+            autoNumberReducer: mockAutoNumberReducerEmpty,
+            commentsPanelReducer: {
+                allComments: []
+            }
+        }
+        store3 = mockStore(() => initialState3);
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        config.slateEntityURN = "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1ff";
+        const spypasteElement = jest.spyOn(actions, 'pasteElement')
+        const params = {
+            parentUrn: { contentUrn: 'urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc' },
+            index: 1,
+            sectionType: 'sectionType',
+            asideData: { interactivedata: { sectionType: [{ id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62" }] } }
+        }
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ status: '200', data: {} }));
+        axios.get = jest.fn(() => Promise.resolve({ status: '200', data: { 'urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6': { type: 'figure', figuretype: 'image', elementdata: { type: 'blockquote' } } } }));
+        await actions.pasteElement(params)(store3.dispatch, store3.getState)
+        expect(spypasteElement).toHaveBeenCalled()
+    });
 
     it('swapElement  action - pe as containerTypeElem', async () => {
         initialState3 = {
@@ -7046,55 +7101,6 @@ describe('Tests Slate Wrapper Actions', () => {
         axios.post = jest.fn(() => Promise.resolve({ status: '200', data: {} }));
         axios.get = jest.fn(() => Promise.resolve({ status: '200', data: { 'urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6': { type: 'figure', figuretype: 'image', elementdata: { type: 'blockquote' } } } }));
         await actions.pasteElement(params)(store3.dispatch, store3.getState);
-        expect(spypasteElement).toHaveBeenCalled()
-    });
-    it('pasteElement  action- operation-type=cut', async () => {
-        initialState3 = {
-            appStore: {
-                slateLevelData: {
-                    "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
-                        contents: {
-                            bodymatter: [{
-                                id: "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f",
-                                contents: {
-                                    bodymatter: []
-                                }
-                            }]
-                        }
-                    }
-                },
-                popupSlateData: {
-                    type: ""
-                },
-            },
-            autoNumberReducer: mockAutoNumberReducerEmpty,
-            tcmReducer: { tcmSnapshot: ["78", "9"] },
-            selectionReducer: {
-                selection: {
-                    activeAnimation: true,
-                    element: { id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1", html: { text: '' } },
-                    inputSubType: "NA",
-                    inputType: "AUTHORED_TEXT",
-                    operationType: "cut",
-                    sourceElementIndex: 1,
-                    sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
-                    sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
-                }
-            },
-            commentsPanelReducer: {
-                allComments: []
-            }
-        }
-        store3 = mockStore(() => initialState3);
-        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
-        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
-        config.slateEntityURN = "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb";
-        const spypasteElement = jest.spyOn(actions, 'pasteElement')
-        const params = {
-            poetryData: { contentUrn: 'urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb' },
-            index: 2
-        }
-        actions.pasteElement(params)(store3.dispatch, store3.getState)
         expect(spypasteElement).toHaveBeenCalled()
     });
     it('swapElement  action - showhide as containerTypeElem', async () => {
