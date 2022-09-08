@@ -23,7 +23,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
@@ -1411,7 +1411,7 @@ class ElementContainer extends Component {
      * show Delete element Popup 
      * @param {elementId} 
      */
-    showDeleteElemPopup = (e, popup, sectionBreak) => {
+    showDeleteElemPopup = (e, popup, sectionBreak, showSectionLabel) => {
         e.stopPropagation();
         this.props.showBlocker(true);
         showTocBlocker();
@@ -1420,7 +1420,8 @@ class ElementContainer extends Component {
         if(disableDeleteWarnings) {
                this.setState({
                 sectionBreak: sectionBreak ? sectionBreak : null,
-                showActionUndone: false
+                showActionUndone: false,
+                showSectionBreakLabelText : showSectionLabel
             }, () => {
                 this.deleteElement(e);
                 this.handleUndoOption(true);
@@ -1467,7 +1468,7 @@ class ElementContainer extends Component {
         sapratorElm?.classList?.remove("hideElement");
         document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
         document.getElementById('next-slate-button')?.classList?.remove('stop-event')
-        const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button')
+        const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
         for (const elm of multipleElement) {
             elm.classList.remove('stop-event')
         }
@@ -1476,7 +1477,8 @@ class ElementContainer extends Component {
         clearTimeout(this.toastTimer)
         this.setState({
             showUndoButton: false,
-            showActionUndone: true
+            showActionUndone: true,
+            showSectionBreakLabelText: false
         })
         this.toastUndoneTimer = setTimeout(() => {
             this.setState({
@@ -1495,7 +1497,8 @@ class ElementContainer extends Component {
         clearTimeout(this.showHideTimer)
         clearTimeout(this.toastTimer)
         this.setState({
-            showUndoButton: false
+            showUndoButton: false,
+            showSectionBreakLabelText: false
         })
         if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {
             this.props.deleteElementAction(id, type, index, elements, containerElements, this.props.showBlocker);
@@ -1507,7 +1510,7 @@ class ElementContainer extends Component {
         this.props.storeDeleteElementKeys({});
         sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
         setTimeout(() => {
-            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button')
+            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
             for (const elm of multipleElement) {
                 elm.classList.remove('stop-event')
             }
@@ -1592,7 +1595,7 @@ class ElementContainer extends Component {
             sapratorElm?.classList?.add("hideElement");
             document.getElementById('previous-slate-button')?.classList?.add('stop-event')
             document.getElementById('next-slate-button')?.classList?.add('stop-event')
-            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button')
+            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
             for (const elm of multipleElement) {
                 elm.classList.add('stop-event')
             }
@@ -1610,7 +1613,7 @@ class ElementContainer extends Component {
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
                     document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
                     document.getElementById('next-slate-button')?.classList?.remove('stop-event')
-                    const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button')
+                    const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
                     for (const elm of multipleElement) {
                         elm.classList.remove('stop-event')
                     }
@@ -1626,7 +1629,7 @@ class ElementContainer extends Component {
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
                     document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
                     document.getElementById('next-slate-button')?.classList?.remove('stop-event')
-                    const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button')
+                    const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
                     for (const elm of multipleElement) {
                         elm.classList.remove('stop-event')
                     }
@@ -2476,7 +2479,7 @@ class ElementContainer extends Component {
                 </div >
                         {
                             this.state.showUndoButton && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
-                                <p> {labelText} has been deleted. </p>
+                                <p> {this.state.showSectionBreakLabelText ? SECTION_BREAK_LABELTEXT : labelText} has been deleted. </p>
                                 <p className='undo-button' onClick={() => this.handleUndoElement()}> Undo </p>
                                 <Button type='toast-close-icon' onClick={() => this.handleUndoOptionTimer()} />
                             </div>
