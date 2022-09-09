@@ -723,7 +723,7 @@ class ElementAsideContainer extends Component {
         let diffDesignType = ["asideSidebar04", "asideSidebar05", "asideSidebarFeature", "asideActivity"]
         let isDiffDesignType= diffDesignType.includes(designtype);
         return (
-            <aside className={`${labelMargin} ${ isDiffDesignType ? '' : designtype } aside-container`} tabIndex="0" ref={this.asideRef}>
+            <aside className={`${labelMargin} ${ isDiffDesignType ? '' : designtype } aside-container`} tabIndex="0">
                 {this.checkForAutoNumberedContent(element) ?
                     <ContainerHeader
                         {...this.props}
