@@ -114,6 +114,8 @@ describe('Testcase for MetaDataPopUpForTE Component', () => {
         const container = wrapper.find('#altText_AM')
         let event={ target: { value: '123' } }
         wrapper.find('#altText_AM').simulate('change',event)
+        wrapper.find('#altText_AM').simulate('click')
+        wrapper.find('#altText_AM').simulate('blur')
     })
 
    
@@ -122,13 +124,32 @@ describe('Testcase for MetaDataPopUpForTE Component', () => {
         const container = wrapper.find('textarea#longDescription_AM')
         let event={ target: { value: '123' } }
         wrapper.find('#longDescription_AM').simulate('change',event)
+        wrapper.find('#longDescription_AM').simulate('click')
+        wrapper.find('#longDescription_AM').simulate('blur')
     })
 
     it('Changing input traverseLeft', () => {
         const wrapper = mount(<Provider store={store}><MetaDataPopUpForTE {...props}/></Provider>);
-        const container = wrapper.find('textarea#longDescription_AM')
+        const container = wrapper.find('.left-arrow')
         let event={ target: { value: '123' } }
-        wrapper.find('#longDescription_AM').simulate('change',event)
+        wrapper.find('.seperate-img').at(2).simulate('click')
+        wrapper.find('.left-arrow').simulate('click')
+    })
+    it('Changing input traverseRight', () => {
+        const wrapper = mount(<Provider store={store}><MetaDataPopUpForTE {...props}/></Provider>);
+        const container = wrapper.find('.left-arrow')
+        let event={ target: { value: '123' } }
+        wrapper.find('.seperate-img').at(2).simulate('click')
+        wrapper.find('.right-arrow').simulate('click')
+    })
+
+    it('Testing metadata import in cypress', () => {
+        const wrapper = mount(<Provider store={store}><MetaDataPopUpForTE {...props}/></Provider>);
+        wrapper.find('.metadata-import-button').simulate('click')
+    })
+    it('Testing cancel/close TE Poup', () => {
+        const wrapper = mount(<Provider store={store}><MetaDataPopUpForTE {...props}/></Provider>);
+        wrapper.find('#close-container').simulate('click')
     })
 
     it('Changing for: If Alt Text Error is True or False', () => {
@@ -170,5 +191,26 @@ describe('Testcase for MetaDataPopUpForTE Component', () => {
         let event={ target: { value: '123' } }
         wrapper.find('#longDescription_AM').simulate('change',event)
     })
-
+    it('it should render loader', () => {
+        let props1 = {
+            ...props,
+            "imageList":[]
+        }
+        const wrapper = mount(<Provider store={store}><MetaDataPopUpForTE {...props1}/></Provider>);   
+     })
+     it('it should render first image', () => {
+        let props1 = {
+            ...props,
+            "imageList":[
+                { 
+                    "id": 1,
+                    "altText": "Alt text <html>",
+                    "longdescription": "This is for testing long desc new<html>",
+                    "imgSrc": "https://cite-media-stg.pearson.com/legacy_paths/31189d68-e07d-42f6-923e-a78955387c6f/galaxy_assesttest%20%281%29.jpg",
+                    "imgId": "imageAssetContent:31189d68-e07d-42f6-923e-a78955387c6f:4749"
+                }
+            ]
+        }
+        const wrapper = mount(<Provider store={store}><MetaDataPopUpForTE {...props1}/></Provider>);   
+     })
 })

@@ -22,6 +22,21 @@ const store = mockStore({
     workflowRole: null
   }
 });
+
+const store1 = mockStore({
+  commentsPanelReducer: {
+    comments: comments,
+    togglePanel: false,
+    toggleReplyForm: false,
+    users: users
+  },
+  appStore : {
+    permissions: permissions
+  },
+  projectInfo: {
+    workflowRole: ["admin", "manager"]
+  }
+});
 describe('Testing CommentsPanel component with props', () => {
   let wrapper = mount(<Provider store={store}>< CommentsPanel comments={comments} projectUsers={users}/> </Provider>)
   const instance = wrapper.find('CommentsPanel').instance();
@@ -162,9 +177,11 @@ describe('Testing CommentsPanel component with props', () => {
 
   describe('Testing action function with props', () => {
     let wrapper = mount(<Provider store={store}><CommentsPanel comment={comments} /></Provider>);
+    let wrapper1 = mount(<Provider store={store1}><CommentsPanel comment={comments} /></Provider>);
     wrapper.find('.dropdown.sort-dropdown .dropdown__button').simulate('click');
     wrapper.find('.dropdown.status-dropdown .dropdown__button').simulate('click');
     const instance = wrapper.find('CommentsPanel').instance();
+    const instance1 = wrapper1.find('CommentsPanel').instance();
     it('renders updateElementComment ', () => {
       instance.updateElementComment();
     });
@@ -192,6 +209,24 @@ describe('Testing CommentsPanel component with props', () => {
     });
     it('tests toggle panel function ', () => {
       instance.togglePanel();
+    });
+    it('tests toggle panel function ', () => {
+      instance1.togglePanel();
+    });
+    it('tests getWorkflowRoleOption function ', () => {
+      let workflowRoles = ["role"]
+      instance.getWorkflowRoleOption(workflowRoles);
+    });
+    it('tests getWorkflowRoleOption function ', () => {
+      let workflowRoles = ["admin", "manager"]
+      instance1.getWorkflowRoleOption(workflowRoles);
+    });
+    it('tests getRoleOption function ', () => {
+      let users = [{roleName: "admin", roleName: "manager"}]
+      instance.getRoleOption (users);
+    });
+    it('tests updateRole function ', () => {
+      instance.updateRole();
     });
   })
 
