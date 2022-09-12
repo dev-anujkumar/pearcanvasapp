@@ -651,10 +651,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
         }
-        if(config.slateType == "assessment" && newVersionManifestId && slateData?.data[newVersionManifestId] && slateData?.data[newVersionManifestId]?.contents?.bodymatter[0]?.elementdata){
-            let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
-                config.assessmentId= slateBodymatter[0].elementdata.assessmentid
-            }
         /** ---- Check if current slate is Double Spread PDF ---- */
         const isCypressPlusProject = getState()?.appStore?.isCypressPlusEnabled
         if (isCypressPlusProject && config.slateType == 'pdfslate' && slateData && slateData.data[newVersionManifestId]) {
@@ -865,9 +861,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         });    
 
                         let slateWrapperNode = document.getElementById('slateWrapper');
+                        let searchString = window.location.search;
+                        let src = new URLSearchParams(searchString);
                         if (slateWrapperNode) {
                             slateWrapperNode.scrollTop = 0;
                         }
+                        if (src && src.get('q') && currentParentData) {
+                            const newSlateData = JSON.parse(JSON.stringify(currentParentData));
+                            const commentElementData = newSlateData?.contents?.bodymatter;
+                            let currentElement = commentElementData?.filter(element => element.id === src.get('q'))
+                            dispatch(setActiveElement(currentElement[0]));
+                        }  
                     }
                 }else{
                     console.log("incorrect data comming...")

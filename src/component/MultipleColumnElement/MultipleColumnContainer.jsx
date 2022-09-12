@@ -120,6 +120,8 @@ class MultipleColumnContainer extends PureComponent {
                                 elementSepratorProps={this.context.elementSepratorProps}
                                 splithandlerfunction={this.context.splithandlerfunction}
                                 pasteElement={this.props.pasteElement}
+                                handleUndoOption = {this.props.handleUndoOption}
+                                closeUndoTimer = {this.props.closeUndoTimer}
                             />
                             <ElementSaprator
                                 index={index}
@@ -136,6 +138,7 @@ class MultipleColumnContainer extends PureComponent {
                                 pasteElement={this.props.pasteElement}
                                 source={MULTICOLUMN_SOURCE}
                                 handleCopyPastePopup={this.props.handleCopyPastePopup}
+                                dataId = {element.id}
                             />  
                         </React.Fragment>
                     )

@@ -24,7 +24,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
     const { poetryData, asideData, parentUrn, showHideObj } = containerElement
     /* For WE creation*/
     if (wipData.type === ELEMENT_ASIDE && type != SECTION_BREAK) {
-        tcmSnapshotsCreateAsideWE(snapshotsData, defaultKeys,index, isPopupSlate,containerElement,operationType);
+        tcmSnapshotsCreateAsideWE(snapshotsData, defaultKeys,index, isPopupSlate,containerElement,popupCutCopyParentData,operationType);
     }
     /* For SH creation*/
     else if (wipData.type === SHOWHIDE) {
@@ -67,7 +67,7 @@ export const tcmSnapshotsOnDefaultSlate = (snapshotsData, defaultKeys, container
  * @param {Object} snapshotsData - Initial Snapshots data
  * @param {String} defaultKeys - default keys of tcm snapshot
 */
-export const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlate,containerElement,operationType=null) => {
+export const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPopupSlate,containerElement,popupCutCopyParentData, operationType=null) => {
     let elementDetails;
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
     let parentObj = {};
@@ -84,7 +84,7 @@ export const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPo
                 if (elementType.indexOf(ele.type) !== -1) {
                     elementId.childId = ele.id;
                     tag.childTag = fetchElementsTag(ele);
-                    elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? 'BODY' : "", item.id,undefined,popupInContainer,slateManifestVersioning,isPopupSlate, parentObj, containerElement);
+                    elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? 'BODY' : "", item.id,undefined,popupInContainer,slateManifestVersioning,isPopupSlate, parentObj, containerElement,actionStatus,popupCutCopyParentData);
                     prepareAndSendTcmData(elementDetails, ele, defaultKeys, actionStatus,index);
                 }
                else if (ele.type === SHOWHIDE || ele.type === POETRY_ELEMENT) {
@@ -98,7 +98,7 @@ export const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPo
         else if (elementType.indexOf(item.type) !== -1) {
             elementId.childId = item.id;
             tag.childTag = fetchElementsTag(item);
-            elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer,slateManifestVersioning, isPopupSlate, parentObj, containerElement);
+            elementDetails = setElementTypeAndUrn(elementId, tag, wipData.subtype === WORKED_EXAMPLE ? "HEAD" : "", "",undefined,popupInContainer,slateManifestVersioning, isPopupSlate, parentObj, containerElement,actionStatus,popupCutCopyParentData);
             prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
         }
         else if (item.type === SHOWHIDE || item.type === POETRY_ELEMENT) {

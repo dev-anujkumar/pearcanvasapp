@@ -24,7 +24,8 @@ jest.mock('../../../src/constants/utility.js', () => {
             } else {
                 return null;
             }
-        }
+        },
+        handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
     }
 })
 
@@ -72,7 +73,8 @@ describe('Testing AlfrescoPopup component', () => {
         },
         handleCloseAlfrescoPicker: jest.fn(),
         alfrescoPopup: jest.fn(),
-        saveSelectedAlfrescoElement: jest.fn()
+        saveSelectedAlfrescoElement: jest.fn(),
+        alfrescoPath:{}
     }
 
     it('AlfrescoPopup Container', () => {

@@ -1,6 +1,7 @@
 import { WORKED_EXAMPLE } from "../component/SlateWrapper/SlateWrapperConstants"
 /*---------------- Error message constants -----------------*/
 export const SLATE_API_ERROR = "Error in getting slate data. Please try again."
+export const SECTION_BREAK_LABELTEXT = "SB"
 
 /*---------------Element Figure ----------------------*/
 export const TABLE_AS_MARKUP = "tableasmarkup" 

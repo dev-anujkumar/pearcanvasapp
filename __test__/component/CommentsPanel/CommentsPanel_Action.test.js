@@ -20,7 +20,8 @@ import {
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 jest.mock('../../../src/constants/utility.js', () => ({
-    sendDataToIframe: jest.fn()
+    sendDataToIframe: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 
 jest.mock('../../../src/config/config.js', () => ({

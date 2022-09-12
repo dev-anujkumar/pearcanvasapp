@@ -123,6 +123,7 @@ export function ElementSaprator(props) {
      * @description: OnClick handler for split slate button
      */
     const splitSlateClickHandler = () => {
+        if(config.savingInProgress) return false
         if(props.openAudio){
             props.showAudioSplitPopup(true , props.index)
         }
@@ -136,9 +137,14 @@ export function ElementSaprator(props) {
         let sourceComp = 'source' in props ? props.source : '';
         let inputType = 'inputType' in props.elementSelection ? props.elementSelection.inputType : '';
         let pasteValidation = getPasteValidated(props, sourceComp, inputType);
-        const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "element-aside", "popup", 'citations', 'element-citation', 'poetry', 'stanza'];
+        const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "popup", 'citations', 'element-citation', 'poetry', 'stanza'];
+        let isChildElementNotAcceptedInPopup = false;
+        if(config.isPopupSlate && props.elementSelection?.element?.type === 'element-aside'){
+            let asideNotAcceptedTypes=['poetry', 'stanza', 'popup', 'showhide', 'groupedcontent'];
+            isChildElementNotAcceptedInPopup = asideNotAcceptedTypes.includes(props?.asideData?.type)
+        }
         let allowToShowPasteIcon = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.elementSelection?.element?.type) ? false : true;
-        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation) {
+        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation && !isChildElementNotAcceptedInPopup) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
                     <Tooltip direction='paste' tooltipText='Paste element'>
@@ -187,7 +193,7 @@ export function ElementSaprator(props) {
     const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
     let hideElementSeperator = isSubscriberRole(props?.projectSubscriptionDetails?.projectSharingRole,props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? 'hideToolbar' : ''
     return (
-        <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`}>
+        <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`} id = {props.dataId}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
                 {permissions && permissions.includes('split_slate') && hideSplitSlateIcon && !config.isPopupSlate && !props.firstOne && !(props.setSlateParent == 'part' && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}

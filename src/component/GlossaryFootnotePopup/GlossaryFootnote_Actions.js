@@ -38,7 +38,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[config.slateManifestURN];
         const showHideElement = store.getState().appStore?.showHideObj;
-        if(currentSlateData?.type==="popup" && currentSlateData.status === "approved" && (config.isCreateFootnote || config.isCreateGlossary)){
+        if(currentSlateData?.type==="popup" && currentSlateData.status === "approved" && config.isCreateFootnote){
             return false;
         }
         let newBodymatter = newParentData[slateId]?.contents?.bodymatter;
@@ -1157,12 +1157,35 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
         }
 
-        store.dispatch({
-            type: UPDATE_FOOTNOTEGLOSSARY,
-            payload: {
-                slateLevelData: newParentData
-            }
-        })
+        const popupParentData = store.getState().appStore.slateLevelData;
+        let newPopupParentData = JSON.parse(JSON.stringify(popupParentData));
+        let currentPopupSlateData = newPopupParentData[config.slateManifestURN];
+        let newPopupSlateData = newParentData[config.tempSlateManifestURN]
+        let currentApprovedSlate = currentSlateData.contents.bodymatter[tempIndex[0]]
+        if(currentPopupSlateData && currentPopupSlateData.type==="popup" && newPopupSlateData && newPopupSlateData.status === 'approved' && config.glossaryCreated){
+            store.dispatch({
+                type: UPDATE_FOOTNOTEGLOSSARY,
+                payload: {
+                    slateLevelData: newPopupParentData
+                }
+            })
+        } else if(currentSlateData && currentSlateData.status === "approved" && (currentApprovedSlate && (currentApprovedSlate.type === "groupedcontent" || currentApprovedSlate.subtype === "workedexample"))){
+            store.dispatch({
+                type: UPDATE_FOOTNOTEGLOSSARY,
+                payload: {
+                    slateLevelData: newPopupParentData
+                }
+            })
+        }
+        else {
+            store.dispatch({
+                type: UPDATE_FOOTNOTEGLOSSARY,
+                payload: {
+                    slateLevelData: newParentData
+                }
+            })
+        }
+        config.glossaryCreated = false
 
         sendDataToIframe({'type': HideLoader,'message': { status: false }});
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })  //hide saving spinner

@@ -9,7 +9,8 @@ import Toolbar from '../../../src/component/Toolbar';
 
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
-    hasReviewerRole: jest.fn()
+    hasReviewerRole: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 
 jest.mock('../../../src/js/slateLockUtility', () => ({
