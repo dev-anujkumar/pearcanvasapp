@@ -26,6 +26,9 @@ jest.mock('../../../src/constants/utility.js', () => {
         sendDataToIframe: () => {
             return jest.fn()
         },
+        getCookieByName: () => {
+            return true
+        },
         handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
     }
 });

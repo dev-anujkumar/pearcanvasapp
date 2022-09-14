@@ -9,7 +9,7 @@ import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import { DEFAULT_VIDEO_POSTER_IMAGE } from './../../constants/Element_Constants';
-import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js'
+import { hasReviewerRole, sendDataToIframe, getCookieByName } from '../../constants/utility.js'
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import {alfrescoPopup, saveSelectedAssetData  , saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
@@ -62,7 +62,8 @@ class ElementAudioVideo extends Component {
 
     /*** @description This function is used to render delete Popup */
     showDeleteAssetPopup = () => {
-        if (this.state.deleteAssetPopup) {
+        const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+        if (this.state.deleteAssetPopup && !disableDeleteWarnings) {
             this.showCanvasBlocker(true)
             return (
                 <PopUp
@@ -75,6 +76,9 @@ class ElementAudioVideo extends Component {
                     isDeleteAssetClass="delete-element-text"    
                 />
             )
+        }else if (this.state.deleteAssetPopup && disableDeleteWarnings){
+            this.deleteElementAsset()
+            return
         }
         else {
             return null
