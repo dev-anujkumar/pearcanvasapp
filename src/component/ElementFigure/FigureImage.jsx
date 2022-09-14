@@ -224,9 +224,9 @@ class FigureImage extends Component {
                     
                 />
             )
-        }else if (this.state.deleteAssetPopup && disableDeleteWarnings){
+        } else if (this.state.deleteAssetPopup && disableDeleteWarnings) {
             this.deleteFigureResource()
-            return
+            return null
         }
         else {
             return null

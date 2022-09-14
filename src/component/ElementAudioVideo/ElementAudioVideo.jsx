@@ -76,9 +76,9 @@ class ElementAudioVideo extends Component {
                     isDeleteAssetClass="delete-element-text"    
                 />
             )
-        }else if (this.state.deleteAssetPopup && disableDeleteWarnings){
+        } else if (this.state.deleteAssetPopup && disableDeleteWarnings) {
             this.deleteElementAsset()
-            return
+            return null
         }
         else {
             return null
