@@ -507,4 +507,44 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         let result = handleTextToRetainFormatting(htmlData, simpleDiv);
         expect(result).toBe('use it hey');
     })
+    it('Case 7 ', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '</abbr>use it hey</abbr>';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<dfn class=test>use it hey</dfn>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        expect(result).toBe('use it hey');
+    })
+    it('Case 7 ', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<abbr>use it hey</abbr>';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<abbr class=test>use it hey</abbr>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        expect(result).toBe('use it hey');
+    })
+    it('Case 7 ', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '</span>use it hey</span>';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<span class=test>use it hey</span>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        expect(result).toBe('use it hey');
+    })
+    it('Case 7 ', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<br />';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<br />'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        expect(result).toBe('use it hey');
+    })
+    it('Case 7 ', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<br>';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<br>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        expect(result).toBe('use it hey');
+    })
 })
