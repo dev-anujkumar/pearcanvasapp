@@ -507,7 +507,7 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         let result = handleTextToRetainFormatting(htmlData, simpleDiv);
         expect(result).toBe('use it hey');
     })
-    it('Case 7 ', () => {
+    it('Case 7', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '</abbr>use it hey</abbr>';
         simpleDiv.innerText = 'use it hey';
@@ -515,7 +515,7 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         let result = handleTextToRetainFormatting(htmlData, simpleDiv);
         expect(result).toBe('use it hey');
     })
-    it('Case 7 ', () => {
+    it('Case 8', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '<abbr>use it hey</abbr>';
         simpleDiv.innerText = 'use it hey';
@@ -523,7 +523,7 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         let result = handleTextToRetainFormatting(htmlData, simpleDiv);
         expect(result).toBe('use it hey');
     })
-    it('Case 7 ', () => {
+    it('Case 9', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '</span>use it hey</span>';
         simpleDiv.innerText = 'use it hey';
@@ -531,7 +531,7 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         let result = handleTextToRetainFormatting(htmlData, simpleDiv);
         expect(result).toBe('use it hey');
     })
-    it('Case 7 ', () => {
+    it('Case 10', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '<br />';
         simpleDiv.innerText = 'use it hey';
@@ -539,7 +539,7 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         let result = handleTextToRetainFormatting(htmlData, simpleDiv);
         expect(result).toBe('use it hey');
     })
-    it('Case 7 ', () => {
+    it('Case 11', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '<br>';
         simpleDiv.innerText = 'use it hey';

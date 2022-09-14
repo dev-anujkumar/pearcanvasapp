@@ -15,7 +15,7 @@ export const CHECKBOX_MESSAGE = "Don't ask me again";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>', '</p>', '</ul>', '</ol>', '</li>']
-export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>', '<img']
+export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>']
 export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<img']
 export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"', 'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"', 'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"', 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
 
@@ -837,9 +837,10 @@ export const handleTextToRetainFormatting = (pastedContent, testElement) => {
     if (NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
         let tempContent = testElement.innerText.replace(/&/g, "&amp;");
         pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    } else if(ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
+    } else if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
         pastedContent = updatedText;
-    } else {
+    } 
+    else {
         let tempContent = testElement.innerText.replace(/&/g, "&amp;");
         pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
