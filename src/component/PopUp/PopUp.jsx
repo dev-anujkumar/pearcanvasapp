@@ -14,8 +14,9 @@ import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
 import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
-import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE } from '../../../src/constants/utility.js';
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
 import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
+import { DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes';
 
 /**
 * @description - PopUp is a class based component. It is defined simply
@@ -27,7 +28,8 @@ class PopUp extends React.Component {
         this.state = {
             wordPasteProceed: false,
             isChecked: false,
-            focusedButton: this.setFocus(props)
+            focusedButton: this.setFocus(props),
+            deleteWarningPopupCheckbox: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
@@ -229,6 +231,16 @@ class PopUp extends React.Component {
         }
     }
 
+    handleClickOnButton = () => {
+        if (this.state.deleteWarningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } });
+    }
+
+    handleDeleteWarningPopupCheckbox = (event) => {
+        this.setState({
+            deleteWarningPopupCheckbox: event?.target?.checked
+        });
+    }
+
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
     * @param {event} 
@@ -287,7 +299,7 @@ class PopUp extends React.Component {
         if (props.openRemovePopUp) {
             return (
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
-                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => this.handleAudioGlossaryButtonsClick(e)}>Ok</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => {this.handleAudioGlossaryButtonsClick(e);this.handleClickOnButton();}}>Ok</span>
                     <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => this.handleAudioGlossaryButtonsClick(e)}>Cancel</span>
                 </div>
             )
@@ -653,6 +665,13 @@ class PopUp extends React.Component {
             return (
                 <div className='popup-checkbox-message'>
                     <input className='popup-checkbox' type="checkbox" value={props.listElementWarningPopupCheckbox} checked={props.listElementWarningPopupCheckbox} onChange={(event) => props?.handleListElementWarningPopupCheckbox(event)} />
+                    <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
+                </div>
+            )
+        } else if (props.removeConfirmation) {
+            return (
+                <div className='popup-checkbox-message'>
+                    <input className='popup-checkbox' type="checkbox" value={this.state.deleteWarningPopupCheckbox} checked={this.state.deleteWarningPopupCheckbox} onChange={(event) => this.handleDeleteWarningPopupCheckbox(event)} />
                     <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
                 </div>
             )
