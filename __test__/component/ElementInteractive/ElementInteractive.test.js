@@ -11,7 +11,6 @@ import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivep
     ,Interactivesimulation,Interactivesurvey,Interactivetimeline,Interactivehotspot,Interactiveaccountingtable,
     Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm } from '../../../fixtures/ElementInteractiveTesting.js'
 import thunk from 'redux-thunk';
-import { getCookieByName } from '../../../src/constants/utility';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const dummyData = [
