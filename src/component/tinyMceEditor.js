@@ -2391,7 +2391,10 @@ export class TinyMceEditor extends Component {
                 let tempContent = testElement.innerText.replace(/&/g, "&amp;");
                 args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
             }
-        } else {
+        } else if(this.props?.element?.type === "element-authoredtext" && args.content.match('class="imageAssetContent"')) {
+            args.content = handleTextToRetainFormatting(args.content,testElement)
+
+        } else{
             args.content = tinymce.activeEditor.selection.getContent();
         }
         if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && !this.notFormatting) {

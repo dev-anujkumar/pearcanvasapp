@@ -15,8 +15,8 @@ export const CHECKBOX_MESSAGE = "Don't ask me again";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>', '</p>', '</ul>', '</ol>', '</li>']
-export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '</em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>']
-export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<img', '</abbr>', '</dfn>', "</a>", 'class="answerLineContent"', 'class="calloutOne"', 'class="calloutTwo"', 'class="calloutThree"', 'class="calloutFour"', 'class="markedForIndex"']
+export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '</em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>','<img']
+export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = ['</abbr>', '</dfn>', "</a>", 'class="answerLineContent"', 'class="calloutOne"', 'class="calloutTwo"', 'class="calloutThree"', 'class="calloutFour"', 'class="markedForIndex"']
 export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"', 'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"', 'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"', 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
 
 export const requestConfigURI = () => {
@@ -832,7 +832,18 @@ export const handleTextToRetainFormatting = (pastedContent, testElement) => {
         let tempContent = testElement.innerText.replace(/&/g, "&amp;");
         pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     } else if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
-        pastedContent = updatedText;
+        if (updatedText.match('class="Wirisformula')) {
+            let tempContent = testElement.getElementsByClassName('Wirisformula')
+            let updatePasteContent = updatedText;
+            for(var i = 0; i < tempContent.length; i++){   
+               let wirisImgData = tempContent[i].outerHTML
+               let wirisImgData1 = wirisImgData.replace(/¨/g, '&uml;').replace(/»/g, "&raquo;").replace(/«/g, "&laquo;").replace(/">/g,'" />')
+                updatePasteContent = updatePasteContent.replace(wirisImgData1,'')
+            }
+            pastedContent = updatePasteContent
+        } else {
+            pastedContent = updatedText;
+        }
     }
     else {
         let tempContent = testElement.innerText.replace(/&/g, "&amp;");
