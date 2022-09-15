@@ -56,7 +56,7 @@ class ElementPopup extends React.Component {
     
     renderSlate =()=>{
         const { element, index, slateLevelData } = this.props
-        const sUrn = findKey(slateLevelData, (slate) => (slate.type === "manifest" || slate.type === "chapterintro" ||  slate.type ==="titlepage" || slate.type === "moduleintro" || slate.type === "partintro"))
+        const sUrn = findKey(slateLevelData, (slate) => (slate.type === "manifest" || slate.type === "chapterintro" ||  slate.type ==="titlepage" || slate.type === "moduleintro" || slate.type === "partintro" || slate.type === "volumeintro"))
         const eUrn = slateLevelData[sUrn] && slateLevelData[sUrn].contentUrn
         config.tempSlateManifestURN = sUrn
         config.tempSlateEntityURN = eUrn
