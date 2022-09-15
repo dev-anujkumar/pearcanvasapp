@@ -11,6 +11,7 @@ import { Interactivefpo , InteractiveFlashcards, Interactive3party, Interactivep
     ,Interactivesimulation,Interactivesurvey,Interactivetimeline,Interactivehotspot,Interactiveaccountingtable,
     Interactivefillinblank,Interactivegalleryimage,Interactivegalleryvideo,Interactivevideomcq,Interactivemcq , InteractiveGuidedExample, interactiveElm } from '../../../fixtures/ElementInteractiveTesting.js'
 import thunk from 'redux-thunk';
+import { getCookieByName } from '../../../src/constants/utility';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const dummyData = [
@@ -1842,6 +1843,18 @@ describe('Testing Methods', () => {
         const res = newInteractiveInstance.deleteElementAsset()
         expect(res).not.toBe(null);
     })
+    it('Testing showDeleteAssetPopup - else IF Condition', () => {
+        newInteractiveInstance.setState({
+            deleteAssetPopup: true
+        })
+        jest.mock('../../../src/constants/utility', () => ({
+            getCookieByName: jest.fn().mockImplementationOnce = () => {
+                return true
+            },
+        }))
+        document.cookie = "DISABLE_DELETE_WARNINGS=true"
+        newInteractiveInstance.showDeleteAssetPopup();
+    });
     it('Testing showDeleteAssetPopup : else condition', () => {
         newInteractiveInstance.setState({
             deleteAssetPopup: false
