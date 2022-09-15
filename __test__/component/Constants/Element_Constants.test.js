@@ -132,7 +132,7 @@ describe('Testing Element_Constans',()=>{
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         })
-        xit('getPasteValidation for SH in  multiCloumn',()=>{
+        it('getPasteValidation for SH in  multiCloumn',()=>{
             let props={
                 "index": 0,
                 "elementType": "group",
@@ -695,7 +695,7 @@ describe('Testing Element_Constans',()=>{
                 },
                 "sectionType": "show"
             }
-            let sourceType="SHOW_HIDE",
+            let sourceType="SHOWHIDE",
                 selectionType="ASIDE",
                 spyFunction = jest.spyOn(Element_Constants, 'getPasteValidated');
                 Element_Constants.getPasteValidated(props, sourceType, selectionType);
