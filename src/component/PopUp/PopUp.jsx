@@ -315,7 +315,7 @@ class PopUp extends React.Component {
         if (props.isDeleteAssetPopup) {
             return (
                 <div className={`dialog-buttons ${props.isDeleteAssetClass}`}>
-                    <span option={PRIMARY_BUTTON} className={`save-button `} onClick={(e) => props.deleteAssetHandler(e)}>Yes</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button `} onClick={(e) => {props.deleteAssetHandler(e);this.handleClickOnButton();}}>Yes</span>
                     <span option={SECONDARY_BUTTON} className={`cancel-button `} id='close-container' onClick={(e) => props.togglePopup(false, e)}>No</span>
                 </div>
             )
@@ -668,7 +668,7 @@ class PopUp extends React.Component {
                     <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
                 </div>
             )
-        } else if (props.removeConfirmation) {
+        } else if (props.removeConfirmation || props.isDeleteAssetPopup) {
             return (
                 <div className='popup-checkbox-message'>
                     <input className='popup-checkbox' type="checkbox" value={this.state.deleteWarningPopupCheckbox} checked={this.state.deleteWarningPopupCheckbox} onChange={(event) => this.handleDeleteWarningPopupCheckbox(event)} />

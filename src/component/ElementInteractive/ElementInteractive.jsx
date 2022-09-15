@@ -15,7 +15,7 @@ import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/Roo
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData, assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
-import { sendDataToIframe } from './../../constants/utility.js';
+import { sendDataToIframe, getCookieByName } from './../../constants/utility.js';
 import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA } from '../../constants/Element_Constants.js';
 import interactiveTypeData from './interactiveTypes.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
@@ -296,7 +296,8 @@ class Interactive extends React.Component {
     
         /*** @description This function is used to render delete Popup */
         showDeleteAssetPopup = () => {
-            if (this.state.deleteAssetPopup) {
+            const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+            if (this.state.deleteAssetPopup && !disableDeleteWarnings) {
                 this.showCanvasBlocker(true)
                 return (
                     <PopUp
@@ -309,6 +310,9 @@ class Interactive extends React.Component {
                         isDeleteAssetClass="delete-element-text"
                     />
                 )
+            } else if (this.state.deleteAssetPopup && disableDeleteWarnings) {
+                this.deleteElementAsset()
+                return null
             }
             else {
                 return null
