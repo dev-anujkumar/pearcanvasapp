@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { labelOptions, getOpenerContent, getOpenerImageSource, moduleLabelOptions } from './OpenerConstants'
+import { labelOptions, getOpenerContent, getOpenerImageSource, moduleLabelOptions, volumeLabelOptions } from './OpenerConstants'
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 
 import '../../styles/OpenerElement/OpenerElement.css'
@@ -234,7 +234,18 @@ class OpenerElement extends Component {
      */
     renderLabelDropdown = () => {
         const { showLabelDropdown } = this.state
-        const openerElementLabelOptions = this.props.setSlateParent === "module" ? moduleLabelOptions : labelOptions
+        let openerElementLabelOptions 
+        switch(this.props.setSlateParent){
+            case "module":
+                openerElementLabelOptions = moduleLabelOptions
+            break;
+            case "volume":
+                openerElementLabelOptions = volumeLabelOptions
+            break;
+            default:
+                openerElementLabelOptions = labelOptions
+            break; 
+        }
         const openerLabelOptions = openerElementLabelOptions.map((value, index) => {
             return <li key={index} data-value={value} onClick={this.handleOpenerLabelChange}>{value}</li>
         })
