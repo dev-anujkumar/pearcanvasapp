@@ -1183,7 +1183,7 @@ class SlateWrapper extends Component {
             this.props.showBlocker(true)
             showTocBlocker()
             const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
-            if (disableDeleteWarnings) {
+            if (disableDeleteWarnings && this.props.openRemovePopUp) {
                 this.processRemoveConfirmation();
                 return null;
             } else {
