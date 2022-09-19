@@ -8,7 +8,7 @@ import * as slateLevelMediaMapper from '../../../src/component/FigureHeader/slat
 import * as AutoNumberActions from '../../../src/component/FigureHeader/AutoNumberActions';
 import {GET_ALL_AUTO_NUMBER_ELEMENTS} from '../../../src/constants/Action_Constants'
 /*************************Import Constants*************************/
-import { mockSlateFiguresList, mockAutoNumberingDetails, slateAncestorFM, slateAncestorBM, slateAncestorPart, slateAncestorChapter, slateAncestorChapterwithMod, mockIndexedElements,
+import { mockSlateFiguresList, mockAutoNumberingDetails, slateAncestorFM, slateAncestorBM, slateAncestorPart, slateAncestorChapter, slateAncestorVolume, slateAncestorChapterwithMod, mockIndexedElements,
          figureData, element, newElement, mockNumberedElements, mock_autoNumber_ElementTypeKey, slateLevelData, elementObj, slateData1, mock_autoNumber_response_ElementType_mapper} from './AutoNumberApiTestData';
 
 const middlewares = [thunk];
@@ -736,6 +736,45 @@ describe('Test-14 getContainerEntityUrn----Conditional coverage', () => {
         const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getContainerEntityUrn');
         let result = autonumber_helperFunctions.getContainerEntityUrn(slateAncestor);
         expect(result).toBe('')
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+
+    it('Test-14.4---getContainerEntityUrn---', () => {
+        let slateAncestor = {
+            ...slateAncestorVolume,
+            label: 'container-introduction'
+        }
+        const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getContainerEntityUrn');
+        autonumber_helperFunctions.getContainerEntityUrn(slateAncestor);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+
+    it('Test-14.4---getContainerEntityUrn--- volume', () => {
+        let slateAncestor = {
+            ...slateAncestorVolume,
+            label: 'container-introduction',
+            ancestor: {
+                label: 'volume'
+            }
+        }
+        const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getContainerEntityUrn');
+        autonumber_helperFunctions.getContainerEntityUrn(slateAncestor);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
+
+    it('Test-14.6---getContainerEntityUrn--- module', () => {
+        let slateAncestor = {
+            ...slateAncestorVolume,
+            label: 'container-introduction',
+            ancestor: {
+                label: 'module'
+            }
+        }
+        const spyFunction = jest.spyOn(autonumber_helperFunctions, 'getContainerEntityUrn');
+        autonumber_helperFunctions.getContainerEntityUrn(slateAncestor);
         expect(spyFunction).toHaveBeenCalled();
         spyFunction.mockClear();
     });

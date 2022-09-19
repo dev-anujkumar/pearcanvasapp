@@ -1010,8 +1010,8 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             });
         const {properties} = response.data.entry;
         return { 
-            altText : properties["cplg:altText"],
-            longdescription: properties["cplg:longDescription"]
+            altText : properties["cplg:altText"] ?? "",
+            longdescription: properties["cplg:longDescription"] ?? ""
         }
     } catch(error){
         return { 
@@ -1079,6 +1079,13 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
         type: UPDATE_TABLE_ELEMENT_ASSET_DATA,
         payload: imagesArrayOfObj
     })
+
+    const imagesDataObject = prepareImagesDataObject(imagesArrayOfObj);
+
+    dispatch({
+        type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
+        payload: imagesDataObject
+    })
 }
 
 /**
@@ -1134,4 +1141,21 @@ export const storeDeleteElementKeys = (deleteObject) => (dispatch) => {
         type: DELETE_ELEMENT_KEYS,
         payload: deleteObject
     })
+}
+
+export const prepareImagesDataObject = (imagesArrayOfObj) => {
+    let imagesLatestData = {}
+    if (imagesArrayOfObj && imagesArrayOfObj.length && imagesArrayOfObj.length > 0) {
+        for (const element of imagesArrayOfObj) {
+            const { altText, longdescription, imgSrc, imgId } = element;
+            imagesLatestData[imgId] = {
+                altText,
+                longdescription,
+                imgSrc,
+                imgId
+            }
+        }
+        return imagesLatestData;
+    }
+    return imagesLatestData;
 }

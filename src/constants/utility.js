@@ -15,8 +15,8 @@ export const CHECKBOX_MESSAGE = "Don't ask me again";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>', '</p>', '</ul>', '</ol>', '</li>']
-export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '</em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>']
-export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<img', '</abbr>', '</dfn>', "</a>", 'class="answerLineContent"', 'class="calloutOne"', 'class="calloutTwo"', 'class="calloutThree"', 'class="calloutFour"', 'class="markedForIndex"']
+export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>']
+export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<img']
 export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"', 'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"', 'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"', 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
 
 export const requestConfigURI = () => {
@@ -826,6 +826,12 @@ export const handleTextToRetainFormatting = (pastedContent, testElement) => {
     let convertTag = tempData?.includes('<b>') ? tempData?.replace(/<b>/g, "<strong>")?.replace(/<*\/b>/g, "</strong>") : tempData
     convertTag = convertTag?.includes('<span id=\"specialChar\"></span>') ? convertTag?.replace("<span id=\"specialChar\"></span>", '') : convertTag
     convertTag = convertTag?.includes('<strike>') ? convertTag?.replace(/<strike>/g, '<s>')?.replace(/<*\/strike>/g, '</s>') : convertTag
+    convertTag = convertTag?.includes('</dfn>') ? convertTag?.replace(/<dfn.+?>/g, '')?.replace(/<*\/dfn>/g, '') : convertTag
+    convertTag = convertTag?.includes('</abbr>') ? convertTag?.replace(/<abbr.+?>/g, '')?.replace(/<*\/abbr>/g, '') : convertTag
+    convertTag = convertTag?.includes('</span>') ? convertTag?.replace(/<span.+?>/g, '')?.replace(/<*\/span>/g, '') : convertTag
+    convertTag = convertTag?.includes('</a>') ? convertTag?.replace(/<sup.+?><*\/sup>/g, '') : convertTag
+    convertTag = convertTag?.includes('<br />') ? convertTag?.replace(/<br \/?>\ ?/g, ' ') : convertTag
+    convertTag = convertTag?.includes('<br>') ? convertTag?.replace(/<br>/g, '') : convertTag
     const updatedText = convertTag.includes('<i>') ? convertTag?.replace(/<i>/g, "<em>")?.replace(/<*\/i>/g, "</em>") : convertTag
     
     if (NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
@@ -833,7 +839,7 @@ export const handleTextToRetainFormatting = (pastedContent, testElement) => {
         pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     } else if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
         pastedContent = updatedText;
-    }
+    } 
     else {
         let tempContent = testElement.innerText.replace(/&/g, "&amp;");
         pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
