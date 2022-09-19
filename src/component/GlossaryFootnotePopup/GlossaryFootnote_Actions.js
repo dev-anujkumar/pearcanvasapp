@@ -1159,25 +1159,15 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
 
         const popupParentData = store.getState().appStore.slateLevelData;
         let newPopupParentData = JSON.parse(JSON.stringify(popupParentData));
-        let currentPopupSlateData = newPopupParentData[config.slateManifestURN];
-        let newPopupSlateData = newParentData[config.tempSlateManifestURN]
         let currentApprovedSlate = currentSlateData.contents.bodymatter[tempIndex[0]]
-        if(currentPopupSlateData && currentPopupSlateData.type==="popup" && newPopupSlateData && newPopupSlateData.status === 'approved' && config.glossaryCreated){
+        if(currentSlateData && currentSlateData.status === "approved" && (currentApprovedSlate && (currentApprovedSlate.type === "groupedcontent" || currentApprovedSlate.subtype === "workedexample"))){
             store.dispatch({
                 type: UPDATE_FOOTNOTEGLOSSARY,
                 payload: {
                     slateLevelData: newPopupParentData
                 }
             })
-        } else if(currentSlateData && currentSlateData.status === "approved" && (currentApprovedSlate && (currentApprovedSlate.type === "groupedcontent" || currentApprovedSlate.subtype === "workedexample"))){
-            store.dispatch({
-                type: UPDATE_FOOTNOTEGLOSSARY,
-                payload: {
-                    slateLevelData: newPopupParentData
-                }
-            })
-        }
-        else {
+        } else {
             store.dispatch({
                 type: UPDATE_FOOTNOTEGLOSSARY,
                 payload: {
