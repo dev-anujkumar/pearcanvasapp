@@ -702,6 +702,136 @@ describe('Testing Element_Constans',()=>{
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         })
+        it('render getPasteValidated conditional coverage',()=>{
+            let props={
+                "index": "1-0-0-0-0",
+                "asideData": {
+                    "id": "urn:pearson:manifest:fca21e2a-0711-4a68-a67c-027f8dc13153",
+                    "type": "showhide",
+                    "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    "versionUrn": "urn:pearson:manifest:fca21e2a-0711-4a68-a67c-027f8dc13153",
+                    "contentUrn": "urn:pearson:entity:90d88956-98cb-4d68-b6cd-24fc903d9e2a",
+                    "status": "wip",
+                    "interactivedata": {
+                        "postertextobject": [{
+                            "id": "urn:pearson:work:b7e28708-0b0b-425e-9e5b-77ae62c21e34",
+                            "type": "element-authoredtext",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": "Reveal Answer:"
+                            },
+                            "html": {
+                                "text": "<p class=\"paragraphNumeroUno\">Reveal Answer:</p>",
+                                "footnotes": {},
+                                "assetsPopover": {},
+                                "glossaryentries": {},
+                                "indexEntries": {}
+                            },
+                            "versionUrn": "urn:pearson:work:b7e28708-0b0b-425e-9e5b-77ae62c21e34",
+                            "contentUrn": "urn:pearson:entity:ee53c98b-0911-4e65-ab15-f140ac8df282"
+                        }],
+                        "show": [{
+                            "id": "urn:pearson:work:b854165a-302f-4abe-9d98-5b87d2f8fba1",
+                            "type": "element-authoredtext",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": ""
+                            },
+                            "html": {
+                                "text": "<p class=\"paragraphNumeroUno\"><br></p>",
+                                "footnotes": {},
+                                "assetsPopover": {},
+                                "glossaryentries": {},
+                                "indexEntries": {}
+                            },
+                            "versionUrn": "urn:pearson:work:b854165a-302f-4abe-9d98-5b87d2f8fba1",
+                            "contentUrn": "urn:pearson:entity:d320be17-9798-4c3d-bff6-521e2caf60e8"
+                        }],
+                        "hide": [{
+                            "id": "urn:pearson:work:16d66f1d-4698-49b1-aa5d-a3d8465351c5",
+                            "type": "element-authoredtext",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": ""
+                            },
+                        }]
+                    },
+                    "sectionType": "show"
+                },
+                "elementType": "showhide",
+                "source": "SHOWHIDE",
+                "elementSelection": {
+                    "element": {
+                        "id": "urn:pearson:manifest:a4bdbaca-5e8b-429e-ba26-3d820539edba",
+                        "type": "element-aside",
+                        "subtype": "sidebar",
+                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                        "designtype": "sidebar1",
+                        "elementdata": {
+                            "bodymatter": [{
+                                "id": "urn:pearson:work:da1d3a02-a4f0-4829-86f9-0f55489f3c35",
+                                "type": "element-authoredtext",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "",
+                                    "headers": [{
+                                        "level": 4
+                                    }]
+                                },
+                            }, {
+                                "id": "urn:pearson:manifest:25454e04-beb6-475f-9f0c-5394a337c626",
+                                "type": "showhide",
+                                "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                                "versionUrn": "urn:pearson:manifest:25454e04-beb6-475f-9f0c-5394a337c626",
+                                "contentUrn": "urn:pearson:entity:772972b3-64e2-4ab2-b458-7b5780019f43",
+                                "status": "wip",
+                                "interactivedata": {
+                                    "postertextobject": [{
+                                        "id": "urn:pearson:work:eee04490-7759-4d72-ad5a-b12956d4c265",
+                                        "type": "element-authoredtext",
+                                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                        "elementdata": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                            "text": "Reveal Answer:"
+                                        },
+                                    }],
+                                    "show": [{
+                                        "id": "urn:pearson:work:0e50f820-4f24-47a1-9762-b931c7545e55",
+                                        "type": "element-authoredtext",
+                                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                        "elementdata": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                            "text": ""
+                                        }
+                                    }],
+                                    "hide": [{
+                                        "id": "urn:pearson:work:69ac96fd-aa03-4518-b322-f41d614643ef",
+                                        "type": "element-authoredtext",
+                                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                        "elementdata": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                            "text": ""
+                                        }
+                                    }]
+                                }
+                            }],
+                        }
+                    },
+                    "operationType": "copy"
+                },
+                "sectionType": "show"
+            }
+            let sourceType="SHOWHIDE",
+                selectionType="ASIDE",
+                spyFunction = jest.spyOn(Element_Constants, 'getPasteValidated');
+                Element_Constants.getPasteValidated(props, sourceType, selectionType);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
     })
 
 })
