@@ -106,6 +106,7 @@ class PopUp extends React.Component {
             || e.target.matches('ins') && e.target.closest('dfn')
             || e.target.matches('em') && e.target.parentNode && e.target.parentNode.tagName == 'DFN'
             || e.target.matches('dfn')
+            || e.target.parentNode && (e.target.parentNode.tagName == 'INS' || e.target.parentNode && e.target.parentNode.tagName == 'DFS')
         ) {
             if (config.isSavingElement) {
                 return false
