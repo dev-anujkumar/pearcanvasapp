@@ -235,9 +235,13 @@ export const getContainerEntityUrn = (slateAncestors) =>{
         return matterType
     }
     else if (slateTypes.includes(slateAncestors?.label)) {
-        if ((slateAncestors?.label === CONTAINER_LABELS.CONTAINER_INTRO) && (slateAncestors?.ancestor?.label === CONTAINER_LABELS.PART)) {
+        if ((slateAncestors?.label === CONTAINER_LABELS.CONTAINER_INTRO) && (slateAncestors?.ancestor?.label === CONTAINER_LABELS.VOLUME)) {
             return slateAncestors?.ancestor?.entityUrn
-        } else if ((slateAncestors?.label === CONTAINER_LABELS.CONTAINER_INTRO) && (slateAncestors?.ancestor?.label === CONTAINER_LABELS.MODULE)) {
+        }
+        else if ((slateAncestors?.label === CONTAINER_LABELS.CONTAINER_INTRO) && (slateAncestors?.ancestor?.label === CONTAINER_LABELS.PART)) {
+            return slateAncestors?.ancestor?.entityUrn
+        }
+        else if ((slateAncestors?.label === CONTAINER_LABELS.CONTAINER_INTRO) && (slateAncestors?.ancestor?.label === CONTAINER_LABELS.MODULE)) {
             return slateAncestors?.ancestor?.ancestor?.entityUrn;
         }
         else if ((slateAncestors?.label === CONTAINER_LABELS.CONTAINER_INTRO) || (slateAncestors?.ancestor?.label === CONTAINER_LABELS.CHAPTER)) {
