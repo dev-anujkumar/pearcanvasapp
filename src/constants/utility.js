@@ -818,7 +818,7 @@ export const handleUnwantedFormattingTags = (element) => {
     return pastedTagsData;
 }
 
-export const handleTextToRetainFormatting = (pastedContent, testElement) => {
+export const handleTextToRetainFormatting = (pastedContent, testElement, props) => {
     let tempData = pastedContent;
     if (MATCH_HTML_TAGS.some(el => tempData.match(el))) {
         tempData = handleUnwantedFormattingTags(testElement)
@@ -832,7 +832,21 @@ export const handleTextToRetainFormatting = (pastedContent, testElement) => {
     convertTag = convertTag?.includes('</a>') ? convertTag?.replace(/<sup.+?><*\/sup>/g, '') : convertTag
     convertTag = convertTag?.includes('<br />') ? convertTag?.replace(/<br \/?>\ ?/g, ' ') : convertTag
     convertTag = convertTag?.includes('<br>') ? convertTag?.replace(/<br>/g, '') : convertTag
-    const updatedText = convertTag.includes('<i>') ? convertTag?.replace(/<i>/g, "<em>")?.replace(/<*\/i>/g, "</em>") : convertTag
+    let updatedText = convertTag.includes('<i>') ? convertTag?.replace(/<i>/g, "<em>")?.replace(/<*\/i>/g, "</em>") : convertTag
+
+    if (props?.element?.elementdata?.headers || props?.element?.elementdata?.type === "pullquote" || (props?.element?.type === 'element-blockfeature' && props?.placeholder !== 'Attribution Text')) {
+        updatedText = updatedText.includes('<strong>') ? updatedText?.replace(/<strong>/g, "")?.replace(/<*\/strong>/g, "") : updatedText
+        updatedText = updatedText.includes('<u>') ? updatedText?.replace(/<u>/g, "")?.replace(/<*\/u>/g, "") : updatedText
+        updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
+    } else if (props?.element?.type === 'element-learningobjectives') {
+        updatedText = updatedText.includes('<strong>') ? updatedText?.replace(/<strong>/g, "")?.replace(/<*\/strong>/g, "") : updatedText
+        updatedText = updatedText.includes('<u>') ? updatedText?.replace(/<u>/g, "")?.replace(/<*\/u>/g, "") : updatedText
+        updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
+        updatedText = updatedText.includes('<em>') ? updatedText?.replace(/<em>/g, "")?.replace(/<*\/em>/g, "") : updatedText
+    } else if (props?.placeholder === "Attribution Text" || props?.placeholder === "Code Block Content") {
+        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
+        updatedText = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    } 
     
     if (NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
         let tempContent = testElement.innerText.replace(/&/g, "&amp;");
