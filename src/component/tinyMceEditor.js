@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, handleWirisImgPaste } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, handleWirisImgPaste, ALLOWED_ELEMENT_IMG_PASTE } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -2369,6 +2369,7 @@ export class TinyMceEditor extends Component {
      */
     pastePreProcess = (plugin, args) => {
         let activeElement = tinymce.activeEditor.dom.getParent(tinymce.activeEditor.selection.getStart(), '.cypress-editable');
+        console.log("This Props",this.props.element)
         if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && this.notFormatting && (activeElement && activeElement.nodeName === 'CODE')) {
             args.content = this.copyContent;
             this.copyContent = '';
@@ -2385,7 +2386,6 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            console.log("PROPS ELEMENT",this.props.element)
             // if ((this.props?.element?.type === "element-authoredtext") && !this.props?.element?.elementdata?.headers && (this.props?.element?.elementdata?.designtype !== 'handwritingstyle') && this.props?.asideData?.type !== "manifestlist") {
                 args.content = handleTextToRetainFormatting(args.content, testElement, this.props)
             // } else {
@@ -2396,8 +2396,8 @@ export class TinyMceEditor extends Component {
                 // args.content = tempContent
                 // }
             // }
-        } else if(this.props?.element?.type === "element-authoredtext" && args.content.match('class="imageAssetContent"')) {
-            args.content = handleTextToRetainFormatting(args.content,testElement)
+        } else if(ALLOWED_ELEMENT_IMG_PASTE.includes(this.props?.element?.type) && args.content.match('class="imageAssetContent"')) {
+            args.content = handleTextToRetainFormatting(args.content,testElement,this.props)
 
         } else{
             args.content = tinymce.activeEditor.selection.getContent();

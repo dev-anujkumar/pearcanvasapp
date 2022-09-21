@@ -18,7 +18,7 @@ export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</
 export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>','<img']
 export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = []
 export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"', 'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"', 'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"', 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
-
+export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext']
 export const requestConfigURI = () => {
     let uri = '';
     if(process.env.NODE_ENV === "development"){
@@ -834,18 +834,13 @@ export const handleTextToRetainFormatting = (pastedContent, testElement,props) =
     convertTag = convertTag?.includes('<br>') ? convertTag?.replace(/<br>/g, '') : convertTag
     const updatedText = convertTag.includes('<i>') ? convertTag?.replace(/<i>/g, "<em>")?.replace(/<*\/i>/g, "</em>") : convertTag
     
-    if (NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
-        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
-        pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    } else if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
-        if(props?.element?.type === "element-authoredtext" && updatedText.match('<img')) {
-            console.log("updated Text",updatedText)
-        if (updatedText.match('class="Wirisformula')) {
-            console.log("===============")
-            pastedContent = handleWirisImgPaste(testElement, updatedText)
-        } else {
-            pastedContent = updatedText;
-           }   
+    if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
+        if (ALLOWED_ELEMENT_IMG_PASTE.includes(props?.element?.type) && updatedText.match('<img ')) {
+            if (updatedText.match('class="Wirisformula')) {
+                pastedContent = handleWirisImgPaste(testElement, updatedText)
+            } else {
+                pastedContent = updatedText;
+            }
         } else {
             pastedContent = handleImagePaste(testElement, updatedText)
         }
@@ -883,12 +878,10 @@ export const handleWirisImgPaste = (testElement, updatedText) => {
 export const handleImagePaste = (testElement, updatedText) => {
    let tempContent = testElement.getElementsByTagName('img');
    let updatePasteContent = updatedText;
-   for(var i = 0; i < tempContent.length; i++){   
+   for(let i = 0; i < tempContent.length; i++){   
       let imgData = tempContent[i].outerHTML
-      console.log("IMAGE DATA",imgData)
       let updatedImgData = imgData.replace(/">/g,'" />')
        updatePasteContent = updatePasteContent.replace(updatedImgData,'')
    }
-   console.log("UPDATED DATA", updatePasteContent)
    return updatePasteContent;
 }
