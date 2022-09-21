@@ -1169,6 +1169,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     slateLevelData: newPopupParentData
                 }
             })
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
         } else if(currentSlateData && currentSlateData.status === "approved" && (currentApprovedSlate && (currentApprovedSlate.type === "groupedcontent" || currentApprovedSlate.subtype === "workedexample"))){
             store.dispatch({
                 type: UPDATE_FOOTNOTEGLOSSARY,
