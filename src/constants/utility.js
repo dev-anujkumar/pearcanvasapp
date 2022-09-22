@@ -8,6 +8,7 @@ import config from '../config/config';
 import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
+import { element } from 'prop-types';
 // DECLARATION - const or variables 
 export const PRIMARY_BUTTON = "primary";
 export const SECONDARY_BUTTON = "secondary";
@@ -18,7 +19,7 @@ export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</
 export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>','<img']
 export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = []
 export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"', 'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"', 'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"', 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
-export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext']
+export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext','element-learningobjectives','element-blockfeature']
 export const requestConfigURI = () => {
     let uri = '';
     if(process.env.NODE_ENV === "development"){
@@ -818,7 +819,7 @@ export const handleUnwantedFormattingTags = (element) => {
     return pastedTagsData;
 }
 
-export const handleTextToRetainFormatting = (pastedContent, testElement,props) => {
+export const handleTextToRetainFormatting = (pastedContent, testElement, props) => {
     let tempData = pastedContent;
     if (MATCH_HTML_TAGS.some(el => tempData.match(el))) {
         tempData = handleUnwantedFormattingTags(testElement)
@@ -832,17 +833,33 @@ export const handleTextToRetainFormatting = (pastedContent, testElement,props) =
     convertTag = convertTag?.includes('</a>') ? convertTag?.replace(/<sup.+?><*\/sup>/g, '') : convertTag
     convertTag = convertTag?.includes('<br />') ? convertTag?.replace(/<br \/?>\ ?/g, ' ') : convertTag
     convertTag = convertTag?.includes('<br>') ? convertTag?.replace(/<br>/g, '') : convertTag
-    const updatedText = convertTag.includes('<i>') ? convertTag?.replace(/<i>/g, "<em>")?.replace(/<*\/i>/g, "</em>") : convertTag
+    let updatedText = convertTag.includes('<i>') ? convertTag?.replace(/<i>/g, "<em>")?.replace(/<*\/i>/g, "</em>") : convertTag
+
+    if (props?.element?.elementdata?.headers || props?.element?.elementdata?.type === "pullquote" || (props?.element?.type === 'element-blockfeature' && props?.placeholder !== 'Attribution Text')) {
+        updatedText = updatedText.includes('<strong>') ? updatedText?.replace(/<strong>/g, "")?.replace(/<*\/strong>/g, "") : updatedText
+        updatedText = updatedText.includes('<u>') ? updatedText?.replace(/<u>/g, "")?.replace(/<*\/u>/g, "") : updatedText
+        updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
+    } else if (props?.element?.type === 'element-learningobjectives') {
+        updatedText = updatedText.includes('<strong>') ? updatedText?.replace(/<strong>/g, "")?.replace(/<*\/strong>/g, "") : updatedText
+        updatedText = updatedText.includes('<u>') ? updatedText?.replace(/<u>/g, "")?.replace(/<*\/u>/g, "") : updatedText
+        updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
+        updatedText = updatedText.includes('<em>') ? updatedText?.replace(/<em>/g, "")?.replace(/<*\/em>/g, "") : updatedText
+    } else if (props?.placeholder === "Attribution Text" || props?.placeholder === "Code Block Content") {
+        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
+        updatedText = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    } 
     
     if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
         if (ALLOWED_ELEMENT_IMG_PASTE.includes(props?.element?.type) && updatedText.match('<img ')) {
             if (updatedText.match('class="Wirisformula')) {
                 pastedContent = handleWirisImgPaste(testElement, updatedText)
+            } else if(props?.element?.type === 'element-blockfeature' && props.placeholder === "Attribution Text") {
+                   pastedContent = handleImagePaste(updatedText) 
             } else {
                 pastedContent = updatedText;
             }
         } else {
-            pastedContent = handleImagePaste(testElement, updatedText)
+            pastedContent = handleImagePaste(updatedText)
         }
     }
     else {
@@ -860,28 +877,20 @@ export const handleTinymceEditorPlugins = (plugins) => {
 }
 /**
  * This function is used to restricts Pasting of Wiris Images 
- * @param {*} testElement 
  * @param {*} updatedText 
  * @returns 
  */
-export const handleWirisImgPaste = (testElement, updatedText) => {
-    let tempContent = testElement.getElementsByClassName('Wirisformula')
-    let updatePasteContent = updatedText;
-    for(var i = 0; i < tempContent.length; i++){   
-       let wirisImgData = tempContent[i].outerHTML
-       let updatedWirisImgData = wirisImgData.replace(/¨/g, '&uml;').replace(/»/g, "&raquo;").replace(/«/g, "&laquo;").replace(/">/g,'" />')
-        updatePasteContent = updatePasteContent.replace(updatedWirisImgData,'')
-    }
+export const handleWirisImgPaste = (updatedText) => {
+    let updatePasteContent = updatedText.replace(/<img align="middle" class="Wirisformula"([\w\W]+?)>/g,'')
     return updatePasteContent;
 }
-
-export const handleImagePaste = (testElement, updatedText) => {
-   let tempContent = testElement.getElementsByTagName('img');
-   let updatePasteContent = updatedText;
-   for(let i = 0; i < tempContent.length; i++){   
-      let imgData = tempContent[i].outerHTML
-      let updatedImgData = imgData.replace(/">/g,'" />')
-       updatePasteContent = updatePasteContent.replace(updatedImgData,'')
-   }
+/**
+ * This function is used to restricts pasting of images inside title,caption,credit etc..
+ * fields of figure (or other) elements
+ * @param {*} updatedText 
+ * @returns 
+ */
+export const handleImagePaste = (updatedText) => {
+   let updatePasteContent = updatedText.replace(/<img ([\w\W]+?)>/g,'');
    return updatePasteContent;
 }

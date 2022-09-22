@@ -2369,7 +2369,6 @@ export class TinyMceEditor extends Component {
      */
     pastePreProcess = (plugin, args) => {
         let activeElement = tinymce.activeEditor.dom.getParent(tinymce.activeEditor.selection.getStart(), '.cypress-editable');
-        console.log("This Props",this.props.element)
         if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && this.notFormatting && (activeElement && activeElement.nodeName === 'CODE')) {
             args.content = this.copyContent;
             this.copyContent = '';
@@ -2386,16 +2385,7 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            // if ((this.props?.element?.type === "element-authoredtext") && !this.props?.element?.elementdata?.headers && (this.props?.element?.elementdata?.designtype !== 'handwritingstyle') && this.props?.asideData?.type !== "manifestlist") {
                 args.content = handleTextToRetainFormatting(args.content, testElement, this.props)
-            // } else {
-                // if(args.content.match('class="Wirisformula')) {
-                //     args.content = handleWirisImgPaste(testElement, args.content)
-                // } else {
-                // let tempContent = testElement.innerHTML.replace(/&/g, "&amp;");
-                // args.content = tempContent
-                // }
-            // }
         } else if(ALLOWED_ELEMENT_IMG_PASTE.includes(this.props?.element?.type) && args.content.match('class="imageAssetContent"')) {
             args.content = handleTextToRetainFormatting(args.content,testElement,this.props)
 
