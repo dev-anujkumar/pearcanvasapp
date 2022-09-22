@@ -347,7 +347,6 @@ export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => 
             labelType = autoNumber_FigureTypeKeyMapper[element?.figuretype];
         }
         if (autoNumberElementsIndex.hasOwnProperty(labelType) && autoNumberElementsIndex[labelType]?.hasOwnProperty(parentIndex)) {
-            console.log("check1111",autoNumberElementsIndex[labelType][parentIndex]?.[element.contentUrn])
             return autoNumberElementsIndex[labelType][parentIndex]?.[element.contentUrn] || ''
         }
     }
