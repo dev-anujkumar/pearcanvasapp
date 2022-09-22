@@ -2394,7 +2394,6 @@ export class TinyMceEditor extends Component {
         }
         if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && !this.notFormatting) {
             args.content = args.content.replace(/\r|\n/g, '');
-            console.log("arg.content",args.content)
         }
     }
 

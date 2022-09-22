@@ -852,7 +852,7 @@ export const handleTextToRetainFormatting = (pastedContent, testElement, props) 
     if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
         if (ALLOWED_ELEMENT_IMG_PASTE.includes(props?.element?.type) && updatedText.match('<img ')) {
             if (updatedText.match('class="Wirisformula')) {
-                pastedContent = handleWirisImgPaste(testElement, updatedText)
+                pastedContent = handleWirisImgPaste(updatedText)
             } else if(props?.element?.type === 'element-blockfeature' && props.placeholder === "Attribution Text") {
                    pastedContent = handleImagePaste(updatedText) 
             } else {

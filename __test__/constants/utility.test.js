@@ -547,4 +547,16 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         let result = handleTextToRetainFormatting(htmlData, simpleDiv);
         expect(result).toBe('use it hey');
     })
+    it('Case 12: Pasting img', () => {
+        let props = {
+            element: {
+                type:"element-authoredtext"
+            }
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<em>Why</em><img align="middle" class="Wirisformula" > <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello <p>do</p>';
+        let htmlData = '<em>Why</em> <b>we</b> <i>use</i><img align="middle" class="Wirisformula" ><strike>it</strike> <span id="specialChar"></span>hello <p>do</p>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv,props);
+        expect(result).toBe(' <em>Why</em> <strong>we</strong> <em>use</em> <s>it</s> hello do');
+    })
 })
