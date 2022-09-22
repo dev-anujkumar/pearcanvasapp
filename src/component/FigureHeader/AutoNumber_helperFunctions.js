@@ -209,7 +209,11 @@ export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
         case CONTAINER_LABELS.BACKMATTER:
             return 'B'
         default:
-            if (autoNumberingDetails?.partOrderList?.hasOwnProperty(containerEntityUrn)) {
+            if (autoNumberingDetails?.volumeOrderList?.hasOwnProperty(containerEntityUrn)) {
+                const volumeNumber = autoNumberingDetails?.volumeOrderList[containerEntityUrn]
+                return volumeNumber ? `V${volumeNumber}` : 'V'
+            }
+            else if (autoNumberingDetails?.partOrderList?.hasOwnProperty(containerEntityUrn)) {
                 const partNumber = autoNumberingDetails?.partOrderList[containerEntityUrn]
                 return partNumber ? `P${partNumber}` : 'P'
             }
@@ -343,6 +347,7 @@ export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => 
             labelType = autoNumber_FigureTypeKeyMapper[element?.figuretype];
         }
         if (autoNumberElementsIndex.hasOwnProperty(labelType) && autoNumberElementsIndex[labelType]?.hasOwnProperty(parentIndex)) {
+            console.log("check1111",autoNumberElementsIndex[labelType][parentIndex]?.[element.contentUrn])
             return autoNumberElementsIndex[labelType][parentIndex]?.[element.contentUrn] || ''
         }
     }
