@@ -106,6 +106,7 @@ class PopUp extends React.Component {
             || e.target.matches('ins') && e.target.closest('dfn')
             || e.target.matches('em') && e.target.parentNode && e.target.parentNode.tagName == 'DFN'
             || e.target.matches('dfn')
+            || e.target.parentNode && (e.target.parentNode.tagName == 'INS' || e.target.parentNode && e.target.parentNode.tagName == 'DFS')
         ) {
             if (config.isSavingElement) {
                 return false
@@ -299,7 +300,7 @@ class PopUp extends React.Component {
         if (props.openRemovePopUp) {
             return (
                 <div className={`dialog-buttons ${props.splitSlateClass}`}>
-                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => this.handleAudioGlossaryButtonsClick(e)}>Ok</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.splitSlateClass}`} onClick={(e) => {this.handleAudioGlossaryButtonsClick(e);this.handleClickOnButton();}}>Ok</span>
                     <span option={SECONDARY_BUTTON} className={`cancel-button ${props.splitSlateClass}`} id='close-container' onClick={(e) => this.handleAudioGlossaryButtonsClick(e)}>Cancel</span>
                 </div>
             )
@@ -668,7 +669,7 @@ class PopUp extends React.Component {
                     <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
                 </div>
             )
-        } else if (props.removeConfirmation || props.isDeleteAssetPopup) {
+        } else if (props.openRemovePopUp || props.isDeleteAssetPopup) {
             return (
                 <div className='popup-checkbox-message'>
                     <input className='popup-checkbox' type="checkbox" value={this.state.deleteWarningPopupCheckbox} checked={this.state.deleteWarningPopupCheckbox} onChange={(event) => this.handleDeleteWarningPopupCheckbox(event)} />
