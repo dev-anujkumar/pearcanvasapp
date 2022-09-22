@@ -138,8 +138,90 @@ describe('Test- editor functions', () => {
         instance.pastePreProcess({}, args);
         expect(spypastePreProcess).toHaveBeenCalled()
     });
-    it('Test addInlineCode-default case ', () => {
-        window.getSelection().anchorNode.parentNode.innerHTML = "Hello"
+    it('Test addInlineCode : if case ', () => {
+        window.getSelection = () => {
+            return {
+                toString: () => {
+                    return "Hello"
+                }
+            }
+        }
+        let event = {
+            preventDefault: () => { },
+            stopPropagation: () => { }
+        }
+        let editor = {
+            on: (temp, cb) => { cb(event) },
+            targetElm: {
+                findChildren: () => {
+                    return {
+                        length: 0
+                    };
+                },
+                dispatchEvent: () => { }
+            },
+            innerHTML: '<p class="paragraphNumeroUno"><code>hello</code></p>',
+            execCommand: jest.fn(),
+            selection: {
+                bookmarkManager: {
+                    moveToBookmark: jest.fn(),
+                    getBookmark: jest.fn()
+                },
+                getStart: () => {
+
+                },
+                getContent: () => {
+                    return ""
+                },
+                setContent: () => { return '' }
+            },
+            dom: {
+                getParent: () => {
+                    return {
+                        innerHTML: '<p class="paragraphNumeroUno place-holder">hello<ol></ol><ul></ul></p>',
+                        children: [
+                            {
+                                tagName: 'BR'
+                            }
+                        ],
+                        innerText: "hello",
+                        querySelectorAll: jest.fn(),
+                        classList: {
+                            remove: jest.fn()
+                        }
+                    }
+                }
+            },
+            insertContent: jest.fn(),
+            children: ['<p class="paragraphNumeroUno">hello</p>'],
+            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
+        }
+        tinymce.activeEditor = {
+            innerHTML: '<p class="paragraphNumeroUno"><code>hello<code></p>',
+            innerText: "hello",
+            textContent: "hello",
+            outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
+            selection: {
+                getStart: () => {
+                    return tinymce.activeEditor.innerHTML;
+                },
+                getContent: () => { return ''}
+            },
+            children: ['p.paragraphNumeroUno'],
+            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus"]
+        }
+        const spyaddInlineCode = jest.spyOn(instance, 'addInlineCode')
+        instance.addInlineCode(editor);
+        expect(spyaddInlineCode).toHaveBeenCalled()
+    });
+    it('Test addInlineCode : if > else case ', () => {
+        window.getSelection = () => {
+            return {
+                toString: () => {
+                    return "Hello"
+                }
+            }
+        }
         let event = {
             preventDefault: () => { },
             stopPropagation: () => { }
@@ -208,8 +290,14 @@ describe('Test- editor functions', () => {
         instance.addInlineCode(editor);
         expect(spyaddInlineCode).toHaveBeenCalled()
     });
-    it('Test addInlineCode-with <code> ', () => {
-        window.getSelection().anchorNode.parentNode.innerHTML = "Hello"
+    it('Test addInlineCode : else case ', () => {
+        window.getSelection = () => {
+            return {
+                toString: () => {
+                    return ""
+                }
+            }
+        }
         let event = {
             preventDefault: () => { },
             stopPropagation: () => { }
@@ -224,7 +312,7 @@ describe('Test- editor functions', () => {
                 },
                 dispatchEvent: () => { }
             },
-            innerHTML: '<code class="paragraphNumeroUno">hello</code>',
+            innerHTML: '<p class="paragraphNumeroUno"><code>hello</code></p>',
             execCommand: jest.fn(),
             selection: {
                 bookmarkManager: {
@@ -238,6 +326,15 @@ describe('Test- editor functions', () => {
                     return ""
                 },
                 setContent: () => { return '' }
+            },
+            formatter: {
+                match: () => { },
+                toggle: () => { },
+                formatChanged: () => {
+                    return {
+                        unbind: () => { }
+                    }
+                }
             },
             dom: {
                 getParent: () => {
@@ -256,12 +353,15 @@ describe('Test- editor functions', () => {
                     }
                 }
             },
+            undoManager: {
+                transact: (cb) => cb()
+            },
             insertContent: jest.fn(),
             children: ['<p class="paragraphNumeroUno">hello</p>'],
             classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
         }
         tinymce.activeEditor = {
-            innerHTML: '<p class="paragraphNumeroUno">hello</p>',
+            innerHTML: '<p class="paragraphNumeroUno"><code>hello<code></p>',
             innerText: "hello",
             textContent: "hello",
             outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
@@ -269,7 +369,7 @@ describe('Test- editor functions', () => {
                 getStart: () => {
                     return tinymce.activeEditor.innerHTML;
                 },
-                getContent: () => { return 'test'}
+                getContent: () => { return ''}
             },
             children: ['p.paragraphNumeroUno'],
             classList: ["cypress-editable", "mce-content-body", "mce-edit-focus"]
@@ -279,7 +379,6 @@ describe('Test- editor functions', () => {
         expect(spyaddInlineCode).toHaveBeenCalled()
     });
     it('Test handleFocussingInlineCode ', () => {
-        // window.getSelection().anchorNode.parentNode.innerHTML="Hello"
         let api = {
             isActive: jest.fn(),
             isDisabled: jest.fn(),
