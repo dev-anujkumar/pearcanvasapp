@@ -224,8 +224,25 @@ function CommunicationChannel(WrappedComponent) {
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
                                 this.props.updateElement(dataToSend, 0 );
                             }
-                        }
+                        }else if(message.assessmentSlateData){
+                            let assessmentUrn = message?.assessmentUrn;
+                            let assessmentDetails = message.assessmentSlateData;
+                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: message.slateManifestUrn } });
+                            let prepareDataToSend = {}
+                            prepareDataToSend.elementdata ={ assessmentid : assessmentUrn}
+                            prepareDataToSend.elementdata = {...prepareDataToSend.elementdata,assessmenttitle : assessmentDetails?.title?.en}
+                            prepareDataToSend.elementdata ={...prepareDataToSend.elementdata, usageType : assessmentDetails.usageType}
+                            prepareDataToSend.inputType = ELEMENT_ASSESSMENT
+                            prepareDataToSend.inputSubType = "NA"
+                            prepareDataToSend.index = "0"
+                            prepareDataToSend.containerUrn = assessmentDetails.contentUrn;
+                            prepareDataToSend.elementdata ={...prepareDataToSend.elementdata, loAssociation : message.slateTagEnabled}
+                            prepareDataToSend.type = "element-assessment";
+                            prepareDataToSend.html = { title: `<p>${assessmentDetails?.title?.en}</p>` }
+                            this.props.updateElement(prepareDataToSend, 0);
+                        
                     }
+                }
                     break;
                 case 'slatePreview':
                 case 'projectPreview':
