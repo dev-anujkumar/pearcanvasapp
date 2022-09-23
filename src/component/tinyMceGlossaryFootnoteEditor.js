@@ -186,13 +186,18 @@ export class ReactEditor extends React.Component {
     */
   addInlineCode = (editor) => {
     let selectedText = window.getSelection().toString();
-    if (selectedText != "") {
+    if (selectedText !== "") {
       editor.execCommand('mceToggleFormat', false, 'code');
       let insertionText = '<code>' + selectedText + '</code>';
-      if(editor.innerHTML.indexOf('code') > -1) {
+      if (editor.innerHTML && editor.innerHTML.indexOf('code') > -1) {
         insertionText = selectedText;
+        editor.insertContent(insertionText);
       }
-      editor.insertContent(insertionText);
+    }
+    else {
+      editor.undoManager.transact(() => {
+        editor.formatter.toggle('code');
+    });
     }
   }
 
