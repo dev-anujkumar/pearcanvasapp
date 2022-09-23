@@ -547,7 +547,7 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         let result = handleTextToRetainFormatting(htmlData, simpleDiv);
         expect(result).toBe('use it hey');
     })
-    it('Case 12: Pasting img', () => {
+    it('Case 12: Pasting wiris img', () => {
         let props = {
             element: {
                 type:"element-authoredtext"
@@ -557,6 +557,32 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         simpleDiv.innerHTML = '<em>Why</em><img align="middle" class="Wirisformula" > <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello <p>do</p>';
         let htmlData = '<em>Why</em> <b>we</b> <i>use</i><img align="middle" class="Wirisformula" ><strike>it</strike> <span id="specialChar"></span>hello <p>do</p>'
         let result = handleTextToRetainFormatting(htmlData, simpleDiv,props);
-        expect(result).toBe(' <em>Why</em> <strong>we</strong> <em>use</em> <s>it</s> hello do');
+        expect(result).toBe('<em>Why</em>we</strong> <em>use</em> <s>it</s> hello do ');
+    })
+    it('Case 12: Pasting inline img', () => {
+        let props = {
+            element: {
+                type:"element-authoredtext"
+            }
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<em>Why</em><img align="middle" class="imageAssetContent" > <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello <p>do</p>';
+        let htmlData = '<em>Why</em> <b>we</b> <i>use</i><img align="middle" class="imageAssetContent" ><strike>it</strike> <span id="specialChar"></span>hello <p>do</p>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv,props);
+        expect(result).toBe('<em>Why</em><img align=\"middle\" class=\"imageAssetContent\"> <strong>we</strong> <em>use</em> <s>it</s> hello do ');
+    })
+    it('Case 12: Pasting inline img for blockfeature element', () => {
+        let props = {
+            placeholder:"Attribution Text",
+            element: {
+                type:"element-blockfeature"
+            }
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<em>Why</em><img align="middle" class="imageAssetContent" > <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello <p>do</p>';
+        simpleDiv.innerText = "<em>Why</em><img align=\"middle\" class=\"imageAssetContent\"> <strong>we</strong> <em>use</em> <s>it</s> hello do "
+        let htmlData = '<em>Why</em> <b>we</b> <i>use</i><img align="middle" class="imageAssetContent" ><strike>it</strike> <span id="specialChar"></span>hello <p>do</p>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv,props);
+        expect(result).toBe('&lt;em&gt;Why&lt;/em&gt;&lt;img align=\"middle\" class=\"imageAssetContent\"&gt; &lt;strong&gt;we&lt;/strong&gt; &lt;em&gt;use&lt;/em&gt; &lt;s&gt;it&lt;/s&gt; hello do ');
     })
 })

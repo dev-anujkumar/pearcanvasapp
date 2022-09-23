@@ -71,7 +71,9 @@ jest.mock('../../../src/constants/utility.js', () => {
         handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
         getCookieByName: () => {
             return true
-        }
+        },
+        handleTextToRetainFormatting: jest.fn(),
+        ALLOWED_ELEMENT_IMG_PASTE: ['element-authoredtext','element-learningobjectives','element-blockfeature']
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {
@@ -2920,6 +2922,21 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         const spypastePostProcess = jest.spyOn(instance, 'pastePostProcess')
         instance.pastePostProcess(plugin, args);
         expect(spypastePostProcess).toHaveBeenCalled()
+    });
+    it('Test-24.1-Method--22--pastePreProcess-element authoredtext Element-Pasting image only', () => {
+        let plugin = {},
+            args = {
+                content: '<img class="imageAssetContent" src="abc">'
+            }
+        component.setProps({
+            element: elementData.paragraph
+        })
+        component.update();
+        tinymce.activeEditor.selection = editor.selection;
+        tinymce.activeEditor.dom = domObj;
+        const spypastePreProcess = jest.spyOn(instance, 'pastePreProcess')
+        instance.pastePreProcess(plugin, args);
+        expect(spypastePreProcess).toHaveBeenCalled()
     });
     describe('Test-26-Method--24--editorPaste', () => {
         it('Test-26.1-Method--24--editorPaste-BCE Element-SyntaxEnabled:True', () => {
