@@ -209,7 +209,11 @@ export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
         case CONTAINER_LABELS.BACKMATTER:
             return 'B'
         default:
-            if (autoNumberingDetails?.partOrderList?.hasOwnProperty(containerEntityUrn)) {
+            if (autoNumberingDetails?.volumeOrderList?.hasOwnProperty(containerEntityUrn)) {
+                const volumeNumber = autoNumberingDetails?.volumeOrderList[containerEntityUrn]
+                return volumeNumber ? `V${volumeNumber}` : 'V'
+            }
+            else if (autoNumberingDetails?.partOrderList?.hasOwnProperty(containerEntityUrn)) {
                 const partNumber = autoNumberingDetails?.partOrderList[containerEntityUrn]
                 return partNumber ? `P${partNumber}` : 'P'
             }
