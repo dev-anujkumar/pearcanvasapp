@@ -846,8 +846,8 @@ export const handleTextToRetainFormatting = (pastedContent, testElement, props) 
         updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
         updatedText = updatedText.includes('<em>') ? updatedText?.replace(/<em>/g, "")?.replace(/<*\/em>/g, "") : updatedText
     } else if (PLACEHOLDER_ARRAY.includes(props?.placeholder) || (props?.isAutoNumberingEnabled && AUTO_NUMBER_PLACEHOLDER.includes(props?.placeholder))) {
-        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
-        updatedText = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        let tempContent = testElement?.innerText?.replace(/&/g, "&amp;");
+        updatedText = tempContent?.replace(/</g, "&lt;")?.replace(/>/g, "&gt;");
     } else if (!props?.isAutoNumberingEnabled && (props?.placeholder === "Label Name" || props.placeholder === "Label")) {
         updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
     } else if (!props?.isAutoNumberingEnabled && props?.placeholder === "Number") {
