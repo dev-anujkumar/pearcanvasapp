@@ -18,6 +18,9 @@ export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</
 export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>','<img']
 export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"', 'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"', 'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"', 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
 export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext','element-learningobjectives','element-blockfeature']
+export const AUTO_NUMBER_PLACEHOLDER = ["Label Name", "Label", "Number"]
+export const PLACEHOLDER_ARRAY = ["Attribution Text", "Code Block Content"]
+
 export const requestConfigURI = () => {
     let uri = '';
     if(process.env.NODE_ENV === "development"){
@@ -842,10 +845,43 @@ export const handleTextToRetainFormatting = (pastedContent, testElement, props) 
         updatedText = updatedText.includes('<u>') ? updatedText?.replace(/<u>/g, "")?.replace(/<*\/u>/g, "") : updatedText
         updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
         updatedText = updatedText.includes('<em>') ? updatedText?.replace(/<em>/g, "")?.replace(/<*\/em>/g, "") : updatedText
-    } else if (props?.placeholder === "Attribution Text" || props?.placeholder === "Code Block Content") {
-        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
-        updatedText = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    } 
+    } else if (PLACEHOLDER_ARRAY.includes(props?.placeholder) || (props?.isAutoNumberingEnabled && AUTO_NUMBER_PLACEHOLDER.includes(props?.placeholder))) {
+        let tempContent = testElement?.innerText?.replace(/&/g, "&amp;");
+        updatedText = tempContent?.replace(/</g, "&lt;")?.replace(/>/g, "&gt;");
+    } else if (!props?.isAutoNumberingEnabled && (props?.placeholder === "Label Name" || props.placeholder === "Label")) {
+        updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
+    } else if (!props?.isAutoNumberingEnabled && props?.placeholder === "Number") {
+        updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
+        updatedText = updatedText.includes('<sub>') ? updatedText?.replace(/<sub>/g, "")?.replace(/<*\/sub>/g, "") : updatedText
+        updatedText = updatedText.includes('<sup>') ? updatedText?.replace(/<sup>/g, "")?.replace(/<*\/sup>/g, "") : updatedText
+    } else if (props?.element?.type === "openerelement") {
+        updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
+    } else if (props?.element?.type === "element-dialogue" || props?.element?.type === 'popup') {
+        switch (props?.placeholder) {
+
+            case "Enter Dialogue...": {
+                updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
+                break;
+            }
+            case "Enter Stage Directions...": {
+                updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
+                updatedText = updatedText.includes('<em>') ? updatedText?.replace(/<em>/g, "")?.replace(/<*\/em>/g, "") : updatedText
+                break;
+            }
+            case "Enter Character Name...": {
+                updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
+                updatedText = updatedText.includes('<strong>') ? updatedText?.replace(/<strong>/g, "")?.replace(/<*\/strong>/g, "") : updatedText
+                break;
+            }
+            case "Enter call to action...": {
+                updatedText = updatedText.includes('<sub>') ? updatedText?.replace(/<sub>/g, "")?.replace(/<*\/sub>/g, "") : updatedText
+                updatedText = updatedText.includes('<sup>') ? updatedText?.replace(/<sup>/g, "")?.replace(/<*\/sup>/g, "") : updatedText
+                updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
+                break;
+            }
+            default: break;
+        }
+    }
     
     if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
         if (ALLOWED_ELEMENT_IMG_PASTE.includes(props?.element?.type) && updatedText.match('<img ')) {
