@@ -29,6 +29,7 @@ const MetaDataPopUpForTE = (props) => {
       let { altText, imgId, imgSrc, longdescription } = imageList[0];
       setAltText(altText);
       setLongDescription(longdescription);
+      setDisableButton(false);
       setimageID(imgId);
       setimageSrc(imgSrc);
       
@@ -43,7 +44,6 @@ const MetaDataPopUpForTE = (props) => {
 
   useEffect(()=> {
     checkingForInputErr();
-    disableButtonForHTML()
   }, [index]);
 
   useEffect(()=> {
@@ -52,18 +52,6 @@ const MetaDataPopUpForTE = (props) => {
 
   const checkHTMLInString = (str) => {
     return /<\/?[a-z][\s\S]*>/i.test(str)
-  }
-
-  const disableButtonForHTML = () => {
-    if(editedImageList && Object.keys(editedImageList).length > 0){
-      if(checkHTMLInString(altText) || checkHTMLInString(longDescription)){
-        setDisableButton(true);
-      } else {
-        setDisableButton(false);
-      }
-    } else {
-      setDisableButton(true);
-    }
   }
 
   const traverseLeft = () => {
@@ -111,6 +99,7 @@ const MetaDataPopUpForTE = (props) => {
     }
     setAltText(altText);
     setLongDescription(longdescription);
+    setDisableButton(false);
     setimageID(imgId);
     setimageSrc(imgSrc);
   }
@@ -122,16 +111,6 @@ const MetaDataPopUpForTE = (props) => {
     }else if(newIndex < lowerIndex && newIndex < upperIndex ){
         setLowerIndex(lowerIndex-1);
         setUpperIndex(upperIndex-1);
-    }
-  }
-
-  const handleButtonDisable = (alt, long) => {
-    let aText = alt || altText;
-    let longDesc = long || longDescription;
-    if(checkHTMLInString(aText) || checkHTMLInString(longDesc)){
-      setDisableButton(true);
-    } else {
-      setDisableButton(false);
     }
   }
 
@@ -177,7 +156,6 @@ const MetaDataPopUpForTE = (props) => {
   }
 
   const handleCancel = () => {
-    updateEditedData({});
     props.prepareImageDataFromTable({}); // this will delete the TE data from store
     togglePopup(false, 'TE');
   }
@@ -245,7 +223,6 @@ const MetaDataPopUpForTE = (props) => {
                         value={altText}
                         onChange={(e) => {
                             setAltText(e.target.value);
-                            handleButtonDisable(e.target.value);
                         }
                         }
                         onClick={() => handleActiveState('altBody')}
@@ -269,7 +246,6 @@ const MetaDataPopUpForTE = (props) => {
                         value={longDescription}
                         onChange={(e) =>{
                             setLongDescription(e.target.value);
-                            handleButtonDisable(null, e.target.value);
                           }
                         }
                         onClick={() => handleActiveState('longBody')}

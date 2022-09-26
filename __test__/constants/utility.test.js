@@ -7,7 +7,7 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import {utility,matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom,labelValueForFiguretype,labelValue,Table, Equation , Exhibit,dropdownValueForFiguretype,dropdownList,subtype,preformattedtext,mathml,image,tableasmarkup, getCookieByName, handleTextToRetainFormatting} from '../../src/constants/utility.js';
 import cypressConfig from '../../src/config/cypressConfig';
-import { newFigureObj } from '../../fixtures/ElementFigureTestingData.js';
+import { newFigureObj, textRetainObject } from '../../fixtures/ElementFigureTestingData.js';
 import { showHide } from '../../fixtures/ElementSHowHideData';
 
 
@@ -468,35 +468,35 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
     it('Case 1', () => {
         let htmlData = "<u>Why</u> do we use it? It is a long <strong><em><u>established</u></em></strong> fact that a <strong><em><s>reader</s></em></strong> will be <sup>distracted</sup> by the readable"
         let elemData = '<div> <u>Why</u> do we use it? It is a long <strong><em><u>established</u></em></strong> fact that a <strong><em><s>reader</s></em></strong> will be <sup>distracted</sup> by the readable </div>'
-        let result = handleTextToRetainFormatting(htmlData, elemData);
+        let result = handleTextToRetainFormatting(htmlData, elemData, textRetainObject);
         expect(result).toBe("<u>Why</u> do we use it? It is a long <strong><em><u>established</u></em></strong> fact that a <strong><em><s>reader</s></em></strong> will be <sup>distracted</sup> by the readable");
     })
     it('Case 2', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '<h1 class="heading1NummerEins"><em>Why</em> we use it?</h1> <p>do</p>';
         let htmlData = '<h1 class="heading1NummerEins"><em>Why</em> we use it?</h1> <p>do</p>'
-        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
         expect(result).toBe(' <em>Why</em> we use it? do');
     })
     it('Case 3 handleUnwantedFormattingTags', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>';
         let htmlData = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>'
-        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
         expect(result).toBe(' <em>Why</em> we use it? do  h  h3 h4 h5 h6  li ul ol ');
     })
     it('Case 4 handleUnwantedFormattingTags else', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '<ol><em>we</em> use it hey</ol>';
         let htmlData = '<ol>we use it hey</ol>'
-        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
         expect(result).toBe('<em>we</em> use it hey ');
     })
     it('Case 5', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '<h1 class="heading1NummerEins"><em>Why</em> <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello</h1> <p>do</p>';
         let htmlData = '<h1 class="heading1NummerEins"><em>Why</em> <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello</h1> <p>do</p>'
-        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
         expect(result).toBe(' <em>Why</em> <strong>we</strong> <em>use</em> <s>it</s> hello do');
     })
     it('Case 6 ', () => {
@@ -504,7 +504,307 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         simpleDiv.innerHTML = '<a>use it hey</a>';
         simpleDiv.innerText = 'use it hey';
         let htmlData = '<a>use it hey</a>'
-        let result = handleTextToRetainFormatting(htmlData, simpleDiv);
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
         expect(result).toBe('use it hey');
+    })
+    it('Case 7', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '</abbr>use it hey</abbr>';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<dfn class=test>use it hey</dfn>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
+        expect(result).toBe('use it hey');
+    })
+    it('Case 8', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<abbr>use it hey</abbr>';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<abbr class=test>use it hey</abbr>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
+        expect(result).toBe('use it hey');
+    })
+    it('Case 9', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '</span>use it hey</span>';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<span class=test>use it hey</span>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
+        expect(result).toBe('use it hey');
+    })
+    it('Case 10', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<br />';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<br />'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
+        expect(result).toBe('use it hey');
+    })
+    it('Case 11', () => {
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<br>';
+        simpleDiv.innerText = 'use it hey';
+        let htmlData = '<br>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
+        expect(result).toBe('use it hey');
+    })
+    it('Case 12: Pasting wiris img', () => {
+        let props = {
+            element: {
+                type:"element-authoredtext"
+            }
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<em>Why</em><img align="middle" class="Wirisformula" > <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello <p>do</p>';
+        let htmlData = '<em>Why</em> <b>we</b> <i>use</i><img align="middle" class="Wirisformula" ><strike>it</strike> <span id="specialChar"></span>hello <p>do</p>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv,props);
+        expect(result).toBe('<em>Why</em>we</strong> <em>use</em> <s>it</s> hello do ');
+    })
+    it('Case 12: Pasting inline img', () => {
+        let props = {
+            element: {
+                type:"element-authoredtext"
+            }
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<em>Why</em><img align="middle" class="imageAssetContent" > <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello <p>do</p>';
+        let htmlData = '<em>Why</em> <b>we</b> <i>use</i><img align="middle" class="imageAssetContent" ><strike>it</strike> <span id="specialChar"></span>hello <p>do</p>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv,props);
+        expect(result).toBe('<em>Why</em><img align=\"middle\" class=\"imageAssetContent\"> <strong>we</strong> <em>use</em> <s>it</s> hello do ');
+    })
+    it('Case 12: Pasting inline img for blockfeature element', () => {
+        let props = {
+            placeholder:"Attribution Text",
+            element: {
+                type:"element-blockfeature"
+            }
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<em>Why</em><img align="middle" class="imageAssetContent" > <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello <p>do</p>';
+        simpleDiv.innerText = "<em>Why</em><img align=\"middle\" class=\"imageAssetContent\"> <strong>we</strong> <em>use</em> <s>it</s> hello do "
+        let htmlData = '<em>Why</em> <b>we</b> <i>use</i><img align="middle" class="imageAssetContent" ><strike>it</strike> <span id="specialChar"></span>hello <p>do</p>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv,props);
+        expect(result).toBe('&lt;em&gt;Why&lt;/em&gt;&lt;img align=\"middle\" class=\"imageAssetContent\"&gt; &lt;strong&gt;we&lt;/strong&gt; &lt;em&gt;use&lt;/em&gt; &lt;s&gt;it&lt;/s&gt; hello do ');
+    })
+    it('Case 12.1 else if  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: 'element-blockfeature'
+            },
+            placeholder : "enter text"
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>';
+        let htmlData = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe(' <em>Why</em> we use it? do  h  h3 h4 h5 h6  li ul ol ');
+    })
+    it('Case 12.2 else if handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: 'element-blockfeature'
+            },
+            placeholder : "enter text"
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = '<h1><em>Why</em> <u><strong>we</strong></u> <s>use</s> it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>';
+        let htmlData = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe(' <em>Why</em> we use it? do  h  h3 h4 h5 h6  li ul ol ');
+    })
+    it('Case 12.3 else if element-learningobjectives handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: 'element-learningobjectives'
+            }
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = "<u>Why</u> do we use it? It is a long <strong><em><u>established</u></em></strong> fact that a <strong><em><s>reader</s></em></strong> will be <sup>distracted</sup> by the readable"
+        let htmlData = '<em>Why</em> we use it? <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it? It is a long established fact that a reader will be <sup>distracted</sup> by the readable");
+    })
+    it('Case 12.3 else if element-learningobjectives else case handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: 'element-learningobjectives'
+            }
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerHTML = "Why do we use it? It is a long established fact that a reader will be <sup>distracted</sup> by the readable"
+        let htmlData = 'Why we use it? <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it? It is a long established fact that a reader will be <sup>distracted</sup> by the readable");
+    })
+    it('Case 12.4 else if Attribution Text  handleTextToRetainFormatting', () => {
+        const object = {
+            placeholder: "Attribution Text"
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why do we use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.5 else if Label Name  handleTextToRetainFormatting', () => {
+        const object = {
+            placeholder: "Label Name",
+            isAutoNumberingEnabled: false
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why <code>do</code> we use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.6 else if Number  handleTextToRetainFormatting', () => {
+        const object = {
+            placeholder: "Number",
+            isAutoNumberingEnabled: false
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why <code>do</code> <sub>we</sub> <sup>use</sup> it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.7 else if openerelement  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: 'openerelement'
+            }
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why <s>do</s> we use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.8 else if Label Name  handleTextToRetainFormatting', () => {
+        const object = {
+            placeholder: "Label Name",
+            isAutoNumberingEnabled: true
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why do we use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.9 else if element-dialogue  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: "element-dialogue"
+            },
+            placeholder: "Enter Dialogue...",
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why <code>do</code> we use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.10 else if Enter Dialogue... else case  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: "element-dialogue"
+            },
+            placeholder: "Enter Dialogue...",
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why do we use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.11 else if element-dialogue  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: "element-dialogue"
+            },
+            placeholder: "Enter Stage Directions...",
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why <code>do</code> <em>we</em> use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.12 else if Enter Stage Directions... else case  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: "element-dialogue"
+            },
+            placeholder: "Enter Stage Directions...",
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why do we use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.13 else if element-dialogue  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: "element-dialogue"
+            },
+            placeholder: "Enter Character Name...",
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why <code>do</code> <strong>we</strong> use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.14 else if Enter Character Name... else case  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: "element-dialogue"
+            },
+            placeholder: "Enter Character Name...",
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why do we use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.15 else if popup  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: "popup"
+            },
+            placeholder: "Enter call to action...",
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why <sub>do</sub> <sup>we</sup> <s>use</s> it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.16 else if popup Enter call to action... else case  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: "popup"
+            },
+            placeholder: "Enter call to action...",
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why do we use it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why do we use it");
+    })
+    it('Case 12.17 else if default case  handleTextToRetainFormatting', () => {
+        const object = {
+            element: {
+                type: "popup"
+            },
+            placeholder: "",
+        }
+        let simpleDiv = document.createElement('div');
+        simpleDiv.innerText = "Why do we use it"
+        let htmlData = 'Why <sub>do</sub> <sup>we</sup> <s>use</s> it'
+        let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
+        expect(result).toBe("Why <sub>do</sub> <sup>we</sup> <s>use</s> it");
     })
 })

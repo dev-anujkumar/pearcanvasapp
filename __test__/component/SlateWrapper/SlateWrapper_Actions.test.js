@@ -78,6 +78,9 @@ describe('Tests Slate Wrapper Actions', () => {
                 }
             },
             autoNumberReducer: mockAutoNumberReducerEmpty,
+            commentsPanelReducer: {
+                allComments: []
+            }
         };
         store = mockStore(() => initialState);
         initialState2 = {
@@ -5838,6 +5841,9 @@ describe('Tests Slate Wrapper Actions', () => {
                     sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
                     sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
                 }
+            },
+            commentsPanelReducer: {
+                allComments: []
             }
         }
         store3 = mockStore(() => initialState3);
@@ -5892,6 +5898,9 @@ describe('Tests Slate Wrapper Actions', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: true
+            },
+            commentsPanelReducer: {
+                allComments: []
             }
         }
         store3 = mockStore(() => initialState3);
@@ -5942,6 +5951,9 @@ describe('Tests Slate Wrapper Actions', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: true
+            },
+            commentsPanelReducer: {
+                allComments: []
             }
         }
         store3 = mockStore(() => initialState3);
@@ -5990,7 +6002,10 @@ describe('Tests Slate Wrapper Actions', () => {
                     sourceEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fc"
                 }
             },
-            autoNumberReducer: { isAutoNumberingEnabled: true}
+            autoNumberReducer: { isAutoNumberingEnabled: true},
+            commentsPanelReducer: {
+                allComments: []
+            }
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -6023,7 +6038,10 @@ describe('Tests Slate Wrapper Actions', () => {
             },
             tcmReducer: { tcmSnapshot: ["78", "9"] },
             selectionReducer: {},
-            autoNumberReducer:{isAutoNumberingEnabled: true}
+            autoNumberReducer:{isAutoNumberingEnabled: true},
+            commentsPanelReducer: {
+                allComments: []
+            }
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -6070,6 +6088,9 @@ describe('Tests Slate Wrapper Actions', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: true
+            },
+            commentsPanelReducer: {
+                allComments: []
             }
         }
         store3 = mockStore(() => initialState3);
@@ -6125,6 +6146,9 @@ describe('Tests Slate Wrapper Actions', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: true
+            },
+            commentsPanelReducer: {
+                allComments: []
             }
         }
         store3 = mockStore(() => initialState3);
@@ -6178,6 +6202,9 @@ describe('Tests Slate Wrapper Actions', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: true
+            },
+            commentsPanelReducer: {
+                allComments: []
             }
         }
         store3 = mockStore(() => initialState3);
@@ -6231,6 +6258,9 @@ describe('Tests Slate Wrapper Actions', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: true
+            },
+            commentsPanelReducer: {
+                allComments: []
             }
         }
         store3 = mockStore(() => initialState3);
@@ -6283,6 +6313,9 @@ describe('Tests Slate Wrapper Actions', () => {
                 }
             },
             autoNumberReducer: mockAutoNumberReducerEmpty,
+            commentsPanelReducer: {
+                allComments: []
+            }
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -7004,7 +7037,10 @@ describe('Tests Slate Wrapper Actions', () => {
                 },
             },
             selectionReducer: {},
-            tcmReducer: { tcmSnapshot: ["78", "9"] }
+            tcmReducer: { tcmSnapshot: ["78", "9"] },
+            commentsPanelReducer: {
+                allComments: []
+            }
         }
         store3 = mockStore(() => initialState3);
         jest.mock('axios');
@@ -7048,6 +7084,7 @@ describe('Tests Slate Wrapper Actions', () => {
                 }
             },
             autoNumberReducer: mockAutoNumberReducerEmpty,
+            commentsPanelReducer: { allComments: [] },
         }
         store3 = mockStore(() => initialState3);
         config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
@@ -7066,7 +7103,6 @@ describe('Tests Slate Wrapper Actions', () => {
         await actions.pasteElement(params)(store3.dispatch, store3.getState);
         expect(spypasteElement).toHaveBeenCalled()
     });
-
     it('swapElement  action - showhide as containerTypeElem', async () => {
         initialState3 = {
             appStore: {

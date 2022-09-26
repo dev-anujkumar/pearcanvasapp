@@ -2089,6 +2089,25 @@ export const slateAncestorChapter = {
         }
     }
 }
+export const slateAncestorVolume = {
+    "containerUrn": "urn:pearson:manifest:34a81813-a44d-4276-9b63-8cd704bb18ec",
+    "entityUrn": "urn:pearson:entity:7a276aed-c8c0-48d9-b6ec-c5f80c1bb1ea",
+    "title": "",
+    "label": "volume",
+    "matterType": "BodyMatter",
+    "ancestor": {
+        "containerUrn": "urn:pearson:manifest:48f38b1b-7558-41bf-9627-903fbfd68972",
+        "entityUrn": "urn:pearson:entity:4bffec29-d3d3-48e2-a42d-e9df091bf4cb",
+        "title": "",
+        "label": "container-introduction",
+        "ancestor": {
+            "containerUrn": "urn:pearson:distributable:2c5fbcf9-81c4-4831-b5ca-adfbf644cfe7",
+            "entityUrn": "urn:pearson:entity:fc1224f4-09b2-452f-aa74-f66f6344b64d",
+            "title": "dev_test_39",
+            "label": "project"
+        }
+    }
+}
 export const slateAncestorChapterwithMod = {
     "containerUrn": "urn:pearson:manifest:c8c3e626-e9b7-4bba-823a-574a9eecce0c",
     "entityUrn": "urn:pearson:entity:69eb9844-92d8-4cd5-baa1-3ae67a4ae3ff",

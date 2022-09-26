@@ -906,6 +906,7 @@ describe('Testing Figure image component', () => {
         },
         onClick: () => { },
         handleFocus: function () { },
+        updateFigureData: function () { },
         permissions: ['add_multimedia_via_alfresco'],
         figureData: {
             model: {
@@ -1000,8 +1001,18 @@ describe('Testing Figure image component', () => {
                 figureImageInstance.showDeleteAssetPopup();
                 expect(spy).toBeCalled();
             });
+            it('Testing showDeleteAssetPopup - else IF Condition', () => {
+                jest.mock('../../../src/constants/utility.js', () => ({
+                    getCookieByName: jest.fn().mockImplementationOnce = () => {
+                        return true
+                    },
+                }))
+                document.cookie = "DISABLE_DELETE_WARNINGS=true"
+                figureImageInstance.showDeleteAssetPopup();
+                expect(spy).toBeCalled();
+            });
             it('Testing showDeleteAssetPopup - ELSE Condition', () => {
-                figureImageInstance.setState({ deleteAssetPopup: false });
+                document.cookie = "DISABLE_DELETE_WARNINGS=false"
                 figureImageInstance.showDeleteAssetPopup();
                 expect(spy).toBeCalled();
             });

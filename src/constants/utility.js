@@ -15,9 +15,11 @@ export const CHECKBOX_MESSAGE = "Don't ask me again";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>', '</p>', '</ul>', '</ol>', '</li>']
-export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '</em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>']
-export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<img', '</abbr>', '</dfn>', "</a>", 'class="answerLineContent"', 'class="calloutOne"', 'class="calloutTwo"', 'class="calloutThree"', 'class="calloutFour"', 'class="markedForIndex"']
+export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>','<img']
 export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"', 'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"', 'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"', 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
+export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext','element-learningobjectives','element-blockfeature']
+export const AUTO_NUMBER_PLACEHOLDER = ["Label Name", "Label", "Number"]
+export const PLACEHOLDER_ARRAY = ["Attribution Text", "Code Block Content"]
 
 export const requestConfigURI = () => {
     let uri = '';
@@ -818,7 +820,7 @@ export const handleUnwantedFormattingTags = (element) => {
     return pastedTagsData;
 }
 
-export const handleTextToRetainFormatting = (pastedContent, testElement) => {
+export const handleTextToRetainFormatting = (pastedContent, testElement, props) => {
     let tempData = pastedContent;
     if (MATCH_HTML_TAGS.some(el => tempData.match(el))) {
         tempData = handleUnwantedFormattingTags(testElement)
@@ -826,13 +828,73 @@ export const handleTextToRetainFormatting = (pastedContent, testElement) => {
     let convertTag = tempData?.includes('<b>') ? tempData?.replace(/<b>/g, "<strong>")?.replace(/<*\/b>/g, "</strong>") : tempData
     convertTag = convertTag?.includes('<span id=\"specialChar\"></span>') ? convertTag?.replace("<span id=\"specialChar\"></span>", '') : convertTag
     convertTag = convertTag?.includes('<strike>') ? convertTag?.replace(/<strike>/g, '<s>')?.replace(/<*\/strike>/g, '</s>') : convertTag
-    const updatedText = convertTag.includes('<i>') ? convertTag?.replace(/<i>/g, "<em>")?.replace(/<*\/i>/g, "</em>") : convertTag
+    convertTag = convertTag?.includes('</dfn>') ? convertTag?.replace(/<dfn.+?>/g, '')?.replace(/<*\/dfn>/g, '') : convertTag
+    convertTag = convertTag?.includes('</abbr>') ? convertTag?.replace(/<abbr.+?>/g, '')?.replace(/<*\/abbr>/g, '') : convertTag
+    convertTag = convertTag?.includes('</span>') ? convertTag?.replace(/<span.+?>/g, '')?.replace(/<*\/span>/g, '') : convertTag
+    convertTag = convertTag?.includes('</a>') ? convertTag?.replace(/<sup.+?><*\/sup>/g, '') : convertTag
+    convertTag = convertTag?.includes('<br />') ? convertTag?.replace(/<br \/?>\ ?/g, ' ') : convertTag
+    convertTag = convertTag?.includes('<br>') ? convertTag?.replace(/<br>/g, '') : convertTag
+    let updatedText = convertTag.includes('<i>') ? convertTag?.replace(/<i>/g, "<em>")?.replace(/<*\/i>/g, "</em>") : convertTag
+
+    if (props?.element?.elementdata?.headers || props?.element?.elementdata?.type === "pullquote" || (props?.element?.type === 'element-blockfeature' && props?.placeholder !== 'Attribution Text')) {
+        updatedText = updatedText.includes('<strong>') ? updatedText?.replace(/<strong>/g, "")?.replace(/<*\/strong>/g, "") : updatedText
+        updatedText = updatedText.includes('<u>') ? updatedText?.replace(/<u>/g, "")?.replace(/<*\/u>/g, "") : updatedText
+        updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
+    } else if (props?.element?.type === 'element-learningobjectives') {
+        updatedText = updatedText.includes('<strong>') ? updatedText?.replace(/<strong>/g, "")?.replace(/<*\/strong>/g, "") : updatedText
+        updatedText = updatedText.includes('<u>') ? updatedText?.replace(/<u>/g, "")?.replace(/<*\/u>/g, "") : updatedText
+        updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
+        updatedText = updatedText.includes('<em>') ? updatedText?.replace(/<em>/g, "")?.replace(/<*\/em>/g, "") : updatedText
+    } else if (PLACEHOLDER_ARRAY.includes(props?.placeholder) || (props?.isAutoNumberingEnabled && AUTO_NUMBER_PLACEHOLDER.includes(props?.placeholder))) {
+        let tempContent = testElement?.innerText?.replace(/&/g, "&amp;");
+        updatedText = tempContent?.replace(/</g, "&lt;")?.replace(/>/g, "&gt;");
+    } else if (!props?.isAutoNumberingEnabled && (props?.placeholder === "Label Name" || props.placeholder === "Label")) {
+        updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
+    } else if (!props?.isAutoNumberingEnabled && props?.placeholder === "Number") {
+        updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
+        updatedText = updatedText.includes('<sub>') ? updatedText?.replace(/<sub>/g, "")?.replace(/<*\/sub>/g, "") : updatedText
+        updatedText = updatedText.includes('<sup>') ? updatedText?.replace(/<sup>/g, "")?.replace(/<*\/sup>/g, "") : updatedText
+    } else if (props?.element?.type === "openerelement") {
+        updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
+    } else if (props?.element?.type === "element-dialogue" || props?.element?.type === 'popup') {
+        switch (props?.placeholder) {
+
+            case "Enter Dialogue...": {
+                updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
+                break;
+            }
+            case "Enter Stage Directions...": {
+                updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
+                updatedText = updatedText.includes('<em>') ? updatedText?.replace(/<em>/g, "")?.replace(/<*\/em>/g, "") : updatedText
+                break;
+            }
+            case "Enter Character Name...": {
+                updatedText = updatedText.includes('<code>') ? updatedText?.replace(/<code>/g, "")?.replace(/<*\/code>/g, "") : updatedText
+                updatedText = updatedText.includes('<strong>') ? updatedText?.replace(/<strong>/g, "")?.replace(/<*\/strong>/g, "") : updatedText
+                break;
+            }
+            case "Enter call to action...": {
+                updatedText = updatedText.includes('<sub>') ? updatedText?.replace(/<sub>/g, "")?.replace(/<*\/sub>/g, "") : updatedText
+                updatedText = updatedText.includes('<sup>') ? updatedText?.replace(/<sup>/g, "")?.replace(/<*\/sup>/g, "") : updatedText
+                updatedText = updatedText.includes('<s>') ? updatedText?.replace(/<s>/g, "")?.replace(/<*\/s>/g, "") : updatedText
+                break;
+            }
+            default: break;
+        }
+    }
     
-    if (NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
-        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
-        pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    } else if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
-        pastedContent = updatedText;
+    if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
+        if (ALLOWED_ELEMENT_IMG_PASTE.includes(props?.element?.type) && updatedText.match('<img ')) {
+            if (updatedText.match('class="Wirisformula')) {
+                pastedContent = handleWirisImgPaste(updatedText)
+            } else if(props?.element?.type === 'element-blockfeature' && props.placeholder === "Attribution Text") {
+                   pastedContent = handleImagePaste(updatedText) 
+            } else {
+                pastedContent = updatedText;
+            }
+        } else {
+            pastedContent = handleImagePaste(updatedText)
+        }
     }
     else {
         let tempContent = testElement.innerText.replace(/&/g, "&amp;");
@@ -846,4 +908,23 @@ export const handleTinymceEditorPlugins = (plugins) => {
     let editorPlugins = plugins;
     if (config.ENABLE_WIRIS_PLUGIN) editorPlugins = `${editorPlugins} tiny_mce_wiris`;
     return editorPlugins;
+}
+/**
+ * This function is used to restricts Pasting of Wiris Images 
+ * @param {*} updatedText 
+ * @returns 
+ */
+export const handleWirisImgPaste = (updatedText) => {
+    let updatePasteContent = updatedText.replace(/<img align="middle" class="Wirisformula"([\w\W]+?)>/g,'')
+    return updatePasteContent;
+}
+/**
+ * This function is used to restricts pasting of images inside title,caption,credit etc..
+ * fields of figure (or other) elements
+ * @param {*} updatedText 
+ * @returns 
+ */
+export const handleImagePaste = (updatedText) => {
+   let updatePasteContent = updatedText.replace(/<img ([\w\W]+?)>/g,'');
+   return updatePasteContent;
 }
