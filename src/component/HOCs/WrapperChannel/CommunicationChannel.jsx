@@ -193,6 +193,12 @@ function CommunicationChannel(WrappedComponent) {
                         closeUndoTimer: message.status
                     })
                     break;
+                case 'fetchRequiredSlateData':
+                    let isFetchAnySlate = true;
+                    let slateManifestUrn = message && message.slateManifestUrn;
+                    let slateEntityUrn = message && message.slateEntityUrn;
+                    this.props.fetchSlateData(slateManifestUrn, slateEntityUrn, config.page, '', "", false, isFetchAnySlate);
+                    break;
                 case 'cancelCEPopup':
                     if (this.props.currentSlateLOData?.length > 0) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
@@ -208,40 +214,25 @@ function CommunicationChannel(WrappedComponent) {
                     });
                     if(message.hasOwnProperty('slateTagEnabled')){
                         config.isPreviousLOAssociation = this.props.isSlateTagEnable
-                        let dataToSend = this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
-                        let messageData = {assessmentResponseMsg:message.slateTagEnabled}
+                        let dataToSend = message.assessmentSlateData ? this.props?.getRequiredSlateData?.getRequiredSlateData[message.slateManifestUrn]?.contents?.bodymatter[0] : this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
+                        let messageData = {assessmentResponseMsg:message.slateTagEnabled};
+                        let slateManifestUrn = message.slateManifestUrn ?? config.slateManifestURN;
+                        let isFromRC = message.assessmentSlateData ? true : false;
                         this.props.isLOExist(messageData);
-                        if (config.parentEntityUrn !== ("Front Matter" || "Back Matter") && config.slateType === "assessment") {
-                            let assessmentUrn = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ?? config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: config.slateManifestURN } });
+                        if (config.parentEntityUrn !== ("Front Matter" || "Back Matter")) {
+                            let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ?? config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
                             if(dataToSend?.elementdata){
                                 dataToSend.inputType = ELEMENT_ASSESSMENT
                                 dataToSend.inputSubType = "NA"
                                 dataToSend.index = "0"
-                                dataToSend.elementParentEntityUrn = config.slateEntityURN
+                                dataToSend.elementParentEntityUrn = message.slateEntityUrn ?? config.slateEntityURN
                                 dataToSend.elementdata.loAssociation = message.slateTagEnabled
-                                dataToSend.slateVersionUrn = config.slateManifestURN
+                                dataToSend.slateVersionUrn = slateManifestUrn
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
-                                this.props.updateElement(dataToSend, 0 );
+                                this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
                             }
-                        }else if(message.assessmentSlateData){
-                            let assessmentUrn = message?.assessmentUrn;
-                            let assessmentDetails = message.assessmentSlateData;
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: message.slateManifestUrn } });
-                            let prepareDataToSend = {}
-                            prepareDataToSend.elementdata ={ assessmentid : assessmentUrn}
-                            prepareDataToSend.elementdata = {...prepareDataToSend.elementdata,assessmenttitle : assessmentDetails?.title?.en}
-                            prepareDataToSend.elementdata ={...prepareDataToSend.elementdata, usageType : assessmentDetails.usageType}
-                            prepareDataToSend.inputType = ELEMENT_ASSESSMENT
-                            prepareDataToSend.inputSubType = "NA"
-                            prepareDataToSend.index = "0"
-                            prepareDataToSend.containerUrn = assessmentDetails.contentUrn;
-                            prepareDataToSend.elementdata ={...prepareDataToSend.elementdata, loAssociation : message.slateTagEnabled}
-                            prepareDataToSend.type = "element-assessment";
-                            prepareDataToSend.html = { title: `<p>${assessmentDetails?.title?.en}</p>` }
-                            this.props.updateElement(prepareDataToSend, 0);
-                        
-                    }
+                        }
                 }
                     break;
                 case 'slatePreview':
