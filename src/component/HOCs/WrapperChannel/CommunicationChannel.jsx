@@ -231,6 +231,8 @@ function CommunicationChannel(WrappedComponent) {
                                 dataToSend.slateVersionUrn = slateManifestUrn
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
                                 this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
+                                if(message.assessmentSlateData)
+                                    this.handleRefreshSlate();
                             }
                         }
                 }
