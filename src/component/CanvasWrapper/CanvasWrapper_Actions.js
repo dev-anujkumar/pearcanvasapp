@@ -624,6 +624,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => { 
+        // isFetchAnySlate is the confirmation we get from RC for RC's related slateDetails fetching
         if(!isFetchAnySlate){
          /* Slate tag issue */
          if (document.getElementsByClassName("slate-tag-icon").length) {

@@ -124,6 +124,10 @@ export const updateElementInStore = (paramsObj) => {
         slateParentData
     } = paramsObj
 
+        /**
+         * @isFromRC represents element update call from RC with loAssociation key
+         * @updatedData - is the updated element details that has been fetch from a RC slate
+         */
     let _slateObject = isFromRC ? slateParentData[updatedData.slateVersionUrn] : newslateData[updatedData.slateVersionUrn],
         { contents: _slateContent } = _slateObject,
         { bodymatter: _slateBodyMatter } = _slateContent,

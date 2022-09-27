@@ -194,6 +194,7 @@ function CommunicationChannel(WrappedComponent) {
                     })
                     break;
                 case 'fetchRequiredSlateData':
+                    // Fetches any slate details with help of slate ManifestUrn and slateEntityUrn
                     let isFetchAnySlate = true;
                     let slateManifestUrn = message && message.slateManifestUrn;
                     let slateEntityUrn = message && message.slateEntityUrn;
@@ -212,8 +213,8 @@ function CommunicationChannel(WrappedComponent) {
                     this.setState({
                         showBlocker: false
                     });
+                    // handles Element Update API call with loAssociation key from TOC and RC
                     if(message.hasOwnProperty('slateTagEnabled')){
-                        config.isPreviousLOAssociation = this.props.isSlateTagEnable
                         let dataToSend = message.assessmentSlateData ? this.props?.getRequiredSlateData?.getRequiredSlateData[message.slateManifestUrn]?.contents?.bodymatter[0] : this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
                         let messageData = {assessmentResponseMsg:message.slateTagEnabled};
                         let slateManifestUrn = message.slateManifestUrn ?? config.slateManifestURN;

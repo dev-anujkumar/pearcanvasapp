@@ -165,6 +165,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
         /** updateBodymatter | Used for TCM Snapshots */
+        /**
+         * @isFromRC represents element update call from RC with loAssociation key
+         * @updatedData - is the updated element details that has been fetch from a RC slate
+         */
         let updateBodymatter = isFromRC ? [updatedData] : getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
         const helperArgs = { 
             updatedData,
