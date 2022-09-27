@@ -52,7 +52,7 @@ export const Interactive3party ={
     "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
     "figuredata": {
         "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
-        "interactiveid": "",
+        "interactiveid": "test",
         "interactivetype": "3rd-party",
         "interactiveformat": "external-link",
         "posterimage": {

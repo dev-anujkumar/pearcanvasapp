@@ -2327,6 +2327,21 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(toastNode.style.display).toEqual("block")
             spyshowLinkToast.mockClear()
         })
+        it("showLinkToast : else", () => {
+         const toastNode = {
+             style : {
+                 display: "none"
+             },
+             innerText: ""
+         }
+         const spyshowLinkToast = jest.spyOn(updateHelpers, "showLinkToast")
+         updateHelpers.showLinkToast(toastNode)
+         setTimeout(() => {
+         expect(spyshowLinkToast).toHaveBeenCalled()
+         expect(toastNode.style.display).toEqual("none")
+        }, 4000);
+        spyshowLinkToast.mockClear()
+     })
         
     })
     describe("update BL methods",()=>{

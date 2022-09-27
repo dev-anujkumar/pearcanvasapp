@@ -139,8 +139,79 @@ describe('Testing MultiColumn component', () => {
     })
     it("HandleFocus method", () => {
         const spyhandleFocus = jest.spyOn(MultiColumnContainerInstance, 'handleFocus')
-        const event = {}
+        const event = {target: { classList: { contains: () => { return false } } }}
         MultiColumnContainerInstance.handleFocus(event);
+        expect(spyhandleFocus).toHaveBeenCalled()
+    })
+    it("HandleFocus method : else", () => {
+        const spyhandleFocus = jest.spyOn(MultiColumnContainerInstance, 'handleFocus')
+        const event = {target: { classList: { contains: () => { return ['container-multi-column-group'] } } }}
+        MultiColumnContainerInstance.handleFocus(event);
+        expect(spyhandleFocus).toHaveBeenCalled()
+    })
+    it("renderElement method", () => {
+        const spyrenderElement = jest.spyOn(MultiColumnContainerInstance, 'renderElement')
+        let parentUrn = {
+            manifestUrn: contextValue.element.id,
+            contentUrn: contextValue.element.contentUrn,
+            elementType: contextValue.element.type
+        }
+        MultiColumnContainerInstance.renderElement(contextValue.element.groupeddata.bodymatter, parentUrn, contextValue.index);
+        expect(spyrenderElement).toHaveBeenCalled()
+    })
+    xit('sortable testing', () => {
+        const instance = wrapper.find('Sortable').instance();
+        expect(instance.props.onChange).toHaveLength(3);
+    })
+    xit(' Sortable onStart function testing', () => {
+        const instance = wrapper.find('Sortable').instance();
+        instance.props.options.onStart()
+        instance.props.onChange();
+        expect(instance.props.onChange).toHaveLength(3);
+    })
+    xit(' Sortable onUpdate function testing', () => {
+        props.setActiveElement = jest.fn();
+        const instance = wrapper.find('Sortable').instance();
+        let evt = {
+            oldDraggableIndex : 0,
+            newDraggableIndex : 1
+        }
+        instance.props.options.onUpdate(evt);
+        expect(instance.props.options.onUpdate).toHaveLength(1);
+    })
+    xit(' Sortable onUpdate function testing - IF savingInProgress is true', () => {
+        config.savingInProgress = true
+        props.setActiveElement = jest.fn();
+        const instance = wrapper.find('Sortable').instance();
+        let evt = {
+            oldDraggableIndex : 0,
+            newDraggableIndex : 1,
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn()
+        }
+        
+        instance.props.options.onUpdate(evt);
+        expect(instance.props.options.onUpdate).toHaveLength(1);
+    })
+    it("renderGroup method", () => {
+        const spyrenderGroup = jest.spyOn(MultiColumnContainerInstance, 'renderGroup')
+        MultiColumnContainerInstance.renderGroup(contextValue);
+        expect(spyrenderGroup).toHaveBeenCalled()
+    })
+    it("handleFocus method - if block - checkSlateLock()", () => {
+        let store2 = mockStore({...initialState, slateLockReducer : {
+            slateLockInfo: { isLocked : true, userId : 'c5test01'},
+        }} );
+        const wrapper2 = mount(
+            <MultiColumnContainerContext.Provider value={{...contextValue,  slateLockInfo:{ isLocked : true, userId : 'c5test01'}}} >
+                <Provider store={store2}>
+                    <MultiColumnContainer {...props} />
+                </Provider>
+            </MultiColumnContainerContext.Provider>);
+            const MultiColumnContainerInstance2 = wrapper2.find('MultiColumnContainer').instance();
+        const spyhandleFocus = jest.spyOn(MultiColumnContainerInstance2, 'handleFocus')
+        let event = {}
+        MultiColumnContainerInstance2.handleFocus(event);
         expect(spyhandleFocus).toHaveBeenCalled()
     })
 })
