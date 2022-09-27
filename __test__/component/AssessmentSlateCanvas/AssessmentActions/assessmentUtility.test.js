@@ -218,7 +218,13 @@ describe('Test---Assessment Utility Functions', () => {
             }
         }
         let assessReducer = {
-            id: "id"
+            figuredata: {
+                elementdata: {
+                    assessmentformat: "puf",
+                    assessmentid: "urn:pearson:work:b47ee1a3-e652-4b2b-bfc5-563d40a8373d"
+                }
+            },
+            assessReducer: false
         }
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkEmbeddedElmAssessment');
         assessment_UtiltyFn.checkEmbeddedElmAssessment(model,assessReducer);

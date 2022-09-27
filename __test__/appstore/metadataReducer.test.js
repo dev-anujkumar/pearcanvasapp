@@ -137,5 +137,14 @@ describe('testing meta data Reducer cases --', () => {
             
         })).toEqual(state5);
     })
+    it('DEFAULT_LF', () => {
+        let state6 = INIT_STATE;
+        state6.defaultLF = '';
+        expect(metadataReducer(INIT_STATE, {
+            type: 'DEFAULT_LF',
+            payload:{defaultLF:''}
+            
+        })).toEqual(state6);
+    })
 });
 
