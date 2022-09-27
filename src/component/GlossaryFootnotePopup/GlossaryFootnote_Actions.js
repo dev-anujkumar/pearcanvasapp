@@ -1170,7 +1170,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
             })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' }); 
-        } else if(currentSlateData && currentSlateData.status === "approved" && (currentApprovedSlate && (currentApprovedSlate.type === "groupedcontent" || currentApprovedSlate.subtype === "workedexample"))){
+        } else if(currentSlateData && currentSlateData.status === "approved" && (currentApprovedSlate && (currentApprovedSlate.type === "groupedcontent" || currentApprovedSlate.type === "element-aside"))){
             store.dispatch({
                 type: UPDATE_FOOTNOTEGLOSSARY,
                 payload: {
