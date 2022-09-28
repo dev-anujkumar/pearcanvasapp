@@ -55,7 +55,8 @@ jest.mock('../../../src/constants/IFrameMessageTypes.js', () => {
 jest.mock('../../../src/js/getAllSlatesData.js', () => {
     return {
         fetchAllSlatesData: jest.fn(),
-        setCurrentSlateAncestorData: jest.fn()
+        setCurrentSlateAncestorData: jest.fn(),
+        fetchAnySlateData: jest.fn()
     }
 });
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshot_Actions', () => {
@@ -1734,6 +1735,52 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
             axios.get = jest.fn(() => Promise.resolve(responseData));
             canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.1-fetchSlateData - Assessment Slate from RC', () => {
+            config.slateType ="assessment"
+            let responseData = {
+                data: {
+                    "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9": {
+                        id: "urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9",
+                        type: "element-assessment",
+                        contents: {
+                            bodymatter: [{
+                                type: "element-assessment", elementdata: { assessmentformat: "puf", assessmentid: "test" }
+                            }]
+                        }
+                    }
+                }
+            }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+                else if (obj && obj.type === FETCH_SLATE_DATA) {
+                    expect(obj.payload).toEqual(slateTestData.slateData1);
+                }
+                else if (obj && obj.type === SET_ACTIVE_ELEMENT) {
+                    expect(obj.payload).toEqual({});
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.slateData1,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9',
+                entityURN = 'urn:pearson:entity:1d4517cf-3a5d-4fd4-8347-2fa55f118294',
+                page = 1,
+                versioning = '',
+                calledFrom = 'SlateRefresh',
+                versionPopupReload = undefined
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload, true)(dispatch, getState);
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         })

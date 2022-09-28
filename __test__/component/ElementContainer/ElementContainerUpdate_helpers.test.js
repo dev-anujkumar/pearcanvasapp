@@ -1,7 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import * as updateHelpers from '../../../src/component/ElementContainer/ElementContainerUpdate_helpers';
-import { slateWithCitationElement, slateWithCitationElement2, slateWithPopupData, slateWithShowhideData, updateBL, updateBL2, updateBL3, updateBL4, updateBL_IN_AS, updateBL_IN_AS2, updateBL_IN_AS3, updateBL_IN_AS4, updateBL_IN_SH, updateBL_IN_SH2, updateBL_IN_SH3, updateBL_IN_WE, updateBL_IN_WE2, updateBL_IN_WE3, updateBL_IN_WE4, updateBL_IN_2C_3C, updateBL_IN_2C_3C2, updateBL_IN_2C_3C3, updateBL_IN_2C_3C4} from "../../../fixtures/slateTestingData"
+import { slateWithCitationElement, slateWithCitationElement2, slateWithPopupData, slateWithShowhideData, updateBL, updateBL2, updateBL3, updateBL4, updateBL_IN_AS, updateBL_IN_AS2, updateBL_IN_AS3, updateBL_IN_AS4, updateBL_IN_SH, updateBL_IN_SH2, updateBL_IN_SH3, updateBL_IN_WE, updateBL_IN_WE2, updateBL_IN_WE3, updateBL_IN_WE4, updateBL_IN_2C_3C, updateBL_IN_2C_3C2, updateBL_IN_2C_3C3, updateBL_IN_2C_3C4, communicationAssessmentSlateData} from "../../../fixtures/slateTestingData"
 import { multiColumnContainer } from "../../../fixtures/multiColumnContainer";
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
@@ -354,6 +354,29 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
         "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
         "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+    }
+    let assessmentUpdatedData = {
+      "id":"urn:pearson:work:1a311208-368a-4d2c-bc62-0c48909e49e3",
+      "type":"element-assessment",
+      "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+      "elementdata":{
+        "schema":"http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+        "assessmentid":"urn:pearson:work:cefad992-88fb-4063-b9d5-14dd165e575e",
+        "assessmenttitle":"test",
+        "assessmentformat":"puf",
+        "usagetype":"Concept Check",
+        "loAssociation":true
+      },
+      "versionUrn":"urn:pearson:work:1a311208-368a-4d2c-bc62-0c48909e49e3",
+      "contentUrn":"urn:pearson:entity:4e4d9ef2-7326-4dfb-9672-6a101b8b2baa",
+      "inputType":"ELEMENT_ASSESSMENT",
+      "inputSubType":"NA",
+      "index":"0",
+      "elementParentEntityUrn":"urn:pearson:entity:9d655572-b631-46a5-85ec-8634b503f9d2",
+      "slateVersionUrn":"urn:pearson:manifest:16b18e5f-7aa4-4b55-8a05-af4ab708d36d",
+      "html":{
+        "title":"<p>test</p>"
+      }
     }
     let parentElement = {
         "id": "urn:pearson:manifest:8a49e877-144a-4750-92d2-81d5188d8e0b",
@@ -1877,6 +1900,37 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
             spyUpdateNewVersionElementInStore.mockClear()
         })
+        it("updateElementInStore - AssessmentSlate from RC", () => {
+         let store = mockStore(() => initialState);
+         let args = { 
+             asideData,
+             parentUrn: null,
+             elementIndex: 0,
+             showHideType: null,
+             parentElement,
+             dispatch: store.dispatch,
+             newslateData: communicationAssessmentSlateData.getRequiredSlateData,
+             autoNumberDetails : {
+                 autoNumberSettingsOption: '',
+                 isAutoNumberingEnabled: true
+             },
+             isFromRC: true,
+             slateParentData: communicationAssessmentSlateData.getRequiredSlateData,
+             updatedData: assessmentUpdatedData
+         }
+         
+         const expectedAction = {
+             type: AUTHORING_ELEMENT_UPDATE,
+             payload: {
+                 slateLevelData: communicationAssessmentSlateData.getRequiredSlateData
+             }
+         }
+         const spyupdateElementInStore = jest.spyOn(updateHelpers, "updateElementInStore")
+         updateHelpers.updateElementInStore(args)
+         expect(spyupdateElementInStore).toHaveBeenCalled()
+         expect(spyupdateElementInStore).toHaveReturnedWith(expectedAction);
+         spyupdateElementInStore.mockClear()
+     })
     })
     describe('updateShowhideElements testCases',()=>{
         const autoNumberDetails = {isAutoNumberingEnabled: true,autoNumberSettingsOption:'Default AutoNumber', updatedSH_Object:{}}
@@ -9017,6 +9071,17 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateLOInStore).toHaveBeenCalled()
             spyupdateLOInStore.mockClear()
         })
+        it("UpdateStoreInCanvas - updateLOInCanvasStore - Assessment from  ", async () => {
+         let store = mockStore(() => initialState);
+         const spyupdateLOInStore = jest.spyOn(updateHelpers, "updateStoreInCanvas")
+         updateHelpers.updateStoreInCanvas({
+             getState: store.getState, dispatch: store.dispatch,
+              updatedData: assessmentUpdatedData, upadtedSlateData: communicationAssessmentSlateData.getRequiredSlateData,
+             isFromRC: true
+         })
+         expect(spyupdateLOInStore).toHaveBeenCalled()
+         spyupdateLOInStore.mockClear()
+     })
         it("updateElementInStore - parentElement - groupedcontent - without elementdata", () => {
             let store = mockStore(() => initialState2);
             let args = { 

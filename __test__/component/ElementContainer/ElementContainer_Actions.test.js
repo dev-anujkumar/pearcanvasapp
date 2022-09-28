@@ -2,7 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import * as actions from '../../../src/component/ElementContainer/ElementContainer_Actions';
-import { slateWithCitationElement} from "../../../fixtures/slateTestingData"
+import { communicationAssessmentSlateData, slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
 import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData } from "../../../fixtures/containerActionsTestingData"
@@ -470,6 +470,51 @@ describe('Tests ElementContainer Actions', () => {
             }
             const spyupdateElement = jest.spyOn(actions, 'updateElement')
             return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
+                expect(spyupdateElement).toHaveBeenCalled()
+            });
+        })
+        it('testing------- Update Element -----action---Assessment slate from RC', () => {
+            
+            let store = mockStore(() => initialState);
+            
+            const updatedData = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-assessment",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: updatedData
+                });
+            });
+            let parentUrn = {
+                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                elementType: "element-authoredtext"
+            }
+           config.tcmStatus= true
+            let asideData = {
+                type: "element-authoredtext",
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+
+            }
+            const spyupdateElement = jest.spyOn(actions, 'updateElement')
+            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData, null, null, null, true, communicationAssessmentSlateData.getRequiredSlateData )).then(() => {
                 expect(spyupdateElement).toHaveBeenCalled()
             });
         })

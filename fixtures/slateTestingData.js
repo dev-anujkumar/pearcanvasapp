@@ -2105,6 +2105,46 @@ export const communicationMockData = {
     }
 }
 
+export const communicationAssessmentSlateData = {
+    "getRequiredSlateData":{
+       "urn:pearson:manifest:16b18e5f-7aa4-4b55-8a05-af4ab708d36d":{
+          "id":"urn:pearson:manifest:16b18e5f-7aa4-4b55-8a05-af4ab708d36d",
+          "type":"manifest",
+          "schema":"http://schemas.pearson.com/wip-authoring/manifest/1",
+          "versionUrn":"urn:pearson:manifest:16b18e5f-7aa4-4b55-8a05-af4ab708d36d",
+          "contentUrn":"urn:pearson:entity:105c82d3-98ff-449f-81df-2f00fa1b0ee8",
+          "contents":{
+             "bodymatter":[
+                {
+                   "id":"urn:pearson:work:99708e22-9758-4389-b9e9-0f7a61af02df",
+                   "type":"element-assessment",
+                   "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                   "elementdata":{
+                      "schema":"http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",
+                      "assessmentid":"urn:pearson:work:5fc56704-9410-4e6e-9c20-3d47849af527",
+                      "assessmenttitle":"Quiz 10.1: Curriculum and program development",
+                      "assessmentformat":"cite",
+                      "usagetype":"Concept Check",
+                      "loAssociation":true
+                   },
+                   "versionUrn":"urn:pearson:work:99708e22-9758-4389-b9e9-0f7a61af02df",
+                   "contentUrn":"urn:pearson:entity:816dd2b5-cd21-4590-a1cc-7d4be421703b"
+                }
+             ],
+             "title":{
+                "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text":"demo"
+             },
+             "schema":"http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+          },
+          "status":"wip",
+          "pageNo":0,
+          "pageCount":1,
+          "pageLimit":25
+       }
+    }
+}
+
 export const slateMockData = {
     "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5": {
         "id": "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c",
