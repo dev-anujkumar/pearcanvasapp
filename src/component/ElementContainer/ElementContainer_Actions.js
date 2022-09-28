@@ -153,7 +153,7 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => async (dispatch, getState) => {
+export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
         if(hasReviewerRole()){
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return ;
@@ -165,7 +165,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
         /** updateBodymatter | Used for TCM Snapshots */
-        let updateBodymatter = getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
+        /**
+         * @isFromRC represents element update call from RC with loAssociation key
+         * @updatedData - is the updated element details that has been fetch from a RC slate
+         */
+        let updateBodymatter = isFromRC ? [updatedData] : getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
         const helperArgs = { 
             updatedData,
             asideData,
@@ -175,19 +179,23 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             versionedData: null,
             elementIndex,
             showHideType,
-            parentElement
+            parentElement,
+            isFromRC,
+            upadtedSlateData
         }
         updateStoreInCanvas(helperArgs)
         let updatedData1 = JSON.parse(JSON.stringify(updatedData));
         updatedData1.projectEntityUrn = config.projectEntityUrn;
-        updatedData1.immediateSlateEntityUrn = config.slateEntityURN;
-        updatedData1.immediateSlateVersionUrn = config.slateManifestURN;
+        if(!isFromRC){
+            updatedData1.immediateSlateEntityUrn = config.slateEntityURN;
+            updatedData1.immediateSlateVersionUrn = config.slateManifestURN;
+        }
         const data = {
             slateLevelData,
             index: elementIndex
         };
         const blockListData = checkBlockListElement(data, 'TAB');
-        if(blockListData && Object.keys(blockListData).length > 0) {
+        if(blockListData && Object.keys(blockListData).length > 0 && !isFromRC) {
             const { parentData } = blockListData;
             updatedData1.elementParentEntityUrn = parentData?.contentUrn;
         }

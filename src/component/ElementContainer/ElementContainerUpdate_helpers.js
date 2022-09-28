@@ -119,10 +119,16 @@ export const updateElementInStore = (paramsObj) => {
         showHideType,
         parentElement,
         newslateData,
-        autoNumberDetails
+        autoNumberDetails,
+        isFromRC,
+        slateParentData
     } = paramsObj
 
-    let _slateObject = newslateData[updatedData.slateVersionUrn],
+        /**
+         * @isFromRC represents element update call from RC with loAssociation key
+         * @updatedData - is the updated element details that has been fetch from a RC slate
+         */
+    let _slateObject = isFromRC ? slateParentData[updatedData.slateVersionUrn] : newslateData[updatedData.slateVersionUrn],
         { contents: _slateContent } = _slateObject,
         { bodymatter: _slateBodyMatter } = _slateContent,
         elementId = updatedData.id;
@@ -1046,10 +1052,12 @@ export const updateStoreInCanvas = (params) => {
         elementIndex,
         showHideType,
         parentElement,
-        fetchSlateData
+        fetchSlateData,
+        isFromRC,
+        upadtedSlateData
     } = params
     //direct dispatching in store
-    const slateParentData = getState().appStore.slateLevelData;
+    const slateParentData = isFromRC ? upadtedSlateData : getState().appStore.slateLevelData;
     const newslateData = JSON.parse(JSON.stringify(slateParentData));
     // update Element in store based on AutoNumber Settings
     const autoNumberSettingsOption = getState().autoNumberReducer?.autoNumberOption
@@ -1085,7 +1093,9 @@ export const updateStoreInCanvas = (params) => {
         const argObj = {
             ...commonArgs,
             parentUrn,
-            showHideType
+            showHideType,
+            isFromRC,
+            slateParentData
         }
         updateElementInStore(argObj)
     }
