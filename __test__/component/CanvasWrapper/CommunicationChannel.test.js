@@ -7,7 +7,8 @@ import {
     communicationMockData,
     GlossaryMockState,
     SlateLockMockState,
-    AssetPopOverMockState
+    AssetPopOverMockState,
+    communicationAssessmentSlateData
 } from '../../../fixtures/slateTestingData.js';
 import tinymce from 'tinymce/tinymce';
 import config from '../../../src/config/config';
@@ -21,6 +22,7 @@ const mockStore = configureMockStore(middlewares);
 const initialState = {
     appStore: {
         slateLevelData: communicationMockData,
+        getRequiredSlateData: communicationAssessmentSlateData,
         permissions: [],
         currentSlateAncestorData: {}
     },
@@ -246,6 +248,7 @@ describe('Testing communication channel', () => {
                 }
             }
         },
+        getRequiredSlateData: communicationAssessmentSlateData,
         toggleCommentsPanel: jest.fn(),
         currentSlateLO: jest.fn(),
         currentSlateLOMath: jest.fn(),
@@ -899,6 +902,32 @@ describe('Testing communication channel', () => {
             data: {
                 type: "getLOlistResponse",
                 message: ""
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    test('Test for fetchRequiredSlateData case', () => {
+        config.page = 0;
+        let event = {
+            data: {
+                type: "fetchRequiredSlateData",
+                message: {slateManifestUrn:"test", slateEntityUrn:"test123"}
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    test('Test for closeUndoTimer case', () => {
+        config.page = 0;
+        let event = {
+            data: {
+                type: "closeUndoTimer",
+                message: {status: true}
             }
         }
         const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
@@ -1907,12 +1936,19 @@ describe('Testing communication channel', () => {
             expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
             spyhandleIncommingMessages.mockClear()
         })
-        test('Test for cancelCEPopup case - slateTagEnabled block', () => {
+        test('Test for cancelCEPopup case - slateTagEnabled block for assessment slate when message from RC', () => {
+            config.slateType = 'assessment'
+            document.getElementsByClassName = () => {
+                return [{
+                    innerText:'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
+                }]
+            }
             let event = {
                 data: {
                     type: "cancelCEPopup",
                     message: {
-                        slateTagEnabled: ''
+                        slateTagEnabled: true,
+                        assessmentSlateData : { contentUrn : "urn:pearson:entity:ae6fb0d6-d8cf-451b-a26e-76329610c4d9"}
                     }
                 }
             }
@@ -1924,38 +1960,17 @@ describe('Testing communication channel', () => {
         })
         test('Test for cancelCEPopup case - slateTagEnabled block for assessment slate', () => {
             config.slateType = 'assessment'
-            document.getElementsByClassName = () => {
-                return [{
-                    innerText:'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
-                }]
-            }
-            let event = {
-                data: {
-                    type: "cancelCEPopup",
-                    message: {
-                        slateTagEnabled: ''
-                    }
-                }
-            }
-            const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
-            channelInstance.handleIncommingMessages(event);
-            expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
-            expect(channelInstance.state.showBlocker).toBe(false)
-            spyhandleIncommingMessages.mockClear()
-        })
-        test('Test for cancelCEPopup case - slateTagEnabled block for assessment slate when no assessment Urn present on UI', () => {
-            config.slateType = 'assessment'
             config.assessmentId = "urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8"
             document.getElementsByClassName = () => {
                 return [{
-                    innerText:undefined
+                    innerText: 'urn:pearson:work:74a080f4-cb5a-4bb6-b983-3d0f70cad3d8'
                 }]
             }
             let event = {
                 data: {
                     type: "cancelCEPopup",
                     message: {
-                        slateTagEnabled: ''
+                        slateTagEnabled: true
                     }
                 }
             }
