@@ -123,10 +123,38 @@ export const clickedOnEditor = (e) => {
     return (e && e.target && ((glossaryEditor && glossaryEditor.contains(e.target)) || (glossaryEditorAttacher && glossaryEditorAttacher.contains(e.target))));
 }
 
+//Check if glossary asset popup is clicked
+export const clickedOnOpenGlossaryAssetsPopup = (e) => {
+    const openGlossaryAssetsPopup = document.getElementById("openFigureGlossary") ? document.getElementById("openFigureGlossary") : null;
+    return (e && e.target && openGlossaryAssetsPopup && openGlossaryAssetsPopup.contains(e.target));
+}
+
+//Check if primary button is clicked
+export const clickedOnPrimaryButton = (e) => {
+    const primaryButton = getPrimaryButton();
+    return (e && e.target && primaryButton && primaryButton.contains(e.target));
+}
+
+//Check if secondary button is clicked
+export const clickedOnSecondaryButton = (e) => {
+    const secondaryButton = getSecondaryButton();
+    return (e && e.target && secondaryButton && secondaryButton.contains(e.target));
+}
+
 //Handle click outside of editor
 export const handleMouseDownHelper = (e) => {
-    if (clickedOnAudioImageButtons(e) || clickedOnEditor(e)) {
+    if (clickedOnAudioImageButtons(e) || clickedOnEditor(e) || clickedOnOpenGlossaryAssetsPopup(e)) {
         blurPopupButtons();
+    } else if (clickedOnPrimaryButton(e)) {
+        const primaryButton = getPrimaryButton();
+        const secondaryButton = getSecondaryButton();
+        blurElement(secondaryButton, SECONDARY);
+        focusElement(primaryButton, PRIMARY);
+    } else if (clickedOnSecondaryButton(e)) {
+        const primaryButton = getPrimaryButton();
+        const secondaryButton = getSecondaryButton();
+        blurElement(primaryButton, PRIMARY);
+        focusElement(secondaryButton, SECONDARY);
     } else {
         focusPopupButtons();
     }
