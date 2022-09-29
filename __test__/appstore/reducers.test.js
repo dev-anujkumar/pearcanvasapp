@@ -50,7 +50,10 @@ import {
     DELETE_ELEMENT_KEYS,
     SET_JOINED_PDF_STATUS,
     SET_SLATE_MATTER_TYPE,
-    UPDATE_CARET_OFFSET
+    UPDATE_CARET_OFFSET,
+    SET_REQUIRED_SLATE_DATA,
+    CYPRESS_PLUS_ENABLED,
+    CHECK_ASIDE_NUMBER
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -87,7 +90,9 @@ const initialState = {
         smartlinks: ["No Label", "Custom"],
         video: ["No Label", "Custom"]
     },
-    tableElementAssetData: []
+    tableElementAssetData: [],
+    isCypressPlusEnabled: false,
+    asideTitleData:[{elementId:'test'}]
 };
 
 const splittedElementIndexValue = "5";
@@ -809,6 +814,26 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         expect(reducer(initialState, {
             type: UPDATE_CARET_OFFSET,
             payload: ""
+        })).toEqual(output);
+    });
+    it('case 54- SET_REQUIRED_SLATE_DATA ', () => {
+        let output = {
+            ...initialState,
+            getRequiredSlateData: {}
+        }
+        expect(reducer(initialState, {
+            type: SET_REQUIRED_SLATE_DATA,
+            payload: {}
+        })).toEqual(output);
+    });
+    it('case 55- CYPRESS_PLUS_ENABLED ', () => {
+        let output = {
+            ...initialState,
+            isCypressPlusEnabled: true
+        }
+        expect(reducer(initialState, {
+            type: CYPRESS_PLUS_ENABLED,
+            payload: {isCypressPlusEnabled : true}
         })).toEqual(output);
     });
 });

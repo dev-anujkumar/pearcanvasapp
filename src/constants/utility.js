@@ -15,9 +15,9 @@ export const CHECKBOX_MESSAGE = "Don't ask me again";
 const WRAPPER_URL = config.WRAPPER_URL; // TO BE IMPORTED
 
 export const MATCH_HTML_TAGS = ['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>', '</p>', '</ul>', '</ol>', '</li>']
-export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>']
-export const NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<img']
+export const ALLOWED_FORMATTING_TOOLBAR_TAGS = ['<strong>', '<code>', '<s>', '<u>', '<sub>', '<sup>', '<em>', '</strong>', '</code>', '</s>', '</u>', '</sub>', '</sup>', '</em>', '<i>','<img']
 export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="heading1NummerEins"', 'class="heading2NummerEins"', 'class="heading3NummerEins"', 'class="heading4NummerEins"', 'class="heading5NummerEins"', 'class="heading6NummerEins"', 'class="paragraphNumeroUno"','class="pullQuoteNumeroUno"', 'class="heading2learningObjectiveItem"', 'class="listItemNumeroUnoUpperAlpha"',  'class="upper-alpha"','class="lower-alpha"', 'class= "listItemNumeroUnoLowerAlpha"', 'class="listItemNumeroUnoUpperRoman"','class="lower-roman"', 'class="upper-roman"', 'class="listItemNumeroUnoLowerRoman"', 'handwritingstyle']
+export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext','element-learningobjectives','element-blockfeature','element-list']
 export const AUTO_NUMBER_PLACEHOLDER = ["Label Name", "Label", "Number"]
 export const PLACEHOLDER_ARRAY = ["Attribution Text", "Code Block Content"]
 
@@ -883,12 +883,19 @@ export const handleTextToRetainFormatting = (pastedContent, testElement, props) 
         }
     }
     
-    if (NOT_ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
-        let tempContent = testElement.innerText.replace(/&/g, "&amp;");
-        pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    } else if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
-        pastedContent = updatedText;
-    } 
+    if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
+        if (ALLOWED_ELEMENT_IMG_PASTE.includes(props?.element?.type) && updatedText.match('<img ')) {
+            if (updatedText.match('class="Wirisformula')) {
+                pastedContent = handleWirisImgPaste(updatedText)
+            } else if(props?.element?.type === 'element-blockfeature' && props.placeholder === "Attribution Text") {
+                   pastedContent = handleImagePaste(updatedText) 
+            } else {
+                pastedContent = updatedText;
+            }
+        } else {
+            pastedContent = handleImagePaste(updatedText)
+        }
+    }
     else {
         let tempContent = testElement.innerText.replace(/&/g, "&amp;");
         pastedContent = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -901,4 +908,23 @@ export const handleTinymceEditorPlugins = (plugins) => {
     let editorPlugins = plugins;
     if (config.ENABLE_WIRIS_PLUGIN) editorPlugins = `${editorPlugins} tiny_mce_wiris`;
     return editorPlugins;
+}
+/**
+ * This function is used to restricts Pasting of Wiris Images 
+ * @param {*} updatedText 
+ * @returns 
+ */
+export const handleWirisImgPaste = (updatedText) => {
+    let updatePasteContent = updatedText.replace(/<img align="middle" class="Wirisformula"([\w\W]+?)>/g,'')
+    return updatePasteContent;
+}
+/**
+ * This function is used to restricts pasting of images inside title,caption,credit etc..
+ * fields of figure (or other) elements
+ * @param {*} updatedText 
+ * @returns 
+ */
+export const handleImagePaste = (updatedText) => {
+   let updatePasteContent = updatedText.replace(/<img ([\w\W]+?)>/g,'');
+   return updatePasteContent;
 }

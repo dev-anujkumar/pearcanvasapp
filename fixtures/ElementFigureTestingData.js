@@ -2914,3 +2914,9 @@ export const blockmathWithData = {
 	"versionUrn": "urn:pearson:work:73a15b98-d284-40e5-93c4-39a96c24a656",
 	"contentUrn": "urn:pearson:entity:f3312b7e-7888-4bdd-8d1d-50fa431d0048"
 }
+
+export const textRetainObject =  {
+    element: {
+        type : "element-authoredtext"
+    }
+}

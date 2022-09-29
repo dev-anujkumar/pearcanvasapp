@@ -7,6 +7,7 @@ import { showAudioRemovePopup } from '../../component/AudioNarration/AudioNarrat
 import { hasReviewerRole } from '../../constants/utility.js'
 import '../../styles/AudioNarration/AudioNarration.css';
 import {showRemoveImageGlossaryPopup} from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js'
+import { blurPopupButtons } from '../GlossaryFootnotePopup/GlossaryFootnotePopup_Helpers.js';
 /**
 * @description - OpenFigureGlossary is a class based component. It is defined simply for opening the already figure glossary popup.
 */
@@ -45,6 +46,7 @@ class OpenGlossaryAssets extends Component {
 
     componentDidMount() {
         document.addEventListener('mousedown', this.handleClickOutside);
+        blurPopupButtons();
         let {  figureGlossaryData, audioGlossaryData } = this.props;
         
         if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) {

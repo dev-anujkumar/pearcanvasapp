@@ -2714,7 +2714,7 @@ class ElementContainer extends Component {
     handleEditInCypressPlus = (e,elementId) =>{
         e.stopPropagation();
         const urlCypressPlus=`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`
-        const cypressPlusWindow = window.open(urlCypressPlus ,'_blank')
+        const cypressPlusWindow = window.open(urlCypressPlus ,'_parent')
         config.CYPRESS_PLUS_WINDOW= cypressPlusWindow
        const obj ={type:INCOMING_MESSAGE,message:REFRESH_MESSAGE}
      setTimeout(()=>{
