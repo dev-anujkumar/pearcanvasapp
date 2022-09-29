@@ -141,9 +141,15 @@ export const clickedOnSecondaryButton = (e) => {
     return (e && e.target && secondaryButton && secondaryButton.contains(e.target));
 }
 
+//Check if toolbar button is clicked
+export const clickedOnToolbarButton = (e) => {
+    const glossaryFootnoteToolbar = document.getElementById("toolbarGlossaryFootnote") ? document.getElementById("toolbarGlossaryFootnote") : null;
+    return (e && e.target && glossaryFootnoteToolbar && glossaryFootnoteToolbar.contains(e.target));
+}
+
 //Handle click outside of editor
 export const handleMouseDownHelper = (e) => {
-    if (clickedOnAudioImageButtons(e) || clickedOnEditor(e) || clickedOnOpenGlossaryAssetsPopup(e)) {
+    if (clickedOnAudioImageButtons(e) || clickedOnEditor(e) || clickedOnOpenGlossaryAssetsPopup(e) || clickedOnToolbarButton(e)) {
         blurPopupButtons();
     } else if (clickedOnPrimaryButton(e)) {
         const primaryButton = getPrimaryButton();
