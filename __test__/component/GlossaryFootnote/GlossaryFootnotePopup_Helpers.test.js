@@ -516,6 +516,74 @@ describe("Testing Glossary Footnote Popup Helpers", () => {
                 spyhandleMouseDownHelper.mockClear()
             })
         })
+        describe("Testing ELSE IF Conditions", () => {
+            it("Testing clickedOnPrimaryButton - primaryButton.contains(e.target) is true", () => {
+                document.getElementById = (value) => {
+                    if (value === "glossary-save-button") {
+                        return {
+                            contains: () => true,
+                            tabIndex: "0",
+                            classList: {
+                                contains: () => false,
+                                add: () => jest.fn(),
+                                remove: () => jest.fn()
+                            },
+                            blur: () => jest.fn(),
+                            focus: () => jest.fn()
+                        }
+                    } else {
+                        return {
+                            contains: () => false,
+                            tabIndex: "0",
+                            classList: {
+                                contains: () => false,
+                                add: () => jest.fn(),
+                                remove: () => jest.fn()
+                            },
+                            blur: () => jest.fn(),
+                            focus: () => jest.fn()
+                        }
+                    }
+                }
+                const spyhandleMouseDownHelper = jest.spyOn(glossaryFootnotePopupHelpers, 'handleMouseDownHelper')
+                glossaryFootnotePopupHelpers.handleMouseDownHelper(event)
+                expect(spyhandleMouseDownHelper).toHaveBeenCalled()
+                spyhandleMouseDownHelper.mockClear()
+            })
+            it("Testing clickedOnSecondaryButton - secondaryButton.contains(e.target) is true", () => {
+                document.getElementById = (value) => {
+                    if (value === "glossary-cancel-button") {
+                        return {
+                            contains: () => true,
+                            tabIndex: "0",
+                            classList: {
+                                contains: () => false,
+                                add: () => jest.fn(),
+                                remove: () => jest.fn()
+                            },
+                            blur: () => jest.fn(),
+                            focus: () => jest.fn()
+                        }
+                    } else {
+                        return {
+                            contains: () => false,
+                            tabIndex: "0",
+                            classList: {
+                                contains: () => false,
+                                add: () => jest.fn(),
+                                remove: () => jest.fn()
+                            },
+                            blur: () => jest.fn(),
+                            focus: () => jest.fn()
+                        }
+                    }
+                }
+                const spyhandleMouseDownHelper = jest.spyOn(glossaryFootnotePopupHelpers, 'handleMouseDownHelper')
+                glossaryFootnotePopupHelpers.handleMouseDownHelper(event)
+                expect(spyhandleMouseDownHelper).toHaveBeenCalled()
+                spyhandleMouseDownHelper.mockClear()
+            })
+        })
         describe("Testing ELSE Condition", () => {
             it("Testing focusPopupButtons", () => {
                 document.getElementById = () => {
