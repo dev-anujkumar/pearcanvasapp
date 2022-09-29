@@ -489,7 +489,7 @@ function CommunicationChannel(WrappedComponent) {
                     'currentSlateId': slateManifestURN,
                     'chapterContainerUrn': '',
                     'currentSlateLF': currentSlateLF,
-                    'assessmentUrn': message.assessmentUrn ?? config.assessmentId,
+                    'assessmentUrn': message.assessmentUrn  ? message.assessmentUrn : assessmentuRN,
                     'previewData': previewData,
                     'defaultLF': defaultLF,
                     'loSpa_Source': message.loSpa_Source
