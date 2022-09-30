@@ -147,9 +147,15 @@ export const clickedOnToolbarButton = (e) => {
     return (e && e.target && glossaryFootnoteToolbar && glossaryFootnoteToolbar.contains(e.target));
 }
 
+//Check if wiris popup is clicked
+export const clickedOnWirisPopup = (e) => {
+    const wirisPopup = document.querySelector(".wrs_modal_dialogContainer") ? document.querySelector(".wrs_modal_dialogContainer") : null;
+    return (e && e.target && wirisPopup && wirisPopup.contains(e.target));
+}
+
 //Handle click outside of editor
 export const handleMouseDownHelper = (e) => {
-    if (clickedOnAudioImageButtons(e) || clickedOnEditor(e) || clickedOnOpenGlossaryAssetsPopup(e) || clickedOnToolbarButton(e)) {
+    if (clickedOnAudioImageButtons(e) || clickedOnEditor(e) || clickedOnOpenGlossaryAssetsPopup(e) || clickedOnToolbarButton(e) || clickedOnWirisPopup(e)) {
         blurPopupButtons();
     } else if (clickedOnPrimaryButton(e)) {
         const primaryButton = getPrimaryButton();
