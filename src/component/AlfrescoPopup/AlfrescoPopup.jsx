@@ -47,10 +47,10 @@ function AlfrescoPopup(props) {
     const [selectedOption, setOption] = React.useState('');
     const [projectMetadata, setMetaData] = React.useState()
     const classes = useStyles();
-    const focusedButton = useRef(SECONDARY_BUTTON);
-    const primaryButton = useRef(null);
-    const secondaryButton = useRef(null);
-    const menuRef = useRef(null);
+    const focusedButton = React.useRef(SECONDARY_BUTTON);
+    const primaryButton = React.useRef(null);
+    const secondaryButton = React.useRef(null);
+    const menuRef = React.useRef(null);
 
     useEffect(() => {
         /** Add Event Listner on Popup Buttons */
