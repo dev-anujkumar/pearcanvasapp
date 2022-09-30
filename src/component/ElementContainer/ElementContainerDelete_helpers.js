@@ -147,7 +147,7 @@ export const deleteFromStore = async (params) => {
     const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
     let bodymatter = [];
     const indexes = asideData?.index?.toString()?.split("-") || [];
-    const elIndex = index.toString().split('-');
+    const elIndex = index?.toString()?.split('-') || [];
     /* To check if the element is cutted from popup slate */
     if ((cutCopyParentData?.isPopupSlate && operationType === 'cut') && popupParentSlateData?.isPopupSlate && (cutCopyParentData?.versionUrn === popupParentSlateData?.versionUrn)) {    // popup slate cut & paste on same slate
         const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
