@@ -123,7 +123,7 @@ describe('Test- editor functions', () => {
     it('Test pastePreProcess - else case', () => {
         tinymce.activeEditor = {
             innerHTML: '',
-            innerText: "hello",
+            innerText: "",
             textContent: "",
             outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
             selection: {
@@ -141,9 +141,62 @@ describe('Test- editor functions', () => {
             content: "",
             type: "pastepreprocess"
         }
-        const spypastePreProcess = jest.spyOn(instance, 'pastePostProcess')
-        instance.pastePostProcess({}, args);
+        const spypastePreProcess = jest.spyOn(instance, 'pastePreProcess')
+        instance.pastePreProcess({}, args);
         expect(spypastePreProcess).toHaveBeenCalled()
+    });
+    it('Test pastePostProcess - if case', () => {
+        tinymce.activeEditor = {
+            innerHTML: '<p class="paragraphNumeroUno">hello</p>',
+            innerText: "hello",
+            textContent: "hello",
+            outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
+            selection: {
+                getStart: () => {
+                    return tinymce.activeEditor.innerHTML;
+                },
+                getContent: () => {
+                    return '<p class="paragraphNumeroUno">hello</p>'
+                }
+            },
+            children: ['p.paragraphNumeroUno'],
+            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", "show-cross-ref-label"]
+        }
+        let args = {
+            node: {
+                innerHTML: '<p class="paragraphNumeroUno">hello</p>',
+            },
+            content: "hello",
+            type: "pastePostProcess "
+        }
+        const spypastePostProcess = jest.spyOn(instance, 'pastePostProcess')
+        instance.pastePostProcess({}, args);
+        expect(spypastePostProcess).toHaveBeenCalled()
+    });
+    it('Test pastePostProcess - else case', () => {
+        tinymce.activeEditor = {
+            innerHTML: '',
+            innerText: "",
+            textContent: "",
+            outerHTML: '<div id="cypress-0" class="cypress-editable mce-content-body mce-edit-focus" placeholder="Type Something..." contenteditable="true" style="caret-color: black;" spellcheck="false"><p class="paragraphNumeroUno">hello</p></div>',
+            selection: {
+                getStart: () => {
+                    return tinymce.activeEditor.innerHTML;
+                },
+                getContent: () => {
+                    return 'test'
+                }
+            },
+            children: ['p.paragraphNumeroUno'],
+            classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", "show-cross-ref-label"]
+        }
+        let args = {
+            content: "",
+            type: "pastePostProcess"
+        }
+        const spypastePostProcess = jest.spyOn(instance, 'pastePostProcess')
+        instance.pastePostProcess({}, args);
+        expect(spypastePostProcess).toHaveBeenCalled()
     });
     it('Test addInlineCode-default case ', () => {
         window.getSelection().anchorNode.parentNode.innerHTML = "Hello"
@@ -458,7 +511,7 @@ describe('Test- editor functions', () => {
     it("editorOnKeyup method", () => {
         let event = {
             target : {
-                innerHTML: '<img class="Wirisformula"></img>',
+                innerHTML: '<img class="temp_Wirisformula"></img>',
             },
             preventDefault: () => { },
             stopPropagation: () => { }
@@ -467,7 +520,7 @@ describe('Test- editor functions', () => {
             dom : {
                 getParent : function (){
                     return {
-                        innerHTML: '<img class="Wirisformula"></img>',
+                        innerHTML: '<img class="temp_Wirisformula"></img>',
                         children: [
                             {
                                 tagName: 'BR'
@@ -549,11 +602,11 @@ describe('Test- editor functions', () => {
         instance.editorOnKeyDown(event, editor);
         expect(spyeditorOnKeyup).toHaveBeenCalled()
     })
-    it("editorOnChange method", () => {
+    it("editorOnChange method : true", () => {
         let event = {
             target : {
-                innerHTML: '<img class="Wirisformula"></img>',
-                getContent : () => { return '<img class="Wirisformula"></img>' }
+                innerHTML: '<img class="temp_Wirisformula"></img>',
+                getContent : () => { return '<img class="temp_Wirisformula"></img>' }
             },
             preventDefault: () => { },
             stopPropagation: () => { }
@@ -562,7 +615,43 @@ describe('Test- editor functions', () => {
             dom : {
                 getParent : function (){
                     return {
-                        innerHTML: '<img class="Wirisformula"></img>',
+                        innerHTML: '<img class="temp_Wirisformula"></img>',
+                        children: [
+                            {
+                                tagName: 'BR'
+                            }
+                        ],
+                        innerText: "hello",
+                        querySelectorAll: jest.fn(),
+                        classList: {
+                            remove: jest.fn()
+                        }
+                    }
+                },
+
+            },
+            selection : {
+                getStart : function () { return event.target.innerHTML }
+            }
+        }
+        const spyeditorOnChange = jest.spyOn(instance, 'editorOnChange')
+        instance.editorOnChange(event, editor);
+        expect(spyeditorOnChange).toHaveBeenCalled()
+    })
+    it("editorOnChange method : false", () => {
+        let event = {
+            target : {
+                innerHTML: '<img class="temp_Wirisformula"></img>',
+                getContent : () => { return '<math class="temp_Wirisformula"></math>' }
+            },
+            preventDefault: () => { },
+            stopPropagation: () => { }
+        }
+        let editor = {
+            dom : {
+                getParent : function (){
+                    return {
+                        innerHTML: '<img class="temp_Wirisformula"></img>',
                         children: [
                             {
                                 tagName: 'BR'
@@ -590,7 +679,7 @@ describe('Test-Function-handlePlaceholer-------->', () => {
     let nextProps = {
         className: "markedindex-editor place-holder",
         glossaaryFootnotePopup: undefined,
-        markIndexCurrentValue: '<p>T<img class="Wirisformula"></img></p>',
+        markIndexCurrentValue: '<p>T<img class="temp_Wirisformula"></img></p>',
         id: "markedindex-0",
         placeholder: "Type Something",
         permissions: ["login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects", "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar", "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying", "note_search_comment", "note_viewer", "lo_edit_metadata"]
