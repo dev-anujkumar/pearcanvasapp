@@ -476,28 +476,28 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         simpleDiv.innerHTML = '<h1 class="heading1NummerEins"><em>Why</em> we use it?</h1> <p>do</p>';
         let htmlData = '<h1 class="heading1NummerEins"><em>Why</em> we use it?</h1> <p>do</p>'
         let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
-        expect(result).toBe('<em>Why</em> we use it? do');
+        expect(result).toBe(' <em>Why</em> we use it? do');
     })
     it('Case 3 handleUnwantedFormattingTags', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>';
         let htmlData = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>'
         let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
-        expect(result).toBe('<em>Why</em> we use it? do  h  h3 h4 h5 h6  li ul ol');
+        expect(result).toBe(' <em>Why</em> we use it? do  h  h3 h4 h5 h6  li ul ol ');
     })
     it('Case 4 handleUnwantedFormattingTags else', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '<ol><em>we</em> use it hey</ol>';
         let htmlData = '<ol>we use it hey</ol>'
         let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
-        expect(result).toBe('<em>we</em> use it hey');
+        expect(result).toBe('<em>we</em> use it hey ');
     })
     it('Case 5', () => {
         let simpleDiv = document.createElement('div');
         simpleDiv.innerHTML = '<h1 class="heading1NummerEins"><em>Why</em> <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello</h1> <p>do</p>';
         let htmlData = '<h1 class="heading1NummerEins"><em>Why</em> <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello</h1> <p>do</p>'
         let result = handleTextToRetainFormatting(htmlData, simpleDiv, textRetainObject);
-        expect(result).toBe('<em>Why</em> <strong>we</strong> <em>use</em> <s>it</s> hello do');
+        expect(result).toBe(' <em>Why</em> <strong>we</strong> <em>use</em> <s>it</s> hello do');
     })
     it('Case 6 ', () => {
         let simpleDiv = document.createElement('div');
@@ -557,7 +557,7 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         simpleDiv.innerHTML = '<em>Why</em><img align="middle" class="Wirisformula" > <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello <p>do</p>';
         let htmlData = '<em>Why</em> <b>we</b> <i>use</i><img align="middle" class="Wirisformula" ><strike>it</strike> <span id="specialChar"></span>hello <p>do</p>'
         let result = handleTextToRetainFormatting(htmlData, simpleDiv,props);
-        expect(result).toBe('<em>Why</em>we</strong> <em>use</em> <s>it</s> hello do');
+        expect(result).toBe('<em>Why</em>we</strong> <em>use</em> <s>it</s> hello do ');
     })
     it('Case 12: Pasting inline img', () => {
         let props = {
@@ -569,7 +569,7 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         simpleDiv.innerHTML = '<em>Why</em><img align="middle" class="imageAssetContent" > <b>we</b> <i>use</i> <strike>it</strike> <span id="specialChar"></span>hello <p>do</p>';
         let htmlData = '<em>Why</em> <b>we</b> <i>use</i><img align="middle" class="imageAssetContent" ><strike>it</strike> <span id="specialChar"></span>hello <p>do</p>'
         let result = handleTextToRetainFormatting(htmlData, simpleDiv,props);
-        expect(result).toBe('<em>Why</em><img align=\"middle\" class=\"imageAssetContent\"> <strong>we</strong> <em>use</em> <s>it</s> hello do');
+        expect(result).toBe('<em>Why</em><img align=\"middle\" class=\"imageAssetContent\"> <strong>we</strong> <em>use</em> <s>it</s> hello do ');
     })
     it('Case 12: Pasting inline img for blockfeature element', () => {
         let props = {
@@ -596,7 +596,7 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         simpleDiv.innerHTML = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>';
         let htmlData = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>'
         let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
-        expect(result).toBe('<em>Why</em> we use it? do  h  h3 h4 h5 h6  li ul ol');
+        expect(result).toBe(' <em>Why</em> we use it? do  h  h3 h4 h5 h6  li ul ol ');
     })
     it('Case 12.2 else if handleTextToRetainFormatting', () => {
         const object = {
@@ -609,7 +609,7 @@ describe('Testing Function - handleTextToRetainFormatting', () => {
         simpleDiv.innerHTML = '<h1><em>Why</em> <u><strong>we</strong></u> <s>use</s> it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>';
         let htmlData = '<h1><em>Why</em> we use it?</h1> <p>do</p> <h2>h</h2> <h3>h3</h3><h4>h4</h4><h5>h5</h5><h6>h6</h6> <li>li</li><ul>ul</ul><ol>ol</ol>'
         let result = handleTextToRetainFormatting(htmlData, simpleDiv, object);
-        expect(result).toBe('<em>Why</em> we use it? do  h  h3 h4 h5 h6  li ul ol');
+        expect(result).toBe(' <em>Why</em> we use it? do  h  h3 h4 h5 h6  li ul ol ');
     })
     it('Case 12.3 else if element-learningobjectives handleTextToRetainFormatting', () => {
         const object = {
