@@ -222,7 +222,7 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.isLOExist(messageData);
                         if (config.parentEntityUrn !== ("Front Matter" || "Back Matter")) {
                             let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ?? config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
+                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ? assessmentUrn : config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
                             if(dataToSend?.elementdata){
                                 dataToSend.inputType = ELEMENT_ASSESSMENT
                                 dataToSend.inputSubType = "NA"
