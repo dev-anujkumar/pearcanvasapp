@@ -5,9 +5,29 @@ import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import AlfrescoPopup from "../../../src/component/AlfrescoPopup/AlfrescoPopup.jsx";
 import Select from '@material-ui/core/Select';
+import { act } from "react-dom/test-utils";
 
 //Constants
 const PRIMARY_BUTTON = "primary";
+const SECONDARY_BUTTON = "secondary";
+
+React.useRef = (value) => {
+    if (value === null) {
+        return {
+            current: {
+                classList: {
+                    contains: () => false,
+                    add: () => jest.fn(),
+                    remove: () => jest.fn(),
+                }
+            }
+        };
+    } else {
+        return {
+            current: SECONDARY_BUTTON
+        };
+    }
+}
 
 jest.mock('../../../src/constants/utility.js', () => {
     return {
@@ -74,7 +94,6 @@ describe('Testing AlfrescoPopup component', () => {
         handleCloseAlfrescoPicker: jest.fn(),
         alfrescoPopup: jest.fn(),
         saveSelectedAlfrescoElement: jest.fn(),
-        alfrescoPath:{}
     }
 
     it('AlfrescoPopup Container', () => {
@@ -84,7 +103,27 @@ describe('Testing AlfrescoPopup component', () => {
     
     describe("Testing handleKeyDown() Method", () => {
         it("Testing handleKeyDown() for keyCode=39 ", () => {
+            React.useRef = (value) => {
+                if (value === null) {
+                    return {
+                        current: {
+                            classList: {
+                                contains: () => false,
+                                add: () => jest.fn(),
+                                remove: () => jest.fn(),
+                            }
+                        }
+                    };
+                } else {
+                    return {
+                        current: SECONDARY_BUTTON
+                    };
+                }
+            }
             const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);
+            act(() => {
+                wrapper.find(Select).at(0).props().onChange({ target: { value: 'c5-media-poc' } });
+            })
             const cancelButton = wrapper.find("button.secondary");
             expect(cancelButton.hasClass('secondary'));
             let event = new KeyboardEvent('keydown', {keyCode: 39});
@@ -92,17 +131,28 @@ describe('Testing AlfrescoPopup component', () => {
         });
 
         it("Testing handleKeyDown() for keyCode=37 ", () => {
+            React.useRef = () => {
+                return {
+                    current: PRIMARY_BUTTON
+                };
+            }
             const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);
+            act(() => {
+                wrapper.find(Select).at(0).props().onChange({ target: { value: 'c5-media-poc' } });
+            })
             const cancelButton = wrapper.find("button.secondary");
             expect(cancelButton.hasClass('secondary'));
-            let event = new KeyboardEvent('keydown', {keyCode: 39});
-            document.dispatchEvent(event);
-            event = new KeyboardEvent('keydown', {keyCode: 37});
+            let event = new KeyboardEvent('keydown', {keyCode: 37});
             document.dispatchEvent(event);
             expect(wrapper.find("button.secondary").hasClass('secondary'));
         });
 
         it("Testing handleKeyDown() for keyCode=13 ", () => {
+            React.useRef = () => {
+                return {
+                    current: null
+                };
+            }
             const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);
             const spy = jest.spyOn(document, 'dispatchEvent');
             let event = new KeyboardEvent('keydown', {keyCode: 13});
@@ -127,7 +177,9 @@ describe('Testing AlfrescoPopup component', () => {
         it('AlfrescoPopup handleChange',() => {
             const handleChange = jest.fn()
             const wrapper = mount(<Provider store={store}><AlfrescoPopup {...props} /></Provider>);
-            wrapper.find(Select).at(0).props().onChange({ target: { value: 'c5-media-poc' } });
+            act(() => {
+                wrapper.find(Select).at(0).props().onChange({ target: { value: 'c5-media-poc' } });
+            })
             expect(handleChange).toBeTruthy();
         })
     });

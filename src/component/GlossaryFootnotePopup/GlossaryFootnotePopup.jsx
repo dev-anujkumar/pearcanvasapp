@@ -15,7 +15,6 @@ import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import FigureTinyMceGlossary from '../ElementFigure/FigureTinyMceGlosaary.jsx'
 import AddImageGlossary from '../ElementFigure/AddImageGlossary.jsx';
 import { markedIndex } from '../../images/TinyMce/TinyMce.jsx';
-import { handleMouseDownHelper, handleKeyDownHelper } from "./GlossaryFootnotePopup_Helpers.js";
 
 class GlossaryFootnotePopup extends Component {
     constructor() {
@@ -24,19 +23,7 @@ class GlossaryFootnotePopup extends Component {
             audioToggle:false,
             figureToggle:false
         }
-    }
 
-    componentDidMount() {
-        document.addEventListener('mousedown', this.handleMouseDown);
-        document.addEventListener('keydown', this.handleKeyDown);
-    }
-
-    handleMouseDown = (e) => {
-        handleMouseDownHelper(e);
-    }
-
-    handleKeyDown = (e) => {
-        handleKeyDownHelper(e);
     }
 
     handleAudioToggle =() =>{
@@ -139,8 +126,8 @@ class GlossaryFootnotePopup extends Component {
                         </div>
                     </div>
                     <div className="glossary-definition-buttons">
-                        <span id="glossary-cancel-button" className="glossary-cancel-button" onClick={closePopup}>Cancel</span>
-                        <span id="glossary-save-button" className="glossary-save-button" disabled={hasReviewerRole('elements_add_remove')} onClick={saveContent}>Save</span>
+                        <span className="glossary-cancel-button" onClick={closePopup}>Cancel</span>
+                        <span className="glossary-save-button" disabled={hasReviewerRole('elements_add_remove')} onClick={saveContent}>Save</span>
                     </div>
                 </div>
             </div>
@@ -148,8 +135,7 @@ class GlossaryFootnotePopup extends Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener('mousedown', this.handleMouseDown);
-        document.removeEventListener('keydown', this.handleKeyDown);
+        
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
             if (ed_id.includes('glossary') || ed_id.includes('footnote')) {
