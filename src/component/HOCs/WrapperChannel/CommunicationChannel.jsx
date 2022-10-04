@@ -434,9 +434,6 @@ function CommunicationChannel(WrappedComponent) {
             This Function is used to get AssessmentData For Aligned Willow Framework
          */
         getAssessmentForWillowAlignment = (message) => {
-            console.log("getAssessmentForWillowAlignment",message)
-            console.log("this.props",this.props)
-
             const {currentSlateLOData, projectLearningFrameworks, currentSlateLF, defaultLF } = this.props
             let slateManifestURN = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             let apiKeys_LO = {
