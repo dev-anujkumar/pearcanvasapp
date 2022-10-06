@@ -160,9 +160,10 @@ export function ElementSaprator(props) {
         const { parentUrn, asideData } = props
         const inContainer = [POETRY, CITATION_GROUP_ELEMENT, SHOW_HIDE ]
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
+        const parentContainer = ["groupedcontent", "showhide"]
         const hasPasteFromWordPermission = hasProjectPermission("paste_from_word");
         let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
-        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && asideData?.parent?.type ==="groupedcontent")) {
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type))) {
             return null;
         }
 
