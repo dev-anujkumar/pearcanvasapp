@@ -185,7 +185,11 @@ class ElementDialogue extends React.PureComponent {
                 psElementIndex: index,
                 oldPSData: element
             }, () => {
+            const deletedElm = document.querySelector(`[data-id="${element.id}-${index}"]`);
+            console.log("deletedElm",deletedElm)
+                setTimeout(() => {
                 this.deleteElement();
+            }, 5000)
             });
         } else {
             this.setState({
