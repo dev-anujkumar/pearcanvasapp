@@ -94,6 +94,7 @@ class ElementDialogue extends React.PureComponent {
                     <Fragment key={element.id}>
                         <div className={"editor"}
                             data-id={element.id}
+                            subElementID={_props.elementId+'-'+index}
                             onMouseOver={_props.handleOnMouseOver}
                             onMouseOut={_props.handleOnMouseOut}
                             onClickCapture={(e) => _props.onClickCapture(e)}
@@ -140,7 +141,7 @@ class ElementDialogue extends React.PureComponent {
                             permissions={_props.permissions}
                             onClickCapture={_props.onClickCapture}
                             userRole={_props.userRole}
-                            dataId={_props.elementId+'-'+index}
+                            sepratorID={_props.elementId+'-'+index}
                         />
                     </Fragment>
                 )
@@ -178,17 +179,22 @@ class ElementDialogue extends React.PureComponent {
     // function to be called on click of dialogue inner elements delete button 
     handleDialogueInnerElementsDelete = (e, index, element) => {
         e.stopPropagation();
-        this.showCanvasBlocker();
+        // this.showCanvasBlocker();
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
         if (disableDeleteWarnings) {
+            let deletedElmID = element.id + "-" + index
+            const deletedElm = document.querySelector(`[subElementID="${deletedElmID}"]`);
+            deletedElm?.classList?.add("hideElement");
+            const sapratorElm = document.querySelector(`[sepratorID="${deletedElmID}"]`);
+            sapratorElm?.classList?.add("hideElement");
             this.setState({
                 psElementIndex: index,
                 oldPSData: element
             }, () => {
-            const deletedElm = document.querySelector(`[data-id="${element.id}-${index}"]`);
-            console.log("deletedElm",deletedElm)
                 setTimeout(() => {
                 this.deleteElement();
+                deletedElm?.classList?.remove("hideElement");
+                sapratorElm?.classList?.remove("hideElement");
             }, 5000)
             });
         } else {

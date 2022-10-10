@@ -10,3 +10,7 @@
 .play-script .cypress-editable.place-holder::before{
     margin-top : 0px !important;
 }
+
+.hideElement {
+    display: none !important;
+}
