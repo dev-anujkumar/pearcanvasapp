@@ -140,6 +140,7 @@ class ElementDialogue extends React.PureComponent {
                             permissions={_props.permissions}
                             onClickCapture={_props.onClickCapture}
                             userRole={_props.userRole}
+                            dataId={_props.elementId+'-'+index}
                         />
                     </Fragment>
                 )
