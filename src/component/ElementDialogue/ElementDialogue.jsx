@@ -4,6 +4,7 @@ import TinyMceEditor from "../tinyMceEditor";
 import DialogueContent from './DialogueContent.jsx';
 import DialogueSeprator from './DialogueSeprator.jsx';
 import "../../styles/ElementDialogue/DialogueStyles.css"
+import './../../styles/ElementContainer/ElementContainer.css';
 import { connect } from 'react-redux';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
@@ -24,8 +25,10 @@ class ElementDialogue extends React.PureComponent {
             selectedInnerElementIndex: null,
             popup: false,
             psElementIndex: null,
-            oldPSData: {}
+            oldPSData: {},
+            showUndoOption : false,
         }
+        this.wrapperRef = React.createRef();
     }
 
     componentDidMount() {
@@ -91,6 +94,7 @@ class ElementDialogue extends React.PureComponent {
             return dialogueContent.map((element, index) => {
                 let labelText = (element.type === 'lines') ? 'DE' : 'SD';
                 return (
+                    <>
                     <Fragment key={element.id}>
                         <div className={"editor"}
                             data-id={element.id}
@@ -144,6 +148,14 @@ class ElementDialogue extends React.PureComponent {
                             sepratorID={_props.elementId+'-'+index}
                         />
                     </Fragment>
+                    {
+                        this.state.showUndoOption && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
+                        <p>{labelText} has been deleted. </p>
+                        <p className='undo-button'> Undo </p>
+                        <Button type='toast-close-icon' />
+                        </div>
+                    }
+                    </>
                 )
             })
         }
@@ -189,10 +201,12 @@ class ElementDialogue extends React.PureComponent {
             sapratorElm?.classList?.add("hideElement");
             this.setState({
                 psElementIndex: index,
-                oldPSData: element
+                oldPSData: element,
+                showUndoOption: true
             }, () => {
                 setTimeout(() => {
                 this.deleteElement();
+                this.setState({showUndoOption: false})
                 deletedElm?.classList?.remove("hideElement");
                 sapratorElm?.classList?.remove("hideElement");
             }, 5000)
