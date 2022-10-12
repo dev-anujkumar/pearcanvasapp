@@ -27,6 +27,7 @@ class ElementDialogue extends React.PureComponent {
             psElementIndex: null,
             oldPSData: {},
             showUndoOption : false,
+            showActionUndone : false,
         }
         this.wrapperRef = React.createRef();
     }
@@ -36,6 +37,48 @@ class ElementDialogue extends React.PureComponent {
             const elementdata = this.props.element.elementdata;
             this.props.setBCEMetadata(elementdata.numberedlines);
             this.props.setBCEMetadata(elementdata.startNumber);
+        }
+        document.addEventListener("mousedown", this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("mousedown", this.handleClickOutside);
+    }
+
+    handleClickOutside = (event) => {
+        if (this.state.showUndoOption) {
+            if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+                this.handleToastCancel()
+            }
+        }
+    }
+
+    handleUndoOption = () => {
+        // undo action
+        this.enableStoppedEvents()
+        this.setState({showUndoOption: false, showActionUndone: true})
+        setTimeout(() => {
+            this.setState({
+                showActionUndone: false
+            }) 
+        }, 2000);
+    }
+
+    handleToastCancel = () => {
+        this.deleteElement()
+        this.setState({
+            showUndoOption: false,
+            showActionUndone: false
+        })
+        this.enableStoppedEvents()
+    }
+
+    enableStoppedEvents = () => {
+        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+        const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+        for (const elm of multipleElement) {
+            elm.classList.remove('stop-event')
         }
     }
 
@@ -151,8 +194,14 @@ class ElementDialogue extends React.PureComponent {
                     {
                         this.state.showUndoOption && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
                         <p>{labelText} has been deleted. </p>
-                        <p className='undo-button'> Undo </p>
-                        <Button type='toast-close-icon' />
+                        <p className='undo-button' onClick={() => this.handleUndoOption()}> Undo </p>
+                        <Button type='toast-close-icon' onClick={() => this.handleToastCancel()}/>
+                        </div>
+                    }
+                    {
+                        this.state.showActionUndone && <div className='delete-toastMsg'>
+                            <p> Action undone. </p>
+                            <Button type='toast-close-icon' onClick={() => this.handleToastCancel()}/>
                         </div>
                     }
                     </>
@@ -199,6 +248,12 @@ class ElementDialogue extends React.PureComponent {
             deletedElm?.classList?.add("hideElement");
             const sapratorElm = document.querySelector(`[sepratorID="${deletedElmID}"]`);
             sapratorElm?.classList?.add("hideElement");
+            document.getElementById('previous-slate-button')?.classList?.add('stop-event')
+            document.getElementById('next-slate-button')?.classList?.add('stop-event')
+            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+            for (const elm of multipleElement) {
+                elm.classList.add('stop-event')
+            }
             this.setState({
                 psElementIndex: index,
                 oldPSData: element,
@@ -209,6 +264,7 @@ class ElementDialogue extends React.PureComponent {
                 this.setState({showUndoOption: false})
                 deletedElm?.classList?.remove("hideElement");
                 sapratorElm?.classList?.remove("hideElement");
+                this.enableStoppedEvents()
             }, 5000)
             });
         } else {
