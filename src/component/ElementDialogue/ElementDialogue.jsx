@@ -65,7 +65,7 @@ class ElementDialogue extends React.PureComponent {
     }
 
     handleToastCancel = () => {
-        this.deleteElement()
+        // deletion
         this.setState({
             showUndoOption: false,
             showActionUndone: false
