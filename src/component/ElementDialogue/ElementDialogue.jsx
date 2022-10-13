@@ -28,6 +28,7 @@ class ElementDialogue extends React.PureComponent {
             oldPSData: {},
             showUndoOption : false,
             showActionUndone : false,
+            undoElement: ""
         }
         this.wrapperRef = React.createRef();
     }
@@ -48,13 +49,20 @@ class ElementDialogue extends React.PureComponent {
     handleClickOutside = (event) => {
         if (this.state.showUndoOption) {
             if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
-                this.handleToastCancel()
+                this.setState({
+                    showUndoOption: false
+                })
+                this.enableStoppedEvents()
             }
         }
     }
 
     handleUndoOption = () => {
         // undo action
+        const deletedElm = document.querySelector(`[subElementID="${this.state.undoElement}"]`);
+        deletedElm?.classList?.remove("hideElement");
+        const sapratorElm = document.querySelector(`[sepratorID="${this.state.undoElement}"]`);
+        sapratorElm?.classList?.remove("hideElement");
         this.enableStoppedEvents()
         this.setState({showUndoOption: false, showActionUndone: true})
         setTimeout(() => {
@@ -64,13 +72,18 @@ class ElementDialogue extends React.PureComponent {
         }, 2000);
     }
 
-    handleToastCancel = () => {
+    handleUndoToastCancel = () => {
         // deletion
         this.setState({
-            showUndoOption: false,
-            showActionUndone: false
+            showUndoOption: false
         })
         this.enableStoppedEvents()
+    }
+
+    handleActionUndoneToastCancel = () => {
+        this.setState({
+            showActionUndone: false
+        })
     }
 
     enableStoppedEvents = () => {
@@ -195,13 +208,13 @@ class ElementDialogue extends React.PureComponent {
                         this.state.showUndoOption && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
                         <p>{labelText} has been deleted. </p>
                         <p className='undo-button' onClick={() => this.handleUndoOption()}> Undo </p>
-                        <Button type='toast-close-icon' onClick={() => this.handleToastCancel()}/>
+                        <Button type='toast-close-icon' onClick={() => this.handleUndoToastCancel()}/>
                         </div>
                     }
                     {
                         this.state.showActionUndone && <div className='delete-toastMsg'>
                             <p> Action undone. </p>
-                            <Button type='toast-close-icon' onClick={() => this.handleToastCancel()}/>
+                            <Button type='toast-close-icon' onClick={() => this.handleActionUndoneToastCancel()}/>
                         </div>
                     }
                     </>
@@ -257,7 +270,8 @@ class ElementDialogue extends React.PureComponent {
             this.setState({
                 psElementIndex: index,
                 oldPSData: element,
-                showUndoOption: true
+                showUndoOption: true,
+                undoElement: deletedElmID
             }, () => {
                 setTimeout(() => {
                 this.deleteElement();
