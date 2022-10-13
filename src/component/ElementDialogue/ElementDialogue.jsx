@@ -29,7 +29,8 @@ class ElementDialogue extends React.PureComponent {
             showUndoOption : false,
             showActionUndone : false,
             deletedElmID: "",
-            showFirstTimeUndo : false
+            showFirstTimeUndo : false,
+            deletedElmLabel: ""
         }
         this.wrapperRef = React.createRef();
     }
@@ -279,7 +280,7 @@ class ElementDialogue extends React.PureComponent {
                     </Fragment>
                     {
                         this.state.showUndoOption && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
-                        <p>{labelText} has been deleted. </p>
+                        <p>{this.state.deletedElmLabel} has been deleted. </p>
                         <p className='undo-button' onClick={() => this.handleUndoOption()}> Undo </p>
                         <Button type='toast-close-icon' onClick={() => this.handleUndoToastCancel()}/>
                         </div>
@@ -324,7 +325,7 @@ class ElementDialogue extends React.PureComponent {
     }
 
     // function to be called on click of dialogue inner elements delete button 
-    handleDialogueInnerElementsDelete = (e, index, element) => {
+    handleDialogueInnerElementsDelete = (e, index, element, labelText) => {
         e.stopPropagation();
         // this.showCanvasBlocker();
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
@@ -333,7 +334,8 @@ class ElementDialogue extends React.PureComponent {
             this.setState({
                 psElementIndex: index,
                 oldPSData: element,
-                deletedElmID: deletedElmID
+                deletedElmID: deletedElmID,
+                deletedElmLabel: labelText
             }, () => {
                 this.deleteElement(deletedElmID);
                 this.handleUndoDeletedElm(true);
@@ -361,7 +363,7 @@ class ElementDialogue extends React.PureComponent {
                         this.props.permissions && this.props.permissions.includes('elements_add_remove') ?
                             (<Button
                                 type="delete-element"
-                                onClick={(e) => this.handleDialogueInnerElementsDelete(e, index, element)}
+                                onClick={(e) => this.handleDialogueInnerElementsDelete(e, index, element, labelText)}
                             />)
                             : null
                     }
