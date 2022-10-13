@@ -157,6 +157,7 @@ class ElementDialogue extends React.PureComponent {
     }
 
     deleteElement = (deletedElmID) => {
+        const deletedElmKey = this.state.showFirstTimeUndo ? this.state.deletedElmID : deletedElmID
         const { warningPopupCheckbox } = this.props;
         if (warningPopupCheckbox && this.state.showFirstTimeUndo) {
             this.setState({
@@ -166,9 +167,9 @@ class ElementDialogue extends React.PureComponent {
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
         if (disableDeleteWarnings || warningPopupCheckbox) {
             sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: true } });
-            const deletedElm = document.querySelector(`[innerElementID="${deletedElmID}"]`);
+            const deletedElm = document.querySelector(`[innerElementID="${deletedElmKey}"]`);
             deletedElm?.classList?.add("hideElement");
-            const sapratorElm = document.querySelector(`[sepratorID="${deletedElmID}"]`);
+            const sapratorElm = document.querySelector(`[sepratorID="${deletedElmKey}"]`);
             sapratorElm?.classList?.add("hideElement");
             document.getElementById('previous-slate-button')?.classList?.add('stop-event')
             document.getElementById('next-slate-button')?.classList?.add('stop-event')
@@ -182,6 +183,7 @@ class ElementDialogue extends React.PureComponent {
             this.timer = setTimeout(() => {
                 const newPsElement = this.updatePSData()
                 this.callUpdateApi(newPsElement);
+                this.setState({showUndoOption: false})
                 sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
                 document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
                 document.getElementById('next-slate-button')?.classList?.remove('stop-event')
@@ -201,7 +203,7 @@ class ElementDialogue extends React.PureComponent {
         this.closePopup();
     }
     closePopup = () => {
-        this.setState({ popup: false, showUndoOption: false });
+        this.setState({ popup: false });
         this.props.showBlocker(false)
         this.props.handleCheckboxPopup({ event: { target: { checked: false } } })
         hideBlocker();
@@ -327,15 +329,15 @@ class ElementDialogue extends React.PureComponent {
     // function to be called on click of dialogue inner elements delete button 
     handleDialogueInnerElementsDelete = (e, index, element, labelText) => {
         e.stopPropagation();
-        // this.showCanvasBlocker();
+        this.showCanvasBlocker();
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
         const deletedElmID = element.id + "-" + index
         if (disableDeleteWarnings) {
             this.setState({
                 psElementIndex: index,
                 oldPSData: element,
-                deletedElmID: deletedElmID,
-                deletedElmLabel: labelText
+                deletedElmLabel: labelText,
+                deletedElmID: deletedElmID
             }, () => {
                 this.deleteElement(deletedElmID);
                 this.handleUndoDeletedElm(true);
@@ -345,7 +347,9 @@ class ElementDialogue extends React.PureComponent {
                 popup: true,
                 psElementIndex: index,
                 oldPSData: element,
-                showFirstTimeUndo: true
+                showFirstTimeUndo: true,
+                deletedElmLabel: labelText,
+                deletedElmID: deletedElmID
             });
         }
     }
