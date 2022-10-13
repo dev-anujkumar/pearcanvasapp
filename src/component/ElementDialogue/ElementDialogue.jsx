@@ -28,7 +28,8 @@ class ElementDialogue extends React.PureComponent {
             oldPSData: {},
             showUndoOption : false,
             showActionUndone : false,
-            undoElement: ""
+            deletedElmID: "",
+            showFirstTimeUndo : false
         }
         this.wrapperRef = React.createRef();
     }
@@ -46,25 +47,51 @@ class ElementDialogue extends React.PureComponent {
         document.removeEventListener("mousedown", this.handleClickOutside);
     }
 
-    handleClickOutside = (event) => {
-        if (this.state.showUndoOption) {
-            if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
-                this.setState({
-                    showUndoOption: false
-                })
-                this.enableStoppedEvents()
+    componentDidUpdate(prevProps) {
+        if (prevProps.closeUndoTimer !== this.props.closeUndoTimer && this.state.showUndoOption) {
+            if (this.props.closeUndoTimer) {
+                this.handleUndoToastCancel();
             }
         }
     }
 
+    handleClickOutside = (event) => {
+        if (this.state.showUndoOption) {
+            if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+                this.handleUndoToastCancel();
+            }
+        }
+    }
+
+    handleUndoDeletedElm = (status) => {
+        this.setState({
+            showUndoOption: status,
+            showActionUndone: false
+        })
+        this.toastTimer = setTimeout(() => {
+            this.setState({
+                showUndoOption: false
+            })
+        }, 5000);
+    }
+
     handleUndoOption = () => {
-        // undo action
-        const deletedElm = document.querySelector(`[subElementID="${this.state.undoElement}"]`);
+        const deletedElm = document.querySelector(`[innerElementID="${this.state.deletedElmID}"]`);
         deletedElm?.classList?.remove("hideElement");
-        const sapratorElm = document.querySelector(`[sepratorID="${this.state.undoElement}"]`);
+        const sapratorElm = document.querySelector(`[sepratorID="${this.state.deletedElmID}"]`)
         sapratorElm?.classList?.remove("hideElement");
-        this.enableStoppedEvents()
-        this.setState({showUndoOption: false, showActionUndone: true})
+        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+        const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+        for (const elm of multipleElement) {
+            elm.classList.remove('stop-event')
+        }
+        clearTimeout(this.timer)
+        clearTimeout(this.toastTimer)
+        this.setState({
+            showUndoOption: false,
+            showActionUndone: true,
+        })
         setTimeout(() => {
             this.setState({
                 showActionUndone: false
@@ -73,11 +100,26 @@ class ElementDialogue extends React.PureComponent {
     }
 
     handleUndoToastCancel = () => {
-        // deletion
+        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+        clearTimeout(this.timer)
+        clearTimeout(this.toastTimer)
+        const newPsElement = this.updatePSData()
+        this.callUpdateApi(newPsElement);
+        sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
+        const deletedElm = document.querySelector(`[innerElementID="${this.state.deletedElmID}"]`);
+        deletedElm?.classList?.remove("hideElement");
+        const sapratorElm = document.querySelector(`[sepratorID="${this.state.deletedElmID}"]`);
+        sapratorElm?.classList?.remove("hideElement");
         this.setState({
-            showUndoOption: false
-        })
-        this.enableStoppedEvents()
+            showUndoOption: false,
+        }) 
+        setTimeout(() => {
+            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+            for (const elm of multipleElement) {
+                elm.classList.remove('stop-event')
+            }
+        }, 300)
     }
 
     handleActionUndoneToastCancel = () => {
@@ -86,16 +128,19 @@ class ElementDialogue extends React.PureComponent {
         })
     }
 
-    enableStoppedEvents = () => {
-        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
-        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
-        const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
-        for (const elm of multipleElement) {
-            elm.classList.remove('stop-event')
+    updatePSData = () => {
+        const { psElementIndex, oldPSData } = this.state;
+        const dialogueContent = oldPSData.html.dialogueContent;
+        dialogueContent.splice(psElementIndex, 1);
+        const newPsElement = {
+            ...oldPSData,
+            html: {
+                ...oldPSData.html,
+                dialogueContent
+            }
         }
+        return newPsElement;
     }
-
-    
 
     addElement = (psIndex, psElementIndex, data, oldPSData) => {
         const dialogueContent = oldPSData.html.dialogueContent;
@@ -110,24 +155,52 @@ class ElementDialogue extends React.PureComponent {
         this.callUpdateApi(newPsElement);
     }
 
-    deleteElement = () => {
+    deleteElement = (deletedElmID) => {
         const { warningPopupCheckbox } = this.props;
-        const { psElementIndex, oldPSData } = this.state;
-        const dialogueContent = oldPSData.html.dialogueContent;
-        dialogueContent.splice(psElementIndex, 1);
-        const newPsElement = {
-            ...oldPSData,
-            html: {
-                ...oldPSData.html,
-                dialogueContent
+        if (warningPopupCheckbox && this.state.showFirstTimeUndo) {
+            this.setState({
+                showUndoOption: true
+            })
+        }
+        const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+        if (disableDeleteWarnings || warningPopupCheckbox) {
+            sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: true } });
+            const deletedElm = document.querySelector(`[innerElementID="${deletedElmID}"]`);
+            deletedElm?.classList?.add("hideElement");
+            const sapratorElm = document.querySelector(`[sepratorID="${deletedElmID}"]`);
+            sapratorElm?.classList?.add("hideElement");
+            document.getElementById('previous-slate-button')?.classList?.add('stop-event')
+            document.getElementById('next-slate-button')?.classList?.add('stop-event')
+            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+            for (const elm of multipleElement) {
+                elm.classList.add('stop-event')
             }
         }
-        if(warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } });
-        this.callUpdateApi(newPsElement);
+        if (warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } });
+        if (disableDeleteWarnings || warningPopupCheckbox) {
+            this.timer = setTimeout(() => {
+                const newPsElement = this.updatePSData()
+                this.callUpdateApi(newPsElement);
+                sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
+                document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+                document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+                const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+                for (const elm of multipleElement) {
+                    elm.classList.remove('stop-event')
+                }
+                const deletedElm = document.querySelector(`[innerElementID="${this.state.deletedElmID}"]`);
+                deletedElm?.classList?.remove("hideElement");
+                const sapratorElm = document.querySelector(`[sepratorID="${this.state.deletedElmID}"]`);
+                sapratorElm?.classList?.remove("hideElement");
+            }, 5000)
+        } else {
+            const newPsElement = this.updatePSData()
+            this.callUpdateApi(newPsElement);
+        }
         this.closePopup();
     }
     closePopup = () => {
-        this.setState({ popup: false });
+        this.setState({ popup: false, showUndoOption: false });
         this.props.showBlocker(false)
         this.props.handleCheckboxPopup({ event: { target: { checked: false } } })
         hideBlocker();
@@ -154,7 +227,7 @@ class ElementDialogue extends React.PureComponent {
                     <Fragment key={element.id}>
                         <div className={"editor"}
                             data-id={element.id}
-                            subElementID={_props.elementId+'-'+index}
+                            innerElementID={_props.elementId+'-'+index}
                             onMouseOver={_props.handleOnMouseOver}
                             onMouseOut={_props.handleOnMouseOut}
                             onClickCapture={(e) => _props.onClickCapture(e)}
@@ -255,37 +328,22 @@ class ElementDialogue extends React.PureComponent {
         e.stopPropagation();
         // this.showCanvasBlocker();
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+        const deletedElmID = element.id + "-" + index
         if (disableDeleteWarnings) {
-            let deletedElmID = element.id + "-" + index
-            const deletedElm = document.querySelector(`[subElementID="${deletedElmID}"]`);
-            deletedElm?.classList?.add("hideElement");
-            const sapratorElm = document.querySelector(`[sepratorID="${deletedElmID}"]`);
-            sapratorElm?.classList?.add("hideElement");
-            document.getElementById('previous-slate-button')?.classList?.add('stop-event')
-            document.getElementById('next-slate-button')?.classList?.add('stop-event')
-            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
-            for (const elm of multipleElement) {
-                elm.classList.add('stop-event')
-            }
             this.setState({
                 psElementIndex: index,
                 oldPSData: element,
-                showUndoOption: true,
-                undoElement: deletedElmID
+                deletedElmID: deletedElmID
             }, () => {
-                setTimeout(() => {
-                this.deleteElement();
-                this.setState({showUndoOption: false})
-                deletedElm?.classList?.remove("hideElement");
-                sapratorElm?.classList?.remove("hideElement");
-                this.enableStoppedEvents()
-            }, 5000)
+                this.deleteElement(deletedElmID);
+                this.handleUndoDeletedElm(true);
             });
         } else {
             this.setState({
                 popup: true,
                 psElementIndex: index,
-                oldPSData: element
+                oldPSData: element,
+                showFirstTimeUndo: true
             });
         }
     }
