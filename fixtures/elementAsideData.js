@@ -2,7 +2,7 @@ export const elementAsideWorkExample = {
 	"id": "urn:pearson:manifest:cfebae33-2236-4325-a822-f52077592b09",
 	"type": "element-aside",
 	"subtype": "workedexample",
-	"designtype": "workedexample1",
+	"designtype": "asideSidebar04",
 	"schema": "http://schemas.pearson.com/wip-authoring/element/1",
 	"elementdata": {
 		"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
@@ -382,7 +382,75 @@ export const elementAsideWorkExample2 =
     "contentUrn": "urn:pearson:entity:b4cbda8f-7a22-4df5-965a-18623a581ec1",
     "versionUrn": "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec"
 }
-
+export const elementAsideWorkExample3 = 
+{
+    "id": "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec",
+    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+    "type": "element-aside",
+    "contents": {
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+        "frontmatter": [],
+        "bodymatter": [
+            {
+				"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+				"type": "element-authoredtext",
+				"subtype": "",
+				"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+				"elementdata": {
+					"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+					"text": "asdfasdfasdf"
+				},
+				"html": {
+					"text": "<h1 class=\"heading1NummerEins\">Heading 1</h1>"
+				},
+				"comments": true,
+				"tcm": true,
+				"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+				"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+				"slateEntityUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+			}
+		],
+        "backmatter": []
+    },
+    "contentUrn": "urn:pearson:entity:b4cbda8f-7a22-4df5-965a-18623a581ec1",
+    "versionUrn": "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec"
+}
+export const elementAsideWorkExample4 = 
+{
+    "id": "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec",
+    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+    "type": "element-aside",
+    "subtype": "workedexample",
+	"numberedandlabel":'',
+    "designtype": "workedexample2",
+    "contents": {
+        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+        "frontmatter": [],
+        "bodymatter": [
+            {
+				"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+				"type": "element-authoredtext",
+				"subtype": "",
+				"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+				"elementdata": {
+					"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+					"text": "asdfasdfasdf"
+				},
+				"html": {
+					"text": "<h1 class=\"heading1NummerEins\">Heading 1</h1>"
+				},
+				"comments": true,
+				"tcm": true,
+				"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+				"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+				"slateEntityUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+			}
+		],
+        "backmatter": []
+    },
+    "contentUrn": "urn:pearson:entity:b4cbda8f-7a22-4df5-965a-18623a581ec1",
+    "versionUrn": "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec"
+}
 export const elementAside = 
 {
     "id": "urn:pearson:manifest:c047b586-c963-47b7-bc59-9ec595c2c6ec",
@@ -436,6 +504,38 @@ export const elementAside =
 }
 export const  element = [{
 	"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+	"type": "manifest",
+	"subtype": "",
+	"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+	"elementdata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "asdfasdfasdf"
+	},
+	"html": {
+		"text": "<p class=\"paragraphNumeroUno\"></p>"
+	},
+	"comments": true,
+	"tcm": true,
+	"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+	"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+},{
+	"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+	"type": "manifest",
+	"subtype": "",
+	"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+	"elementdata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "asdfasdfasdf"
+	},
+	"html": {
+		"text": "<p class=\"paragraphNumeroUno\"></p>"
+	},
+	"comments": true,
+	"tcm": true,
+	"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+	"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+},{
+	"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
 	"type": "element-authoredtext",
 	"subtype": "",
 	"schema": "http://schemas.pearson.com/wip-authoring/element/1",
@@ -484,7 +584,38 @@ export const section =
 		"contentUrn": "urn:pearson:entity:08942f6d-8fd3-4a39-b72d-8bdc33eb289a",
 		"versionUrn": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
 	}
-
+export const section1 = 
+	{
+		"id": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c",
+		"schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+		"type": "manifest",
+		"elementdata": {
+			"schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+			"frontmatter": [],
+			"bodymatter": [
+				{
+					"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+					"type": "element-authoredtext",
+					"subtype": "",
+					"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+					"elementdata": {
+						"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+						"text": "asdfasdfasdf"
+					},
+					"html": {
+						"text": " \\/JSX< abc >?kk<lk> lk l is one of the most commonly used syntax extensions out there. Originally JSX was parsed via a Facebook fork of Esprima — a JavaScript syntax parser developed by jQuery. As it gained momentum, Acorn took things to their hands and decided to make their own version of the parser which ended up being 1.5–2x faster than Esprima-fb, and is now being used by officially Babel."
+					},
+					"comments": true,
+					"tcm": true,
+					"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+					"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+				}
+			],
+			"backmatter": []
+		},
+		"contentUrn": "urn:pearson:entity:08942f6d-8fd3-4a39-b72d-8bdc33eb289a",
+		"versionUrn": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
+	}
 export const asideDataType1 = {
 	"id": "urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7",
 	"type": "element-aside",
@@ -980,6 +1111,7 @@ export const asideNumbering = {
 	"subtype": "sidebar",
 	"schema": "http://schemas.pearson.com/wip-authoring/element/1",
 	"designtype": "asideSidebar01",
+	"numberedandlabel":'',
 	"elementdata": {
 		"bodymatter": [
 			{
@@ -1034,7 +1166,6 @@ export const asideNumbering = {
 	"contentUrn": "urn:pearson:entity:1f94b1dd-4ab9-47f4-8ef6-3b91154cfad5",
 	"status": "wip"
 }
-
 export const weNumbering = {
 	"id": "urn:pearson:manifest:6760246e-8cd5-4ddd-a525-292a98ab1432",
 	"type": "element-aside",

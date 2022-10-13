@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
 import ElementAsideContainer from '../../../src/component/ElementAsideContainer/ElementAsideContainer';
-import { elementAsideWorkExample, elementAside, element, section,asideNumbering } from '../../../fixtures/elementAsideData';
+import { elementAsideWorkExample, elementAside, element, section,asideNumbering, section1, elementAsideWorkExample3 } from '../../../fixtures/elementAsideData';
 import { threeMultiColumnContainer } from '../../../fixtures/multiColumnContainer';
 import { showHide } from '../../../fixtures/ElementSHowHideData';
 import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
@@ -23,6 +23,7 @@ jest.mock('../../../src/component/tinyMceEditor.js',()=>{
         return (<div>null</div>)
     }
 })
+
 const autoNumberReducer = {
     isAutoNumberingEnabled: false,
     autoNumberedElements: {
@@ -154,11 +155,15 @@ describe('Testing ElementAside component with props', () => {
     })
     describe('Testing functions with props', () => {
         it('should render section function', () => {
-            instance.renderContainer({ ...props })
+            instance.renderContainer({ ...props },'abc',true)
             expect(wrapper.find(".container-aside")).toHaveLength(1)
         })
         it('should render  section function correctly', () => {
             let sectiondata = instance.section(section)
+            expect(sectiondata.props.className).toEqual('section');
+        })
+        it('should render  section function correctly', () => {
+            let sectiondata = instance.section(section1)
             expect(sectiondata.props.className).toEqual('section');
         })
 
@@ -166,7 +171,27 @@ describe('Testing ElementAside component with props', () => {
             let sectionBreak = instance.sectionBreak(section)
             expect((sectionBreak.props.className).trim()).toEqual('aside-section-break');
         })
+        it('should render  sectionBreak function correctly', () => {
+            const initialState2 = {
+                ...initialState,
+                searchReducer: {
+                    searchTerm: "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c",
+                    parentId: "",
+                    deeplink: true,
+                    scroll: false,
+                    scrollTop: 0
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: true
+                }
 
+            }
+            let store2  = mockStore(initialState2)
+            const wrapper = mount(<Provider store={store2}>< ElementAsideContainer {...props} esProps={props.elementSepratorProps}/> </Provider>);
+            const instance1 = wrapper.find('ElementAsideContainer').instance();
+            let sectionBreak = instance1.sectionBreak(section1)
+            expect((sectionBreak.props.className).trim()).toEqual('aside-section-break searched');
+        })
         it('should render  renderElement function correctly', () => {
             let parentEntityUrn = "urn:pearson:entity:b4cbda8f-7a22-4df5-965a-18623a581ec1"
             instance.renderElement(element, parentEntityUrn)
@@ -294,6 +319,56 @@ describe('Testing ElementAside component with props', () => {
             instance.onSectionDragUpdate(event, containerBodyMatter, 2, "section-break");
             expect(spyOnSectionDragUpdate).toHaveBeenCalled();
         })
+        it("onSectionDragUpdate test for section-break", () => {
+            let props2 = {
+                element: elementAsideWorkExample3,
+                onUpdate : jest.fn(),
+                onStart : jest.fn(),
+                setActiveElement : jest.fn(),
+                handleFocus : jest.fn(),
+                swapElement : jest.fn(),
+                deleteElement: jest.fn(),
+                slateLockInfo:{isLocked:false,userId:'c5test01'},
+                handleCopyPastePopup:jest.fn(),
+            }
+            jest.spyOn(document, 'querySelector').mockImplementationOnce((id) => {
+                if(id === `.show-hide-active`) {
+                return {
+                    classList:{
+                        remove: jest.fn()
+                    }
+                }
+            }
+            })
+            const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props2} /> </Provider>)
+            const instance = wrapper.find('ElementAsideContainer').instance();
+            const spyOnSectionDragUpdate = jest.spyOn(instance, 'onSectionDragUpdate');
+
+            let event = {
+                oldDraggableIndex: 0,
+                newDraggableIndex: 1
+            }
+            let containerBodyMatter = props.element.elementdata
+            instance.onSectionDragUpdate(event, containerBodyMatter, 2, "section-break");
+            expect(spyOnSectionDragUpdate).toHaveBeenCalled();
+        })
+        it("onSectionDragUpdate test for section", () => {
+            let props2 = {
+                ...props,
+                element: elementAsideWorkExample3
+            }
+            const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props2} /> </Provider>)
+            const instance = wrapper.find('ElementAsideContainer').instance();
+            const spyOnSectionDragUpdate = jest.spyOn(instance, 'onSectionDragUpdate');
+
+            let event = {
+                oldDraggableIndex: 0,
+                newDraggableIndex: 1
+            }
+            let containerBodyMatter = props2.element.contents
+            instance.onSectionDragUpdate(event, containerBodyMatter, 0, "section");
+            expect(spyOnSectionDragUpdate).toHaveBeenCalled();
+        })
     })
 })
 
@@ -387,7 +462,7 @@ describe("test AsideWENumebring",()=>{
         }, {
             elementId: "urn:pearson:manifest:6760246e-8cd5-4ddd-a525-292a98ab1432",
             isAsideNumber: true
-        }]
+        }],
     } 
     const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props} esProps={props.elementSepratorProps}/> </Provider>);
     const instance = wrapper.find('ElementAsideContainer').instance();
@@ -418,7 +493,10 @@ describe("test AsideWENumebring",()=>{
     it('Test Aside Blur-else-1', () => {
         const event={
             target: { classList: { contains: () => { return ['element-container','as'] } } },
-            path:[{ }]
+            path:[{ classList: { contains: () => { return ['element-container','as','toolbar-container'] } },
+                     dataset: {
+                        id:'cypress-1-t1'
+                     }   }]
         }
         const AsideBlur=jest.spyOn(instance,'handleAsideBlur');
         instance.handleAsideBlur(event);
