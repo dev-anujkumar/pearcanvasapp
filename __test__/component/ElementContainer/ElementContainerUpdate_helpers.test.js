@@ -10,6 +10,7 @@ import { AUTHORING_ELEMENT_UPDATE } from '../../../src/constants/Action_Constant
 import { JSDOM } from 'jsdom'
 import metadataTestData from '../../../fixtures/ElementMetadataAnchorTestData';
 import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../../../src/component/FigureHeader/AutoNumberConstants';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 global.document = (new JSDOM()).window.Element;
@@ -47,7 +48,8 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         slateLevelData: slateLevelData,
         appStore: {
             slateLevelData: slateLevelData.slateLevelData,
-            oldFiguredata: null
+            oldFiguredata: null,
+            isCypressPlusEnabled: true
         },
         learningToolReducer: {
             shouldHitApi: false,
@@ -353,8 +355,28 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         "tcm": true,
         "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
         "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
-        "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+        "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+        "displayedlabel" : "displayedlabel",
+        "manualoverride" : "manualoverride"
     }
+    let updatedData2 = {
+      "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+      "type": "element-pdf",
+      "subtype": "",
+      "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+      "elementdata": {
+          "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+          "text": ""
+      },
+      "html": {
+          "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+      },
+      "comments": false,
+      "tcm": true,
+      "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+      "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+      "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+  }
     let assessmentUpdatedData = {
       "id":"urn:pearson:work:1a311208-368a-4d2c-bc62-0c48909e49e3",
       "type":"element-assessment",
@@ -469,7 +491,14 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
                 updatedData: {...updatedData, pageNumberRef: "1"}, 
                 asideData: {
                     ...asideData,
-                    type: 'showhide'
+                    type: 'showhide',
+               grandParent:
+               {
+                  asideData:
+                  {
+                        type: "groupedcontent"
+                     }
+               }
                 },
                 dispatch: jest.fn(),
                 versionedData: {...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b"},
@@ -489,6 +518,110 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
             spyUpdateNewVersionElementInStore.mockClear()
         })
+        it("Versioned element - asideData - showhide - updateNewVersionElementInStore - getShowhideParent : if > if", () => {
+         let args = { 
+             updatedData: {...updatedData, pageNumberRef: "1"}, 
+             asideData: {
+                 ...asideData,
+                 type: 'showhide',
+            grandParent:
+            {
+               asideData:
+               {
+                     type: "element-aside"
+                  }
+            }
+             },
+             dispatch: jest.fn(),
+             versionedData: {...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b"},
+             elementIndex: "1-2-2",
+             parentElement,
+             fetchSlateData: jest.fn(),
+             newslateData: slateLevelData.slateLevelData,
+             slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+             autoNumberDetails : {
+                 autoNumberSettingsOption: '',
+                 isAutoNumberingEnabled: true
+             }
+         }
+
+         const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+         updateHelpers.updateNewVersionElementInStore(args)
+         expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+         spyUpdateNewVersionElementInStore.mockClear()
+     })
+     it("Versioned element - asideData - showhide - updateNewVersionElementInStore - getShowhideParent : if > if > else", () => {
+      let args = { 
+          updatedData: {...updatedData, pageNumberRef: "1"}, 
+          asideData: {
+              ...asideData,
+              type: 'showhide',
+         grandParent:
+         {
+            asideData:
+            {
+               parent :
+               {
+                     type: "groupedcontent"
+                  }
+            }
+            }
+          },
+          dispatch: jest.fn(),
+          versionedData: {...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b"},
+          elementIndex: "1-2-2",
+          parentElement,
+          fetchSlateData: jest.fn(),
+          newslateData: slateLevelData.slateLevelData,
+          slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+          autoNumberDetails : {
+              autoNumberSettingsOption: '',
+              isAutoNumberingEnabled: true
+          }
+      }
+
+      const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+      updateHelpers.updateNewVersionElementInStore(args)
+      expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+      spyUpdateNewVersionElementInStore.mockClear()
+  })
+  it("Versioned element - asideData - showhide - updateNewVersionElementInStore - getShowhideParent : if > if > if", () => {
+   let args = { 
+       updatedData: {...updatedData, pageNumberRef: "1"}, 
+       asideData: {
+           ...asideData,
+           type: 'showhide',
+      grandParent:
+      {
+         asideData:
+         {
+               type: "element-aside",
+               parent:
+               {
+                  type: "groupedcontent"
+               }
+            }
+      }
+       },
+       dispatch: jest.fn(),
+       versionedData: {...updatedData, id: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b"},
+       elementIndex: "1-2-2",
+       parentElement,
+       fetchSlateData: jest.fn(),
+       newslateData: slateLevelData.slateLevelData,
+       slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",
+       autoNumberDetails : {
+           autoNumberSettingsOption: '',
+           isAutoNumberingEnabled: true
+       }
+   }
+
+   const spyUpdateNewVersionElementInStore = jest.spyOn(updateHelpers, "updateNewVersionElementInStore")
+   updateHelpers.updateNewVersionElementInStore(args)
+   expect(spyUpdateNewVersionElementInStore).toHaveBeenCalled()
+   spyUpdateNewVersionElementInStore.mockClear()
+})
+
         it("Versioned element - showhide - updateNewVersionElementInStore", () => {
             let store = mockStore(() => initialState);
             let args = { 
@@ -2207,6 +2340,21 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyprepareDataForUpdateTcm).toHaveBeenCalled()
             spyprepareDataForUpdateTcm.mockClear()
         }) 
+        it("prepareDataForUpdateTcm - figuretype condition", async () => {
+         let store = mockStore(() => initialState);
+         let args = {
+             updatedDataID: "urn:pearson:work:123",
+             getState: store.getState,
+             dispatch: store.dispatch,
+             updatedData: {...updatedData2, figuretype: '', type: "element-pdf"},
+             versionedData: null,
+         }
+
+         const spyprepareDataForUpdateTcm = jest.spyOn(updateHelpers, "prepareDataForUpdateTcm")
+         updateHelpers.prepareDataForUpdateTcm(args)
+         expect(spyprepareDataForUpdateTcm).toHaveBeenCalled()
+         spyprepareDataForUpdateTcm.mockClear()
+     }) 
         it("collectDataAndPrepareTCMSnapshot - metaDataField", async () => {
             let store = mockStore(() => initialState);
             let args = {
@@ -8185,6 +8333,88 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateLOInStore).toHaveBeenCalled()
             spyupdateLOInStore.mockClear()
         })
+        it("Test updateMetadataAnchorLOsinStore - updateLOInStore : else if", async () => {
+         let store = mockStore(() => initialState3);
+         let responseData = {
+             loData: [
+                 {
+                     "elementdata": {
+                         "loref": "urn:pearson:educationalgoal:f77c17cd-461a-447a-a592-b333eea0109f"
+                     },
+                     "metaDataAnchorID": ["urn:pearson:work:4d966e5e-bf9a-4672-952b-06e354796f96"],
+                     "loIndex": [0]
+                 },
+                 {
+                     "elementdata": {
+                         "loref": "urn:pearson:educationalgoal:59169f05-96cd-4f83-acb9-fde0a6d89528"
+                     },
+                     "metaDataAnchorID": ["urn:pearson:work:13c99072-413a-4d59-85a2-3f4f4dce3b81"],
+                     "loIndex": ["1-0"]
+                 },
+                 {
+                     "elementdata": {
+                         "loref": "urn:pearson:educationalgoal:ada3bee3-2e41-4c74-8817-509842cbc8b7"
+                     },
+                     "metaDataAnchorID": ["urn:pearson:work:77c5d6c0-fd0c-4e27-a94b-e2f39e3b743e"],
+                     "loIndex": ["1-2-0"]
+                 }
+             ]
+         }
+         const spyupdateLOInStore = jest.spyOn(updateHelpers, "updateMetadataAnchorLOsinStore")
+         updateHelpers.updateMetadataAnchorLOsinStore({
+             updatedData: reqPayload,
+             responseData: responseData,
+             getState: store.getState,
+             dispatch: store.dispatch,
+             currentSlateData: {
+                 ...metadataTestData.slateLevelData_1_MainSlate["urn:pearson:manifest:8f33291d-4b57-4fab-b890-68aa46a117bd"],
+                 status: "approved"
+             }
+         })
+         expect(spyupdateLOInStore).toHaveBeenCalled()
+         spyupdateLOInStore.mockClear()
+     })
+     it("Test updateMetadataAnchorLOsinStore - updateLOInStore : else if > else", async () => {
+      let store = mockStore(() => initialState3);
+      let responseData = {
+          loData: [
+              {
+                  "elementdata": {
+                      "loref": "urn:pearson:educationalgoal:f77c17cd-461a-447a-a592-b333eea0109f"
+                  },
+                  "metaDataAnchorID": ["urn:pearson:work:4d966e5e-bf9a-4672-952b-06e354796f96"],
+                  "loIndex": [0]
+              },
+              {
+                  "elementdata": {
+                      "loref": "urn:pearson:educationalgoal:59169f05-96cd-4f83-acb9-fde0a6d89528"
+                  },
+                  "metaDataAnchorID": ["urn:pearson:work:13c99072-413a-4d59-85a2-3f4f4dce3b81"],
+                  "loIndex": ["1-0"]
+              },
+              {
+                  "elementdata": {
+                      "loref": "urn:pearson:educationalgoal:ada3bee3-2e41-4c74-8817-509842cbc8b7"
+                  },
+                  "metaDataAnchorID": ["urn:pearson:work:77c5d6c0-fd0c-4e27-a94b-e2f39e3b743e"],
+                  "loIndex": ["1-2-0"]
+              }
+          ]
+      }
+      const spyupdateLOInStore = jest.spyOn(updateHelpers, "updateMetadataAnchorLOsinStore")
+      updateHelpers.updateMetadataAnchorLOsinStore({
+          updatedData: reqPayload,
+          responseData: responseData,
+          getState: store.getState,
+          dispatch: store.dispatch,
+          currentSlateData: {
+              ...metadataTestData.slateLevelData_1_MainSlate["urn:pearson:manifest:8f33291d-4b57-4fab-b890-68aa46a117bd"],
+              status: "test"
+          }
+      })
+      expect(spyupdateLOInStore).toHaveBeenCalled()
+      spyupdateLOInStore.mockClear()
+  })
         it("Test updateLOInStore function - default case ", async () => {
             const store = mockStore(() => initialState3);
             const spyupdateLOInStore = jest.spyOn(updateHelpers, "updateLOInStore")
@@ -9107,5 +9337,106 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
             expect(spyupdateElementInStore).toHaveBeenCalled()
             spyupdateElementInStore.mockClear()
         })
+       const {
+          AUTO_NUMBER_SETTING_DEFAULT,
+          AUTO_NUMBER_SETTING_RESUME_NUMBER,
+          AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+          AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
+       } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
+       it("updateFigureElement_InSH : AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER : if", () => {
+          const oldElement = {
+             displayedlabel: "displayedlabel",
+             manualoverride: "manualoverride",
+             numberedandlabel: true,
+          }
+          const displayedlabel = updatedData.displayedlabel
+          const manualoverride = updatedData.manualoverride
+          const spyupdateFigureElement_InSH = jest.spyOn(updateHelpers, 'updateFigureElement_InSH')
+          updateHelpers.updateFigureElement_InSH(AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, oldElement, { displayedlabel, manualoverride });
+          expect(spyupdateFigureElement_InSH).toHaveBeenCalled();
+          spyupdateFigureElement_InSH.mockClear()
+       })
+       it("updateFigureElement_InSH : AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER : else", () => {
+          const oldElement = {
+             manualoverride: "manualoverride",
+             numberedandlabel: true,
+          }
+          const displayedlabel = updatedData.displayedlabel
+          const manualoverride = updatedData.manualoverride
+          const spyupdateFigureElement_InSH = jest.spyOn(updateHelpers, 'updateFigureElement_InSH')
+          updateHelpers.updateFigureElement_InSH(AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, oldElement, { displayedlabel, manualoverride });
+          expect(spyupdateFigureElement_InSH).toHaveBeenCalled();
+          spyupdateFigureElement_InSH.mockClear()
+       })
+       it("updateFigureElement_InSH : AUTO_NUMBER_SETTING_RESUME_NUMBER", () => {
+          const oldElement = {
+             displayedlabel: "displayedlabel"
+          }
+          const displayedlabel = updatedData.displayedlabel
+          const manualoverride = updatedData.manualoverride
+          const spyupdateFigureElement_InSH = jest.spyOn(updateHelpers, 'updateFigureElement_InSH')
+          updateHelpers.updateFigureElement_InSH(AUTO_NUMBER_SETTING_RESUME_NUMBER, oldElement, { displayedlabel, manualoverride });
+          expect(spyupdateFigureElement_InSH).toHaveBeenCalled();
+          spyupdateFigureElement_InSH.mockClear()
+       })
+       it("updateFigureElement_InSH : AUTO_NUMBER_SETTING_REMOVE_NUMBER : if", () => {
+          const oldElement = {
+             displayedlabel: "displayedlabel",
+             manualoverride: "manualoverride",
+          }
+          const displayedlabel = updatedData.displayedlabel
+          const manualoverride = updatedData.manualoverride
+          const spyupdateFigureElement_InSH = jest.spyOn(updateHelpers, 'updateFigureElement_InSH')
+          updateHelpers.updateFigureElement_InSH(AUTO_NUMBER_SETTING_REMOVE_NUMBER, oldElement, { displayedlabel, manualoverride });
+          expect(spyupdateFigureElement_InSH).toHaveBeenCalled();
+          spyupdateFigureElement_InSH.mockClear()
+       })
+       it("updateFigureElement_InSH : AUTO_NUMBER_SETTING_REMOVE_NUMBER : else", () => {
+          const oldElement = {
+             numberedandlabel: false
+          }
+          const displayedlabel = updatedData.displayedlabel
+          const manualoverride = updatedData.manualoverride
+          const spyupdateFigureElement_InSH = jest.spyOn(updateHelpers, 'updateFigureElement_InSH')
+          updateHelpers.updateFigureElement_InSH(AUTO_NUMBER_SETTING_REMOVE_NUMBER, oldElement, { displayedlabel, manualoverride });
+          expect(spyupdateFigureElement_InSH).toHaveBeenCalled();
+          spyupdateFigureElement_InSH.mockClear()
+       })
+       it("updateFigureElement_InSH : AUTO_NUMBER_SETTING_DEFAULT", () => {
+          const oldElement = {
+             displayedlabel: "displayedlabel",
+             manualoverride: "manualoverride",
+             numberedandlabel: true,
+          }
+          const displayedlabel = updatedData.displayedlabel
+          const manualoverride = updatedData.manualoverride
+          const spyupdateFigureElement_InSH = jest.spyOn(updateHelpers, 'updateFigureElement_InSH')
+          updateHelpers.updateFigureElement_InSH(AUTO_NUMBER_SETTING_DEFAULT, oldElement, { displayedlabel, manualoverride });
+          expect(spyupdateFigureElement_InSH).toHaveBeenCalled();
+          spyupdateFigureElement_InSH.mockClear()
+       })
+       it("updateFigureElement_InSH : default : if", () => {
+          const oldElement = {
+             manualoverride: "manualoverride",
+          }
+          const displayedlabel = updatedData.displayedlabel
+          const manualoverride = updatedData.manualoverride
+          const spyupdateFigureElement_InSH = jest.spyOn(updateHelpers, 'updateFigureElement_InSH')
+          updateHelpers.updateFigureElement_InSH("default", oldElement, { displayedlabel, manualoverride });
+          expect(spyupdateFigureElement_InSH).toHaveBeenCalled();
+          spyupdateFigureElement_InSH.mockClear()
+       })
+       it("updateFigureElement_InSH : default : else", () => {
+          const oldElement = {
+             numberedandlabel: true,
+             displayedlabel: "displayedlabel"
+          }
+          const displayedlabel = updatedData.displayedlabel
+          const manualoverride = updatedData.manualoverride
+          const spyupdateFigureElement_InSH = jest.spyOn(updateHelpers, 'updateFigureElement_InSH')
+          updateHelpers.updateFigureElement_InSH("default", oldElement, { displayedlabel, manualoverride });
+          expect(spyupdateFigureElement_InSH).toHaveBeenCalled();
+          spyupdateFigureElement_InSH.mockClear()
+       })
     })
 })
