@@ -84,12 +84,15 @@ let initialState = {
 		activeElement: {},
 		slateLevelData: {
 			'urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee': {contents: {bodymatter: []}}
-		}
+		},
+	showFirstTimeUndo: true,
+	showUndoOption: false
 	},
 	keyboardReducer: {
         selectedElement: []
     },
-	showFirstTimeUndo: true
+	showFirstTimeUndo: true,
+	showUndoOption: false
 };
 const event = {
 	stopPropagation: jest.fn(),
@@ -145,6 +148,7 @@ describe('1. Dialogue element test cases', () => {
 		handleCheckboxPopup: jest.fn(),
 		showCanvasBlocker: jest.fn(),
 		onClick: jest.fn(),
+		closeUndoTimer: "test"
 	};
     it('1.1 Dialogue element render successfully', () => {
 		const store = mockStore(initialState);
@@ -305,7 +309,7 @@ describe('1. Dialogue element test cases', () => {
 		const compInstance = dialogueInstance(props);
         expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'componentDidMount')
-		compInstance.componentDidMount();
+		compInstance.componentDidMount(props);
 		expect(spy).toHaveBeenCalled()
 		spy.mockClear()
     });
@@ -327,7 +331,7 @@ describe('1. Dialogue element test cases', () => {
 		expect(spy).toHaveBeenCalled();
 		spy.mockClear();
 		});
-	it('1.2 Test handleUndoOption Function', () => {
+	it('1.13 Test handleUndoOption Function', () => {
 		const compInstance = dialogueInstance(props);
 		expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'handleUndoOption')
@@ -335,4 +339,55 @@ describe('1. Dialogue element test cases', () => {
 		expect(spy).toHaveBeenCalled();
 		spy.mockClear()
 		});
+		it('1.14 Test componentWillUnmount Function', () => {
+		const compInstance = dialogueInstance(props);
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'componentWillUnmount')
+		compInstance.componentWillUnmount();
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+		});
+		it('1.15 Test componentDidUpdate Function', () => {
+			let prevProps = {
+                ...props,
+             closeUndoTimer: false
+            }
+		const compInstance = dialogueInstance(prevProps);
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+		compInstance.componentDidUpdate(prevProps);
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+		});
+		it('1.16 Test handleUndoDeletedElm Function', () => {
+		const compInstance = dialogueInstance(props);
+		compInstance.setState({
+			showUndoOption: false,
+            showActionUndone: false
+		});
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'handleUndoDeletedElm')
+		compInstance.handleUndoDeletedElm(props);
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+		});
+		it('1.16 Test handleActionUndoneToastCancel Function', () => {
+		const compInstance = dialogueInstance(props);
+		compInstance.setState({
+			showUndoOption: false,
+			});
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'handleActionUndoneToastCancel')
+		compInstance.handleActionUndoneToastCancel(props);
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+		});
+		it('1.17 test click event', () => {
+			const store = mockStore(initialState);
+			const component = mount(<Provider store={store}><ElementDialogue {...props} /></Provider>);
+			const compInstance = dialogueInstance(props);
+			const spy = jest.spyOn(compInstance, 'handleUndoOption');
+			component.find('.undo-button').simulate('click')
+			expect(spy).toHaveBeenCalled();
+		  })
 });
