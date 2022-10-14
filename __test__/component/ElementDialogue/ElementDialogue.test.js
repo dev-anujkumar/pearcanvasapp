@@ -416,42 +416,42 @@ describe('1. Dialogue element test cases', () => {
 		});
 		expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'componentDidUpdate')
-		compInstance.componentDidUpdate({closeUndoTimer: "test1"});
+		compInstance.componentDidUpdate({ closeUndoTimer: "test1" });
 		expect(spy).toHaveBeenCalled()
 		spy.mockClear()
-		});
+	});
 	it('1.15 Test componentDidUpdate Function : else', () => {
-			const compInstance = dialogueInstance(props1);
-			compInstance.setState({
-				showUndoOption: true, oldPSData : {html:{dialogueContent:["test"]}}
-			});
-			expect(compInstance).toBeDefined();
-			const spy = jest.spyOn(compInstance, 'componentDidUpdate')
-			compInstance.componentDidUpdate({closeUndoTimer: "test1"});
-			expect(spy).toHaveBeenCalled()
-			spy.mockClear()
-			});
+		const compInstance = dialogueInstance(props1);
+		compInstance.setState({
+			showUndoOption: true, oldPSData: { html: { dialogueContent: ["test"] } }
+		});
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+		compInstance.componentDidUpdate({ closeUndoTimer: "test1" });
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+	});
 	it('1.16 Test handleUndoDeletedElm Function', () => {
 		const compInstance = dialogueInstance(props);
 		compInstance.setState({
 			showUndoOption: false,
-            showActionUndone: false
+			showActionUndone: false
 		});
 		expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'handleUndoDeletedElm')
 		compInstance.handleUndoDeletedElm(props);
 		expect(spy).toHaveBeenCalled()
 		spy.mockClear()
-		});
+	});
 	it('1.16 Test handleActionUndoneToastCancel Function', () => {
 		const compInstance = dialogueInstance(props);
 		compInstance.setState({
 			showUndoOption: false,
-			});
+		});
 		expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'handleActionUndoneToastCancel')
 		compInstance.handleActionUndoneToastCancel(props);
 		expect(spy).toHaveBeenCalled()
 		spy.mockClear()
-		});
+	});
 });
