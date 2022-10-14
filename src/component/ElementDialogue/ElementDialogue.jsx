@@ -505,7 +505,7 @@ class ElementDialogue extends React.PureComponent {
                         closeUndoTimer = {this.props.closeUndoTimer}
                 />}
                     {
-                        this.state.showUndoOption && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>{console.log("1111111")}
+                        this.state.showUndoOption && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
                             <p>{this.state.deletedElmLabel} has been deleted. </p>
                             <p className='undo-button' onClick={() => this.handleUndoOption()}> Undo </p>
                             <Button type='toast-close-icon' onClick={() => this.handleUndoToastCancel()} />
