@@ -187,7 +187,6 @@ class ElementDialogue extends React.PureComponent {
             return dialogueContent.map((element, index) => {
                 let labelText = (element.type === 'lines') ? 'DE' : 'SD';
                 return (
-                    <>
                     <Fragment key={element.id}>
                         <div className={"editor"}
                             data-id={element.id}
@@ -241,20 +240,6 @@ class ElementDialogue extends React.PureComponent {
                             sepratorID={_props.elementId+'-'+index}
                         />
                     </Fragment>
-                    {
-                        this.state.showUndoOption && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
-                        <p>{this.state.deletedElmLabel} has been deleted. </p>
-                        <p className='undo-button' onClick={() => this.handleUndoOption()}> Undo </p>
-                        <Button type='toast-close-icon' onClick={() => this.handleUndoToastCancel()}/>
-                        </div>
-                    }
-                    {
-                        this.state.showActionUndone && <div className='delete-toastMsg'>
-                            <p> Action undone. </p>
-                            <Button type='toast-close-icon' onClick={() => this.handleActionUndoneToastCancel()}/>
-                        </div>
-                    }
-                    </>
                 )
             })
         }
@@ -519,6 +504,19 @@ class ElementDialogue extends React.PureComponent {
                         handleUndoOption = {this.props.handleUndoOption}
                         closeUndoTimer = {this.props.closeUndoTimer}
                 />}
+                    {
+                        this.state.showUndoOption && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>{console.log("1111111")}
+                        <p>{this.state.deletedElmLabel} has been deleted. </p>
+                        <p className='undo-button' onClick={() => this.handleUndoOption()}> Undo </p>
+                        <Button type='toast-close-icon' onClick={() => this.handleUndoToastCancel()}/>
+                        </div>
+                    }
+                    {
+                        this.state.showActionUndone && <div className='delete-toastMsg'>
+                            <p> Action undone. </p>
+                            <Button type='toast-close-icon' onClick={() => this.handleActionUndoneToastCancel()}/>
+                        </div>
+                    }
                 </div>
                 : ''
         )
