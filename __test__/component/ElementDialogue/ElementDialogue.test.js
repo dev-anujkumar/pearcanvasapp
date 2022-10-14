@@ -88,7 +88,8 @@ let initialState = {
 	},
 	keyboardReducer: {
         selectedElement: []
-    }
+    },
+	showFirstTimeUndo: true
 };
 const event = {
 	stopPropagation: jest.fn(),
@@ -325,6 +326,13 @@ describe('1. Dialogue element test cases', () => {
 		compInstance.handleDialogueInnerElementsDelete(event, 0, props.element);
 		expect(spy).toHaveBeenCalled();
 		spy.mockClear();
-		}
-	)
+		});
+	it('1.2 Test handleUndoOption Function', () => {
+		const compInstance = dialogueInstance(props);
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'handleUndoOption')
+		compInstance.handleUndoOption();
+		expect(spy).toHaveBeenCalled();
+		spy.mockClear()
+		});
 });
