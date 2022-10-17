@@ -19,11 +19,12 @@ const defaultDialougeElement = {
 const DialogueSeprator = (props) => {
 
     const [showDetails, setDetails] = useState(false);
-    const { index, elementIndex, firstOne, element: psElement } = props;
+    const { index, elementIndex, firstOne, element: psElement, sepratorID} = props;
     const updatedIndex = firstOne ?  index : index+1;
     return (
         <div
             className={`elementSapratorContainer ${props.hideElementSeperator}`}
+            sepratorID={sepratorID}
             style={{ display: 'flex', flexDirection: 'row' }}>
             <div className='elemDiv-hr'>
                 <hr className='horizontalLine' />
