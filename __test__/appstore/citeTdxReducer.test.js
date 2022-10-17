@@ -22,6 +22,24 @@ currentSlateLODataMath:"",
 showSlateLockPopup: false,
 isRenderMetdataLO:false
 }
+const INIT_STATE2 = {
+    citeData: [],
+    tdxData: [],
+    mmiData: [],
+    assessmenterrFlag: true,
+    isLoading: true,
+    currentAssessmentSelected:{},
+    singleAssessmentData: {
+            isLoading: false,
+            errFlag: true
+    },
+    currentSingleAssessmentSelected:{},
+    sortOrder:'',
+    sortBy:'',
+    searchUuidVal:"",
+    searchTitleVal:""
+}
+
 
 const INITIAL_ACTION = {
     type: '',
@@ -136,4 +154,15 @@ describe('testing meta data Reducer cases --', () => {
             }
         })).toEqual(output)
     });
-})
+        it('GET_SINGLE_ASSESSMENT_DATA', () => {
+            let state1 = INIT_STATE2;
+            state1.isLoading = false;
+            expect(citeTdxReducer(INIT_STATE2, {
+                type: 'GET_SINGLE_ASSESSMENT_DATA',
+                payload: {
+                    isLoading: false,
+                    errFlag: true
+                } 
+            })).toEqual(state1);
+        });
+});
