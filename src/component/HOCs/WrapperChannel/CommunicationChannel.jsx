@@ -426,6 +426,9 @@ function CommunicationChannel(WrappedComponent) {
                 case "getAssessmentData":
                     this.getAssessmentForWillowAlignment(message);
                     break;
+                case "preflightElementFocus": 
+                    config.currentElementUrn = message
+                    break;
             }
         }
 
@@ -928,6 +931,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.totalPageCount = 0;
                 config.pageLimit = 0;
                 config.fromTOC = false;
+                config.elementSlateRefresh = true
                 sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing...' } });
                 this.props.handleSlateRefresh(id, () => {
                     config.isSlateLockChecked = false;

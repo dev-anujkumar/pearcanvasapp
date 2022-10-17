@@ -868,12 +868,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         if (slateWrapperNode) {
                             slateWrapperNode.scrollTop = 0;
                         }
-                        if (src && src.get('q') && currentParentData) {
-                            const newSlateData = JSON.parse(JSON.stringify(currentParentData));
-                            const commentElementData = newSlateData?.contents?.bodymatter;
-                            let currentElement = commentElementData?.filter(element => element.id === src.get('q'))
-                            dispatch(setActiveElement(currentElement[0]));
-                        }  
+                        if(src && src.get('q') && currentParentData && !config.elementSlateRefresh) {
+                            dispatch(getContainerData(src.get('q')));
+                        } else if(currentParentData && config.elementSlateRefresh) {
+                            dispatch(getContainerData(''));
+                        } else if(config.currentElementUrn && currentParentData && !config.elementSlateRefresh){
+                            dispatch(getContainerData(config.currentElementUrn));
+                        }
                     }
                 }else{
                     console.log("incorrect data comming...")

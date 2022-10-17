@@ -103,7 +103,9 @@ let cypressConfig = {
     figureDataToBeFetched:false,
     parentOfParentItem:[],
     assessmentId: "",
-    glossaryCreated: false
+    glossaryCreated: false,
+    elementSlateRefresh: false,
+    currentElementUrn: ''
 }
 
 
