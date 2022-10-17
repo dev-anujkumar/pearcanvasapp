@@ -8,7 +8,7 @@ import * as actions from '../../../src/component/SlateWrapper/SlateWrapper_Actio
 import { SlatetDataOpenerDefault, SlatetDataOpenerElement, createstoreWithFigure, slateMockData, sectionBreakMockSlateData, NotSectionBreakMockSlateData, NotSectionBreakMockSlateData2, NotSectionBreakMockSlateData3, updateBL_IN_AS, updateBL_IN_WE, updateBL_IN_AS2, updateBL_IN_AS3, updateBL_IN_AS4, updateBL_IN_WE4, updateBL4, updateBL_IN_2C_3C4 } from "../../../fixtures/slateTestingData"
 import { SET_SLATE_TYPE, SET_SLATE_ENTITY, ACCESS_DENIED_POPUP,SET_SLATE_MATTER_TYPE, SET_PARENT_NODE, SWAP_ELEMENT, SET_UPDATED_SLATE_TITLE, AUTHORING_ELEMENT_CREATED, SET_SPLIT_INDEX, GET_PAGE_NUMBER, ERROR_POPUP, CYPRESS_PLUS_ENABLED, UPDATE_CARET_OFFSET } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config';
-import { elementAside, slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, asideDataType3, slateLevelData3, asideData11, workedexampleaside, asideforgouped } from '../../../fixtures/elementAsideData';
+import { elementAside, slateLevelData1, slateLevelData2, asideDataType1, asideDataType2, asideDataType3, slateLevelData3, asideData11, workedexampleaside, asideforgouped, showHideAsideData } from '../../../fixtures/elementAsideData';
 import MockAdapter from 'axios-mock-adapter';
 import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility.js', () => ({
@@ -4930,6 +4930,47 @@ describe('Tests Slate Wrapper Actions', () => {
         jest.mock('axios');
         axios.post = jest.fn(() => Promise.resolve({ data: [{}, {}] }));
         await store3.dispatch(actions.createPowerPasteElements(powerPasteData, index, parentUrn, asideData11)).then(() => {
+            expect(spyPowerPasteElement).toHaveBeenCalled();
+        });
+    })
+
+    it('createPowerPasteElements action - wip slate show hide element', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    'urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5': {
+                        ...slateMockData['urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5'],
+                        status: 'wip'
+                    }
+                },
+                activeElement: {},
+                splittedElementIndex: 0,
+                pageNumberData: {},
+                popupSlateData: {
+                    type: "popup"
+                }
+            },
+            autoNumberReducer: { isAutoNumberingEnabled: true },
+            tcmReducer: { tcmSnapshot: ["78", "9"] }
+        }
+        store3 = mockStore(() => initialState3);
+        const spyPowerPasteElement = jest.spyOn(actions, 'createPowerPasteElements');
+        const powerPasteData = [{
+            "html": {
+                "text": `<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+            }
+        }];
+        const parentUrn = {
+            contentUrn: "urn:pearson:manifest:b6f0b701-ada0-4118-8480-0827b57e9cf0",
+            manifestUrn: 'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7'
+        };
+        config.projectUrn = "urn:pearson:distributable:6548a93a-9ca4-4955-b22b-49a5dff9b40f";
+        config.slateEntityURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        config.slateManifestURN = "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5";
+        const index = 0;
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({ data: [{}, {}] }));
+        await store3.dispatch(actions.createPowerPasteElements(powerPasteData, index, parentUrn, showHideAsideData)).then(() => {
             expect(spyPowerPasteElement).toHaveBeenCalled();
         });
     })
