@@ -85,7 +85,6 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
                 "AssessmentInstrument"
             ],
             "name": "Elm Assessments title is C0A5CT5T5E",
-            "status": "https://schema.pearson.com/ns/contentlifecyclestatus/wip",
             "description": "New Test Description.",
             "taxonomicTypes": [
                 "puf"
@@ -912,7 +911,8 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
                 assessmentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
                 projDURN: "urn:pearson:distributable:8f1ceb41-da2c-4fc1-896d-fc4d2566fa0b",
                 containerURN: "urn:pearson:manifest:bd47b002-d949-4a60-948d-e9c652c297e0",
-                assessmentItemWorkUrn: ""
+                assessmentItemWorkUrn: "",
+                elementId: "test"
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe(ELM_PORTAL_API_ERROR);
@@ -979,6 +979,31 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             spyFunction.mockClear();
 
         });
+        it('Test-5.1---updateAssessmentVersion-Then : else ', () => {
+            let oldWorkUrn = "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af"
+            let updatedWorkUrn = "urn:pearson:work:9db703b9-4e21-4dac-968e-baf9323467af"
+            let responseData = {
+                data: { status: "0" },
+                status: 0
+            }
+            let dispatch = (obj) => {
+                if (obj.type === 'ASSESSMENT_CONFIRMATION_POPUP') {
+                    expect(obj.type).toBe('ASSESSMENT_CONFIRMATION_POPUP');
+                    expect(obj.payload).toEqual(true);
+                } else {
+                    expect(obj.type).toBe('SAVE_AUTO_UPDATE_ID');
+                    expect(obj.payload.oldAssessmentId).toEqual("");
+                    expect(obj.payload.newAssessmentId).toEqual("");
+                }
+
+            }
+            const spyFunction = jest.spyOn(assessment_Actions, 'updateAssessmentVersion');
+            axios.post = jest.fn(() => Promise.resolve(responseData));
+            assessment_Actions.updateAssessmentVersion(oldWorkUrn, updatedWorkUrn)(dispatch);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+
+        });
         it('Test-5.2---updateAssessmentVersion-Then-2', () => {
             let oldWorkUrn = "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af"
             let updatedWorkUrn = "urn:pearson:work:9db703b9-4e21-4dac-968e-baf9323467af"
@@ -997,7 +1022,8 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
                 assessmentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
                 projDURN: "urn:pearson:distributable:8f1ceb41-da2c-4fc1-896d-fc4d2566fa0b",
                 containerURN: "urn:pearson:manifest:bd47b002-d949-4a60-948d-e9c652c297e0",
-                assessmentItemWorkUrn: ""
+                assessmentItemWorkUrn: "",
+                elementId: "test"
             }
             let dispatch = (obj) => {
                 if (obj.type == ELM_PORTAL_API_ERROR) {

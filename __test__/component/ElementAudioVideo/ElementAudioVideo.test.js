@@ -26,6 +26,9 @@ jest.mock('../../../src/constants/utility.js', () => {
         sendDataToIframe: () => {
             return jest.fn()
         },
+        getCookieByName: () => {
+            return null;
+        },
         handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
     }
 });
@@ -578,6 +581,19 @@ describe('Testing Element Audio-Video component', () => {
             elementAudioVideoInstance.setState({ deleteAssetPopup: true });
             elementAudioVideoInstance.showDeleteAssetPopup();
             expect(spy).toBeCalled();
+        });
+        it('Testing showDeleteAssetPopup - else IF Condition', () => {
+            elementAudioVideoInstance.setState({ deleteAssetPopup: true });
+            jest.mock('../../../src/constants/utility.js', () => {
+                return {
+                    getCookieByName: jest.fn().mockImplementationOnce = () => {
+                        return true;
+                    },
+                }
+            });
+            
+            document.cookie = "DISABLE_DELETE_WARNINGS=true"
+            elementAudioVideoInstance.showDeleteAssetPopup();
         });
         it('Testing showDeleteAssetPopup - ELSE Condition', () => {
             elementAudioVideoInstance.setState({ deleteAssetPopup: false });

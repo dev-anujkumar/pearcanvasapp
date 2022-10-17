@@ -106,6 +106,9 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
         },
         prepareImageDataFromTable: () => {
             return jest.fn()
+        },
+        storeDeleteElementKeys: () => {
+            return jest.fn()
         }
     }
 })
@@ -2153,7 +2156,8 @@ describe('Test-Other Functions', () => {
                 secondaryOption: "secondary-pullquote",
                 tag: "BQ",
                 toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
-            }
+            },
+            closeUndoTimer: "test"
         };
 
         let elementContainer = mount(<Provider store={store1}><ElementContainer {...props} /></Provider>);
@@ -2166,7 +2170,7 @@ describe('Test-Other Functions', () => {
 
         document.getElementById["scrollTop"] = 1
         const spycomponentDidUpdate = jest.spyOn(elementContainerInstance, 'componentDidUpdate')
-        elementContainerInstance.componentDidUpdate();
+        elementContainerInstance.componentDidUpdate({closeUndoTimer: "test1"});
         expect(spycomponentDidUpdate).toHaveBeenCalled();
         spycomponentDidUpdate.mockClear()
     })
@@ -2277,6 +2281,7 @@ describe('Test-Other Functions', () => {
                 tag: "BQ",
                 toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
             },
+            closeUndoTimer: "test"
         };
         let elementContainer = mount(<Provider store={store1}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -2287,7 +2292,7 @@ describe('Test-Other Functions', () => {
         }
         document.getElementById["scrollTop"] = 1
         const spycomponentDidUpdate = jest.spyOn(elementContainerInstance, 'componentDidUpdate')
-        elementContainerInstance.componentDidUpdate();
+        elementContainerInstance.componentDidUpdate({closeUndoTimer: "test1"});
         expect(spycomponentDidUpdate).toHaveBeenCalled();
         spycomponentDidUpdate.mockClear()
     })

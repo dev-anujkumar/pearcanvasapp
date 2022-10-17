@@ -193,6 +193,13 @@ function CommunicationChannel(WrappedComponent) {
                         closeUndoTimer: message.status
                     })
                     break;
+                case 'fetchRequiredSlateData':
+                    // Fetches any slate details with help of slate ManifestUrn and slateEntityUrn
+                    let isFetchAnySlate = true;
+                    let slateManifestUrn = message && message.slateManifestUrn;
+                    let slateEntityUrn = message && message.slateEntityUrn;
+                    this.props.fetchSlateData(slateManifestUrn, slateEntityUrn, config.page, '', "", false, isFetchAnySlate);
+                    break;
                 case 'cancelCEPopup':
                     if (this.props.currentSlateLOData?.length > 0) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
@@ -206,26 +213,30 @@ function CommunicationChannel(WrappedComponent) {
                     this.setState({
                         showBlocker: false
                     });
+                    // handles Element Update API call with loAssociation key from TOC and RC
                     if(message.hasOwnProperty('slateTagEnabled')){
-                        config.isPreviousLOAssociation = this.props.isSlateTagEnable
-                        let dataToSend = this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
-                        let messageData = {assessmentResponseMsg:message.slateTagEnabled}
+                        let dataToSend = message.assessmentSlateData ? this.props?.getRequiredSlateData?.getRequiredSlateData[message.slateManifestUrn]?.contents?.bodymatter[0] : this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
+                        let messageData = {assessmentResponseMsg:message.slateTagEnabled};
+                        let slateManifestUrn = message.slateManifestUrn ?? config.slateManifestURN;
+                        let isFromRC = message.assessmentSlateData ? true : false;
                         this.props.isLOExist(messageData);
-                        if (config.parentEntityUrn !== ("Front Matter" || "Back Matter") && config.slateType === "assessment") {
-                            let assessmentUrn = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ?? config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: config.slateManifestURN } });
+                        if (config.parentEntityUrn !== ("Front Matter" || "Back Matter")) {
+                            let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ? assessmentUrn : config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
                             if(dataToSend?.elementdata){
                                 dataToSend.inputType = ELEMENT_ASSESSMENT
                                 dataToSend.inputSubType = "NA"
                                 dataToSend.index = "0"
-                                dataToSend.elementParentEntityUrn = config.slateEntityURN
+                                dataToSend.elementParentEntityUrn = message.slateEntityUrn ?? config.slateEntityURN
                                 dataToSend.elementdata.loAssociation = message.slateTagEnabled
-                                dataToSend.slateVersionUrn = config.slateManifestURN
+                                dataToSend.slateVersionUrn = slateManifestUrn
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
-                                this.props.updateElement(dataToSend, 0 );
+                                this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
+                                if(message.assessmentSlateData)
+                                    this.handleRefreshSlate();
                             }
                         }
-                    }
+                }
                     break;
                 case 'slatePreview':
                 case 'projectPreview':
@@ -478,10 +489,11 @@ function CommunicationChannel(WrappedComponent) {
                     'currentSlateId': slateManifestURN,
                     'chapterContainerUrn': '',
                     'currentSlateLF': currentSlateLF,
-                    'assessmentUrn': message.assessmentUrn ?? config.assessmentId,
+                    'assessmentUrn': message.assessmentUrn  ? message.assessmentUrn : assessmentuRN,
                     'previewData': previewData,
                     'defaultLF': defaultLF,
-                    'loSpa_Source': message.loSpa_Source
+                    'loSpa_Source': message.loSpa_Source,
+                    'isSubscribed':message.isSubscribed ? message.isSubscribed : false
                 }
             })
         }

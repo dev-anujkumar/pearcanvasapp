@@ -626,11 +626,19 @@ class Sidebar extends Component {
                 let attrValue = ""
                 attributions = attributionsList.map(item => {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable)
-                    if (item === "alt_text") {
-                        attrValue = this.props.activeElement.altText ? this.props.activeElement.altText : ""
-                    }
-                    else if (item === "long_description") {
-                        attrValue = this.props.activeElement.longDesc ? this.props.activeElement.longDesc : ""
+                    if (this.props?.activeElement?.elementType === "openerelement") {
+                        if (item === "alt_text") {
+                            attrValue = document?.querySelector("[name='alt_text']")?.innerHTML ? document?.querySelector("[name='alt_text']")?.innerHTML : this.props.activeElement.altText ? this.props.activeElement.altText : ""
+                        } else if (item === "long_description") {
+                            attrValue = document?.querySelector("[name='long_description']")?.innerHTML ? document?.querySelector("[name='long_description']")?.innerHTML : this.props.activeElement.longDesc ? this.props.activeElement.longDesc : ""
+                        }
+                    } else {
+                        if (item === "alt_text") {
+                            attrValue = this.props.activeElement.altText ? this.props.activeElement.altText : ""
+                        }
+                        else if (item === "long_description") {
+                            attrValue = this.props.activeElement.longDesc ? this.props.activeElement.longDesc : ""
+                        }
                     }
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>

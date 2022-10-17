@@ -68,4 +68,16 @@ describe('Testing Function - getPasteValidated', () => {
         let returnData = getPasteValidated(separatorProps, sourceType, selectionType);
         expect(returnData).toBe(false);
     })
+    it('Test2- getPasteValidated - Aside in Aside',()=>{
+        let sourceType = 'ASIDE'
+        let selectionType = 'SHOW_HIDE'
+        let returnData = getPasteValidated(separatorProps, sourceType, selectionType);
+        expect(returnData).toBe(true);
+    })
+    it('Test2- getPasteValidated - Aside in Aside',()=>{
+        let sourceType = 'ASIDE'
+        let selectionType = 'POETRY'
+        let returnData = getPasteValidated(separatorProps, sourceType, selectionType);
+        expect(returnData).toBe(true);
+    })
 })

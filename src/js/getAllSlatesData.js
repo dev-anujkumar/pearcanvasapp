@@ -1,6 +1,6 @@
 import { sendDataToIframe } from '../constants/utility'
 import config from '../config/config';
-import { GET_ALL_SLATES_DATA, SET_CURRENT_SLATE_DATA } from '../constants/Action_Constants';
+import { GET_ALL_SLATES_DATA, SET_CURRENT_SLATE_DATA, SET_REQUIRED_SLATE_DATA } from '../constants/Action_Constants';
 let containerType = ['project', 'part', 'chapter', 'module','appendix', 'volume']
 
 /**
@@ -205,6 +205,15 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
         type: SET_CURRENT_SLATE_DATA,
         payload: {
             currentSlateAncestorData: currentSlateData
+        }
+    })
+}
+
+export const fetchAnySlateData = (slateData) => dispatch =>{
+    return dispatch({
+        type: SET_REQUIRED_SLATE_DATA,
+        payload:{
+            getRequiredSlateData : slateData
         }
     })
 }

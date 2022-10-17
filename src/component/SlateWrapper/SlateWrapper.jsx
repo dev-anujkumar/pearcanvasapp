@@ -13,7 +13,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -1182,19 +1182,25 @@ class SlateWrapper extends Component {
         if (this.props.openRemovePopUp || this.props.openSplitPopUp) {
             this.props.showBlocker(true)
             showTocBlocker()
-            return (
-                <PopUp
-                    openRemovePopUp={this.props.openRemovePopUp}
-                    dialogText={dialogText}
-                    active={true}
-                    removeConfirmation={true}
-                    audioRemoveClass={audioRemoveClass}
-                    saveButtonText='OK'
-                    saveContent={this.processRemoveConfirmation}
-                    togglePopup={this.toggleAudioPopup}
-                    isGlossary ={this.props.isGlossary}
-                />
-            )
+            const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+            if (disableDeleteWarnings && this.props.openRemovePopUp) {
+                this.processRemoveConfirmation();
+                return null;
+            } else {
+                return (
+                    <PopUp
+                        openRemovePopUp={this.props.openRemovePopUp}
+                        dialogText={dialogText}
+                        active={true}
+                        removeConfirmation={true}
+                        audioRemoveClass={audioRemoveClass}
+                        saveButtonText='OK'
+                        saveContent={this.processRemoveConfirmation}
+                        togglePopup={this.toggleAudioPopup}
+                        isGlossary ={this.props.isGlossary}
+                    />
+                )
+            }
         }
         else if (this.props.openWrongAudioPopup) {
             this.props.showBlocker(true)
