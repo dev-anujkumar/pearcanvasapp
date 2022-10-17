@@ -70,6 +70,7 @@ const ShowHideUiBlock = (props) => {
 			showDiscussion = {showDiscussion}
 			cloneContainer = {props?.cloneContainer}
 			dataId = {isFirst}
+			handleCopyPastePopup={props.handleCopyPastePopup}
 		/>
 	}
 
