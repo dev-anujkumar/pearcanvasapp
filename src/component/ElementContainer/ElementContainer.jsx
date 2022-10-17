@@ -898,11 +898,13 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData) => {
+        console.log("Inside handleContentChange", node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData);
         let { parentUrn, asideData } = this.props;
         asideData = cgTitleFieldData?.asideData && Object.keys(cgTitleFieldData?.asideData).length > 0 ? cgTitleFieldData?.asideData : asideData;
         parentElement = cgTitleFieldData?.parentElement && Object.keys(cgTitleFieldData?.parentElement).length > 0 ? cgTitleFieldData?.parentElement : parentElement;
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+        console.log("assetPopoverPopupIsVisible", assetPopoverPopupIsVisible);
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
@@ -985,7 +987,8 @@ class ElementContainer extends Component {
                 previousElementData.html.text = previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
-                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
+                console.log("Outside if condition", !assetPopoverPopupIsVisible, !config.savingInProgress , !checkCanvasBlocker , elementType , primaryOption, secondaryOption);
+                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
@@ -2546,6 +2549,7 @@ class ElementContainer extends Component {
                     copyClickedY={this.copyClickedY}
                     permissions={_props.permissions}
                     slateLevelData={this.props.slateLevelData}
+                    handleBlur={this.handleBlur}
                 />
             )
         }

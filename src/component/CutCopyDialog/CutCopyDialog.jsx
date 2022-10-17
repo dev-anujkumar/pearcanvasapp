@@ -14,7 +14,9 @@ const CutCopyDialog = props => {
                 {allowToShowOptions && renderCutCopyOption(props)}
                 <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
-            
+            <div className="copyUrn" onClick={(e) => props.handleBlur(true)}>
+                Refresh
+            </div>
             <div className='blockerBgDiv' tabIndex="0" onClick={(e) => { hideAPOOnOuterClick(e, props.toggleCopyMenu) }}></div>
         </div>
     )
