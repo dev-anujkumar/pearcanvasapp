@@ -1374,7 +1374,11 @@ class SlateWrapper extends Component {
 
     saveAndClose = () =>{
         if(this.props.slateData[config.tempSlateManifestURN].status === "approved"){
-            setTimeout(this.closePopup, 7000)
+            if (config.savingInProgress || config.isSavingElement) {
+                setTimeout(this.closePopup, 7000)
+            }else{
+                setTimeout(this.closePopup, 0)
+            }
         }else{
             setTimeout(this.closePopup, 800)
         }
