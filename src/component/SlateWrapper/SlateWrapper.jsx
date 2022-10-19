@@ -1375,7 +1375,8 @@ class SlateWrapper extends Component {
     saveAndClose = () =>{
         if(this.props && config.tempSlateManifestURN && this.props.slateData && this.props.slateData[config.tempSlateManifestURN] && this.props.slateData[config.tempSlateManifestURN].status === "approved"){
             if (config.savingInProgress || config.isSavingElement) {
-                setTimeout(this.closePopup, 8000)
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                setTimeout(this.closePopup, 10000)
             }else{
                 setTimeout(this.closePopup, 0)
             }
@@ -1385,6 +1386,7 @@ class SlateWrapper extends Component {
     }
 
     closePopup = () =>{
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })
         let popupId = config.slateManifestURN
         if(this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN].status === "wip"){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
