@@ -682,6 +682,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 delete Object.assign(newslateData, {[Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];     
                 config.slateManifestURN= Object.values(slateData.data)[0].id
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
+                config.tcmStatusPopupGlossary = true
                 return dispatch({
                     type: AUTHORING_ELEMENT_UPDATE,
                     payload: {

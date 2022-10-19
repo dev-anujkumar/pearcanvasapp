@@ -105,7 +105,8 @@ let cypressConfig = {
     assessmentId: "",
     glossaryCreated: false,
     elementSlateRefresh: false,
-    currentElementUrn: ''
+    currentElementUrn: '',
+    tcmStatusPopupGlossary: false
 }
 
 
