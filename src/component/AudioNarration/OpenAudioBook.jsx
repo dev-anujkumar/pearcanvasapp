@@ -15,7 +15,8 @@ class OpenAudioBook extends React.Component {
         super(props);
         this.state ={
             replaceToggle:false
-        }
+        },
+        this.wrapperRef = React.createRef();
     }
 
     /**
@@ -37,19 +38,21 @@ class OpenAudioBook extends React.Component {
 
 
     componentDidMount() {
-        document.addEventListener('mousedown', this.handleClick, false)
+        document.addEventListener("mousedown", this.handleClickOutside);
     }
 
     /**
     * @description - handleClick function responsible for closing the dropdown whenever clicked outside.
     */
-    handleClick = (e) => {
-        if (this.node.contains(e.target)) {
-            return;
+    handleClickOutside = (event) => {
+        if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+            this.props.closeAudioBookDialog()
         }
-        this.props.closeAudioBookDialog()
     }
-
+   
+    componentWillUnmount() {
+        document.removeEventListener("mousedown", this.handleClickOutside);
+    }
 
     static getDerivedStateFromProps(nextprops, prevState) {
         if (prevState && prevState.audioData && prevState.audioData.containerUrn !== nextprops && nextprops.audioData && nextprops.audioData.containerUrn) {
@@ -90,7 +93,7 @@ class OpenAudioBook extends React.Component {
         
         const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' && this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)
         return (
-            <div className={!isGlossary ?'audiodropdown':'glossary-audiodropdown'} style={isGlossary ? this.props.position :null}  id='openAudioBook' ref={node => this.node = node} onBlur={() => this.handleClick(this)}>
+            <div className={!isGlossary ?'audiodropdown':'glossary-audiodropdown'} style={isGlossary ? this.props.position :null}  id='openAudioBook' ref={this.wrapperRef} >
                 <div className="audio-close">
                     <h2 className="audio-book-text">Audio Book</h2>
                     <span className="close-icon-audio" onClick={() => this.props.closeAudioBookDialog()}>{audioNarrationCloseIcon}</span>
