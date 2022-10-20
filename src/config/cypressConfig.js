@@ -106,7 +106,8 @@ let cypressConfig = {
     glossaryCreated: false,
     elementSlateRefresh: false,
     currentElementUrn: '',
-    tcmStatusPopupGlossary: false
+    tcmStatusPopupGlossary: false,
+    pendingTcmStatus: false
 }
 
 

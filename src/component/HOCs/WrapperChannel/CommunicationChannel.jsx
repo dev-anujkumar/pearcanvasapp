@@ -429,6 +429,8 @@ function CommunicationChannel(WrappedComponent) {
                 case "preflightElementFocus": 
                     config.currentElementUrn = message
                     break;
+                case "pendingTcmStatus":
+                    config.pendingTcmStatus = message.status
             }
         }
 
