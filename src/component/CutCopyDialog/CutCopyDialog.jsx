@@ -4,19 +4,23 @@ import config from './../../config/config';
 import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions';
 
 const CutCopyDialog = props => {
-
+    
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     const popupSlateNotAcceptedTypes = ['groupedcontent', 'showhide', 'citations', 'element-citation', 'poetry', 'stanza'];
+    const refreshSupportedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup'];
     let allowToShowOptions = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.element?.type) ? false : true;
+    const showRefreshOption = (refreshSupportedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true 
     return (
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">
                 {allowToShowOptions && renderCutCopyOption(props)}
                 <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
-            <div className="copyUrn" onClick={(e) => props.handleBlur(true)}>
-                Refresh
-            </div>
+            {
+                showRefreshOption && <div className="copyUrn" onClick={(e) => props.handleBlur(true,null,null,null,null,null,'REFRESH_ELEMENT')}>
+                    Refresh
+                </div>
+            }
             <div className='blockerBgDiv' tabIndex="0" onClick={(e) => { hideAPOOnOuterClick(e, props.toggleCopyMenu) }}></div>
         </div>
     )

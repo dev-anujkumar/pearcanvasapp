@@ -897,14 +897,13 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData) => {
-        console.log("Inside handleContentChange", node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData);
+    handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom) => {
         let { parentUrn, asideData } = this.props;
         asideData = cgTitleFieldData?.asideData && Object.keys(cgTitleFieldData?.asideData).length > 0 ? cgTitleFieldData?.asideData : asideData;
         parentElement = cgTitleFieldData?.parentElement && Object.keys(cgTitleFieldData?.parentElement).length > 0 ? cgTitleFieldData?.parentElement : parentElement;
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
-        console.log("assetPopoverPopupIsVisible", assetPopoverPopupIsVisible);
+        if (assetPopoverPopupIsVisible && triggeredFrom === 'REFRESH_ELEMENT') assetPopoverPopupIsVisible = false;
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
@@ -987,8 +986,7 @@ class ElementContainer extends Component {
                 previousElementData.html.text = previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
-                console.log("Outside if condition", !assetPopoverPopupIsVisible, !config.savingInProgress , !checkCanvasBlocker , elementType , primaryOption, secondaryOption);
-                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !config.savingInProgress && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
+                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
@@ -1221,7 +1219,7 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}) => {
+    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}, triggeredFrom = '') => {
         const { elementType, primaryOption, secondaryOption, elementId } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
@@ -1244,9 +1242,9 @@ class ElementContainer extends Component {
         }  
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
-            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType, null, cgTitleFieldData);
+            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType, null, cgTitleFieldData, triggeredFrom);
         } else {
-            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData)
+            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom)
         }
     }
 
