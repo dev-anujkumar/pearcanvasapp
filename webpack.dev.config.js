@@ -9,7 +9,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 //const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 //const WebpackMd5Hash = require('webpack-md5-hash');
 const BrotliPlugin = require('brotli-webpack-plugin');
-const USEHASH = '[hash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
+const USEHASH = '[fullhash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
 const COMPRESSION = process.env.COMPRESSION && process.env.COMPRESSION == 'true' || false;
 const DOTENV = require('dotenv').config({ path: __dirname + '/.env' });
 const plugin = [
@@ -157,7 +157,7 @@ module.exports = {
         //overlay: true,
         port: 443,
         //index: 'index.html',
-        hot: true,
+        //hot: true,
         proxy: [{
             context: ['**/configurationjs**', '/pluginwiris_engine/**'],
             target: 'https://dev-structuredauthoring.pearson.com/',
@@ -168,17 +168,27 @@ module.exports = {
         }]
     },
     optimization: {
-        runtimeChunk: 'single', // To extract the manifest and runtime
         splitChunks: {
-            cacheGroups: {
-                defaultVendors: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: 'vendors',
-                    chunks: 'all'
-                }
-            }
+          chunks: 'async',
+          minSize: 20000,
+          minRemainingSize: 0,
+          minChunks: 1,
+          maxAsyncRequests: 30,
+          maxInitialRequests: 30,
+          enforceSizeThreshold: 50000,
+          cacheGroups: {
+            defaultVendors: {
+              //test: /[\\/]node_modules[\\/]/,
+              priority: -10,
+              reuseExistingChunk: true,
+            },
+            default: {
+              minChunks: 2,
+              priority: -20,
+              reuseExistingChunk: true,
+            },
+          },
         },
-        sideEffects: false,
-        minimize: true
-    }
+      }
+
 }

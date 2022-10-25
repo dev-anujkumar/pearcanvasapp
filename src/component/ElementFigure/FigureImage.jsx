@@ -27,7 +27,6 @@ import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
-const BLANK_NUMBER_LABEL_OPTIONS = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER]
 const imageFigureTypes = ["image","mathImage","table","tableasmarkup","authoredtext","codelisting"];
 const blockMathCodeTypes = ["authoredtext","codelisting"];
 

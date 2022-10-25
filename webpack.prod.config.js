@@ -125,8 +125,8 @@ module.exports = {
             analyzerMode: 'static'
         }),
         // To prevent vendor hash id to change everytime
-        new webpack.HashedModuleIdsPlugin(),
-        new WebpackMd5Hash(),
+        new webpack.ids.HashedModuleIdsPlugin(),
+        //new WebpackMd5Hash(),
         new webpack.DefinePlugin({
             "process.env": JSON.stringify(DOTENV.parsed)
         })
@@ -137,8 +137,7 @@ module.exports = {
         runtimeChunk: 'single', // To extract the manifest and runtime
         splitChunks: {
             cacheGroups: {
-                vendor: {
-                    test: /[\\/]node_modules[\\/]/,
+                defaultVendors: {
                     name: 'vendors',
                     chunks: 'all'
                 }

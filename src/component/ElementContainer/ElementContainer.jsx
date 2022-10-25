@@ -16,7 +16,7 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
+import { addComment, deleteElement, updateElement, createShowHideElement, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
          prepareImageDataFromTable } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
@@ -1866,8 +1866,6 @@ class ElementContainer extends Component {
                         elemBorderToggle={this.props.elemBorderToggle}
                         deleteElement={this.deleteElement}
                         showHideId={this.props.showHideId}
-                        //createShowHideElement = {this.props.createShowHideElement}
-                        //deleteShowHideUnit = {this.props.deleteShowHideUnit}
                         activeElement={this.props.activeElement}
                         showBlocker={this.props.showBlocker}
                         permissions={permissions}
@@ -2798,9 +2796,6 @@ const mapDispatchToProps = (dispatch) => {
         releaseSlateLock,
         createShowHideElement: (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
             dispatch(createShowHideElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
-        },
-        deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
-            dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
         },
         createPoetryUnit: (poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element) => {
             dispatch(createPoetryUnit(poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element))
