@@ -2522,7 +2522,9 @@ class ElementContainer extends Component {
             containerId: objKey,
             columnIndex: `C${index + 1}`
         }
-        this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
+        setTimeout(() => {
+            this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
+        }, 0)
     }
 
     /**
