@@ -1044,6 +1044,18 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
+    test('Test for brokerPreview case', () => {
+        let event = {
+            data: {
+                type: "brokerPreview",
+                message: ""
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
     test('Test for slatePreview case', () => {
         let event = {
             data: {

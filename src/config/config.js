@@ -59,6 +59,7 @@ let config = {
     ENABLE_AUTO_NUMBER_CONTENT: false,
     SLATE_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-dev-publishSlate',
     PROJECT_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-dev-publishTitleInterimNonBroker',
+    BROKER_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-qa-publishTitleInterim',
     AWS_RESOURCE : 'lambda',
     PROJECT_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
     SLATE_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
