@@ -103,7 +103,8 @@ let cypressConfig = {
     figureDataToBeFetched:false,
     parentOfParentItem:[],
     assessmentId: "",
-    glossaryCreated: false
+    glossaryCreated: false,
+    BROKER_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-qa-publishTitleInterim',
 }
 
 
