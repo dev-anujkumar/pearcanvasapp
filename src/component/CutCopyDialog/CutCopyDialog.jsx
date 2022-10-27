@@ -4,12 +4,12 @@ import config from './../../config/config';
 import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions';
 
 const CutCopyDialog = props => {
-    
+
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     const popupSlateNotAcceptedTypes = ['groupedcontent', 'showhide', 'citations', 'element-citation', 'poetry', 'stanza'];
-    const refreshSupportedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup'];
+    const refreshRestrictedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup', 'discussion', 'poetry', 'element-dialogue'];
     let allowToShowOptions = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.element?.type) ? false : true;
-    const showRefreshOption = (refreshSupportedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true 
+    const showRefreshOption = (refreshRestrictedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true 
     return (
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">
