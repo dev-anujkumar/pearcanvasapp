@@ -291,6 +291,7 @@ export const fetchElementWipData = (bodymatter, index, type, entityUrn, operatio
                 } else {
                     wipData = bodymatter[eleIndex[0]]
                 }
+                break;
             case POPUP_ELEMENT:/** To set Parent Element from GlossaryFootnote Action- Create title from footnote */           
                 wipData = popupWipData(bodymatter, eleIndex,operationType,wipData)
                 break;

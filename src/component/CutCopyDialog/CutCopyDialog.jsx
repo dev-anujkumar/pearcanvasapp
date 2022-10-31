@@ -3,13 +3,23 @@ import store from '../../appstore/store';
 import config from './../../config/config';
 import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions';
 
+// function to be called on click of refresh option
+const refreshElement = (props) => {
+    let index = null;
+    // handling blockquote index for element refresh 
+    if(props?.element?.elementdata?.type === 'blockquote' && props?.index) {
+        index = props?.index + '-0';
+    }
+    props.handleBlur(true, null, index, null, null, null, 'REFRESH_ELEMENT');
+}
+
 const CutCopyDialog = props => {
     
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     const popupSlateNotAcceptedTypes = ['groupedcontent', 'showhide', 'citations', 'element-citation', 'poetry', 'stanza'];
-    const refreshSupportedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup'];
+    const refreshRestrictedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup', 'discussion', 'poetry', 'element-dialogue', 'openerelement'];
     let allowToShowOptions = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.element?.type) ? false : true;
-    const showRefreshOption = (refreshSupportedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true 
+    const showRefreshOption = (refreshRestrictedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true 
     return (
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">
@@ -17,7 +27,7 @@ const CutCopyDialog = props => {
                 <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
             {
-                showRefreshOption && <div className="copyUrn" onClick={(e) => props.handleBlur(true,null,null,null,null,null,'REFRESH_ELEMENT')}>
+                showRefreshOption && <div className="copyUrn" onClick={() => refreshElement(props)}>
                     Refresh
                 </div>
             }
