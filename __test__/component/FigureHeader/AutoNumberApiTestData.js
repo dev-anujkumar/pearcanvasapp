@@ -5350,6 +5350,83 @@ export const selectedElement = [{
 	contentUrn: "urn:pearson:entity:5b98f4b8-f9fb-4e55-82ca-357286d803e0",
 	displayedlabel: "Figure",
 	numberedandlabel: true
+  },{
+	id: "urn:pearson:manifest:83f08c82-8d49-4fdf-a40f-36c60f39f29f",
+	type: "groupedcontent",
+	subtype: "group",
+	schema: "http://schemas.pearson.com/wip-authoring/element/1",
+	designtype: "2C",
+	elementdata: {
+	  bodymatter: [
+		{
+		  id: "urn:pearson:work:0e84ecb9-ff85-4df9-9790-a14f967bb4dd",
+		  type: "figure",
+		  figuretype: "image",
+		  subtype: "imageTextWidth",
+		  schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+		  titlecontentintitlefield: true,
+		  alignment: "text-width",
+		  title: {
+			schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+			text: ""
+		  },
+		  captions: {
+			schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+			text: ""
+		  },
+		  credits: {
+			schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+			text: ""
+		  },
+		  figuredata: {
+			schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+			imageid: "",
+			path: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+			height: "422",
+			width: "680",
+			podwidth: ""
+		  },
+		  html: {
+			title: "<p></p>",
+			captions: "<p></p>",
+			credits: "<p></p>",
+			footnotes: {},
+			assetsPopover: {},
+			glossaryentries: {},
+			indexEntries: {}
+		  },
+		  versionUrn: "urn:pearson:work:0e84ecb9-ff85-4df9-9790-a14f967bb4dd",
+		  contentUrn: "urn:pearson:entity:5b98f4b8-f9fb-4e55-82ca-357286d803e0",
+		  displayedlabel: "Figure",
+		  numberedandlabel: true
+		},
+		{
+		  id: "urn:pearson:work:25173d9f-2123-42de-9ff0-f98a22f63296",
+		  type: "element-authoredtext",
+		  schema: "http://schemas.pearson.com/wip-authoring/element/1",
+		  elementdata: {
+			schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+			text: ""
+		  },
+		  html: {
+			text: "<p class=\"paragraphNumeroUno\"><br></p>",
+			footnotes: {},
+			assetsPopover: {},
+			glossaryentries: {},
+			indexEntries: {}
+		  },
+		  versionUrn: "urn:pearson:work:25173d9f-2123-42de-9ff0-f98a22f63296",
+		  contentUrn: "urn:pearson:entity:85ac1442-48df-47ee-b110-1d8268e76d61"
+		}
+	  ],
+	  schema: "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest"
+	},
+	versionUrn: "urn:pearson:manifest:83f08c82-8d49-4fdf-a40f-36c60f39f29f",
+	contentUrn: "urn:pearson:entity:ec981ef8-e76f-43e8-867a-8be79971223c",
+	status: "wip",
+	pageNo: 0,
+	displayedlabel: "2C",
+	numberedandlabel: true
   }];
 
   export const asideOnSlateData = {

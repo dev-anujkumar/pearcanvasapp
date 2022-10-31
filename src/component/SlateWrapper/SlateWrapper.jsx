@@ -1371,10 +1371,22 @@ class SlateWrapper extends Component {
             )
         }
     }
-    closePopup = () =>{
-        if (config.savingInProgress || config.isSavingElement) {
-            return false
+
+    saveAndClose = () =>{
+        if(this.props && config.tempSlateManifestURN && this.props.slateData && this.props.slateData[config.tempSlateManifestURN] && this.props.slateData[config.tempSlateManifestURN].status === "approved"){
+            if (config.savingInProgress || config.isSavingElement) {
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                setTimeout(this.closePopup, 10000)
+            }else{
+                setTimeout(this.closePopup, 0)
+            }
+        }else{
+            setTimeout(this.closePopup, 800)
         }
+    }
+
+    closePopup = () =>{
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })
         let popupId = config.slateManifestURN
         if(this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN].status === "wip"){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -1555,7 +1567,7 @@ class SlateWrapper extends Component {
                 <div className='title-head-wrapper'>
                      {
                         this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'popup' ?
-                          <button className="popup-button" onClick={this.closePopup}>SAVE & CLOSE</button>
+                          <button className="popup-button" onClick={this.saveAndClose}>SAVE & CLOSE</button>
                           :this.renderSlateHeader(this.props)
                     } 
                 </div>

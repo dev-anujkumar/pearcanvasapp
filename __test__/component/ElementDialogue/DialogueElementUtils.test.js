@@ -48,6 +48,7 @@ it('Testing createPSDataForUpdateAPI function ELSE case', () => {
     let elementDiscussion = {
         id: "1"
     }
+  
     config.elementStatus= {[elementDiscussion.id]: "approved"}
     let props = {
         index: "",
@@ -73,5 +74,84 @@ it('Testing createPSDataForUpdateAPI function ELSE case', () => {
     }
     let finalData = Utils.createPSDataForUpdateAPI(props, elementDiscussion);
     expect(finalData).toEqual(result)
+});
+it('Testing handleCommonEvents function IF case', () => {
+    let addEvent = true
+    let elementDiscussion = {
+        id: "1"
+    }
+    jest.spyOn(document, 'querySelectorAll').mockImplementationOnce((id) => {
+        if(id ===`.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label`) {
+        return [{
+            classList:{
+                add: jest.fn()
+            }
+        }]
+    }
+    })
+    config.elementStatus= {[elementDiscussion.id]: "approved"}
+    let props = {
+        index: "",
+        parentElement: {
+            type: "",
+            subtype: "",
+            elementdata: "",
+            groupeddata: "",
+            contentUrn: "",
+        },
+        asideData:{
+            type: ElementConstants.SHOW_HIDE
+        },
+    sectionType:"show",
+    }
+    let result = {
+        "elementParentEntityUrn": undefined, 
+        'id': '1',
+        "index": "", 
+        "inputSubType": "NA", 
+        "inputType": "ELEMENT_DIALOGUE", 
+        "slateVersionUrn": undefined,
+    }
+    let finalData = Utils.handleCommonEvents(props, addEvent);
+    expect(finalData).toEqual(undefined)
+});
+it('Testing handleCommonEvents function ELSE case', () => {
+    let elementDiscussion = {
+        id: "1"
+    }
+    jest.spyOn(document, 'querySelectorAll').mockImplementationOnce((id) => {
+        if(id ===`.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label`) {
+        return [{
+            classList:{
+                remove: jest.fn()
+            }
+        }]
+    }
+    })
+    config.elementStatus= {[elementDiscussion.id]: "approved"}
+    let props = {
+        index: "",
+        parentElement: {
+            type: "",
+            subtype: "",
+            elementdata: "",
+            groupeddata: "",
+            contentUrn: "",
+        },
+        asideData:{
+            type: ElementConstants.SHOW_HIDE
+        },
+    sectionType:"show",
+    }
+    let result = {
+        "elementParentEntityUrn": undefined, 
+        'id': '1',
+        "index": "", 
+        "inputSubType": "NA", 
+        "inputType": "ELEMENT_DIALOGUE", 
+        "slateVersionUrn": undefined,
+    }
+    let finalData = Utils.handleCommonEvents(props);
+    expect(finalData).toEqual(undefined)
 });
 });

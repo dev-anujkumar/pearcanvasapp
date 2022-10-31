@@ -14,6 +14,11 @@ export const handleTCMData = (slateManifestUrn) => (dispatch, getState) => {
     if (cypressPlusProjectStatus && config.slateType === "pdfslate") {
         return false; // disable TCM for all PDF slates in Cypress+ Enabled Projects
     }
+    if(config.tcmStatusPopupGlossary === true || (config.pendingTcmStatus === "true" && config.elementSlateRefresh)){
+        sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'true' });
+    }
+    config.tcmStatusPopupGlossary = false
+    config.pendingTcmStatus = false
     let url = `${config.TCM_SRVR_STATUS_URL}${config.projectUrn}/slate/${slateManifestUrn}`;
     return axios.get(url, {
         headers: {

@@ -2068,6 +2068,7 @@ class ElementContainer extends Component {
                         splithandlerfunction={splithandlerfunction}
                         handleUndoOption = {this.handleUndoOption}
                         closeUndoTimer = {this.props.closeUndoTimer}
+                        handleCopyPastePopup={this.props.handleCopyPastePopup}
                     />;
                     labelText = 'SH'
                     break;
