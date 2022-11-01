@@ -19,8 +19,8 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+// import TextField from '@material-ui/core/TextField';
+// import Autocomplete from '@material-ui/lab/Autocomplete';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -509,7 +509,7 @@ class Sidebar extends Component {
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
                     </div>) : (<div className={`element-dropdown-title bce ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
-                        <Autocomplete
+                        {/* <Autocomplete
                             disablePortal
                             disableClearable
                             id="language-select-demo"
@@ -531,7 +531,7 @@ class Sidebar extends Component {
                                     }}
                                 />
                             )}
-                        />
+                        /> */}
                     </div>)}
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
@@ -628,9 +628,9 @@ class Sidebar extends Component {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable)
                     if (this.props?.activeElement?.elementType === "openerelement") {
                         if (item === "alt_text") {
-                            attrValue = document?.querySelector("[name='alt_text']")?.innerHTML ? document?.querySelector("[name='alt_text']")?.innerHTML : this.props.activeElement.altText ? this.props.activeElement.altText : ""
+                            attrValue = this.props?.alfrescoAltLongDescData?.hasOwnProperty("altText") ? this.props?.alfrescoAltLongDescData?.altText : this.props?.activeElement?.altText ? this.props?.activeElement?.altText : ""
                         } else if (item === "long_description") {
-                            attrValue = document?.querySelector("[name='long_description']")?.innerHTML ? document?.querySelector("[name='long_description']")?.innerHTML : this.props.activeElement.longDesc ? this.props.activeElement.longDesc : ""
+                            attrValue = this.props?.alfrescoAltLongDescData?.hasOwnProperty("longDesc") ? this.props?.alfrescoAltLongDescData?.longDesc : this.props?.activeElement?.longDesc ? this.props?.activeElement?.longDesc : ""
                         }
                     } else {
                         if (item === "alt_text") {
@@ -1062,7 +1062,8 @@ const mapStateToProps = state => {
         tcmStatus: state.tcmReducer.tcmStatus,
         asideData:state.appStore.asideData,
         asideTitleData: state.appStore.asideTitleData,
-        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled
+        isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
+        alfrescoAltLongDescData: state.alfrescoReducer.savedAltLongDesData,
     };
 };
 

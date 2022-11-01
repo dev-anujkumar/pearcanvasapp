@@ -46,6 +46,18 @@ describe('Test Actions', () => {
         expect(spyFunction).toHaveBeenCalled();
         spyFunction.mockClear();
     });
+    it('Test-1.4---saveSelectedAltTextLongDescData', () => {
+        const data = {
+            altText : "",
+            longDesc: ""
+        }
+        const spyFunction = jest.spyOn(AlfrescoActions, 'saveSelectedAltTextLongDescData');
+        let result = AlfrescoActions.saveSelectedAltTextLongDescData(data);
+        expect(result.type).toEqual('SAVE_ALFRESCO_ALT_LONG_DESC_DATA');
+        expect(result.payload).toEqual(data);
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
+    });
 });
 describe('Test fetchAlfrescoSiteDropdownList',()=>{
     it('Test-2.1---fetchAlfrescoSiteDropdownList-Then- with res.data', () => {
