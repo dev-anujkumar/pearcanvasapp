@@ -19,8 +19,8 @@ import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-// import TextField from '@material-ui/core/TextField';
-// import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -509,7 +509,7 @@ class Sidebar extends Component {
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
                     </div>) : (<div className={`element-dropdown-title bce ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
-                        {/* <Autocomplete
+                        <Autocomplete
                             disablePortal
                             disableClearable
                             id="language-select-demo"
@@ -531,7 +531,7 @@ class Sidebar extends Component {
                                     }}
                                 />
                             )}
-                        /> */}
+                        /> 
                     </div>)}
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
