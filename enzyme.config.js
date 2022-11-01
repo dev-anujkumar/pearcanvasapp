@@ -7,7 +7,7 @@ import { createSerializer } from 'enzyme-to-json';
 import sinon from 'sinon';
 import expect from 'expect';
 
-expect.addSnapshotSerializer(createSerializer({ mode: 'deep' }));
+//expect.addSnapshotSerializer(createSerializer({ mode: 'deep' }));
 
 configure({ adapter: new Adapter() });
 
