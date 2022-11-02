@@ -3,7 +3,8 @@ import {
     SET_ALFRESCO_POPUP,
     SAVE_ALFRESCO_ASSET_DATA,
     SAVE_INLINE_IMAGE_DATA,
-    SAVE_ALFRESCO_ELEMENT
+    SAVE_ALFRESCO_ELEMENT,
+    SAVE_ALFRESCO_ALT_LONG_DESC_DATA
 } from './../../constants/Action_Constants';
 import config from '../../config/config';
 import axios from 'axios';
@@ -34,6 +35,12 @@ export const saveInlineImageData = (data) =>{
     }
 }
 
+export const saveSelectedAltTextLongDescData = (data) => {
+    return {
+        type: SAVE_ALFRESCO_ALT_LONG_DESC_DATA,
+        payload: data
+    }
+}
 /**
  * This method is used to fetch Alfresco Site list
  * @param {*} calledFrom 

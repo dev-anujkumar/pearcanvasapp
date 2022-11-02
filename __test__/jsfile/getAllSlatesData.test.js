@@ -1,8 +1,10 @@
 import config from '../../src/config/config.js';
 import * as actions from '../../src/js/getAllSlatesData.js';
 import {allSlatesData,returnAllSlateData} from '../../fixtures/AllSlatesTestData';
+import { communicationAssessmentSlateData } from '../../fixtures/slateTestingData'
 jest.mock('../../src/constants/utility.js', () => ({
-    sendDataToIframe: jest.fn()
+    sendDataToIframe: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 
 
@@ -71,6 +73,15 @@ it('Test Function----->setCurrentSlateAncestorData - Slate in Backmatter',()=>{
         expect(obj.type).toBe('SET_CURRENT_SLATE_DATA')
     }
     actions.setCurrentSlateAncestorData(returnAllSlateData)(dispatch)
+    expect(spyFunction).toHaveBeenCalled()
+})
+it('Test Function----->fetchAnySlateData ',()=>{
+    const spyFunction = jest.spyOn(actions,'fetchAnySlateData');
+    let dispatch = (obj) => {
+        expect(obj.type).toBe('SET_REQUIRED_SLATE_DATA')
+        expect(obj.payload.getRequiredSlateData).toEqual(communicationAssessmentSlateData.getRequiredSlateData)
+    }
+    actions.fetchAnySlateData(communicationAssessmentSlateData.getRequiredSlateData)(dispatch)
     expect(spyFunction).toHaveBeenCalled()
 })
 })

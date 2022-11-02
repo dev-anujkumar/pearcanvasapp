@@ -29,6 +29,7 @@ jest.mock('../../../src/constants/utility.js', () => {
       hasReviewerRole: () => {
           return false
       },
+      handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
   }
 });
 const middlewares = [thunk];

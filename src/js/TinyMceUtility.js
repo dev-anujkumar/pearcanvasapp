@@ -14,7 +14,7 @@ import store from '../appstore/store';
   */
  export const dataFromAlfresco = (data, editor, imageArgs) => {
     let imageData = data;
-    let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "" ;
+    let epsURL = imageData?.epsUrl ? imageData?.epsUrl : imageData.hasOwnProperty('institution-urls') ? (imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "") :"" ;
     let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
     let uniqID = imageData.id ? imageData.id : "";
     let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";

@@ -46,7 +46,14 @@ import {
     UPDATE_OLD_SMARTLINK_INFO,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     UPDATE_TABLE_ELEMENT_ASSET_DATA,
-    UPDATE_TABLE_ELEMENT_EDITED_DATA
+    UPDATE_TABLE_ELEMENT_EDITED_DATA,
+    DELETE_ELEMENT_KEYS,
+    SET_JOINED_PDF_STATUS,
+    SET_SLATE_MATTER_TYPE,
+    UPDATE_CARET_OFFSET,
+    SET_REQUIRED_SLATE_DATA,
+    CYPRESS_PLUS_ENABLED,
+    CHECK_ASIDE_NUMBER
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -83,7 +90,9 @@ const initialState = {
         smartlinks: ["No Label", "Custom"],
         video: ["No Label", "Custom"]
     },
-    tableElementAssetData: []
+    tableElementAssetData: [],
+    isCypressPlusEnabled: false,
+    asideTitleData:[{elementId:'test'}]
 };
 
 const splittedElementIndexValue = "5";
@@ -764,6 +773,67 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         expect(reducer(initialState, {
             type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
             payload: {}
+        })).toEqual(output);
+    });
+
+    it('case 50- DELETE_ELEMENT_KEYS ', () => {
+        let output = {
+            ...initialState,
+            deletedElementKeysData: {}
+        }
+        expect(reducer(initialState, {
+            type: DELETE_ELEMENT_KEYS,
+            payload: {}
+        })).toEqual(output);
+    });
+    it('case 51- SET_JOINED_PDF_STATUS ', () => {
+        let output = {
+            ...initialState,
+            isJoinedPdfSlate: false
+        }
+        expect(reducer(initialState, {
+            type: SET_JOINED_PDF_STATUS,
+            payload: false
+        })).toEqual(output);
+    });
+    it('case 52- SET_SLATE_MATTER_TYPE ', () => {
+        let output = {
+            ...initialState,
+            slateMatterType: {}
+        }
+        expect(reducer(initialState, {
+            type: SET_SLATE_MATTER_TYPE,
+            payload: {}
+        })).toEqual(output);
+    });
+    it('case 53- UPDATE_CARET_OFFSET ', () => {
+        let output = {
+            ...initialState,
+            caretPosition: ""
+        }
+        expect(reducer(initialState, {
+            type: UPDATE_CARET_OFFSET,
+            payload: ""
+        })).toEqual(output);
+    });
+    it('case 54- SET_REQUIRED_SLATE_DATA ', () => {
+        let output = {
+            ...initialState,
+            getRequiredSlateData: {}
+        }
+        expect(reducer(initialState, {
+            type: SET_REQUIRED_SLATE_DATA,
+            payload: {}
+        })).toEqual(output);
+    });
+    it('case 55- CYPRESS_PLUS_ENABLED ', () => {
+        let output = {
+            ...initialState,
+            isCypressPlusEnabled: true
+        }
+        expect(reducer(initialState, {
+            type: CYPRESS_PLUS_ENABLED,
+            payload: {isCypressPlusEnabled : true}
         })).toEqual(output);
     });
 });

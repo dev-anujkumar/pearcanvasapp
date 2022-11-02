@@ -14,7 +14,8 @@ import tinymce from 'tinymce/tinymce';
 
 jest.mock('axios');
 jest.mock('../../../src/constants/utility.js', () => ({
-    sendDataToIframe: jest.fn()
+    sendDataToIframe: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 jest.mock('../../../src/config/config.js', () => ({
     slateManifestURN: "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e",

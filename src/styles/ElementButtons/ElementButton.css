@@ -86,7 +86,7 @@
     margin-left: -10px;
 }
 
-.container-aside .power-paste-icon {
+.container-aside .power-paste-icon, .show-hide-component .power-paste-icon {
     margin-left: -35px;
 }
 

@@ -8,7 +8,7 @@ import BlockMathCode from './BlockMathCode.jsx';
 import { DEFAULT_IMAGE_SOURCE, labelHtmlData } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
-import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype } from '../../constants/utility';
+import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype, getCookieByName } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import { updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import figureData from './figureTypes';
@@ -208,7 +208,8 @@ class FigureImage extends Component {
 
     /*** @description This function is used to render delete Popup */
     showDeleteAssetPopup = () => {
-        if (this.state.deleteAssetPopup) {
+        const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+        if (this.state.deleteAssetPopup && !disableDeleteWarnings) {
             this.showCanvasBlocker(true)
             return (
                 <PopUp
@@ -222,6 +223,9 @@ class FigureImage extends Component {
                     
                 />
             )
+        } else if (this.state.deleteAssetPopup && disableDeleteWarnings) {
+            this.deleteFigureResource()
+            return null
         }
         else {
             return null

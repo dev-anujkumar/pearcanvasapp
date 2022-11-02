@@ -13,7 +13,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -1053,6 +1053,7 @@ class SlateWrapper extends Component {
                                         projectSubscriptionDetails={this.props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed}
                                         hideElementSeperator={this.props.hideElementSeperator}
                                         handleCopyPastePopup={this.handleCopyPastePopup}
+                                        closeUndoTimer = {this.props.closeUndoTimer}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -1082,6 +1083,7 @@ class SlateWrapper extends Component {
                                             pasteElement={this.props.pasteElement}
                                             handleCopyPastePopup={this.handleCopyPastePopup}
                                             source={TEXT_SOURCE}
+                                            dataId = {element.id}
                                         />
                                         : null
                                     }
@@ -1180,19 +1182,25 @@ class SlateWrapper extends Component {
         if (this.props.openRemovePopUp || this.props.openSplitPopUp) {
             this.props.showBlocker(true)
             showTocBlocker()
-            return (
-                <PopUp
-                    openRemovePopUp={this.props.openRemovePopUp}
-                    dialogText={dialogText}
-                    active={true}
-                    removeConfirmation={true}
-                    audioRemoveClass={audioRemoveClass}
-                    saveButtonText='OK'
-                    saveContent={this.processRemoveConfirmation}
-                    togglePopup={this.toggleAudioPopup}
-                    isGlossary ={this.props.isGlossary}
-                />
-            )
+            const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+            if (disableDeleteWarnings && this.props.openRemovePopUp) {
+                this.processRemoveConfirmation();
+                return null;
+            } else {
+                return (
+                    <PopUp
+                        openRemovePopUp={this.props.openRemovePopUp}
+                        dialogText={dialogText}
+                        active={true}
+                        removeConfirmation={true}
+                        audioRemoveClass={audioRemoveClass}
+                        saveButtonText='OK'
+                        saveContent={this.processRemoveConfirmation}
+                        togglePopup={this.toggleAudioPopup}
+                        isGlossary ={this.props.isGlossary}
+                    />
+                )
+            }
         }
         else if (this.props.openWrongAudioPopup) {
             this.props.showBlocker(true)
@@ -1363,10 +1371,22 @@ class SlateWrapper extends Component {
             )
         }
     }
-    closePopup = () =>{
-        if (config.savingInProgress || config.isSavingElement) {
-            return false
+
+    saveAndClose = () =>{
+        if(this.props && config.tempSlateManifestURN && this.props.slateData && this.props.slateData[config.tempSlateManifestURN] && this.props.slateData[config.tempSlateManifestURN].status === "approved"){
+            if (config.savingInProgress || config.isSavingElement) {
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                setTimeout(this.closePopup, 10000)
+            }else{
+                setTimeout(this.closePopup, 0)
+            }
+        }else{
+            setTimeout(this.closePopup, 800)
         }
+    }
+
+    closePopup = () =>{
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })
         let popupId = config.slateManifestURN
         if(this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN].status === "wip"){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
@@ -1547,7 +1567,7 @@ class SlateWrapper extends Component {
                 <div className='title-head-wrapper'>
                      {
                         this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'popup' ?
-                          <button className="popup-button" onClick={this.closePopup}>SAVE & CLOSE</button>
+                          <button className="popup-button" onClick={this.saveAndClose}>SAVE & CLOSE</button>
                           :this.renderSlateHeader(this.props)
                     } 
                 </div>

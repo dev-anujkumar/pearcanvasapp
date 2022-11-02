@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -349,7 +349,13 @@ export class TinyMceEditor extends Component {
         }
         if ((this.props.element && this.props.element.type === "element-list" && this.props.element.elementdata.listtype === type) ||
             (this.props.currentElement && this.props.currentElement.type === "element-list" && this.props.currentElement.elementdata.listtype === type)) {
-            this.toggleConfirmationPopup(true, this.props.element.subtype || this.props.currentElement.subtype);
+            //Check if disable list element warning popup flag is true
+            const disableListElementWarning = getCookieByName("DISABLE_LIST_ELEMENT_WARNING");
+            if (disableListElementWarning) {
+                this.props.onListSelect(this.props.element.subtype || this.props.currentElement.subtype, "");
+            } else {
+                this.toggleConfirmationPopup(true, this.props.element.subtype || this.props.currentElement.subtype);
+            }
         } else {
             this.props.onListSelect(subType, "");
         }
@@ -396,6 +402,10 @@ export class TinyMceEditor extends Component {
             if (this.props && this.props.element && this.props.element.type && this.props.element.type === 'stanza' && e.command === 'mceToggleFormat') {
                 let divParent = tinymce.$(`div[id="cypress-${this.props.index}"]`).children();
                 spanHandlers.handleFormattingTags(editor, this.props.elementId, 'div', divParent, 'poetryLine', range);
+            }
+            if (this.props && this.props.element && this.props.element.type && this.props.element.type === 'element-dialogue' && e.command === 'mceToggleFormat') {
+                let divParent = tinymce.$(`div[id="cypress-${this.props.index}"]`).children();
+                spanHandlers.handleFormattingTags(editor, this.props.elementId, 'div', divParent, 'dialogueLine', range);
             }
             if (this.props && this.props.element && this.props.element.type && this.props.element.figuretype === 'codelisting' && e.command === 'mceToggleFormat') {
                 let codeParent = tinymce.$(`code[id="cypress-${this.props.index}"]`).children();
@@ -505,9 +515,6 @@ export class TinyMceEditor extends Component {
                         ) {
                             e.target.targetElm.children[0].innerHTML = textToReplace;
                         }
-                        else if (this.props.element.type === 'stanza') {
-                            spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'div', 'poetryLine');
-                        }
                         else if (e.target.targetElm.nodeName === "CODE" && this.props.element.figuretype === 'codelisting') {
                             spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'code', 'codeNoHighlightLine');
                         }
@@ -552,10 +559,11 @@ export class TinyMceEditor extends Component {
                     let elementId = tinymce.activeEditor ? tinymce.activeEditor.id : '';
                     let blockqt = document.querySelector('#' + elementId + ' blockquote p.paragraphNummerEins');
                     let opener = document.querySelector('#' + elementId + ' opener p.paragraphNummerEins');
-                    if (!blockqt || blockqt.innerText.trim()) {
+                    const smartlinkElementCheck = e?.target?.targetElm?.className?.includes('hyperLinkText')
+                    if ((!blockqt || blockqt.innerText.trim()) && !smartlinkElementCheck) {
                         editor.selection.setContent('<span id="specialChar"></span>');
                     }
-                    if (!opener || opener.innerText.trim()) {
+                    if ((!opener || opener.innerText.trim()) && !smartlinkElementCheck) {
                         editor.selection.setContent('<span id="specialChar"></span>');
                     }
                     setTimeout(() => {
@@ -615,6 +623,11 @@ export class TinyMceEditor extends Component {
                     }
                     break;
                 case 'Strikethrough':
+                    if (this.props.element.type === 'openerelement' || headingElement || elementType === 'Pullquote' || elementType === 'Blockquote' || elementType === 'Learning Objective Item' || attributionElement || (activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    break;
                 case 'Underline':
                 case 'Bold':
                     if (headingElement || elementType === 'Pullquote' || elementType === 'Blockquote' || elementType === 'Learning Objective Item' || attributionElement || (activeElement.nodeName === "CODE" && syntaxEnabled && syntaxEnabled.checked)) {
@@ -992,6 +1005,8 @@ export class TinyMceEditor extends Component {
                 let lastCont = '';
                 if(['<br data-mce-bogus="1">', '<br>'].includes(this.lastContent) && this.props.element.type === 'element-aside'){
                     lastCont = activeElement.innerHTML;
+                } else if (['<br data-mce-bogus="1">'].includes(activeElement.innerHTML) && this.props.element.type === 'openerelement') {
+                    activeElement.innerHTML = '<p class="paragraphNumeroUno"><br></p>';
                 } else {
                     lastCont = this.lastContent;
                 }
@@ -2371,13 +2386,11 @@ export class TinyMceEditor extends Component {
         let testElement = document.createElement('div');
         testElement.innerHTML = args.content;
         if (testElement.innerText.trim().length) {
-            if ((this.props?.element?.type === "element-authoredtext") && !this.props?.element?.elementdata?.headers && (this.props?.element?.elementdata?.designtype !== 'handwritingstyle') && this.props?.asideData?.type !== "manifestlist") {
-                args.content = handleTextToRetainFormatting(args.content, testElement)
-            } else {
-                let tempContent = testElement.innerText.replace(/&/g, "&amp;");
-                args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            }
-        } else {
+                args.content = handleTextToRetainFormatting(args.content, testElement, this.props)
+        } else if(ALLOWED_ELEMENT_IMG_PASTE.includes(this.props?.element?.type) && args.content.match('class="imageAssetContent"')) {
+            args.content = handleTextToRetainFormatting(args.content,testElement,this.props)
+
+        } else{
             args.content = tinymce.activeEditor.selection.getContent();
         }
         if (this.props.element && this.props.element.figuretype && this.props.element.figuretype === "codelisting" && !this.notFormatting) {
@@ -2943,6 +2956,7 @@ export class TinyMceEditor extends Component {
         if (this.props.element.type === "element-dialogue") {
             elementId = this.props.element.id;
         }
+        config.glossaryCreated = true
         let sText = editor.selection.getContent();
         let parser = new DOMParser();
         let htmlDoc = parser.parseFromString(sText, 'text/html');

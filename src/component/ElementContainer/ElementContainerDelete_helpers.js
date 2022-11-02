@@ -147,6 +147,7 @@ export const deleteFromStore = async (params) => {
     const popupParentSlateData = getState().autoNumberReducer?.popupParentSlateData;
     let bodymatter = [];
     const indexes = asideData?.index?.toString()?.split("-") || [];
+    const elIndex = index?.toString()?.split('-') || [];
     /* To check if the element is cutted from popup slate */
     if ((cutCopyParentData?.isPopupSlate && operationType === 'cut') && popupParentSlateData?.isPopupSlate && (cutCopyParentData?.versionUrn === popupParentSlateData?.versionUrn)) {    // popup slate cut & paste on same slate
         const popupContent = await getSlateLevelData(cutCopyParentData?.versionUrn, cutCopyParentData?.contentUrn);
@@ -176,8 +177,7 @@ export const deleteFromStore = async (params) => {
             /* delete the element inside showhide on cut from sh */
             sh_Object?.interactivedata[sectionType]?.splice(cCIndex, 1);
         }
-    } else if (parentUrn && parentUrn.elementType == "group") {
-        const elIndex = index.toString().split('-') 
+    } else if (parentUrn && parentUrn.elementType == "group" && (parentUrn?.mcId === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
     } else {
         bodymatter.forEach((element, key) => {

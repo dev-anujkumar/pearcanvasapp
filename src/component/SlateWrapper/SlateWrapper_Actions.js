@@ -26,7 +26,7 @@ import {
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
+import { tcmSnapshotsForCreate, prepareSnapshots_ShowHide } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import * as slateWrapperConstants from "./SlateWrapperConstants"
 import { onPasteSuccess, checkElementExistence, prepareDataForTcmCreate } from "./slateWrapperAction_helper"
 import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
@@ -564,6 +564,9 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
     let _requestData = {
         "content":data
     };
+    if (asideData?.type === SHOW_HIDE) {
+        _requestData.sectionType = asideData?.sectionType
+    }
     let indexOfInsertion = index
     powerPasteData.forEach(pastedElement => {
         const newElement = {
@@ -589,11 +592,14 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         let indexOfElement = 0
         while (indexOfElement < response.data.length) {
             if (slateWrapperConstants.elementType.indexOf("TEXT") !== -1){
-                const containerElement = {
+                let containerElement = {
                     asideData: asideData?asideData:null,
                     parentUrn: parentUrn?parentUrn:null,
                     poetryData: null
                 };
+                if(asideData?.type === SHOW_HIDE) {
+                    containerElement = prepareSnapshots_ShowHide(containerElement, ...response.data, index);
+                }
                 const slateData = {
                     currentParentData: newParentData,
                     bodymatter: currentSlateData.contents.bodymatter,
@@ -634,6 +640,12 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
                             ele.contents.bodymatter.splice(index, 0, ...response.data)
                         }
                     })
+                }
+            })
+        } else if (asideData?.type === SHOW_HIDE) {
+            newParentData[config.slateManifestURN]?.contents?.bodymatter.map((item) => {
+                if (item?.id === parentUrn?.manifestUrn) {
+                    item?.interactivedata[asideData?.sectionType].splice(index, 0, ...response.data);
                 }
             })
         }
@@ -1242,7 +1254,7 @@ const fetchContainerData = (entityURN, manifestURN, isPopup) => {
 
 export const pasteElement = (params) => async (dispatch, getState) => {
     let selection = getState().selectionReducer.selection || {};
-
+    let allComments = getState().commentsPanelReducer.allComments;
     if(Object.keys(selection).length > 0 && 'element' in selection) {
         const {
             index,
@@ -1536,6 +1548,10 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                         const node2 = node1?.querySelector(`.paragraphNummerEins`)
                         node2?.focus()
                     }, 200)
+                }
+                let anyOpenComment = allComments?.filter(({ commentOnEntity }) => commentOnEntity === selection?.element?.id).length > 0
+                if((selection.operationType === 'cut') && (anyOpenComment) ) {
+                    sendDataToIframe({'type': 'refreshCM', 'message': {status: true}})
                 }
             }
         }

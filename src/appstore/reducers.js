@@ -58,7 +58,9 @@ import {
     SET_SLATE_MATTER_TYPE,
     UPDATE_TABLE_ELEMENT_ASSET_DATA,
     UPDATE_TABLE_ELEMENT_EDITED_DATA,
-    UPDATE_CARET_OFFSET
+    UPDATE_CARET_OFFSET,
+    DELETE_ELEMENT_KEYS,
+    SET_REQUIRED_SLATE_DATA
 } from '../constants/Action_Constants';
 
 /**
@@ -127,7 +129,9 @@ const INITIAL_STATE = {
     isJoinedPdfSlate: false,
     tableElementAssetData: [],
     tableElementEditedData: {},
-    caretPosition: ''
+    caretPosition: '',
+    deletedElementKeysData: {},
+    getRequiredSlateData: {}
 };
 
 const INITIAL_ACTION = {
@@ -421,6 +425,16 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 tableElementEditedData: { ...state.tableElementEditedData, ...action.payload}
+            }
+        case DELETE_ELEMENT_KEYS:
+            return {
+                ...state,
+                deletedElementKeysData: action.payload
+            }
+        case SET_REQUIRED_SLATE_DATA:
+            return{
+                ...state,
+                getRequiredSlateData: action.payload
             }
         default:
             return state;

@@ -24,7 +24,7 @@ const ShowHideUiBlock = (props) => {
 			return (
 					<React.Fragment key={item?.id}>
 						{ renderElements(item, indexes) }
-						{ showSeprator(elemSepratorIndex) }
+						{ showSeprator(elemSepratorIndex, item?.id) }
 					</React.Fragment>
 				)
 		})
@@ -69,6 +69,8 @@ const ShowHideUiBlock = (props) => {
 			showPlayscript = {showPlayscript}
 			showDiscussion = {showDiscussion}
 			cloneContainer = {props?.cloneContainer}
+			dataId = {isFirst}
+			handleCopyPastePopup={props.handleCopyPastePopup}
 		/>
 	}
 
@@ -111,6 +113,8 @@ const ShowHideUiBlock = (props) => {
 			handleFocus = {props.handleFocus}
 			elementSepratorProps={props.elementSepratorProps}
 			splithandlerfunction={props.splithandlerfunction}
+			handleUndoOption = {props.handleUndoOption}
+			closeUndoTimer = {props.closeUndoTimer}
 		/>
 	}
 

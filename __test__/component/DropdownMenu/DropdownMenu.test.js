@@ -2,7 +2,8 @@ import * as menu from '../../../src/component/DropdownMenu/Dropdown.jsx';
 import { disciplines, learningSystemList } from '../../../fixtures/learningTool';
 import { MockUsageTypeList_Data } from '../../../fixtures/AssessmentSlateCanvasTestingData.js';
 jest.mock('../../../src/constants/utility.js', () => ({
-    hasReviewerRole: jest.fn()
+    hasReviewerRole: jest.fn(),
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 
 describe('Testing DropdownMenu component', () => {

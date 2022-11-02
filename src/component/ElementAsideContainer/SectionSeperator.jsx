@@ -71,7 +71,7 @@ class SectionSeperator extends Component {
                 {(elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active' ?
                     <div> 
                         <Button copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu,true)}} btnClassName={btnClassName} type="element-label" labelText="SB" />
-                      {this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button  onClick={(e) => this.props.showDeleteElemPopup(e,true, element)} type="delete-element" />}
+                      {this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button  onClick={(e) => this.props.showDeleteElemPopup(e,true, element, true)} type="delete-element" />}
                     </div>:""
                  }
                 <hr className="section-break" />

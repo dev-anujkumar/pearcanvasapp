@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { labelOptions, getOpenerContent, getOpenerImageSource, moduleLabelOptions } from './OpenerConstants'
+import { labelOptions, getOpenerContent, getOpenerImageSource, moduleLabelOptions, volumeLabelOptions } from './OpenerConstants'
 import { dropdownArrow } from './../../images/ElementButtons/ElementButtons.jsx';
 
 import '../../styles/OpenerElement/OpenerElement.css'
@@ -10,7 +10,7 @@ import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
 import axios from 'axios';
-import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
+import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement, saveSelectedAltTextLongDescData } from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 import TinyMceEditor from '../tinyMceEditor';
 
@@ -56,6 +56,8 @@ class OpenerElement extends Component {
         let imageId = `urn:pearson:alfresco:${uniqID}`;
         let figureType = data?.content?.mimeType?.split('/')[0]
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
+        let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
+        let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
             let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
             let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
@@ -77,6 +79,11 @@ class OpenerElement extends Component {
             id: ''
         }
         this.props.saveSelectedAssetData(payloadObj)
+        const altLongDescData = {
+            altText: altText,
+            longDesc: longDesc
+        }
+        this.props.saveSelectedAltTextLongDescData(altLongDescData)
         disableHeader(false)
         hideTocBlocker()
     }
@@ -234,7 +241,18 @@ class OpenerElement extends Component {
      */
     renderLabelDropdown = () => {
         const { showLabelDropdown } = this.state
-        const openerElementLabelOptions = this.props.setSlateParent === "module" ? moduleLabelOptions : labelOptions
+        let openerElementLabelOptions 
+        switch(this.props.setSlateParent){
+            case "module":
+                openerElementLabelOptions = moduleLabelOptions
+            break;
+            case "volume":
+                openerElementLabelOptions = volumeLabelOptions
+            break;
+            default:
+                openerElementLabelOptions = labelOptions
+            break; 
+        }
         const openerLabelOptions = openerElementLabelOptions.map((value, index) => {
             return <li key={index} data-value={value} onClick={this.handleOpenerLabelChange}>{value}</li>
         })
@@ -516,6 +534,9 @@ const mapActionToProps = (dispatch) =>{
         },
         saveSelectedAlfrescoElement: (payloadObj) => {
             dispatch(saveSelectedAlfrescoElement(payloadObj))
+        },
+        saveSelectedAltTextLongDescData: (payloadObj) => {
+            dispatch(saveSelectedAltTextLongDescData(payloadObj))
         }
     }
 }

@@ -67,7 +67,13 @@ jest.mock('../../../src/constants/utility.js', () => {
             return true
         },
         guid: jest.fn(),
-        removeBlankTags: jest.fn()
+        removeBlankTags: jest.fn(),
+        handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
+        getCookieByName: () => {
+            return true
+        },
+        handleTextToRetainFormatting: jest.fn(),
+        ALLOWED_ELEMENT_IMG_PASTE: ['element-authoredtext','element-learningobjectives','element-blockfeature']
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {
@@ -561,7 +567,36 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(mySpyFunction).toHaveBeenCalled()
             expect(instance.props.element.type).toBe('stanza')
         })
-        it('Test-5.5-Method--3--editorExecCommand --For BLOCK_CODE Element--', () => {
+        it('Test-5.5-Method--3--editorExecCommand --For ELEMENT-DIALOGUE Element--', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                command: 'mceToggleFormat'
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                dom : { getParent(){return }}
+            }
+            instance.props = {
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: { type: "element-dialogue" }
+            }
+            component.update();
+            // console.log(instance.props)
+            let mySpyFunction = jest.spyOn(instance, 'editorExecCommand');
+            instance.editorExecCommand(nextEditor);
+            expect(mySpyFunction).toHaveBeenCalled()
+            expect(instance.props.element.type).toBe('element-dialogue')
+        })
+        it('Test-5.6-Method--3--editorExecCommand --For BLOCK_CODE Element--', () => {
             let event = {
                 target: {
                     getContent: () => {
@@ -590,7 +625,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(instance.props.element.type).toBe('figure')
             expect(instance.props.element.figuretype).toBe('codelisting')
         })
-        it('Test-5.6-Method--3--editorExecCommand --For Glossary Italicizing',() => {
+        it('Test-5.7-Method--3--editorExecCommand --For Glossary Italicizing',() => {
             let event = {
                 target: {
                     getContent: () => {
@@ -1625,6 +1660,18 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 },
                 setContent: () => { },
             }
+            document.querySelector = (selector) =>{
+                if(selector== '.panel_syntax_highlighting .switch input'){
+                    return {
+                        checked:true
+                    }
+                }
+            }
+            component.setProps({
+                ...props,
+                element: { type: "openerelement" }
+            })
+            component.update();
             const getContent = jest.spyOn(event.target, 'getContent');
             instance.editorBeforeExecCommand(nextEditor);
             expect(getContent).toHaveBeenCalled()
@@ -2904,6 +2951,21 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
         const spypastePostProcess = jest.spyOn(instance, 'pastePostProcess')
         instance.pastePostProcess(plugin, args);
         expect(spypastePostProcess).toHaveBeenCalled()
+    });
+    it('Test-24.1-Method--22--pastePreProcess-element authoredtext Element-Pasting image only', () => {
+        let plugin = {},
+            args = {
+                content: '<img class="imageAssetContent" src="abc">'
+            }
+        component.setProps({
+            element: elementData.paragraph
+        })
+        component.update();
+        tinymce.activeEditor.selection = editor.selection;
+        tinymce.activeEditor.dom = domObj;
+        const spypastePreProcess = jest.spyOn(instance, 'pastePreProcess')
+        instance.pastePreProcess(plugin, args);
+        expect(spypastePreProcess).toHaveBeenCalled()
     });
     describe('Test-26-Method--24--editorPaste', () => {
         it('Test-26.1-Method--24--editorPaste-BCE Element-SyntaxEnabled:True', () => {

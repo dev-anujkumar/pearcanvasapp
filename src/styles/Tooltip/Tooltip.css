@@ -188,7 +188,7 @@
 .tooltip .tooltip-flag {
     width: 105px;
     top: 24px;
-    left: 1%;
+    left: 31px;
     height: auto;
 }
 
@@ -211,11 +211,11 @@
 }
 
 .expand-te-btn .tooltip .tooltip-picker-for-table,
-.add-comment-btn .tooltip .tooltip-comment,
-.flag-te-btn .tooltip .tooltip-flag {
+.add-comment-btn .tooltip .tooltip-comment{
     margin-left: -65px !important;
 }
-.view-comment-btn .tooltip .tooltip-view-comment {
+.view-comment-btn .tooltip .tooltip-view-comment, 
+.flag-te-btn .tooltip .tooltip-flag{
     margin-left: -95px !important;
 }
 
@@ -309,7 +309,7 @@
     transition: opacity 1s;
 }
 
-.container-aside .tooltip .tooltip-poc {
+.container-aside .tooltip .tooltip-poc, .show-hide-component .tooltip .tooltip-poc {
     margin-left: -65px;
 }
 

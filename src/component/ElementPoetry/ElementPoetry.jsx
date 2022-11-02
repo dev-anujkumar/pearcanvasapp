@@ -213,6 +213,8 @@ class ElementPoetry extends Component {
                                 showDeleteElemPopup={this.props.showDeleteElemPopup}
                                 parentElement = {this.props.element}
                                 onListSelect={this.props.onListSelect}
+                                handleUndoOption = {this.props.handleUndoOption}
+                                closeUndoTimer = {this.props.closeUndoTimer}
                                 userRole={this.props.userRole}>
                             </ElementContainer>
                             <ElementSaprator
@@ -228,6 +230,7 @@ class ElementPoetry extends Component {
                                 userRole={this.props.userRole}
                                 pasteElement={this.props.pasteElement}
                                 source={POETRY_SOURCE}
+                                dataId = {element.id}
                             />
                         </React.Fragment>
                     )

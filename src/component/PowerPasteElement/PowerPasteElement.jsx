@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react'
 
 //Helper methods and constants
 import powerPasteHelpers from "./powerpaste_helpers.js";
+import { SECONDARY_BUTTON, focusPopupButtons, blurPopupButtons } from '../PopUp/PopUp_helpers.js';
 
 // Tinymce library and plugins
 import tinymce from 'tinymce/tinymce';
@@ -24,9 +25,11 @@ const PowerPasteElement = (props) => {
       editorConfig.selector = "#" + editorRef.current.id;
     }
     tinymce.init(editorConfig)
-
+    editorRef.current.addEventListener('blur', () => {
+      focusPopupButtons();
+    })
     return () => {
-      tinymce.activeEditor.destroy?.()
+      tinymce.activeEditor?.destroy?.()
     }
   }, [])
 
@@ -50,6 +53,9 @@ const PowerPasteElement = (props) => {
     paste_postprocess: (plugin, data) => pastePostProcess(data, props),
     setup: (editor) => {
       setupKeydownEvent(editor)
+      editorFocus(editor)
+      editorBlur(editor)
+      editorClick(editor)
     }
   }
 
@@ -104,7 +110,10 @@ export const pastePostProcess = (data, props) => {
       createPastedElements(childElements, elements);
     } */
     const parentIndex = props.index;
-    elements.length && props.toggleWordPasteProceed(true)
+    if (elements.length) {
+      props.toggleWordPasteProceed(true)
+      focusPopupButtons();
+    }
     props.onPowerPaste(elements, parentIndex);
 
     // if valid data has been pasted in to editor once then make editor non-editable
@@ -166,11 +175,47 @@ export const createPastedElements = (childElements, elements) => {
 export const setupKeydownEvent = (editor) => {
   editor.on('keydown', e => {
     const keyCode = e.keyCode || e.which;
+    if (keyCode === 27) {
+      const secondaryButton = document.querySelector(`[option=${SECONDARY_BUTTON}]`) ? document.querySelector(`[option=${SECONDARY_BUTTON}]`) : null;
+      if (secondaryButton) {
+        secondaryButton.click();
+      }
+    }
     if (!(keyCode === 86 && (e.ctrlKey || e.metaKey))) { //disabling editing and allowing pasting
       e.preventDefault()
       e.stopImmediatePropagation()
       return
     }
     editor.undoManager.clear() //disabling undo/redo
+  });
+}
+
+/**
+ * TinyMCE focus event listener
+ * @param {*} editor tinyMCE editor instance 
+ */
+export const editorFocus = (editor) => {
+  editor.on('focus', () => {
+    blurPopupButtons();
+  });
+}
+
+/**
+ * TinyMCE blur event listener
+ * @param {*} editor tinyMCE editor instance 
+ */
+export const editorBlur = (editor) => {
+  editor.on('blur', () => {
+    focusPopupButtons();
+  });
+}
+
+/**
+ * TinyMCE click event listener
+ * @param {*} editor tinyMCE editor instance 
+ */
+export const editorClick = (editor) => {
+  editor.on('click', () => {
+    blurPopupButtons();
   });
 }

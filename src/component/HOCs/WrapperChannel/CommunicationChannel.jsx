@@ -13,7 +13,7 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
-import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT } from '../../SlateWrapper/SlateWrapperConstants'
+import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT  } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../../constants/Element_Constants.js';
 import { SLATE_TYPE_PDF, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -188,6 +188,18 @@ function CommunicationChannel(WrappedComponent) {
                 case 'refreshSlate':
                     this.handleRefreshSlate();
                     break;
+                case 'closeUndoTimer' : 
+                    this.setState({
+                        closeUndoTimer: message.status
+                    })
+                    break;
+                case 'fetchRequiredSlateData':
+                    // Fetches any slate details with help of slate ManifestUrn and slateEntityUrn
+                    let isFetchAnySlate = true;
+                    let slateManifestUrn = message && message.slateManifestUrn;
+                    let slateEntityUrn = message && message.slateEntityUrn;
+                    this.props.fetchSlateData(slateManifestUrn, slateEntityUrn, config.page, '', "", false, isFetchAnySlate);
+                    break;
                 case 'cancelCEPopup':
                     if (this.props.currentSlateLOData?.length > 0) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
@@ -201,26 +213,30 @@ function CommunicationChannel(WrappedComponent) {
                     this.setState({
                         showBlocker: false
                     });
+                    // handles Element Update API call with loAssociation key from TOC and RC
                     if(message.hasOwnProperty('slateTagEnabled')){
-                        config.isPreviousLOAssociation = this.props.isSlateTagEnable
-                        let dataToSend = this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
-                        let messageData = {assessmentResponseMsg:message.slateTagEnabled}
+                        let dataToSend = message.assessmentSlateData ? this.props?.getRequiredSlateData?.getRequiredSlateData[message.slateManifestUrn]?.contents?.bodymatter[0] : this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
+                        let messageData = {assessmentResponseMsg:message.slateTagEnabled};
+                        let slateManifestUrn = message.slateManifestUrn ?? config.slateManifestURN;
+                        let isFromRC = message.assessmentSlateData ? true : false;
                         this.props.isLOExist(messageData);
-                        if (config.parentEntityUrn !== ("Front Matter" || "Back Matter") && config.slateType === "assessment") {
-                            let assessmentUrn = document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
-                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ?? config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled } });
+                        if (config.parentEntityUrn !== ("Front Matter" || "Back Matter")) {
+                            let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
+                            sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ? assessmentUrn : config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
                             if(dataToSend?.elementdata){
                                 dataToSend.inputType = ELEMENT_ASSESSMENT
                                 dataToSend.inputSubType = "NA"
                                 dataToSend.index = "0"
-                                dataToSend.elementParentEntityUrn = config.slateEntityURN
+                                dataToSend.elementParentEntityUrn = message.slateEntityUrn ?? config.slateEntityURN
                                 dataToSend.elementdata.loAssociation = message.slateTagEnabled
-                                dataToSend.slateVersionUrn = config.slateManifestURN
+                                dataToSend.slateVersionUrn = slateManifestUrn
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
-                                this.props.updateElement(dataToSend, 0 );
+                                this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
+                                if(message.assessmentSlateData)
+                                    this.handleRefreshSlate();
                             }
                         }
-                    }
+                }
                     break;
                 case 'slatePreview':
                 case 'projectPreview':
@@ -279,7 +295,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.togglePageNumberAction()
                     break;
                 case 'GetActiveSlate':
-                    sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN } });
+                    sendDataToIframe({ 'type': 'GetActiveSlate', 'message': { slateEntityURN: config.slateEntityURN, slateManifestURN: config.slateManifestURN } });
                     break;
                 case 'statusForExtLOSave':
                     this.handleExtLOData(message);
@@ -410,6 +426,11 @@ function CommunicationChannel(WrappedComponent) {
                 case "getAssessmentData":
                     this.getAssessmentForWillowAlignment(message);
                     break;
+                case "preflightElementFocus": 
+                    config.currentElementUrn = message
+                    break;
+                case "pendingTcmStatus":
+                    config.pendingTcmStatus = message.status
             }
         }
 
@@ -473,9 +494,11 @@ function CommunicationChannel(WrappedComponent) {
                     'currentSlateId': slateManifestURN,
                     'chapterContainerUrn': '',
                     'currentSlateLF': currentSlateLF,
-                    'assessmentUrn': message.assessmentUrn ?? config.assessmentId,
+                    'assessmentUrn': message.assessmentUrn  ? message.assessmentUrn : assessmentuRN,
                     'previewData': previewData,
-                    'defaultLF': defaultLF
+                    'defaultLF': defaultLF,
+                    'loSpa_Source': message.loSpa_Source,
+                    'isSubscribed':message.isSubscribed ? message.isSubscribed : false
                 }
             })
         }
@@ -821,7 +844,7 @@ function CommunicationChannel(WrappedComponent) {
                 localStorage.setItem('lastAlignedLos', JSON.stringify({...lastAlignedLosToSlates,...newAlignment}));
             }
         }
-        handleLOData = (message, updatedData) => {
+        handleLOData = (message) => {
             if (message.statusForSave) {
                 message.loObj ? this.props.currentSlateLOMath([message.loObj.label.en]) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
@@ -910,6 +933,7 @@ function CommunicationChannel(WrappedComponent) {
                 config.totalPageCount = 0;
                 config.pageLimit = 0;
                 config.fromTOC = false;
+                config.elementSlateRefresh = true
                 sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': { slateRefreshStatus: 'Refreshing...' } });
                 this.props.handleSlateRefresh(id, () => {
                     config.isSlateLockChecked = false;
@@ -1210,7 +1234,7 @@ function CommunicationChannel(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}/>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )

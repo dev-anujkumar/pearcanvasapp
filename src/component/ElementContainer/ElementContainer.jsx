@@ -16,14 +16,14 @@ import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
-         prepareImageDataFromTable } from './ElementContainer_Actions';
+import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
+         prepareImageDataFromTable, storeDeleteElementKeys } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
@@ -112,9 +112,14 @@ class ElementContainer extends Component {
             assetsPopupStatus: false,
             isActive: false,
             showBlockCodeElemPopup: false,
-            warningPopupCheckbox: false
+            warningPopupCheckbox: false,
+            showUndoButton : false,
+            undoElement: "",
+            showActionUndone : false,
+            listElementWarningPopupCheckbox: false,
+            showFirstTimeUndo : false
         };
-
+        this.wrapperRef = React.createRef();
 
     }
 
@@ -178,9 +183,10 @@ class ElementContainer extends Component {
         document.addEventListener('click', () => {
             this.setState({ showCopyPopup: false })
         });
+        document.addEventListener("mousedown", this.handleClickOutside);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         let divObj = 0;
         if (this.props.searchParent !== '' && document.querySelector(`div[data-id="${this.props.searchParent}"]`)) {
             divObj = document.querySelector(`div[data-id="${this.props.searchParent}"]`).offsetTop;
@@ -210,6 +216,20 @@ class ElementContainer extends Component {
                 document.getElementById('slateWrapper').scrollTop = divObj;
             }
         }
+
+        if (prevProps.closeUndoTimer !== this.props.closeUndoTimer && this.state.showUndoButton) {
+            if (this.props.closeUndoTimer) {
+                this.handleUndoOptionTimer();
+            }
+        }
+    }
+
+    handleClickOutside = (event) => {
+        if (this.state.showUndoButton) {
+            if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+                this.handleUndoOptionTimer();
+            }
+        }
     }
 
     componentWillUnmount() {
@@ -219,6 +239,7 @@ class ElementContainer extends Component {
         }
         handleElmPortalEvents('remove');/** Remove Elm-Assessment Update eventListener */
         handlePostMsgOnAddAssess("", "", "", "remove", "")
+        document.removeEventListener("mousedown", this.handleClickOutside);
     }
 
     componentWillReceiveProps(newProps) {
@@ -876,12 +897,13 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData) => {
+    handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom) => {
         let { parentUrn, asideData } = this.props;
         asideData = cgTitleFieldData?.asideData && Object.keys(cgTitleFieldData?.asideData).length > 0 ? cgTitleFieldData?.asideData : asideData;
         parentElement = cgTitleFieldData?.parentElement && Object.keys(cgTitleFieldData?.parentElement).length > 0 ? cgTitleFieldData?.parentElement : parentElement;
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+        if (assetPopoverPopupIsVisible && triggeredFrom === 'REFRESH_ELEMENT') assetPopoverPopupIsVisible = false;
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
@@ -1197,7 +1219,7 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}) => {
+    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}, triggeredFrom = '') => {
         const { elementType, primaryOption, secondaryOption, elementId } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
@@ -1220,9 +1242,9 @@ class ElementContainer extends Component {
         }  
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
-            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType, null, cgTitleFieldData);
+            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType, null, cgTitleFieldData, triggeredFrom);
         } else {
-            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData)
+            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom)
         }
     }
 
@@ -1390,23 +1412,27 @@ class ElementContainer extends Component {
      * show Delete element Popup 
      * @param {elementId} 
      */
-    showDeleteElemPopup = (e, popup, sectionBreak) => {
+    showDeleteElemPopup = (e, popup, sectionBreak, showSectionLabel) => {
         e.stopPropagation();
         this.props.showBlocker(true);
         showTocBlocker();
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
         // if disableDeleteWarnings present in cookie then call delete element directly without showing popup
         if(disableDeleteWarnings) {
-            this.setState({
-                sectionBreak: sectionBreak ? sectionBreak : null
+               this.setState({
+                sectionBreak: sectionBreak ? sectionBreak : null,
+                showActionUndone: false,
+                showSectionBreakLabelText : showSectionLabel
             }, () => {
                 this.deleteElement(e);
+                this.handleUndoOption(true);
             })
         } else {
             this.setState({
                 popup,
                 showDeleteElemPopup: true,
-                sectionBreak: sectionBreak ? sectionBreak : null
+                sectionBreak: sectionBreak ? sectionBreak : null,
+                showFirstTimeUndo: true
             });
         }
     }
@@ -1424,6 +1450,80 @@ class ElementContainer extends Component {
         });
     }
 
+    handleUndoOption = (status) => {
+        this.setState({
+            showUndoButton: status,
+            showActionUndone: false
+        })
+        this.toastTimer = setTimeout(() => {
+            this.setState({
+                showUndoButton: false
+            })  
+        }, 5000);
+    }
+
+    handleUndoElement = () => {
+        const deletedElm = document.querySelector(`[data-id="${this.state.undoElement}"]`);
+        deletedElm?.classList?.remove("hideElement");
+        const sapratorElm = document.getElementById(`${this.state.undoElement}`)
+        sapratorElm?.classList?.remove("hideElement");
+        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+        const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+        for (const elm of multipleElement) {
+            elm.classList.remove('stop-event')
+        }
+        clearTimeout(this.timer)
+        clearTimeout(this.showHideTimer)
+        clearTimeout(this.toastTimer)
+        this.setState({
+            showUndoButton: false,
+            showActionUndone: true,
+            showSectionBreakLabelText: false
+        })
+        this.toastUndoneTimer = setTimeout(() => {
+            this.setState({
+                showActionUndone: false
+            }) 
+        }, 2000);
+        this.props.storeDeleteElementKeys({});
+    }
+
+    handleUndoOptionTimer = () => {
+        let { parentElement } = this.props;
+        const { id, type, index, elements, containerElements, parentUrn, asideData, contentUrn, poetryData } = this.props.deletedKeysValue
+        document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+        document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+        clearTimeout(this.timer)
+        clearTimeout(this.showHideTimer)
+        clearTimeout(this.toastTimer)
+        this.setState({
+            showUndoButton: false,
+            showSectionBreakLabelText: false
+        })
+        if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {
+            this.props.deleteElementAction(id, type, index, elements, containerElements, this.props.showBlocker);
+        }
+        else {
+            this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, elements, null);
+
+        }
+        this.props.storeDeleteElementKeys({});
+        sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
+        setTimeout(() => {
+            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+            for (const elm of multipleElement) {
+                elm.classList.remove('stop-event')
+            }
+        }, 300)
+    }
+
+    handleActionUndoneTimer = () => {
+        this.setState({
+            showActionUndone: false
+        })
+    }
+
     /**
      * For deleting slate level element
      */
@@ -1433,6 +1533,11 @@ class ElementContainer extends Component {
         //let { contentUrn } = this.props.element
         //let index = this.props.index
 
+        if (this.state.warningPopupCheckbox && this.state.showFirstTimeUndo) {
+            this.setState({
+                showUndoButton: true
+            })
+        }
         if (this.state.sectionBreak) {
             parentUrn = {
                 elementType: element.type,
@@ -1467,15 +1572,72 @@ class ElementContainer extends Component {
             },
             isSectionBreak: this.state.sectionBreak ?? {}
         }
+        const object = {
+            "id" : id,
+            "type" : type,
+            "index" : index,
+            "elements" : this.props.element,
+            "containerElements" : containerElements,
+            "parentUrn" : parentUrn,
+            "asideData" : asideData,
+            "contentUrn" : contentUrn,
+            "poetryData" : poetryData
+        }
         this.handleCommentPopup(false, e);
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+        if(disableDeleteWarnings || this.state.warningPopupCheckbox) {
+            sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: true } });
+            this.setState({
+                undoElement: id
+            })
+            const deletedElm = document.querySelector(`[data-id="${id}"]`);
+            deletedElm?.classList?.add("hideElement");
+            const sapratorElm = document.getElementById(`${id}`)
+            sapratorElm?.classList?.add("hideElement");
+            document.getElementById('previous-slate-button')?.classList?.add('stop-event')
+            document.getElementById('next-slate-button')?.classList?.add('stop-event')
+            const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+            for (const elm of multipleElement) {
+                elm.classList.add('stop-event')
+            }
+            this.props.storeDeleteElementKeys(object); 
+        } else {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        }
+        
         if(this.state.warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } }); 
         // api needs to run from here
-        if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {// || element.type === elementTypeConstant.SHOW_HIDE
-            this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
+        if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {
+            if (disableDeleteWarnings || this.state.warningPopupCheckbox) {
+                this.showHideTimer = setTimeout(() => {
+                    this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
+                    sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
+                    document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+                    document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+                    const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+                    for (const elm of multipleElement) {
+                        elm.classList.remove('stop-event')
+                    }
+                }, 5000)
+            } else {
+                this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
+            }  
         }
         else {
-            this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
+            if (disableDeleteWarnings || this.state.warningPopupCheckbox) {
+                this.timer = setTimeout(() => {
+                    this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
+                    sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
+                    document.getElementById('previous-slate-button')?.classList?.remove('stop-event')
+                    document.getElementById('next-slate-button')?.classList?.remove('stop-event')
+                    const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
+                    for (const elm of multipleElement) {
+                        elm.classList.remove('stop-event')
+                    }
+                }, 5000)
+            } else {
+                this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
+            } 
         }
         this.setState({
             sectionBreak: null,
@@ -1626,6 +1788,13 @@ class ElementContainer extends Component {
             warningPopupCheckbox: event?.target?.checked
         });
     }
+
+    handleListElementWarningPopupCheckbox = (event) => {
+        this.setState({
+            listElementWarningPopupCheckbox: event?.target?.checked
+        });
+    }
+
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element
     * @param {*} tcmData tcm data for elements on the slate
@@ -1784,7 +1953,7 @@ class ElementContainer extends Component {
                     }
                     break;
                 case elementTypeConstant.ELEMENT_LIST:
-                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} markedIndexValue={this.props.markedIndexValue} openMarkedIndexPopUp={this.openMarkedIndexPopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType} />;
+                    editor = <ListElement showBlocker={this.props.showBlocker} permissions={permissions} openAssetPopoverPopUp={this.openAssetPopoverPopUp} openGlossaryFootnotePopUp={this.openGlossaryFootnotePopUp} markedIndexValue={this.props.markedIndexValue} openMarkedIndexPopUp={this.openMarkedIndexPopUp} handleFocus={this.handleFocus} handleBlur={this.handleBlur} index={index} elementId={element.id} element={element} model={element.html} slateLockInfo={slateLockInfo} onListSelect={this.props.onListSelect} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}  handleAudioPopupLocation={this.handleAudioPopupLocation} parentElement={this.props?.parentElement} handleAssetsPopupLocation={this.handleAssetsPopupLocation} showHideType={this.props?.showHideType} handleListElementWarningPopupCheckbox={this.handleListElementWarningPopupCheckbox} listElementWarningPopupCheckbox={this.state.listElementWarningPopupCheckbox} />;
                     labelText = 'OL'
                     if ((element.subtype || element.elementdata.subtype) === 'disc')
                         labelText = 'UL'
@@ -1824,6 +1993,8 @@ class ElementContainer extends Component {
                         markedIndexPopup= {this.props.markedIndexPopup}
                         showHideType = {this.props.showHideType}
                         handleCopyPastePopup={this.props.handleCopyPastePopup}
+                        handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />;
                     break;
                 case elementTypeConstant.METADATA_ANCHOR:
@@ -1853,6 +2024,8 @@ class ElementContainer extends Component {
                         handleAudioPopupLocation={this.handleAudioPopupLocation}
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
                         parentElement={this.props?.parentElement}
+                        handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />;
                     labelText = 'Pop'
                     break;
@@ -1892,6 +2065,9 @@ class ElementContainer extends Component {
                         handleCommentspanel={handleCommentspanel}
                         pasteElement={this.props.pasteElement}
                         splithandlerfunction={splithandlerfunction}
+                        handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
+                        handleCopyPastePopup={this.props.handleCopyPastePopup}
                     />;
                     labelText = 'SH'
                     break;
@@ -1916,7 +2092,8 @@ class ElementContainer extends Component {
                         handleFocus: this.handleFocus,
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
-                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement}
+                        handleUndoOption: this.handleUndoOption
+                    }}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} closeUndoTimer = {this.props.closeUndoTimer}
                         />
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
@@ -1975,6 +2152,8 @@ class ElementContainer extends Component {
                         parentUrn={this.props?.parentUrn}
                         parentElement={this.props.parentElement}
                         showHideType = {this.props.showHideType}
+                        handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />
                     labelText = 'PE'
                     break;
@@ -2005,6 +2184,8 @@ class ElementContainer extends Component {
                         glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
                         handleAudioPopupLocation={this.handleAudioPopupLocation}
                         handleAssetsPopupLocation={this.handleAssetsPopupLocation}
+                        handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />
                     labelText = 'ST'
                     break;
@@ -2028,8 +2209,9 @@ class ElementContainer extends Component {
                             handleFocus: this.handleFocus,
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
+                            handleUndoOption:this.handleUndoOption,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup}  closeUndoTimer = {this.props.closeUndoTimer} />
                         </MultiColumnContext.Provider>;
                     } else {
                         labelText = MULTI_COLUMN_2C.ELEMENT_TAG_NAME
@@ -2049,8 +2231,9 @@ class ElementContainer extends Component {
                             handleFocus: this.handleFocus,
                             handleBlur: this.handleBlur,
                             deleteElement: this.deleteElement,
+                            handleUndoOption: this.handleUndoOption,
                             splithandlerfunction: this.props.splithandlerfunction,
-                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup} />
+                        }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup}  closeUndoTimer = {this.props.closeUndoTimer}/>
                         </MultiColumnContext.Provider>;
                     }
                     break;
@@ -2088,6 +2271,8 @@ class ElementContainer extends Component {
                         position={this.state.position}
                         handleCheckboxPopup ={this.handleWarningPopupCheckbox}
                         warningPopupCheckbox={this.state.warningPopupCheckbox}
+                        handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />;
                     labelText = 'PS'
                     break;
@@ -2203,6 +2388,7 @@ class ElementContainer extends Component {
         let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
         let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
                 return (
+            <>
                 <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                     {this.renderCopyComponent(this.props, index, inContainer, tcm)}
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
@@ -2256,6 +2442,8 @@ class ElementContainer extends Component {
                         showBlockCodeElemPopup={this.state.showBlockCodeElemPopup}
                         handleCheckboxPopup ={this.handleWarningPopupCheckbox}
                         warningPopupCheckbox={this.state.warningPopupCheckbox}
+                        handleUndoOption = {this.handleUndoOption}
+                        closeUndoTimer = {this.props.closeUndoTimer}
                     />}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
@@ -2289,6 +2477,20 @@ class ElementContainer extends Component {
                         </PageNumberContext.Consumer>
                     }
                 </div >
+                        {
+                            this.state.showUndoButton && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
+                                <p> {this.state.showSectionBreakLabelText ? SECTION_BREAK_LABELTEXT : labelText} has been deleted. </p>
+                                <p className='undo-button' onClick={() => this.handleUndoElement()}> Undo </p>
+                                <Button type='toast-close-icon' onClick={() => this.handleUndoOptionTimer()} />
+                            </div>
+                        }
+                        {
+                            this.state.showActionUndone && <div className='delete-toastMsg'>
+                                <p> Action undone. </p>
+                                <Button type='toast-close-icon' onClick={() => this.handleActionUndoneTimer()} />
+                            </div>
+                        }
+            </>
 
         );
     }
@@ -2320,7 +2522,9 @@ class ElementContainer extends Component {
             containerId: objKey,
             columnIndex: `C${index + 1}`
         }
-        this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
+        setTimeout(() => {
+            this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
+        }, 0)
     }
 
     /**
@@ -2344,6 +2548,7 @@ class ElementContainer extends Component {
                     copyClickedY={this.copyClickedY}
                     permissions={_props.permissions}
                     slateLevelData={this.props.slateLevelData}
+                    handleBlur={this.handleBlur}
                 />
             )
         }
@@ -2512,7 +2717,7 @@ class ElementContainer extends Component {
     handleEditInCypressPlus = (e,elementId) =>{
         e.stopPropagation();
         const urlCypressPlus=`${config.CYPRESS_PLUS_URL}?project_d_urn=${config.projectUrn}&project_e_urn=${config.projectEntityUrn}&project_manifest_urn=${config.slateManifestURN}&project_w_urn=${elementId}`
-        const cypressPlusWindow = window.open(urlCypressPlus ,'_blank')
+        const cypressPlusWindow = window.open(urlCypressPlus ,'_parent')
         config.CYPRESS_PLUS_WINDOW= cypressPlusWindow
        const obj ={type:INCOMING_MESSAGE,message:REFRESH_MESSAGE}
      setTimeout(()=>{
@@ -2667,8 +2872,7 @@ class ElementContainer extends Component {
                 this.handleFigurePopup(true);
             }
             
-        }
-        else {
+        } else {
             let fullAssessment = checkFullElmAssessment(element);
             let embeddedAssessment = checkEmbeddedElmAssessment(element);
             const isInteractive = checkInteractive(element);
@@ -2862,6 +3066,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         prepareImageDataFromTable: (element) => {
             dispatch(prepareImageDataFromTable(element));
+        },
+        storeDeleteElementKeys : (objectkey) => {
+            dispatch(storeDeleteElementKeys(objectkey));
         }
     }
 }
@@ -2909,7 +3116,8 @@ const mapStateToProps = (state) => {
         isJoinedPdfSlate: state.appStore.isJoinedPdfSlate,
         figureDropdownData: state.appStore.figureDropdownData,
         tableElementAssetData: state.appStore.tableElementAssetData,
-        popupParentSlateData: state.autoNumberReducer.popupParentSlateData
+        popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
+        deletedKeysValue: state.appStore.deletedElementKeysData
     }
 }
 

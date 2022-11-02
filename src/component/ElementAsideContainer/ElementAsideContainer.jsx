@@ -333,6 +333,8 @@ class ElementAsideContainer extends Component {
                     permissions={this.props.permissions}
                     userRole={this.props.userRole}
                     handleCopyPastePopup={this.props.handleCopyPastePopup}
+                    handleUndoOption = {this.props.handleUndoOption}
+                    closeUndoTimer = {this.props.closeUndoTimer}
                 />
                 <Sortable
                     options={{
@@ -499,6 +501,8 @@ class ElementAsideContainer extends Component {
                                         elementSepratorProps={this.props.elementSepratorProps}
                                         splithandlerfunction={this.props.splithandlerfunction}
                                         pasteElement={this.props.pasteElement}
+                                        handleUndoOption = {this.props.handleUndoOption}
+                                        closeUndoTimer = {this.props.closeUndoTimer}
                                     >
                                     </ElementContainer>
                                     <ElementSaprator
@@ -516,6 +520,7 @@ class ElementAsideContainer extends Component {
                                         pasteElement={this.props.pasteElement}
                                         source={ASIDE_SOURCE}
                                         handleCopyPastePopup={this.props.handleCopyPastePopup}
+                                        dataId = {element.id}
                                     />
                                 </React.Fragment>
                             )
@@ -718,7 +723,7 @@ class ElementAsideContainer extends Component {
         let diffDesignType = ["asideSidebar04", "asideSidebar05", "asideSidebarFeature", "asideActivity"]
         let isDiffDesignType= diffDesignType.includes(designtype);
         return (
-            <aside className={`${labelMargin} ${ isDiffDesignType ? '' : designtype } aside-container`} tabIndex="0" ref={this.asideRef}>
+            <aside className={`${labelMargin} ${ isDiffDesignType ? '' : designtype } aside-container`} tabIndex="0">
                 {this.checkForAutoNumberedContent(element) ?
                     <ContainerHeader
                         {...this.props}

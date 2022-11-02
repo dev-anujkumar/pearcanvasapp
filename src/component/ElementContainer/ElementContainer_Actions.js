@@ -6,7 +6,7 @@ import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS,
-         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA } from "./../../constants/Action_Constants";
+         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA, DELETE_ELEMENT_KEYS } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
@@ -153,7 +153,7 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData) => async (dispatch, getState) => {
+export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
         if(hasReviewerRole()){
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return ;
@@ -165,7 +165,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         }
         updatedData = (updatedData.type == "element-blockfeature") ? contentEditableFalse(updatedData): updatedData;
         /** updateBodymatter | Used for TCM Snapshots */
-        let updateBodymatter = getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
+        /**
+         * @isFromRC represents element update call from RC with loAssociation key
+         * @updatedData - is the updated element details that has been fetch from a RC slate
+         */
+        let updateBodymatter = isFromRC ? [updatedData] : getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
         const helperArgs = { 
             updatedData,
             asideData,
@@ -175,19 +179,23 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             versionedData: null,
             elementIndex,
             showHideType,
-            parentElement
+            parentElement,
+            isFromRC,
+            upadtedSlateData
         }
         updateStoreInCanvas(helperArgs)
         let updatedData1 = JSON.parse(JSON.stringify(updatedData));
         updatedData1.projectEntityUrn = config.projectEntityUrn;
-        updatedData1.immediateSlateEntityUrn = config.slateEntityURN;
-        updatedData1.immediateSlateVersionUrn = config.slateManifestURN;
+        if(!isFromRC){
+            updatedData1.immediateSlateEntityUrn = config.slateEntityURN;
+            updatedData1.immediateSlateVersionUrn = config.slateManifestURN;
+        }
         const data = {
             slateLevelData,
             index: elementIndex
         };
         const blockListData = checkBlockListElement(data, 'TAB');
-        if(blockListData && Object.keys(blockListData).length > 0) {
+        if(blockListData && Object.keys(blockListData).length > 0 && !isFromRC) {
             const { parentData } = blockListData;
             updatedData1.elementParentEntityUrn = parentData?.contentUrn;
         }
@@ -233,15 +241,10 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             showHideObj
         }
         processAndStoreUpdatedResponse(updateArgs)
-            if (updatedData.type == "element-assessment") {
-                let newAssessmentId = response?.data?.elementdata?.assessmentid;
-                sendDataToIframe({ 'type': 'UpdatedAssessmentId', 'message': { currentAssessmentId: newAssessmentId } });
-                config.assessmentId = newAssessmentId;
-                sendDataToIframe({
-                    'type': 'newAssessmentDetails',
-                    'message': { assessmentId: newAssessmentId, containerUrn: config.slateManifestURN}
-                })
-            }
+        if (updatedData.type == "element-assessment") {
+            let newAssessmentId = response?.data?.elementdata?.assessmentid;
+            config.assessmentId = newAssessmentId;
+        }    
     }
     catch(error) {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
@@ -910,8 +913,8 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             });
         const {properties} = response.data.entry;
         return { 
-            altText : properties["cplg:altText"],
-            longdescription: properties["cplg:longDescription"]
+            altText : properties["cplg:altText"] ?? "",
+            longdescription: properties["cplg:longDescription"] ?? ""
         }
     } catch(error){
         return { 
@@ -979,6 +982,13 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
         type: UPDATE_TABLE_ELEMENT_ASSET_DATA,
         payload: imagesArrayOfObj
     })
+
+    const imagesDataObject = prepareImagesDataObject(imagesArrayOfObj);
+
+    dispatch({
+        type: UPDATE_TABLE_ELEMENT_EDITED_DATA,
+        payload: imagesDataObject
+    })
 }
 
 /**
@@ -1027,4 +1037,28 @@ export const saveTEMetadata = async (editedImageList) => {
         }
     } catch(error){
     }
+}
+
+export const storeDeleteElementKeys = (deleteObject) => (dispatch) => {
+    dispatch({
+        type: DELETE_ELEMENT_KEYS,
+        payload: deleteObject
+    })
+}
+
+export const prepareImagesDataObject = (imagesArrayOfObj) => {
+    let imagesLatestData = {}
+    if (imagesArrayOfObj && imagesArrayOfObj.length && imagesArrayOfObj.length > 0) {
+        for (const element of imagesArrayOfObj) {
+            const { altText, longdescription, imgSrc, imgId } = element;
+            imagesLatestData[imgId] = {
+                altText,
+                longdescription,
+                imgSrc,
+                imgId
+            }
+        }
+        return imagesLatestData;
+    }
+    return imagesLatestData;
 }

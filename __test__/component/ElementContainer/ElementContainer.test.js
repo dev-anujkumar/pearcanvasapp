@@ -53,6 +53,7 @@ jest.mock('./../../../src/constants/utility.js', () => ({
             replace: jest.fn()
         })
     },
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
@@ -104,6 +105,9 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
             return jest.fn()
         },
         prepareImageDataFromTable: () => {
+            return jest.fn()
+        },
+        storeDeleteElementKeys: () => {
             return jest.fn()
         }
     }
@@ -2152,7 +2156,8 @@ describe('Test-Other Functions', () => {
                 secondaryOption: "secondary-pullquote",
                 tag: "BQ",
                 toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
-            }
+            },
+            closeUndoTimer: "test"
         };
 
         let elementContainer = mount(<Provider store={store1}><ElementContainer {...props} /></Provider>);
@@ -2165,7 +2170,7 @@ describe('Test-Other Functions', () => {
 
         document.getElementById["scrollTop"] = 1
         const spycomponentDidUpdate = jest.spyOn(elementContainerInstance, 'componentDidUpdate')
-        elementContainerInstance.componentDidUpdate();
+        elementContainerInstance.componentDidUpdate({closeUndoTimer: "test1"});
         expect(spycomponentDidUpdate).toHaveBeenCalled();
         spycomponentDidUpdate.mockClear()
     })
@@ -2276,6 +2281,7 @@ describe('Test-Other Functions', () => {
                 tag: "BQ",
                 toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "glossary", "slatetag"]
             },
+            closeUndoTimer: "test"
         };
         let elementContainer = mount(<Provider store={store1}><ElementContainer {...props} /></Provider>);
         const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -2286,7 +2292,7 @@ describe('Test-Other Functions', () => {
         }
         document.getElementById["scrollTop"] = 1
         const spycomponentDidUpdate = jest.spyOn(elementContainerInstance, 'componentDidUpdate')
-        elementContainerInstance.componentDidUpdate();
+        elementContainerInstance.componentDidUpdate({closeUndoTimer: "test1"});
         expect(spycomponentDidUpdate).toHaveBeenCalled();
         spycomponentDidUpdate.mockClear()
     })
@@ -3504,6 +3510,17 @@ describe('Test-Other Functions', () => {
         elementContainerInstance.handleWarningPopupCheckbox(event);
         expect(handleWarningPopupCheckbox).toHaveBeenCalled();
         handleWarningPopupCheckbox.mockClear()
+    });
+    it("handleListElementWarningPopupCheckbox function", () => {
+        const event = {
+            target:{
+                value:"true"
+            }
+        }
+        const handleListElementWarningPopupCheckbox = jest.spyOn(elementContainerInstance, 'handleListElementWarningPopupCheckbox')
+        elementContainerInstance.handleListElementWarningPopupCheckbox(event);
+        expect(handleListElementWarningPopupCheckbox).toHaveBeenCalled();
+        handleListElementWarningPopupCheckbox.mockClear()
     });
 
     it("handleAutonumberAfterUpdate function", () => {

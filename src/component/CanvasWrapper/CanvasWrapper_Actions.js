@@ -41,7 +41,7 @@ import { sendToDataLayer } from '../../constants/ga';
 import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
-import { fetchAllSlatesData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
+import { fetchAllSlatesData, fetchAnySlateData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR } from '../../constants/Element_Constants'
@@ -559,7 +559,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
 
 
 
-export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload) => (dispatch, getState) => {
+export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload, isFetchAnySlate) => (dispatch, getState) => {
     /** [TK-3289]- Fetch Data for All Slates */
     const startTime = performance.now();
     dispatch(fetchAllSlatesData());
@@ -624,6 +624,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => { 
+        // isFetchAnySlate is the confirmation we get from RC for RC's related slateDetails fetching
+        if(!isFetchAnySlate){
          /* Slate tag issue */
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
@@ -651,11 +653,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
             }
         }
-        if(config.slateType == "assessment" && newVersionManifestId && slateData?.data[newVersionManifestId] && slateData?.data[newVersionManifestId]?.contents?.bodymatter[0]?.elementdata){
-            let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter;
-                config.assessmentId= slateBodymatter[0].elementdata.assessmentid;
-                sendDataToIframe({ 'type': 'UpdatedAssessmentId', 'message': { currentAssessmentId: config.assessmentId}});
-            }
         /** ---- Check if current slate is Double Spread PDF ---- */
         const isCypressPlusProject = getState()?.appStore?.isCypressPlusEnabled
         if (isCypressPlusProject && config.slateType == 'pdfslate' && slateData && slateData.data[newVersionManifestId]) {
@@ -685,6 +682,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 delete Object.assign(newslateData, {[Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];     
                 config.slateManifestURN= Object.values(slateData.data)[0].id
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
+                config.tcmStatusPopupGlossary = true
                 return dispatch({
                     type: AUTHORING_ELEMENT_UPDATE,
                     payload: {
@@ -866,8 +864,17 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         });    
 
                         let slateWrapperNode = document.getElementById('slateWrapper');
+                        let searchString = window.location.search;
+                        let src = new URLSearchParams(searchString);
                         if (slateWrapperNode) {
                             slateWrapperNode.scrollTop = 0;
+                        }
+                        if(src && src.get('q') && currentParentData && !config.elementSlateRefresh) {
+                            dispatch(getContainerData(src.get('q')));
+                        } else if(currentParentData && config.elementSlateRefresh) {
+                            dispatch(getContainerData(''));
+                        } else if(config.currentElementUrn && currentParentData && !config.elementSlateRefresh){
+                            dispatch(getContainerData(config.currentElementUrn));
                         }
                     }
                 }else{
@@ -921,6 +928,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
         /** Get List of Figures on a Slate for Auto-Numbering */
         const slateFigures = getAutoNumberedElementsOnSlate(slateData.data[newVersionManifestId],{dispatch})
+    }else{
+        dispatch(fetchAnySlateData(slateData.data))
+    }
     })
     .catch(err => {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
