@@ -6,11 +6,14 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { createSerializer } from 'enzyme-to-json';
 import sinon from 'sinon';
 import expect from 'expect';
+import { TextEncoder, TextDecoder } from 'util';
 
 //expect.addSnapshotSerializer(createSerializer({ mode: 'deep' }));
 
 configure({ adapter: new Adapter() });
 
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
 global.shallow = shallow;
 global.render = render;
 global.mount = mount;
