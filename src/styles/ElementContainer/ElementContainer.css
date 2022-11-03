@@ -366,3 +366,9 @@ p.blockquoteTextCredit.mce-edit-focus.place-holder:focus::before {
   .stop-event {
     pointer-events: none !important;
   }
+  h5 code {
+    color: #525252 !important;
+    font-family: monospace !important;
+    font-size: 1.2175em !important;
+    font-style: inherit !important;
+}
