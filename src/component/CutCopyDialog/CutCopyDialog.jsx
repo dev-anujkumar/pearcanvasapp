@@ -17,7 +17,7 @@ const CutCopyDialog = props => {
     
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     const popupSlateNotAcceptedTypes = ['groupedcontent', 'showhide', 'citations', 'element-citation', 'poetry', 'stanza'];
-    const refreshRestrictedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup', 'discussion', 'poetry', 'element-dialogue', 'openerelement', 'element-generateLOlist', 'element-learningobjectivemapping'];
+    const refreshRestrictedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup', 'discussion', 'poetry', 'element-dialogue', 'openerelement', 'element-generateLOlist', 'element-learningobjectivemapping', 'element-pdf', 'element-assessment', 'manifest'];
     let allowToShowOptions = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.element?.type) ? false : true;
     const showRefreshOption = (refreshRestrictedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true 
     return (
