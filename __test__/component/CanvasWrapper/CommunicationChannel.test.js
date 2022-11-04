@@ -1080,7 +1080,7 @@ describe('Testing communication channel', () => {
         expect(channelInstance.releaseLockAndRedirect).toHaveBeenCalled()
         spyreleaseLockAndRedirect.mockClear()
     })
-    test('Test for logout case', () => {
+    xtest('Test for logout case', () => {
         let event = {
             data: {
                 type: "logout",
