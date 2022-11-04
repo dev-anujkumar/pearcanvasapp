@@ -59,7 +59,8 @@ describe('Test for Sidebar component', () => {
         alfrescoReducer : {
             alfrescoAltLongDescData: {
                 altText: '',
-                longDesc: ''
+                longDesc: '',
+                savedAltLongDesData: 'abc'
             }
         }
     }
@@ -331,7 +332,8 @@ describe('Test for Sidebar component', () => {
             alfrescoReducer : {
                 alfrescoAltLongDescData: {
                     altText: '',
-                    longDesc: ''
+                    longDesc: '',
+                    savedAltLongDesData: 'abc'
                 }
             }
         });
@@ -386,7 +388,8 @@ describe('Test for Sidebar component', () => {
             alfrescoReducer : {
                 alfrescoAltLongDescData: {
                     altText: '',
-                    longDesc: ''
+                    longDesc: '',
+                    savedAltLongDesData: 'abc'
                 }
             }
         });
@@ -433,7 +436,8 @@ describe('Test for Sidebar component', () => {
             alfrescoReducer : {
                 alfrescoAltLongDescData: {
                     altText: '',
-                    longDesc: ''
+                    longDesc: '',
+                    savedAltLongDesData: 'abc'
                 }
             }
 
@@ -661,7 +665,8 @@ describe('Test for Sidebar component', () => {
                 alfrescoReducer : {
                     alfrescoAltLongDescData: {
                         altText: '',
-                        longDesc: ''
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
                     }
                 }
             });
@@ -721,7 +726,8 @@ describe('Test for Sidebar component', () => {
                 alfrescoReducer : {
                     alfrescoAltLongDescData: {
                         altText: '',
-                        longDesc: ''
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
                     }
                 }
             });
@@ -772,7 +778,8 @@ describe('Test for Sidebar component', () => {
                 alfrescoReducer : {
                     alfrescoAltLongDescData: {
                         altText: '',
-                        longDesc: ''
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
                     }
                 }
             });
@@ -824,7 +831,8 @@ describe('Test for Sidebar component', () => {
                 alfrescoReducer : {
                     alfrescoAltLongDescData: {
                         altText: '',
-                        longDesc: ''
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
                     }
                 }
             });
@@ -888,7 +896,8 @@ describe('Test for Sidebar component', () => {
             alfrescoReducer : {
                 alfrescoAltLongDescData: {
                     altText: '',
-                    longDesc: ''
+                    longDesc: '',
+                    savedAltLongDesData: 'abc'
                 }
             }
         });
@@ -974,7 +983,8 @@ describe('Test for Sidebar component', () => {
             alfrescoReducer : {
                 alfrescoAltLongDescData: {
                     altText: '',
-                    longDesc: ''
+                    longDesc: '',
+                    savedAltLongDesData: 'abc'
                 }
             }
         }
@@ -1072,7 +1082,8 @@ describe('Test for Sidebar component', () => {
             alfrescoReducer : {
                 alfrescoAltLongDescData: {
                     altText: '',
-                    longDesc: ''
+                    longDesc: '',
+                    savedAltLongDesData: 'abc'
                 }
             }
         }
@@ -1232,7 +1243,8 @@ describe('Test for Sidebar component', () => {
             alfrescoReducer : {
                 alfrescoAltLongDescData: {
                     altText: '',
-                    longDesc: ''
+                    longDesc: '',
+                    savedAltLongDesData: 'abc'
                 }
             }
         }
@@ -1373,7 +1385,8 @@ describe('Test for Sidebar component', () => {
             alfrescoReducer : {
                 alfrescoAltLongDescData: {
                     altText: '',
-                    longDesc: ''
+                    longDesc: '',
+                    savedAltLongDesData: 'abc'
                 }
             }
         }
@@ -1935,7 +1948,8 @@ describe('Test for Sidebar component', () => {
                 alfrescoReducer : {
                     alfrescoAltLongDescData: {
                         altText: '',
-                        longDesc: ''
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
                     }
                 }
             }
