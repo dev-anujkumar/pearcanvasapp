@@ -1381,14 +1381,19 @@ class SlateWrapper extends Component {
                 setTimeout(this.closePopup, 0)
             }
         }else{
-            setTimeout(this.closePopup, 800)
+            if (config.savingInProgress || config.isSavingElement) {
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                setTimeout(this.closePopup, 4000)
+            }else{
+                setTimeout(this.closePopup, 0);
+            }
         }
     }
 
     closePopup = () =>{
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })
         let popupId = config.slateManifestURN
-        if(this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN].status === "wip"){
+        if( this.props.slateData && this.props.slateData[config.tempSlateManifestURN] && this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].status === "wip"){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
