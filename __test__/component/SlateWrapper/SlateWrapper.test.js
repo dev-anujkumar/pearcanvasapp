@@ -847,7 +847,12 @@ describe("SlateWrapper Component", () => {
     describe("1.40 Test - closePopup ", () => {
         it('1.40.1  Test - if case (config.isSavingElement)', () => {
             config.isSavingElement = true;
-            const compInstance = slateWrapInstance(props);
+            const newProps = {...props};
+            config.tempSlateManifestURN = "s-12345";
+            config.cachedActiveElement = {element: {id: "1231", status: "approved",index: 1}};
+           // newProps.slateData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"].status = "approved";
+            newProps.slateData["s-12345"] = {status: "approved",id:"id-123"};
+            const compInstance = slateWrapInstance(newProps);
             const spy = jest.spyOn(compInstance, 'closePopup')
             compInstance.closePopup();
             expect(spy).toHaveBeenCalled();
