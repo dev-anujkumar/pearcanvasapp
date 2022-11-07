@@ -124,8 +124,8 @@ class ElementDialogue extends React.PureComponent {
     }
 
     addElement = (psIndex, psElementIndex, data, oldPSData) => {
-        const dialogueContent = oldPSData.html.dialogueContent;
-        dialogueContent.splice(psElementIndex, 0, data);
+        const dialogueContent = oldPSData.html.dialogueContent || [];
+        dialogueContent?.splice(psElementIndex, 0, data);
         const newPsElement = {
             ...oldPSData,
             html: {

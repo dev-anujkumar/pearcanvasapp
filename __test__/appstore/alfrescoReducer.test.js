@@ -4,7 +4,8 @@ import {
     SET_ALFRESCO_POPUP,
     SAVE_ALFRESCO_ASSET_DATA,
     SAVE_INLINE_IMAGE_DATA,
-    SAVE_ALFRESCO_ELEMENT
+    SAVE_ALFRESCO_ELEMENT,
+    SAVE_ALFRESCO_ALT_LONG_DESC_DATA
 } from '../../src/constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -21,7 +22,11 @@ const INITIAL_STATE = {
     locationData: {},
     calledFromGlossaryFootnote: false,
     calledFromImageGlossaryFootnote: false,
-    savedElement:{}
+    savedElement:{},
+    savedAltLongDesData: {
+        altText : "",
+        longDesc: ""
+    }
 }
 
 const INITIAL_ACTION = {
@@ -65,6 +70,16 @@ describe('Test alfrescoReducer', () => {
             type: SAVE_ALFRESCO_ELEMENT,
             payload: {
                 savedElement:{}
+            }
+        })
+    })
+    it('SAVE_ALFRESCO_ALT_LONG_DESC_DATA', () => {
+        
+        reducer(INITIAL_STATE, {
+            type: SAVE_ALFRESCO_ALT_LONG_DESC_DATA,
+            payload: {
+                altText: "",
+                longDesc: ''
             }
         })
     })

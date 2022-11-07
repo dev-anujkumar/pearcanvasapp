@@ -55,6 +55,12 @@ describe('Test for Sidebar component', () => {
         },
         autoNumberReducer: {
             isAutoNumberingEnabled: false
+        },
+        alfrescoReducer : {
+            alfrescoAltLongDescData: {
+                altText: '',
+                longDesc: ''
+            }
         }
     }
     const sidebarWithData = mockStore(initialStore);
@@ -321,6 +327,12 @@ describe('Test for Sidebar component', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: false
+            },
+            alfrescoReducer : {
+                alfrescoAltLongDescData: {
+                    altText: '',
+                    longDesc: ''
+                }
             }
         });
 
@@ -370,6 +382,12 @@ describe('Test for Sidebar component', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: false
+            },
+            alfrescoReducer : {
+                alfrescoAltLongDescData: {
+                    altText: '',
+                    longDesc: ''
+                }
             }
         });
 
@@ -411,6 +429,12 @@ describe('Test for Sidebar component', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: false
+            },
+            alfrescoReducer : {
+                alfrescoAltLongDescData: {
+                    altText: '',
+                    longDesc: ''
+                }
             }
 
         });
@@ -633,6 +657,12 @@ describe('Test for Sidebar component', () => {
                 },
                 autoNumberReducer: {
                     isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: ''
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar   {...props} /></Provider>);
@@ -687,6 +717,12 @@ describe('Test for Sidebar component', () => {
                 },
                 autoNumberReducer: {
                     isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: ''
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData1}><Sidebar   {...props} /></Provider>);
@@ -732,6 +768,12 @@ describe('Test for Sidebar component', () => {
                 },
                 autoNumberReducer: {
                     isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: ''
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -778,6 +820,12 @@ describe('Test for Sidebar component', () => {
                 },
                 autoNumberReducer: {
                     isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: ''
+                    }
                 }
             });
             let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
@@ -836,6 +884,12 @@ describe('Test for Sidebar component', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: false
+            },
+            alfrescoReducer : {
+                alfrescoAltLongDescData: {
+                    altText: '',
+                    longDesc: ''
+                }
             }
         });
         let activeElement = {
@@ -916,6 +970,12 @@ describe('Test for Sidebar component', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: false
+            },
+            alfrescoReducer : {
+                alfrescoAltLongDescData: {
+                    altText: '',
+                    longDesc: ''
+                }
             }
         }
         const sidebarWithData1 = mockStore(storeData);
@@ -1008,6 +1068,12 @@ describe('Test for Sidebar component', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: false
+            },
+            alfrescoReducer : {
+                alfrescoAltLongDescData: {
+                    altText: '',
+                    longDesc: ''
+                }
             }
         }
         const sidebarWithData1 = mockStore(storeData);
@@ -1162,6 +1228,12 @@ describe('Test for Sidebar component', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: false
+            },
+            alfrescoReducer : {
+                alfrescoAltLongDescData: {
+                    altText: '',
+                    longDesc: ''
+                }
             }
         }
         const storeData2 = {
@@ -1297,6 +1369,12 @@ describe('Test for Sidebar component', () => {
             },
             autoNumberReducer: {
                 isAutoNumberingEnabled: false
+            },
+            alfrescoReducer : {
+                alfrescoAltLongDescData: {
+                    altText: '',
+                    longDesc: ''
+                }
             }
         }
         const storeData2 = {
@@ -1853,6 +1931,12 @@ describe('Test for Sidebar component', () => {
                 },
                 autoNumberReducer: {
                     isAutoNumberingEnabled: true
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: ''
+                    }
                 }
             }
             let storeData2 = {

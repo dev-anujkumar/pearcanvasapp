@@ -403,6 +403,10 @@ export class TinyMceEditor extends Component {
                 let divParent = tinymce.$(`div[id="cypress-${this.props.index}"]`).children();
                 spanHandlers.handleFormattingTags(editor, this.props.elementId, 'div', divParent, 'poetryLine', range);
             }
+            if (this.props && this.props.element && this.props.element.type && this.props.element.type === 'element-dialogue' && e.command === 'mceToggleFormat') {
+                let divParent = tinymce.$(`div[id="cypress-${this.props.index}"]`).children();
+                spanHandlers.handleFormattingTags(editor, this.props.elementId, 'div', divParent, 'dialogueLine', range);
+            }
             if (this.props && this.props.element && this.props.element.type && this.props.element.figuretype === 'codelisting' && e.command === 'mceToggleFormat') {
                 let codeParent = tinymce.$(`code[id="cypress-${this.props.index}"]`).children();
                 spanHandlers.handleFormattingTags(editor, this.props.elementId, 'code', codeParent, 'codeNoHighlightLine', range);
@@ -510,9 +514,6 @@ export class TinyMceEditor extends Component {
                                 e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem"))
                         ) {
                             e.target.targetElm.children[0].innerHTML = textToReplace;
-                        }
-                        else if (this.props.element.type === 'stanza') {
-                            spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'div', 'poetryLine');
                         }
                         else if (e.target.targetElm.nodeName === "CODE" && this.props.element.figuretype === 'codelisting') {
                             spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'code', 'codeNoHighlightLine');
