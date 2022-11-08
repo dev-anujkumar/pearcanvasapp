@@ -1373,17 +1373,22 @@ class SlateWrapper extends Component {
     }
 
     saveAndClose = () =>{
-        if(this.props && config.tempSlateManifestURN && this.props.slateData && this.props.slateData[config.tempSlateManifestURN] && this.props.slateData[config.tempSlateManifestURN].status === "approved"){
+        if(this.props && config.tempSlateManifestURN && config.slateManifestURN &&  this.props.slateData && this.props.slateData[config.tempSlateManifestURN] && (this.props.slateData[config.tempSlateManifestURN].status === "approved" || this.props.slateData[config.slateManifestURN].status === "approved")){
             if (config.savingInProgress || config.isSavingElement) {
-                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-                setTimeout(this.closePopup, 10000)
+                if(Object.keys(this.props.asideData).length > 0){
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                    setTimeout(this.closePopup, 10000)
+                }else{
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                    setTimeout(this.closePopup, 4000)
+                }
+                
             }else{
                 setTimeout(this.closePopup, 0)
             }
         }else{
             if (config.savingInProgress || config.isSavingElement) {
-                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-                setTimeout(this.closePopup, 4000)
+                setTimeout(this.closePopup, 800)
             }else{
                 setTimeout(this.closePopup, 0);
             }
