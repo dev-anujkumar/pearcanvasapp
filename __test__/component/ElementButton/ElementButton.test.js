@@ -4,26 +4,43 @@ import buttonTypes from '../../../src/component/ElementButtons/ButtonTypes';
 
 describe('Testing Button component with props', () => {
 
+    const props1 = {
+        isSubscribersSlate: true
+    }
+    const props2 = {
+        isSubscribersSlate: false
+    }
+
     it('render split Button component ', () => {
         const component = mount(<Button type={buttonTypes.SPLIT_SLATE} labelText="UL" />);
-         expect(component.find('span.btn-element').hasClass('split-icon')).toBe(true);
+        expect(component.find('span.btn-element').hasClass('split-icon')).toBe(true);
     })
     it('render add-comment Button component ', () => {
-        const component = mount(<Button type={buttonTypes.ADD_COMMENT} labelText="UL" />);
+        const component = mount(<Button {...props1} type={buttonTypes.ADD_COMMENT} labelText="UL" />);
         expect(component.find('span.btn-element').hasClass('add-comment')).toBe(true);
         expect(component.find('span.btn-element').hasClass('split-icon')).toBe(false);
         expect(component.find('svg#Capa_1').exists()).toBe(false);
     })
-  it('render Edit Button Component to open Cypress Plus', () => {
-    const component = mount(<Button type={buttonTypes.EDIT_BUTTON_CYPRESSSPLUS} labelText='UL' />)
-    expect(component.find('span.btn-element').hasClass('edit-in-cypressPlus')).toBe(false)
-  })
-  it('render view-comment Button component ', () => {
-    const component = mount(<Button type={buttonTypes.VIEW_COMMENT} labelText="UL" />);
-    expect(component.find('span.btn-element').hasClass('add-comment')).toBe(true);
-    expect(component.find('span.btn-element').hasClass('split-icon')).toBe(false);
-    expect(component.find('svg#Capa_1').exists()).toBe(false);
-})
+    it('render add-comment Button component : isSubscribersSlate : false', () => {
+        const component = mount(<Button {...props2} type={buttonTypes.ADD_COMMENT} labelText="UL" />);
+        expect(component.find('span.btn-element').hasClass('add-comment')).toBe(true);
+        expect(component.find('span.btn-element').hasClass('split-icon')).toBe(false);
+        expect(component.find('svg#Capa_1').exists()).toBe(false);
+    })
+    it('render Edit Button Component to open Cypress Plus', () => {
+        const component = mount(<Button {...props1} type={buttonTypes.EDIT_BUTTON_CYPRESSSPLUS} labelText='UL' />)
+        expect(component.find('span.btn-element').hasClass('edit-in-cypressPlus')).toBe(false)
+    })
+    it('render Edit Button Component to open Cypress Plus: isSubscribersSlate : false', () => {
+        const component = mount(<Button {...props2} type={buttonTypes.EDIT_BUTTON_CYPRESSSPLUS} labelText='UL' />)
+        expect(component.find('span.btn-element').hasClass('edit-in-cypressPlus')).toBe(false)
+    })
+    it('render view-comment Button component ', () => {
+        const component = mount(<Button type={buttonTypes.VIEW_COMMENT} labelText="UL" />);
+        expect(component.find('span.btn-element').hasClass('add-comment')).toBe(true);
+        expect(component.find('span.btn-element').hasClass('split-icon')).toBe(false);
+        expect(component.find('svg#Capa_1').exists()).toBe(false);
+    })
     it('render comment-flag Button component  ', () => {
         const component = mount(<Button type={buttonTypes.COMMENT_FLAGGED} labelText="UL" />);
         expect(component.find('span.btn-element').hasClass('flag-comment')).toBe(true);
@@ -145,7 +162,12 @@ describe('Testing Button component with props', () => {
         expect(component.find('svg#assessmentSlate-item-icon').exists()).toBe(true);
     })
     it('render FEEDBACK Button component  ', () => {
-        const component = mount(<Button type={buttonTypes.FEEDBACK} />);
+        const component = mount(<Button {...props1} type={buttonTypes.FEEDBACK} />);
+        expect(component.find('span.btn-element').hasClass('feedback')).toBe(true);
+        expect(component.find('svg.feedback-icon-svg').exists()).toBe(true);
+    })
+    it('render FEEDBACK Button component : isSubscribersSlate : false', () => {
+        const component = mount(<Button {...props2} type={buttonTypes.FEEDBACK} />);
         expect(component.find('span.btn-element').hasClass('feedback')).toBe(true);
         expect(component.find('svg.feedback-icon-svg').exists()).toBe(true);
     })
@@ -189,7 +211,19 @@ describe('Testing Button component with props', () => {
         expect(component.find('svg#elm-interactive-icon').exists()).toBe(true);
     })
     it('render EDIT_BUTTON Button component  ', () => {
-        const component = mount(<Button type={buttonTypes.EDIT_BUTTON} />);
+        const component = mount(<Button {...props1} type={buttonTypes.EDIT_BUTTON} />);
+        expect(component.find('span.btn-element').hasClass('edit-button')).toBe(true);
+    })
+    it('render EDIT_BUTTON Button component : isSubscribersSlate : false', () => {
+        const component = mount(<Button {...props2} type={buttonTypes.EDIT_BUTTON} />);
+        expect(component.find('span.btn-element').hasClass('edit-button')).toBe(true);
+    })
+    it('render EDIT_TE_BUTTON Button component  ', () => {
+        const component = mount(<Button  {...props1} type={buttonTypes.EDIT_TE_BUTTON} />);
+        expect(component.find('span.btn-element').hasClass('edit-button')).toBe(true);
+    })
+    it('render EDIT_TE_BUTTON Button component : isSubscribersSlate : false', () => {
+        const component = mount(<Button  {...props2} type={buttonTypes.EDIT_TE_BUTTON} />);
         expect(component.find('span.btn-element').hasClass('edit-button')).toBe(true);
     })
     it('render APPROVE_TICK_ICON Button component  ', () => {
@@ -201,7 +235,19 @@ describe('Testing Button component with props', () => {
         expect(component.find('span.btn-element').hasClass('power-paste-icon')).toBe(true);
     })
     it('render ALFRESCO_METADATA Button component  ', () => {
-        const component = mount(<Button type={buttonTypes.ALFRESCO_METADATA} />);
+        const component = mount(<Button {...props1} type={buttonTypes.ALFRESCO_METADATA} />);
+        expect(component.find('span.btn-element').hasClass('alfresco-metadata-icon')).toBe(true);
+    })
+    it('render ALFRESCO_METADATA Button component : isSubscribersSlate : false ', () => {
+        const component = mount(<Button {...props2} type={buttonTypes.ALFRESCO_METADATA} />);
+        expect(component.find('span.btn-element').hasClass('alfresco-metadata-icon')).toBe(true);
+    })
+    it('render ALFRESCO_TE_METADATA Button component  ', () => {
+        const component = mount(<Button {...props1} type={buttonTypes.ALFRESCO_TE_METADATA} />);
+        expect(component.find('span.btn-element').hasClass('alfresco-metadata-icon')).toBe(true);
+    })
+    it('render ALFRESCO_TE_METADATA Button component : isSubscribersSlate : false ', () => {
+        const component = mount(<Button {...props2} type={buttonTypes.ALFRESCO_TE_METADATA} />);
         expect(component.find('span.btn-element').hasClass('alfresco-metadata-icon')).toBe(true);
     })
     it('render STAGE_DIRECTION Button component  ', () => {
@@ -215,5 +261,9 @@ describe('Testing Button component with props', () => {
     it('render ELEMENT_LABEL_CLICKABLE Button component  ', () => {
         const component = mount(<Button type={buttonTypes.ELEMENT_LABEL_CLICKABLE} />);
         expect(component.find('span.btn-element').hasClass('element-label-clickable-button')).toBe(true);
+    })
+    it('render TOAST_CLOSE_ICON Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.TOAST_CLOSE_ICON} />);
+        expect(component.find('div').hasClass('toast-close-icon')).toBe(true);
     })
 })

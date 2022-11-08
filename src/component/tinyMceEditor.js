@@ -3285,7 +3285,8 @@ export class TinyMceEditor extends Component {
                     config.editorRefID = this.editorRef.current.id;
                     let timeoutId = setTimeout(() => {
                         if (!(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
-                            document.getElementById(this.editorRef.current.id).click();
+                            const elementID = this.editorRef?.current?.id ? this.editorRef.current.id : config.editorRefID;
+                            document.getElementById(elementID).click();
                         }
                         clearTimeout(timeoutId)
                     }, 0)
