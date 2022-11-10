@@ -932,3 +932,13 @@ export const handleImagePaste = (updatedText) => {
    let updatePasteContent = updatedText.replace(/<img ([\w\W]+?)>/g,'');
    return updatePasteContent;
 }
+
+/**Function to remove style attribute getting added to <u>, <em> and <strong> due to scenario mentioned in Bug PCAT-17429 */
+export const removeStyleAttribute = (html) => {
+    let tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    tinyMCE.$(tempDiv).find('u').removeAttr('style');
+    tinyMCE.$(tempDiv).find('em').removeAttr('style');
+    tinyMCE.$(tempDiv).find('strong').removeAttr('style');
+    return tempDiv.innerHTML;
+}
