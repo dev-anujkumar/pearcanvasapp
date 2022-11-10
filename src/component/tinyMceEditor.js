@@ -3010,13 +3010,14 @@ export class TinyMceEditor extends Component {
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let term = glossaryTermText;
         let definition = null;
+        let blockfeatureType = this.props?.element?.elementdata?.type === "pullquote" ? this.props?.element?.elementdata?.type : ''
         // commented after allowing flow of formatting tags from canvas to glossary term
         // let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;'); 
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
-        term = term.replace(/<br data-mce-bogus="1">/g, "")
-        definition = definition.replace(/<br data-mce-bogus="1">/g, "")
+        term = term?.replace(/<br data-mce-bogus="1">/g, "")
+        definition = definition?.replace(/<br data-mce-bogus="1">/g, "")
         customEvent.subscribe('glossaryFootnoteSave', (elementWorkId) => {
-            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, blockfeatureType, poetryField)
             customEvent.unsubscribe('glossaryFootnoteSave');
         })
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
@@ -4235,7 +4236,8 @@ export class TinyMceEditor extends Component {
         let index = this.props.index;
         let elementSubType = this.props.element ? this.props.element.figuretype : '';
         let glossaryTermText = this.glossaryTermText;
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, this.props.poetryField);
+        let blockfeatureType = this.props?.element?.elementdata?.type === "pullquote" ? this.props?.element?.elementdata?.type : ''
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, this.props.poetryField );
     }
 
     generateHiddenElement = () => {
