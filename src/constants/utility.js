@@ -940,5 +940,7 @@ export const removeStyleAttribute = (html) => {
     tinyMCE.$(tempDiv).find('u').removeAttr('style');
     tinyMCE.$(tempDiv).find('em').removeAttr('style');
     tinyMCE.$(tempDiv).find('strong').removeAttr('style');
+    tinyMCE.$(tempDiv).find('span').removeAttr('style');
+    tinyMCE.$(tempDiv).find('s').removeAttr('style');
     return tempDiv.innerHTML;
 }
