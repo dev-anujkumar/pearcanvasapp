@@ -135,59 +135,59 @@ describe('Testing AudioNarration component with props', () => {
         expect(spyhandleC2MediaClick).toHaveBeenCalledWith({ target: { tagName: 'g' } });
         spyhandleC2MediaClick.mockClear()
     })
-    xdescribe('Alfresco Data Handling', () => {
+    // xdescribe('Alfresco Data Handling', () => {
 
-        let sampleAltTextDiv = document.createElement('at')
-        sampleAltTextDiv.setAttribute('name', 'alt_text');
-        sampleAltTextDiv.innerHTML = "alt_text"
-        document.body.appendChild(sampleAltTextDiv)
+    //     let sampleAltTextDiv = document.createElement('at')
+    //     sampleAltTextDiv.setAttribute('name', 'alt_text');
+    //     sampleAltTextDiv.innerHTML = "alt_text"
+    //     document.body.appendChild(sampleAltTextDiv)
 
-        let sampleLongDescriptionDiv = document.createElement('ld')
-        sampleLongDescriptionDiv.setAttribute('name', 'long_description');
-        sampleLongDescriptionDiv.innerHTML = "long_Description"
-        document.body.appendChild(sampleLongDescriptionDiv)
+    //     let sampleLongDescriptionDiv = document.createElement('ld')
+    //     sampleLongDescriptionDiv.setAttribute('name', 'long_description');
+    //     sampleLongDescriptionDiv.innerHTML = "long_Description"
+    //     document.body.appendChild(sampleLongDescriptionDiv)
 
 
 
-        const narrativeAudio = mount(<Provider store={store}><AddAudioBook {...props} /></Provider>);
-        let narrativeAudioInstance = narrativeAudio.find('AddAudioBook').instance();
-        const spydataFromAlfresco = jest.spyOn(narrativeAudioInstance, 'dataFromAlfresco')
-        const defaultPath = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
+    //     const narrativeAudio = mount(<Provider store={store}><AddAudioBook {...props} /></Provider>);
+    //     let narrativeAudioInstance = narrativeAudio.find('AddAudioBook').instance();
+    //     const spydataFromAlfresco = jest.spyOn(narrativeAudioInstance, 'dataFromAlfresco')
+    //     const defaultPath = "https://d12m40tknrppbi.cloudfront.net/cite/images/FPO-audio_video.png";
 
-        it('Test- if case workflow', () => {
-            let data = {
-                "narrativeAudioUrn": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
-                "location": "https://cite-media-stg.pearson.com/legacy_paths/f8433cd3-04cd-4479-852c-dde4ab410a9f/nse_aud_11_u43_l1_m1_02.mp3",
-                "title": {
-                    "en": "gdjagd"
-                },
-                "format": "audio/mpeg"
-            }
-            narrativeAudioInstance.dataFromAlfresco(data)
-            narrativeAudioInstance.forceUpdate();
-            narrativeAudio.update();
-            expect(spydataFromAlfresco).toHaveBeenCalled()
-            spydataFromAlfresco.mockClear()
-        })
-        it('Test- if case workflow-  smartLinkURl given', () => {
-            let data = {
-                'assetType': "audio",
-                 epsUrl: "",
-                'alt-text': "ält-text",
-                'longDescription': "longDescription",
-                smartLinkURl: "https://cite-media-stg.pearson.com/legacy_paths/f8433cd3-04cd-4479-852c-dde4ab410a9f/nse_aud_11_u43_l1_m1_02.mp3",
-                displayName : "AudioFile",
-                mimetype: "vtt"
-            }
+    //     it('Test- if case workflow', () => {
+    //         let data = {
+    //             "narrativeAudioUrn": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
+    //             "location": "https://cite-media-stg.pearson.com/legacy_paths/f8433cd3-04cd-4479-852c-dde4ab410a9f/nse_aud_11_u43_l1_m1_02.mp3",
+    //             "title": {
+    //                 "en": "gdjagd"
+    //             },
+    //             "format": "audio/mpeg"
+    //         }
+    //         narrativeAudioInstance.dataFromAlfresco(data)
+    //         narrativeAudioInstance.forceUpdate();
+    //         narrativeAudio.update();
+    //         expect(spydataFromAlfresco).toHaveBeenCalled()
+    //         spydataFromAlfresco.mockClear()
+    //     })
+    //     it('Test- if case workflow-  smartLinkURl given', () => {
+    //         let data = {
+    //             'assetType': "audio",
+    //              epsUrl: "",
+    //             'alt-text': "ält-text",
+    //             'longDescription': "longDescription",
+    //             smartLinkURl: "https://cite-media-stg.pearson.com/legacy_paths/f8433cd3-04cd-4479-852c-dde4ab410a9f/nse_aud_11_u43_l1_m1_02.mp3",
+    //             displayName : "AudioFile",
+    //             mimetype: "vtt"
+    //         }
 
-            narrativeAudioInstance.forceUpdate();
-            narrativeAudioInstance.dataFromAlfresco(data)
-            narrativeAudioInstance.forceUpdate();
-            narrativeAudio.update();
-            expect(spydataFromAlfresco).toHaveBeenCalled()
-            spydataFromAlfresco.mockClear()
-        })
-    })
+    //         narrativeAudioInstance.forceUpdate();
+    //         narrativeAudioInstance.dataFromAlfresco(data)
+    //         narrativeAudioInstance.forceUpdate();
+    //         narrativeAudio.update();
+    //         expect(spydataFromAlfresco).toHaveBeenCalled()
+    //         spydataFromAlfresco.mockClear()
+    //     })
+    // })
     xit('Test- lifescycle method-shouldComponentUpdate',()=>{
         const spyshouldComponentUpdate  = jest.spyOn(narrativeAudioInstance, 'shouldComponentUpdate')
         narrativeAudioInstance.shouldComponentUpdate();
