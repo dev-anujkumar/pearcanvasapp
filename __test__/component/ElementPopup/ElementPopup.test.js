@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-import config from '../../../src/config/config.js';
+import config from '../../../src/config/config';
 
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
@@ -62,6 +62,43 @@ describe('Testing Element Show Hide component', () => {
         expect(instance).toBeDefined();
     })
 
+    test('renders without crashing', () => {
+        let props1 = {
+            element:{
+                popupdata:{
+                    'formatted-subtitle': {
+                        html:{
+                            text: '123'
+                        }
+                    }
+                },
+                id: '123'
+            },
+            activeElement:{
+                elementId: '123'
+            }
+        }
+        config.savingInProgrgetCiteTdxDataess = true
+        const component = mount(<Provider store={store}><ElementPopup {...props1} /></Provider>)
+        expect(component).toHaveLength(1);
+        let instance = component.instance();
+        expect(instance).toBeDefined();
+    })
+
+    test('renders without crashing', () => {
+        let props2 = {
+            element:{
+                popupdata:{
+
+                }
+            }
+        }
+        const component = mount(<Provider store={store}><ElementPopup {...props2} /></Provider>)
+        expect(component).toHaveLength(1);
+        let instance = component.instance();
+        expect(instance).toBeDefined();
+    })
+
     test('Test renderslate function ', () => {
         let elementPopupInstance = component.find("ElementPopup").instance()
         const spyRenderSlatefunction = jest.spyOn(elementPopupInstance, 'renderSlate')
@@ -83,9 +120,55 @@ describe('Testing Element Show Hide component', () => {
         const spyhandleFocus = jest.spyOn(instance, 'handlepopupSlateClick')
         config.popupCreationCallInProgress = false
         config.isSavingElement = false
+        config.savingInProgress = true
         let event = {
             target: {
                 classList: { contains:()=>{return true;}}
+            }
+        }
+        instance.handlepopupSlateClick(event);
+        expect(spyhandleFocus).toHaveBeenCalled()
+    })
+
+    it("handlepopupSlateClick method - if block -event ", () => {
+        const instance = component.find('ElementPopup').instance();
+        const spyhandleFocus = jest.spyOn(instance, 'handlepopupSlateClick')
+        config.popupCreationCallInProgress = true
+        config.isSavingElement = true
+        config.popupCreationCallInProgress = false
+        let event = {
+            target: {
+                classList: { contains:()=>{return true;}}
+            }
+        }
+        instance.handlepopupSlateClick(event);
+        expect(spyhandleFocus).toHaveBeenCalled()
+    })
+
+    it("handlepopupSlateClick method - if block -event ", () => {
+        const instance = component.find('ElementPopup').instance();
+        const spyhandleFocus = jest.spyOn(instance, 'handlepopupSlateClick')
+        config.popupCreationCallInProgress = true
+        config.isSavingElement = true
+        config.popupCreationCallInProgress = true
+        let event = {
+            target: {
+                classList: { contains:()=>{return true;}}
+            }
+        }
+        instance.handlepopupSlateClick(event);
+        expect(spyhandleFocus).toHaveBeenCalled()
+    })
+
+    it("handlepopupSlateClick method - if block -event ", () => {
+        const instance = component.find('ElementPopup').instance();
+        const spyhandleFocus = jest.spyOn(instance, 'handlepopupSlateClick')
+        config.popupCreationCallInProgress = true
+        config.isSavingElement = true
+        config.popupCreationCallInProgress = true
+        let event = {
+            target: {
+                classList: { contains:()=>{return false;}}
             }
         }
         instance.handlepopupSlateClick(event);
