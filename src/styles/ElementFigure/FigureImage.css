@@ -102,7 +102,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     font-weight: 500;
     line-height: 1.5;
     color:#000;
-    font-family: sans-serif, 'Open Sans' !important;
+    font-family: sans-serif,  !important;
 }
 .floating-code-content-group .figureCodeContent.cypress-editable {
     font-weight: 500;
