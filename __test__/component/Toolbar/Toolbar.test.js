@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
-
+import config from '../../../src/config/config';
 import Toolbar from '../../../src/component/Toolbar';
 
 jest.mock('../../../src/constants/utility.js', () => ({
@@ -49,10 +49,18 @@ const store = mockStore({
     }
 });
 
-let wrapper = mount(<Provider store={store}><Toolbar /></Provider>);
+const props = {
+    isToolBarBlocked : true,
+    slateLockInfo : "test"
+}
+
+config.isPopupSlate = true
+config.isCypressPlusEnabled = true
+
+let wrapper = mount(<Provider store={store}><Toolbar {...props}/></Provider>);
 
 beforeEach(() => {
-    wrapper = mount(<Provider store={store}><Toolbar /></Provider>);
+    wrapper = mount(<Provider store={store}><Toolbar {...props}/></Provider>);
 })
 
 describe('Toolbar testing', () => {
@@ -71,5 +79,8 @@ describe('Toolbar testing', () => {
     })
     it('collapse header', () => {
        wrapper.find('.collapse-header').simulate('click')
+    })
+    it('search urn', () => {
+        wrapper.find('.search-urn').simulate('click')
     })
 })

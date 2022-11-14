@@ -846,6 +846,8 @@ describe("SlateWrapper Component", () => {
     })
     describe("1.40 Test - closePopup ", () => {
         it('1.40.1  Test - if case (config.isSavingElement)', () => {
+            config.cachedActiveElement = {element: {id: "1231", status: "approved",index: 1}};
+            config.tempSlateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
             config.isSavingElement = true;
             const newProps = {...props};
             config.tempSlateManifestURN = "s-12345";
