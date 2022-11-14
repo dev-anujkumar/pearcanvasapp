@@ -15,6 +15,7 @@
     border-radius:4px;
     position: relative;
     background-color: #FFF;
+    font-family: sans-serif, 'Open Sans' !important;
 }
 .opener-element-container .input-box-container{
     display: flex;
