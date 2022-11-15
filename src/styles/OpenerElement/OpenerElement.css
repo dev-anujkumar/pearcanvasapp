@@ -32,7 +32,7 @@
 }
 .opener-title > p.paragraphNumeroUno{
     margin: 0px -5px !important;
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: sans-serif, 'Open Sans' !important;
     font-size: 15px;
     white-space: nowrap;
 }
