@@ -8,7 +8,7 @@
 }
 
 .figure-image-wrapper h4, .figure-image-wrapper p, .floating-number-group h4 {
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: sans-serif !important;
 }
 .figureElement .cypress-editable.place-holder::before{
     margin-top : 2px !important;

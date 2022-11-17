@@ -100,6 +100,14 @@ describe('Testing OpenAudioBook component', () => {
         spyProcessConfirmation.mockClear()
           
     })
+    it('onClick-default case : else', () => {
+        narrativeAudioInstance.processConfirmation("test");
+        narrativeAudioInstance.forceUpdate();
+        narrativeAudio.update();
+        expect(spyProcessConfirmation).toHaveBeenCalled()
+        spyProcessConfirmation.mockClear()
+          
+    })
     xit('Blur Dropdown', () => {
         narrativeAudio.find('.audiodropdown').simulate('blur');
         // narrativeAudioInstance.processConfirmation("not-test");
