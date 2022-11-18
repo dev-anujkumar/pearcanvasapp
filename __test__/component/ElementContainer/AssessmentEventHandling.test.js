@@ -39,7 +39,7 @@ jest.mock('../../../src/appstore/store', () => {
     }
 });
 describe('Testing AssessmentEventHandling function', () => {
-    xit('Test-1-handleElmPortalEvents', () => {
+    it('Test-1-handleElmPortalEvents', () => {
         handleElmPortalEvents('add');
         let event = new CustomEvent("message", {
             data: {
