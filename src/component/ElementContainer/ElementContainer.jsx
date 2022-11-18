@@ -2929,14 +2929,18 @@ class ElementContainer extends Component {
      * @description - This function is for handling hover on element and showing page numbering box.
      */
     handleOnMouseOver = () => {
-        this.setState({ isHovered: true })
+        if(this.props.pageNumberToggle){
+            this.setState({ isHovered: true })
+        }
     }
 
     /**
      * @description - This function is for handling mouse out on element and hiding page numbering box.
      */
     handleOnMouseOut = () => {
-        this.setState({ isHovered: false })
+        if(this.props.pageNumberToggle){
+            this.setState({ isHovered: false })
+        }
     }
 
     static getDerivedStateFromError(error) {
@@ -3122,7 +3126,8 @@ const mapStateToProps = (state) => {
         figureDropdownData: state.appStore.figureDropdownData,
         tableElementAssetData: state.appStore.tableElementAssetData,
         popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
-        deletedKeysValue: state.appStore.deletedElementKeysData
+        deletedKeysValue: state.appStore.deletedElementKeysData,
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle
     }
 }
 
