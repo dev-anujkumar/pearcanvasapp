@@ -10,6 +10,7 @@ import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, C
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
 import axios from "axios"
+import { truncate } from 'fs/promises';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -18,7 +19,8 @@ jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
     getLabelNumberTitleHTML: jest.fn(),
-    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
+    createLabelNumberTitleModel: jest.fn()
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshotsCreate_Update.js', () => ({
     prepareSnapshots_ShowHide: jest.fn(),
@@ -85,7 +87,7 @@ describe('Tests ElementContainer Actions', () => {
         tcmReducer:{
             tcmSnapshot:[]
         },
-        autoNumberReducer: { isAutoNumberingEnabled: true },
+        autoNumberReducer: { isAutoNumberingEnabled: true, popupParentSlateData : {isPopupSlate: truncate} },
         assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" }
     };
     let initialState2 ={...initialState,
@@ -94,6 +96,7 @@ describe('Tests ElementContainer Actions', () => {
         tcmReducer : {
             tcmSnapshot: [{elemURN: "2", txCnt: 1}]
         },
+        autoNumberReducer: { isAutoNumberingEnabled: true},
         assetPopOverSearch: { assetID: "urn:pearson:work:23454423342" }
     }
     // let store = mockStore(() => initialState);
@@ -382,6 +385,51 @@ describe('Tests ElementContainer Actions', () => {
                 expect(spyupdateElement).toHaveBeenCalled()
             });
         })
+        it('testing------- Update Element -----action > element-blockfeature condition', () => {
+            
+            let store = mockStore(() => initialState);
+            
+            const updatedData = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-blockfeature",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: updatedData
+                });
+            });
+            let parentUrn = {
+                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                elementType: "element-authoredtext"
+            }
+           config.tcmStatus= true
+            let asideData = {
+                type: "element-authoredtext",
+                id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+
+            }
+            const spyupdateElement = jest.spyOn(actions, 'updateElement')
+            return store.dispatch(actions.updateElement(updatedData, 0, parentUrn, asideData)).then(() => {
+                expect(spyupdateElement).toHaveBeenCalled()
+            });
+        })
         it('testing------- Update Element -----action - Reviewer role', () => {
             
             let store = mockStore(() => initialState);
@@ -577,10 +625,202 @@ describe('Tests ElementContainer Actions', () => {
                 "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
                 "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
             }
+            const type2BAdded = "MANIFEST_LIST"
             mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
 
             const spyAction = jest.spyOn(actions, "createShowHideElement")
-            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)(jest.fn, store.getState)
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex,type2BAdded)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
+        })
+        it('testing------- Create Show/Hide Element------action', () => {
+            let store = mockStore(() => initialState2);
+            let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                type = "show",
+                index = "0-1-0",
+                cb = jest.fn(),
+                parentContentUrn = "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                parentElement = {
+                    id: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    type: "showhide",
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    versionUrn: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    contentUrn: "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                    interactivedata: {
+                        "postertextobject": [
+                            {
+                                "type": "element-authoredtext",
+                                "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                            }
+                        ],
+                        "show": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                            }
+                        ],
+                        "hide": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:743ddeed-104e-44ad-8f11-affdcf1b2019"
+                            }
+                        ]
+                    }
+                },
+                parentElementIndex = "0"
+
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            const type2BAdded = "MANIFEST_LIST"
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
+
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex,type2BAdded)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
+        })
+        it('testing------- Create Show/Hide Element------action > config.tcmStatus = false', () => {
+            let store = mockStore(() => initialState2);
+            let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                type = "show",
+                index = "0-1-0",
+                cb = jest.fn(),
+                parentContentUrn = "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                parentElement = {
+                    id: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    type: "showhide",
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    versionUrn: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    contentUrn: "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                    interactivedata: {
+                        "postertextobject": [
+                            {
+                                "type": "element-authoredtext",
+                                "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                            }
+                        ],
+                        "show": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                            }
+                        ],
+                        "hide": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:743ddeed-104e-44ad-8f11-affdcf1b2019"
+                            }
+                        ]
+                    }
+                },
+                parentElementIndex = "0"
+
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            const type2BAdded = "MANIFEST_LIST"
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
+            config.tcmStatus = false
+
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex,type2BAdded)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
+        })
+        it('testing------- Create Show/Hide Element------action > config.tcmStatus = true', () => {
+            let store = mockStore(() => initialState2);
+            let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                type = "show",
+                index = "0-1-0",
+                cb = jest.fn(),
+                parentContentUrn = "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                parentElement = {
+                    id: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    type: "showhide",
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    versionUrn: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    contentUrn: "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                    interactivedata: {
+                        "postertextobject": [
+                            {
+                                "type": "element-authoredtext",
+                                "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                            }
+                        ],
+                        "show": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                            }
+                        ],
+                        "hide": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:743ddeed-104e-44ad-8f11-affdcf1b2019"
+                            }
+                        ]
+                    }
+                },
+                parentElementIndex = "0"
+
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-authoredtext",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "html": {
+                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            const type2BAdded = "test"
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
+            config.tcmStatus = true
+
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex,type2BAdded)(jest.fn, store.getState)
             expect(spyAction).toHaveBeenCalled()
         })
         it('testing------- Create Show/Hide Element with approved state------action', () => {
@@ -859,8 +1099,7 @@ describe('Tests ElementContainer Actions', () => {
             actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex)(jest.fn, store.getState)
             expect(spyAction).toHaveBeenCalled()
         })
-
-        it('testing------- Create Aside element inside Show/Hide Element ----action', () => {
+        it('testing------- Create Aside element inside Show/Hide Element ----action > if', () => {
             let store = mockStore(() => initialState);
             let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
                 type = "show",
@@ -928,9 +1167,155 @@ describe('Tests ElementContainer Actions', () => {
                 }
             }
             mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
-            const type2BAdded = 'CONTAINER';
+            const type2BAdded = 'WORKED_EXAMPLE';
             const spyAction = jest.spyOn(actions, "createShowHideElement")
             actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex, type2BAdded)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
+        })
+        it('testing------- Create Aside element inside Show/Hide Element ----action > else', () => {
+            let store = mockStore(() => initialState2);
+            let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                type = "show",
+                index = "3-1-2-0-0",
+                cb = jest.fn(),
+                parentContentUrn = "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                parentElement = {
+                    id: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    type: "showhide",
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    versionUrn: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    contentUrn: "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                    interactivedata: {
+                        "postertextobject": [
+                            {
+                                "type": "element-authoredtext",
+                                "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                            }
+                        ],
+                        "show": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                            }
+                        ],
+                        "hide": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:743ddeed-104e-44ad-8f11-affdcf1b2019"
+                            }
+                        ]
+                    }
+                },
+                parentElementIndex = "0"
+
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                "type": "element-aside",
+                "subtype": "sidebar",
+                "designtype": "sidebar",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "bodymatter": [
+                        {
+                            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                            "type": "element-authoredtext",
+                            "subtype": "",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": ""
+                            },
+                            "html": {
+                                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                            },
+                            "comments": false,
+                            "tcm": true,
+                            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                            "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                        }
+                    ]
+                }
+            }
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
+            const type2BAdded = 'WORKED_EXAMPLE';
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex, type2BAdded)(jest.fn, store.getState)
+            expect(spyAction).toHaveBeenCalled()
+        })
+        it('testing------- Create Aside element inside Show/Hide Element ----without cb', () => {
+            let store = mockStore(() => initialState);
+            let elementId = "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                type = "show",
+                index = "3-1-2-0-0",
+                cb = jest.fn(),
+                parentContentUrn = "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                parentElement = {
+                    id: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    type: "showhide",
+                    schema: "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/showhide",
+                    versionUrn: "urn:pearson:manifest:3a6f5764-6428-4241-862b-cd2673fa4017",
+                    contentUrn: "urn:pearson:entity:8341cba0-98b1-4952-aa62-a905ae8438a9",
+                    interactivedata: {
+                        "postertextobject": [
+                            {
+                                "type": "element-authoredtext",
+                                "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                            }
+                        ],
+                        "show": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:e4495bc8-7fd5-4d9c-bd4c-1a879ad34019"
+                            }
+                        ],
+                        "hide": [
+                            {
+                                "type": "element-authoredtext",
+                                "id": "urn:pearson:work:743ddeed-104e-44ad-8f11-affdcf1b2019"
+                            }
+                        ]
+                    }
+                },
+                parentElementIndex = "0"
+
+            const mock = new MockAdapter(axios);
+            const data = {
+                "id": "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                "type": "element-aside",
+                "subtype": "sidebar",
+                "designtype": "sidebar",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "bodymatter": [
+                        {
+                            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                            "type": "element-authoredtext",
+                            "subtype": "",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": ""
+                            },
+                            "html": {
+                                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                            },
+                            "comments": false,
+                            "tcm": true,
+                            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527",
+                            "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+                        }
+                    ]
+                }
+            }
+            mock.onPost(`${config.REACT_APP_API_URL}v1/slate/element`).reply(200, data);
+            const type2BAdded = 'WORKED_EXAMPLE';
+            const spyAction = jest.spyOn(actions, "createShowHideElement")
+            actions.createShowHideElement(elementId, type, index, parentContentUrn, '', parentElement, parentElementIndex, type2BAdded)(jest.fn, store.getState)
             expect(spyAction).toHaveBeenCalled()
         })
     })
@@ -1116,7 +1501,7 @@ describe('Tests ElementContainer Actions', () => {
         })
     })
 
-    xdescribe('testing------- Table Editor ------action', () => {
+    describe('testing------- Table Editor ------action', () => {
         it('testing------- Table Editor ------action', () => {
             let elementId = "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4ea"
             let response =
@@ -1179,6 +1564,7 @@ describe('Tests ElementContainer Actions', () => {
                 }
             };
             let elementId = "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4ea"
+            let updatedData = "test"
             let response =
             {
                 "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4ea":
@@ -1208,7 +1594,7 @@ describe('Tests ElementContainer Actions', () => {
                 type: AUTHORING_ELEMENT_UPDATE,
                 payload: slateLevelDataWithApproved
             }];
-            return store.dispatch(actions.getTableEditorData(elementId)).then(() => {
+            return store.dispatch(actions.getTableEditorData(elementId,updatedData)).then(() => {
                 expect(store.getActions()).toEqual(expectedActions);
             });
         })
@@ -1463,10 +1849,30 @@ describe('Tests ElementContainer Actions', () => {
                 "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
                 "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
             }
-            it(" updatedData.type == element-blockfeature ", () => {
+            const dataToUpdate2 = {
+                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "type": "element-blockfeature",
+                "subtype": "",
+                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                "elementdata": {
+                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    "text": ""
+                },
+                "comments": false,
+                "tcm": true,
+                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+            }
+            it(" updatedData.type == element-blockfeature > if", () => {
                 const spycontentEditableFalse  = jest.spyOn(actions, 'contentEditableFalse')
                 actions.contentEditableFalse(dataToUpdate)
                 expect(spycontentEditableFalse).toHaveReturnedWith(dataToUpdate)
+                spycontentEditableFalse.mockClear()
+            })
+            it(" updatedData.type == element-blockfeature > if > else", () => {
+                const spycontentEditableFalse  = jest.spyOn(actions, 'contentEditableFalse')
+                actions.contentEditableFalse(dataToUpdate2)
+                expect(spycontentEditableFalse)
                 spycontentEditableFalse.mockClear()
             })
             it(" updatedData.type !== element-blockfeature ", () => {
@@ -1749,6 +2155,24 @@ describe("TEsting for prepareImageDataFromTable", ()=>{
        expect(spyupdateFigureData).toHaveBeenCalled()
        spyupdateFigureData.mockClear()
     })
+    it("test for prepareImageDataFromTable > else", ()=>{
+        const initialState = {
+             appStore: {
+                    slateLevelData: newslateShowhideData.slateLevelData
+                }}
+           let store = mockStore(() => initialState);
+           let dispatch = jest.fn(),
+           getState = store.getState;
+           let element = {
+            figuredata: {
+                tableasHTML: ""
+            },
+           }
+           const spyupdateFigureData = jest.spyOn(actions, 'prepareImageDataFromTable');
+           actions.prepareImageDataFromTable(element)(dispatch, getState)
+           expect(spyupdateFigureData).toHaveBeenCalled()
+           spyupdateFigureData.mockClear()
+        })
 })
 describe("Testing for updateAside Number", ()=>{
     it("testing with updateAside",()=>{
@@ -1763,16 +2187,75 @@ describe("Testing for updateAside Number", ()=>{
         let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a";
         let index = "0-1-1";
         let isAutoNumberingEnabled = true ;
-        let autoNumberOption = 'resume-numbering'
+        let autoNumberOption = 'test'
         let  previousData = {
-           "numberedandlabel" : "1-2"
+           "numberedandlabel" : "1-2",
+           contentUrn: "test"
        };
        const spyupdateFigureData = jest.spyOn(actions, 'updateAsideNumber');
        actions.updateAsideNumber(previousData, index, elementId, isAutoNumberingEnabled, autoNumberOption)(dispatch, getState)
        expect(spyupdateFigureData).toHaveBeenCalled()
        spyupdateFigureData.mockClear()
     })
+    it("testing with updateAside : AUTO_NUMBER_SETTING_REMOVE_NUMBER",()=>{
+        const initialState = {
+            appStore: {
+                slateLevelData: newslateShowhideData.slateLevelData
+            }}
+            let store = mockStore(() => initialState);
+            let dispatch = jest.fn(),
+            getState = store.getState;
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220d0"
+            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a";
+            let index = "0-1-1";
+            let isAutoNumberingEnabled = true ;
+            let autoNumberOption = 'Remove label & number'
+            let  previousData = {
+               "numberedandlabel" : "1-2",
+               contentUrn: "test"
+           };
+           const spyupdateFigureData = jest.spyOn(actions, 'updateAsideNumber');
+           actions.updateAsideNumber(previousData, index, elementId, isAutoNumberingEnabled, autoNumberOption)(dispatch, getState)
+           expect(spyupdateFigureData).toHaveBeenCalled()
+           spyupdateFigureData.mockClear()
+        })
+    it("testing with updateAside > else",()=>{
+        const initialState = {
+            appStore: {
+                slateLevelData: newslateShowhideData.slateLevelData
+            }}
+            let store = mockStore(() => initialState);
+            let dispatch = jest.fn(),
+            getState = store.getState;
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220d0"
+            let elementId = "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a";
+            let index = "0-1-1";
+            let isAutoNumberingEnabled = false ;
+            let autoNumberOption = 'resume-numbering'
+            let  previousData = {
+               "numberedandlabel" : "1-2"
+           };
+           const spyupdateFigureData = jest.spyOn(actions, 'updateAsideNumber');
+           actions.updateAsideNumber(previousData, index, elementId, isAutoNumberingEnabled, autoNumberOption)(dispatch, getState)
+           expect(spyupdateFigureData).toHaveBeenCalled()
+           spyupdateFigureData.mockClear()
+        })
+
 })
+it("testing with updateAside",()=>{
+    const initialState = {
+        appStore: {
+            slateLevelData: newslateShowhideData.slateLevelData
+        }}
+        let store = mockStore(() => initialState);
+        let dispatch = jest.fn(),
+        getState = store.getState;
+       const id = ["t","t2","t3"]
+       const spyupdateFigureData = jest.spyOn(actions,'storeDeleteElementKeys');
+       actions.storeDeleteElementKeys(id)(dispatch, getState)
+       expect(spyupdateFigureData).toHaveBeenCalled()
+       spyupdateFigureData.mockClear()
+    })
 
 describe("updateAutoNumberingDropdownForCompare  Testing", ()=>{
     it('testing------- updateAutoNumberingDropdownForCompare------method', () => {
