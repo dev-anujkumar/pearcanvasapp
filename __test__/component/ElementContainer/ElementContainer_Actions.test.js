@@ -5,7 +5,7 @@ import * as actions from '../../../src/component/ElementContainer/ElementContain
 import { communicationAssessmentSlateData, slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
-import { slateLevelData, addNewComment, slateLevelDataWithApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData } from "../../../fixtures/containerActionsTestingData"
+import { slateLevelData, addNewComment, slateLevelDataWithApproved, slateLevelDataWithoutApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData } from "../../../fixtures/containerActionsTestingData"
 import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, UPDATE_TABLE_ELEMENT_EDITED_DATA,SET_ELEMENT_STATUS } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
@@ -17,10 +17,39 @@ const mockStore = configureMockStore(middlewares);
 global.document = (new JSDOM()).window.Element;
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
-    hasReviewerRole: jest.fn(),
+            hasReviewerRole: () => {
+                return false
+            },
     getLabelNumberTitleHTML: jest.fn(),
     handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
     createLabelNumberTitleModel: jest.fn()
+}))
+jest.mock('../../../src/component/ShowHide/ShowHide_Helper', () => {
+    return {
+        getShowHideElement: () => {
+            return {
+                type: 'showhide',
+                id: "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
+                interactivedata: {
+                    "type": 'showhide',
+                    "postertextobject": [
+                        {
+                            "type": "element-authoredtext",
+                            "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                            "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f",
+                            "versionUrn":"urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"
+                        }
+                    ]
+                }
+            }
+        },
+        indexOfSectionType: () => {return "postertextobject"}
+    }
+})
+jest.mock('../../../src/component/FigureHeader/AutoNumber_helperFunctions', () => ({
+    generateDropdownDataForContainers: jest.fn(),
+    setAutonumberingValuesForPayload: jest.fn(),
+    getValueOfLabel: jest.fn()
 }))
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshotsCreate_Update.js', () => ({
     prepareSnapshots_ShowHide: jest.fn(),
@@ -1598,6 +1627,66 @@ describe('Tests ElementContainer Actions', () => {
                 expect(store.getActions()).toEqual(expectedActions);
             });
         })
+        it('testing------- Table Editor without approved------action', () => {
+            let initialStateApproved = {
+                slateLevelData: slateLevelDataWithoutApproved,
+                appStore: slateLevelDataWithoutApproved,
+                learningToolReducer: {
+                    shouldHitApi: false,
+                    learningToolTypeValue: '',
+                    apiResponse: [],
+                    showErrorMsg: true, //should be false
+                    showLTBody: false,
+                    learningTypeSelected: false,
+                    showDisFilterValues: false,
+                    selectedResultFormApi: '',
+                    resultIsSelected: false,
+                    toggleLT: false,
+                    linkButtonDisable: true,
+                    apiResponseForDis: [],
+                    learningToolDisValue: '',
+                    numberOfRows: 25,
+                },
+                glossaryFootnoteReducer: {
+                    glossaryFootnoteValue: { elementWorkId: "4343653" },
+                    glossaryFootNoteCurrentValue: "",
+                    elementIndex: ""
+                }
+            };
+            let elementId = "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4ea"
+            let updatedData = "test"
+            let response =
+            {
+                "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4ea":
+                {
+                    id: "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4ea",
+                    type: "figure",
+                    figuretype: "tableasmarkup",
+                    schema: "http://schemas.pearson.com/wip-authoring/figure/1",
+                    figuredata: {
+                        tableasHTML: '<table style="border-collapse: collapse; width: 1146.4px; word-break: break-all; outline: none; text-align: left;" data-mce-style="border-collapse: collapse; width: 100%;" class="mce-item-table" contenteditable="false" data-mce-selected="1"><tbody><tr><td style="width: 573.2px; outline: none;">22</td><td style="width: 573.2px; outline: none;"><br></td></tr></tbody></table>'
+                    },
+                    versionUrn: "urn:pearson:work:01e6b4a6-efb5-4f0b-b0e7-cdb47a84e4ea",
+                    contentUrn: "urn:pearson:entity:778e227e-2da6-47d9-8afe-963f443f1dbd"
+
+                }
+            }
+            let store = mockStore(() => initialStateApproved);
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: response
+                });
+            });
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: slateLevelDataWithoutApproved
+            }];
+            return store.dispatch(actions.getTableEditorData(elementId,updatedData)).then(() => {
+                expect(store.getActions()).toEqual(expectedActions);
+            });
+        })
     })
 
     describe('testing-------UpdateFigure Data ------action', () => {
@@ -2087,6 +2176,21 @@ describe("asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE && asideDataFromA
     it("condition.versionUrn == elementId index length 4 ", () => {
         const asideDataFromAfrescoMetadata = {
             type: 'element-aside',
+            parent: {
+                type: 'showhide',
+                showHideType: 'show'
+            }
+        }
+        const elementId = "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231",
+        elementIndex = "0-1-0-0";
+        const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData');
+        actions.updateFigureData(figureData, elementIndex, elementId, asideDataFromAfrescoMetadata, cb)(dispatch, getState)
+        expect(spyupdateFigureData).toHaveBeenCalled()
+        spyupdateFigureData.mockClear()
+    })
+    it("condition.versionUrn == elementId index length 4 ", () => {
+        const asideDataFromAfrescoMetadata = {
+            type: 'showhide',
             parent: {
                 type: 'showhide',
                 showHideType: 'show'
