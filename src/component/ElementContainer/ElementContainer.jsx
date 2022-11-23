@@ -2039,8 +2039,6 @@ class ElementContainer extends Component {
                         elemBorderToggle={this.props.elemBorderToggle}
                         deleteElement={this.deleteElement}
                         showHideId={this.props.showHideId}
-                        //createShowHideElement = {this.props.createShowHideElement}
-                        //deleteShowHideUnit = {this.props.deleteShowHideUnit}
                         activeElement={this.props.activeElement}
                         showBlocker={this.props.showBlocker}
                         permissions={permissions}
@@ -3006,9 +3004,6 @@ const mapDispatchToProps = (dispatch) => {
         releaseSlateLock,
         createShowHideElement: (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
             dispatch(createShowHideElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
-        },
-        deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
-            dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
         },
         createPoetryUnit: (poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element) => {
             dispatch(createPoetryUnit(poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element))

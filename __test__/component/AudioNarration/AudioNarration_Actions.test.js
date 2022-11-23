@@ -7,7 +7,6 @@ import * as types from '../../../src/constants/Action_Constants'
 import config from '../../../src/config/config'
 import { mockData, mockDatadelete, mockGlossaryData, alfrescoDataTesting
 } from '../../../fixtures/audioNarrationTestingdata'
-import { async } from 'q';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 let initialState = {
