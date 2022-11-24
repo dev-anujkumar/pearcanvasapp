@@ -582,7 +582,7 @@ export const prepareBqHtml = (node) => {
                     return node.parentNode.parentNode.firstElementChild.firstElementChild.innerHTML
                 } else{
                 //for callout and figure link
-                return node.parentNode.parentNode.firstElementChild.firstElementChild.firstElementChild.innerHTML
+                return node.parentNode.parentNode.firstElementChild.firstElementChild.innerHTML
                 }
             }
             else{
