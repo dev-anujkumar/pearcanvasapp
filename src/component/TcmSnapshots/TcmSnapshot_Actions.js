@@ -2,7 +2,6 @@ import axios from 'axios';
 import config from '../../config/config';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { GET_TCM_RESOURCES, AUTHORING_ELEMENT_UPDATE } from '../../constants/Action_Constants';
-import { MULTI_COLUMN } from './TcmConstants'
 
  /**
      * @description - TCM STATUS FOR ELEMENT LEVEL ON SLATE
@@ -146,7 +145,7 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
             eleIndex =  index.split("-");
             if (eleIndex.length == 2) {          /** Inside WE-HEAD | Aside */
                 parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]] = element
-            } else if (eleIndex.length == 3 && element.popupdata.bodymatter[eleIndex[0]].type !== MULTI_COLUMN ) {   /** Inside WE-BODY */
+            } else if (eleIndex.length == 3 && element.popupdata.bodymatter[eleIndex[0]].type !== 'groupedcontent' ) {   /** Inside WE-BODY */
                 parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]= element
             }
             

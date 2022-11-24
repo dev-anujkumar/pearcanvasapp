@@ -6,10 +6,10 @@ const path = require('path');
 const webpack = require('webpack');
 const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-const WebpackMd5Hash = require('webpack-md5-hash');
+//const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+//const WebpackMd5Hash = require('webpack-md5-hash');
 const BrotliPlugin = require('brotli-webpack-plugin');
-const USEHASH = '[hash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
+const USEHASH = '[fullhash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
 const COMPRESSION = process.env.COMPRESSION && process.env.COMPRESSION == 'true' || false;
 const DOTENV = require('dotenv').config({ path: __dirname + '/.env' });
 const plugin = [
@@ -21,10 +21,10 @@ const plugin = [
         template: path.join(__dirname, 'src/index.html'),
         excludeChunks: ['server']
     }),
-    new ScriptExtHtmlWebpackPlugin({
-        //To add defer property in script tags
-        defaultAttribute: 'defer'
-    }),
+    // new ScriptExtHtmlWebpackPlugin({
+    //     //To add defer property in script tags
+    //     defaultAttribute: 'defer'
+    // }),
     new CopyPlugin({ 
         patterns:[
         {
@@ -38,10 +38,10 @@ const plugin = [
     ]}
     ),
     // To prevent vendor hash id to change everytime
-    new webpack.HashedModuleIdsPlugin(),
+   // new webpack.HashedModuleIdsPlugin(),
     // This doesn't work with [contenthash] or [chunkhash] and uncomment it if HMR is needed
     new webpack.HotModuleReplacementPlugin(),
-    new WebpackMd5Hash(),
+    //new WebpackMd5Hash(),
     new webpack.DefinePlugin({
         "process.env": JSON.stringify(DOTENV.parsed)
     }),
@@ -135,7 +135,7 @@ module.exports = {
             },
             {
                 test: /\.(woff|woff2|ttf|eot)(\?[\s\S]+)?$/,
-                loader: ['file-loader']
+                use: ['file-loader']
             }
         ]
     },
@@ -145,16 +145,19 @@ module.exports = {
     // Webapck dev server basic configuration
     devServer: {
         // Webpack dev server will lookup for this dir
-        contentBase: path.join(__dirname, 'dist'),
+        static: {
+            directory: path.join(__dirname, 'dist'),
+          },
+        //contentBase: path.join(__dirname, 'dist'),
         // Enable gzip compression for everything served:
         compress: true,
         allowedHosts: ['local-dev.pearson.com'],
         https: true,
         open: true,
-        overlay: true,
+        //overlay: true,
         port: 443,
-        index: 'index.html',
-        hot: true,
+        //index: 'index.html',
+        //hot: true,
         proxy: [{
             context: ['**/configurationjs**', '/pluginwiris_engine/**'],
             target: 'https://dev-structuredauthoring.pearson.com/',
@@ -165,17 +168,22 @@ module.exports = {
         }]
     },
     optimization: {
-        runtimeChunk: 'single', // To extract the manifest and runtime
         splitChunks: {
+            chunks: 'async',
+            minSize: 20000,
+            minRemainingSize: 0,
+            minChunks: 1,
+            maxAsyncRequests: 30,
+            maxInitialRequests: 30,
+            enforceSizeThreshold: 50000,
             cacheGroups: {
-                vendor: {
+                defaultVendors: {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
                     chunks: 'all'
                 }
             }
         },
-        sideEffects: false,
-        minimize: true
     }
+
 }

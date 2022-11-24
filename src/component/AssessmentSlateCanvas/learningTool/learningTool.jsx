@@ -150,7 +150,6 @@ class LearningTool extends React.Component {
  * @discription - dispatch actions as props from this component
  */
 const mapActionToProps = {
-    learningAppType: toolTypeFilterSelectedAction,
     closeLt: closeLtAction,
     selectedFigure: selectedFigureAction,
     learningToolDisFilter: learningToolDisFilterAction,

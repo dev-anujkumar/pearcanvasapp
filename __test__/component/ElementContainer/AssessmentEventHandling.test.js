@@ -79,6 +79,36 @@ describe('Testing AssessmentEventHandling function', () => {
         expect(result.itemId).toBe('urn:pearson:work:2117f871-fd1a-4120-945a-7f8f3abc0ca3');
         expect(result.itemTitle).toBe('Quiz 16.3 Who Defines Deviance?!!!!!');
     })
+
+    it('Test handleElmPortalEvents', () => {
+        const result = handleElmPortalEvents('add','fromUpdate');
+        expect(result)
+    })
+
+    it('Test reloadSlate', () => {
+        const result = reloadSlate();
+        expect(result)
+    })
+
+    it('Test handleRefreshSlate', () => {
+        config.tempSlateManifestURN = 'urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee'
+        config.tempSlateEntityURN = 'urn:pearson:entity:2139e052-2813-4cbe-9441-48e01e51d34a'
+        config.projectUrn = 'urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee'
+        config.slateManifestURN = 'urn:pearson:entity:2139e052-2813-4cbe-9441-48e01e51d34a'
+        const dispatch = jest.fn()
+        const result = handleRefreshSlate(dispatch);
+        expect(result)
+    })
+
+    it('Test getInteractivePostMsg', () => {
+        const result = getInteractivePostMsg(123);
+        expect(result)
+    })
+
+    it('Test getInteractivePostMsg', () => {
+        const result = getInteractivePostMsg('abc');
+        expect(result)
+    })
 });
 
 describe('Testing, Elm - AssessmentEventHandling function', () => {
