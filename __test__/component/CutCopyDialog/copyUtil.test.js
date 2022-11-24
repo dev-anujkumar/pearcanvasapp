@@ -18,7 +18,7 @@ describe("Cut/Copy utility methods", () => {
         expect(spyOnCopyContext).toHaveBeenCalledWith(eventObj, toggleFunction, true)
         expect(toggleFunction).toHaveBeenCalled()
     })
-    it("OnCopyContext method else", () => {
+    xit("OnCopyContext method else", () => {
         const eventObj = {
             currentTarget: {
             
