@@ -18,6 +18,38 @@ describe("Cut/Copy utility methods", () => {
         expect(spyOnCopyContext).toHaveBeenCalledWith(eventObj, toggleFunction, true)
         expect(toggleFunction).toHaveBeenCalled()
     })
+    it("OnCopyContext method else", () => {
+        const eventObj = {
+            currentTarget: {
+            
+            },
+            clientX: 0,
+            clientY: 0,
+            preventDefault: jest.fn()
+        }
+        const toggleFunction = jest.fn()
+        const spyOnCopyContext = jest.spyOn(CopyUtilMethods, "OnCopyContext")
+        CopyUtilMethods.OnCopyContext(eventObj, toggleFunction, true)
+        expect(spyOnCopyContext).toHaveBeenCalledWith(eventObj, toggleFunction, true)
+        expect(toggleFunction).toHaveBeenCalled()
+    })
+    it("OnCopyContext method", () => {
+        const eventObj = {
+            currentTarget: {
+                classList:  {
+                    contains: () => true
+                }
+            },
+            clientX: 0,
+            clientY: 0,
+            preventDefault: jest.fn()
+        }
+        const toggleFunction = jest.fn()
+        const spyOnCopyContext = jest.spyOn(CopyUtilMethods, "OnCopyContext")
+        CopyUtilMethods.OnCopyContext(eventObj, toggleFunction, false)
+        expect(spyOnCopyContext).toHaveBeenCalledWith(eventObj, toggleFunction, false)
+        expect(toggleFunction).toHaveBeenCalled()
+    })
     it("getParentPosition method - Body tag", () => {
         const elementObj = {
             tagName: "BODY",

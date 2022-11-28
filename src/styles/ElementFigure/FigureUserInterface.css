@@ -8,7 +8,7 @@
 }
 
 .figure-image-wrapper h4, .figure-image-wrapper p, .floating-number-group h4 {
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: sans-serif !important;
 }
 .figureElement .cypress-editable.place-holder::before{
     margin-top : 2px !important;
@@ -46,6 +46,7 @@ code .codeNoHighlightLine{
     cursor: auto !important;
     outline: none;
     overflow-y: hidden;
+    font-family: sans-serif !important;
 }
 
 /* .floating-credit-group .figureCredit.cypress-editable {
@@ -85,7 +86,7 @@ h4.figureLabel, h4.figureTitle, h4.figureNumber{
     font-weight: 500 !important;
     height:40px;
     z-index: 1;
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: sans-serif, 'Open Sans' !important;
     white-space: nowrap;
     overflow: hidden;
 }
@@ -962,7 +963,7 @@ th ol li.listItemNumeroUnoNone:before {
 }
 
 .Enter-Button-Label {
-    font-family: 'Open Sans',sans-serif!important;
+    font-family: sans-serif,'Open Sans'!important;
     font-size: 14px;
     font-weight: normal;
     font-stretch: normal;

@@ -30,7 +30,8 @@ export default {
     ELEMENT_DIALOGUE : 'element-dialogue',
     ELEMENT_DISCUSSION : "discussion",
     SHOW_HIDE: 'showhide',
-    POPUP: 'popup'
+    POPUP: 'popup',
+    HIDE_SPLIT_SLATE_CONTAINER:['part','volume']
 }
 
 /** This array contains data for element picker popup with key as button-type */

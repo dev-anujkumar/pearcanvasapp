@@ -45,7 +45,8 @@ const { TEXT,
     TOC_PARENT_TYPES,
     SHOW_HIDE,
     POPUP,
-    ELEMENT_DISCUSSION
+    ELEMENT_DISCUSSION,
+    HIDE_SPLIT_SLATE_CONTAINER
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
@@ -202,7 +203,7 @@ export function ElementSaprator(props) {
     return (
         <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`} id = {props.dataId}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
-                {permissions && permissions.includes('split_slate') && hideSplitSlateIcon && !config.isPopupSlate && !props.firstOne && !(props.setSlateParent == 'part' && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
+                {permissions && permissions.includes('split_slate') && hideSplitSlateIcon && !config.isPopupSlate && !props.firstOne && !(HIDE_SPLIT_SLATE_CONTAINER.includes(props.setSlateParent)  && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
             <div className='elemDiv-hr'>

@@ -8,8 +8,9 @@ const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserJSPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+//const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+// const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+//const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const USEHASH = '[contenthash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
@@ -105,10 +106,10 @@ module.exports = {
             filename: "[name].css",
             chunkFilename: "[id].css"
         }),
-        new ScriptExtHtmlWebpackPlugin({
-            //To add defer property in script tags
-            defaultAttribute: 'defer'
-        }),
+        // new ScriptExtHtmlWebpackPlugin({
+        //     //To add defer property in script tags
+        //     defaultAttribute: 'defer'
+        // }),
         new CopyPlugin({ 
             patterns:[
             {
@@ -124,8 +125,8 @@ module.exports = {
             analyzerMode: 'static'
         }),
         // To prevent vendor hash id to change everytime
-        new webpack.HashedModuleIdsPlugin(),
-        new WebpackMd5Hash(),
+        new webpack.ids.HashedModuleIdsPlugin(),
+        //new WebpackMd5Hash(),
         new webpack.DefinePlugin({
             "process.env": JSON.stringify(DOTENV.parsed)
         })
@@ -135,8 +136,15 @@ module.exports = {
     optimization: {
         runtimeChunk: 'single', // To extract the manifest and runtime
         splitChunks: {
+            chunks: 'async',
+            minSize: 20000,
+            minRemainingSize: 0,
+            minChunks: 1,
+            maxAsyncRequests: 30,
+            maxInitialRequests: 30,
+            enforceSizeThreshold: 50000,
             cacheGroups: {
-                vendor: {
+                defaultVendors: {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
                     chunks: 'all'
@@ -150,7 +158,7 @@ module.exports = {
                 parallel: true,
                 sourceMap: true
             }),
-            new OptimizeCSSAssetsPlugin({})
+            // new CssMinimizerPlugin({})
         ]
     }
 }

@@ -50,23 +50,23 @@ const store = mockStore({
     }
 })
 describe('Testing Element  component with props', () => {
-    let useSelectorStub;
-    let useDispatchStub;
-    let dispatchSpy; 
-    beforeEach(() => {
-        // Mock useSelector hook
-        useSelectorStub = sinon.stub(redux, 'useSelector');
-        useSelectorStub.returns({ id: 1, text: 'Old Item' });
+    // let useSelectorStub;
+    // let useDispatchStub;
+    // let dispatchSpy; 
+    // beforeEach(() => {
+    //     // Mock useSelector hook
+    //     const useSelectorSpy = jest.spyOn(redux, 'useSelector');
+    //     useSelectorSpy.mockRetu({ id: 1, text: 'Old Item' });
     
-        // Mock useDispatch hook
-        useDispatchStub = sinon.stub(redux, 'useDispatch');
-        // Mock dispatch function returned from useDispatch
-        dispatchSpy = sinon.spy();
-        useDispatchStub.returns(dispatchSpy);
-      });
-      afterEach(() => {
-        sinon.restore();
-      });
+    //     // Mock useDispatch hook
+    //     useDispatchStub = sinon.stub(redux, 'useDispatch');
+    //     // Mock dispatch function returned from useDispatch
+    //     dispatchSpy = sinon.spy();
+    //     useDispatchStub.returns(dispatchSpy);
+    //   });
+    //   afterEach(() => {
+    //     sinon.restore();
+    //   });
     const div = document.createElement('div');
     let type = "element-authoredtext";
     let props= {

@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -3010,13 +3010,14 @@ export class TinyMceEditor extends Component {
         let typeWithPopup = this.props.element ? this.props.element.type : "";
         let term = glossaryTermText;
         let definition = null;
+        let blockfeatureType = this.props?.element?.elementdata?.type === "pullquote" ? this.props?.element?.elementdata?.type : ''
         // commented after allowing flow of formatting tags from canvas to glossary term
         // let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;'); 
         definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
-        term = term.replace(/<br data-mce-bogus="1">/g, "")
-        definition = definition.replace(/<br data-mce-bogus="1">/g, "")
+        term = term?.replace(/<br data-mce-bogus="1">/g, "")
+        definition = definition?.replace(/<br data-mce-bogus="1">/g, "")
         customEvent.subscribe('glossaryFootnoteSave', (elementWorkId) => {
-            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField)
+            saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, blockfeatureType, poetryField)
             customEvent.unsubscribe('glossaryFootnoteSave');
         })
         this.handleBlur(null, true); //element saving before creating G/F (as per java team)
@@ -4160,7 +4161,8 @@ export class TinyMceEditor extends Component {
             if (codeLine.length) {
                 for (let index = 0; index < codeLine.length; index++) {
                     if (codeLine[index] && codeLine[index].innerHTML) {
-                        codeLine[index].innerHTML = String(codeLine[index].innerHTML).replace(/ /g, '&nbsp;');
+                        let htmlWithoutStyleAttribute = removeStyleAttribute(codeLine[index].innerHTML);
+                        codeLine[index].innerHTML = String(htmlWithoutStyleAttribute).replace(/ /g, '&nbsp;');
                     }
                 }
 
@@ -4235,7 +4237,8 @@ export class TinyMceEditor extends Component {
         let index = this.props.index;
         let elementSubType = this.props.element ? this.props.element.figuretype : '';
         let glossaryTermText = this.glossaryTermText;
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, this.props.poetryField);
+        let blockfeatureType = this.props?.element?.elementdata?.type === "pullquote" ? this.props?.element?.elementdata?.type : ''
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, this.props.poetryField );
     }
 
     generateHiddenElement = () => {

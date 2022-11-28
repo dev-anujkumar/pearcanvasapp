@@ -910,7 +910,7 @@ class ElementContainer extends Component {
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
             case elementTypeConstant.POETRY_STANZA:
-                let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent" ||  parentElement.type == 'element-blockfeature') ? activeEditorId : `cypress-${this.props.index}`
+                let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent" ||  parentElement.type == 'element-blockfeature' && parentElement?.elementdata?.type !== "pullquote") ? activeEditorId : `cypress-${this.props.index}`
                 let currentNode = document.getElementById(index)
                 const blockquoteCondition = currentNode?.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')
                 let html =  blockquoteCondition ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
@@ -2039,8 +2039,6 @@ class ElementContainer extends Component {
                         elemBorderToggle={this.props.elemBorderToggle}
                         deleteElement={this.deleteElement}
                         showHideId={this.props.showHideId}
-                        //createShowHideElement = {this.props.createShowHideElement}
-                        //deleteShowHideUnit = {this.props.deleteShowHideUnit}
                         activeElement={this.props.activeElement}
                         showBlocker={this.props.showBlocker}
                         permissions={permissions}
@@ -2764,8 +2762,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField);
     }
 
     /**
@@ -2929,14 +2927,18 @@ class ElementContainer extends Component {
      * @description - This function is for handling hover on element and showing page numbering box.
      */
     handleOnMouseOver = () => {
-        this.setState({ isHovered: true })
+        if(this.props.pageNumberToggle){
+            this.setState({ isHovered: true })
+        }
     }
 
     /**
      * @description - This function is for handling mouse out on element and hiding page numbering box.
      */
     handleOnMouseOut = () => {
-        this.setState({ isHovered: false })
+        if(this.props.pageNumberToggle){
+            this.setState({ isHovered: false })
+        }
     }
 
     static getDerivedStateFromError(error) {
@@ -2969,8 +2971,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteElement: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
         },
-        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField)).then(() => {
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, typeWithPopup, poetryField)).then(() => {
                 if (callback) {
                     callback();
                 }
@@ -3002,9 +3004,6 @@ const mapDispatchToProps = (dispatch) => {
         releaseSlateLock,
         createShowHideElement: (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
             dispatch(createShowHideElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
-        },
-        deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
-            dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
         },
         createPoetryUnit: (poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element) => {
             dispatch(createPoetryUnit(poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element))
@@ -3122,7 +3121,8 @@ const mapStateToProps = (state) => {
         figureDropdownData: state.appStore.figureDropdownData,
         tableElementAssetData: state.appStore.tableElementAssetData,
         popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
-        deletedKeysValue: state.appStore.deletedElementKeysData
+        deletedKeysValue: state.appStore.deletedElementKeysData,
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle
     }
 }
 
