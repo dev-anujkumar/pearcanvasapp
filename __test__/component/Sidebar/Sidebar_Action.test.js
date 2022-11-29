@@ -312,6 +312,23 @@ describe('Test - Sidebar_Actions',()=>{
             expect(spyconversionElement).toHaveBeenCalled()
             spyconversionElement.mockClear()
         });
+        it('Test Convert Element > 3rd if', () => {
+            store = mockStore(() => initialState);
+            tinymce.activeEditor = {}
+            let elementData = {
+                elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+                elementType: "element-authoredtext",
+                labelText: "H1",
+                primaryOption: "primary-heading",
+                secondaryOption: "secondary-heading-1",
+                toolbar: ["bold", "underline", "strikethrough", "orderedlist", "unorderedlist", "increaseindent", "decreaseindent", "glossary", "assetpopover", "slatetag", "redo"]
+            }
+            let store = mockStore(() => initialState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+            store.dispatch(sidebarAction.conversionElement(elementData));
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
         it('Test handleElementConversion -else case', () => {
             store = mockStore(() => initialState);
             let elementData = {
@@ -1224,6 +1241,23 @@ describe('1 Test convertElement ', () => {
         spyconversionElement.mockClear()
         
     });
+    it('1.4 Test convertElement - figuretype === "assessment" > prepareAssessmentDataForConversion ', () => {
+        const elementDiv = document.createElement('div');
+        elementDiv.setAttribute("data-id", "urn:pearson:work:fd5d9748-6928-43ed-85b7-48c1a4a42bb4");
+        const elementSpan = document.createElement('span');
+        elementSpan.setAttribute("class", "singleAssessment_Dropdown_currentLabel");
+        elementSpan.innerText = "figure";
+        elementDiv.appendChild(elementSpan);
+        document.body.appendChild(elementDiv);
+
+        const { oldElementData, newElementData, oldElementInfo } = testData?.testcase77;
+        let store = mockStore(() => initialState);
+        const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+        store.dispatch(sidebarAction.convertElement(oldElementData, newElementData, oldElementInfo, store, ["0"], "",""));
+        expect(spyconversionElement).toHaveBeenCalled()
+        spyconversionElement.mockClear()
+        
+    });
     it('1.5 Test convertElement - outputSubTypeEnum !== "DISC" ', () => {
         
         const { oldElementData, newElementData, oldElementInfo } = testData?.testcase11;
@@ -1491,6 +1525,26 @@ describe('2 Test handleElementConversion  ', () => {
             spyconversionElement.mockClear()
         });
     });
+    describe('2.3 appStore?.asideData?.parent?.type === "groupedcontent  ', () => {
+        it('1.3.1 indexes.length === 4 ', () => {
+            const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase28;
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        it('1.3.1 indexes.length === 4 ', () => {
+            const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase29;
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+    });
     describe('2.4 indexes.forEach(index => {  ', () => {
         it('1.4.1 bodymatter[index] else case ', () => {
             const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase3;
@@ -1551,6 +1605,42 @@ describe('5 Test updateContainerMetadata ', () => {
     it('5.1 Test Case for API resolve updateContainerMetadata and status is wip', () => {
         let responseData = {}
         const {initState,dataToUpdate} = testData?.testcase18;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateContainerMetadata');
+        axios.put = jest.fn(() => Promise.resolve(responseData));
+        sidebarAction.updateContainerMetadata(dataToUpdate);
+        storeMock.dispatch(sidebarAction.updateContainerMetadata(dataToUpdate)); 
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    });
+    it('5.1 Test Case updateContainerMetadataInStore > else if', () => {
+        let responseData = {}
+        const {initState,dataToUpdate} = testData?.testcase1888;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateContainerMetadata');
+        axios.put = jest.fn(() => Promise.resolve(responseData));
+        sidebarAction.updateContainerMetadata(dataToUpdate);
+        storeMock.dispatch(sidebarAction.updateContainerMetadata(dataToUpdate)); 
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    });
+    it('5.1 Test Case updateContainerMetadataInStore > else if > else > else', () => {
+        let responseData = {}
+        const {initState,dataToUpdate} = testData?.testcase27;
+        config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateContainerMetadata');
+        axios.put = jest.fn(() => Promise.resolve(responseData));
+        sidebarAction.updateContainerMetadata(dataToUpdate);
+        storeMock.dispatch(sidebarAction.updateContainerMetadata(dataToUpdate)); 
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    });
+    it('5.1 Test Case updateContainerMetadataInStore > 1st if > else', () => {
+        let responseData = {}
+        const {initState,dataToUpdate} = testData?.testcase188;
         config.slateManifestURN = "urn:pearson:manifest:9c5a75e1-5b38-4b03-bfc3-fb06aab65333";
         const storeMock = mockStore(() => initState);
         const spyFunction = jest.spyOn(sidebarAction, 'updateContainerMetadata');
@@ -1757,6 +1847,127 @@ describe('Test - ManifestList conversion', () => {
                 id: 'urn:pearson:manifest:5d1e0b35-bcfc-4580-ad62-96824c86a17b',
             },
             slateLevelBLIndex:[0,0,0,0],
+            dataToSend: {
+                columnnumber: 1,
+                slateLevelBLIndex: 1
+            },
+            asideData:{
+                "type":"manifestlist",
+                "subtype":"decimal",
+                "id":"urn:pearson:manifest:572857da-8942-448a-9344-ab6786a26e53",
+                "contentUrn":"urn:pearson:entity:0d5e8831-2d6d-4e72-9d16-b8c821a19170",
+                "element":{
+                   "id":"urn:pearson:manifest:572857da-8942-448a-9344-ab6786a26e53",
+                   "type":"manifestlist",
+                   "subtype":"decimal",
+                   "schema":"http://schemas.pearson.com/wip-authoring/list/1",
+                   "versionUrn":"urn:pearson:manifest:572857da-8942-448a-9344-ab6786a26e53",
+                   "contentUrn":"urn:pearson:entity:0d5e8831-2d6d-4e72-9d16-b8c821a19170",
+                   "listdata":{
+                      "bodymatter":[
+                         {
+                            "id":"urn:pearson:manifest:82feb2c9-991e-4958-b866-8f6a0d48a538",
+                            "type":"manifestlistitem",
+                            "schema":"http://schemas.pearson.com/wip-authoring/list/1",
+                            "versionUrn":"urn:pearson:manifest:82feb2c9-991e-4958-b866-8f6a0d48a538",
+                            "contentUrn":"urn:pearson:entity:8cf01ccc-7817-4f35-ae7a-9f72ebbc882b",
+                            "listitemdata":{
+                               "bodymatter":[
+                                  {
+                                     "id":"urn:pearson:work:839f0d4f-332d-4be6-af03-86fa72ff4fb8",
+                                     "type":"element-authoredtext",
+                                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                     "elementdata":{
+                                        "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text":""
+                                     },
+                                     "html":{
+                                        "text":"<p class=\"paragraphNumeroUno\"><br></p>"
+                                     },
+                                     "versionUrn":"urn:pearson:work:839f0d4f-332d-4be6-af03-86fa72ff4fb8",
+                                     "contentUrn":"urn:pearson:entity:fc6ad736-e1f7-4ba7-baa5-42f158b668ce",
+                                     "status":"wip",
+                                     "index":"0-0-0-0"
+                                  }
+                               ]
+                            }
+                         }
+                      ]
+                   },
+                   "listtype":"ordered",
+                   "startNumber":1,
+                   "columnnumber":1,
+                   "iconcolor":"iconColor1",
+                   "fontstyle":"fontStyle1"
+                },
+                "index":"0-0",
+                "parent":{
+                   "id":"urn:pearson:manifest:cf179ea5-0a5f-4dd7-b937-403cec80d43c",
+                   "type":"element-aside",
+                   "contentUrn":"urn:pearson:entity:2fe00637-5c5b-403e-b5e5-4ceb0c376570"
+                },
+                "parentManifestList":{
+                   "id":"urn:pearson:manifest:572857da-8942-448a-9344-ab6786a26e53",
+                   "type":"manifestlist",
+                   "subtype":"decimal",
+                   "schema":"http://schemas.pearson.com/wip-authoring/list/1",
+                   "versionUrn":"urn:pearson:manifest:572857da-8942-448a-9344-ab6786a26e53",
+                   "contentUrn":"urn:pearson:entity:0d5e8831-2d6d-4e72-9d16-b8c821a19170",
+                   "listdata":{
+                      "bodymatter":[
+                         {
+                            "id":"urn:pearson:manifest:82feb2c9-991e-4958-b866-8f6a0d48a538",
+                            "type":"manifestlistitem",
+                            "schema":"http://schemas.pearson.com/wip-authoring/list/1",
+                            "versionUrn":"urn:pearson:manifest:82feb2c9-991e-4958-b866-8f6a0d48a538",
+                            "contentUrn":"urn:pearson:entity:8cf01ccc-7817-4f35-ae7a-9f72ebbc882b",
+                            "listitemdata":{
+                               "bodymatter":[
+                                  {
+                                     "id":"urn:pearson:work:839f0d4f-332d-4be6-af03-86fa72ff4fb8",
+                                     "type":"element-authoredtext",
+                                     "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+                                     "elementdata":{
+                                        "schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text":""
+                                     },
+                                     "html":{
+                                        "text":"<p class=\"paragraphNumeroUno\"><br></p>"
+                                     },
+                                     "versionUrn":"urn:pearson:work:839f0d4f-332d-4be6-af03-86fa72ff4fb8",
+                                     "contentUrn":"urn:pearson:entity:fc6ad736-e1f7-4ba7-baa5-42f158b668ce",
+                                     "status":"wip",
+                                     "index":"0-0-0-0"
+                                  }
+                               ]
+                            }
+                         }
+                      ]
+                   },
+                   "listtype":"ordered",
+                   "startNumber":1,
+                   "columnnumber":1,
+                   "iconcolor":"iconColor1",
+                   "fontstyle":"fontStyle1"
+                }
+             }
+        }
+        storeMock.dispatch(sidebarAction.updateBlockListMetadata(dataToUpdate));
+        expect(spyFunction).toHaveBeenCalled()
+        spyFunction.mockClear()
+    })
+    it('Test - updateBlockListMetadata .slateLevelBLIndex === number', async () => {
+        const {initState} = testData?.testcase23;
+        config.slateManifestURN = "urn:pearson:manifest:e5042835-1c9c-485d-ac89-c96a9a86473f";
+        const storeMock = mockStore(() => initState);
+        const spyFunction = jest.spyOn(sidebarAction, 'updateBlockListMetadata');
+        axios.put = jest.fn(() => Promise.resolve({}));
+        const dataToUpdate = {
+            blockListData: {
+                contentUrn: '',
+                id: 'urn:pearson:manifest:5d1e0b35-bcfc-4580-ad62-96824c86a17b',
+            },
+            slateLevelBLIndex:0,
             dataToSend: {
                 columnnumber: 1,
                 slateLevelBLIndex: 1

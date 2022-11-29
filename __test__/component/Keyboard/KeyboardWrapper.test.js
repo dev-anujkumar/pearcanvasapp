@@ -33,7 +33,6 @@ describe("KeyboardWrapper Testing", () => {
     );
     expect(keyboardWrapper2).toHaveLength(1);
 
-    // keyboardWrapper.find('#focus').node.focus();
   });
 
   it("moveCursor > if", () => {
@@ -209,6 +208,61 @@ describe("KeyboardWrapper Testing", () => {
         },
         nextSibling: {
           id: 'f-e-s'
+        },
+        nodeName: 'SPAN'
+      },
+      0
+    );
+  });
+
+  it("isLastChild > if > 1st else if > else if", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => { }, preventDefault: () => { } },
+      {
+        lastChild: {
+          parentNode: {
+            nodeName: "CODE"
+          },
+          nodeName: "IMG"
+        },
+        textContent: "",
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+          classList: {
+            contains: () => "figureTitle"
+          },
+          className: {
+            includes: () => { }
+          },
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
+        },
+        nodeName: 'SPAN'
+      },
+      0
+    );
+  });
+
+  it("isLastChild > if > 1st else if > else if", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => { }, preventDefault: () => { } },
+      {
+        lastChild: {
+          className: "Wirisformula",
+          parentNode: {
+            nodeName: "CODE"
+          },
+          nodeName: "IMG"
+        },
+        textContent: "",
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+          classList: {
+            contains: () => "figureTitle"
+          },
+          className: {
+            includes: () => { }
+          },
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
         },
         nodeName: 'SPAN'
       },
