@@ -552,7 +552,7 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             break;
     }
 
-    elmUrn.map((item) => {
+    elmUrn.forEach((item) => {
         return tcmData.push({
             "txCnt": 1,
             "isPrevAcceptedTxAvailable": false,

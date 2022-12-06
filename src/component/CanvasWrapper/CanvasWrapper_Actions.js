@@ -1400,7 +1400,7 @@ function prepareDataForTcmCreate(parentElement, popupField , responseData, getSt
     if (parentElement && parentElement.type =='popup' && formattedTitleField.indexOf(popupField) !==-1 ) {
         elmUrn.push(responseData.id)
     }
-    elmUrn.map((item) => {
+    elmUrn.forEach((item) => {
         return tcmData.push({
             "txCnt": 1,
             "isPrevAcceptedTxAvailable": false,

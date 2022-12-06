@@ -2677,7 +2677,6 @@ class ElementContainer extends Component {
             showDeleteElemPopup: false,
             showAlfrescoExpansionPopup: false,
             showBlockCodeElemPopup: false,
-            showAlfrescoExpansionPopup: false,
             comment: "",
             warningPopupCheckbox: false
         });
