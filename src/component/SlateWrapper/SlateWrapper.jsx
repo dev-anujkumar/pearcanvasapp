@@ -295,7 +295,7 @@ class SlateWrapper extends Component {
                     let _context = this;
                     const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
                     return (
-                        <div className={`slate-content ${isOwnerRole(projectSharingRole,isSubscribed) ? 'ownerSlateBackGround' :'' } ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
+                        <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 <Sortable
                                     options={{

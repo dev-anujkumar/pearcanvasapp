@@ -23,15 +23,6 @@ import { sendDataToIframe, isSubscriberRole } from '../../constants/utility.js';
         )
     }
 
-     /**Slate Header method for Subscribed slate */
-     renderSubscribedSlate = () => {
-         return (
-             <div className="canvas-header slate-lock-block">
-                 <span className="locked-slate-title">Subscribed Slate (View only)</span><br />
-             </div>
-         )
-     }
-    
     checkSlateLock = (slateLockInfo,projectSharingRole,projectSubscriptionDetails) => {
         if(slateLockInfo){
             // TK-11991 - fixing test cases console errors
@@ -39,9 +30,6 @@ import { sendDataToIframe, isSubscriberRole } from '../../constants/utility.js';
             if(slateLockInfo.isLocked && config.userId !== lockedUserId){
                 sendDataToIframe({ 'type': SlateLockStatus, 'message': { slateLockInfo: slateLockInfo } });
                 return this.renderSlateLockJSX(slateLockInfo.userId) // (`${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`)
-            }
-            else if (isSubscriberRole(projectSharingRole, projectSubscriptionDetails)) {
-                return this.renderSubscribedSlate()
             }
             else {
 				sendDataToIframe({ 'type': SlateLockStatus, 'message': { slateLockInfo: slateLockInfo } });
