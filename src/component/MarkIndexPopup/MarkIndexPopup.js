@@ -92,7 +92,7 @@ componentWillMount() {
       if (this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))) {
         config.isGlossarySaving = true;
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField, null, null, null, crossReferences)
+        saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null, poetryField, null, null, null, crossReferences)
       }
     }
     this.props.showMarkedIndexPopup(false);
@@ -126,12 +126,12 @@ componentWillMount() {
       let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))
       if(markedIndexEntryURN){
         if(checkDifference){
-          await saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField,null,null,null,crossReferences);
+          await saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null, poetryField,null,null,null,crossReferences);
         }
         this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN, checkDifference, crossReferences);
       } else{
         getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", async res => {
-          await saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup, poetryField,null,null,null,crossReferences);
+          await saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null, poetryField,null,null,null,crossReferences);
           this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id, checkDifference, crossReferences);
           this.props.showingToastMessage(true);
         });
