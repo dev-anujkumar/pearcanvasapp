@@ -944,3 +944,10 @@ export const removeStyleAttribute = (html) => {
     tinyMCE.$(tempDiv).find('s').removeAttr('style');
     return tempDiv.innerHTML;
 }
+
+export const getSelectionTextWithFormatting = (node) => {
+    let tagName = node.tagName;
+    let tempDiv = document.createElement(tagName);
+    tempDiv.innerHTML = node.innerHTML;
+    return tempDiv.outerHTML;
+}
