@@ -380,8 +380,13 @@ export class TinyMceEditor extends Component {
             let node = editor.selection.getNode();
             let nodeName = node ? node.tagName.toLowerCase() : null;
             let dataURI = null;
-            if (nodeName === 'dfn') {
+            const nodeNames = ['dfn','span'];
+            if (nodeNames.indexOf(nodeName) > -1) {
                 dataURI = node.getAttribute('data-uri');
+            } else if (validStylesTagList.indexOf(nodeName) > -1) {
+                const dfnNode = node.closest('dfn') || node.closest('span');
+                nodeName = dfnNode ? dfnNode.tagName.toLowerCase() : null;
+                dataURI = dfnNode.getAttribute('data-uri');
             }
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
@@ -419,17 +424,20 @@ export class TinyMceEditor extends Component {
                     setFormattingToolbar('disableTinymceToolbar')
                 }
             }
-            if (e.command === 'mceToggleFormat' && e.value === 'italic') {
+            const eventValue = e.value;
+            const allowedFormattings = ['bold','italic','underline','strikethrough','subscript','superscript'];
+            if (e.command === 'mceToggleFormat' && allowedFormattings.indexOf(eventValue) > -1) {
                 let parser = new DOMParser();
                 let htmlDoc = parser.parseFromString(selectContent, 'text/html');
                 let dfnTags = htmlDoc.getElementsByTagName('DFN');
-                if ((nodeName && nodeName === 'dfn') || dfnTags.length || (nodeName && nodeName === 'code')) {
+                const validNodeNames = ['dfn','code','span'];
+                const termType = (nodeName === 'span') ? MARKEDINDEX : GLOSSARY;
+                if (validNodeNames.indexOf(nodeName) > -1 || dfnTags.length) {
                     let dfnAttribute = [];
-                    if(nodeName==='code'){
+                    if (nodeName === 'code') {
                         dataURI = node.parentNode.getAttribute('data-uri');
                         dfnAttribute.push(dataURI)
-                    }
-                    if (nodeName && nodeName === 'dfn') {
+                    } else if (nodeNames.indexOf(nodeName) > -1) {
                         dfnAttribute.push(dataURI);
                     } else {
                         for (let index = 0; index < dfnTags.length; index++) {
@@ -437,7 +445,12 @@ export class TinyMceEditor extends Component {
                         }
                     }
                     for (let index = 0; index < dfnAttribute.length; index++) {
-                        this.handleGlossaryForItalic(activeElement, dfnAttribute[index]);
+                        this.handleGlossaryForSubscript(activeElement, dfnAttribute[index], termType);
+                        this.handleGlossaryForSuperscript(activeElement, dfnAttribute[index], termType);
+                        this.handleGlossaryForStrikethrough(activeElement, dfnAttribute[index], termType);
+                        this.handleGlossaryForUnderline(activeElement, dfnAttribute[index], termType);
+                        this.handleGlossaryForItalic(activeElement, dfnAttribute[index], termType);
+                        this.handleGlossaryForBold(activeElement, dfnAttribute[index], termType);
                     }
                 }
             }
@@ -877,7 +890,7 @@ export class TinyMceEditor extends Component {
         /**
          * Case - clicking over mark index text
          */
-        else if ((e.target.nodeName == "SPAN" || e.target.closest("span")) && e.target.className === "markedForIndex") {
+        else if ((e.target.nodeName == "SPAN" && e.target.className && e.target.className === "markedForIndex" ) || (e.target.closest("span") && e.target.closest("span").className && e.target.closest("span").className === "markedForIndex")) {
             let uri = e.target.dataset.uri;
             let span = e.target.closest("span");
 
