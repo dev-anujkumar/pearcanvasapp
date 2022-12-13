@@ -383,7 +383,7 @@ export class TinyMceEditor extends Component {
             const nodeNames = ['dfn','span'];
             if (nodeNames.indexOf(nodeName) > -1) {
                 dataURI = node.getAttribute('data-uri');
-            } else if (validStylesTagList.indexOf(nodeName) > -1) {
+            } else if (validStylesTagList.indexOf(nodeName) > -1 && (node.closest('dfn') || node.closest('span'))) {
                 const dfnNode = node.closest('dfn') || node.closest('span');
                 nodeName = dfnNode ? dfnNode.tagName.toLowerCase() : null;
                 dataURI = dfnNode.getAttribute('data-uri');
