@@ -3016,6 +3016,10 @@ export class TinyMceEditor extends Component {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(elementId, "GLOSSARY", res => {
             let insertionText = ""
+            let stylesHTML = tinymce.activeEditor.selection.getEnd();
+            if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1) {
+                selectedText = getSelectionTextWithFormatting(stylesHTML);
+            }
             if (res.data && res.data.id) {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
