@@ -14,192 +14,257 @@ describe("KeyboardWrapper Testing", () => {
         selectedElement: [],
       },
     }));
+    let props = {enable: true}
+    let props2 = {enable: false}
     const keyboardWrapper = mount(
       <Provider enable store={store}>
-        <KeyboardWrapper>
+        <KeyboardWrapper {...props}>
           <input id="focus" type="text" />
         </KeyboardWrapper>
       </Provider>
     );
     expect(keyboardWrapper).toHaveLength(1);
+    const keyboardWrapper2 = mount(
+      <Provider enable store={store}>
+        <KeyboardWrapper {...props2}>
+          <input id="focus" type="text" />
+        </KeyboardWrapper>
+      </Provider>
+    );
+    expect(keyboardWrapper2).toHaveLength(1);
 
-    // keyboardWrapper.find('#focus').node.focus();
   });
 
-  it("User Press Up arrow key and id is KW child", () => {
+  it("moveCursor > if", () => {
     moveCursor(
-      { keyCode: 38, stopPropagation: () => {}, preventDefault: () => {} },
+      { keyCode: 38, stopPropagation: () => { }, preventDefault: () => { } },
       {
         firstChild: {
           firstChild: {
             parentNode: {},
-            querySelector : () =>({parentNode: {}}),
+            querySelector: () => ({ parentNode: {} }),
           },
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
-          classList:  {
+          classList: {
             contains: () => "figureCredit"
           },
           className: [],
-          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
         },
       },
       0
     );
   });
 
-  it("User Press down arrow key and id is KW child", () => {
+  it("moveCursor > else if", () => {
     moveCursor(
-      { keyCode: 40, stopPropagation: () => {}, preventDefault: () => {} },
+      { keyCode: 40, stopPropagation: () => { }, preventDefault: () => { } },
       {
         textContext: ["1", "2"],
         firstChild: {
           firstChild: {
             parentNode: {},
-            querySelector : () =>({parentNode: {}}),
+            querySelector: () => ({ parentNode: {} }),
           },
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
           className: [],
-          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
         },
       },
       0
     );
   });
 
-  it("isLastChild function else if case", () => {
+  it("moveCursor > else if > else", () => {
     moveCursor(
-      { keyCode: 40, stopPropagation: () => {}, preventDefault: () => {} },
+      { keyCode: 0, stopPropagation: () => { }, preventDefault: () => { } },
       {
         textContext: ["1", "2"],
         firstChild: {
           firstChild: {
             parentNode: {},
-            querySelector : () =>({parentNode: {}}),
+            querySelector: () => ({ parentNode: {} }),
           },
-        },
-        lastChild: {
-
         },
         parentNode: {
           id: QUERY_SELECTOR + "-1",
           className: [],
-          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
-          parentNode: {
-            id: QUERY_SELECTOR + "-1",
-            className: [],
-            querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
-          }
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
         },
       },
       0
     );
   });
 
-  it("isLastChild function if condition - else if case", () => {
+  it("isFirtstChild > if > 1st if > if", () => {
     moveCursor(
-      { keyCode: 40, stopPropagation: () => {}, preventDefault: () => {} },
+      { keyCode: 38, stopPropagation: () => { }, preventDefault: () => { } },
       {
-        textContext: [],
         firstChild: {
           firstChild: {
             parentNode: {},
-            querySelector : () =>({parentNode: {}}),
+            querySelector: () => ({ parentNode: {} }),
           },
         },
-        lastChild: {
-          nodeName: "IMG"
-        },
+        className: 'codeNoHighlightLine',
         parentNode: {
+          className: 'codeNoHighlightLine',
           id: QUERY_SELECTOR + "-1",
-          className: [],
-          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
-          parentNode: {
-            id: QUERY_SELECTOR + "-1",
-            querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
-          }
-        },
-      },
-      0
-    );
-  });
-
-  it("isLastChild function if condition - else case", () => {
-    moveCursor(
-      { keyCode: 40, stopPropagation: () => {}, preventDefault: () => {} },
-      {
-        textContext: [],
-        firstChild: {
-          firstChild: {
-            parentNode: {},
-          querySelector : () =>({parentNode: {}}),
-          },
-        },
-        lastChild: {
-          nodeName: "IMG"
-        },
-        parentNode: {
-          id: QUERY_SELECTOR + "-1",
-          className: [],
-          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
-          parentNode: {
-            id: "different id",
-            querySelector : () =>({parentNode: {id:"different id"}}),
-          }
-        },
-      },
-      0
-    );
-  });
-
-  it("User Press Up arrow key - isFirstChild- if - else if condition", () => {
-    moveCursor(
-      { keyCode: 38, stopPropagation: () => {}, preventDefault: () => {} },
-      {
-        // firstChild: {
-        //   firstChild: {
-        //     parentNode: {},
-        //   },
-        // },
-        parentNode: {
-          id: QUERY_SELECTOR + "-1",
-          className: [],
-          classList:  {
+          classList: {
             contains: () => "figureCredit"
           },
-          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
         },
       },
       0
     );
   });
 
-  it("User Press Up arrow key - isFirstChild- if - else if query selector condition", () => {
+  it("isFirtstChild > if > 1st if > else", () => {
     moveCursor(
-      { keyCode: 38, stopPropagation: () => {}, preventDefault: () => {} },
+      { keyCode: 38, stopPropagation: () => { }, preventDefault: () => { } },
       {
-        nodeName: "IMG",
         firstChild: {
           firstChild: {
             parentNode: {},
-            querySelector : () =>({parentNode: {}}),
+            querySelector: () => ({ parentNode: {} }),
           },
         },
+        className: 'codeNoHighlightLine',
         parentNode: {
           id: QUERY_SELECTOR + "-1",
-          className: [],
-          classList:  {
+          classList: {
             contains: () => "figureCredit"
           },
-          querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
-          parentNode: {
-            id: QUERY_SELECTOR + "-1",
-            querySelector : () =>({parentNode: {id:QUERY_SELECTOR+ "-1"}}),
-          }
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
         },
+      },
+      0
+    );
+  });
+
+  it("isLastChild > if > 1st if > if", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => { }, preventDefault: () => { } },
+      {
+        firstChild: {
+          firstChild: {
+            parentNode: {},
+            querySelector: () => ({ parentNode: {} }),
+          },
+        },
+        className: 'codeNoHighlightLine',
+        parentNode: {
+          className: 'codeNoHighlightLine',
+          id: QUERY_SELECTOR + "-1",
+          classList: {
+            contains: () => "figureCredit"
+          },
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
+        },
+      },
+      0
+    );
+  });
+
+  it("isLastChild > if > 1st if > else", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => { }, preventDefault: () => { } },
+      {
+        firstChild: {
+          firstChild: {
+            parentNode: {},
+            querySelector: () => ({ parentNode: {} }),
+          },
+        },
+        className: 'codeNoHighlightLine',
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+          classList: {
+            contains: () => "figureCredit"
+          },
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
+        },
+      },
+      0
+    );
+  });
+
+  it("isLastChild > if > 2nd if", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => { }, preventDefault: () => { } },
+      {
+        lastChild: "lastChild",
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+          classList: {
+            contains: () => "figureTitle"
+          },
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
+        },
+        nextSibling: {
+          id: 'f-e-s'
+        },
+        nodeName: 'SPAN'
+      },
+      0
+    );
+  });
+
+  it("isLastChild > if > 1st else if > else if", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => { }, preventDefault: () => { } },
+      {
+        lastChild: {
+          parentNode: {
+            nodeName: "CODE"
+          },
+          nodeName: "IMG"
+        },
+        textContent: "",
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+          classList: {
+            contains: () => "figureTitle"
+          },
+          className: {
+            includes: () => { }
+          },
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
+        },
+        nodeName: 'SPAN'
+      },
+      0
+    );
+  });
+
+  it("isLastChild > if > 1st else if > else if", () => {
+    moveCursor(
+      { keyCode: 40, stopPropagation: () => { }, preventDefault: () => { } },
+      {
+        lastChild: {
+          className: "Wirisformula",
+          parentNode: {
+            nodeName: "CODE"
+          },
+          nodeName: "IMG"
+        },
+        textContent: "",
+        parentNode: {
+          id: QUERY_SELECTOR + "-1",
+          classList: {
+            contains: () => "figureTitle"
+          },
+          className: {
+            includes: () => { }
+          },
+          querySelector: () => ({ parentNode: { id: QUERY_SELECTOR + "-1" } }),
+        },
+        nodeName: 'SPAN'
       },
       0
     );

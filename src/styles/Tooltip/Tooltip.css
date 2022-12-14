@@ -309,7 +309,7 @@
     transition: opacity 1s;
 }
 
-.container-aside .tooltip .tooltip-poc {
+.container-aside .tooltip .tooltip-poc, .show-hide-component .tooltip .tooltip-poc {
     margin-left: -65px;
 }
 

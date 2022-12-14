@@ -721,10 +721,7 @@ export const releaseOwnerPopup=(data)=>{
  * @param isSubscribed- whether it is subscribed or not
  */
 export const isOwnerRole = (projectSharingRole, isSubscribed) => {
-    if (projectSharingRole === "OWNER" && isSubscribed) {
-        return true
-    }
-    return false
+    return projectSharingRole === "OWNER" && isSubscribed;
 }
 
 /**It checks whether its a Subscriber project or not
@@ -732,10 +729,7 @@ export const isOwnerRole = (projectSharingRole, isSubscribed) => {
  * @param isSubscribed- whether it is subscribed or not
  */
 export const isSubscriberRole = (projectSharingRole, isSubscribed) => {
-    if (projectSharingRole === "SUBSCRIBER" && isSubscribed) {
-        return true
-    }
-    return false
+    return projectSharingRole === "SUBSCRIBER" && isSubscribed;
 }
 
 // function to remove tinymce spellcheck DOM attributes from innerHTML
@@ -931,4 +925,23 @@ export const handleWirisImgPaste = (updatedText) => {
 export const handleImagePaste = (updatedText) => {
    let updatePasteContent = updatedText.replace(/<img ([\w\W]+?)>/g,'');
    return updatePasteContent;
+}
+
+/**Function to remove style attribute getting added to <u>, <em> and <strong> due to scenario mentioned in Bug PCAT-17429 */
+export const removeStyleAttribute = (html) => {
+    let tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    tinyMCE.$(tempDiv).find('u').removeAttr('style');
+    tinyMCE.$(tempDiv).find('em').removeAttr('style');
+    tinyMCE.$(tempDiv).find('strong').removeAttr('style');
+    tinyMCE.$(tempDiv).find('span').removeAttr('style');
+    tinyMCE.$(tempDiv).find('s').removeAttr('style');
+    return tempDiv.innerHTML;
+}
+
+export const getSelectionTextWithFormatting = (node) => {
+    let tagName = node.tagName;
+    let tempDiv = document.createElement(tagName);
+    tempDiv.innerHTML = node.innerHTML;
+    return tempDiv.outerHTML;
 }

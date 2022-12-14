@@ -897,19 +897,20 @@ class ElementContainer extends Component {
      * @param {*} secondaryOption
      * @param {*} activeEditorId
      */
-    handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData) => {
+    handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom) => {
         let { parentUrn, asideData } = this.props;
         asideData = cgTitleFieldData?.asideData && Object.keys(cgTitleFieldData?.asideData).length > 0 ? cgTitleFieldData?.asideData : asideData;
         parentElement = cgTitleFieldData?.parentElement && Object.keys(cgTitleFieldData?.parentElement).length > 0 ? cgTitleFieldData?.parentElement : parentElement;
         let dataToSend = {}
         let assetPopoverPopupIsVisible = document.querySelector("div.blockerBgDiv");
+        if (assetPopoverPopupIsVisible && triggeredFrom === 'REFRESH_ELEMENT') assetPopoverPopupIsVisible = false;
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
         switch (previousElementData.type) {
             case elementTypeConstant.AUTHORED_TEXT:
             case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
             case elementTypeConstant.BLOCKFEATURE:
             case elementTypeConstant.POETRY_STANZA:
-                let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent" ||  parentElement.type == 'element-blockfeature') ? activeEditorId : `cypress-${this.props.index}`
+                let index = (parentElement.type == "showhide" || parentElement.type == "popup" || parentElement.type == "poetry" || parentElement.type == "citations" || parentElement.type == "groupedcontent" ||  parentElement.type == 'element-blockfeature' && parentElement?.elementdata?.type !== "pullquote") ? activeEditorId : `cypress-${this.props.index}`
                 let currentNode = document.getElementById(index)
                 const blockquoteCondition = currentNode?.parentNode?.parentNode?.classList?.contains('blockquoteMarginalia')
                 let html =  blockquoteCondition ? prepareBqHtml(currentNode) : currentNode && currentNode.innerHTML;
@@ -1218,7 +1219,7 @@ class ElementContainer extends Component {
     /**
      * Will be called on element blur and a saving call will be made
      */
-    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}) => {
+    handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}, triggeredFrom = '') => {
         const { elementType, primaryOption, secondaryOption, elementId } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
@@ -1241,9 +1242,9 @@ class ElementContainer extends Component {
         }  
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
-            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType, null, cgTitleFieldData);
+            this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate, parentElement, showHideType, null, cgTitleFieldData, triggeredFrom);
         } else {
-            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData)
+            this.handleContentChange(node, element, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom)
         }
     }
 
@@ -2038,8 +2039,6 @@ class ElementContainer extends Component {
                         elemBorderToggle={this.props.elemBorderToggle}
                         deleteElement={this.deleteElement}
                         showHideId={this.props.showHideId}
-                        //createShowHideElement = {this.props.createShowHideElement}
-                        //deleteShowHideUnit = {this.props.deleteShowHideUnit}
                         activeElement={this.props.activeElement}
                         showBlocker={this.props.showBlocker}
                         permissions={permissions}
@@ -2068,6 +2067,7 @@ class ElementContainer extends Component {
                         splithandlerfunction={splithandlerfunction}
                         handleUndoOption = {this.handleUndoOption}
                         closeUndoTimer = {this.props.closeUndoTimer}
+                        handleCopyPastePopup={this.props.handleCopyPastePopup}
                     />;
                     labelText = 'SH'
                     break;
@@ -2548,6 +2548,7 @@ class ElementContainer extends Component {
                     copyClickedY={this.copyClickedY}
                     permissions={_props.permissions}
                     slateLevelData={this.props.slateLevelData}
+                    handleBlur={this.handleBlur}
                 />
             )
         }
@@ -2761,8 +2762,8 @@ class ElementContainer extends Component {
      * @param {} 
      * @param 
      */
-    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
-        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField);
+    openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
+        this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField);
     }
 
     /**
@@ -2926,14 +2927,18 @@ class ElementContainer extends Component {
      * @description - This function is for handling hover on element and showing page numbering box.
      */
     handleOnMouseOver = () => {
-        this.setState({ isHovered: true })
+        if(this.props.pageNumberToggle){
+            this.setState({ isHovered: true })
+        }
     }
 
     /**
      * @description - This function is for handling mouse out on element and hiding page numbering box.
      */
     handleOnMouseOut = () => {
-        this.setState({ isHovered: false })
+        if(this.props.pageNumberToggle){
+            this.setState({ isHovered: false })
+        }
     }
 
     static getDerivedStateFromError(error) {
@@ -2966,8 +2971,8 @@ const mapDispatchToProps = (dispatch) => {
         deleteElement: (id, type, parentUrn, asideData, contentUrn, index, poetryData, element) => {
             dispatch(deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, element))
         },
-        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
-            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, elementSubType, glossaryTermText, typeWithPopup, poetryField)).then(() => {
+        glossaaryFootnotePopup: (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
+            dispatch(glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, typeWithPopup, poetryField)).then(() => {
                 if (callback) {
                     callback();
                 }
@@ -2999,9 +3004,6 @@ const mapDispatchToProps = (dispatch) => {
         releaseSlateLock,
         createShowHideElement: (element, type, index, parentContentUrn, cb, parentElement, parentElementIndex) => {
             dispatch(createShowHideElement(element, type, index, parentContentUrn, cb, parentElement, parentElementIndex))
-        },
-        deleteShowHideUnit: (id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex) => {
-            dispatch(deleteShowHideUnit(id, type, contentUrn, index, eleIndex, parentId, cb, parentElement, parentElementIndex))
         },
         createPoetryUnit: (poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element) => {
             dispatch(createPoetryUnit(poetryField, parentElement, cb, popupElementIndex, slateManifestURN, element))
@@ -3119,7 +3121,8 @@ const mapStateToProps = (state) => {
         figureDropdownData: state.appStore.figureDropdownData,
         tableElementAssetData: state.appStore.tableElementAssetData,
         popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
-        deletedKeysValue: state.appStore.deletedElementKeysData
+        deletedKeysValue: state.appStore.deletedElementKeysData,
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle
     }
 }
 

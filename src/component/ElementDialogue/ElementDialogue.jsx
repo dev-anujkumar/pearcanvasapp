@@ -4,11 +4,12 @@ import TinyMceEditor from "../tinyMceEditor";
 import DialogueContent from './DialogueContent.jsx';
 import DialogueSeprator from './DialogueSeprator.jsx';
 import "../../styles/ElementDialogue/DialogueStyles.css"
+import './../../styles/ElementContainer/ElementContainer.css';
 import { connect } from 'react-redux';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
 import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex, getCookieByName } from '../../constants/utility.js';
-import { createPSDataForUpdateAPI } from './DialogueElementUtils';
+import { createPSDataForUpdateAPI, handleCommonEvents } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
 import PopUp from '../PopUp';
 import { hideBlocker, showTocBlocker } from '../../js/toggleLoader';
@@ -24,8 +25,14 @@ class ElementDialogue extends React.PureComponent {
             selectedInnerElementIndex: null,
             popup: false,
             psElementIndex: null,
-            oldPSData: {}
+            oldPSData: {},
+            showUndoOption : false,
+            showActionUndone : false,
+            deletedElmID: "",
+            showFirstTimeUndo : false,
+            deletedElmLabel: ""
         }
+        this.wrapperRef = React.createRef();
     }
 
     componentDidMount() {
@@ -34,25 +41,75 @@ class ElementDialogue extends React.PureComponent {
             this.props.setBCEMetadata(elementdata.numberedlines);
             this.props.setBCEMetadata(elementdata.startNumber);
         }
+        document.addEventListener("mousedown", this.handleClickOutside);
     }
 
-    
+    componentWillUnmount() {
+        document.removeEventListener("mousedown", this.handleClickOutside);
+    }
 
-    addElement = (psIndex, psElementIndex, data, oldPSData) => {
-        const dialogueContent = oldPSData.html.dialogueContent;
-        dialogueContent.splice(psElementIndex, 0, data);
-        const newPsElement = {
-            ...oldPSData,
-            html: {
-                ...oldPSData.html,
-                dialogueContent
+    componentDidUpdate(prevProps) {
+        if (prevProps.closeUndoTimer !== this.props.closeUndoTimer && this.state.showUndoOption) {
+            if (this.props.closeUndoTimer) {
+                this.handleUndoToastCancel();
             }
         }
-        this.callUpdateApi(newPsElement);
     }
 
-    deleteElement = () => {
-        const { warningPopupCheckbox } = this.props;
+    handleClickOutside = (event) => {
+        if (this.state.showUndoOption) {
+            if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+                this.handleUndoToastCancel();
+            }
+        }
+    }
+
+    handleUndoDeletedElm = (status) => {
+        this.setState({
+            showUndoOption: status,
+            showActionUndone: false
+        })
+        this.toastTimer = setTimeout(() => {
+            this.setState({
+                showUndoOption: false
+            })
+        }, 5000);
+    }
+
+    handleUndoOption = () => {
+        handleCommonEvents(this.state.deletedElmID, false)
+        clearTimeout(this.timer)
+        clearTimeout(this.toastTimer)
+        this.setState({
+            showUndoOption: false,
+            showActionUndone: true,
+        })
+        setTimeout(() => {
+            this.setState({
+                showActionUndone: false
+            }) 
+        }, 2000);
+    }
+
+    handleUndoToastCancel = () => {
+        clearTimeout(this.timer)
+        clearTimeout(this.toastTimer)
+        const newPsElement = this.updatePSData()
+        this.callUpdateApi(newPsElement);
+        sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
+        handleCommonEvents(this.state.deletedElmID, false)
+        this.setState({
+            showUndoOption: false,
+        })
+    }
+
+    handleActionUndoneToastCancel = () => {
+        this.setState({
+            showActionUndone: false
+        })
+    }
+
+    updatePSData = () => {
         const { psElementIndex, oldPSData } = this.state;
         const dialogueContent = oldPSData.html.dialogueContent;
         dialogueContent.splice(psElementIndex, 1);
@@ -63,8 +120,47 @@ class ElementDialogue extends React.PureComponent {
                 dialogueContent
             }
         }
-        if(warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } });
+        return newPsElement;
+    }
+
+    addElement = (psIndex, psElementIndex, data, oldPSData) => {
+        const dialogueContent = oldPSData.html.dialogueContent || [];
+        dialogueContent?.splice(psElementIndex, 0, data);
+        const newPsElement = {
+            ...oldPSData,
+            html: {
+                ...oldPSData.html,
+                dialogueContent
+            }
+        }
         this.callUpdateApi(newPsElement);
+    }
+
+    deleteElement = (deletedElmID) => {
+        const deletedElmKey = this.state.showFirstTimeUndo ? this.state.deletedElmID : deletedElmID
+        const { warningPopupCheckbox } = this.props;
+        if (warningPopupCheckbox && this.state.showFirstTimeUndo) {
+            this.setState({
+                showUndoOption: true
+            })
+        }
+        if (warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } });
+        const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+        if (disableDeleteWarnings || warningPopupCheckbox) {
+            sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: true } });
+            handleCommonEvents(deletedElmKey,true)
+            this.timer = setTimeout(() => {
+                const newPsElement = this.updatePSData()
+                this.callUpdateApi(newPsElement);
+                this.setState({showUndoOption: false})
+                sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
+                handleCommonEvents(this.state.deletedElmID, false)
+            }, 5000)
+        }
+        else {
+            const newPsElement = this.updatePSData()
+            this.callUpdateApi(newPsElement);
+        }
         this.closePopup();
     }
     closePopup = () => {
@@ -94,6 +190,7 @@ class ElementDialogue extends React.PureComponent {
                     <Fragment key={element.id}>
                         <div className={"editor"}
                             data-id={element.id}
+                            innerElementID={_props.elementId+'-'+index}
                             onMouseOver={_props.handleOnMouseOver}
                             onMouseOut={_props.handleOnMouseOut}
                             onClickCapture={(e) => _props.onClickCapture(e)}
@@ -140,6 +237,7 @@ class ElementDialogue extends React.PureComponent {
                             permissions={_props.permissions}
                             onClickCapture={_props.onClickCapture}
                             userRole={_props.userRole}
+                            sepratorID={_props.elementId+'-'+index}
                         />
                     </Fragment>
                 )
@@ -175,22 +273,29 @@ class ElementDialogue extends React.PureComponent {
     }
 
     // function to be called on click of dialogue inner elements delete button 
-    handleDialogueInnerElementsDelete = (e, index, element) => {
+    handleDialogueInnerElementsDelete = (e, index, element, labelText) => {
         e.stopPropagation();
         this.showCanvasBlocker();
         const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
+        const deletedElmID = element.id + "-" + index
         if (disableDeleteWarnings) {
             this.setState({
                 psElementIndex: index,
-                oldPSData: element
+                oldPSData: element,
+                deletedElmLabel: labelText,
+                deletedElmID: deletedElmID
             }, () => {
-                this.deleteElement();
+                this.deleteElement(deletedElmID);
+                this.handleUndoDeletedElm(true);
             });
         } else {
             this.setState({
                 popup: true,
                 psElementIndex: index,
-                oldPSData: element
+                oldPSData: element,
+                showFirstTimeUndo: true,
+                deletedElmLabel: labelText,
+                deletedElmID: deletedElmID
             });
         }
     }
@@ -208,7 +313,7 @@ class ElementDialogue extends React.PureComponent {
                         this.props.permissions && this.props.permissions.includes('elements_add_remove') ?
                             (<Button
                                 type="delete-element"
-                                onClick={(e) => this.handleDialogueInnerElementsDelete(e, index, element)}
+                                onClick={(e) => this.handleDialogueInnerElementsDelete(e, index, element, labelText)}
                             />)
                             : null
                     }
@@ -399,6 +504,19 @@ class ElementDialogue extends React.PureComponent {
                         handleUndoOption = {this.props.handleUndoOption}
                         closeUndoTimer = {this.props.closeUndoTimer}
                 />}
+                    {
+                        this.state.showUndoOption && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
+                            <p>{this.state.deletedElmLabel} has been deleted. </p>
+                            <p className='undo-button' onClick={() => this.handleUndoOption()}> Undo </p>
+                            <Button type='toast-close-icon' onClick={() => this.handleUndoToastCancel()} />
+                        </div>
+                    }
+                    {
+                        this.state.showActionUndone && <div className='delete-toastMsg'>
+                            <p> Action undone. </p>
+                            <Button type='toast-close-icon' onClick={() => this.handleActionUndoneToastCancel()} />
+                        </div>
+                    }
                 </div>
                 : ''
         )

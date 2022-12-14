@@ -84,11 +84,15 @@ let initialState = {
 		activeElement: {},
 		slateLevelData: {
 			'urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee': {contents: {bodymatter: []}}
-		}
+		},
+	showFirstTimeUndo: true,
+	showUndoOption: false
 	},
 	keyboardReducer: {
         selectedElement: []
-    }
+    },
+	showFirstTimeUndo: true,
+	showUndoOption: false
 };
 const event = {
 	stopPropagation: jest.fn(),
@@ -141,6 +145,48 @@ describe('1. Dialogue element test cases', () => {
 			getElementById: jest.fn()
 		},
 		warningPopupCheckbox : true,
+		handleCheckboxPopup: jest.fn(),
+		showCanvasBlocker: jest.fn(),
+		onClick: jest.fn(),
+		closeUndoTimer: "test"
+	};
+	let props1 = {
+		index:0,
+		permissions: ["elements_add_remove"],
+		btnClassName: "activeTagBgColor",
+		element: {
+			id: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083180",
+			html: {
+				actTitle:"<p>dasd</p>",
+				sceneTitle:"<p></p>",
+				credits:"<p></p>",
+				dialogueContent: [
+					{ type: "stagedirection", text: "<p>2</p>" },
+					{ type: "lines", characterName: "<p>3weqwe</p>", text: "<p><span></span>421323</p>" }
+				]	
+			},
+			handleOnMouseOver: jest.fn(),
+			onMouseOut: jest.fn(),
+			onClickCapture: jest.fn(),
+			elementdata: { 
+				startNumber: 2,
+				numberedlines : false
+			}
+		},
+		deleteScriptElement: jest.fn(),
+		elemBorderToggle: true,
+		borderToggle: "active",
+		//
+		activeElement: {
+			elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083181"
+		},
+		elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083181",
+		//
+		setBCEMetadata: jest.fn(),
+		handleFocus: jest.fn(),
+		context: {
+			getElementById: jest.fn()
+		},
 		handleCheckboxPopup: jest.fn(),
 		showCanvasBlocker: jest.fn(),
 		onClick: jest.fn(),
@@ -276,6 +322,18 @@ describe('1. Dialogue element test cases', () => {
 		props.showBlocker = jest.fn();
 		const compInstance = dialogueInstance(props);
 		compInstance.setState({
+			psElementIndex: 0, oldPSData: oldPSData, showFirstTimeUndo: true
+		});
+        expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'deleteElement')
+		compInstance.deleteElement();
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+    });
+	it('1.8 Test deleteElement Function : else', () => {
+		props1.showBlocker = jest.fn();
+		const compInstance = dialogueInstance(props1);
+		compInstance.setState({
 			psElementIndex: 0, oldPSData: oldPSData
 		});
         expect(compInstance).toBeDefined();
@@ -304,6 +362,15 @@ describe('1. Dialogue element test cases', () => {
 		const compInstance = dialogueInstance(props);
         expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'componentDidMount')
+		compInstance.componentDidMount(props);
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+    });
+	it('1.10 Test componentDidMount Function : else', () => {
+		const props = {}
+		const compInstance = dialogueInstance(props);
+        expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'componentDidMount')
 		compInstance.componentDidMount();
 		expect(spy).toHaveBeenCalled()
 		spy.mockClear()
@@ -318,13 +385,73 @@ describe('1. Dialogue element test cases', () => {
 		spy.mockClear()
     });
 	it('1.12 test for handleDialogueInnerElementsDelete', ()=>{
-		document.cookie = "DISABLE_DELETE_WARNINGS=true;domain=pearson.com;path=/;"
+		document.cookie = "DISABLE_DELETE_WARNINGS=true"
 		const compInstance = dialogueInstance(props);
         expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'handleDialogueInnerElementsDelete')
 		compInstance.handleDialogueInnerElementsDelete(event, 0, props.element);
 		expect(spy).toHaveBeenCalled();
 		spy.mockClear();
-		}
-	)
+		});
+	it('1.13 Test handleUndoOption Function', () => {
+		const compInstance = dialogueInstance(props);
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'handleUndoOption')
+		compInstance.handleUndoOption();
+		expect(spy).toHaveBeenCalled();
+		spy.mockClear()
+		});
+	it('1.14 Test componentWillUnmount Function', () => {
+		const compInstance = dialogueInstance(props);
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'componentWillUnmount')
+		compInstance.componentWillUnmount();
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+		});
+	it('1.15 Test componentDidUpdate Function', () => {
+		const compInstance = dialogueInstance(props);
+		compInstance.setState({
+			showUndoOption: true, oldPSData : {html:{dialogueContent:["test"]}}
+		});
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+		compInstance.componentDidUpdate({ closeUndoTimer: "test1" });
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+	});
+	it('1.15 Test componentDidUpdate Function : else', () => {
+		const compInstance = dialogueInstance(props1);
+		compInstance.setState({
+			showUndoOption: true, oldPSData: { html: { dialogueContent: ["test"] } }
+		});
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'componentDidUpdate')
+		compInstance.componentDidUpdate({ closeUndoTimer: "test1" });
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+	});
+	it('1.16 Test handleUndoDeletedElm Function', () => {
+		const compInstance = dialogueInstance(props);
+		compInstance.setState({
+			showUndoOption: false,
+			showActionUndone: false
+		});
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'handleUndoDeletedElm')
+		compInstance.handleUndoDeletedElm(props);
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+	});
+	it('1.16 Test handleActionUndoneToastCancel Function', () => {
+		const compInstance = dialogueInstance(props);
+		compInstance.setState({
+			showUndoOption: false,
+		});
+		expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'handleActionUndoneToastCancel')
+		compInstance.handleActionUndoneToastCancel(props);
+		expect(spy).toHaveBeenCalled()
+		spy.mockClear()
+	});
 });

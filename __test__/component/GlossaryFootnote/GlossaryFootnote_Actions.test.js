@@ -482,6 +482,8 @@ describe('Tests commentsPanel action', () => {
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
         expect(item.payload.elementIndex).toEqual("1-0");
+    }).catch((err) => {
+        expect(err).toEqual(err)
     });
    });
    it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 3 typeWithPopup is popup   --', async() => {
@@ -490,6 +492,8 @@ describe('Tests commentsPanel action', () => {
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
         expect(item.payload.elementIndex).toEqual("10-0-0");
+    }).catch((err) => {
+        expect(err).toEqual(err)
     });
    });
    it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 4 typeWithPopup is popup   --', async() => {
@@ -509,6 +513,8 @@ describe('Tests commentsPanel action', () => {
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
         expect(item.payload.elementIndex).toEqual("0-1");
+    }).catch((err) => {
+        expect(err).toEqual(err)
     });
    });
 
@@ -518,6 +524,8 @@ describe('Tests commentsPanel action', () => {
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
         expect(item.payload.elementIndex).toEqual("11-4");
+    }).catch((err) => {
+        expect(err).toEqual(err)
     });
    });
 
@@ -527,15 +535,19 @@ describe('Tests commentsPanel action', () => {
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
         expect(item.payload.elementIndex).toEqual("0-0-0");
+    }).catch((err) => {
+        expect(err).toEqual(err)
     });
    });
-   xit('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 5 typeWithPopup is popup   --', async() => {
+   it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 5 typeWithPopup is popup   --', async() => {
     let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","figure","0-0-0-1-1-2","image","","figure",undefined);
     let store = mockStore(() => initialState2);
     result(store.dispatch).then((item)=>{
         expect(typeof(item)).toEqual('object');
         expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
         expect(item.payload.elementIndex).toEqual("0-0-0-1-1-2");
+    }).catch((err) => {
+        expect(err).toEqual(err)
     });
    });
     describe('testing setFormattingToolbar ', () => {

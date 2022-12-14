@@ -361,7 +361,7 @@ export const FigureHeader = (props) => {
                 <div className='figure-label-number-field'>
                     <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number Settings</span>
                     <KeyboardWrapper index={`${props.index}-labelautonumber-1`} enable={isEnableKeyboard()} focus>
-                    <div ref={labelRef} tabIndex={0} onKeyDown={(e) => {
+                    <div id="onKeyDown1" ref={labelRef} tabIndex={0} onKeyDown={(e) => {
                         if(true) {
                             const key = e.which || e.keyCode;
                             if(key === 13 && !hasReviewerRole()) {
@@ -394,7 +394,7 @@ export const FigureHeader = (props) => {
                 {removeLabelCondition && showLabelField && labelNumberSetting !== AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER && <div className='figure-label-field'>
                     <span className={`label ${labelDropDown ? 'active' : ''}`}>Label</span>
                     <KeyboardWrapper index={`${props.index}-label-1`} enable={isEnableKeyboard()} focus>
-                    <div ref={nonAutoLabelRef} tabIndex={0} onKeyDown={(e) => {
+                    <div id="onKeyDown2" ref={nonAutoLabelRef} tabIndex={0} onKeyDown={(e) => {
                         if(true) {
                             const key = e.which || e.keyCode;
                             if(key === 13 && !hasReviewerRole()) {

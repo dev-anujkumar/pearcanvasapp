@@ -138,7 +138,7 @@ class GlossaryFootnoteMenu extends React.Component {
     saveContent = () => {
         if (!hasReviewerRole()) {
             const { glossaryFootnoteValue,audioGlossaryData,figureGlossaryData, markedIndexGlossaryData } = this.props;
-            let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup, poetryField} = glossaryFootnoteValue;
+            let { elementWorkId, elementType, glossaryfootnoteid, type, elementSubType, typeWithPopup, blockfeatureType, poetryField} = glossaryFootnoteValue;
             let term = null;
             let definition = null;
             let defaultValue = document.createElement('p')
@@ -194,7 +194,7 @@ class GlossaryFootnoteMenu extends React.Component {
             if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase()) || this.props.markedIndexGlossaryData.isDifference == true ){
                 config.isGlossarySaving = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, poetryField,audioGlossaryData,figureGlossaryData, markedIndexGlossaryData?.indexEntries)
+                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, blockfeatureType, poetryField,audioGlossaryData,figureGlossaryData, markedIndexGlossaryData?.indexEntries)
             }
         }
         this.props.showGlossaaryFootnote(false);

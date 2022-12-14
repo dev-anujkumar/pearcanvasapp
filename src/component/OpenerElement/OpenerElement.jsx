@@ -10,7 +10,7 @@ import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
 import axios from 'axios';
-import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } from '../AlfrescoPopup/Alfresco_Action'
+import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement, saveSelectedAltTextLongDescData } from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 import TinyMceEditor from '../tinyMceEditor';
 
@@ -56,6 +56,8 @@ class OpenerElement extends Component {
         let imageId = `urn:pearson:alfresco:${uniqID}`;
         let figureType = data?.content?.mimeType?.split('/')[0]
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
+        let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
+        let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
             let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
             let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
@@ -77,6 +79,11 @@ class OpenerElement extends Component {
             id: ''
         }
         this.props.saveSelectedAssetData(payloadObj)
+        const altLongDescData = {
+            altText: altText,
+            longDesc: longDesc
+        }
+        this.props.saveSelectedAltTextLongDescData(altLongDescData)
         disableHeader(false)
         hideTocBlocker()
     }
@@ -527,6 +534,9 @@ const mapActionToProps = (dispatch) =>{
         },
         saveSelectedAlfrescoElement: (payloadObj) => {
             dispatch(saveSelectedAlfrescoElement(payloadObj))
+        },
+        saveSelectedAltTextLongDescData: (payloadObj) => {
+            dispatch(saveSelectedAltTextLongDescData(payloadObj))
         }
     }
 }

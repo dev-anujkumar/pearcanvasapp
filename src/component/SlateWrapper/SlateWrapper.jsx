@@ -295,7 +295,7 @@ class SlateWrapper extends Component {
                     let _context = this;
                     const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
                     return (
-                        <div className={`slate-content ${isOwnerRole(projectSharingRole,isSubscribed) ? 'ownerSlateBackGround' :'' } ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
+                        <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 <Sortable
                                     options={{
@@ -1371,12 +1371,34 @@ class SlateWrapper extends Component {
             )
         }
     }
-    closePopup = () =>{
-        if (config.savingInProgress || config.isSavingElement) {
-            return false
+
+    saveAndClose = () =>{
+        if(this.props && config.tempSlateManifestURN && config.slateManifestURN &&  this.props.slateData && this.props.slateData[config.tempSlateManifestURN] && (this.props.slateData[config.tempSlateManifestURN].status === "approved" || this.props.slateData[config.slateManifestURN].status === "approved")){
+            if (config.savingInProgress || config.isSavingElement) {
+                if(Object.keys(this.props.asideData).length > 0){
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                    setTimeout(this.closePopup, 10000)
+                }else{
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+                    setTimeout(this.closePopup, 4000)
+                }
+                
+            }else{
+                setTimeout(this.closePopup, 0)
+            }
+        }else{
+            if (config.savingInProgress || config.isSavingElement) {
+                setTimeout(this.closePopup, 800)
+            }else{
+                setTimeout(this.closePopup, 0);
+            }
         }
+    }
+
+    closePopup = () =>{
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })
         let popupId = config.slateManifestURN
-        if(this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN].status === "wip"){
+        if( this.props.slateData && this.props.slateData[config.tempSlateManifestURN] && this.props.slateData[config.tempSlateManifestURN].status === "approved" && this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].status === "wip"){
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
@@ -1555,7 +1577,7 @@ class SlateWrapper extends Component {
                 <div className='title-head-wrapper'>
                      {
                         this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'popup' ?
-                          <button className="popup-button" onClick={this.closePopup}>SAVE & CLOSE</button>
+                          <button className="popup-button" onClick={this.saveAndClose}>SAVE & CLOSE</button>
                           :this.renderSlateHeader(this.props)
                     } 
                 </div>

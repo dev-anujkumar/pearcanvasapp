@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { mount, shallow } from 'enzyme';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
+import Select from '@material-ui/core/Select';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import config from '../../../src/config/config';
@@ -16,6 +17,7 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
         return (<div>null</div>)
     }
 })
+let hasReviewerRole = jest.fn(() => false)
 
 config.figureFieldsPlaceholders = ['Number', 'Label Name', 'Title', 'Caption', 'Credit']
 config.smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table', 'fpo']
@@ -29,6 +31,18 @@ describe('Testing FigureHeader component', () => {
         let figureHeaderWrapper = mount(<Provider store={store}><FigureHeader {...props} /></Provider>);
         expect(figureHeaderWrapper).toHaveLength(1);
     })
+
+    it("onKeydown", () => {
+        let figureHeaderWrapper = mount(<Provider store={store}><FigureHeader {...props} /></Provider>);
+        let event = {
+            stopPropagation: jest.fn(),
+            preventDefault: jest.fn(),
+            keyCode: 38,
+            which: 86
+        }
+        figureHeaderWrapper.find('#onKeyDown1').at(0).simulate('keyDown', event);
+        figureHeaderWrapper.find('#onKeyDown2').at(0).simulate('keyDown', event);
+    });
 
     it('For Audio type with oldSettings : Resume numbering & newSettings : Remove label & number case ', () => {
         let figureHeaderWrapper2 = mount(<Provider store={store}><FigureHeader {...props1} /></Provider>);

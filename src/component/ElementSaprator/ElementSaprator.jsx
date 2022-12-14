@@ -45,7 +45,8 @@ const { TEXT,
     TOC_PARENT_TYPES,
     SHOW_HIDE,
     POPUP,
-    ELEMENT_DISCUSSION
+    ELEMENT_DISCUSSION,
+    HIDE_SPLIT_SLATE_CONTAINER
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
@@ -158,16 +159,22 @@ export function ElementSaprator(props) {
 
     const renderWordPasteButton = (parentElementType, { firstOne, index, userRole, onClickCapture }) => {
         const { parentUrn, asideData } = props
-        const inContainer = [POETRY, CITATION_GROUP_ELEMENT, SHOW_HIDE ]
+        const inContainer = [POETRY, CITATION_GROUP_ELEMENT]
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
         const parentContainer = ["groupedcontent", "showhide"]
+        const parentContainerForShowHide = ["groupedcontent", "element-aside"]
         const hasPasteFromWordPermission = hasProjectPermission("paste_from_word");
         let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
-        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type))) {
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type))) {
             return null;
         }
+        let insertionIndex = firstOne ? index : index + 1
 
-        const insertionIndex = firstOne ? index : index + 1
+        if(asideData?.type === SHOW_HIDE) {
+            const indexs = index?.toString()?.split("-") || [];
+            const insertionIndexForShowHide = indexs[indexs?.length - 1];
+            insertionIndex = insertionIndexForShowHide
+        }
         return (
             <div className={'elemDiv-expand'} onClickCapture={onClickCapture} >
                 <Tooltip direction='poc' tooltipText='Paste from Word'>
@@ -196,7 +203,7 @@ export function ElementSaprator(props) {
     return (
         <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`} id = {props.dataId}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
-                {permissions && permissions.includes('split_slate') && hideSplitSlateIcon && !config.isPopupSlate && !props.firstOne && !(props.setSlateParent == 'part' && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
+                {permissions && permissions.includes('split_slate') && hideSplitSlateIcon && !config.isPopupSlate && !props.firstOne && !(HIDE_SPLIT_SLATE_CONTAINER.includes(props.setSlateParent)  && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
             <div className='elemDiv-hr'>

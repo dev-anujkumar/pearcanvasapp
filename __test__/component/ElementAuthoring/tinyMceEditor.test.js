@@ -224,6 +224,7 @@ let selectionEditor = {
         return {
             tagName: 'span',
             className: 'poetryLine',
+            getAttribute: () => { },
             closest: () => { },
             childNodes:[{
                 tagName: 'span',
@@ -567,7 +568,36 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(mySpyFunction).toHaveBeenCalled()
             expect(instance.props.element.type).toBe('stanza')
         })
-        it('Test-5.5-Method--3--editorExecCommand --For BLOCK_CODE Element--', () => {
+        it('Test-5.5-Method--3--editorExecCommand --For ELEMENT-DIALOGUE Element--', () => {
+            let event = {
+                target: {
+                    getContent: () => {
+                        return "Test"
+                    }
+                },
+                command: 'mceToggleFormat'
+            }
+            let nextEditor = {
+                on: (temp, cb) => { cb(event) },
+                selection: editor.selection,
+                setContent: () => { },
+                dom : { getParent(){return }}
+            }
+            instance.props = {
+                ...props,
+                permissions: ["login", "logout"],
+                tagName: "SPAN",
+                elementId: "work:urn",
+                element: { type: "element-dialogue" }
+            }
+            component.update();
+            // console.log(instance.props)
+            let mySpyFunction = jest.spyOn(instance, 'editorExecCommand');
+            instance.editorExecCommand(nextEditor);
+            expect(mySpyFunction).toHaveBeenCalled()
+            expect(instance.props.element.type).toBe('element-dialogue')
+        })
+        it('Test-5.6-Method--3--editorExecCommand --For BLOCK_CODE Element--', () => {
             let event = {
                 target: {
                     getContent: () => {
@@ -596,7 +626,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
             expect(instance.props.element.type).toBe('figure')
             expect(instance.props.element.figuretype).toBe('codelisting')
         })
-        it('Test-5.6-Method--3--editorExecCommand --For Glossary Italicizing',() => {
+        it('Test-5.7-Method--3--editorExecCommand --For Glossary Italicizing',() => {
             let event = {
                 target: {
                     getContent: () => {
@@ -610,7 +640,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
-                dom : { getParent(){return }}
+                dom : { getParent(){return {querySelector: () => { return {closest: () => {}}}}}}
             }
             instance.props = {
                 ...props,

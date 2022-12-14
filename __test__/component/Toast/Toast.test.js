@@ -14,14 +14,21 @@ let initialState={
 }
 describe('Testing Toast component', () => {
     let store = mockStore(initialState);
-    let props = {
+    let props1 = {
         active: true,
         showToastMessage: jest.fn()
     }
-    const component = mount(<Provider store={store}><Toast {...props} /></Provider>)
+    let props2 = {
+        showToastMessage: jest.fn()
+    }
+    const component = mount(<Provider store={store}><Toast {...props1} /></Provider>)
     const instance = component.find('Toast').instance();
     it('Test Toast- Render without crashing', () => {
         expect(component.find('div#toast-message')).toHaveLength(1);
+    })
+    const component2 = mount(<Provider store={store}><Toast {...props2} /></Provider>)
+    it('Test Toast- Render without crashing', () => {
+        expect(component2.find('div#toast-message')).toHaveLength(0);
     })
     it('Test hideToast', () => {
         let sypFunc = jest.spyOn(instance, 'hideToast')
