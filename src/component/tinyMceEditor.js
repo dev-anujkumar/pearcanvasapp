@@ -2961,7 +2961,7 @@ export class TinyMceEditor extends Component {
         getGlossaryFootnoteId(elementId, "MARKEDINDEX", res => {
             let insertionText = ""
             let stylesHTML = tinymce.activeEditor.selection.getEnd();
-            if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1) {
+            if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1 && stylesHTML.textContent == selectedText) {
                 selectedText = getSelectionTextWithFormatting(stylesHTML);
             }
             if (res.data && res.data.id) {
@@ -3017,7 +3017,7 @@ export class TinyMceEditor extends Component {
         getGlossaryFootnoteId(elementId, "GLOSSARY", res => {
             let insertionText = ""
             let stylesHTML = tinymce.activeEditor.selection.getEnd();
-            if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1) {
+            if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1 && stylesHTML.textContent == selectedText) {
                 selectedText = getSelectionTextWithFormatting(stylesHTML);
             }
             if (res.data && res.data.id) {
