@@ -239,7 +239,7 @@ function CommunicationChannel(WrappedComponent) {
                 }
                     break;
                 case 'bannerIsVisible':
-                    document.getElementById('link-notification').style.bottom = '12%'
+                    document.getElementById('link-notification').style.bottom = '17%'
                     break;
                 case 'brokerPreview':
                 case 'slatePreview':
