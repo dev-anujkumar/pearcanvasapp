@@ -238,6 +238,9 @@ function CommunicationChannel(WrappedComponent) {
                         }
                 }
                     break;
+                case 'bannerIsVisible':
+                    document.getElementById('link-notification').style.bottom = '12%'
+                    break;
                 case 'brokerPreview':
                 case 'slatePreview':
                 case 'projectPreview':
