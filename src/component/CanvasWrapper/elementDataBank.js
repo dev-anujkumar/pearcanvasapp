@@ -374,6 +374,16 @@ const elementDataBank = {
         },
         "wider-33-33-33" : {
             "secondaryOption" : "secondary-multicolumn-3c-wider"
+        },
+        "text-width" : {
+            "secondaryOption" : "secondary-tabbed"
+        }
+    },
+    "group": {
+        "elementType" : "group",
+        "primaryOption" : "primary-tab",
+        "wider-60-40" : {
+            "secondaryOption" : "secondary-multicolumn-wider"
         }
     },
     "element-dialogue" : {

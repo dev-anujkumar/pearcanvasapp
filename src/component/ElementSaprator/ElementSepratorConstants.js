@@ -58,6 +58,7 @@ export const containerTypeArray = {
     },
     "multi-column-group": {
         "2-column": "multi-column-group",
-        "3-column": "multi-column-group-column-3"
+        "3-column": "multi-column-group-column-3",
+        "Tabbed 2-column": "multi-column-group-tabbed_2_column"
     }
 }

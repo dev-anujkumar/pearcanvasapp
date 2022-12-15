@@ -269,6 +269,18 @@ export const externalLOWarningtxt = `Performing this action will remove the curr
 export const CYPRESS_LF = "cypressLF";
 export const EXTERNAL_LF =  "externalLF";
 
+/** Tabbed 2 column element - TABBED_2_COLUMN */
+export const TABBED_2_COLUMN = {
+    "ELEMENT_TAG_NAME": "TB",
+    "ELEMENT_NAME" : "primary-tabbed-elem"
+}
+
+/** Tabbed tab element - TAB_2_COLUMN */
+export const TABBED_TAB = {
+    "ELEMENT_TAG_NAME": "Tab",
+    "ELEMENT_NAME" : "primary-tab-elem"
+}
+
 /** Multi column - 3 column constants */
 export const MULTI_COLUMN_3C = {
     "ELEMENT_TAG_NAME": "3C",

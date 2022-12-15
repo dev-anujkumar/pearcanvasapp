@@ -987,7 +987,7 @@ export default {
         'primary-multicolumn-3c': {		
             text: '3 Column',
             toolbar: [],
-            enum: 'MULTI_COLUMN',		
+            enum: 'MULTI_COLUMN',	
             subtype: {		
                 'secondary-multicolumn-3c-wider': {
                     text: 'Wider than text width 33/33/33%',
@@ -996,7 +996,31 @@ export default {
                 }
             }		
         },
+        'primary-tabbed-elem': {
+            text: 'Tabbed 2 Column',
+            toolbar: [],
+            enum: 'TABBED_ELEMENT',		
+            subtype: {		
+                'secondary-tabbed': {
+                    labelText: 'TB'
+                }
+            }
+        },
         enumType: 'multicolumn'		
+    },
+    'group': {
+        'primary-tab': {
+            text: 'Tab 2 Column',
+            toolbar: [],
+            enum: 'TAB_ELEMENT',
+            subtype: {
+                'secondary-multicolumn-wider': {
+                    text: 'Wider than text width 60/40%',
+                    labelText: 'Tab',
+                    enum: 'WIDER_60_40'
+                }
+            }
+        }
     },
     "element-dialogue" : {
         "primary-element-dialogue": {

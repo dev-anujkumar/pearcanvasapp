@@ -23,7 +23,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
@@ -45,6 +45,8 @@ import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 import MultiColumnContext from "./MultiColumnContext.js"
 import MultipleColumnContainer from "../MultipleColumnElement/MultipleColumnContainer.jsx";
+import Tabbed2Column from '../ElementTabbed/Tabbed2ColumnContainer.jsx';
+import TabbedTabContainer from '../ElementTabbed/TabbedTabContainer.jsx';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
@@ -1867,8 +1869,10 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn } = this.props;
+        element = parentUrn?.type === 'tabbed-element' ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
+        console.log('labelText', labelText, element)
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
         let anyFlaggedComment = allComments?.filter(({ commentFlag, commentOnEntity }) => commentOnEntity === element.id && commentFlag === true).length > 0
@@ -2191,8 +2195,49 @@ class ElementContainer extends Component {
                     break;
 
                 case elementTypeConstant.MULTI_COLUMN:
-                    // checking if labelText is 3C to render 3 column component
-                    if (labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) {
+                    // checking if labelText is TB to render Tabbed 2 column element
+                    if (labelText === TABBED_2_COLUMN.ELEMENT_TAG_NAME) {
+                        editor = <Tabbed2Column
+                            activeElement = {this.props.activeElement}
+                            showBlocker = {this.props.showBlocker}
+                            permissions = {permissions}
+                            index = {index}
+                            element = {element}
+                            slateLockInfo = {slateLockInfo}
+                            handleCommentspanel = {handleCommentspanel}
+                            isBlockerActive = {this.props.isBlockerActive}
+                            onClickCapture = {this.props.onClickCapture}
+                            elementSepratorProps = {elementSepratorProps}
+                            setActiveElement = {this.props.setActiveElement}
+                            onListSelect = {this.props.onListSelect}
+                            handleFocus = {this.handleFocus}
+                            handleBlur = {this.handleBlur}
+                            deleteElement = {this.deleteElement}
+                            handleUndoOption = {this.handleUndoOption}
+                            splithandlerfunction = {this.props.splithandlerfunction}
+                        />
+                    } else if (this.props.parentUrn.type === 'tabbed-element') {
+                        editor = <TabbedTabContainer
+                        activeElement = {this.props.activeElement}
+                        showBlocker = {this.props.showBlocker}
+                        permissions = {permissions}
+                        index = {index}
+                        element = {element}
+                        slateLockInfo = {slateLockInfo}
+                        handleCommentspanel = {handleCommentspanel}
+                        isBlockerActive = {this.props.isBlockerActive}
+                        onClickCapture = {this.props.onClickCapture}
+                        elementSepratorProps = {elementSepratorProps}
+                        setActiveElement = {this.props.setActiveElement}
+                        onListSelect = {this.props.onListSelect}
+                        handleFocus = {this.handleFocus}
+                        handleBlur = {this.handleBlur}
+                        deleteElement = {this.deleteElement}
+                        handleUndoOption = {this.handleUndoOption}
+                        splithandlerfunction = {this.props.splithandlerfunction}
+                        />
+                        // checking if labelText is 3C to render 3 column component
+                    } else if (labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) {
                         editor = editor = <MultiColumnContext.Provider value={{
                             activeElement: this.props.activeElement,
                             showBlocker: this.props.showBlocker,
@@ -2394,7 +2439,7 @@ class ElementContainer extends Component {
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         <Button type="element-label"  elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
                         {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
-                        {(labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME || MULTI_COLUMN_2C.ELEMENT_TAG_NAME) && <div>{this.renderMultipleColumnLabels(element)}</div>}
+                        {((labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) || (labelText === MULTI_COLUMN_2C.ELEMENT_TAG_NAME) || (labelText === TABBED_TAB.ELEMENT_TAG_NAME)) && <div>{this.renderMultipleColumnLabels(element)}</div>}
                         {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" elementType={element?.type} onClick={(e) => this.showDeleteElemPopup(e, true)} />)
                             : null}
                         {this.renderColorPaletteButton(element, permissions)}
@@ -2917,6 +2962,7 @@ class ElementContainer extends Component {
             }
             return this.renderElement(element);
         } catch (error) {
+            console.log("error log is here", error)
             return (
                 <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
             )
