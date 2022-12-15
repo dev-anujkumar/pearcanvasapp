@@ -15,7 +15,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
+import {markedIndexPopup, showMarkedIndexWarningPopup } from './../MarkIndexPopup/MarkIndex_Action'
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
          prepareImageDataFromTable, storeDeleteElementKeys } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
@@ -25,7 +25,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, removeMarkedIndexDOMAttributes } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -1816,6 +1816,54 @@ class ElementContainer extends Component {
         }
         return tcmButtonStatus;
     }
+
+    processRemoveMarkedIndexConfirmation = () => {
+        hideBlocker()
+        this.props.showBlocker(false)
+        this.props.showMarkedIndexWarningPopup(false);
+        if(this.props.showMarkIndexWarningMsg){
+            const currentMarkedIndexId = this.props.markedIndexValue.markIndexid
+            let currentDOMAttributes = document.querySelector(`[data-uri="${this.props.markedIndexValue.markIndexid}"]`).parentNode
+            let updatedDOMAttributes = removeMarkedIndexDOMAttributes(currentDOMAttributes.innerHTML, currentMarkedIndexId)
+            currentDOMAttributes.innerHTML = updatedDOMAttributes
+            let workEditor = document.getElementById('cypress-' + this.props.elementIndexForMarkedIndex)
+            workEditor.focus()
+            workEditor.blur()
+            this.props.markedIndexPopup(false);
+            this.props.showingToastMessage(true, true);
+        }   
+    }
+
+    toggleMarkedIndexPopup = () => {
+        this.props.showBlocker(false)
+        hideToc()
+        hideBlocker()
+        if(this.props.showMarkIndexWarningMsg){
+            this.props.showMarkedIndexWarningPopup(false);
+        }
+    }
+
+    showMarkedIndexRemoveConfirmationPopup = () => {
+        let dialogText = 'Are you sure you want to remove the index marker entry? This action cannot be undone.';
+        if (this.props.showMarkIndexWarningMsg) {
+            this.props.showBlocker(true)
+            showTocBlocker()
+            return (
+                <PopUp
+                    dialogText={dialogText}
+                    active={true}
+                    removeMarkedIndex={true}
+                    removeMarkedClass= "removemarkedindexclass"
+                    removeMarkedIndexContent={this.processRemoveMarkedIndexConfirmation}
+                    toggleMarkedIndexPopup={this.toggleMarkedIndexPopup}
+                />
+            )
+        }
+        else {
+            return null
+        }
+    }
+
     /**
     * @description - showTCMButton is responsible for showing the tcm/feedback icon on the element
     * @param {*} tcmData tcm data for elements on the slate
@@ -2445,6 +2493,7 @@ class ElementContainer extends Component {
                         handleUndoOption = {this.handleUndoOption}
                         closeUndoTimer = {this.props.closeUndoTimer}
                     />}
+                    {this.showMarkedIndexRemoveConfirmationPopup()}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
                             figureUrl={this.state.figureUrl}
@@ -3029,6 +3078,9 @@ const mapDispatchToProps = (dispatch) => {
         setSelection: (params) => {
             dispatch(setSelection(params))
         },
+        showMarkedIndexWarningPopup: () => {
+            dispatch(showMarkedIndexWarningPopup())
+        },
         editElmAssessmentId: (assessmentId, assessmentItemId) => {
             dispatch(editElmAssessmentId(assessmentId, assessmentItemId))
         },
@@ -3122,7 +3174,9 @@ const mapStateToProps = (state) => {
         tableElementAssetData: state.appStore.tableElementAssetData,
         popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
         deletedKeysValue: state.appStore.deletedElementKeysData,
-        pageNumberToggle: state.toolbarReducer.pageNumberToggle
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle,
+        showMarkIndexWarningMsg: state.markedIndexReducer.showMarkIndexWarningMsg,
+        elementIndexForMarkedIndex:  state.markedIndexReducer.elementIndex,
     }
 }
 

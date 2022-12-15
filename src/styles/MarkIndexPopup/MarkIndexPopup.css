@@ -33,7 +33,7 @@
 
 .printIndx-cancel-button{
     border-radius: 4px;
-    padding: 8px 22px;
+    padding: 8px 16px;
     background: #fff;
     color: "#005a70";
     margin-right: 10px;
@@ -49,7 +49,7 @@
   }
   .printIndex-save-button{
     border-radius: 4px;
-    padding: 8px 22px;
+    padding: 8px 16px;
     border: 1px solid #005a70;
     font-size: 13px;
     color: #fff;
@@ -70,9 +70,23 @@
 .printIndex-save-button:hover{
     background: #07313b;
 }
+.deleteMarkedIndexbutton {
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    background-color: #fff;
+    text-align: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 5px 6px 3px 6px;
+    height: 36px;
+    display: flex;
+    width: 36px;
+    margin-right: 16px;
+}
 .button-group {
     margin-top: 40px;
     float: right;
+    display: flex;
 }
 
 .markedindex-word-header{

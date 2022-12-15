@@ -86,9 +86,11 @@ export class CanvasWrapper extends Component {
         }
     }
 
-    showingToastMessage = (status) => {
+    showingToastMessage = (status, removed) => {
+        const toastMsgText = removed ? "Index removed successfully." : "Index added successfully."
         this.setState({
-            toastMessage: status
+            toastMessage: status,
+            toastMsgText: toastMsgText
         })
         setTimeout(() => {
             this.setState({
@@ -193,14 +195,14 @@ export class CanvasWrapper extends Component {
                                     {this.props.showApoSearch ? <AssetPopoverSearch showBlocker={this.props.showCanvasBlocker}/> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
-                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked} closeUndoTimer = {this.props.closeUndoTimer}/>
+                                        <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked} closeUndoTimer = {this.props.closeUndoTimer} showingToastMessage = {this.showingToastMessage}/>
                                     </RootContext.Provider>
                                 </div>
                                  {/*Next Button */}
                                 {
                                     this.state.toastMessage &&
                                     <div className="toastMsg">
-                                        <p>Index added successfully.</p>
+                                        <p>{this.state.toastMsgText}</p>
                                     </div>
                                 }
                                  {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container next-btn ${config.disableNext ? 'disabled':""}`}>

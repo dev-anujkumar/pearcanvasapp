@@ -7,10 +7,12 @@ import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import config from '../../config/config';
 import { setFormattingToolbar, saveGlossaryAndFootnote } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import { getGlossaryFootnoteId } from '../../js/glossaryFootnote';
-import { markedIndexPopupOverGlossary, getCrossReferenceValues } from '../MarkIndexPopup/MarkIndex_Action';
+import { markedIndexPopupOverGlossary, getCrossReferenceValues, showMarkedIndexWarningPopup } from '../MarkIndexPopup/MarkIndex_Action';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor"
 import { checkforToolbarClick } from '../../js/utils'
 import { CrossReference } from './MarkIndex_CrossReference';
+import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
+import Tooltip from '../Tooltip';
 
 class PrintIndexPopup extends Component {
   constructor(props) {
@@ -23,6 +25,7 @@ class PrintIndexPopup extends Component {
 
 
   handleClickOutside = (event) => {
+    if (this.props.showMarkIndexWarningMsg) return false;
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       if (!this.props.isInGlossary) {
         const {crossReferences, crossRefValues} = this.getCrossRefData();
@@ -226,6 +229,9 @@ componentWillMount() {
             <CrossReference crossRefValue={this.props.markedIndexCurrentValue?.crossReferences}/>
 
             <div className="button-group">
+              <Tooltip direction="removeMarkedIndex" tooltipText="Remove Index entry">
+                {buttonText === 'Update' ? <span className='deleteMarkedIndexbutton' onClick={() => this.props.showMarkedIndexWarningPopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></span> : ''}
+              </Tooltip>
               <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>
               <span className="printIndex-save-button" disabled={false} onClick={this.saveMarkedIndex}>{buttonText}</span>
             </div>
@@ -240,8 +246,9 @@ componentWillMount() {
 const mapStateToProps = state => {
   return {
     glossaryData: state.glossaryFootnoteReducer,
-    markedIndexData:  state.markedIndexReducer
+    markedIndexData:  state.markedIndexReducer,
+    showMarkIndexWarningMsg: state.markedIndexReducer.showMarkIndexWarningMsg
   }
 }
 
-export default connect(mapStateToProps, { markedIndexPopupOverGlossary, getCrossReferenceValues })(PrintIndexPopup);
+export default connect(mapStateToProps, { markedIndexPopupOverGlossary, getCrossReferenceValues, showMarkedIndexWarningPopup })(PrintIndexPopup);
