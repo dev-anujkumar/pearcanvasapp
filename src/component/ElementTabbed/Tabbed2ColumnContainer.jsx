@@ -35,6 +35,8 @@ export const Tabbed2Column = (props) => {
             if (tabElements !== null && tabElements !== undefined) {
                 return tabElements.map((tabElement, index) => {
                     if (tabElement?.groupdata?.bodymatter) {
+                        parentUrn = {...parentUrn, tabEntity: tabElement.contentUrn, tabManifest: tabElement.id}
+                        let element = {...tabElement.groupdata.bodymatter[0], parentUrn: parentUrn};
                         return (
                             <React.Fragment key={tabElement.id}>
                                 {
@@ -56,7 +58,7 @@ export const Tabbed2Column = (props) => {
                                     />
                                 }
                                 <ElementContainer
-                                    element={tabElement.groupdata.bodymatter[0]}
+                                    element={element}
                                     index={`${parentIndex}-${index}`}
                                     asideData={asideData}
                                     parentUrn={parentUrn}

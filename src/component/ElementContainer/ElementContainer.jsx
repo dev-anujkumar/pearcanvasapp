@@ -1872,7 +1872,6 @@ class ElementContainer extends Component {
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn } = this.props;
         element = parentUrn?.type === 'tabbed-element' ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
-        console.log('labelText', labelText, element)
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
         let anyFlaggedComment = allComments?.filter(({ commentFlag, commentOnEntity }) => commentOnEntity === element.id && commentFlag === true).length > 0
@@ -2432,12 +2431,24 @@ class ElementContainer extends Component {
         const inContainer = this.props.parentUrn ? true : false;
         let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
         let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
+        let activeColumnLabel = "Tab"
+        for (let propsElementObject of this.props.multipleColumnData) {
+            if (propsElementObject.containerId === element.id) {
+                activeColumnLabel = propsElementObject.columnIndex;
+            }
+        }
                 return (
             <>
                 <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                     {this.renderCopyComponent(this.props, index, inContainer, tcm)}
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        <Button type="element-label"  elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
+                                {
+                                    labelText === TABBED_TAB.ELEMENT_TAG_NAME ?
+                                    <Button type="label-clickable-button" btnClassName={activeColumnLabel === labelText ? "activeTagBgColor" : ""} labelText={labelText} onClick={() => this.updateTabSelection(element)} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} />
+                                        // <Button type="element-label" elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
+                                        :
+                                        <Button type="element-label" elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
+                                }
                         {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
                         {((labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) || (labelText === MULTI_COLUMN_2C.ELEMENT_TAG_NAME) || (labelText === TABBED_TAB.ELEMENT_TAG_NAME)) && <div>{this.renderMultipleColumnLabels(element)}</div>}
                         {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" elementType={element?.type} onClick={(e) => this.showDeleteElemPopup(e, true)} />)
@@ -2559,6 +2570,7 @@ class ElementContainer extends Component {
     }
 
     updateColumnValues = (index, element) => {
+        console.log('awerfghjk awerfghjk', element)
         if(config.popupCreationCallInProgress){ /** Restrict click on 2C if saving is inprogress PE */
             return false
         }
@@ -2566,6 +2578,20 @@ class ElementContainer extends Component {
         let multipleColumnObjData = {
             containerId: objKey,
             columnIndex: `C${index + 1}`
+        }
+        setTimeout(() => {
+            this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
+        }, 0)
+    }
+
+    updateTabSelection = (element) => {
+        if(config.popupCreationCallInProgress){ /** Restrict click on 2C if saving is inprogress PE */
+            return false
+        }
+        let objKey = element.id;
+        let multipleColumnObjData = {
+            containerId: objKey,
+            columnIndex: 'Tab'
         }
         setTimeout(() => {
             this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
