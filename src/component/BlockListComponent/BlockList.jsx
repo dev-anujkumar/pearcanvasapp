@@ -68,6 +68,7 @@ const BlockList = (props) => {
                     parentElement={props?.parentElement}
                     showHideType={props?.showHideType}
                     parentManifestListItem={parentManifestListItem}
+                    pasteElement={props?.pasteElement}
                 />
             )
         })

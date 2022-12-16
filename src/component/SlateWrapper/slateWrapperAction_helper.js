@@ -14,6 +14,7 @@ import ElementConstants from '../ElementContainer/ElementConstants.js';
 import { handleAutoNumberingOnCopyPaste } from '../FigureHeader/AutoNumber_CutCopy_helpers';
 import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
+import { MANIFEST_LIST } from '../../constants/Element_Constants';
 const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP, POETRY_ELEMENT } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
@@ -146,7 +147,7 @@ export const onPasteSuccess = async (params) => {
     slateOldNumberedContainerElements = await getAsideElementsWrtKey(currentSlateData?.contents?.bodymatter, ELEMENT_ASIDE, slateOldNumberedContainerElements);
     const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type!=='popup') {
+    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type!=='popup' && responseData?.type!==MANIFEST_LIST) {
         const snapArgs = {
             newParentData,
             currentSlateData,
@@ -172,8 +173,8 @@ export const onPasteSuccess = async (params) => {
     if (operationType === 'cut') {
         dispatch({ type: SET_POPUP_PARENT_CUT_COPY, payload: {} });
     }
-    /* Paste Aside/WE/CG/Poetry into S/H */
-    const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP, POETRY_ELEMENT];
+    /* Paste Aside/WE/CG/Poetry/BL into S/H */
+    const containersInSH = [ELEMENT_ASIDE, CITATION_GROUP, POETRY_ELEMENT, MANIFEST_LIST];
     if (asideData?.type === SHOW_HIDE && containersInSH.includes(responseData?.type)) {
         const manifestUrn = parentUrn?.manifestUrn;
         try {
@@ -631,7 +632,7 @@ export const setPayloadForContainerCopyPaste = (params) => {
         containerEntityUrn
     } = params
 
-    const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample","showhide","popup","discussion"]
+    const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample","showhide","popup","discussion","manifestlist"]
     if (acceptedTypes.includes(selection.element.type)) {
         if (selection.operationType === "cut") {
             return {
