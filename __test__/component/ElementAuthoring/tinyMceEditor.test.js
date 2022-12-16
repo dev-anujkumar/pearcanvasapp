@@ -224,6 +224,7 @@ let selectionEditor = {
         return {
             tagName: 'span',
             className: 'poetryLine',
+            getAttribute: () => { },
             closest: () => { },
             childNodes:[{
                 tagName: 'span',
@@ -639,7 +640,7 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 on: (temp, cb) => { cb(event) },
                 selection: editor.selection,
                 setContent: () => { },
-                dom : { getParent(){return }}
+                dom : { getParent(){return {querySelector: () => { return {closest: () => {}}}}}}
             }
             instance.props = {
                 ...props,

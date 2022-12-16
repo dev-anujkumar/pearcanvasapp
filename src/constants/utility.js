@@ -721,10 +721,7 @@ export const releaseOwnerPopup=(data)=>{
  * @param isSubscribed- whether it is subscribed or not
  */
 export const isOwnerRole = (projectSharingRole, isSubscribed) => {
-    if (projectSharingRole === "OWNER" && isSubscribed) {
-        return true
-    }
-    return false
+    return projectSharingRole === "OWNER" && isSubscribed;
 }
 
 /**It checks whether its a Subscriber project or not
@@ -732,10 +729,7 @@ export const isOwnerRole = (projectSharingRole, isSubscribed) => {
  * @param isSubscribed- whether it is subscribed or not
  */
 export const isSubscriberRole = (projectSharingRole, isSubscribed) => {
-    if (projectSharingRole === "SUBSCRIBER" && isSubscribed) {
-        return true
-    }
-    return false
+    return projectSharingRole === "SUBSCRIBER" && isSubscribed;
 }
 
 // function to remove tinymce spellcheck DOM attributes from innerHTML
@@ -943,4 +937,11 @@ export const removeStyleAttribute = (html) => {
     tinyMCE.$(tempDiv).find('span').removeAttr('style');
     tinyMCE.$(tempDiv).find('s').removeAttr('style');
     return tempDiv.innerHTML;
+}
+
+export const getSelectionTextWithFormatting = (node) => {
+    let tagName = node.tagName;
+    let tempDiv = document.createElement(tagName);
+    tempDiv.innerHTML = node.innerHTML;
+    return tempDiv.outerHTML;
 }
