@@ -239,7 +239,11 @@ function CommunicationChannel(WrappedComponent) {
                 }
                     break;
                 case 'bannerIsVisible':
-                    document.getElementById('link-notification').style.bottom = '17%'
+                    if (message && message.status) {
+                        document.getElementById('link-notification').style.bottom = '17%'
+                        document.getElementsByClassName('toastMsg').style.bottom = '17%'
+                        document.getElementsByClassName('delete-toastMsg').style.bottom = '17%'
+                    }
                     break;
                 case 'brokerPreview':
                 case 'slatePreview':
