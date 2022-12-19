@@ -2215,7 +2215,7 @@ class ElementContainer extends Component {
                             handleUndoOption = {this.handleUndoOption}
                             splithandlerfunction = {this.props.splithandlerfunction}
                         />
-                    } else if (this.props.parentUrn.type === 'tabbed-element') {
+                    } else if (this.props?.parentUrn?.type === 'tabbed-element') {
                         editor = <TabbedTabContainer
                         activeElement = {this.props.activeElement}
                         showBlocker = {this.props.showBlocker}
