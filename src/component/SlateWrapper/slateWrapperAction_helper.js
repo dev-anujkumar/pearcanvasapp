@@ -561,8 +561,7 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             "feedback": null
         })
     })
-
-    if (tcmData.length > 0) {
+    if (tcmData.length > 0 && createdElementData.type !== MANIFEST_LIST) {
         sendDataToIframe({ 'type': projectPendingTcStatus, 'message': 'true' })
     }
 
