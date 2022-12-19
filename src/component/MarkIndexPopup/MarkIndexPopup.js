@@ -3,22 +3,25 @@ import { connect } from 'react-redux';
 import { Close, ErrorOutline } from '@material-ui/icons'
 import '../../styles/MarkIndexPopup/MarkIndexPopup.css';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeMarkedIndexDOMAttributes } from '../../constants/utility.js';
 import config from '../../config/config';
 import { setFormattingToolbar, saveGlossaryAndFootnote } from '../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import { getGlossaryFootnoteId } from '../../js/glossaryFootnote';
-import { markedIndexPopupOverGlossary, getCrossReferenceValues, showMarkedIndexWarningPopup } from '../MarkIndexPopup/MarkIndex_Action';
+import { markedIndexPopupOverGlossary, getCrossReferenceValues } from '../MarkIndexPopup/MarkIndex_Action';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor"
 import { checkforToolbarClick } from '../../js/utils'
 import { CrossReference } from './MarkIndex_CrossReference';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import Tooltip from '../Tooltip';
+import PopUp from '../PopUp';
+import { showTocBlocker, hideBlocker, hideToc } from '../../js/toggleLoader'
 
 class PrintIndexPopup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      markIndexCurrentValue: this.props.markedIndexCurrentValue?.secondLevel ? (tinyMCE.$(this.props.markedIndexCurrentValue?.secondLevel))[0].innerHTML : ''
+      markIndexCurrentValue: this.props.markedIndexCurrentValue?.secondLevel ? (tinyMCE.$(this.props.markedIndexCurrentValue?.secondLevel))[0].innerHTML : '',
+      showMarkIndexWarningMsg: false
     }
     this.wrapperRef = null;
   }
@@ -184,6 +187,61 @@ componentWillMount() {
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
+  showMarkedIndexWarningPopup = (status) => {
+    this.setState({
+      showMarkIndexWarningMsg: status
+    })
+  }
+
+  processRemoveMarkedIndexConfirmation = () => {
+    hideBlocker()
+    this.props.showBlocker(false)
+    this.showMarkedIndexWarningPopup(false);
+    // if(this.props.showMarkIndexWarningMsg){
+        const currentMarkedIndexId = this.props.markedIndexData.markedIndexValue.markIndexid
+        let currentDOMAttributes = document.querySelector(`[data-uri="${currentMarkedIndexId}"]`).parentNode
+        let updatedDOMAttributes = removeMarkedIndexDOMAttributes(currentDOMAttributes.innerHTML, currentMarkedIndexId)
+        currentDOMAttributes.innerHTML = updatedDOMAttributes
+        let workEditor = document.getElementById('cypress-' + this.props.elementIndexForMarkedIndex)
+        workEditor.focus()
+        workEditor.blur()
+        this.props.showMarkedIndexPopup(false);
+        this.props.showingToastMessage(true, true);
+    // }   
+}
+
+toggleMarkedIndexPopup = () => {
+    this.props.showBlocker(false)
+    hideToc()
+    hideBlocker()
+    this.showMarkedIndexWarningPopup(false);
+    // if(this.props.showMarkIndexWarningMsg){
+        // this.props.showMarkedIndexWarningPopup(false);
+    // }
+}
+
+
+  showMarkedIndexRemoveConfirmationPopup = () => {
+    let dialogText = 'Are you sure you want to remove the index marker entry? This action cannot be undone.';
+    if (this.state.showMarkIndexWarningMsg) {
+        this.props.showBlocker(true)
+        showTocBlocker()
+        return (
+            <PopUp
+                dialogText={dialogText}
+                active={true}
+                removeMarkedIndex={true}
+                removeMarkedClass= "removemarkedindexclass"
+                removeMarkedIndexContent={this.processRemoveMarkedIndexConfirmation}
+                toggleMarkedIndexPopup={this.toggleMarkedIndexPopup}
+            />
+        )
+    }
+    else {
+        return null
+    }
+}
+
   render() {
     let buttonText = ""
     const {markedIndexValue, markedIndexGlossary } =  this.props.markedIndexData;
@@ -230,13 +288,13 @@ componentWillMount() {
 
             <div className="button-group">
               <Tooltip direction="removeMarkedIndex" tooltipText="Remove Index entry">
-                {buttonText === 'Update' ? <span className='deleteMarkedIndexbutton' onClick={() => this.props.showMarkedIndexWarningPopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></span> : ''}
+                {buttonText === 'Update' ? <span className='deleteMarkedIndexbutton' onClick={() => this.showMarkedIndexWarningPopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></span> : ''}
               </Tooltip>
               <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>
               <span className="printIndex-save-button" disabled={false} onClick={this.saveMarkedIndex}>{buttonText}</span>
             </div>
           </div>
-
+          {this.showMarkedIndexRemoveConfirmationPopup()}
         </div>
       </div>
     );
@@ -247,8 +305,9 @@ const mapStateToProps = state => {
   return {
     glossaryData: state.glossaryFootnoteReducer,
     markedIndexData:  state.markedIndexReducer,
-    showMarkIndexWarningMsg: state.markedIndexReducer.showMarkIndexWarningMsg
+    showMarkIndexWarningMsg: state.markedIndexReducer.showMarkIndexWarningMsg,
+    elementIndexForMarkedIndex:  state.markedIndexReducer.elementIndex,
   }
 }
 
-export default connect(mapStateToProps, { markedIndexPopupOverGlossary, getCrossReferenceValues, showMarkedIndexWarningPopup })(PrintIndexPopup);
+export default connect(mapStateToProps, { markedIndexPopupOverGlossary, getCrossReferenceValues })(PrintIndexPopup);

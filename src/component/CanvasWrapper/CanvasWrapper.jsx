@@ -233,7 +233,7 @@ export class CanvasWrapper extends Component {
                                             return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData} markedIndexGlossaryData={this.props.markedIndexGlossary}/>)
                                         }
                                         if(markIndexpopUpStatus){
-                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue} isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage}/>
+                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue} isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage} showBlocker = {this.props.showCanvasBlocker}/>
 
                                         }
                                         else {

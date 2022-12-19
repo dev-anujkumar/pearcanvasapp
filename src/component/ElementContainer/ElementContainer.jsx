@@ -1817,52 +1817,52 @@ class ElementContainer extends Component {
         return tcmButtonStatus;
     }
 
-    processRemoveMarkedIndexConfirmation = () => {
-        hideBlocker()
-        this.props.showBlocker(false)
-        this.props.showMarkedIndexWarningPopup(false);
-        if(this.props.showMarkIndexWarningMsg){
-            const currentMarkedIndexId = this.props.markedIndexValue.markIndexid
-            let currentDOMAttributes = document.querySelector(`[data-uri="${this.props.markedIndexValue.markIndexid}"]`).parentNode
-            let updatedDOMAttributes = removeMarkedIndexDOMAttributes(currentDOMAttributes.innerHTML, currentMarkedIndexId)
-            currentDOMAttributes.innerHTML = updatedDOMAttributes
-            let workEditor = document.getElementById('cypress-' + this.props.elementIndexForMarkedIndex)
-            workEditor.focus()
-            workEditor.blur()
-            this.props.markedIndexPopup(false);
-            this.props.showingToastMessage(true, true);
-        }   
-    }
+    // processRemoveMarkedIndexConfirmation = () => {
+    //     hideBlocker()
+    //     this.props.showBlocker(false)
+    //     this.props.showMarkedIndexWarningPopup(false);
+    //     if(this.props.showMarkIndexWarningMsg){
+    //         const currentMarkedIndexId = this.props.markedIndexValue.markIndexid
+    //         let currentDOMAttributes = document.querySelector(`[data-uri="${this.props.markedIndexValue.markIndexid}"]`).parentNode
+    //         let updatedDOMAttributes = removeMarkedIndexDOMAttributes(currentDOMAttributes.innerHTML, currentMarkedIndexId)
+    //         currentDOMAttributes.innerHTML = updatedDOMAttributes
+    //         let workEditor = document.getElementById('cypress-' + this.props.elementIndexForMarkedIndex)
+    //         workEditor.focus()
+    //         workEditor.blur()
+    //         this.props.markedIndexPopup(false);
+    //         this.props.showingToastMessage(true, true);
+    //     }   
+    // }
 
-    toggleMarkedIndexPopup = () => {
-        this.props.showBlocker(false)
-        hideToc()
-        hideBlocker()
-        if(this.props.showMarkIndexWarningMsg){
-            this.props.showMarkedIndexWarningPopup(false);
-        }
-    }
+    // toggleMarkedIndexPopup = () => {
+    //     this.props.showBlocker(false)
+    //     hideToc()
+    //     hideBlocker()
+    //     if(this.props.showMarkIndexWarningMsg){
+    //         this.props.showMarkedIndexWarningPopup(false);
+    //     }
+    // }
 
-    showMarkedIndexRemoveConfirmationPopup = () => {
-        let dialogText = 'Are you sure you want to remove the index marker entry? This action cannot be undone.';
-        if (this.props.showMarkIndexWarningMsg) {
-            this.props.showBlocker(true)
-            showTocBlocker()
-            return (
-                <PopUp
-                    dialogText={dialogText}
-                    active={true}
-                    removeMarkedIndex={true}
-                    removeMarkedClass= "removemarkedindexclass"
-                    removeMarkedIndexContent={this.processRemoveMarkedIndexConfirmation}
-                    toggleMarkedIndexPopup={this.toggleMarkedIndexPopup}
-                />
-            )
-        }
-        else {
-            return null
-        }
-    }
+    // showMarkedIndexRemoveConfirmationPopup = () => {
+    //     let dialogText = 'Are you sure you want to remove the index marker entry? This action cannot be undone.';
+    //     if (this.props.showMarkIndexWarningMsg) {
+    //         this.props.showBlocker(true)
+    //         showTocBlocker()
+    //         return (
+    //             <PopUp
+    //                 dialogText={dialogText}
+    //                 active={true}
+    //                 removeMarkedIndex={true}
+    //                 removeMarkedClass= "removemarkedindexclass"
+    //                 removeMarkedIndexContent={this.processRemoveMarkedIndexConfirmation}
+    //                 toggleMarkedIndexPopup={this.toggleMarkedIndexPopup}
+    //             />
+    //         )
+    //     }
+    //     else {
+    //         return null
+    //     }
+    // }
 
     /**
     * @description - showTCMButton is responsible for showing the tcm/feedback icon on the element
@@ -2493,7 +2493,7 @@ class ElementContainer extends Component {
                         handleUndoOption = {this.handleUndoOption}
                         closeUndoTimer = {this.props.closeUndoTimer}
                     />}
-                    {this.showMarkedIndexRemoveConfirmationPopup()}
+                    {/* {this.showMarkedIndexRemoveConfirmationPopup()} */}
                     {this.state.isfigurePopup &&
                         <MetaDataPopUp
                             figureUrl={this.state.figureUrl}

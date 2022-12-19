@@ -300,7 +300,7 @@ class PopUp extends React.Component {
         if (props.removeMarkedIndex) {
             return (
                 <div className={`dialog-buttons ${props.removeMarkedClass}`}>
-                    <span option={PRIMARY_BUTTON} className={`save-button ${props.removeMarkedClass} primary`} onClick={(e) => props.removeMarkedIndexContent(e)}>Yes</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button ${props.removeMarkedClass}`} onClick={(e) => props.removeMarkedIndexContent(e)}>Yes</span>
                     <span option={SECONDARY_BUTTON} className={`cancel-button ${props.removeMarkedClass}`} id='close-container' onClick={(e) => props.toggleMarkedIndexPopup(e)}>Cancel</span>
                 </div>
             )
