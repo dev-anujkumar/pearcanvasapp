@@ -197,50 +197,44 @@ componentWillMount() {
     hideBlocker()
     this.props.showBlocker(false)
     this.showMarkedIndexWarningPopup(false);
-    // if(this.props.showMarkIndexWarningMsg){
-        const currentMarkedIndexId = this.props.markedIndexData.markedIndexValue.markIndexid
-        let currentDOMAttributes = document.querySelector(`[data-uri="${currentMarkedIndexId}"]`).parentNode
-        let updatedDOMAttributes = removeMarkedIndexDOMAttributes(currentDOMAttributes.innerHTML, currentMarkedIndexId)
-        currentDOMAttributes.innerHTML = updatedDOMAttributes
-        let workEditor = document.getElementById('cypress-' + this.props.elementIndexForMarkedIndex)
-        workEditor.focus()
-        workEditor.blur()
-        this.props.showMarkedIndexPopup(false);
-        this.props.showingToastMessage(true, true);
-    // }   
-}
+    const currentMarkedIndexId = this.props.markedIndexData.markedIndexValue.markIndexid
+    let currentDOMAttributes = document.querySelector(`[data-uri="${currentMarkedIndexId}"]`).parentNode
+    let updatedDOMAttributes = removeMarkedIndexDOMAttributes(currentDOMAttributes.innerHTML, currentMarkedIndexId)
+    currentDOMAttributes.innerHTML = updatedDOMAttributes
+    let workEditor = document.getElementById('cypress-' + this.props.elementIndexForMarkedIndex)
+    workEditor.focus()
+    workEditor.blur()
+    this.props.showMarkedIndexPopup(false);
+    this.props.showingToastMessage(true, true);
+  }
 
-toggleMarkedIndexPopup = () => {
+  toggleMarkedIndexPopup = () => {
     this.props.showBlocker(false)
     hideToc()
     hideBlocker()
     this.showMarkedIndexWarningPopup(false);
-    // if(this.props.showMarkIndexWarningMsg){
-        // this.props.showMarkedIndexWarningPopup(false);
-    // }
-}
-
+  }
 
   showMarkedIndexRemoveConfirmationPopup = () => {
     let dialogText = 'Are you sure you want to remove the index marker entry? This action cannot be undone.';
     if (this.state.showMarkIndexWarningMsg) {
-        this.props.showBlocker(true)
-        showTocBlocker()
-        return (
-            <PopUp
-                dialogText={dialogText}
-                active={true}
-                removeMarkedIndex={true}
-                removeMarkedClass= "removemarkedindexclass"
-                removeMarkedIndexContent={this.processRemoveMarkedIndexConfirmation}
-                toggleMarkedIndexPopup={this.toggleMarkedIndexPopup}
-            />
-        )
+      this.props.showBlocker(true)
+      showTocBlocker()
+      return (
+        <PopUp
+          dialogText={dialogText}
+          active={true}
+          removeMarkedIndex={true}
+          removeMarkedClass="removemarkedindexclass"
+          removeMarkedIndexContent={this.processRemoveMarkedIndexConfirmation}
+          toggleMarkedIndexPopup={this.toggleMarkedIndexPopup}
+        />
+      )
     }
     else {
-        return null
+      return null
     }
-}
+  }
 
   render() {
     let buttonText = ""

@@ -1,5 +1,5 @@
 
-import {OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES, MARKEDINDEX_DELETE_POPUP} from  '../constants/Action_Constants';
+import {OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES} from  '../constants/Action_Constants';
 
 const INITIAL_STATE = {
     markedIndexValue: { "type": "", "popUpStatus": false },
@@ -35,11 +35,6 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 crossReferenceValues: action.payload.crossReferenceValues,
-            }
-        case MARKEDINDEX_DELETE_POPUP:
-            return {
-                ...state,
-                showMarkIndexWarningMsg: action.payload
             }
         default:
             return state;

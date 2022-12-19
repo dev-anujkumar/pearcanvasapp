@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES, MARKEDINDEX_DELETE_POPUP  } from '../../constants/Action_Constants';
+import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES } from '../../constants/Action_Constants';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
@@ -306,11 +306,4 @@ const extractCrossRefFromHtml = tempMarkedIndexContentText => {
     }
 
     return crossRefString;
-}
-
-export const showMarkedIndexWarningPopup = (status) => (dispatch, getState) => {
-    return dispatch({
-        type: MARKEDINDEX_DELETE_POPUP,
-        payload: status
-    });
 }
