@@ -425,7 +425,7 @@ export class TinyMceEditor extends Component {
                 }
             }
             const eventValue = e.value;
-            const allowedFormattings = ['bold','italic','underline','strikethrough','subscript','superscript'];
+            const allowedFormattings = ['italic'];
             if (e.command === 'mceToggleFormat' && allowedFormattings.indexOf(eventValue) > -1) {
                 let parser = new DOMParser();
                 let htmlDoc = parser.parseFromString(selectContent, 'text/html');
@@ -445,12 +445,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
                     for (let index = 0; index < dfnAttribute.length; index++) {
-                        this.handleGlossaryForSubscript(activeElement, dfnAttribute[index], termType);
-                        this.handleGlossaryForSuperscript(activeElement, dfnAttribute[index], termType);
-                        this.handleGlossaryForStrikethrough(activeElement, dfnAttribute[index], termType);
-                        this.handleGlossaryForUnderline(activeElement, dfnAttribute[index], termType);
                         this.handleGlossaryForItalic(activeElement, dfnAttribute[index], termType);
-                        this.handleGlossaryForBold(activeElement, dfnAttribute[index], termType);
                     }
                 }
             }
