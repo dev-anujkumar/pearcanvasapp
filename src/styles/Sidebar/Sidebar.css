@@ -8,6 +8,10 @@
     font-family: 'Open Sans', sans-serif;
 }
 
+.canvas-sidebar-banner{
+    max-height: 77%
+}
+
 .canvas-sidebar > .canvas-sidebar-heading {
     font-size: 14px;
     font-weight: 550;

@@ -21,7 +21,7 @@ class Toast extends Component {
 
     render() {
         if (this.props.active) {
-            return <div id="toast-message">{this.props.toastMessage}</div>
+            return <div id="toast-message" className={this.props.isBannerVisible ? 'banner-visible' : ''}>{this.props.toastMessage}</div>
         } else {
             return null
         }

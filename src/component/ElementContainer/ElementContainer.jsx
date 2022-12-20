@@ -2273,6 +2273,7 @@ class ElementContainer extends Component {
                         warningPopupCheckbox={this.state.warningPopupCheckbox}
                         handleUndoOption = {this.handleUndoOption}
                         closeUndoTimer = {this.props.closeUndoTimer}
+                        isBannerVisible={this.state.isBannerVisible}
                     />;
                     labelText = 'PS'
                     break;
@@ -2478,14 +2479,14 @@ class ElementContainer extends Component {
                     }
                 </div >
                         {
-                            this.state.showUndoButton && <div ref={this.wrapperRef} className='delete-toastMsg overlap'>
+                            this.state.showUndoButton && <div ref={this.wrapperRef} className={`delete-toastMsg overlap ${this.props.isBannerVisible ? "delete-toastMsg-withBanner" : ""}`}>
                                 <p> {this.state.showSectionBreakLabelText ? SECTION_BREAK_LABELTEXT : labelText} has been deleted. </p>
                                 <p className='undo-button' onClick={() => this.handleUndoElement()}> Undo </p>
                                 <Button type='toast-close-icon' onClick={() => this.handleUndoOptionTimer()} />
                             </div>
                         }
                         {
-                            this.state.showActionUndone && <div className='delete-toastMsg'>
+                            this.state.showActionUndone && <div className={`delete-toastMsg ${this.props.isBannerVisible ? "delete-toastMsg-withBanner" : ""}`}>
                                 <p> Action undone. </p>
                                 <Button type='toast-close-icon' onClick={() => this.handleActionUndoneTimer()} />
                             </div>

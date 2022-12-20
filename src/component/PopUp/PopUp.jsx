@@ -687,7 +687,7 @@ class PopUp extends React.Component {
             <div className="model">
                 {
                     active ?
-                        <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
+                        <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass} ${this.props.isWordPastePopup && this.props.isBannerVisible ? "model-popup-banner" : ""}`} ref={this.modelRef}>
                             <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}

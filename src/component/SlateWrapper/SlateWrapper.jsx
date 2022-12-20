@@ -952,6 +952,7 @@ class SlateWrapper extends Component {
                     index={this.state.pastedindex}
                     handlePowerPaste = {this.handlePowerPaste}
                     isWordPastePopup = {this.state.isWordPastePopup}
+                    isBannerVisible = {this.props.isBannerVisible}
                 />
             )
         }
@@ -1054,6 +1055,7 @@ class SlateWrapper extends Component {
                                         hideElementSeperator={this.props.hideElementSeperator}
                                         handleCopyPastePopup={this.handleCopyPastePopup}
                                         closeUndoTimer = {this.props.closeUndoTimer}
+                                        isBannerVisible = {this.props.isBannerVisible}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (
@@ -1588,8 +1590,8 @@ class SlateWrapper extends Component {
                     }
                 </KeyboardUpDown>
                 </div>
-                <div id="link-notification"></div>
-                {this.props.showToast  && <Toast active={true}/>}
+                <div id="link-notification" className={this.props.isBannerVisible ? 'banner-visible' : ''}></div>
+                {this.props.showToast  && <Toast active={true} isBannerVisible={this.props.isBannerVisible}/>}
                 <ListButtonDropPortal slateData={this.props.slateData}>
                     {
                         (selectedType, startValue, inputRef) => (

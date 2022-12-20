@@ -43,6 +43,10 @@
     transform: translateX(-50%);
 }
 
+.banner-visible{
+    bottom: 17% !important
+}
+
 .toast-container{
     width: 100%;
     height: 100%;

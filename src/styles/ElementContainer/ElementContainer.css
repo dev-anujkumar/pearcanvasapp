@@ -366,6 +366,10 @@ p.blockquoteTextCredit.mce-edit-focus.place-holder:focus::before {
     cursor: pointer;
   }
 
+  .delete-toastMsg-withBanner {
+    bottom: 17% !important
+  }
+
   .stop-event {
     pointer-events: none !important;
   }

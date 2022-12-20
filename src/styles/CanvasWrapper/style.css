@@ -218,3 +218,7 @@ h1 sup a{
   font-size: 14px;
   font-family: 'Open Sans', sans-serif;
 }
+
+.toastMsg-withBanner{
+  bottom: 17% !important
+}

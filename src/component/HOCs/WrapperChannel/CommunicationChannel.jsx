@@ -30,6 +30,7 @@ function CommunicationChannel(WrappedComponent) {
                 tocDeleteMessage: null,
                 showLockPopup: false,
                 lockOwner: "",
+                isBannerVisible: false
             };
         }
 
@@ -239,10 +240,8 @@ function CommunicationChannel(WrappedComponent) {
                 }
                     break;
                 case 'bannerIsVisible':
-                    if(message && message.status){
-                        document.getElementById('link-notification').style.bottom = '17%'
-                        document.getElementsByClassName('toastMsg').style.bottom = '17%'
-                        document.getElementsByClassName('delete-toastMsg').style.bottom = '17%'    
+                    if (message && message.status) {
+                        this.setState({isBannerVisible: true})
                     }
                     break;
                 case 'brokerPreview':
@@ -1242,7 +1241,7 @@ function CommunicationChannel(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer}/>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer} isBannerVisible={this.state.isBannerVisible}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )
