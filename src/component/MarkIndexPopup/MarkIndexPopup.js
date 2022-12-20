@@ -28,7 +28,6 @@ class PrintIndexPopup extends Component {
 
 
   handleClickOutside = (event) => {
-    if (this.props.showMarkIndexWarningMsg) return false;
     if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
       if (!this.props.isInGlossary) {
         const {crossReferences, crossRefValues} = this.getCrossRefData();
@@ -299,7 +298,6 @@ const mapStateToProps = state => {
   return {
     glossaryData: state.glossaryFootnoteReducer,
     markedIndexData:  state.markedIndexReducer,
-    showMarkIndexWarningMsg: state.markedIndexReducer.showMarkIndexWarningMsg,
     elementIndexForMarkedIndex:  state.markedIndexReducer.elementIndex,
   }
 }

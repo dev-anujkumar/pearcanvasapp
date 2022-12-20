@@ -6,8 +6,7 @@ const INITIAL_STATE = {
     markedIndexCurrentValue: '',
     elementIndex: '',
     markedIndexGlossary: {popUpStatus: false,  indexEntries: {}, markedIndexEntryURN: '', },
-    crossReferenceValues: [],
-    showMarkIndexWarningMsg: false
+    crossReferenceValues: []
 };
 
 const INITIAL_ACTION = {

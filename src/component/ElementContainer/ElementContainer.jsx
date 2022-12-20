@@ -15,7 +15,7 @@ import Button from './../ElementButtons';
 import PopUp from '../PopUp';
 import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
-import {markedIndexPopup} from './../MarkIndexPopup/MarkIndex_Action'
+import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
          prepareImageDataFromTable, storeDeleteElementKeys } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
@@ -1816,7 +1816,6 @@ class ElementContainer extends Component {
         }
         return tcmButtonStatus;
     }
-
     /**
     * @description - showTCMButton is responsible for showing the tcm/feedback icon on the element
     * @param {*} tcmData tcm data for elements on the slate
