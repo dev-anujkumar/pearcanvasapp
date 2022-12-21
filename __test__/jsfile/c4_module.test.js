@@ -38,7 +38,7 @@ describe('Testing c4_modules', () => {
         c4PublishObj.publishTitle(project, section, cite, callBack, isPreview);
     })
 
-    it('Testing publishTitleDelay function',() => {
+    it('Testing publishTitleDelay function : true',() => {
     
         let response = {
             responseText: {
@@ -68,6 +68,41 @@ describe('Testing c4_modules', () => {
             cite = 'cite', 
             callBack = jest.fn(), 
             isPreview = true
+
+            publishTitleDelay(project, section, cite, callBack, isPreview);
+          });
+
+    })
+    it('Testing publishTitleDelay function : false',() => {
+    
+        let response = {
+            responseText: {
+                ResponseMetadata: {
+                    requestStatusCode: 200
+                },
+                data: {
+                    previewURL: "http://previewURL"
+                }
+            } 
+        }
+        jest.mock('axios'); 
+        const mockedResponse = Promise.resolve(response);
+        let callback = (response) => jest.fn(response);
+        jest.mock('axios', (response) => ({ post: (response) => jest.fn(response),create: jest.fn() }));
+        mockedResponse.then(function(mockedResponse) {
+            let content_url = 'http://helloUrl',
+            pubConObj = {
+                requestid: 'id',
+                distributableVersionUrn: 'urn',
+                requester: 'cypress',
+                timestamp: '25Dec'
+            },
+            pubApiKey = 'key';
+           let project = 'project',
+            section = 'section', 
+            cite = 'cite', 
+            callBack = jest.fn(), 
+            isPreview = false
 
             publishTitleDelay(project, section, cite, callBack, isPreview);
           });

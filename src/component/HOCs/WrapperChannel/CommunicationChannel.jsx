@@ -238,6 +238,7 @@ function CommunicationChannel(WrappedComponent) {
                         }
                 }
                     break;
+                case 'brokerPreview':
                 case 'slatePreview':
                 case 'projectPreview':
                     if (!config.savingInProgress) {

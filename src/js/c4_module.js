@@ -71,9 +71,10 @@ ajax.put = function (url, data, cb, contentType, sync) {
     ajax.send(url, cb, 'PUT', data, contentType, sync);
 };
 
-export function publishTitleDelay(project, section, cite, callBack, isPreview) {
+export function publishTitleDelay(project, section, cite, callBack, isPreview, type) {
     try {
         var content_url = config_object.PROJECT_PREVIEW_ENDPOINT;
+        let PREVIEW_ARN = (type === 'projectPreview') ? config_object.PROJECT_PREVIEW_ARN : config_object.BROKER_PREVIEW_ARN
         let content_data = {};
         content_data["projectManifest"] = project;
         content_data["sectionManifest"] = section;
@@ -83,7 +84,7 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview) {
         if (isPreview == true) {
             content_data["preview"] = true;
         }
-        ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', config_object.PROJECT_PREVIEW_ARN, false);
+        ajax.post(content_url, JSON.stringify(content_data), callback, 'application/json', PREVIEW_ARN, false);
         let parsedResponse = JSON.parse(response.responseText);
 
         if (parsedResponse.data && parsedResponse.data.previewURL) {
@@ -141,9 +142,9 @@ export const c4PublishObj = {
             return false;
         }
     },
-    publishTitle: function (project, section, cite, callBack, isPreview) {
+    publishTitle: function (project, section, cite, callBack, isPreview, type) {
         _.delay(() => {
-            publishTitleDelay(project, section, cite, callBack, isPreview)
+            publishTitleDelay(project, section, cite, callBack, isPreview, type)
         }, 150);
     }
 }

@@ -129,7 +129,7 @@ export const SOURCE_MAP = {
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
     [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','POP_UP'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
     [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] },
-    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST'], 'notSupport': [] }
+    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST', 'COLUMN_VIEW_1', 'COLUMN_VIEW_2', 'COLUMN_VIEW_3','COLUMN_VIEW_4'], 'notSupport': [] }
 };
 const SHOWHIDE = "SHOW_HIDE";
 // This mapping is used for conditional rendering of Paste Button inside Elements
@@ -141,13 +141,24 @@ const CONDITIONAL_PASTE_SUPPORT = {
 
 export const getPasteValidated = (separatorProps, sourceType, selectionType) => {
     let validation = true;
+    let index;
+    let parentType = separatorProps?.asideData?.parent?.type;
+    const selectedColumn = selectionType === "COLUMN_VIEW_1" || selectionType === 'COLUMN_VIEW_2' || selectionType === 'COLUMN_VIEW_3' || selectionType === 'COLUMN_VIEW_4'
+    if(separatorProps.elementType === SHOW_HIDE.toLowerCase()){
+        index = separatorProps?.index
+        index = index?.split('-');
+    }
     if (sourceType in SOURCE_MAP) {
         if (SOURCE_MAP[sourceType].support.length > 0) {
             if ((SOURCE_MAP[sourceType].support).indexOf(selectionType) < 0) {
                 validation = false;
+            }else if(selectedColumn && sourceType === SHOW_HIDE && index?.length > 3){
+                validation = false;
             }
         } else if (SOURCE_MAP[sourceType].notSupport.length > 0) {
             if ((SOURCE_MAP[sourceType].notSupport).indexOf(selectionType) >= 0) {
+                validation = false;
+            }else if(sourceType === ASIDE_SOURCE && (parentType === SHOW_HIDE.toLowerCase() || parentType === "groupedcontent")){
                 validation = false;
             }
         }
