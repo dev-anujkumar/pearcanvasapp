@@ -44,7 +44,8 @@ const initialState1 = {
         },
         markedIndexGlossary: {
             popUpStatus: false, indexEntries: {}, markedIndexEntryURN: ''
-        }
+        },
+        elementIndex: "0"
     }
 }
 let store = mockStore(initialState);
@@ -177,6 +178,13 @@ describe('Testing Markedindex component with props', () => {
         MarkIndexPopupInstance.toggleMarkedIndexPopup()
         expect(spyclosePopUp).toHaveBeenCalled()
         spyclosePopUp.mockClear()
+    })
+    it('showMarkedIndexRemoveConfirmationPopup function ', () => {
+        MarkIndexPopupInstance.setState({showMarkIndexWarningMsg: true});
+        const spy = jest.spyOn(MarkIndexPopupInstance, 'showMarkedIndexRemoveConfirmationPopup')
+        MarkIndexPopupInstance.showMarkedIndexRemoveConfirmationPopup();
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
     })
 })
 describe('Testing toolbarHandling Function', () => {
