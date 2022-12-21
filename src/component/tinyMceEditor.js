@@ -430,22 +430,32 @@ export class TinyMceEditor extends Component {
                 let parser = new DOMParser();
                 let htmlDoc = parser.parseFromString(selectContent, 'text/html');
                 let dfnTags = htmlDoc.getElementsByTagName('DFN');
+                let spanTags = htmlDoc.getElementsByTagName('SPAN');
                 const validNodeNames = ['dfn','code','span'];
-                const termType = (nodeName === 'span') ? MARKEDINDEX : GLOSSARY;
-                if (validNodeNames.indexOf(nodeName) > -1 || dfnTags.length) {
-                    let dfnAttribute = [];
+                let termType = null;
+                if (nodeName === "span" || spanTags.length) {
+                    termType = MARKEDINDEX;
+                } else if (nodeName === "dfn" || dfnTags.length) {
+                    termType = GLOSSARY;
+                }
+                if (validNodeNames.indexOf(nodeName) > -1 || dfnTags.length || spanTags.length) {
+                    let dataUriAttributesList = [];
                     if (nodeName === 'code') {
                         dataURI = node.parentNode.getAttribute('data-uri');
-                        dfnAttribute.push(dataURI)
+                        dataUriAttributesList.push(dataURI)
                     } else if (nodeNames.indexOf(nodeName) > -1) {
-                        dfnAttribute.push(dataURI);
-                    } else {
+                        dataUriAttributesList.push(dataURI);
+                    } else if (dfnTags.length) {
                         for (let index = 0; index < dfnTags.length; index++) {
-                            dfnAttribute.push(dfnTags[index].getAttribute('data-uri'));
+                            dataUriAttributesList.push(dfnTags[index].getAttribute('data-uri'));
+                        }
+                    } else if (spanTags.length) {
+                        for (let index = 0; index < spanTags.length; index++) {
+                            dataUriAttributesList.push(spanTags[index].getAttribute('data-uri'));
                         }
                     }
-                    for (let index = 0; index < dfnAttribute.length; index++) {
-                        this.handleGlossaryForItalic(activeElement, dfnAttribute[index], termType);
+                    for (let index = 0; index < dataUriAttributesList.length; index++) {
+                        this.handleGlossaryForItalic(activeElement, dataUriAttributesList[index], termType);
                     }
                 }
             }
