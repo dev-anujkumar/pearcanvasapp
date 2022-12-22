@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES  } from '../../constants/Action_Constants';
+import { OPEN_MARKED_INDEX, OPEN_MARKED_INDEX_ON_GLOSSARY, UPDATE_CROSS_REFERENCE_VALUES } from '../../constants/Action_Constants';
 import config from '../../config/config';
 import store from '../../appstore/store.js'
 import { onGlossaryFnUpdateSuccessInShowHide } from '../ShowHide/ShowHide_Helper.js';
@@ -30,7 +30,8 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         markIndexText,
         typeWithPopup: typeWithPopup ? typeWithPopup : undefined,
         poetryField: poetryField ? poetryField : undefined,
-        isNewIndex
+        isNewIndex,
+        index
     }
 
     if (status === true) {

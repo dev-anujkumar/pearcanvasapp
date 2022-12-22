@@ -945,3 +945,15 @@ export const getSelectionTextWithFormatting = (node) => {
     tempDiv.innerHTML = node.innerHTML;
     return tempDiv.outerHTML;
 }
+
+export const removeMarkedIndexDOMAttributes = (innerHTML, currentMarkedIndexId) => {
+    const markedIndexDiv = document.createElement('div');
+    markedIndexDiv.innerHTML = innerHTML
+    while(tinyMCE.$(markedIndexDiv).find(`span[data-uri="${currentMarkedIndexId}"]`)?.length) {
+        tinyMCE.$(markedIndexDiv).find(`span[data-uri="${currentMarkedIndexId}"]`).each(function () {
+            let innerHtml = this?.innerHTML;
+            this.outerHTML = innerHtml;
+        });
+    }
+    return markedIndexDiv?.innerHTML;
+}
