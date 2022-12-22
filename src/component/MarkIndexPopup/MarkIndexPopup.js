@@ -15,6 +15,7 @@ import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import Tooltip from '../Tooltip';
 import PopUp from '../PopUp';
 import { showTocBlocker, hideBlocker, hideToc } from '../../js/toggleLoader'
+import { MARKEDINDEX_DIALOG_TEXT, INDEX_REMOVED_TEXT, INDEX_ADDED_TEXT } from './../../constants/Element_Constants';
 
 class PrintIndexPopup extends Component {
   constructor(props) {
@@ -145,7 +146,7 @@ componentWillMount() {
       const { markedIndexValue } = this.props.markedIndexData;
       this.saveContent(crossReferences, crossRefValues);
       if (Object.keys(markedIndexValue).includes('isNewIndex') && markedIndexValue?.isNewIndex) {
-        this.props.showingToastMessage(true);
+        this.props.showingToastMessage(true, INDEX_ADDED_TEXT);
       }
     }
   }
@@ -196,15 +197,15 @@ componentWillMount() {
     hideBlocker()
     this.props.showBlocker(false)
     this.showMarkedIndexWarningPopup(false);
-    const currentMarkedIndexId = this.props.markedIndexData.markedIndexValue.markIndexid
-    let currentDOMAttributes = document.querySelector(`[data-uri="${currentMarkedIndexId}"]`).parentNode
-    let updatedDOMAttributes = removeMarkedIndexDOMAttributes(currentDOMAttributes.innerHTML, currentMarkedIndexId)
+    const currentMarkedIndexId = this.props?.markedIndexData?.markedIndexValue?.markIndexid
+    let currentDOMAttributes = document.querySelector(`[data-uri="${currentMarkedIndexId}"]`)?.parentNode
+    let updatedDOMAttributes = removeMarkedIndexDOMAttributes(currentDOMAttributes?.innerHTML, currentMarkedIndexId)
     currentDOMAttributes.innerHTML = updatedDOMAttributes
-    let workEditor = document.getElementById('cypress-' + this.props.elementIndexForMarkedIndex)
-    workEditor.focus()
-    workEditor.blur()
+    let workEditor = document.getElementById('cypress-' + this.props?.elementIndexForMarkedIndex)
+    workEditor?.focus()
+    workEditor?.blur()
     this.props.showMarkedIndexPopup(false);
-    this.props.showingToastMessage(true, true);
+    this.props.showingToastMessage(true, INDEX_REMOVED_TEXT);
   }
 
   toggleMarkedIndexPopup = () => {
@@ -215,13 +216,12 @@ componentWillMount() {
   }
 
   showMarkedIndexRemoveConfirmationPopup = () => {
-    let dialogText = 'Are you sure you want to remove the index marker entry? This action cannot be undone.';
     if (this.state.showMarkIndexWarningMsg) {
       this.props.showBlocker(true)
       showTocBlocker()
       return (
         <PopUp
-          dialogText={dialogText}
+          dialogText={MARKEDINDEX_DIALOG_TEXT}
           active={true}
           removeMarkedIndex={true}
           removeMarkedClass="removemarkedindexclass"

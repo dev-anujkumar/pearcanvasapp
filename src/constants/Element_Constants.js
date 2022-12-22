@@ -117,6 +117,10 @@ export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio',
 export const GLOSSARY = 'Glossary'
 /** Component source for element saprator */
 
+export const MARKEDINDEX_DIALOG_TEXT = 'Are you sure you want to remove the index marker entry? This action cannot be undone.'
+export const INDEX_REMOVED_TEXT = "Index removed successfully."
+export const INDEX_ADDED_TEXT = "Index added successfully."
+
 export const CITATION_SOURCE = 'CITATION';
 export const ASIDE_SOURCE = 'ASIDE';
 export const POETRY_SOURCE = 'POETRY';

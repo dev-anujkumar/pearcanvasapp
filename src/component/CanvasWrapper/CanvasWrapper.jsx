@@ -86,8 +86,7 @@ export class CanvasWrapper extends Component {
         }
     }
 
-    showingToastMessage = (status, removed) => {
-        const toastMsgText = removed ? "Index removed successfully." : "Index added successfully."
+    showingToastMessage = (status, toastMsgText) => {
         this.setState({
             toastMessage: status,
             toastMsgText: toastMsgText
