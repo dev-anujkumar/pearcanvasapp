@@ -281,7 +281,7 @@ componentWillMount() {
 
             <div className="button-group">
               <Tooltip direction="removeMarkedIndex" tooltipText="Remove Index entry">
-                {buttonText === 'Update' ? <span className='deleteMarkedIndexbutton' onClick={() => this.showMarkedIndexWarningPopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></span> : ''}
+                {buttonText === 'Update' ? <span className='deleteMarkedIndexbutton' onClick={() => this.showMarkedIndexWarningPopup(true)}><img className='markedindex-delete-icon' src={figureDeleteIcon} /></span> : ''}
               </Tooltip>
               <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>
               <span className="printIndex-save-button" disabled={false} onClick={this.saveMarkedIndex}>{buttonText}</span>
