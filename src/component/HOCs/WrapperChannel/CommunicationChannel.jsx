@@ -435,7 +435,6 @@ function CommunicationChannel(WrappedComponent) {
                     config.pendingTcmStatus = message.status
                     break;
                 case 'bannerIsVisible':
-                    console.log("messagee",message)
                     if (message && message.hasOwnProperty('status')) {
                         this.setState({ isBannerVisible: message.status })
                     }
