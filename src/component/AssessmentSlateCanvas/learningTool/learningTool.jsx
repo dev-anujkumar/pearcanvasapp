@@ -114,7 +114,7 @@ class LearningTool extends React.Component {
         return (
             <>
                 <div className="learningToolContainer">
-                    <div className="learningToolHeader">
+                    <div className={`learningToolHeader ${this.props.isBannerVisible ? 'learningToolContainer-Banner' : ''}`}>
                         {/* Title of POPUP */}
                         <div className="learningToolHeaderTitle">
                             <h1 className="learningToolHeaderString">{LT_LA_HEADER}</h1>

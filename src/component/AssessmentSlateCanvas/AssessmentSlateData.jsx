@@ -576,9 +576,9 @@ class AssessmentSlateData extends Component {
         let assessmentSlateJSX;
 
         if ((activeAssessmentType === CITE || activeAssessmentType === TDX) && showCiteTdxComponent === true) {
-            return <RootCiteTdxComponent openedFrom={'slateAssessment'} closeWindowAssessment={() => this.closeWindowAssessment()} assessmentType={activeAssessmentType} addCiteTdxFunction={this.addCiteTdxAssessment} usageTypeMetadata={activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} setCiteTdxFilterData={this.setCiteTdxFilterData} assessmentSlateObj={assessmentSlateObj}/>
+            return <RootCiteTdxComponent openedFrom={'slateAssessment'} closeWindowAssessment={() => this.closeWindowAssessment()} assessmentType={activeAssessmentType} addCiteTdxFunction={this.addCiteTdxAssessment} usageTypeMetadata={activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} setCiteTdxFilterData={this.setCiteTdxFilterData} assessmentSlateObj={assessmentSlateObj} isBannerVisible={this.props.isBannerVisible}/>
         } else if (changeLearningData && activeAssessmentType === LEARNING_TEMPLATE) {
-            return <LearningTool closePopUp={this.closeLTLAPopUp} linkLearningApp={this.linkLearningApp} closelearningPopup={this.closelearningPopup} />
+            return <LearningTool closePopUp={this.closeLTLAPopUp} linkLearningApp={this.linkLearningApp} closelearningPopup={this.closelearningPopup} isBannerVisible={this.props.isBannerVisible}/>
         } else if (getAssessmentData && getAssessmentDataPopup === false && changeLearningData === false) {
             assessmentSlateJSX = this.state.isUpdateFinal ? this.showNewAssessmentSlate(activeAssessmentType, activeAssessmentUsageType) : this.showFinalAssessmentSlate(slatePlaceholder, activeAssessmentType, assessmentSlateObj, activeAssessmentUsageType);
         } else if (getAssessmentData && (getAssessmentDataPopup === true || learningToolStatus)) {

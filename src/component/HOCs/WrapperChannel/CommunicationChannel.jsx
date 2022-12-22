@@ -30,6 +30,7 @@ function CommunicationChannel(WrappedComponent) {
                 tocDeleteMessage: null,
                 showLockPopup: false,
                 lockOwner: "",
+                isBannerVisible: false
             };
         }
 
@@ -432,6 +433,13 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case "pendingTcmStatus":
                     config.pendingTcmStatus = message.status
+                    break;
+                case 'bannerIsVisible':
+                    console.log("messagee",message)
+                    if (message && message.hasOwnProperty('status')) {
+                        this.setState({ isBannerVisible: message.status })
+                    }
+                    break;
             }
         }
 
@@ -1235,7 +1243,7 @@ function CommunicationChannel(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer}/>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer} isBannerVisible={this.state.isBannerVisible}/>
                     {this.showLockPopup()}
                 </React.Fragment>
             )

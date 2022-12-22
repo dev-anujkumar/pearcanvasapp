@@ -1054,6 +1054,7 @@ class SlateWrapper extends Component {
                                         hideElementSeperator={this.props.hideElementSeperator}
                                         handleCopyPastePopup={this.handleCopyPastePopup}
                                         closeUndoTimer = {this.props.closeUndoTimer}
+                                        isBannerVisible={this.props.isBannerVisible}
                                     >
                                         {
                                             (isHovered, isPageNumberEnabled, activeElement, permissions) => (

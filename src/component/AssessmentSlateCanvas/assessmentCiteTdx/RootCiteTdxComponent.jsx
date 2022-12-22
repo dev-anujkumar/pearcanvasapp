@@ -79,11 +79,11 @@ class RootCiteTdxComponent extends Component {
     const uuidToSearch = filterUUID ? filterUUID : searchUuidVal;
     return (
       <div className="vex-overlay cite-wrapper">
-        <div className="root-container">
+        <div className={`root-container ${this.props.isBannerVisible ? 'learningToolContainer-Banner' : ''}`}>
           <CiteComponentError>
             <CiteTdxHeader headerProps={this.headerProps} resetPage={this.props.resetPage} />
             <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.props.AssessmentSearchTitle} resetPage={this.props.resetPage} currentPageNo={this.state.currentPageNo}  searchTitle={titleToSearch} filterUUID={uuidToSearch} openedFrom = {this.props.openedFrom}/>
-            <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment} currentPageNo={this.state.currentPageNo} searchTitle={searchTitleVal} filterUUID={this.props.filterUUID} searchUuidVal={searchUuidVal}/>
+            <CiteTdxTable assessmentType={this.props.assessmentType} searchAssessment={this.searchAssessment} currentPageNo={this.state.currentPageNo} searchTitle={searchTitleVal} filterUUID={this.props.filterUUID} searchUuidVal={searchUuidVal} isBannerVisible={this.props.isBannerVisible}/>
             <CiteTdxFooter closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} searchTitle={searchTitleVal} filterUUID={filterUUID} searchUuidVal={searchUuidVal} assessmentType={this.props.assessmentType} isReset={this.props.isReset} resetPage={this.props.resetPage} getCurrentPageNo={this.getCurrentPageNo} openedFrom = {this.props.openedFrom} currentPageNo={this.state.currentPageNo} setCiteTdxFilterData={this.props.setCiteTdxFilterData} assessmentSlateObj={assessmentSlateObj}/>
           </CiteComponentError>
         </div>

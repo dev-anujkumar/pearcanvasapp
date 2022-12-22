@@ -34,7 +34,7 @@ class RootSingleAssessmentComponent extends Component {
   render() {
     return (
       <div className="vex-overlay cite-wrapper">
-        <div className="root-container">
+        <div className={`root-container ${this.props.isBannerVisible ? 'cite-wrapper-banner' : ''}`}>
             <CiteTdxHeader headerProps={this.headerProps} resetPage={this.props.resetPage}/>
               <FilterAssessmentData  openedFrom = {this.props.openedFrom} setCurrentAssessment={this.props.setCurrentAssessment} assessmentNavigateBack={this.props.assessmentNavigateBack}/>
               <CiteTdxSingleAssessmentTable assessmentType={this.props.assessmentType} openedFrom = {this.props.openedFrom}/>

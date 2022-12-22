@@ -157,6 +157,7 @@ class AssessmentSlateCanvas extends Component {
                     addCiteTdxAssessment={this.addCiteTdxAssessment}
                     setAssessmentUsageType={setAssessmentUsageType}
                     elementId={elementId}
+                    isBannerVisible={this.props.isBannerVisible}
                 />
                 <TinyMceEditor
                     slateLockInfo={this.props.slateLockInfo}
