@@ -145,7 +145,8 @@ const mapStateToProps = (state) => {
         isLoading: state.citeTdxReducer.isLoading,
         currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected,
         assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag,
-        sortingData:state.citeTdxReducer
+        sortingData:state.citeTdxReducer,
+        isBannerVisible: state.projectInfo.isBannerVisible
     }
 }
 

@@ -32,7 +32,8 @@ import {
     OEP_DISCUSSION,
     UPDATE_AUTONUMBER_MAPPER_KEYS,
     PROJECT_LOB_LIST,
-    NO_DISCUSSION_ITEMS
+    NO_DISCUSSION_ITEMS,
+    BANNER_IS_VISIBLE
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1818,4 +1819,11 @@ export const fetchUserLocation = () => async () => {
 	} catch (error) {
 		console.error("Error", error);
 	}
+}
+
+export const setCautionBannerStatus = (status) => (dispatch, getState) => {
+    return dispatch({
+        type: BANNER_IS_VISIBLE,
+        payload: status
+    })
 }

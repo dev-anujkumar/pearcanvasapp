@@ -30,7 +30,6 @@ function CommunicationChannel(WrappedComponent) {
                 tocDeleteMessage: null,
                 showLockPopup: false,
                 lockOwner: "",
-                isBannerVisible: false
             };
         }
 
@@ -436,7 +435,7 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'bannerIsVisible':
                     if (message && message.hasOwnProperty('status')) {
-                        this.setState({ isBannerVisible: message.status })
+                        this.props.setCautionBannerStatus(message.status)
                     }
                     break;
             }
@@ -1242,7 +1241,7 @@ function CommunicationChannel(WrappedComponent) {
         render() {
             return (
                 <React.Fragment>
-                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer} isBannerVisible={this.state.isBannerVisible}/>
+                    <WrappedComponent {...this.props} showBlocker={this.state.showBlocker} showCanvasBlocker={this.showCanvasBlocker} tocDeleteMessage={this.state.tocDeleteMessage} updatePageLink={this.updatePageLink}  closeUndoTimer = {this.state.closeUndoTimer} />
                     {this.showLockPopup()}
                 </React.Fragment>
             )

@@ -101,7 +101,8 @@ const mapActionToProps = {
 
 const mapStateToProps = state => {
   return {
-    citeTdxReducer: state.citeTdxReducer
+    citeTdxReducer: state.citeTdxReducer,
+    isBannerVisible: state.projectInfo.isBannerVisible
   };
 };
 

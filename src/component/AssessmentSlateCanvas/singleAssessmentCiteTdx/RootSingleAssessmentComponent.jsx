@@ -49,7 +49,8 @@ const mapActionToProps = {
 }
 const mapStateToProps = (state) => {
   return {
-    currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected
+    currentAssessmentSelected: state.citeTdxReducer.currentAssessmentSelected,
+    isBannerVisible: state.projectInfo.isBannerVisible
   }
 }
 
