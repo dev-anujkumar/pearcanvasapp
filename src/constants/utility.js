@@ -939,13 +939,6 @@ export const removeStyleAttribute = (html) => {
     return tempDiv.innerHTML;
 }
 
-export const getSelectionTextWithFormatting = (node) => {
-    let tagName = node.tagName;
-    let tempDiv = document.createElement(tagName);
-    tempDiv.innerHTML = node.innerHTML;
-    return tempDiv.outerHTML;
-}
-
 export const removeMarkedIndexDOMAttributes = (innerHTML, currentMarkedIndexId) => {
     const markedIndexDiv = document.createElement('div');
     markedIndexDiv.innerHTML = innerHTML
