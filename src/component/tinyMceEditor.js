@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, getSelectionTextWithFormatting } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -2976,10 +2976,6 @@ export class TinyMceEditor extends Component {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(elementId, "MARKEDINDEX", res => {
             let insertionText = ""
-            let stylesHTML = tinymce.activeEditor.selection.getEnd();
-            if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1 && stylesHTML.textContent == selectedText) {
-                selectedText = getSelectionTextWithFormatting(stylesHTML);
-            }
             if (res.data && res.data.id) {
                 insertionText = `<span data-uri=${res.data.id} class="markedForIndex">${selectedText}</span>`
             }
@@ -3032,10 +3028,6 @@ export class TinyMceEditor extends Component {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(elementId, "GLOSSARY", res => {
             let insertionText = ""
-            let stylesHTML = tinymce.activeEditor.selection.getEnd();
-            if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1 && stylesHTML.textContent == selectedText) {
-                selectedText = getSelectionTextWithFormatting(stylesHTML);
-            }
             if (res.data && res.data.id) {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
