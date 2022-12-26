@@ -26,7 +26,7 @@ import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessage
 import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, getSelectionTextWithFormatting } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
-import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement, saveCaretPosition } from './SlateWrapper/SlateWrapper_Actions';
 import { deleteElement } from './ElementContainer/ElementContainer_Actions';
@@ -1403,9 +1403,20 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
+                currentElement = tinymce.activeEditor.selection.getNode();
                 let selectedClassName = tinymce.activeEditor.selection.getNode().className;
-                if(selectedClassName.toLowerCase() ==='calloutone' || selectedClassName.toLowerCase() ==='callouttwo' || selectedClassName.toLowerCase() ==='calloutthree' || selectedClassName.toLowerCase() ==='calloutfour' || selectedClassName.toLowerCase() === 'markedforindex' || selectedClassName.toLowerCase() === 'pearson-component glossaryterm'){
-                    let currentElement = tinymce.activeEditor.selection.getNode();
+                let selecteNodeName = tinymce.activeEditor.selection.getNode().tagName;
+
+                /* If only formatted text is present inside editor with custom formatting eg glossary, mark-index */
+                if (childNodeTagsArr.includes(selecteNodeName.toLowerCase()) && !selectedClassName) {
+                    while (!currentElement.className) {
+                        currentElement = currentElement.parentNode;
+                        selectedClassName = currentElement.className;
+                    }
+                }
+                /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+
+                if (allowedClassName.includes(selectedClassName.toLowerCase())) {
                     let offset = this.getOffSet(currentElement);
                     let textLength = currentElement.textContent.length;
                     if (textLength === offset || textLength === offset + 1) {
@@ -1417,7 +1428,7 @@ export class TinyMceEditor extends Component {
                             editor.selection.setCursorLocation(parentNode.childNodes[childNodes.length - 1], 0);
                         }
                     }
-                }
+                } 
             }
             if (activeElement.nodeName === "CODE") {
                 let tempKey = e.keyCode || e.which;
