@@ -20,6 +20,8 @@ export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="he
 export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext','element-learningobjectives','element-blockfeature','element-list']
 export const AUTO_NUMBER_PLACEHOLDER = ["Label Name", "Label", "Number"]
 export const PLACEHOLDER_ARRAY = ["Attribution Text", "Code Block Content", "Enter Button Label"]
+export const validFirstNodeTags = ['span','dfn'];
+export const validStylesTagList = ['strong','em','u','s','sup','sub','code'];
 
 export const requestConfigURI = () => {
     let uri = '';
@@ -937,6 +939,29 @@ export const removeStyleAttribute = (html) => {
     tinyMCE.$(tempDiv).find('span').removeAttr('style');
     tinyMCE.$(tempDiv).find('s').removeAttr('style');
     return tempDiv.innerHTML;
+}
+
+export const getSelectionTextWithFormatting = (node) => {
+    let tagName = node.tagName;
+    let tempDiv = document.createElement(tagName);
+    tempDiv.innerHTML = node.innerHTML;
+    return tempDiv.outerHTML;
+}
+
+export const getParentNode = (node, stylingOrderList) => {
+    let parentNode = node?.parentNode;
+    if (parentNode && parentNode.tagName && validStylesTagList.indexOf(parentNode.tagName.toLowerCase()) > -1) {
+        stylingOrderList.push(parentNode.tagName.toLowerCase());
+        getParentNode(parentNode, stylingOrderList);
+    }
+}
+
+export const findStylingOrder = (node) => {
+    let stylingOrderList = [];
+    if (node && node.tagName && validFirstNodeTags.indexOf(node.tagName.toLowerCase()) > -1) {
+        getParentNode(node, stylingOrderList);
+    }
+    return stylingOrderList;
 }
 
 export const removeMarkedIndexDOMAttributes = (innerHTML, currentMarkedIndexId) => {
