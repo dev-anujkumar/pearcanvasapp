@@ -20,8 +20,11 @@ export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="he
 export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext','element-learningobjectives','element-blockfeature','element-list']
 export const AUTO_NUMBER_PLACEHOLDER = ["Label Name", "Label", "Number"]
 export const PLACEHOLDER_ARRAY = ["Attribution Text", "Code Block Content", "Enter Button Label"]
-export const validFirstNodeTags = ['span','dfn'];
+export const GLOSSARY = 'GLOSSARY';
+export const MARKEDINDEX = 'MARKEDINDEX';
 export const validStylesTagList = ['strong','em','u','s','sup','sub','code'];
+export const allowedFormattings = ['bold','italic','underline','strikethrough','superscript','subscript'];
+export const validFirstNodeTags = ['span','dfn'];
 
 export const requestConfigURI = () => {
     let uri = '';
