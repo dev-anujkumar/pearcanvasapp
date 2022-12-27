@@ -17,7 +17,7 @@ export const TabbedTabContainer = (props) => {
         let groupedDataBodymatter = tab?.groupeddata && tab?.groupeddata?.bodymatter || [];
         let highlightTab = true;
         for (let element of props.multipleColumnData) {
-            if (element.containerId === tab.id && element.columnIndex !== 'Tab') {
+            if (element.containerId === tab.id && element.columnIndex !== 'Tit') {
                 highlightTab = false;
             }
         }

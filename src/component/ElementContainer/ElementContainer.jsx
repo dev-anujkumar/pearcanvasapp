@@ -2431,19 +2431,14 @@ class ElementContainer extends Component {
         const inContainer = this.props.parentUrn ? true : false;
         let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
         let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
-        let activeColumnLabel = "Tab"
-        for (let propsElementObject of this.props.multipleColumnData) {
-            if (propsElementObject.containerId === element.id) {
-                activeColumnLabel = propsElementObject.columnIndex;
-            }
-        }
-                return (
+        return (
             <>
                 <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                     {this.renderCopyComponent(this.props, index, inContainer, tcm)}
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         <Button type="element-label" elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
                         {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
+                        {labelText === TABBED_TAB.ELEMENT_TAG_NAME && this.renderTabTitleLabel(element)}
                         {((labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) || (labelText === MULTI_COLUMN_2C.ELEMENT_TAG_NAME) || (labelText === TABBED_TAB.ELEMENT_TAG_NAME)) && <div>{this.renderMultipleColumnLabels(element)}</div>}
                         {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" elementType={element?.type} onClick={(e) => this.showDeleteElemPopup(e, true)} />)
                             : null}
@@ -2545,14 +2540,29 @@ class ElementContainer extends Component {
         );
     }
 
-    // function to render multiple columns for 3 column container based on bodymatter
-    renderMultipleColumnLabels = (element) => {
-        let activeColumnLabel = "C1"
+    // function to render Title label for tabbed element
+    renderTabTitleLabel = (element) => {
+        let activeColumnLabel = 'Tit';
         for (let propsElementObject of this.props.multipleColumnData) {
             if (propsElementObject.containerId === element.id) {
                 activeColumnLabel = propsElementObject.columnIndex;
             }
         }
+        return (
+            <Button btnClassName={activeColumnLabel === `Tit` ? "activeTagBgColor" : ""} labelText='Tit' onClick={() => this.updateColumnValues('Tit', element)} type="label-clickable-button" />
+        )
+    }
+
+    // function to render multiple columns for 3 column container based on bodymatter
+    renderMultipleColumnLabels = (element) => {
+        let activeColumnLabel;
+        activeColumnLabel = ('parentUrn' in element && element.parentUrn?.type === 'tabbed-element') ? "" : "C1";
+        for (let propsElementObject of this.props.multipleColumnData) {
+            if (propsElementObject.containerId === element.id) {
+                activeColumnLabel = propsElementObject.columnIndex;
+            }
+        }
+        
         if (element && 'groupeddata' in element && element.groupeddata && 'bodymatter' in element.groupeddata &&
             element.groupeddata.bodymatter && element.groupeddata.bodymatter.length > 0) {
             return element.groupeddata.bodymatter.map((bodymatter, index) => {
@@ -2564,7 +2574,6 @@ class ElementContainer extends Component {
     }
 
     updateColumnValues = (index, element) => {
-        console.log('awerfghjk awerfghjk', element)
         if(config.popupCreationCallInProgress){ /** Restrict click on 2C if saving is inprogress PE */
             return false
         }
@@ -2573,6 +2582,7 @@ class ElementContainer extends Component {
             containerId: objKey,
             columnIndex: `C${index + 1}`
         }
+        multipleColumnObjData = index === 'Tit' ? multipleColumnObjData.columnIndex = 'Tit' : multipleColumnObjData;
         setTimeout(() => {
             this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
         }, 0)
