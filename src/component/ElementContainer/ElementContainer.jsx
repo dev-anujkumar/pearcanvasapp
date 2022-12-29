@@ -338,6 +338,9 @@ class ElementContainer extends Component {
             }
             config.lastActiveElementId = element?.id
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
+            if(this.props.element.type === "manifestlist" && this.props.parentElement.type === "element-aside"){
+                this.toolbarHandling('add')
+            }
             this.props.fetchCommentByElement(this.props.element.id);
         }
         this.handleCommunication(this.props.element.id);
@@ -1277,7 +1280,10 @@ class ElementContainer extends Component {
             } else {
                 dataToSend.elementdata.assessmenttitle = assessmentData.title;
             }
-            this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + assessmentData.format)
+            let approvedAssessmentCheck = this.props.slateLevelData[config.slateManifestURN].status === "approved" && dataToSend.type === "element-assessment"  // this is to restrict the element call if assessment slate status is approved 
+            if(!approvedAssessmentCheck){
+                this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + assessmentData.format)
+            }
         } else {
             dataToSend.elementdata.usagetype = assessmentData;
             this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + this.props.element.elementdata.assessmentformat)

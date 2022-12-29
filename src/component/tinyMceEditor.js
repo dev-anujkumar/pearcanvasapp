@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -47,9 +47,6 @@ const {
     AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
-const GLOSSARY = 'GLOSSARY';
-const MARKEDINDEX = 'MARKEDINDEX';
-const validStylesTagList = ['strong','em','u','s','sup','sub','code'];
 
 export class TinyMceEditor extends Component {
     constructor(props) {
@@ -425,7 +422,6 @@ export class TinyMceEditor extends Component {
                 }
             }
             const eventValue = e.value;
-            const allowedFormattings = ['italic'];
             if (e.command === 'mceToggleFormat' && allowedFormattings.indexOf(eventValue) > -1) {
                 let parser = new DOMParser();
                 let htmlDoc = parser.parseFromString(selectContent, 'text/html');
@@ -437,6 +433,12 @@ export class TinyMceEditor extends Component {
                     termType = MARKEDINDEX;
                 } else if (nodeName === "dfn" || dfnTags.length) {
                     termType = GLOSSARY;
+                }
+                let tag = null;
+                if (termType === MARKEDINDEX) {
+                    tag = 'span';
+                } else if (termType === GLOSSARY) {
+                    tag = 'dfn';
                 }
                 if (validNodeNames.indexOf(nodeName) > -1 || dfnTags.length || spanTags.length) {
                     let dataUriAttributesList = [];
@@ -455,7 +457,11 @@ export class TinyMceEditor extends Component {
                         }
                     }
                     for (let index = 0; index < dataUriAttributesList.length; index++) {
-                        this.handleGlossaryForItalic(activeElement, dataUriAttributesList[index], termType);
+                        const dataURINode = activeElement.querySelector(`${tag}[data-uri="${dataUriAttributesList[index]}"]`);
+                        const stylingOrderList = findStylingOrder(dataURINode);
+                        stylingOrderList.forEach((styleTag) => {
+                            this.handleFormatting(activeElement, dataUriAttributesList[index], termType, styleTag);
+                        })
                     }
                 }
             }
@@ -2833,129 +2839,18 @@ export class TinyMceEditor extends Component {
         this.props.learningObjectiveOperations(text);
     }
 
-    // Handle Glossary for Subscript
-    handleGlossaryForSubscript = (activeElement, dataURIId, term = GLOSSARY) => {
+    // Handle formatting for markedIndex and glossary
+    handleFormatting = (activeElement, dataURIId, term = GLOSSARY, styleTag) => {
         let tag = (term === MARKEDINDEX) ? "span" : "dfn";
         let dfn = activeElement.querySelector(`${tag}[data-uri="${dataURIId}"]`);
-        let subTag = dfn.closest('sub');
+        let subTag = dfn.closest(`${styleTag}`);
         if (subTag) {
-            dfn.innerHTML = '<sub>' + dfn.innerHTML + '</sub>'
+            dfn.innerHTML = `<${styleTag}>` + dfn.innerHTML + `</${styleTag}>`
             if (subTag.textContent === dfn.textContent) {
                 let innerHTML = subTag.innerHTML;
                 subTag.outerHTML = innerHTML;
             } else {
                 spanHandlers.splitOnTag(subTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Superscript
-    handleGlossaryForSuperscript = (activeElement, dataURIId, term = GLOSSARY) => {
-        let tag = (term === MARKEDINDEX) ? "span" : "dfn";
-        let dfn = activeElement.querySelector(`${tag}[data-uri="${dataURIId}"]`);
-        let supTag = dfn.closest('sup');
-        if (supTag) {
-            dfn.innerHTML = '<sup>' + dfn.innerHTML + '</sup>'
-            if (supTag.textContent === dfn.textContent) {
-                let innerHTML = supTag.innerHTML;
-                supTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(supTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Strikethrough
-    handleGlossaryForStrikethrough = (activeElement, dataURIId, term = GLOSSARY) => {
-        let tag = (term === MARKEDINDEX) ? "span" : "dfn";
-        let dfn = activeElement.querySelector(`${tag}[data-uri="${dataURIId}"]`);
-        let sTag = dfn.closest('s');
-        if (sTag) {
-            dfn.innerHTML = '<s>' + dfn.innerHTML + '</s>'
-            if (sTag.textContent === dfn.textContent) {
-                let innerHTML = sTag.innerHTML;
-                sTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(sTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Underline
-    handleGlossaryForUnderline = (activeElement, dataURIId, term = GLOSSARY) => {
-        let tag = (term === MARKEDINDEX) ? "span" : "dfn";
-        let dfn = activeElement.querySelector(`${tag}[data-uri="${dataURIId}"]`);
-        let uTag = dfn.closest('u');
-        if (uTag) {
-            dfn.innerHTML = '<u>' + dfn.innerHTML + '</u>'
-            if (uTag.textContent === dfn.textContent) {
-                let innerHTML = uTag.innerHTML;
-                uTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(uTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Italic
-    handleGlossaryForItalic = (activeElement, dataURIId, term = GLOSSARY) => {
-        let tag = (term === MARKEDINDEX) ? "span" : "dfn";
-        let dfn = activeElement.querySelector(`${tag}[data-uri="${dataURIId}"]`);
-        let emTag = dfn.closest('em');
-        if (emTag) {
-            dfn.innerHTML = '<em>' + dfn.innerHTML + '</em>'
-            if (emTag.textContent === dfn.textContent) {
-                let innerHTML = emTag.innerHTML;
-                emTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(emTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Bold
-    handleGlossaryForBold = (activeElement, dataURIId, term = GLOSSARY) => {
-        let tag = (term === MARKEDINDEX) ? "span" : "dfn";
-        let dfn = activeElement.querySelector(`${tag}[data-uri="${dataURIId}"]`);
-        let strongTag = dfn.closest('strong');
-        if (strongTag) {
-            dfn.innerHTML = '<strong>' + dfn.innerHTML + '</strong>'
-            if (strongTag.textContent === dfn.textContent) {
-                let innerHTML = strongTag.innerHTML;
-                strongTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(strongTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Code
-    handleGlossaryForCode = (activeElement, dataURIId, term = GLOSSARY) => {
-        let tag = (term === MARKEDINDEX) ? "span" : "dfn";
-        let dfn = activeElement.querySelector(`${tag}[data-uri="${dataURIId}"]`);
-        let codeTag = dfn.closest('code');
-        if (codeTag) {
-            dfn.innerHTML = `<code>${dfn.innerHTML}</code>`
-            if (codeTag.textContent === dfn.textContent) {
-                let innerHTML = codeTag.innerHTML;
-                codeTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(codeTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle MarkedIndex for Italic
-    handleMarkedIndexForItalic = (activeElement, dataURIId) => {
-        let dfn = activeElement.querySelector(`span[data-uri="${dataURIId}"]`);
-        let emTag = dfn.closest('em');
-        if (emTag) {
-            dfn.innerHTML = '<em>' + dfn.innerHTML + '</em>'
-            if (emTag.textContent === dfn.textContent) {
-                let innerHTML = emTag.innerHTML;
-                emTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(emTag.parentNode, dfn);
             }
         }
     }
@@ -2973,6 +2868,7 @@ export class TinyMceEditor extends Component {
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
         this.markIndexText = selectedText;
         let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+        let selectedNodeText = editor.selection.getNode().textContent;
         if (selectedText.trim() === "") {
             return false
         }
@@ -2980,18 +2876,23 @@ export class TinyMceEditor extends Component {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(elementId, "MARKEDINDEX", res => {
             let insertionText = ""
+            if (selectedText !== selectedNodeText) {
+                let stylesHTML = tinymce.activeEditor.selection.getEnd();
+                if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1 && stylesHTML.textContent === selectedText) {
+                    selectedText = getSelectionTextWithFormatting(stylesHTML);
+                }
+            }
             if (res.data && res.data.id) {
                 insertionText = `<span data-uri=${res.data.id} class="markedForIndex">${selectedText}</span>`
             }
             editor.selection.setContent(insertionText);
-            this.handleGlossaryForSubscript(activeElement, res.data.id, MARKEDINDEX);
-            this.handleGlossaryForSuperscript(activeElement, res.data.id, MARKEDINDEX);
-            this.handleGlossaryForStrikethrough(activeElement, res.data.id, MARKEDINDEX);
-            this.handleGlossaryForUnderline(activeElement, res.data.id, MARKEDINDEX);
-            this.handleGlossaryForItalic(activeElement, res.data.id, MARKEDINDEX);
-            this.handleGlossaryForBold(activeElement, res.data.id, MARKEDINDEX);
-            this.handleGlossaryForCode(activeElement, res.data.id, MARKEDINDEX);
-            //this.handleMarkedIndexForItalic(activeElement, res.data.id)
+            //Start of code to move styling inside span tag
+            const dataURINode = activeElement.querySelector(`span[data-uri="${res.data.id}"]`);
+            const stylingOrderList = findStylingOrder(dataURINode);
+            stylingOrderList.forEach((styleTag) => {
+                this.handleFormatting(activeElement, res.data.id, MARKEDINDEX, styleTag);
+            })
+            //End of code to move styling inside span tag
             this.toggleMarkedIndexPopup(true, 'Markedindex', res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); }, true);
             this.saveMarkedIndexContent()
         })
@@ -3012,6 +2913,7 @@ export class TinyMceEditor extends Component {
         let htmlDoc = parser.parseFromString(sText, 'text/html');
         let spans = htmlDoc.getElementsByClassName("poetryLine");
         let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+        let selectedNodeText = editor.selection.getNode().textContent;
         if (spans && spans.length) {
             store.dispatch({
                 type: MULTIPLE_LINE_POETRY_ERROR_POPUP,
@@ -3032,17 +2934,23 @@ export class TinyMceEditor extends Component {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(elementId, "GLOSSARY", res => {
             let insertionText = ""
+            if (selectedText !== selectedNodeText) {
+                let stylesHTML = tinymce.activeEditor.selection.getEnd();
+                if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1 && stylesHTML.textContent === selectedText) {
+                    selectedText = getSelectionTextWithFormatting(stylesHTML);
+                }
+            }
             if (res.data && res.data.id) {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
             editor.selection.setContent(insertionText);
-            this.handleGlossaryForSubscript(activeElement, res.data.id);
-            this.handleGlossaryForSuperscript(activeElement, res.data.id);
-            this.handleGlossaryForStrikethrough(activeElement, res.data.id);
-            this.handleGlossaryForUnderline(activeElement, res.data.id);
-            this.handleGlossaryForItalic(activeElement, res.data.id);
-            this.handleGlossaryForBold(activeElement, res.data.id);
-            this.handleGlossaryForCode(activeElement, res.data.id);
+            //Start of code to move styling inside dfn tag
+            const dataURINode = activeElement.querySelector(`dfn[data-uri="${res.data.id}"]`);
+            const stylingOrderList = findStylingOrder(dataURINode);
+            stylingOrderList.forEach((styleTag) => {
+                this.handleFormatting(activeElement, res.data.id, GLOSSARY, styleTag);
+            })
+            //End of code to move styling inside dfn tag
             let dfn = activeElement.querySelector(`dfn[data-uri="${res.data.id}"]`);
             // this.glossaryTermText = dfn.innerHTML
             this.glossaryTermText = `<p>${dfn.innerHTML}</p>` || "<p></p>"
