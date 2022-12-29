@@ -47,5 +47,6 @@ export default {
     ALFRESCO_TE_METADATA:'alfresco-TE-metadata',
     ELEMENT_LABEL_CLICKABLE : "label-clickable-button",
     COMMENT_FLAGGED: 'comment-flagged',
-    TOAST_CLOSE_ICON : "toast-close-icon"
+    TOAST_CLOSE_ICON : "toast-close-icon",
+    TABBED_TAB : "multi-column-group-tabbed-tab"
 }

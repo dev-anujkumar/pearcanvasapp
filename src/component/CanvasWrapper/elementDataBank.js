@@ -376,7 +376,7 @@ const elementDataBank = {
             "secondaryOption" : "secondary-multicolumn-3c-wider"
         },
         "text-width" : {
-            "secondaryOption" : "secondary-tabbed"
+            "secondaryOption" : "secondary-tabbed-30-70"
         }
     },
     "group": {

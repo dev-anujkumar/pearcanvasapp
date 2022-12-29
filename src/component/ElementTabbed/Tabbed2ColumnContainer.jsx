@@ -24,13 +24,13 @@ export const Tabbed2Column = (props) => {
                 parentManifestUrn: element.id,
                 parentContentUrn: element.contentUrn,
             }
-            return renderTabElement(element?.groupeddata?.bodymatter, parentUrn, asideData, props.index);
+            return renderTabElement(element, element?.groupeddata?.bodymatter, parentUrn, asideData, props.index);
         } else {
             return null;
         }
     }
 
-    const renderTabElement = (tabElements, parentUrn, asideData, parentIndex) => {
+    const renderTabElement = (tbElement, tabElements, parentUrn, asideData, parentIndex) => {
         try {
             if (tabElements !== null && tabElements !== undefined) {
                 return tabElements.map((tabElement, index) => {
@@ -45,6 +45,7 @@ export const Tabbed2Column = (props) => {
                                         firstOne={index === 0}
                                         esProps={props.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
                                         elementType="group"
+                                        subtype= {tbElement.subtype}
                                         sectionBreak={false}
                                         permissions={props.permissions}
                                         onClickCapture={props.onClickCapture}
@@ -80,6 +81,7 @@ export const Tabbed2Column = (props) => {
                                     index={index}
                                     esProps={props.elementSepratorProps(index, false, parentUrn, asideData, parentIndex)}
                                     elementType="group"
+                                    subtype= {tbElement.subtype}
                                     sectionBreak={false}
                                     permissions={props.permissions}
                                     onClickCapture={props.onClickCapture}

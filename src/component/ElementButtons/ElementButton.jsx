@@ -212,6 +212,11 @@ class ElementButton extends Component {
                     {multiColumnContainer}
                 </span>
                 break;
+            case buttonTypes.TABBED_TAB:
+                buttonJSX = <span className="btn-element multi-column-group-tabbed-tab" onClick={clickHandlerFn}>
+                    {multiColumnContainer}
+                </span>
+                break;
             case ButtonTypes.ELM_INTERACTIVE_ICON:
                 buttonJSX = <span className="" onClick={clickHandlerFn}>
                     {elmInteractiveIcon}
