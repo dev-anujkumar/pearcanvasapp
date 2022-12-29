@@ -1406,12 +1406,14 @@ export class TinyMceEditor extends Component {
                 currentElement = tinymce.activeEditor.selection.getNode();
                 let selectedClassName = tinymce.activeEditor.selection.getNode().className;
                 let selecteNodeName = tinymce.activeEditor.selection.getNode().tagName;
+                let currentElementNodes = [tinymce.activeEditor.selection.getNode().tagName];
 
                 /* If only formatted text is present inside editor with custom formatting eg glossary, mark-index */
                 if (childNodeTagsArr.includes(selecteNodeName.toLowerCase()) && !selectedClassName) {
                     while (!currentElement.className) {
                         currentElement = currentElement.parentNode;
                         selectedClassName = currentElement.className;
+                        currentElementNodes.push(currentElement.tagName);
                     }
                 }
                 /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
@@ -1420,12 +1422,14 @@ export class TinyMceEditor extends Component {
                     let offset = this.getOffSet(currentElement);
                     let textLength = currentElement.textContent.length;
                     if (textLength === offset || textLength === offset + 1) {
-                        if (!currentElement.nextSibling) {
+                        let elementTags = currentElementNodes.map(tag => tag.toLowerCase());
+                        if (!currentElement.nextSibling || (currentElement.nextSibling && elementTags.includes('code'))) {
                             let parentNode = currentElement.parentNode;
                             let innerHtml = parentNode.innerHTML + '&#65279';
                             parentNode.innerHTML = innerHtml;
                             let childNodes = parentNode.childNodes;
                             editor.selection.setCursorLocation(parentNode.childNodes[childNodes.length - 1], 0);
+                            if (elementTags.includes('code')) this.editorClick();
                         }
                     }
                 } 
