@@ -143,5 +143,5 @@ export const elementDataByTag = {
     }
 }
 
-export const childNodeTagsArr = ['strong', 'em', 'u', 's', 'sub', 'sup']
+export const childNodeTagsArr = ['strong', 'em', 'u', 's', 'sub', 'sup', 'code']
 export const allowedClassName = ['calloutone', 'callouttwo', 'calloutthree', 'calloutfour', 'markedforindex', 'pearson-component glossaryterm']
