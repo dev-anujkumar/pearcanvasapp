@@ -1280,10 +1280,7 @@ class ElementContainer extends Component {
             } else {
                 dataToSend.elementdata.assessmenttitle = assessmentData.title;
             }
-            let approvedAssessmentCheck = this.props.slateLevelData[config.slateManifestURN].status === "approved" && dataToSend.type === "element-assessment"  // this is to restrict the element call if assessment slate status is approved 
-            if(!approvedAssessmentCheck){
-                this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + assessmentData.format)
-            }
+            this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + assessmentData.format)
         } else {
             dataToSend.elementdata.usagetype = assessmentData;
             this.handleContentChange('', dataToSend, ELEMENT_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT + this.props.element.elementdata.assessmentformat)

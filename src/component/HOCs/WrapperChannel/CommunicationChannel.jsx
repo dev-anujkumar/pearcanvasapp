@@ -231,14 +231,7 @@ function CommunicationChannel(WrappedComponent) {
                                 dataToSend.elementdata.loAssociation = message.slateTagEnabled
                                 dataToSend.slateVersionUrn = slateManifestUrn
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
-                                let assessmentIdCheck = config.assessmentId in this.props.assessmentReducer;
-                                let assessmentID = assessmentIdCheck ? config.assessmentId : dataToSend.elementdata.assessmentid
-                                let assessmenUpdateStatus = this.props.assessmentReducer[assessmentID]?.showUpdateStatus
-                                let slateVersionStatus = this.props.slateLevelData[config.slateManifestURN].status
-                                let approvedAssessmentCheck = slateVersionStatus === "approved" && dataToSend.type === "element-assessment" && (assessmenUpdateStatus !== false) // this is to restrict the element call if assessment slate status is approved 
-                                if(!approvedAssessmentCheck){
-                                    this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
-                                }
+                                this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
                                 if(message.assessmentSlateData)
                                     this.handleRefreshSlate();
                             }
