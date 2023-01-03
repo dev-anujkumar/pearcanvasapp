@@ -23,10 +23,10 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
-import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM } from '../component/SlateWrapper/SlateWrapperConstants.js';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement, saveCaretPosition } from './SlateWrapper/SlateWrapper_Actions';
 import { deleteElement } from './ElementContainer/ElementContainer_Actions';
@@ -377,8 +377,13 @@ export class TinyMceEditor extends Component {
             let node = editor.selection.getNode();
             let nodeName = node ? node.tagName.toLowerCase() : null;
             let dataURI = null;
-            if (nodeName === 'dfn') {
+            const nodeNames = ['dfn','span'];
+            if (nodeNames.indexOf(nodeName) > -1) {
                 dataURI = node.getAttribute('data-uri');
+            } else if (validStylesTagList.indexOf(nodeName) > -1 && (node.closest('dfn') || node.closest('span'))) {
+                const dfnNode = node.closest('dfn') || node.closest('span');
+                nodeName = dfnNode ? dfnNode.tagName.toLowerCase() : null;
+                dataURI = dfnNode.getAttribute('data-uri');
             }
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
 
@@ -416,25 +421,47 @@ export class TinyMceEditor extends Component {
                     setFormattingToolbar('disableTinymceToolbar')
                 }
             }
-            if (e.command === 'mceToggleFormat' && e.value === 'italic') {
+            const eventValue = e.value;
+            if (e.command === 'mceToggleFormat' && allowedFormattings.indexOf(eventValue) > -1) {
                 let parser = new DOMParser();
                 let htmlDoc = parser.parseFromString(selectContent, 'text/html');
                 let dfnTags = htmlDoc.getElementsByTagName('DFN');
-                if ((nodeName && nodeName === 'dfn') || dfnTags.length || (nodeName && nodeName === 'code')) {
-                    let dfnAttribute = [];
-                    if(nodeName==='code'){
+                let spanTags = htmlDoc.getElementsByTagName('SPAN');
+                const validNodeNames = ['dfn','code','span'];
+                let termType = null;
+                if (nodeName === "span" || spanTags.length) {
+                    termType = MARKEDINDEX;
+                } else if (nodeName === "dfn" || dfnTags.length) {
+                    termType = GLOSSARY;
+                }
+                let tag = null;
+                if (termType === MARKEDINDEX) {
+                    tag = 'span';
+                } else if (termType === GLOSSARY) {
+                    tag = 'dfn';
+                }
+                if (validNodeNames.indexOf(nodeName) > -1 || dfnTags.length || spanTags.length) {
+                    let dataUriAttributesList = [];
+                    if (nodeName === 'code') {
                         dataURI = node.parentNode.getAttribute('data-uri');
-                        dfnAttribute.push(dataURI)
-                    }
-                    if (nodeName && nodeName === 'dfn') {
-                        dfnAttribute.push(dataURI);
-                    } else {
+                        dataUriAttributesList.push(dataURI)
+                    } else if (nodeNames.indexOf(nodeName) > -1) {
+                        dataUriAttributesList.push(dataURI);
+                    } else if (dfnTags.length) {
                         for (let index = 0; index < dfnTags.length; index++) {
-                            dfnAttribute.push(dfnTags[index].getAttribute('data-uri'));
+                            dataUriAttributesList.push(dfnTags[index].getAttribute('data-uri'));
+                        }
+                    } else if (spanTags.length) {
+                        for (let index = 0; index < spanTags.length; index++) {
+                            dataUriAttributesList.push(spanTags[index].getAttribute('data-uri'));
                         }
                     }
-                    for (let index = 0; index < dfnAttribute.length; index++) {
-                        this.handleGlossaryForItalic(activeElement, dfnAttribute[index]);
+                    for (let index = 0; index < dataUriAttributesList.length; index++) {
+                        const dataURINode = activeElement.querySelector(`${tag}[data-uri="${dataUriAttributesList[index]}"]`);
+                        const stylingOrderList = findStylingOrder(dataURINode);
+                        stylingOrderList.forEach((styleTag) => {
+                            this.handleFormatting(activeElement, dataUriAttributesList[index], termType, styleTag);
+                        })
                     }
                 }
             }
@@ -874,7 +901,7 @@ export class TinyMceEditor extends Component {
         /**
          * Case - clicking over mark index text
          */
-        else if ((e.target.nodeName == "SPAN" || e.target.closest("span")) && e.target.className === "markedForIndex") {
+        else if ((e.target.nodeName == "SPAN" && e.target.className && e.target.className === "markedForIndex" ) || (e.target.closest("span") && e.target.closest("span").className && e.target.closest("span").className === "markedForIndex")) {
             let uri = e.target.dataset.uri;
             let span = e.target.closest("span");
 
@@ -1382,21 +1409,36 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
+                currentElement = tinymce.activeEditor.selection.getNode();
                 let selectedClassName = tinymce.activeEditor.selection.getNode().className;
-                if(selectedClassName.toLowerCase() ==='calloutone' || selectedClassName.toLowerCase() ==='callouttwo' || selectedClassName.toLowerCase() ==='calloutthree' || selectedClassName.toLowerCase() ==='calloutfour' || selectedClassName.toLowerCase() === 'markedforindex' || selectedClassName.toLowerCase() === 'pearson-component glossaryterm'){
-                    let currentElement = tinymce.activeEditor.selection.getNode();
+                let selecteNodeName = tinymce.activeEditor.selection.getNode().tagName;
+                let currentElementNodes = [tinymce.activeEditor.selection.getNode().tagName];
+
+                /* If only formatted text is present inside editor with custom formatting eg glossary, mark-index */
+                if (childNodeTagsArr.includes(selecteNodeName.toLowerCase()) && !selectedClassName) {
+                    while (!currentElement.className) {
+                        currentElement = currentElement.parentNode;
+                        selectedClassName = currentElement.className;
+                        currentElementNodes.push(currentElement.tagName);
+                    }
+                }
+                /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+
+                if (allowedClassName.includes(selectedClassName.toLowerCase())) {
                     let offset = this.getOffSet(currentElement);
                     let textLength = currentElement.textContent.length;
                     if (textLength === offset || textLength === offset + 1) {
-                        if (!currentElement.nextSibling) {
+                        let elementTags = currentElementNodes.map(tag => tag.toLowerCase());
+                        if (!currentElement.nextSibling || (currentElement.nextSibling && elementTags.includes('code'))) {
                             let parentNode = currentElement.parentNode;
                             let innerHtml = parentNode.innerHTML + '&#65279';
                             parentNode.innerHTML = innerHtml;
                             let childNodes = parentNode.childNodes;
                             editor.selection.setCursorLocation(parentNode.childNodes[childNodes.length - 1], 0);
+                            if (elementTags.includes('code')) this.editorClick();
                         }
                     }
-                }
+                } 
             }
             if (activeElement.nodeName === "CODE") {
                 let tempKey = e.keyCode || e.which;
@@ -2797,122 +2839,18 @@ export class TinyMceEditor extends Component {
         this.props.learningObjectiveOperations(text);
     }
 
-    // Handle Glossary for Subscript
-    handleGlossaryForSubscript = (activeElement, dataURIId) => {
-        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
-        let subTag = dfn.closest('sub');
+    // Handle formatting for markedIndex and glossary
+    handleFormatting = (activeElement, dataURIId, term = GLOSSARY, styleTag) => {
+        let tag = (term === MARKEDINDEX) ? "span" : "dfn";
+        let dfn = activeElement.querySelector(`${tag}[data-uri="${dataURIId}"]`);
+        let subTag = dfn.closest(`${styleTag}`);
         if (subTag) {
-            dfn.innerHTML = '<sub>' + dfn.innerHTML + '</sub>'
+            dfn.innerHTML = `<${styleTag}>` + dfn.innerHTML + `</${styleTag}>`
             if (subTag.textContent === dfn.textContent) {
                 let innerHTML = subTag.innerHTML;
                 subTag.outerHTML = innerHTML;
             } else {
                 spanHandlers.splitOnTag(subTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Superscript
-    handleGlossaryForSuperscript = (activeElement, dataURIId) => {
-        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
-        let supTag = dfn.closest('sup');
-        if (supTag) {
-            dfn.innerHTML = '<sup>' + dfn.innerHTML + '</sup>'
-            if (supTag.textContent === dfn.textContent) {
-                let innerHTML = supTag.innerHTML;
-                supTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(supTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Strikethrough
-    handleGlossaryForStrikethrough = (activeElement, dataURIId) => {
-        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
-        let sTag = dfn.closest('s');
-        if (sTag) {
-            dfn.innerHTML = '<s>' + dfn.innerHTML + '</s>'
-            if (sTag.textContent === dfn.textContent) {
-                let innerHTML = sTag.innerHTML;
-                sTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(sTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Underline
-    handleGlossaryForUnderline = (activeElement, dataURIId) => {
-        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
-        let uTag = dfn.closest('u');
-        if (uTag) {
-            dfn.innerHTML = '<u>' + dfn.innerHTML + '</u>'
-            if (uTag.textContent === dfn.textContent) {
-                let innerHTML = uTag.innerHTML;
-                uTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(uTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Italic
-    handleGlossaryForItalic = (activeElement, dataURIId) => {
-        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
-        let emTag = dfn.closest('em');
-        if (emTag) {
-            dfn.innerHTML = '<em>' + dfn.innerHTML + '</em>'
-            if (emTag.textContent === dfn.textContent) {
-                let innerHTML = emTag.innerHTML;
-                emTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(emTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Bold
-    handleGlossaryForBold = (activeElement, dataURIId) => {
-        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
-        let strongTag = dfn.closest('strong');
-        if (strongTag) {
-            dfn.innerHTML = '<strong>' + dfn.innerHTML + '</strong>'
-            if (strongTag.textContent === dfn.textContent) {
-                let innerHTML = strongTag.innerHTML;
-                strongTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(strongTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle Glossary for Code
-    handleGlossaryForCode = (activeElement, dataURIId) => {
-        let dfn = activeElement.querySelector(`dfn[data-uri="${dataURIId}"]`);
-        let codeTag = dfn.closest('code');
-        if (codeTag) {
-            dfn.innerHTML = `<code>${dfn.innerHTML}</code>`
-            if (codeTag.textContent === dfn.textContent) {
-                let innerHTML = codeTag.innerHTML;
-                codeTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(codeTag.parentNode, dfn);
-            }
-        }
-    }
-
-    // Handle MarkedIndex for Italic
-    handleMarkedIndexForItalic = (activeElement, dataURIId) => {
-        let dfn = activeElement.querySelector(`span[data-uri="${dataURIId}"]`);
-        let emTag = dfn.closest('em');
-        if (emTag) {
-            dfn.innerHTML = '<em>' + dfn.innerHTML + '</em>'
-            if (emTag.textContent === dfn.textContent) {
-                let innerHTML = emTag.innerHTML;
-                emTag.outerHTML = innerHTML;
-            } else {
-                spanHandlers.splitOnTag(emTag.parentNode, dfn);
             }
         }
     }
@@ -2930,6 +2868,7 @@ export class TinyMceEditor extends Component {
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
         this.markIndexText = selectedText;
         let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+        let selectedNodeText = editor.selection.getNode().textContent;
         if (selectedText.trim() === "") {
             return false
         }
@@ -2937,11 +2876,23 @@ export class TinyMceEditor extends Component {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(elementId, "MARKEDINDEX", res => {
             let insertionText = ""
+            if (selectedText !== selectedNodeText) {
+                let stylesHTML = tinymce.activeEditor.selection.getEnd();
+                if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1 && stylesHTML.textContent === selectedText) {
+                    selectedText = getSelectionTextWithFormatting(stylesHTML);
+                }
+            }
             if (res.data && res.data.id) {
                 insertionText = `<span data-uri=${res.data.id} class="markedForIndex">${selectedText}</span>`
             }
             editor.selection.setContent(insertionText);
-            this.handleMarkedIndexForItalic(activeElement, res.data.id)
+            //Start of code to move styling inside span tag
+            const dataURINode = activeElement.querySelector(`span[data-uri="${res.data.id}"]`);
+            const stylingOrderList = findStylingOrder(dataURINode);
+            stylingOrderList.forEach((styleTag) => {
+                this.handleFormatting(activeElement, res.data.id, MARKEDINDEX, styleTag);
+            })
+            //End of code to move styling inside span tag
             this.toggleMarkedIndexPopup(true, 'Markedindex', res.data && res.data.id || null, () => { this.toggleMarkedIndexIcon(true); }, true);
             this.saveMarkedIndexContent()
         })
@@ -2962,6 +2913,7 @@ export class TinyMceEditor extends Component {
         let htmlDoc = parser.parseFromString(sText, 'text/html');
         let spans = htmlDoc.getElementsByClassName("poetryLine");
         let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
+        let selectedNodeText = editor.selection.getNode().textContent;
         if (spans && spans.length) {
             store.dispatch({
                 type: MULTIPLE_LINE_POETRY_ERROR_POPUP,
@@ -2982,17 +2934,23 @@ export class TinyMceEditor extends Component {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         getGlossaryFootnoteId(elementId, "GLOSSARY", res => {
             let insertionText = ""
+            if (selectedText !== selectedNodeText) {
+                let stylesHTML = tinymce.activeEditor.selection.getEnd();
+                if (stylesHTML.tagName && validStylesTagList.indexOf(stylesHTML.tagName.toLowerCase()) > -1 && stylesHTML.textContent === selectedText) {
+                    selectedText = getSelectionTextWithFormatting(stylesHTML);
+                }
+            }
             if (res.data && res.data.id) {
                 insertionText = `<dfn data-uri= ${res.data.id} class="Pearson-Component GlossaryTerm">${selectedText}</dfn>`
             }
             editor.selection.setContent(insertionText);
-            this.handleGlossaryForSubscript(activeElement, res.data.id);
-            this.handleGlossaryForSuperscript(activeElement, res.data.id);
-            this.handleGlossaryForStrikethrough(activeElement, res.data.id);
-            this.handleGlossaryForUnderline(activeElement, res.data.id);
-            this.handleGlossaryForItalic(activeElement, res.data.id);
-            this.handleGlossaryForBold(activeElement, res.data.id);
-            this.handleGlossaryForCode(activeElement, res.data.id);
+            //Start of code to move styling inside dfn tag
+            const dataURINode = activeElement.querySelector(`dfn[data-uri="${res.data.id}"]`);
+            const stylingOrderList = findStylingOrder(dataURINode);
+            stylingOrderList.forEach((styleTag) => {
+                this.handleFormatting(activeElement, res.data.id, GLOSSARY, styleTag);
+            })
+            //End of code to move styling inside dfn tag
             let dfn = activeElement.querySelector(`dfn[data-uri="${res.data.id}"]`);
             // this.glossaryTermText = dfn.innerHTML
             this.glossaryTermText = `<p>${dfn.innerHTML}</p>` || "<p></p>"

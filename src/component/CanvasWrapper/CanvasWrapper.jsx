@@ -20,7 +20,7 @@ import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList } from './CanvasWrapper_Actions';
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -86,9 +86,10 @@ export class CanvasWrapper extends Component {
         }
     }
 
-    showingToastMessage = (status) => {
+    showingToastMessage = (status, toastMsgText) => {
         this.setState({
-            toastMessage: status
+            toastMessage: status,
+            toastMsgText: toastMsgText
         })
         setTimeout(() => {
             this.setState({
@@ -200,7 +201,7 @@ export class CanvasWrapper extends Component {
                                 {
                                     this.state.toastMessage &&
                                     <div className="toastMsg">
-                                        <p>Index added successfully.</p>
+                                        <p>{this.state.toastMsgText}</p>
                                     </div>
                                 }
                                  {slateData[config.slateManifestURN] && slateData[config.slateManifestURN].type !== 'popup' && <div className={`navigation-container next-btn ${config.disableNext ? 'disabled':""}`}>
@@ -231,7 +232,7 @@ export class CanvasWrapper extends Component {
                                             return (<GlossaryFootnoteMenu permissions={this.props.permissions} glossaryFootnoteValue={this.props.glossaryFootnoteValue} showGlossaaryFootnote={this.props.glossaaryFootnotePopup} glossaryFootNoteCurrentValue = {this.props.glossaryFootNoteCurrentValue} audioGlossaryData={this.props.audioGlossaryData} figureGlossaryData={this.props.figureGlossaryData} markedIndexGlossaryData={this.props.markedIndexGlossary}/>)
                                         }
                                         if(markIndexpopUpStatus){
-                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue} isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage}/>
+                                            return <MarkIndexPopup permissions={this.props.permissions} showMarkedIndexPopup = {this.props.markedIndexPopup} markedIndexCurrentValue={this.props.markedIndexCurrentValue} markedIndexValue={this.props.markedIndexValue} isInGlossary={this.props.markedIndexGlossary?.popUpStatus} showingToastMessage = {this.showingToastMessage} showBlocker = {this.props.showCanvasBlocker}/>
 
                                         }
                                         else {
@@ -351,6 +352,7 @@ export default connect(
         savePopupParentSlateData,
         fetchLOBList,
         fetchUserLocation,
-        fetchDefaultLF
+        fetchDefaultLF,
+        setCautionBannerStatus
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

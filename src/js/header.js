@@ -29,9 +29,8 @@ export const publishContent = function (type) {
     if(type == 'slatePreview') {
         c4PublishObj.publishSlate(projectURN,firstSlate,citeURN);
     }
-    else if(type == 'projectPreview') {
-        c4PublishObj.publishTitle(projectURN,firstSlate,citeURN, undefined, true);
-
+    else {
+        c4PublishObj.publishTitle(projectURN,firstSlate,citeURN, undefined, true, type);
     }
 }
 let storageExist = ("sessionStorage" in window && window.sessionStorage);

@@ -1143,3 +1143,18 @@ ol li.listItemNumeroUnoLowerRoman {
   margin-top: 2px;
   outline: 0;
 }
+
+.dialog-window.removemarkedindexclass {
+  color: #000 !important;
+}
+.dialog-buttons.removemarkedindexclass {
+  margin-top: 30px;
+}
+.markedIndexWarning {
+  margin-bottom: 9px;
+  font-size: 16px;
+  color: #005a70;
+  font-weight: 600;
+  height: 22px;
+  margin-top: 6px;
+}

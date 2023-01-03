@@ -445,6 +445,9 @@ td.tableRowData {
     .learningToolContainer {
         max-height: 400px;
     }
+    .learningToolContainer-Banner {
+        max-height: 350px !important
+    }
 }
 
 @media only screen and (max-width:1200px) {

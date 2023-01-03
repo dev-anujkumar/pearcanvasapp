@@ -141,6 +141,9 @@
     margin-bottom: 0px !important;
     /*margin-top: 10px !important; */
 }
+.manifest-list-li > .editor > .element-container.p.showBorder, .manifest-list-li > .editor > .element-container.p.active{
+    background: none;
+}
 .bl .cypress-editable.place-holder::before {
     margin-top: -2px !important;
 }

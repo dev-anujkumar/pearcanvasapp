@@ -12,7 +12,7 @@ import elementTypeConstant, { containerTypeArray } from './ElementSepratorConsta
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
-import { getPasteValidated } from '../../constants/Element_Constants.js';
+import { getPasteValidated, MANIFEST_LIST } from '../../constants/Element_Constants.js';
 import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 
@@ -448,7 +448,7 @@ export const pasteElement = (separatorProps, togglePaste, type) => {
         index2ShowHide = index;
     }
     const selectedElement = separatorProps.elementSelection.element
-    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,SHOW_HIDE,POPUP]
+    const acceptedTypes=[ELEMENT_ASIDE,CITATION_GROUP_ELEMENT,POETRY,MULTI_COLUMN,SHOW_HIDE,POPUP,MANIFEST_LIST]
     if ((acceptedTypes.includes(selectedElement.type)) && type === 'copy'){
         const parentUrn = separatorProps.parentUrn ?? null
         const asideData = separatorProps.asideData ?? null

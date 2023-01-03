@@ -238,6 +238,7 @@ function CommunicationChannel(WrappedComponent) {
                         }
                 }
                     break;
+                case 'brokerPreview':
                 case 'slatePreview':
                 case 'projectPreview':
                     if (!config.savingInProgress) {
@@ -431,6 +432,12 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case "pendingTcmStatus":
                     config.pendingTcmStatus = message.status
+                    break;
+                case 'bannerIsVisible':
+                    if (message && message.hasOwnProperty('status')) {
+                        this.props.setCautionBannerStatus(message.status)
+                    }
+                    break;
             }
         }
 
