@@ -12,6 +12,7 @@ let initialState = {
         currentAssessmentSelected:{
          }
  },
+ projectInfo: {isBannerVisible: false}
 };
 
 describe('Cite/TDX single root component test', () => {

@@ -88,7 +88,8 @@ let initialState = {
     appStore: {
         usageTypeListData: { usageTypeList: ["Quiz", "Concept Check", "Test"] }
     },
-    assessmentReducer: assessmentRed
+    assessmentReducer: assessmentRed,
+    projectInfo: {isBannerVisible: false}
 };
 let store = mockStore(initialState);
 jest.mock('../../../src/js/toggleLoader', () => ({
@@ -548,7 +549,8 @@ describe('Testing Element Single Assessment - ELM ASSESSMENTS - Elm Functions', 
         appStore: {
             usageTypeListData: { usageTypeList: ["Quiz", "Concept Check", "Test"] }
         },
-        assessmentReducer: assessmentRed3
+        assessmentReducer: assessmentRed3,
+        projectInfo: {isBannerVisible: false}
     };
 
     it('Test-A.1-addPufAssessment function', () => {
