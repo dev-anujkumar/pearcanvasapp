@@ -280,8 +280,7 @@ const mapStateToProps = state => {
         projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
         defaultLF: state.metadataReducer.defaultLF,
         isSlateTagEnable: state.metadataReducer.slateTagEnable,
-        getRequiredSlateData: state.appStore.getRequiredSlateData,
-        assessmentReducer: state.assessmentReducer,
+        getRequiredSlateData: state.appStore.getRequiredSlateData
     };
 };
 
