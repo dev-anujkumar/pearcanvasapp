@@ -14,13 +14,15 @@ export const Tabbed2Column = (props) => {
     const renderTabbedElement = (element) => {
         if (element?.groupeddata?.bodymatter.length) {
             let parentUrn = {
-                type: 'tabbed-element',
+                type: 'groupedcontent',
+                subtype: 'tab',
                 manifestUrn: element.id,
                 contentUrn: element.contentUrn,
                 tbId: element.id, /* Will be used in tcm snapshot -2c->we */
             }
             let asideData = {
-                parentElementtype: 'tabbed-element',
+                parentElementType: 'groupedcontent',
+                parentElementSubtype: 'tab',
                 parentManifestUrn: element.id,
                 parentContentUrn: element.contentUrn,
             }

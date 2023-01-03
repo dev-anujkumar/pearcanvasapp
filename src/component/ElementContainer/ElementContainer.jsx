@@ -1870,7 +1870,7 @@ class ElementContainer extends Component {
     renderElement = (element = {}) => {
         let editor = '';
         let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn } = this.props;
-        element = parentUrn?.type === 'tabbed-element' ? {...element, parentUrn: parentUrn} : element;
+        element = (parentUrn?.type === 'groupedcontent' && parentUrn?.subtype === 'tab') ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
@@ -2215,7 +2215,7 @@ class ElementContainer extends Component {
                             handleUndoOption = {this.handleUndoOption}
                             splithandlerfunction = {this.props.splithandlerfunction}
                         />
-                    } else if (this.props?.parentUrn?.type === 'tabbed-element') {
+                    } else if (this.props?.parentUrn?.type === 'groupedcontent' && this.props?.parentUrn?.subtype === 'tab') {
                         editor = <TabbedTabContainer
                         activeElement = {this.props.activeElement}
                         showBlocker = {this.props.showBlocker}
@@ -2542,7 +2542,7 @@ class ElementContainer extends Component {
 
     // function to render Title label for tabbed element
     renderTabTitleLabel = (element) => {
-        let activeColumnLabel = 'Tit';
+        let activeColumnLabel = '';
         for (let propsElementObject of this.props.multipleColumnData) {
             if (propsElementObject.containerId === element.id) {
                 activeColumnLabel = propsElementObject.columnIndex;
@@ -2555,8 +2555,7 @@ class ElementContainer extends Component {
 
     // function to render multiple columns for 3 column container based on bodymatter
     renderMultipleColumnLabels = (element) => {
-        let activeColumnLabel;
-        activeColumnLabel = ('parentUrn' in element && element.parentUrn?.type === 'tabbed-element') ? "" : "C1";
+        let activeColumnLabel = "C1";
         for (let propsElementObject of this.props.multipleColumnData) {
             if (propsElementObject.containerId === element.id) {
                 activeColumnLabel = propsElementObject.columnIndex;
@@ -2582,25 +2581,11 @@ class ElementContainer extends Component {
             containerId: objKey,
             columnIndex: `C${index + 1}`
         }
-        multipleColumnObjData = index === 'Tit' ? multipleColumnObjData.columnIndex = 'Tit' : multipleColumnObjData;
+        multipleColumnObjData = index === 'Tit' ? {...multipleColumnObjData, columnIndex: 'Tit'} : multipleColumnObjData;
         setTimeout(() => {
             this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
         }, 0)
     }
-
-    // updateTabSelection = (element) => {
-    //     if(config.popupCreationCallInProgress){ /** Restrict click on 2C if saving is inprogress PE */
-    //         return false
-    //     }
-    //     let objKey = element.id;
-    //     let multipleColumnObjData = {
-    //         containerId: objKey,
-    //         columnIndex: 'Tab'
-    //     }
-    //     setTimeout(() => {
-    //         this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
-    //     }, 0)
-    // }
 
     /**
      * Renders the Cut/Copy Urn/element dialog menu

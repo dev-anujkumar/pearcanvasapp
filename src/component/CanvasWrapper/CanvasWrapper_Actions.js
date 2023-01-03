@@ -281,7 +281,7 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"]  
                 }
-                if (element?.parentUrn?.type === 'tabbed-element') {
+                if (element?.parentUrn?.subtype === 'tab') {
                     elementType = {
                         elementType: elementDataBank['group']["elementType"],
                         primaryOption: elementDataBank['group']["primaryOption"],

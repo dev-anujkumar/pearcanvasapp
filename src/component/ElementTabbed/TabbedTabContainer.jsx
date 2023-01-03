@@ -15,16 +15,16 @@ export const TabbedTabContainer = (props) => {
 
     const renderTabElement = (tab) => {
         let groupedDataBodymatter = tab?.groupeddata && tab?.groupeddata?.bodymatter || [];
-        let highlightTab = true;
+        let highlightTab = false;
         for (let element of props.multipleColumnData) {
-            if (element.containerId === tab.id && element.columnIndex !== 'Tit') {
-                highlightTab = false;
+            if (element.containerId === tab.id && element.columnIndex === 'Tit') {
+                highlightTab = true;
             }
         }
         if (highlightTab) {
             return (
                 <React.Fragment>
-                    <TabbedTinyMCE {...props}/>
+                    <TabbedTinyMCE {...props} parentElement = {tab}/>
                 </React.Fragment>
             )
         } else {
