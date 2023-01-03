@@ -220,6 +220,9 @@ function CommunicationChannel(WrappedComponent) {
                         let slateManifestUrn = message.slateManifestUrn ?? config.slateManifestURN;
                         let isFromRC = message.assessmentSlateData ? true : false;
                         this.props.isLOExist(messageData);
+                        const { assessmenId } = this.props.assessmentReducer
+                        const slateVersionStatus = this.props.slateLevelData[config.slateManifestURN].status
+                        const approvedAssessmentCheck = slateVersionStatus === "approved" && dataToSend.type === "element-assessment"
                         if (config.parentEntityUrn !== ("Front Matter" || "Back Matter")) {
                             let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
                             sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ? assessmentUrn : config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
@@ -231,7 +234,13 @@ function CommunicationChannel(WrappedComponent) {
                                 dataToSend.elementdata.loAssociation = message.slateTagEnabled
                                 dataToSend.slateVersionUrn = slateManifestUrn
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
-                                this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
+                                if(approvedAssessmentCheck && assessmenId){    // this is to update id and versionUrn if assessment slate status is approved 
+                                    dataToSend.id = assessmenId
+                                    dataToSend.versionUrn = assessmenId
+                                }
+                                if(assessmenId){
+                                    this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
+                                }
                                 if(message.assessmentSlateData)
                                     this.handleRefreshSlate();
                             }

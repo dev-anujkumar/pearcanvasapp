@@ -20,6 +20,8 @@ import { handleAutonumberingOnCreate, handleAutonumberingForElementsInContainers
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberedElement } from './UpdateElements';
+import { updateAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import store from '../../appstore/store';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 
 const { 
@@ -244,6 +246,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         if (updatedData.type == "element-assessment") {
             let newAssessmentId = response?.data?.elementdata?.assessmentid;
             config.assessmentId = newAssessmentId;
+            store.dispatch(updateAssessmentId(response?.data?.id));
         }    
     }
     catch(error) {
