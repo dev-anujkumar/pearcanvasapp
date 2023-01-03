@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import Tooltip from '../Tooltip';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor";
 import { CrossRefCheckbox } from './CrossRefCheckBox';
+import { MARKEDINDEX_NO_RESULT_FOUND_TEXT } from './../../constants/Element_Constants';
 
 
 export const CrossReference = ({crossRefValue}) => {
@@ -27,6 +28,7 @@ export const CrossReference = ({crossRefValue}) => {
     const handleClickOutside = event => {
         if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
             setPopUpStatus(false);
+            setShowErrorMsg(false);
         }
     };
 
@@ -101,7 +103,7 @@ export const CrossReference = ({crossRefValue}) => {
             }
             {
                 !filteredDropDown?.length && showErrorMsg && <div className="cross-ref-dropdown-without-result">
-                    <span>No result found</span>
+                    <span>{MARKEDINDEX_NO_RESULT_FOUND_TEXT}</span>
                 </div>
             }
         </div>
