@@ -1038,7 +1038,7 @@ export class TinyMceEditor extends Component {
                     lastCont = this.lastContent;
                 }
                 this.lastContent = activeElement.innerHTML;
-                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' && this.props.element.type !== "element-blockfeature"|| (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
+                if (!isMediaElement && !activeElement.children.length && this.props?.asideData?.parentElementSubtype !== "tab" && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' && this.props.element.type !== "element-blockfeature"|| (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = lastCont;

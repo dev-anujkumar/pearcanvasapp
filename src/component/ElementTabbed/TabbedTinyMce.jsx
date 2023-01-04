@@ -22,7 +22,7 @@ const TabbedTinyMCE = (props) => {
         handleBlur  :  props.handleBlur,
         slateLockInfo : props.slateLockInfo,
         // elementId : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].id,
-        parentElement : props.tabElement,
+        parentElement : props.parentElement,
         // citationAsideData : props.citationAsideData
     }
 
