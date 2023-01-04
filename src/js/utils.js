@@ -578,12 +578,8 @@ export const prepareBqHtml = (node) => {
         if (checkStyle) {
             const callOut = node?.parentNode?.parentNode?.firstElementChild?.firstElementChild?.firstElementChild?.firstElementChild
             if(callOut){
-                if(checkStyle.nodeName == "SUP" || checkStyle.nodeName == 'ABBR' || checkStyle.nodeName == 'SPAN'){
-                    return node.parentNode.parentNode.firstElementChild.firstElementChild.innerHTML
-                } else{
                 //for callout and figure link
                 return node.parentNode.parentNode.firstElementChild.firstElementChild.innerHTML
-                }
             }
             else{
                 //for formating options

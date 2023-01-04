@@ -1039,8 +1039,14 @@ class ElementContainer extends Component {
                             displayedlabel: displayedlabel,
                             manualoverride: manualoverride
                         }
-                        this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
-                        (this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;
+                        // this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
+                        // (this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;
+                        if(this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
+                            delete updatedElement?.manualoverride
+                        }
+                        if(this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+                            delete updatedElement?.displayedlabel
+                        }
                         this.handleAutonumberAfterUpdate(previousElementData, updatedElement, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
                     }
                 }
@@ -3055,8 +3061,8 @@ const mapDispatchToProps = (dispatch) => {
         enableAsideNumbering: (data,id) => {
             dispatch(enableAsideNumbering(data,id))
         },
-        updateAsideNumber: (previousElementData, index, undefined, isAutoNumberingEnabled, autoNumberOption) => {
-            dispatch(updateAsideNumber(previousElementData, index, undefined, isAutoNumberingEnabled, autoNumberOption))
+        updateAsideNumber: (previousElementData, index, elementId, isAutoNumberingEnabled, autoNumberOption) => {
+            dispatch(updateAsideNumber(previousElementData, index, elementId, isAutoNumberingEnabled, autoNumberOption))
         },
         updateAutonumberingOnElementTypeUpdate: (titleHTML, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
             dispatch(updateAutonumberingOnElementTypeUpdate(titleHTML, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData))

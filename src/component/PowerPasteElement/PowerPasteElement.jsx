@@ -147,8 +147,16 @@ export const createPastedElements = (childElements, elements) => {
           // if the list starts other than numeric format then calls addSpecificOListClasses method 
           // otherwise calls addOListClasses method for adding list classes to html and if the list 
           // does not start with digits and has style attribute then remove it
-          childElements[i].hasAttribute('style') ? powerPasteHelpers.addSpecificOListClasses(childElements[i], childElements[i], 1) : powerPasteHelpers.addOListClasses(childElements[i], 1);
-          childElements[i].hasAttribute('style') ? childElements[i].removeAttribute('style') : childElements[i];
+          
+          // childElements[i].hasAttribute('style') ? powerPasteHelpers.addSpecificOListClasses(childElements[i], childElements[i], 1) : powerPasteHelpers.addOListClasses(childElements[i], 1);
+          // childElements[i].hasAttribute('style') ? childElements[i].removeAttribute('style') : childElements[i];
+          if(childElements[i].hasAttribute('style')){
+            powerPasteHelpers.addSpecificOListClasses(childElements[i], childElements[i], 1);
+            childElements[i].removeAttribute('style');
+          }
+          else {
+            powerPasteHelpers.addOListClasses(childElements[i], 1);
+          }
           elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
           break;
         case 'IMG':
