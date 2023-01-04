@@ -360,10 +360,10 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             manualoverride : manualoverride
         }
         if(autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
-            delete dataToSend.manualoverride
+            delete data.manualoverride
         }
         if(autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
-            delete dataToSend.displayedlabel
+            delete data.displayedlabel
         }
     }
     return data
