@@ -147,7 +147,7 @@ export function getInteractivePostMsg(data){
         const interactives = data?.split("|") ?? [];
         if (interactives?.length && interactives[0] === "interactive") {
             let dataToSend = {}
-            interactives.map((key) => {
+            interactives.forEach((key) => {
                 const itemKey = key?.split("_");
                 switch (itemKey[0]) {
                     case 'wUrn':

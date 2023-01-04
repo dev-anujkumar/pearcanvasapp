@@ -46,7 +46,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         var footnoteContentText, glossaryFootElem = {}, glossaryContentText, tempGlossaryContentText;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
         const asideParent = store.getState().appStore?.asideData
-        if (showHideElement || asideParent?.type === 'showhide' && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry') && blockfeatureType !== "pullquote") { /** Glossary-Footnotes inside Show-Hide */
+        if (showHideElement || asideParent?.type === 'showhide' && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry') && elementType !== 'element-blockfeature') { /** Glossary-Footnotes inside Show-Hide */
             /* Get the element where footnote/Glossery is added */
             glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
             if(tempIndex.length == 4 && glossaryFootElem[tempIndex[0]]?.type === "showhide" && elementType === 'element-blockfeature'){
@@ -72,7 +72,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         else if (tempIndex.length == 6 && elementType === "figure" && newBodymatter[tempIndex[0]].type === 'groupedcontent' ) {
             glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]?.elementdata?.bodymatter[tempIndex[3]]?.contents?.bodymatter[tempIndex[4]];
         }
-        else if (elementType === "figure" || (elementType === 'element-blockfeature' && blockfeatureType !== "pullquote" )) {
+        else if (elementType === "figure") {
             let tempUpdatedIndex = index.split('-');
             let updatedIndex = tempUpdatedIndex[0];
             if(tempIndex.length == 4 && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'groupedcontent'){
@@ -80,6 +80,74 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             } else if((tempIndex.length == 3 || tempIndex.length == 4) && elementType === 'element-blockfeature' && newBodymatter[updatedIndex].type == 'element-aside'){
                 glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[0]]
             } else {
+                glossaryFootElem = newBodymatter[updatedIndex]
+            }
+        } else if (elementType === 'element-blockfeature' && blockfeatureType !== "pullquote" ) {
+            let updatedIndex = index;
+            if (typeof index === 'string' && index.includes('-')) {
+                let tempUpdatedIndex = index.split('-');
+                updatedIndex = tempUpdatedIndex[0];
+            }
+            if (elementType === 'element-blockfeature' && newBodymatter[tempIndex[0]]?.type == 'groupedcontent') {
+                let indexesLen = tempIndex.length;
+                switch (indexesLen) {
+                    case 4:
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[tempIndex[2]]
+                        break;
+                    case 5:
+                        const glossaryFootnoteElementOfWE = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
+                        if (glossaryFootnoteElementOfWE?.displayedlabel === "Worked Example") {
+                            glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[3]];
+                        } else {
+                            glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]];
+                        }
+                        break;
+                    case 6:
+                        let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]]?.elementdata ? newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]]?.elementdata.bodymatter[tempIndex[3]] : newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
+                        if (glossaryFootnoteElementOfWe?.type === 'manifest') {
+                            glossaryFootElem = glossaryFootnoteElementOfWe?.contents?.bodymatter[tempIndex[4]];
+                        } else if (glossaryFootnoteElementOfWe?.type === 'showhide') {
+                            glossaryFootElem = glossaryFootnoteElementOfWe.interactivedata[asideParent.sectionType][tempIndex[4]];
+                        }
+                        break;
+                    case 7:
+                        glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]]?.interactivedata[asideParent?.sectionType][tempIndex[5]]
+                        break;
+                    case 8:
+                        glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents?.bodymatter[tempIndex[4]].interactivedata[asideParent?.sectionType][tempIndex[6]]
+                        break;
+                }
+            } else if (elementType === 'element-blockfeature' && newBodymatter[updatedIndex]?.type == 'element-aside') {
+                let indexesLen = tempIndex.length;
+                switch (indexesLen) {
+                    case 3:
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[1]]
+                        break;
+                    case 4:
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[1]]?.contents?.bodymatter[tempIndex[2]]
+                        break;
+                    case 5:
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[1]]?.interactivedata[asideParent?.sectionType][tempIndex[3]]
+                        break;
+                    case 6:
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.elementdata?.bodymatter[tempIndex[1]]?.contents?.bodymatter[tempIndex[2]].interactivedata[asideParent?.sectionType][tempIndex[4]]
+                        break;
+                }
+            } else if (newBodymatter[tempIndex[0]]?.type === 'showhide' && elementType === 'element-blockfeature') {
+                let indexesLen = tempIndex.length;
+                switch (indexesLen) {
+                    case 4:
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.sectionType][tempIndex[2]]
+                        break;
+                    case 5:
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata?.bodymatter[tempIndex[3]]
+                        break;
+                    case 6:
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.interactivedata[asideParent?.parent?.showHideType][tempIndex[2]].elementdata?.bodymatter[tempIndex[3]].contents?.bodymatter[tempIndex[4]];
+                        break;
+                }
+            } 
+            else {
                 glossaryFootElem = newBodymatter[updatedIndex]
             }
         }
@@ -584,7 +652,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let elementIndex = indexElement
         if (typeof index === 'string' && index.includes('-')) {
             let tempIndex = index && typeof (index) !== 'number' && index.split('-');
-            if (tempIndex.length == 7) {
+            if (tempIndex.length == 8) {
+                elementIndex = tempIndex[0] + '-' + tempIndex[1] + '-' + tempIndex[2] + '-' + tempIndex[3] + '-' + tempIndex[4] + '-' + tempIndex[5] + '-' + tempIndex[6] + '-' + tempIndex[7]
+            } else if (tempIndex.length == 7) {
                 elementIndex = tempIndex[0] + '-' + tempIndex[1] + '-' + tempIndex[2] + '-' + tempIndex[3] + '-' + tempIndex[4] + '-' + tempIndex[5] + '-' + tempIndex[6]
             } else if (tempIndex.length == 6) {
                 elementIndex = tempIndex[0] + '-' + tempIndex[1] + '-' + tempIndex[2] + '-' + tempIndex[3] + '-' + tempIndex[4] + '-' + tempIndex[5]
@@ -789,7 +859,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
         if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
             let showhideTypeVal = "", showHideObject = undefined
-            if(showHideElement ||  asideParent?.type === 'showhide'){ /** Glossary-Footnotes inside Show-Hide */
+            if((showHideElement ||  asideParent?.type === 'showhide') && elementType !== 'element-blockfeature' ){ /** Glossary-Footnotes inside Show-Hide */
                 showhideTypeVal = asideParent?.sectionType;//findSectionType(shTypeIndex?.toString())
                 let showhideElement = getShowHideElement(tcmBodymatter, innerSH_Index.length, innerSH_Index, elementType)
                 let innerSH_Element = showhideTypeVal && showhideElement?.interactivedata[showhideTypeVal][innerSH_Index]
@@ -841,7 +911,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
 
-        if (showHideElement || asideParent?.type === 'showhide'  && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry') && blockfeatureType !== "pullquote") {/** Glossary-Footnotes inside Show-Hide */
+        if (showHideElement || asideParent?.type === 'showhide'  && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry') && elementType !== 'element-blockfeature') {/** Glossary-Footnotes inside Show-Hide */
             newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
             if(tempIndex.length == 4 && asideParent?.type === 'showhide' && elementType === 'element-blockfeature'){
                 newBodymatter[tempIndex[0]].interactivedata.show[tempIndex[2]] = res.data;
@@ -866,7 +936,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         else if (tempIndex.length === 6 && elementType == 'figure') {
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = res.data;
         }
-        else if (elementType === "figure" || (elementType === 'element-blockfeature' && blockfeatureType !== "pullquote")) {
+        else if (elementType === "figure") {
             let updatedIndex = index.split('-')[0];
             if(tempIndex.length === 4 && newBodymatter[updatedIndex].type === 'groupedcontent' && elementType === 'element-blockfeature'){
                 newBodymatter[updatedIndex].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
@@ -877,7 +947,85 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             } else{
                 newBodymatter[updatedIndex] = res.data;
             }
-        } else if (elementType === 'element-blockfeature' && blockfeatureType === "pullquote") {
+        } 
+        else if (elementType === 'element-blockfeature' && blockfeatureType !== "pullquote") {
+            let updatedIndex = index;
+            if (typeof index === 'string' && index.includes('-')) {
+                let tempUpdatedIndex = index.split('-');
+                updatedIndex = tempUpdatedIndex[0];
+            }
+            if (newBodymatter[tempIndex[0]]?.type === 'groupedcontent' && elementType === 'element-blockfeature') {
+                let indexesLen = tempIndex.length;
+                switch (indexesLen) {
+                    case 4: {
+                        newBodymatter[updatedIndex].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data;
+                        break;
+                    }
+                    case 5: {
+                        let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]]
+                        if (glossaryFootnoteElementOfWe?.displayedlabel === "Worked Example") {
+                            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]] = res.data;
+                        } else {
+                            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = res.data;
+                        }
+                        break;
+                    }
+                    case 6: {
+                        let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]]?.elementdata ? newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]]?.elementdata.bodymatter[tempIndex[3]] : newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
+                        if (glossaryFootnoteElementOfWe?.type === 'manifest') {
+                            glossaryFootnoteElementOfWe.contents.bodymatter[tempIndex[4]] = res.data;
+                        }
+                        else if (glossaryFootnoteElementOfWe?.type === 'showhide') {
+                            glossaryFootnoteElementOfWe.interactivedata[asideParent.sectionType][tempIndex[4]] = res.data;
+                        }
+                        break;
+                    }
+                    case 7:
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].interactivedata[asideParent.sectionType][tempIndex[5]] = res.data;
+                        break;
+                    case 8:
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]].interactivedata[asideParent.sectionType][tempIndex[6]] = res.data;
+                        break;
+                }
+            } else if (newBodymatter[updatedIndex]?.type === 'element-aside') {
+                let indexesLen = tempIndex.length;
+                switch (indexesLen) {
+                    case 3: {
+                        newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]] = res.data;
+                        break;
+                    }
+                    case 4: {
+                        newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]] = res.data;
+                        break;
+                    }
+                    case 5: {
+                        newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].interactivedata[asideParent.sectionType][tempIndex[3]] = res.data;
+                        break;
+                    }
+                    case 6: {
+                        newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].interactivedata[asideParent.sectionType][tempIndex[4]] = res.data;
+                        break;
+                    }
+                }
+            } else if (newBodymatter[tempIndex[0]]?.type === 'showhide' && elementType === 'element-blockfeature') {
+                let indexesLen = tempIndex.length;
+                switch (indexesLen) {
+                    case 4:
+                        newBodymatter[tempIndex[0]].interactivedata[asideParent?.sectionType][tempIndex[2]] = res.data
+                        break;
+                    case 5:
+                        newBodymatter[tempIndex[0]].interactivedata[asideParent.parent.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = res.data
+                        break;
+                    case 6:
+                        newBodymatter[tempIndex[0]].interactivedata[asideParent.parent.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = res.data
+                        break;
+                }
+            } 
+            else {
+                newBodymatter[updatedIndex] = res.data;
+            }
+        }
+        else if (elementType === 'element-blockfeature' && blockfeatureType === "pullquote") {
             let updatedIndex = index;
             if (typeof index === 'string' && index.includes('-')) {
                 let tempUpdatedIndex = index.split('-');

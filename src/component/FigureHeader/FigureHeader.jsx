@@ -337,7 +337,7 @@ export const FigureHeader = (props) => {
                 const numberVal = parseInt(evt.target.innerText)
                 isnum = /^[1-9][0-9]*$/.test(numberVal);
             }
-            if (labelNumberSettingDropDown === AUTO_NUMBER_SETTING_RESUME_NUMBER && !isnum) {
+            if (labelNumberSettingDropDown == AUTO_NUMBER_SETTING_RESUME_NUMBER && !isnum) {
                 return false;
             } else {
                 setCurrentNumberValue(evt.target.innerText?.replace(/&nbsp;/g, ' ')?.replaceAll('&nbsp;', ' '));

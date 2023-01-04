@@ -153,9 +153,9 @@ export const filterCiteTdxData = (assessmentType, assessmentTitle, filterUUID) =
     }
 }
 
-export function getMCQGuidedData(workUrn) {
+export async function getMCQGuidedData(workUrn) {
     try {
-        let responseData = axios.get(`${config.ASSESSMENT_ENDPOINT}assessmentitem/v2/${workUrn}/content`,
+        let responseData = await axios.get(`${config.ASSESSMENT_ENDPOINT}assessmentitem/v2/${workUrn}/content`,
             {
                 headers: {
                     'myCloudProxySession': config.myCloudProxySession

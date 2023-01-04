@@ -113,7 +113,7 @@ class LearningTool extends React.Component {
         }
         return (
             <>
-                <div className="learningToolContainer">
+                <div className={`learningToolContainer ${this.props.isBannerVisible ? 'learningToolContainer-Banner' : ''}`}>
                     <div className="learningToolHeader">
                         {/* Title of POPUP */}
                         <div className="learningToolHeaderTitle">
@@ -163,7 +163,8 @@ const mapActionToProps = {
  */
 const mapStateToProps = (state) => {
     return {
-        learningToolReducer: state.learningToolReducer
+        learningToolReducer: state.learningToolReducer,
+        isBannerVisible: state.projectInfo.isBannerVisible
     }
 }
 

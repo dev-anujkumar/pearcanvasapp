@@ -340,6 +340,9 @@ class ElementContainer extends Component {
             }
             config.lastActiveElementId = element?.id
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
+            if(this.props.element.type === "manifestlist" && this.props.parentElement.type === "element-aside"){
+                this.toolbarHandling('add')
+            }
             this.props.fetchCommentByElement(this.props.element.id);
         }
         this.handleCommunication(this.props.element.id);
@@ -2364,7 +2367,7 @@ class ElementContainer extends Component {
                     break;
 
                 case elementTypeConstant.BLOCK_LIST:
-                    editor = <BlockListWrapper grandParentManifestList={this.props?.currentManifestList} asideData={this.props?.asideData} indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} isBlockList={true}/>;
+                    editor = <BlockListWrapper grandParentManifestList={this.props?.currentManifestList} asideData={this.props?.asideData} pasteElement={this.props.pasteElement} indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} isBlockList={true}/>;
                     labelText = 'BL'
                     break;
 
@@ -2742,7 +2745,6 @@ class ElementContainer extends Component {
             showDeleteElemPopup: false,
             showAlfrescoExpansionPopup: false,
             showBlockCodeElemPopup: false,
-            showAlfrescoExpansionPopup: false,
             comment: "",
             warningPopupCheckbox: false
         });

@@ -39,6 +39,16 @@ describe('Header module testing', () => {
         publishContent(type)
     })
 
+    it('Testing publishContent : else', () => {
+        let type = 'test'
+        jest.mock("../../src/js/c4_module", () => {
+            let c4PublishObj = {}
+            return c4PublishObj
+        })
+       
+        publishContent(type)
+    })
+
     it('Testing logout function', () => {
         logout()
     })

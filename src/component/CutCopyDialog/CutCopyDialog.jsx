@@ -41,9 +41,8 @@ export default CutCopyDialog;
 export const renderCutCopyOption = (componentProps) => {
     const { userRole,permissions, element: { type,subtype } } = componentProps
     const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list", "figure", "stanza", "element-citation","citations","poetry","groupedcontent","showhide","discussion","popup","element-dialogue"],
-            allowedRoles = ["admin", "manager", "edit", "default_user"],
-            restrictedTypes = ["manifestlist"];
-    if (!restrictedTypes.includes(type) && (acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) ) {
+            allowedRoles = ["admin", "manager", "edit", "default_user"]
+    if ((acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) ) {
         return (
             <>
                 <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "copy")}>

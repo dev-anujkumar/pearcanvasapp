@@ -32,7 +32,8 @@ import {
     OEP_DISCUSSION,
     UPDATE_AUTONUMBER_MAPPER_KEYS,
     PROJECT_LOB_LIST,
-    NO_DISCUSSION_ITEMS
+    NO_DISCUSSION_ITEMS,
+    BANNER_IS_VISIBLE
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1409,7 +1410,7 @@ function prepareDataForTcmCreate(parentElement, popupField , responseData, getSt
     if (parentElement && parentElement.type =='popup' && formattedTitleField.indexOf(popupField) !==-1 ) {
         elmUrn.push(responseData.id)
     }
-    elmUrn.map((item) => {
+    elmUrn.forEach((item) => {
         return tcmData.push({
             "txCnt": 1,
             "isPrevAcceptedTxAvailable": false,
@@ -1827,4 +1828,11 @@ export const fetchUserLocation = () => async () => {
 	} catch (error) {
 		console.error("Error", error);
 	}
+}
+
+export const setCautionBannerStatus = (status) => (dispatch, getState) => {
+    return dispatch({
+        type: BANNER_IS_VISIBLE,
+        payload: status
+    })
 }

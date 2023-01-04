@@ -45,7 +45,7 @@ export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
         if (Object.keys(projectContent)?.length > 0) {
             let numberedElements = {}
             let requiredProjectContent = {}
-            Object.keys(projectContent).map((key) => {
+            Object.keys(projectContent).forEach((key) => {
                 requiredProjectContent[key.slice(0,-1)] = projectContent[key]
             })
             numberedElements = getNumberedElements(requiredProjectContent, currentParentUrn);

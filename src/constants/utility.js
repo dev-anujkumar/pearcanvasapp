@@ -20,6 +20,11 @@ export const MATCH_CLASSES_DATA = ['class="decimal"', 'class="disc"', 'class="he
 export const ALLOWED_ELEMENT_IMG_PASTE = ['element-authoredtext','element-learningobjectives','element-blockfeature','element-list']
 export const AUTO_NUMBER_PLACEHOLDER = ["Label Name", "Label", "Number"]
 export const PLACEHOLDER_ARRAY = ["Attribution Text", "Code Block Content", "Enter Button Label"]
+export const GLOSSARY = 'GLOSSARY';
+export const MARKEDINDEX = 'MARKEDINDEX';
+export const validStylesTagList = ['strong','em','u','s','sup','sub','code'];
+export const allowedFormattings = ['bold','italic','underline','strikethrough','superscript','subscript'];
+export const validFirstNodeTags = ['span','dfn'];
 
 export const requestConfigURI = () => {
     let uri = '';
@@ -721,10 +726,7 @@ export const releaseOwnerPopup=(data)=>{
  * @param isSubscribed- whether it is subscribed or not
  */
 export const isOwnerRole = (projectSharingRole, isSubscribed) => {
-    if (projectSharingRole === "OWNER" && isSubscribed) {
-        return true
-    }
-    return false
+    return projectSharingRole === "OWNER" && isSubscribed;
 }
 
 /**It checks whether its a Subscriber project or not
@@ -732,10 +734,7 @@ export const isOwnerRole = (projectSharingRole, isSubscribed) => {
  * @param isSubscribed- whether it is subscribed or not
  */
 export const isSubscriberRole = (projectSharingRole, isSubscribed) => {
-    if (projectSharingRole === "SUBSCRIBER" && isSubscribed) {
-        return true
-    }
-    return false
+    return projectSharingRole === "SUBSCRIBER" && isSubscribed;
 }
 
 // function to remove tinymce spellcheck DOM attributes from innerHTML
@@ -943,4 +942,39 @@ export const removeStyleAttribute = (html) => {
     tinyMCE.$(tempDiv).find('span').removeAttr('style');
     tinyMCE.$(tempDiv).find('s').removeAttr('style');
     return tempDiv.innerHTML;
+}
+
+export const getSelectionTextWithFormatting = (node) => {
+    let tagName = node.tagName;
+    let tempDiv = document.createElement(tagName);
+    tempDiv.innerHTML = node.innerHTML;
+    return tempDiv.outerHTML;
+}
+
+export const getParentNode = (node, stylingOrderList) => {
+    let parentNode = node?.parentNode;
+    if (parentNode && parentNode.tagName && validStylesTagList.indexOf(parentNode.tagName.toLowerCase()) > -1) {
+        stylingOrderList.push(parentNode.tagName.toLowerCase());
+        getParentNode(parentNode, stylingOrderList);
+    }
+}
+
+export const findStylingOrder = (node) => {
+    let stylingOrderList = [];
+    if (node && node.tagName && validFirstNodeTags.indexOf(node.tagName.toLowerCase()) > -1) {
+        getParentNode(node, stylingOrderList);
+    }
+    return stylingOrderList;
+}
+
+export const removeMarkedIndexDOMAttributes = (innerHTML, currentMarkedIndexId) => {
+    const markedIndexDiv = document.createElement('div');
+    markedIndexDiv.innerHTML = innerHTML
+    while(tinyMCE.$(markedIndexDiv).find(`span[data-uri="${currentMarkedIndexId}"]`)?.length) {
+        tinyMCE.$(markedIndexDiv).find(`span[data-uri="${currentMarkedIndexId}"]`).each(function () {
+            let innerHtml = this?.innerHTML;
+            this.outerHTML = innerHtml;
+        });
+    }
+    return markedIndexDiv?.innerHTML;
 }

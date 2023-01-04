@@ -79,7 +79,7 @@ class RootCiteTdxComponent extends Component {
     const uuidToSearch = filterUUID ? filterUUID : searchUuidVal;
     return (
       <div className="vex-overlay cite-wrapper">
-        <div className="root-container">
+        <div className={`root-container ${this.props.isBannerVisible ? 'learningToolContainer-Banner' : ''}`}>
           <CiteComponentError>
             <CiteTdxHeader headerProps={this.headerProps} resetPage={this.props.resetPage} />
             <FilterAssessmentData assessmentType={this.props.assessmentType} AssessmentSearchTitle={this.props.AssessmentSearchTitle} resetPage={this.props.resetPage} currentPageNo={this.state.currentPageNo}  searchTitle={titleToSearch} filterUUID={uuidToSearch} openedFrom = {this.props.openedFrom}/>
@@ -101,7 +101,8 @@ const mapActionToProps = {
 
 const mapStateToProps = state => {
   return {
-    citeTdxReducer: state.citeTdxReducer
+    citeTdxReducer: state.citeTdxReducer,
+    isBannerVisible: state.projectInfo.isBannerVisible
   };
 };
 
