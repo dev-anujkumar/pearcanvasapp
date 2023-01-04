@@ -776,8 +776,6 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             displayedlabel: displayedlabel,
             manualoverride: manualoverride
         }
-        // autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
-        // (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;
         if(autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
             delete updatedElement?.manualoverride
         }
@@ -832,8 +830,6 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             displayedlabel : displayedlabel,
             manualoverride : manualoverride
         }
-        // autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete dataToSend.manualoverride : dataToSend;
-        // (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete dataToSend.displayedlabel : dataToSend;
         if(autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
             delete dataToSend.manualoverride
         }

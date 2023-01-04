@@ -1039,8 +1039,6 @@ class ElementContainer extends Component {
                             displayedlabel: displayedlabel,
                             manualoverride: manualoverride
                         }
-                        // this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete updatedElement?.manualoverride : updatedElement;
-                        // (this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete updatedElement?.displayedlabel : updatedElement;
                         if(this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
                             delete updatedElement?.manualoverride
                         }
