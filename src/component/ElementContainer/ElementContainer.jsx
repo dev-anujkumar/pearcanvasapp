@@ -1040,10 +1040,10 @@ class ElementContainer extends Component {
                             manualoverride: manualoverride
                         }
                         if(this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
-                            delete updatedElement?.manualoverride
+                            delete updatedElement['manualoverride']
                         }
                         if(this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_REMOVE_NUMBER || this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
-                            delete updatedElement?.displayedlabel
+                            delete updatedElement['displayedlabel']
                         }
                         this.handleAutonumberAfterUpdate(previousElementData, updatedElement, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
                     }

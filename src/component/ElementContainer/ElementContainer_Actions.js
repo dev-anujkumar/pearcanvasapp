@@ -777,10 +777,10 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             manualoverride: manualoverride
         }
         if(autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
-            delete updatedElement?.manualoverride
+            delete updatedElement['manualoverride']
         }
         if(autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
-            delete updatedElement?.displayedlabel
+            delete updatedElement['displayedlabel']
         }
         const dataToReturn = updateAutoNumberedElement(autoNumberOption, updatedElement, { displayedlabel: updatedElement?.displayedlabel, manualoverride: updatedElement?.manualoverride })
         updatedElement = { ...dataToReturn }
@@ -831,10 +831,10 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             manualoverride : manualoverride
         }
         if(autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
-            delete dataToSend.manualoverride
+            delete dataToSend['manualoverride']
         }
         if(autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
-            delete dataToSend.displayedlabel
+            delete dataToSend['displayedlabel']
         }
     }
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
