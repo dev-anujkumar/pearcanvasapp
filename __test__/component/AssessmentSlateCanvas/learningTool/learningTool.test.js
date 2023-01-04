@@ -17,7 +17,8 @@ const store = mockStore({
         apiResponseForDis: disciplines.options,
         showDisFilterValues: true,
         selectedResultFormApi: selectedResult
-    }
+    },
+    projectInfo: {isBannerVisible: false}
 });
 
 describe('Testing LearningTool component', () => {

@@ -23,6 +23,7 @@ let initialState = {
         sortBy:"modifiedDate"
 
  },
+ projectInfo: {isBannerVisible: false}
 };
 
 
@@ -192,6 +193,7 @@ describe('Table component', () => {
             sortBy:"modifiedDate"
     
      },
+     projectInfo: {isBannerVisible: false}
     }
     
     let store1 = mockStore(initialState1);
@@ -262,7 +264,8 @@ describe('Table component', () => {
             assessmenterrFlag:false,
             sortBy:"modifiedDate"
     
-     },
+            },
+            projectInfo: {isBannerVisible: false}
     }
 
     let store2 = mockStore(initialState2);

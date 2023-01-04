@@ -121,7 +121,8 @@ const store = mockStore({
         elementId: "urn",
         alfrescoListOption: [],
         launchAlfrescoPopup: true
-    }
+    },
+    projectInfo: {isBannerVisible: false}
 });
 const store1 = mockStore({
     citeTdxReducer : { currentAssessmentSelected : {} },
@@ -133,7 +134,8 @@ const store1 = mockStore({
         elementId: "urn",
         alfrescoListOption: [],
         launchAlfrescoPopup: true
-    }
+    },
+    projectInfo: {isBannerVisible: false}
 });
 const store2 = mockStore({
     citeTdxReducer : { currentAssessmentSelected : {} },
@@ -145,7 +147,8 @@ const store2 = mockStore({
         elementId: "urn",
         alfrescoListOption: [],
         launchAlfrescoPopup: true
-    }
+    },
+    projectInfo: {isBannerVisible: false}
 });
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {

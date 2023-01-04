@@ -1,6 +1,6 @@
 import { action } from "@storybook/addon-actions";
 import { projectInfo } from "../../src/appstore/projectInfoReducer";
-import { UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS, UPDATE_PROJECT_INFO, UPDATE_USAGE_TYPE, UPDATE_DISCUSSION_ITEMS, UPDATE_LOB_WORKFLOW } from "../../src/constants/Action_Constants";
+import { UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS, UPDATE_PROJECT_INFO, UPDATE_USAGE_TYPE, UPDATE_DISCUSSION_ITEMS, UPDATE_LOB_WORKFLOW, BANNER_IS_VISIBLE } from "../../src/constants/Action_Constants";
 
 const INITIAL_STATE = {
     usageType: [],
@@ -15,7 +15,8 @@ const INITIAL_STATE = {
     isOwnersSubscribedSlateChecked: true,
     isOwnerKeyExist: false,
     LOBList:[],
-    showDiscussionLOBDropdown: false
+    showDiscussionLOBDropdown: false,
+    isBannerVisible: false
 }
 
 describe("Testing LOB permissions", () => {
@@ -145,6 +146,19 @@ describe("Testing LOB permissions", () => {
             type: OWNERS_SUBSCRIBED_SLATE,
             payload:
                 isOwnersSubscribedSlateChecked
+
+        })).toEqual(output)
+    });
+    it('BANNER_IS_VISIBLE', () => {
+        let isBannerVisible = true
+        let output = {
+            ...INITIAL_STATE,
+            isBannerVisible: true
+        }
+        expect(projectInfo(INITIAL_STATE, {
+            type: BANNER_IS_VISIBLE,
+            payload:
+            isBannerVisible
 
         })).toEqual(output)
     });

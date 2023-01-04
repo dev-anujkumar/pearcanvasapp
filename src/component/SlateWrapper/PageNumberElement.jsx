@@ -106,7 +106,7 @@ class PageNumberElement extends React.Component {
                 Page #
             <input className="textBox" readOnly={hasReviewerRole()} onBlur={(e) => { !hasReviewerRole() && this.updatePageNumber(e) }} onChange={this.pageNoChangeHandler} maxLength="8" value={pageNumber} onMouseLeave={(e) => { }} onMouseEnter={(e) => { }} type="text" onClick={this.textBoxClicked} onKeyPress={this.handleKeyUp} />
                 {
-                    (pageNumber && pageNumber !== '' && elemid && elemid === element.id) ?
+                    (pageNumber && pageNumber != '' && elemid && elemid === element.id) ?
                         <span className="closeBtn" onMouseDown={this.removePageNumber}>
                             <i className="fa fa-close" aria-hidden="true"></i>
                         </span> : ''

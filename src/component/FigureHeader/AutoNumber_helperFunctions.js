@@ -73,7 +73,7 @@ export const getOverridedNumberValue = (element) => {
 const checkKeysInObj = (Obj) => {
     let check = true;
     for (let Key in Obj) {
-        if (Obj[Key] === '' || Obj[Key] === undefined || Obj[Key] === null || Obj[Key] === NaN) {
+        if (Obj[Key] === '' || Obj[Key] === undefined || Obj[Key] === null || Number.isNaN(Obj[Key])) {
             check = false;
             break;
         }

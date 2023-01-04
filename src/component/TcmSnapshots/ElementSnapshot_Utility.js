@@ -157,7 +157,7 @@ const setSnapshotsInListAndPoetry = async (actionStatus, elementList, semanticTy
 */
 const prepareGlossarySnapshotContent = (actionStatus, glossaryList, glossaryHtmlList) => {
     let glossarySnap = []
-    glossaryList && glossaryList.length && glossaryList.map(glossaryItem => {
+    glossaryList && glossaryList.length && glossaryList.forEach(glossaryItem => {
         let dataID = glossaryItem.itemid;
         let glossaryHtml = JSON.parse(glossaryHtmlList[dataID])
         if (glossaryItem.glossaryentry && glossaryItem.glossaryentry[0] ) {
@@ -665,7 +665,7 @@ export const removeCalloutTitle = (elementHTML) =>{
         const callout3List = hiddenDiv.querySelectorAll(`span.calloutThree`) ?? []
         const callout4List = hiddenDiv.querySelectorAll(`span.calloutFour`) ?? []
         const calloutList = [callout1List, callout2List, callout3List, callout4List];
-        calloutList && calloutList.length && calloutList.map((calloutTypeList) => {
+        calloutList && calloutList.length && calloutList.forEach((calloutTypeList) => {
             for (let index = 0; index < calloutTypeList.length; index++) {
                 calloutTypeList[index].removeAttribute('title');
             }

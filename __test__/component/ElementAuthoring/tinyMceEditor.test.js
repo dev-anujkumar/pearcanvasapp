@@ -12,6 +12,7 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
+import { GLOSSARY, MARKEDINDEX } from '../../../src/constants/utility.js';
 const middlewares = [thunk];
 
 global.document = (new JSDOM()).window.Element;
@@ -73,7 +74,13 @@ jest.mock('../../../src/constants/utility.js', () => {
             return true
         },
         handleTextToRetainFormatting: jest.fn(),
-        ALLOWED_ELEMENT_IMG_PASTE: ['element-authoredtext','element-learningobjectives','element-blockfeature']
+        ALLOWED_ELEMENT_IMG_PASTE: ['element-authoredtext','element-learningobjectives','element-blockfeature'],
+        validStylesTagList: ['strong','em','u','s','sup','sub','code'],
+        allowedFormattings: ['bold','italic','underline','strikethrough','superscript','subscript'],
+        validFirstNodeTags: ['span','dfn'],
+        findStylingOrder: () => {
+            return ['em']
+        }
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {
@@ -2495,7 +2502,12 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                         return '<p><span className="poetryLine">Hello</span></p>';
                     },
                     setContent: () => { },
-                    getStart: () => { }
+                    getStart: () => { },
+                    getNode: () => {
+                        return {
+                            textContent: "Hello"
+                        }
+                    }
                 },
                 dom: {
                     getParent: () => {}
@@ -7551,6 +7563,18 @@ describe('------------------------------Test2 TINY_MCE_EDITOR-------------------
                                         }
                                     }
                                 }
+                            } else if (sel=='span[data-uri="glossaryId"]') {
+                                return {
+                                    innerHTML: 'innerData',
+                                    closest: ()=>{
+                                        return {
+                                            textContent :"la la la" ,
+                                            innerHTML:"<em>la la la</em>",
+                                            outerHTML :"<span></span>",
+                                            parentNode:""
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -7629,6 +7653,19 @@ describe('------------------------------Test2 TINY_MCE_EDITOR-------------------
                                         }
                                     }
                                 }
+                            } else if (sel=='span[data-uri="glossaryId"]') {
+                                return {
+                                    innerHTML: 'innerData',
+                                    textContent :"la la la",
+                                    closest: ()=>{
+                                        return {
+                                            textContent :"la la la",
+                                            innerHTML:"<em>la la la</em>",
+                                            outerHTML :"<span></span>",
+                                            parentNode:""
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -7695,6 +7732,14 @@ describe('------------------------------Test2 TINY_MCE_EDITOR-------------------
                     return {
                         querySelector: (sel) => {
                             if (sel=='dfn[data-uri="glossaryId"]') {
+                                return {
+                                    innerHTML: 'innerData',
+                                    textContent :"la la la",
+                                    closest: ()=>{
+                                        return false
+                                    }
+                                }
+                            } else if (sel=='span[data-uri="glossaryId"]') {
                                 return {
                                     innerHTML: 'innerData',
                                     textContent :"la la la",
@@ -9160,7 +9205,7 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                     innerText: () => { }
                 }
             }
-            const spyNewFn = jest.spyOn(instance3,'handleGlossaryForCode')
+            const spyNewFn = jest.spyOn(instance3,'handleFormatting')
             spyNewFn.mockImplementationOnce(() => {
                 return true
             })
@@ -9364,8 +9409,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                     }
                 }
             }
-            const spyFN = jest.spyOn(instance2, 'handleGlossaryForCode');
-            instance2.handleGlossaryForCode(activeElement, "testid");
+            const spyFN = jest.spyOn(instance2, 'handleFormatting');
+            instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'code');
             expect(spyFN).toHaveBeenCalled();
         })
         it('Test-X-Method--handleGlossaryForCode else', () => {
@@ -9456,8 +9501,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                     }
                 }
             }
-            const spyFN = jest.spyOn(instance2, 'handleGlossaryForCode');
-            instance2.handleGlossaryForCode(activeElement, "testid");
+            const spyFN = jest.spyOn(instance2, 'handleFormatting');
+            instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'code');
             expect(spyFN).toHaveBeenCalled();
         })
         it('Test-X-Method--handleGlossaryForCode else', () => {
@@ -9544,8 +9589,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                     }
                 }
             }
-            const spyFN = jest.spyOn(instance2, 'handleGlossaryForCode');
-            instance2.handleGlossaryForCode(activeElement, "testid");
+            const spyFN = jest.spyOn(instance2, 'handleFormatting');
+            instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'code');
             expect(spyFN).toHaveBeenCalled();
         })
         it('Test-X-Method--handleGlossaryForCode else', () => {
@@ -9714,8 +9759,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForBold');
-        instance2.handleGlossaryForBold(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'strong');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForBold else', () => {
@@ -9806,8 +9851,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForBold');
-        instance2.handleGlossaryForBold(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'strong');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForBold else', () => {
@@ -9894,8 +9939,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForBold');
-        instance2.handleGlossaryForBold(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'strong');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForUnderline if', () => {
@@ -9986,8 +10031,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForUnderline');
-        instance2.handleGlossaryForUnderline(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'u');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForUnderline else', () => {
@@ -10078,8 +10123,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForUnderline');
-        instance2.handleGlossaryForUnderline(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'u');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForUnderline else', () => {
@@ -10166,8 +10211,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForUnderline');
-        instance2.handleGlossaryForUnderline(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'u');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForStrikethrough if', () => {
@@ -10258,8 +10303,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForStrikethrough');
-        instance2.handleGlossaryForStrikethrough(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 's');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForStrikethrough else', () => {
@@ -10350,8 +10395,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForStrikethrough');
-        instance2.handleGlossaryForStrikethrough(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 's');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForStrikethrough else', () => {
@@ -10438,8 +10483,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForStrikethrough');
-        instance2.handleGlossaryForStrikethrough(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 's');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForSuperscript if', () => {
@@ -10530,8 +10575,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSuperscript');
-        instance2.handleGlossaryForSuperscript(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'sup');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForSuperscript else', () => {
@@ -10622,8 +10667,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSuperscript');
-        instance2.handleGlossaryForSuperscript(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'sup');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForSuperscript else', () => {
@@ -10710,8 +10755,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSuperscript');
-        instance2.handleGlossaryForSuperscript(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'sup');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForSubscript if', () => {
@@ -10802,8 +10847,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSubscript');
-        instance2.handleGlossaryForSubscript(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'sub');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForSubscript else', () => {
@@ -10894,8 +10939,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSubscript');
-        instance2.handleGlossaryForSubscript(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'sub');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleGlossaryForSubscript else', () => {
@@ -10982,8 +11027,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleGlossaryForSubscript');
-        instance2.handleGlossaryForSubscript(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", GLOSSARY, 'sub');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleMarkedIndexForItalic if', () => {
@@ -11074,8 +11119,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleMarkedIndexForItalic');
-        instance2.handleMarkedIndexForItalic(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", MARKEDINDEX, 'em');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleMarkedIndexForItalic else', () => {
@@ -11166,8 +11211,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleMarkedIndexForItalic');
-        instance2.handleMarkedIndexForItalic(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", MARKEDINDEX, 'em');
         expect(spyFN).toHaveBeenCalled();
     })
     it('Test-X-Method--handleMarkedIndexForItalic else', () => {
@@ -11254,8 +11299,8 @@ describe('------------------------------Test-X TINY_MCE_EDITOR - Button Actions-
                 }
             }
         }
-        const spyFN = jest.spyOn(instance2, 'handleMarkedIndexForItalic');
-        instance2.handleMarkedIndexForItalic(activeElement, "testid");
+        const spyFN = jest.spyOn(instance2, 'handleFormatting');
+        instance2.handleFormatting(activeElement, "testid", MARKEDINDEX, 'em');
         expect(spyFN).toHaveBeenCalled();
     })
 }); 

@@ -1682,7 +1682,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
                     for (let index = 0; index < dfnAttribute.length; index++) {
-                        self.handleGlossaryForCode(activeElement, dfnAttribute[index]);
+                        self.handleFormatting(activeElement, dfnAttribute[index], GLOSSARY, 'code');
                     }
                 }
             },
