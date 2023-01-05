@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import Tooltip from '../Tooltip';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor";
 import { CrossRefCheckbox } from './CrossRefCheckBox';
+import { MARKEDINDEX_NO_RESULT_FOUND_TEXT } from './../../constants/Element_Constants';
 
 
 export const CrossReference = ({crossRefValue}) => {
@@ -10,6 +11,7 @@ export const CrossReference = ({crossRefValue}) => {
     let [popUpStatus, setPopUpStatus] = useState(false);
     let [crossRef, setcrossRef] = useState([]);
     let [filteredDropDown, setFilteredDropDown] = useState([]);
+    let [showErrorMsg, setShowErrorMsg] = useState(false)
     const dropDown = useSelector(state => state.markedIndexReducer.crossReferenceValues);
 
     useEffect(() => {
@@ -26,6 +28,7 @@ export const CrossReference = ({crossRefValue}) => {
     const handleClickOutside = event => {
         if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
             setPopUpStatus(false);
+            setShowErrorMsg(false);
         }
     };
 
@@ -46,8 +49,10 @@ export const CrossReference = ({crossRefValue}) => {
             }
             let newDropDown = dropDown.filter(word => word.includes(value));
             setFilteredDropDown(newDropDown);
+            setShowErrorMsg(true)
         } else {
             changePopUpStatus(false);
+            setShowErrorMsg(false)
         }
     }
 
@@ -84,7 +89,7 @@ export const CrossReference = ({crossRefValue}) => {
         <div ref={wrapperRef}>
             <div className="markedindex-secondlevel-header">
                 <div id="index-secondlevel-attacher">
-                    <Tooltip direction="bottom" showClass={crossRef.length === 0 ? true : false} tooltipText={crossRef.join(',')}>
+                    <Tooltip direction="bottom cross-ref-tooltip" showClass={crossRef.length === 0 ? true : false} tooltipText={crossRef.join(',')}>
                         <div className="markedindex-secondlevel-label" onClick={handleDropDownClick}>
                             <label className="cross-reference-lable">Cross Reference (See Also)</label>
                             <ReactMarkedIndexEditor className='markedindex-editor place-holder cross-reference' id='markedindex-cross-reference' markIndexCurrentValue={crossRef.join(',')} filterCrossRef={filterCrossRef} isFilterCrossRefNeeded={crossRefValue?.length > 0 ? false : true}/>
@@ -94,7 +99,12 @@ export const CrossReference = ({crossRefValue}) => {
                 </div>
             </div>
             {
-                popUpStatus && <CrossRefCheckbox selectedData={crossRef} handleSelectedCheckboxValue={handleSelectedCheckboxValue} dropDownList={filteredDropDown.length > 0 ? filteredDropDown : dropDown}/>
+                popUpStatus && <CrossRefCheckbox selectedData={crossRef} handleSelectedCheckboxValue={handleSelectedCheckboxValue} dropDownList={filteredDropDown.length > 0 ? filteredDropDown : []}/>
+            }
+            {
+                !filteredDropDown?.length && showErrorMsg && <div className="cross-ref-dropdown-without-result">
+                    <span>{MARKEDINDEX_NO_RESULT_FOUND_TEXT}</span>
+                </div>
             }
         </div>
     )

@@ -140,6 +140,9 @@ export class ReactMarkedIndexEditor extends React.Component {
         if(editor.id === 'markedindex-0'){
           tinymce.$('.printIndex-save-button').removeClass('disabled');
         }
+        if(this.props.id === "markedindex-cross-reference") {
+          tinymce.$('.cross-ref-tooltip').removeClass('disable-tooltip')
+        }
       }
       else {
         activeElement.classList.add('place-holder')
@@ -149,6 +152,9 @@ export class ReactMarkedIndexEditor extends React.Component {
         }
         if(editor.id === 'markedindex-0'){
           tinymce.$('.printIndex-save-button').addClass('disabled');
+        }
+        if(this.props.id === "markedindex-cross-reference") {
+          tinymce.$('.cross-ref-tooltip').addClass('disable-tooltip')
         }
       }
     }
