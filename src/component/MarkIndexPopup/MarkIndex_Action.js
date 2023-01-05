@@ -268,13 +268,13 @@ const prepareCrossRefArray = result => {
 
             if(indexObj?.firstlevelentry){
                 let firstLvlObj = indexObj.firstlevelentry;
-                if(firstLvlObj?.firstlevelentry && crossRefValues.indexOf(firstLvlObj.firstlevelentry.text) <= -1){
+                if(firstLvlObj?.firstlevelentry && crossRefValues.indexOf(firstLvlObj.firstlevelentry.text) < 0){
                     crossRefValues.push(firstLvlObj.firstlevelentry.text);
                 }
 
                 if(firstLvlObj?.secondlevelentries && firstLvlObj.secondlevelentries.length > 0) {
                     let secondLvlObj = firstLvlObj.secondlevelentries[0];
-                    if(secondLvlObj?.secondlevelentry && crossRefValues.indexOf(secondLvlObj.secondlevelentry.text) <= -1){
+                    if(secondLvlObj?.secondlevelentry && crossRefValues.indexOf(secondLvlObj.secondlevelentry.text) < 0){
                         crossRefValues.push(secondLvlObj.secondlevelentry.text);
                     }
                 }
