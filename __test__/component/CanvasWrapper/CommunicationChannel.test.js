@@ -75,6 +75,9 @@ const initialState = {
     autoNumberReducer: {
         isAutoNumberingEnabled: true
     },
+    assessmentReducer: {
+        assessmentId: "test"
+    }
 
 };
 
@@ -247,6 +250,9 @@ describe('Testing communication channel', () => {
                     ]
                 }
             }
+        },
+        assessmentReducer: {
+            assessmentId: "test"
         },
         getRequiredSlateData: communicationAssessmentSlateData,
         toggleCommentsPanel: jest.fn(),
