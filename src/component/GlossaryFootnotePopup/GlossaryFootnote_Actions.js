@@ -1155,7 +1155,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 switch (tempIndex[1]) {
                     case "1":
                         let responseElement = {...res.data}
-                        newBodymatter[tempIndex[0]].contents['formatted-title']
                         res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
                         responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
                         newBodymatter[tempIndex[0]].contents['formatted-title'] = responseElement;
@@ -1175,7 +1174,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     switch (tempIndex[2]) {
                         case "1":
                             let responseElement = {...res.data}
-                            newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents['formatted-title']
                             res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
                             responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
                             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents['formatted-title']= responseElement;
@@ -1193,7 +1191,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     switch (tempIndex[3]) {
                         case "1":
                             let responseElement = {...res.data}
-                            newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].contents['formatted-title']
                             res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
                             responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
                             newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]].contents['formatted-title'] = responseElement;
@@ -1209,7 +1206,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     switch (tempIndex[3]) {
                         case "1":
                             let responseElement = {...res.data}
-                            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].contents['formatted-title']
                             res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
                             responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
                             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].contents['formatted-title'] = responseElement;
@@ -1225,7 +1221,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     switch (tempIndex[3]) {
                         case "1":
                             let responseElement = { ...res.data }
-                            newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['formatted-title']
                             res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
                             responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
                             newBodymatter[tempIndex[0]].interactivedata[asideParent.sectionType][tempIndex[2]].contents['formatted-title'] = responseElement;
