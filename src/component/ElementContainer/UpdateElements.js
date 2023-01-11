@@ -100,8 +100,12 @@ export const generateCommonFigureData = (index, previousElementData, elementType
         previousElementData.figuredata.podwidth = podwidth ? (podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`) : ''
     }  
 
-    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
-    previousElementData.hasOwnProperty('indexPos') ? delete previousElementData.indexPos : previousElementData;  // Key added for autonumbering
+    if(previousElementData && previousElementData.hasOwnProperty('subtitle')){
+        delete previousElementData.subtitle                                     // conversion of old figure
+    }
+    if(previousElementData && previousElementData.hasOwnProperty('indexPos')){
+        delete previousElementData.indexPos                                     // Key added for autonumbering
+    }
 
     let data = {
         ...previousElementData,
@@ -279,7 +283,9 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             }
         }
     
-    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
+    if(previousElementData && previousElementData.hasOwnProperty('subtitle')){
+        delete previousElementData.subtitle                                     // conversion of old figure
+    }
 
     let data = {
         ...previousElementData,
@@ -353,8 +359,12 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             displayedlabel : displayedlabel,
             manualoverride : manualoverride
         }
-        autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER ? delete data.manualoverride : data;
-        (autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER) ? delete data.displayedlabel : data;
+        if(autoNumberOption === AUTO_NUMBER_SETTING_DEFAULT || autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER){
+            delete data.manualoverride
+        }
+        if(autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
+            delete data.displayedlabel
+        }
     }
     return data
 }
@@ -426,7 +436,9 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
         captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
         creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
 
-    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
+    if(previousElementData && previousElementData.hasOwnProperty('subtitle')){
+        delete previousElementData.subtitle                                     // conversion of old figure
+    }
 
     let data = {
         ...previousElementData,
@@ -548,7 +560,9 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
     captionText = captionText.replace(/(\r\n|\n|\r)/gm, '');
     creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
 
-    previousElementData.hasOwnProperty('subtitle') ? delete previousElementData.subtitle : previousElementData;  // conversion of old figure
+    if(previousElementData && previousElementData.hasOwnProperty('subtitle')){
+        delete previousElementData.subtitle                                     // conversion of old figure
+    }
 
     let data = {
         ...previousElementData,
