@@ -893,6 +893,71 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     })
 }
 
+export const updateTabTitle = (previousData, index) => (dispatch, getState) => {
+    const parentData = getState().appStore.slateLevelData;
+    const currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    let elementEntityUrn = "", updatedElement;
+    let titleDOM = document.getElementById(`cypress-${index}-0`)
+    let titleHTML = titleDOM ? titleDOM.innerHTML : ""
+    console.log('updateTabTitle 11111', titleHTML);
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    console.log('updateTabTitle 2222', titleHTML);
+    config.isSavingElement = true
+    let dataToSend;
+    dataToSend = {
+        // id: activeElementId,
+        projectUrn: config.projectUrn,
+        subtype: previousData.subtype,
+        type: previousData.type,
+        html: {
+            title: `<p>${titleHTML}</p`
+        },
+        // versionUrn: activeElementId,
+        contentUrn: previousData.contentUrn,
+        status: currentSlateData.status
+    }
+
+    let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${previousData.contentUrn}/metadata?isHtmlPresent=true`
+    return axios.put(url, dataToSend, {
+        headers: {
+            "Content-Type": "application/json",
+            'myCloudProxySession': config.myCloudProxySession
+        }
+    }).then(res => {
+        if (currentSlateData?.status === 'approved') {
+            if (currentSlateData.type === "popup") {
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
+            }
+            else {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            config.savingInProgress = false
+            config.isSavingElement = false
+        } else {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            const newParentData = getState().appStore.slateLevelData;
+            const parsedParentData = JSON.parse(JSON.stringify(newParentData));
+            let newSlateData = parsedParentData[config.slateManifestURN];
+            const newVersionURN = res?.data?.versionUrn && res.data.versionUrn.trim() !== "" ? res.data.versionUrn : ""
+        }
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        config.conversionInProcess = false
+        config.savingInProgress = false
+        config.isSavingElement = false
+    }).catch(err => {
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        dispatch({ type: ERROR_POPUP, payload: { show: true } })
+        config.conversionInProcess = false
+        config.savingInProgress = false
+        config.isSavingElement = false
+        console.error(" Error >> ", err)
+    })
+}
+
 /**
  * This function will make an API call to fetch the metadata for an image
  * @param {*} id Image ID

@@ -53,6 +53,7 @@ Array.prototype.move = function (from, to) {
 };
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData,blockListDetails) => (dispatch, getState) => {
+    console.log('type, index, parentUrn, asideData', type, index, parentUrn, asideData);
     config.currentInsertedIndex = index;
     let  popupSlateData = getState().appStore.popupSlateData;
     const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
@@ -105,7 +106,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         const tempSlateWrapperConstants = [...slateWrapperConstants.elementType].filter( item => item !== "MANIFEST_LIST")
         //This check is for the TEXT element which gets created inside BL on Shift+Enter
         if(!blockListDetails) {
-        if (tempSlateWrapperConstants.indexOf(type) !== -1) {
+        // if (tempSlateWrapperConstants.indexOf(type) !== -1) {
+        if (tempSlateWrapperConstants.indexOf(type) !== -1 && asideData?.subtype !== 'tab') {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
@@ -276,6 +278,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     });
                 }
             })  
+        /* To update redux store while creating new element inside TB->Tab->Column */
+        } else if (asideData && asideData.type === 'groupedcontent' && asideData.subtype === 'tab') {
+            const parentIndexes = asideData.index && asideData.index.split("-")
+            let item = newParentData[config.slateManifestURN].contents.bodymatter[parentIndexes[0]];
+            item.groupeddata.bodymatter[parentIndexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[parentIndexes[2]].groupdata.bodymatter.splice(index, 0, createdElementData);
         }
         else if (asideData && asideData.type === 'groupedcontent') {
             newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
@@ -476,7 +483,14 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                      initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
             }
-          } 
+            /* add a new tab element inside TB */
+        } else if (type === slateWrapperConstants.TABBED_COLUMN_TAB) {
+            newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
+                if (item.id == asideData?.parentManifestUrn) {
+                    item?.groupeddata?.bodymatter.splice(index, 0, createdElementData)
+                }
+            })
+        } 
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }

@@ -8,16 +8,17 @@ import config from '../../config/config.js';
 import { getTitleSubtitleModel } from "../../constants/utility.js"
 
 const TabbedTinyMCE = (props) => {
-    // console.log('props props', props)
     const editorProps = {
         permissions : props.permissions,
         element : props.element,
+        currentElement : props.element,
         index : `${props.index}-0`,
-        className : "citationTitle formatted-text",
+        className : "citationTitle tabTitle formatted-text",
         id : props.id,
         placeholder : "Enter tab name (max. 25 characters)",
         tagName : 'h4',
-        model : props.tabElement?.groupdata.hasOwnProperty('formatted-title') && props.tabElement.groupdata["formatted-title"].html && props.tabElement.groupdata["formatted-title"].html.text ? getTitleSubtitleModel(props.tabElement.groupdata["formatted-title"].html.text, "formatted-subtitle").replace(/&nbsp;/g, "") : `<p class="paragraphNumeroUno"><br/></p>`,
+        // model : props.element?.groupdata.hasOwnProperty('title') && props.element.groupdata["title"].text ? getTitleSubtitleModel(props.element.groupdata["title"].text, "formatted-subtitle").replace(/&nbsp;/g, "") : `<p class="paragraphNumeroUno"><br/></p>`,
+        model : `<p><em><strong>abcd</strong></em></p`,
         handleEditorFocus : props.handleFocus,
         handleBlur  :  props.handleBlur,
         slateLockInfo : props.slateLockInfo,

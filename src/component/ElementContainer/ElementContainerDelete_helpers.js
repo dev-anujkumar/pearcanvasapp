@@ -43,22 +43,26 @@ export const onDeleteSuccess = (params) => {
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
+    console.log('onDeleteSuccess onDeleteSuccess', asideData);
+
 
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
-    const tcmDeleteArgs = {
-        deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
-        deleteElemData,
-        type,
-        parentUrn,
-        asideData,
-        contentUrn,
-        index,
-        poetryData,
-        cutCopyParentUrn,
-        showHideObj,
-        element
+    if (asideData?.subtype !== 'tab') {
+        const tcmDeleteArgs = {
+            deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
+            deleteElemData,
+            type,
+            parentUrn,
+            asideData,
+            contentUrn,
+            index,
+            poetryData,
+            cutCopyParentUrn,
+            showHideObj,
+            element
+        }
+        prepareTCMSnapshotsForDelete(tcmDeleteArgs)
     }
-    prepareTCMSnapshotsForDelete(tcmDeleteArgs)
 
     const currentSlateData = newParentData[config.slateManifestURN];
     if (currentSlateData.status === 'approved') {
@@ -166,6 +170,7 @@ export const deleteFromStore = async (params) => {
         bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter;
     }
     const iList = index?.toString()?.split("-") || [];
+    console.log('deleteElement method type, index, parentUrn, asideData', type, index, parentUrn, asideData);
     /* update the store on /cut/paste of showhide elements */
     if(asideData?.type === SHOWHIDE && iList?.length >= 3) {
         /* Get the showhide Element */
@@ -177,6 +182,9 @@ export const deleteFromStore = async (params) => {
             /* delete the element inside showhide on cut from sh */
             sh_Object?.interactivedata[sectionType]?.splice(cCIndex, 1);
         }
+        /* To dez redux store while deleting element from TB->Tab->Column */
+    } else if (parentUrn?.elementType === "group" && asideData?.subtype === 'tab' && (parentUrn?.tbId === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
+        newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[elIndex[2]].groupdata.bodymatter.splice(elIndex[3], 1);
     } else if (parentUrn && parentUrn.elementType == "group" && (parentUrn?.mcId === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
     } else {

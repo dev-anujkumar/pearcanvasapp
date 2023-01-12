@@ -14,31 +14,32 @@ export const TabbedTabContainer = (props) => {
     );
 
     const renderTabElement = (tab) => {
-        let groupedDataBodymatter = tab?.groupeddata && tab?.groupeddata?.bodymatter || [];
+        let tabElementData = tab?.groupdata?.bodymatter[0];
+        let groupedDataBodymatter = tabElementData?.groupeddata && tabElementData?.groupeddata?.bodymatter || [];
         let highlightTab = false;
         for (let element of props.multipleColumnData) {
-            if (element.containerId === tab.id && element.columnIndex === 'Tit') {
+            if (element.containerId === tabElementData.id && element.columnIndex === 'Ttl') {
                 highlightTab = true;
             }
         }
         if (highlightTab) {
             return (
                 <React.Fragment>
-                    <TabbedTinyMCE {...props} parentElement = {tab}/>
+                    <TabbedTinyMCE {...props}/>
                 </React.Fragment>
             )
         } else {
             return groupedDataBodymatter?.map((columnData, index) => {
                 return (
                     <React.Fragment key={columnData.id}>
-                        {renderColumnContent(columnData, index)}
+                        {renderColumnContent(tab, columnData, index)}
                     </React.Fragment>
                 )
             })
         }
     }
 
-    const renderColumnContent = (column, columnIndex) => {
+    const renderColumnContent = (tab, column, columnIndex) => {
         try {
             let { id: _columnId, type: _columnType, groupdata: _groupdata } = column
             let { bodymatter: _bodyMatter } = _groupdata
@@ -49,11 +50,11 @@ export const TabbedTabContainer = (props) => {
                 manifestUrn: _columnId,
                 contentUrn: column.contentUrn,
                 elementType: _columnType,
-                tbId: props?.element?.id /* Will be used in tcm snapshot -2c->we */
+                tbId: props?.parentElement?.id /* Will be used in tcm snapshot -TB->Tab */
             }
             return (
                 <div className={`container-multi-column-group-3c ${constants.setClassByElementType(column)} column-${columnIndex}`} data-id={_columnId} container-type={_columnType}>
-                    {renderElement(_bodyMatter, parentUrn, index)}
+                    {renderElement(tab, _bodyMatter, parentUrn, index)}
                 </div>
             )
         } catch (error) {
@@ -68,13 +69,13 @@ export const TabbedTabContainer = (props) => {
  * @param {object} parentUrn - object containing immediate parent information
  * @param {Number} parentIndex - Index of column
  */
-    const renderElement = (_elements, parentUrn, parentIndex) => {
+    const renderElement = (tab, _elements, parentUrn, parentIndex) => {
         let columnIndex;
-        // for (let element of this.props.multipleColumnData) {
-        //     if (element.containerId === parentUrn.mcId) {
-        //         columnIndex = element.columnIndex;
-        //     }
-        // }
+        for (let element of props.multipleColumnData) {
+            if (element.containerId === tab?.groupdata?.bodymatter[0].id) {
+                columnIndex = element.columnIndex;
+            }
+        }
         if (!columnIndex && parentUrn.columnName === "C1") {
             columnIndex = parentUrn.columnName;
         }
@@ -82,10 +83,12 @@ export const TabbedTabContainer = (props) => {
         let asideData = {
             type: "groupedcontent",
             subtype: "tab",
-            id: props.element.id,
-            contentUrn: props.element.contentUrn,
-            element: props.element,
-            index: parentIndex
+            id: props.parentElement.id,
+            contentUrn: props.parentElement.contentUrn,
+            columnElement: props.element,
+            columnName: columnIndex,
+            index: parentIndex,
+            parent: props.parentElement
         };
         try {
             if (_elements !== null && _elements !== undefined && parentUrn.columnName === columnIndex) {
@@ -123,7 +126,7 @@ export const TabbedTabContainer = (props) => {
                                 handleCommentspanel={props.handleCommentspanel}
                                 isBlockerActive={props.isBlockerActive}
                                 onClickCapture={props.onClickCapture}
-                                parentElement={props.element}
+                                parentElement={props.parentElement}
                                 onListSelect={props.onListSelect}
                                 userRole={props.userRole}
                                 elementSepratorProps={props.elementSepratorProps}

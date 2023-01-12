@@ -17,7 +17,7 @@ import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
-         prepareImageDataFromTable, storeDeleteElementKeys } from './ElementContainer_Actions';
+         prepareImageDataFromTable, storeDeleteElementKeys, updateTabTitle } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
@@ -87,6 +87,7 @@ const {
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -311,6 +312,13 @@ class ElementContainer extends Component {
         if (!(this.props.permissions && (this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) && !hasReviewerRole()) {
             return true
         }
+        // Prevent TB element to be highlighted when we click on Tab element properties
+        /* ---------------------------------------XX--------------------------------------- */
+        const tabLabels = ['Ttl', 'C1', 'C2'];
+        if (labelText === 'TB' && event.target.textContent && tabLabels.includes(event.target.textContent)) {
+            return true;
+        }
+        /* ---------------------------------------XX--------------------------------------- */
         if (updateFromC2Flag == "updateFromC2") {
             if (this.props.element.type === "openerelement") {
                 this.setState({
@@ -903,6 +911,10 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom) => {
+        console.log('console console 1', node, previousElementData, elementType);
+        // console.log('console console 2', primaryOption, secondaryOption);
+        // console.log('console console 3', activeEditorId, forceupdate);
+        console.log('console console 4', parentElement, showHideType, elemIndex);
         let { parentUrn, asideData } = this.props;
         asideData = cgTitleFieldData?.asideData && Object.keys(cgTitleFieldData?.asideData).length > 0 ? cgTitleFieldData?.asideData : asideData;
         parentElement = cgTitleFieldData?.parentElement && Object.keys(cgTitleFieldData?.parentElement).length > 0 ? cgTitleFieldData?.parentElement : parentElement;
@@ -1046,6 +1058,13 @@ class ElementContainer extends Component {
                         this.handleAutonumberAfterUpdate(previousElementData, updatedElement, this.props.autoNumberedElements, this.props.currentSlateAncestorData, this.props.slateLevelData);
                     }
                 }
+                break;
+
+            case elementTypeConstant.TABBED_TAB:
+                // sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                // config.isSavingElement = true
+                // console.log('elementContainer file', previousElementData);
+                // this.props.updateTabTitle(previousElementData, this.props.index);
                 break;
 
             case elementTypeConstant.FIGURE:
@@ -2218,26 +2237,6 @@ class ElementContainer extends Component {
                             handleUndoOption = {this.handleUndoOption}
                             splithandlerfunction = {this.props.splithandlerfunction}
                         />
-                    } else if (this.props?.parentUrn?.type === 'groupedcontent' && this.props?.parentUrn?.subtype === 'tab') {
-                        editor = <TabbedTabContainer
-                        activeElement = {this.props.activeElement}
-                        showBlocker = {this.props.showBlocker}
-                        permissions = {permissions}
-                        index = {index}
-                        element = {element}
-                        slateLockInfo = {slateLockInfo}
-                        handleCommentspanel = {handleCommentspanel}
-                        isBlockerActive = {this.props.isBlockerActive}
-                        onClickCapture = {this.props.onClickCapture}
-                        elementSepratorProps = {elementSepratorProps}
-                        setActiveElement = {this.props.setActiveElement}
-                        onListSelect = {this.props.onListSelect}
-                        handleFocus = {this.handleFocus}
-                        handleBlur = {this.handleBlur}
-                        deleteElement = {this.deleteElement}
-                        handleUndoOption = {this.handleUndoOption}
-                        splithandlerfunction = {this.props.splithandlerfunction}
-                        />
                         // checking if labelText is 3C to render 3 column component
                     } else if (labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) {
                         editor = editor = <MultiColumnContext.Provider value={{
@@ -2283,6 +2282,28 @@ class ElementContainer extends Component {
                         }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup}  closeUndoTimer = {this.props.closeUndoTimer}/>
                         </MultiColumnContext.Provider>;
                     }
+                    break;
+                case elementTypeConstant.TABBED_TAB:
+                    editor = <TabbedTabContainer
+                        activeElement = {this.props.activeElement}
+                        showBlocker = {this.props.showBlocker}
+                        permissions = {permissions}
+                        index = {index}
+                        element = {element}
+                        parentElement = {this.props.parentElement}
+                        slateLockInfo = {slateLockInfo}
+                        handleCommentspanel = {handleCommentspanel}
+                        isBlockerActive = {this.props.isBlockerActive}
+                        onClickCapture = {this.props.onClickCapture}
+                        elementSepratorProps = {elementSepratorProps}
+                        setActiveElement = {this.props.setActiveElement}
+                        onListSelect = {this.props.onListSelect}
+                        handleFocus = {this.handleFocus}
+                        handleBlur = {this.handleBlur}
+                        deleteElement = {this.deleteElement}
+                        handleUndoOption = {this.handleUndoOption}
+                        splithandlerfunction = {this.props.splithandlerfunction}
+                        />
                     break;
 
                 case elementTypeConstant.ELEMENT_DIALOGUE:
@@ -2547,17 +2568,18 @@ class ElementContainer extends Component {
     renderTabTitleLabel = (element) => {
         let activeColumnLabel = '';
         for (let propsElementObject of this.props.multipleColumnData) {
-            if (propsElementObject.containerId === element.id) {
+            if (propsElementObject.containerId === element.groupdata?.bodymatter[0].id) {
                 activeColumnLabel = propsElementObject.columnIndex;
             }
         }
         return (
-            <Button btnClassName={activeColumnLabel === `Tit` ? "activeTagBgColor" : ""} labelText='Tit' onClick={() => this.updateColumnValues('Tit', element)} type="label-clickable-button" />
+            <Button btnClassName={activeColumnLabel === `Ttl` ? "activeTagBgColor" : ""} labelText='Ttl' onClick={() => this.updateColumnValues('Ttl', element.groupdata?.bodymatter[0])} type="label-clickable-button" />
         )
     }
 
     // function to render multiple columns for 3 column container based on bodymatter
     renderMultipleColumnLabels = (element) => {
+        element = (this.props?.parentUrn?.type === 'groupedcontent' && this.props?.parentUrn?.subtype === 'tab') ? element.groupdata?.bodymatter[0] : element;
         let activeColumnLabel = "C1";
         for (let propsElementObject of this.props.multipleColumnData) {
             if (propsElementObject.containerId === element.id) {
@@ -2584,7 +2606,7 @@ class ElementContainer extends Component {
             containerId: objKey,
             columnIndex: `C${index + 1}`
         }
-        multipleColumnObjData = index === 'Tit' ? {...multipleColumnObjData, columnIndex: 'Tit'} : multipleColumnObjData;
+        multipleColumnObjData = index === 'Ttl' ? {...multipleColumnObjData, columnIndex: 'Ttl'} : multipleColumnObjData;
         setTimeout(() => {
             this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
         }, 0)
@@ -3136,6 +3158,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         storeDeleteElementKeys : (objectkey) => {
             dispatch(storeDeleteElementKeys(objectkey));
+        },
+        updateTabTitle: (previousElementData, index) => {
+            dispatch(updateTabTitle(previousElementData, index));
         }
     }
 }

@@ -829,7 +829,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'multi-column-group-tabbed-tab',
-                buttonHandler: () => this.splithandlerfunction('multi-column-group-tabbed-tab', index, firstOne, parentUrn),
+                buttonHandler: () => this.splithandlerfunction('multi-column-group-tabbed-tab', index, firstOne, parentUrn, asideData),
                 tooltipText: 'Tab',
                 tooltipDirection: 'left'
             },

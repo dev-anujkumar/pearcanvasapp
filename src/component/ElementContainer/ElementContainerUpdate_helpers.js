@@ -22,6 +22,7 @@ import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
 import { startPdfConversion,poolFunc} from '../PdfSlate/CypressPlusAction';
+import elementConstant from '../ElementSaprator/ElementSepratorConstants';
 import elementTypeConstant from './ElementConstants';
 
 
@@ -136,13 +137,13 @@ export const updateElementInStore = (paramsObj) => {
     const iList = elementIndex?.toString()?.split("-") || [];
     const isBlockListElement  = isElementInsideBlocklist({index:elementIndex,data:{asideData:asideData}},newslateData)
     const { autoNumberSettingsOption, isAutoNumberingEnabled } = autoNumberDetails;
+    console.log('params paramsObj', paramsObj);
 
     /* update the store on update of showhide elements inside container elements */
     if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
         const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList, updatedData.type );
         updateShowhideElements(sh_Object, updatedData, iList, { isAutoNumberingEnabled, autoNumberSettingsOption });
-    } else
-    if (parentElement && parentElement.type === "citations") {
+    } else if (parentElement && parentElement.type === "citations") {
         const indexes = typeof elementIndex === 'string' ? elementIndex?.split("-"): elementIndex;
         // Update CG inside S/H
         if (asideData?.parent?.type === SHOW_HIDE) {
@@ -169,6 +170,27 @@ export const updateElementInStore = (paramsObj) => {
                     _slateBodyMatter[elementIndex].contents["formatted-title"] = { ...updatedData }
                 }
             }
+        }
+        /* Update data of element inside tab inside TB */
+    } else if (parentElement?.type === "groupedcontent" && asideData?.subtype === elementConstant.TAB) {
+        const indexes = elementIndex.split("-")
+        let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+        /** Updation of AutoNumbered Elements */
+        if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+            element = { ...element, ...updatedData }
+            const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+            element = { ...dataToReturn }
+        }
+        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]] = {
+            ...element,
+            ...updatedData,
+            elementdata: {
+                ...element.elementdata,
+                startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                text: updatedData.elementdata ? updatedData.elementdata.text : null
+            },
+            tcm: _slateObject.tcm ? true : false
         }
     } else if (parentElement && parentElement.type === "groupedcontent" && asideData?.type !== 'manifestlist') {
         const indexes = elementIndex.split("-")
@@ -824,6 +846,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         currentParentData,
         showHideObj
     } = params
+    console.log('collectDataAndPrepareTCMSnapshot', asideData);
     const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
     const isPopupOrShowhideElement = ((parentElement?.type === POOPUP_ELEMENT) || (parentElement?.type === SHOW_HIDE && !(updatedData?.metaDataField || updatedData?.sectionType === 'creditsarray'))|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
@@ -831,7 +854,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     const noAdditionalFields = (updatedData.metaDataField == undefined && (updatedData.sectionType == undefined || updatedData.sectionType == 'bodymatter')) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     //This check will be removed once Blocklist will support TCM
-    if (asideData?.type !== "manifestlist") {
+    if (asideData?.type !== "manifestlist" && asideData?.subtype !== 'tab') {
     if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
         const containerElement = {
             asideData,
