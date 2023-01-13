@@ -375,3 +375,14 @@ p.blockquoteTextCredit.mce-edit-focus.place-holder:focus::before {
     font-size: 1.2175em !important;
     font-style: inherit !important;
 }
+.metadata-pdfElement {
+    width: 22px;
+}
+.btn-element.alfresco-metadata-icon.metadata-pdfElement img {
+    width: 20px;
+    padding: 4px 2px 0 2px;
+}
+.cypress-plus {
+    width: 22px;
+    margin-bottom: -2px;
+}
