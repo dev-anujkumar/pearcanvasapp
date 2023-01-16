@@ -109,7 +109,7 @@ export const addElementInShowHide = (index, sectionType, type2BAdded, props) => 
 * @param {Number} indexlength - indexlength of showhide element on slate
 * @param {Array} iList - array of index heirarchy of showhide element on slate
 */
-export function getShowHideElement(_slateBodyMatter, indexlength, iList, elementType) {
+export function getShowHideElement(_slateBodyMatter, indexlength, iList, elementType, parentElement) {
 	try {
         let sh_Element;
 		switch(indexlength) {
@@ -124,8 +124,13 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList, element
 					_slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]] : /* 2C:SH:Element */
 					_slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]]?.contents.bodymatter[iList[2]]; /* WE:Body:SH:Element */
                 break;
-            case 6: /* 2C:AS/WE-Head:SH:Element */
-				sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
+            case 6: /* TB:Tab:SH:Element */
+                if (parentElement?.grandParent?.asideData?.subtype === ElementConstants.TAB) {
+                    sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[iList[2]].groupdata.bodymatter[iList[3]];
+                } else {
+                    /* 2C:AS/WE-Head:SH:Element */
+                    sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
+                }
                 break;
             case 7: /* 2C:WE-Body:SH:Element */
 				sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];

@@ -3,6 +3,7 @@ import { SLATE_FIGURE_ELEMENTS } from "../../constants/Action_Constants";
 import { getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getSlateLevelData, updateChapterPopupData } from './AutoNumberActions';
 import store from '../../appstore/store';
+import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const getAutoNumberedElementsOnSlate = async (slateLevelData, params) => {
     const { dispatch } = params
@@ -54,7 +55,14 @@ export const getImagesInsideSlates = async (bodyMatter, numberedElements = [], p
                         await getMediaElementInShowhide(element, numberedElements, [...element.indexPos])
                         break;
                     case containerElements.MULTI_COLUMN:
-                        await getMediaElementInMultiColumn(element, numberedElements, [...element.indexPos]);
+                        if (element?.subtype === ElementConstants.TAB) {
+                            let tabElements = element?.groupeddata?.bodymatter;
+                            for (let tab of tabElements) {
+                                await getMediaElementInMultiColumn(tab.groupdata.bodymatter[0], numberedElements, [...element.indexPos]);
+                            }
+                        } else {
+                            await getMediaElementInMultiColumn(element, numberedElements, [...element.indexPos]);
+                        }
                         break;
                     case containerElements.POPUP:
                         if (popupElementsList.length) {
@@ -161,7 +169,14 @@ export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElemen
                         await getContainerInShowhide(element, numberedElements, typeKey);
                         break;
                     case containerElements.MULTI_COLUMN:
-                        await getContainerInMultiColumn(element, numberedElements, [...element.indexPos], typeKey);
+                        if (element?.subtype === ElementConstants.TAB) {
+                            let tabElements = element?.groupeddata?.bodymatter;
+                            for (let tab of tabElements) {
+                                await getContainerInMultiColumn(tab.groupdata.bodymatter[0], numberedElements, [...element.indexPos], typeKey);
+                            }
+                        } else {
+                            await getContainerInMultiColumn(element, numberedElements, [...element.indexPos], typeKey);
+                        }
                         break;
                     case containerElements.POPUP:
                         const popupParentData = store.getState().autoNumberReducer?.popupParentSlateData;

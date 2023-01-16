@@ -7,6 +7,7 @@ import { getAutoNumberSequence } from './AutoNumberActions';
 import { containerElements, autoNumber_ElementTypeToStoreKeysMapper, displayLabelsForContainer } from './AutoNumberConstants';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getImagesInsideSlates, getAutoNumberedElementsOnSlate, getAsideElementsWrtKey, getPopupDataInsideContainer, containerBodyMatter } from './slateLevelMediaMapper';
+import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const updateCreatedElementInAutonumberList = (mediaType, mediaList, autoNumberedElementsObj, dispatch) => {
     dispatch({
@@ -58,7 +59,14 @@ export const findElementsInContainer = async (element, numberedElements = [], cr
             await getAllElementsInShowhide(element, numberedElements, createdElementData);
             break;
         case containerElements.MULTI_COLUMN:
-            await getAllElementsInMultiColumn(element, numberedElements, createdElementData);
+            if (element?.subtype === ElementConstants.TAB) {
+                let tabElements = element?.groupeddata?.bodymatter;
+                for (let tab of tabElements) {
+                    await getAllElementsInMultiColumn(tab.groupdata.bodymatter[0], numberedElements, createdElementData);
+                }
+            } else {
+                await getAllElementsInMultiColumn(element, numberedElements, createdElementData);
+            }
             break;
         case containerElements.POPUP:
             getAllElementsInPopup(element, numberedElements, createdElementData);
@@ -259,6 +267,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 slateElements = [];
         }
 
+        console.log('slateElements slateElements', slateElements);
         let elementObj = slateElements?.find(element => element.contentUrn === createdElementData.contentUrn);
         let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
         const activeLabelElements = slateElements?.filter(img => img.displayedlabel === createdElementData.displayedlabel);

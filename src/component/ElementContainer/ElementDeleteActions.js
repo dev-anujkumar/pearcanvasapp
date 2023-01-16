@@ -13,6 +13,7 @@ import { AUTHORING_ELEMENT_UPDATE, ERROR_POPUP } from "./../../constants/Action_
 import tinymce from 'tinymce';
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
+import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
     const elementIndex = eleIndex?.toString()?.split('-')
@@ -54,8 +55,11 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             isSectionBreak,
             cutCopyParentUrn
         }
-        const { prepareTCMSnapshotsForDelete } = (await import("./ElementContainerDelete_helpers.js"))
-        prepareTCMSnapshotsForDelete(deleteData);
+        // This check will remove when TB supports tcm 
+        if (asideData?.subtype !== ElementConstants.TAB) {
+            const { prepareTCMSnapshotsForDelete } = (await import("./ElementContainerDelete_helpers.js"))
+            prepareTCMSnapshotsForDelete(deleteData);
+        }
 
         /** --------- When slate is Approved: Refresh TOC ------------------------------*/
         const { onSlateApproved } = (await import("./ElementContainerDelete_helpers.js"))
@@ -123,8 +127,30 @@ export const updateStorePostDelete = (deleteParams) => {
     } = deleteParams
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
     let elementToUpdate;
+    console.log('updateStorePostDelete updateStorePostDelete', index, newIndex, asideData);
 
-    if (asideData?.parent?.type !== 'showhide' && asideData?.type !== "manifestlist") {
+    if (asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB) {
+        switch (newIndex.length) {
+            case 6: // TB:Tab:c1:sh:show:p
+                elementToUpdate = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[newIndex[2]]?.groupdata?.bodymatter[newIndex[3]];
+                if (elementToUpdate?.type == 'showhide') {
+                    elementToUpdate?.interactivedata[showHideType[newIndex[4]]].splice(index, 1)
+                }
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[newIndex[2]].groupdata.bodymatter[newIndex[3]] = elementToUpdate;
+                break;
+            // case 7: // 2c:c1:we:body:sh:show:p
+            //     elementToUpdate = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
+            //     if (elementToUpdate?.type == 'showhide') {
+            //         elementToUpdate.interactivedata[showHideType[newIndex[5]]].splice(index, 1)
+            //     }
+            //     newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]] = elementToUpdate;
+            //     break;
+            case 1:/** Element on slate level */
+            default:
+                newBodymatter.splice(index, 1)
+                break;
+        }
+    } else if (asideData?.parent?.type !== 'showhide' && asideData?.type !== "manifestlist") {
         switch (newIndex.length) {
             case 2:
                 elementToUpdate = newBodymatter[newIndex[0]]
