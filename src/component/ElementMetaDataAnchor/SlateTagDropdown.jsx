@@ -353,8 +353,8 @@ class SlateTagDropdown extends React.Component {
         <div>
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
               <ul>
-                <div className={enableExtLO && "option-disabled"}>
-                <li onClick={this.toggleLoOptionsDropdown} className="option-disabled"><span>{AlignToCypressSlateDropdown}</span><span className='lo-navigation-icon option-disabled'>{loNextIcon}</span></li>
+                <div className={"option-disabled"}>
+                <li onClick={this.toggleLoOptionsDropdown}><span>{AlignToCypressSlateDropdown}</span><span className='lo-navigation-icon option-disabled'>{loNextIcon}</span></li>
                 </div>
                 <div>
                   {
