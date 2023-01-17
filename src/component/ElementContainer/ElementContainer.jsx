@@ -468,6 +468,16 @@ class ElementContainer extends Component {
         return titleHTML !== oldTitleHTML
     }
 
+    tabTitleDifference = (index, previousElementData) => {
+        let titleDOM = document.getElementById(`cypress-${index}-0`),
+        titleHTML = titleDOM ? titleDOM.innerHTML : ""
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+        titleHTML = createLabelNumberTitleModel('', '', titleHTML);
+        let oldTitleHTML = previousElementData.hasOwnProperty('html') ? this.removeClassesFromHtml(previousElementData.html.title) : `<p class="paragraphNumeroUno"><br/></p>`;
+        // console.log("checkk",titleHTML,oldTitleHTML)
+        return titleHTML !== oldTitleHTML
+    }
+
     /**
      * Checks for any difference in data before initiating saving call
      * @param {*} index element index
@@ -1061,10 +1071,12 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.TABBED_TAB:
-                // sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                // config.isSavingElement = true
-                // console.log('elementContainer file', previousElementData);
-                // this.props.updateTabTitle(previousElementData, this.props.index);
+                if(this.tabTitleDifference(this.props.index, previousElementData) && previousElementData?.id !== "") {
+                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                config.isSavingElement = true
+                console.log('elementContainer file', previousElementData);
+                this.props.updateTabTitle(previousElementData, this.props.index);
+                }
                 break;
 
             case elementTypeConstant.FIGURE:

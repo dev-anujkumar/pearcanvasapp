@@ -897,12 +897,33 @@ export const updateTabTitle = (previousData, index) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
-    let elementEntityUrn = "", updatedElement;
+    // let elementEntityUrn = "", updatedElement;
     let titleDOM = document.getElementById(`cypress-${index}-0`)
     let titleHTML = titleDOM ? titleDOM.innerHTML : ""
-    console.log('updateTabTitle 11111', titleHTML);
     titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
-    console.log('updateTabTitle 2222', titleHTML);
+    // updatedElement = {
+    //     ...previousData,
+    //     html: {
+    //         title: titleHTML
+    //     }
+    // }
+    // console.log("currentSlateData",currentSlateData)
+    // console.log("currentSlateData",currentSlateData.contents.bodymatter[0].groupeddata.bodymatter[0].html.title)
+    // currentParentData = currentSlateData.contents.bodymatter[0].groupeddata.bodymatter[0].html.title;
+    // currentParentData = {
+    //     ...previousData,
+    //     html: {
+    //         title: titleHTML
+    //     }
+    // }
+    // currentSlateData.contents.bodymatter[0].groupeddata.bodymatter[0].html.title = currentParentData;
+
+    dispatch({
+        type: AUTHORING_ELEMENT_UPDATE,
+        payload: {
+            slateLevelData: currentParentData
+        }
+    })
     config.isSavingElement = true
     let dataToSend;
     dataToSend = {
@@ -935,14 +956,28 @@ export const updateTabTitle = (previousData, index) => (dispatch, getState) => {
                 sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
             }
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            // config.conversionInProcess = false
             config.savingInProgress = false
             config.isSavingElement = false
-        } else {
+        }
+        else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             const newParentData = getState().appStore.slateLevelData;
             const parsedParentData = JSON.parse(JSON.stringify(newParentData));
-            let newSlateData = parsedParentData[config.slateManifestURN];
-            const newVersionURN = res?.data?.versionUrn && res.data.versionUrn.trim() !== "" ? res.data.versionUrn : ""
+            // let newSlateData = parsedParentData[config.slateManifestURN];
+            // const newVersionURN = res?.data?.versionUrn && res.data.versionUrn.trim() !== "" ? res.data.versionUrn : ""
+            // const updatedSlateData = dispatch(updateTabTitleInStore({
+            //     index,
+            //     updatedElement,
+            //     currentSlateData: newSlateData
+            // }, newVersionURN))
+            // currentParentData[config.slateManifestURN] = updatedSlateData?.currentSlateData
+            // dispatch({
+            //     type: AUTHORING_ELEMENT_UPDATE,
+            //     payload: {
+            //         slateLevelData: currentParentData
+            //     }
+            // })
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         config.conversionInProcess = false
