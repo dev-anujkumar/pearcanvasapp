@@ -137,11 +137,10 @@ export const updateElementInStore = (paramsObj) => {
     const iList = elementIndex?.toString()?.split("-") || [];
     const isBlockListElement  = isElementInsideBlocklist({index:elementIndex,data:{asideData:asideData}},newslateData)
     const { autoNumberSettingsOption, isAutoNumberingEnabled } = autoNumberDetails;
-    console.log('params paramsObj', paramsObj);
 
     /* update the store on update of showhide elements inside container elements */
     if(asideData?.type === SHOW_HIDE && iList?.length >= 3) {
-        const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList, updatedData.type );
+        const sh_Object = getShowHideElement(_slateBodyMatter, iList?.length, iList, updatedData.type, asideData);
         updateShowhideElements(sh_Object, updatedData, iList, { isAutoNumberingEnabled, autoNumberSettingsOption });
     } else if (parentElement && parentElement.type === "citations") {
         const indexes = typeof elementIndex === 'string' ? elementIndex?.split("-"): elementIndex;

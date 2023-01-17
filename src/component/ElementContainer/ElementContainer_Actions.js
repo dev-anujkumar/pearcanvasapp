@@ -20,7 +20,7 @@ import { handleAutonumberingOnCreate, handleAutonumberingForElementsInContainers
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberedElement } from './UpdateElements';
-const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
+const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB } = ElementConstants;
 
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -501,7 +501,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
         };
         //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed 
-        if(type2BAdded !== "MANIFEST_LIST") {
+        // check modified to prevent snapshots for TB element
+        if (type2BAdded !== "MANIFEST_LIST" && parentElement?.grandParent?.asideData?.subtype !== TAB) {
         if (slateWrapperConstants?.elementType?.indexOf(type2BAdded) !== -1) {
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
@@ -518,7 +519,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         /* Create inner elements in ShowHide */
         const indexes = index?.toString().split('-') || [];
         /* Get the showhide element object from slate data using indexes */
-        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes, null, parentElement);
+        console.log('addElementInShowHide first step', shObject, parentElement);
         /* After getting showhide Object, add the new element */
         if(shObject?.id === elementId) {
             if(shObject?.interactivedata?.hasOwnProperty(type)) {
