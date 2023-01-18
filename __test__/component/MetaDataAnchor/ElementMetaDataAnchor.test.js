@@ -54,6 +54,10 @@ describe('Test Rendering of metadaanchor on slate', () => {
         elementMetaAnchorInstance.onLOClickHandle(props.currentSlateLOData, event)
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
     })
+    it('perform onLOClickHandle for cypressLF', () => {
+        let event = { target: { id: "aefeqrwq" }, stopPropagation: jest.fn() }
+        elementMetaAnchorInstance.onLOClickHandle(undefined, event)
+    })
     it('on call of prepareLOData',()=>{
         let loData={
             "lourn": "urn:5567809876",

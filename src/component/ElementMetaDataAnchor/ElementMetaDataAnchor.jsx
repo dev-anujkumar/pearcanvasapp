@@ -72,7 +72,7 @@ export class ElementMetaDataAnchor extends Component {
       let element = document.getElementsByClassName('learningObjectiveinnerText');
       element = Array.from(element);
       element.forEach((item) => {
-        item.classList.add("place-holder");
+        // item.classList.add("place-holder");
       })
     }
     let jsx;
