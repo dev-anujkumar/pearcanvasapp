@@ -117,10 +117,21 @@ class ElementContainer extends Component {
             undoElement: "",
             showActionUndone : false,
             listElementWarningPopupCheckbox: false,
-            showFirstTimeUndo : false
+            showFirstTimeUndo : false,
+            pdfSlateAssetId:""
         };
         this.wrapperRef = React.createRef();
 
+    }
+    /**
+     * This function sets PDF alfresco Id when adding or replacing a PDF
+     * to show Expand In Alfresco button
+     * @param {String} id 
+     */
+    setPdfSlateAssetId = (id) => {
+        this.setState({
+            pdfSlateAssetId: id
+        })
     }
 
     getElementVersionStatus = (element, elementStatus) => {
@@ -2322,6 +2333,7 @@ class ElementContainer extends Component {
                         handleFocus={this.handleFocus}
                         handleBlur={this.handleBlur}
                         model={this.props.model}
+                        setPdfSlateAssetId={this.setPdfSlateAssetId}
                     />;
                     labelText = 'PDF'
                     break;
@@ -2421,6 +2433,9 @@ class ElementContainer extends Component {
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
+                         {/*Displaying Expand in Alfresco option for PDF Slates when a PDF is added  */}
+                        {permissions && permissions?.includes('alfresco_crud_access') && element?.type === elementTypeConstant.PDF_SLATE &&
+                        (element?.elementdata?.assetid !== "" || this.state.pdfSlateAssetId !== "") && <Button type={`alfresco-TE-metadata`} btnClassName={` metadata-pdfElement ${btnClassName}`} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'alfresco-TE-metadata': 'alfresco-metadata'}`} btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />} 
                         {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} />)}
@@ -2839,8 +2854,11 @@ class ElementContainer extends Component {
     handleAlfrescoMetadataWindow = (e) => {       
         if(this.props?.element?.figuretype === TABLE_ELEMENT){
             this.showAlfrescoExpansionPopup(e, true, this.props.element)
-        }else{
+        }else {
             let imageId;
+            if (this.props.element.type === 'element-pdf') {
+                imageId =this.state.pdfSlateAssetId ||  this.props?.element?.elementdata?.assetid 
+            } else {
             switch(this.props?.element?.figuretype){
              case IMAGE:
                 imageId=this.props?.element?.figuredata?.imageid
@@ -2856,9 +2874,10 @@ class ElementContainer extends Component {
                 break;
              default: imageId=null
             }
-            imageId = imageId.replace('urn:pearson:alfresco:', '');
-            this.openInNewWindow(imageId)
         }
+        imageId = imageId.replace('urn:pearson:alfresco:', '');
+        this.openInNewWindow(imageId)
+    }
    
     }
 
