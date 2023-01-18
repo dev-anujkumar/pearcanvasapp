@@ -1,7 +1,13 @@
 import React, { useRef, useEffect, useState, useReducer } from 'react';
+import Sortable from 'react-sortablejs';
 import { connect } from 'react-redux';
+import config from "../../config/config.js";
 import ElementSaprator from '../ElementSaprator';
 import ElementContainer from '../ElementContainer';
+import constants from "./constants.js";
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { swapElement } from '../SlateWrapper/SlateWrapper_Actions';
 
 
 export const Tabbed2Column = (props) => {
@@ -10,6 +16,26 @@ export const Tabbed2Column = (props) => {
         {
         }
     );
+
+    /**
+     * Prepares data of elements to be swapped
+     * @param {object} event - event object
+     * @param {object} parentUrn - contains data about parent container
+     */
+    const prepareSwapData = (event, parentUrn) => {
+        let bodyMatterObj = props.element.groupeddata.bodymatter || [];
+        let swappedElementData = bodyMatterObj[event.oldDraggableIndex];
+        console.log('prepareSwapData prepareSwapData', props.element.groupeddata);
+        let dataObj = {
+            oldIndex: event.oldDraggableIndex,
+            newIndex: event.newDraggableIndex,
+            swappedElementData: swappedElementData,
+            currentSlateEntityUrn: parentUrn.contentUrn,
+            containerTypeElem: `${props.labelText}`,
+            containerIndex: props.index
+        }
+        return dataObj
+    }
 
     const renderTabbedElement = (element) => {
         if (element?.groupeddata?.bodymatter.length) {
@@ -26,7 +52,40 @@ export const Tabbed2Column = (props) => {
                 parentManifestUrn: element.id,
                 parentContentUrn: element.contentUrn,
             }
-            return renderTabElement(element, element?.groupeddata?.bodymatter, parentUrn, asideData, props.index);
+            return (
+                <div>
+                    <Sortable
+                        options={{
+                            ...constants.sortableOptions,
+                            onStart: (evt) => {
+                                props.onClickCapture(evt)
+                            },
+
+                            // Element dragging ended
+                            onUpdate: (evt) => {
+                                if (config.savingInProgress) {
+                                    evt.preventDefault()
+                                    evt.stopPropagation()
+                                    return false
+                                }
+                                let dataObj = prepareSwapData(evt, parentUrn);
+                                props.swapElement(dataObj, () => { });
+                                props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                            },
+                        }}
+                        tag="div"
+                        ref={(c) => {
+                            if (c) {
+                                //let sortable = c.sortable;
+                            }
+                        }}
+                        onChange={function (items, sortable, evt) { }}
+                    >
+                        {renderTabElement(element, element?.groupeddata?.bodymatter, parentUrn, asideData, props.index)}
+                    </Sortable>
+                </div>
+            )
         } else {
             return null;
         }
@@ -122,7 +181,9 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = (dispatch) => {
     return {
-
+        swapElement: (dataObj, cb) => {
+            dispatch(swapElement(dataObj, cb))
+        }
     }
 }
 

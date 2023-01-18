@@ -469,12 +469,11 @@ class ElementContainer extends Component {
     }
 
     tabTitleDifference = (index, previousElementData) => {
-        let titleDOM = document.getElementById(`cypress-${index}-0`),
-        titleHTML = titleDOM ? titleDOM.innerHTML : ""
+        let titleDOM = document.getElementById(`cypress-${index}-0`);
+        let titleHTML = titleDOM ? titleDOM.innerHTML : ""
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
-        titleHTML = createLabelNumberTitleModel('', '', titleHTML);
+        titleHTML = this.removeClassesFromHtml(createLabelNumberTitleModel('', '', titleHTML));
         let oldTitleHTML = previousElementData.hasOwnProperty('html') ? this.removeClassesFromHtml(previousElementData.html.title) : `<p class="paragraphNumeroUno"><br/></p>`;
-        // console.log("checkk",titleHTML,oldTitleHTML)
         return titleHTML !== oldTitleHTML
     }
 
@@ -921,10 +920,6 @@ class ElementContainer extends Component {
      * @param {*} activeEditorId
      */
     handleContentChange = async (node, previousElementData, elementType, primaryOption, secondaryOption, activeEditorId, forceupdate, parentElement, showHideType, elemIndex, cgTitleFieldData, triggeredFrom) => {
-        console.log('console console 1', node, previousElementData, elementType);
-        // console.log('console console 2', primaryOption, secondaryOption);
-        // console.log('console console 3', activeEditorId, forceupdate);
-        console.log('console console 4', parentElement, showHideType, elemIndex);
         let { parentUrn, asideData } = this.props;
         asideData = cgTitleFieldData?.asideData && Object.keys(cgTitleFieldData?.asideData).length > 0 ? cgTitleFieldData?.asideData : asideData;
         parentElement = cgTitleFieldData?.parentElement && Object.keys(cgTitleFieldData?.parentElement).length > 0 ? cgTitleFieldData?.parentElement : parentElement;
@@ -1071,7 +1066,7 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.TABBED_TAB:
-                if(this.tabTitleDifference(this.props.index, previousElementData) && previousElementData?.id !== "") {
+                if(this.tabTitleDifference(this.props.index, previousElementData) && previousElementData?.id) {
                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                 config.isSavingElement = true
                 console.log('elementContainer file', previousElementData);
@@ -2231,6 +2226,7 @@ class ElementContainer extends Component {
                     // checking if labelText is TB to render Tabbed 2 column element
                     if (labelText === TABBED_2_COLUMN.ELEMENT_TAG_NAME) {
                         editor = <Tabbed2Column
+                            labelText = {TABBED_2_COLUMN.ELEMENT_TAG_NAME}
                             activeElement = {this.props.activeElement}
                             showBlocker = {this.props.showBlocker}
                             permissions = {permissions}
@@ -2297,6 +2293,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.TABBED_TAB:
                     editor = <TabbedTabContainer
+                        labelText = {TABBED_TAB.ELEMENT_TAG_NAME}
                         activeElement = {this.props.activeElement}
                         showBlocker = {this.props.showBlocker}
                         permissions = {permissions}

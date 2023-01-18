@@ -852,8 +852,9 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 }
                 else if (containerTypeElem && containerTypeElem == '3C') {
                     newBodymatter[dataObj.containerIndex].groupeddata.bodymatter[dataObj.columnIndex].groupdata.bodymatter.move(oldIndex, newIndex);
-                }
-                else {
+                } else if (containerTypeElem && containerTypeElem == 'TB') {
+                    newBodymatter[dataObj.containerIndex].groupeddata.bodymatter.move(oldIndex, newIndex);
+                } else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }
 

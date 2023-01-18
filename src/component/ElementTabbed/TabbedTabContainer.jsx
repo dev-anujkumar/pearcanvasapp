@@ -1,9 +1,14 @@
 import React, { useRef, useEffect, useState, useReducer } from 'react';
+import Sortable from 'react-sortablejs';
 import { connect } from 'react-redux';
+import config from "../../config/config.js";
 import ElementSaprator from '../ElementSaprator';
 import ElementContainer from '../ElementContainer';
 import TabbedTinyMCE from './TabbedTinyMce.jsx';
 import constants from "./constants.js";
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { swapElement } from '../SlateWrapper/SlateWrapper_Actions';
 
 
 export const TabbedTabContainer = (props) => {
@@ -39,6 +44,28 @@ export const TabbedTabContainer = (props) => {
         }
     }
 
+    /**
+     * Prepares data of elements to be swapped
+     * @param {object} event - event object
+     * @param {object} parentUrn - contains data about parent container
+     */
+    const prepareSwapData = (event, parentUrn) => {
+        let swappedElementData;
+        let bodyMatterObj = props.element.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex] || [];
+        swappedElementData = bodyMatterObj[event.oldDraggableIndex];
+        // console.log('parentUrn in swap data function', parentUrn, props.element.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex], swappedElementData);
+        let dataObj = {
+            oldIndex: event.oldDraggableIndex,
+            newIndex: event.newDraggableIndex,
+            swappedElementData: swappedElementData,
+            currentSlateEntityUrn: parentUrn.contentUrn,
+            containerTypeElem: `${props.labelText}`,
+            columnIndex: parentUrn.columnIndex,
+            containerIndex: props.index
+        }
+        return dataObj
+    }
+
     const renderColumnContent = (tab, column, columnIndex) => {
         try {
             let { id: _columnId, type: _columnType, groupdata: _groupdata } = column
@@ -54,7 +81,36 @@ export const TabbedTabContainer = (props) => {
             }
             return (
                 <div className={`container-multi-column-group-3c ${constants.setClassByElementType(column)} column-${columnIndex}`} data-id={_columnId} container-type={_columnType}>
-                    {renderElement(tab, _bodyMatter, parentUrn, index)}
+                    <Sortable
+                        options={{
+                            ...constants.sortableOptions,
+                            onStart: (evt) => {
+                                props.onClickCapture(evt)
+                            },
+
+                            // Element dragging ended
+                            onUpdate: (evt) => {
+                                if (config.savingInProgress) {
+                                    evt.preventDefault()
+                                    evt.stopPropagation()
+                                    return false
+                                }
+                                let dataObj = prepareSwapData(evt, parentUrn)
+                                props.swapElement(dataObj, () => { })
+                                props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                            },
+                        }}
+                        tag="div"
+                        ref={(c) => {
+                            if (c) {
+                                //let sortable = c.sortable;
+                            }
+                        }}
+                        onChange={function (items, sortable, evt) { }}
+                    >
+                        {renderElement(tab, _bodyMatter, parentUrn, index)}
+                    </Sortable>
                 </div>
             )
         } catch (error) {
@@ -203,7 +259,9 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = (dispatch) => {
     return {
-
+        swapElement: (dataObj, cb) => {
+            dispatch(swapElement(dataObj, cb))
+        }
     }
 }
 
