@@ -48,6 +48,7 @@ import pasteIcon from '../../images/ElementButtons/contentPaste.png'
 import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
 import ButtonTypes from './ButtonTypes.js';
 import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
+import tabIcon from '../../images/ElementButtons/newTabIcon.png'
 import ElementConstants from '../ElementContainer/ElementConstants'; 
 class ElementButton extends Component {
    
@@ -214,7 +215,7 @@ class ElementButton extends Component {
                 break;
             case buttonTypes.TABBED_TAB:
                 buttonJSX = <span className="btn-element multi-column-group-tabbed-tab" onClick={clickHandlerFn}>
-                    {multiColumnContainer}
+                    <img src={tabIcon} />
                 </span>
                 break;
             case ButtonTypes.ELM_INTERACTIVE_ICON:

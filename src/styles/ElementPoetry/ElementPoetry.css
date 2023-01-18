@@ -7,11 +7,14 @@
     color: #000;
     font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
 }
-.element-container.pe .horizontalLine  {
+/* .element-container.pe .horizontalLine  {
     margin-left: -30px;
-}
+} */
 .element-container.pe .dropdown  {
     margin-left: -23px;
+}
+.multi-column .element-container.pe .dropdown,.tb .element-container.pe .dropdown  {
+    margin-left: 0;
 }
 .poetryLineLevel1{
     display: block;
