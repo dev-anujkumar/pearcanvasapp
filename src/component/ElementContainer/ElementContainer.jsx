@@ -123,7 +123,11 @@ class ElementContainer extends Component {
         this.wrapperRef = React.createRef();
 
     }
-
+    /**
+     * This function sets PDF alfresco Id when adding or replacing a PDF
+     * to show Expand In Alfresco button
+     * @param {String} id 
+     */
     setPdfSlateAssetId = (id) => {
         this.setState({
             pdfSlateAssetId: id
@@ -2429,6 +2433,7 @@ class ElementContainer extends Component {
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
+                         {/*Displaying Expand in Alfresco option for PDF Slates when a PDF is added  */}
                         {permissions && permissions?.includes('alfresco_crud_access') && element?.type === elementTypeConstant.PDF_SLATE &&
                         (element?.elementdata?.assetid !== "" || this.state.pdfSlateAssetId !== "") && <Button type={`alfresco-TE-metadata`} btnClassName={` metadata-pdfElement ${btnClassName}`} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
