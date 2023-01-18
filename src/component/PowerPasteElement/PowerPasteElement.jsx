@@ -94,6 +94,7 @@ export const pastePostProcess = (data, props) => {
     tinyMCE.activeEditor.setContent('');
 
     const childNodes = data.node.children;
+    console.log('childNodes',childNodes)
     const elements = [];
     createPastedElements(childNodes, elements);
     
@@ -116,11 +117,45 @@ export const pastePostProcess = (data, props) => {
     }
     props.onPowerPaste(elements, parentIndex);
 
+    // const spacesAndNewLineFormatArray = ["\n    ","\n  \n\n\n","\n   \n\n\n","\n\n\n"]
+    // const allSupUnsupChildNodes = data.node.childNodes
+    // let contentToPaste = ""
+    // const elementsHtml = elements.map(item => {return item.html})
+    // for (let index = 0; index < allSupUnsupChildNodes.length; index++) {
+    //   const element = allSupUnsupChildNodes[index];
+    //   if(elementsHtml.includes(element.outerHTML)) {
+    //     contentToPaste += element.outerHTML
+    //   } else if(!spacesAndNewLineFormatArray.includes(element?.data)){
+    //     contentToPaste += "<p class='UnsupportedContent' style='color: red'>Unsupported Content</p>"
+    //   }
+    // }
+    
+    // const updatedPasteContent = document.createElement('div');
+    // updatedPasteContent.innerHTML = contentToPaste;
+    data.node = prepareFinalPasteContent(elements,data.node)
     // if valid data has been pasted in to editor once then make editor non-editable
     elements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
   }
 }
+export const prepareFinalPasteContent = (elements,nodeData) => {
+  const spacesAndNewLineFormatArray = ["\n    ","\n  \n\n\n","\n   \n\n\n","\n\n\n"]
+  const allSupUnsupChildNodes = nodeData.childNodes
+  let contentToPaste = ""
+  const elementsHtml = elements.map(item => {return item.html})
+  for (let index = 0; index < allSupUnsupChildNodes.length; index++) {
+    const element = allSupUnsupChildNodes[index];
+    if(elementsHtml.includes(element.outerHTML)) {
+      contentToPaste += element.outerHTML
+    } else if(!spacesAndNewLineFormatArray.includes(element?.data)){
+      contentToPaste += "<p class='UnsupportedContent' style='color: red'>Unsupported Content</p>"
+    }
+  }
 
+  const updatedPasteContent = document.createElement('div');
+  updatedPasteContent.innerHTML = contentToPaste;
+
+  return updatedPasteContent
+}
 /**
  * Processes and stores copied data to an array
  * @param {HTMLElement} childElements HTML element node object
