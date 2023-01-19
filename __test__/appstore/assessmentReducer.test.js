@@ -12,6 +12,7 @@ import {
     ASSESSMENT_CONFIRMATION_POPUP,
     ELM_NEW_ITEM_DATA,
     SET_ELM_PICKER_MSG,
+    UPDATE_ASSESSMENT_ID,
     SET_USAGE_TYPE
 } from '../../src/constants/Action_Constants';
 
@@ -318,6 +319,16 @@ describe('Test AssessmentReducer', () => {
     it('SET_ELM_PICKER_MSG', () => {
         reducer(INITIAL_STATE, {
             type: 'SET_ELM_PICKER_MSG',
+            payload: {
+                source:"elm",
+                type:"item",
+                timeStamp:"3847238923"
+            }
+        })
+    })
+    it('UPDATE_ASSESSMENT_ID', () => {
+        reducer(INITIAL_STATE, {
+            type: 'UPDATE_ASSESSMENT_ID',
             payload: {
                 source:"elm",
                 type:"item",

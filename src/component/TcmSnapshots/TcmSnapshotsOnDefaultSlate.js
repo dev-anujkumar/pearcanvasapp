@@ -306,7 +306,7 @@ export const tcmSnapshotsCreateSectionBreak = (containerElement, snapshotsData, 
             tag.childTag = fetchElementsTag(item);
             if (asideData?.parent?.type === SHOWHIDE) {
                 const parentElement = asideData ?? {}
-                { asideData, parentUrn }
+
                 elementDetails = setElementTypeAndUrn(elementId, tag, "BODY", wipData.id, undefined, popupInContainer, slateManifestVersioning, isPopupSlate, parentElement, { asideData, parentUrn });
             }
             else{

@@ -104,4 +104,7 @@ describe('testing audioNarration reducer cases --', () => {
             }
         })).toEqual(mockGlossaryData)
     })
+    it('Test Initial State', () => {
+        expect(reducer(INITIAL_STATE)).toEqual(INITIAL_STATE);
+    });
 });

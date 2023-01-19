@@ -11,6 +11,8 @@ const refreshElement = (props) => {
         index = props?.index + '-0';
     }
     props.handleBlur(true, null, index, null, null, null, 'REFRESH_ELEMENT');
+    // calling the function to close copy menu 
+    props.toggleCopyMenu(false);
 }
 
 const CutCopyDialog = props => {

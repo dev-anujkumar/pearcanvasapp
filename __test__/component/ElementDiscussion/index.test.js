@@ -29,7 +29,8 @@ jest.mock('../../../src/constants/utility.js', () => {
       hasReviewerRole: () => {
           return false
       },
-      handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
+      handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
+      sendDataToIframe: jest.fn(),
   }
 });
 const middlewares = [thunk];
@@ -47,7 +48,8 @@ const initialState = {
   projectInfo: {
       LOB: 'OEP',
       usageType: [{label:'self reflection'}],
-      discussionItems: [{discussionUrn:'', title:""}]
+      discussionItems: [{discussionUrn:'', title:""}],
+      lineOfBusiness: "lineOfBusiness"
   },
 };
 

@@ -836,4 +836,10 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
             payload: {isCypressPlusEnabled : true}
         })).toEqual(output);
     });
+    it('case 56- CHECK_ASIDE_NUMBER ', () => {
+        expect(reducer(initialState, {
+            type: CHECK_ASIDE_NUMBER,
+            payload: false
+        }))
+    });
 });
