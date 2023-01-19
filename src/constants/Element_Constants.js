@@ -83,6 +83,8 @@ export const LIST_TYPE_MAPPINGS = {
     }
 }
 
+/************ElementMetaDataAnchor_Test_IDs************** */ 
+export const TEST_TARGET_ID = 'aefeqrwq';
 
 /****************SlateTagDropdown************************ */ 
 export const SLATE_ASSESSMENT = 'assessment';

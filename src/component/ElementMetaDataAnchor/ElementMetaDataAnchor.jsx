@@ -72,6 +72,7 @@ export class ElementMetaDataAnchor extends Component {
       let element = document.getElementsByClassName('learningObjectiveinnerText');
       element = Array.from(element);
       element.forEach((item) => {
+        /* Handling placeholder flicker in case of cypressLF */
         // item.classList.add("place-holder");
       })
     }
