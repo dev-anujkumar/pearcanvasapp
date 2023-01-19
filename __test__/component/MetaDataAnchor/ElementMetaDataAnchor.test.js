@@ -6,7 +6,6 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
-import { TEST_TARGET_ID, CYPRESS_LF } from '../../../src/constants/Element_Constants';
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
         return (<div>null</div>)
@@ -19,7 +18,7 @@ const store = mockStore({
             "lourn": "urn:5567809876",
             "label": { en: "test data" }
         },
-        currentSlateLF: CYPRESS_LF
+        currentSlateLF: 'cypressLF'
     }
 });
 let props = {
@@ -51,13 +50,14 @@ describe('Test Rendering of metadaanchor on slate', () => {
             "lourn": "urn:5567809876",
             "label": { en: "test data" }
         }
-        let event = { target: { id: TEST_TARGET_ID }, stopPropagation: jest.fn() }
+        let event = { target: { id: "aefeqrwq" }, stopPropagation: jest.fn() }
         elementMetaAnchorInstance.onLOClickHandle(props.currentSlateLOData, event)
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
     })
     it('perform onLOClickHandle for cypressLF', () => {
-        let event = { target: { id: TEST_TARGET_ID }, stopPropagation: jest.fn() }
-        elementMetaAnchorInstance.onLOClickHandle(undefined, event)
+        let event = { target: { id: "aefeqrwq" }, stopPropagation: jest.fn() }
+        const currentSlateLOData = undefined;
+        elementMetaAnchorInstance.onLOClickHandle(currentSlateLOData, event)
     })
     it('on call of prepareLOData',()=>{
         let loData={
@@ -106,13 +106,13 @@ describe('External LO -Test Rendering of metadaanchor on slate', () => {
         expect(wrapper.find('ElementMetaDataAnchor')).toHaveLength(1);
     })
     it('onLOClickHandle config.editorRefID == e.target.id', () => {
-        config.editorRefID = TEST_TARGET_ID
+        config.editorRefID = "aefeqrwq"
         let data =
             [{
                 "lourn": "urn:5567809876",
                 "label": { en: "test data" }
             }]
-        let event = { target: { id: TEST_TARGET_ID }, stopPropagation: jest.fn() }
+        let event = { target: { id: "aefeqrwq" }, stopPropagation: jest.fn() }
         elementMetaAnchorInstance.onLOClickHandle(props.currentSlateLOData, event)
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
     })
@@ -122,7 +122,7 @@ describe('External LO -Test Rendering of metadaanchor on slate', () => {
                 "lourn": "urn:5567809876",
                 "label": { en: "test data" }
             }]
-        let event = { target: { id: TEST_TARGET_ID }, stopPropagation: jest.fn() }
+        let event = { target: { id: "aefeqrwq" }, stopPropagation: jest.fn() }
         elementMetaAnchorInstance.onLOClickHandle(data, event)
         expect(elementMetaAnchorInstance.props.currentSlateLOData).toEqual(data);
     })
