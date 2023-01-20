@@ -1117,3 +1117,8 @@ th ol li.listItemNumeroUnoNone:before {
     color: #005a70;
 }
 /**Table Element(TE) Styling End*/
+
+/*Tab Title*/
+.tabTitleContainer{
+    padding: 19px 12px 0 12px;
+}

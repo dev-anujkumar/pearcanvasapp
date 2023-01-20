@@ -282,14 +282,14 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"]  
                 }
-                if (element.width && element.groupproportions) {
+                if (element.width && element.groupproportions && element.subtype === 'tab') {
+                    element['width'] = 'text-width';
+                    elementType["primaryOption"] = TABBED_2_COLUMN.ELEMENT_NAME;
+                    elementType["secondaryOption"] = elementDataBank[element.type][`tb-${element.width}-${element.groupproportions}`]["secondaryOption"]
+                } else if (element.width && element.groupproportions) {
                     // checking for column 3 proportion to set primaryOption 
                     if(element.groupproportions === MULTI_COLUMN_3C.ELEMENT_PROPORTION) elementType["primaryOption"] = MULTI_COLUMN_3C.ELEMENT_NAME; 
                     elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
-                } else if (element.subtype === 'tab') {
-                    element['width'] = 'text-width';
-                    elementType["primaryOption"] = TABBED_2_COLUMN.ELEMENT_NAME;
-                    elementType["secondaryOption"] = elementDataBank[element.type][element.width]["secondaryOption"]
                 } else {
                     elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"] 
                 }

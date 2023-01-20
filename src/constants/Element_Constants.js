@@ -324,3 +324,6 @@ export const BLOCK_LIST_ELEMENT_EVENT_MAPPING = {
 
 /** Not supported TCM revet functionality element types */
 export const notAllowedTCMElementTypes = ['openerelement', 'tableasmarkup', 'manifestlist', 'element-generateLOlist']
+
+/* Tab Title Placeholder */
+export const tabTitlePlaceholder = "Enter tab name (max. 25 characters)"
