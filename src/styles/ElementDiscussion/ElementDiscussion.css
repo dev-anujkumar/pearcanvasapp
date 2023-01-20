@@ -264,7 +264,7 @@
 }
 
 .LOBDropdown .MuiInputBase-input {
-  padding: 0;
+  padding: 0 !important;
 }
 
 .LOBDropdown .MuiSelect-select.MuiSelect-select {

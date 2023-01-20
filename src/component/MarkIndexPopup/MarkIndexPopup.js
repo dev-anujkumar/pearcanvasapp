@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Close, ErrorOutline } from '@material-ui/icons'
+import { Close, ErrorOutline } from '@mui/icons-material'
 import '../../styles/MarkIndexPopup/MarkIndexPopup.css';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeMarkedIndexDOMAttributes } from '../../constants/utility.js';

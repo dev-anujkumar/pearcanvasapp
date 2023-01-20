@@ -3,7 +3,7 @@
 */
 import React, { useRef, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 import TinyMceEditor from "../tinyMceEditor";
 import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';

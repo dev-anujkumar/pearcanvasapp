@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
 import AlfrescoPopup from "../../../src/component/AlfrescoPopup/AlfrescoPopup.jsx";
-import Select from '@material-ui/core/Select';
+import Select from '@mui/material/Select';
 import { act } from "react-dom/test-utils";
 
 //Constants

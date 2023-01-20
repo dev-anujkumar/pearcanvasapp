@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import { mount, shallow } from 'enzyme';
 import thunk from 'redux-thunk';
 import configureMockStore from 'redux-mock-store';
-import Select from '@material-ui/core/Select';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import config from '../../../src/config/config';
