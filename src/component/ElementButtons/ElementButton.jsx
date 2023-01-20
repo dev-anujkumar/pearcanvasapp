@@ -96,7 +96,7 @@ class ElementButton extends Component {
                     <img src={deleteIcon} /></span>
                 break;
             case buttonTypes.TCM:
-                buttonJSX = <span className={`btn-element small tcm-icon`} title="Track Changes" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small tcm-icon ${btnClassName}`} title="Track Changes" onClick={clickHandlerFn}>
                     {tcmIcon}
                     </span>
                 break;

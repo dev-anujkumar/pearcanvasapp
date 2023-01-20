@@ -1158,3 +1158,8 @@ ol li.listItemNumeroUnoLowerRoman {
   height: 22px;
   margin-top: 6px;
 }
+
+.pdf-tcm-icon {
+  margin-top: -4px;
+  width: 22px !important;
+}
