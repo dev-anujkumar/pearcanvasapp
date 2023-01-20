@@ -502,7 +502,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         };
         //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed 
         // check modified to prevent snapshots for TB element
-        if (type2BAdded !== "MANIFEST_LIST" && parentElement?.grandParent?.asideData?.subtype !== TAB) {
+        const isTbElement = parentElement?.grandParent?.asideData?.subtype === TAB || parentElement?.grandParent?.asideData?.parent?.subtype === TAB;
+        if (type2BAdded !== "MANIFEST_LIST" && !isTbElement) {
         if (slateWrapperConstants?.elementType?.indexOf(type2BAdded) !== -1) {
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
@@ -516,6 +517,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             return false;
         }
         let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
+        console.log('showhide in asideeeee', elementId, type, index, parentContentUrn, cb, parentElement);
         /* Create inner elements in ShowHide */
         const indexes = index?.toString().split('-') || [];
         /* Get the showhide element object from slate data using indexes */

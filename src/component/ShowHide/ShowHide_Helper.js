@@ -132,9 +132,16 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList, element
                     sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
                 }
                 break;
-            case 7: /* 2C:WE-Body:SH:Element */
-				sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
+            case 7: /* TB:Tab:AS/WE-Head:SH:Element */
+                if (parentElement?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
+                    sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[iList[2]].groupdata.bodymatter[iList[3]]?.elementdata.bodymatter[iList[4]];
+                    /* 2C:WE-Body:SH:Element */ 
+                } else {
+                    sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
+                }
                 break;
+            case 8: /* TB:Tab:WE-Body:SH:Element */
+                sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[iList[2]].groupdata.bodymatter[iList[3]]?.elementdata.bodymatter[iList[4]]?.contents.bodymatter[iList[5]];
         }
         if(sh_Element?.type === ElementConstants.SHOW_HIDE) {
             return sh_Element;

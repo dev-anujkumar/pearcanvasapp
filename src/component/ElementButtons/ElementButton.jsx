@@ -48,7 +48,7 @@ import pasteIcon from '../../images/ElementButtons/contentPaste.png'
 import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
 import ButtonTypes from './ButtonTypes.js';
 import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
-import tabIcon from '../../images/ElementButtons/newTabIcon.png'
+import tabIcon from '../../images/ElementButtons/tabIcon.png'
 import ElementConstants from '../ElementContainer/ElementConstants'; 
 class ElementButton extends Component {
    

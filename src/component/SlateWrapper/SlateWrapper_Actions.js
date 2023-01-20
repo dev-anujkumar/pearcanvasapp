@@ -36,7 +36,7 @@ import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorCon
 import ElementConstants from '../ElementContainer/ElementConstants';
 import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
-const { SHOW_HIDE } = ElementConstants;
+const { SHOW_HIDE, TAB, MULTI_COLUMN, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
 import {preparePayloadData} from '../../component/TcmSnapshots/CutCopySnapshots_helper';
 import { enableAsideNumbering } from '../Sidebar/Sidebar_Action.js';
@@ -104,10 +104,12 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
         /**This will be removed when BL supports TCM */
         const tempSlateWrapperConstants = [...slateWrapperConstants.elementType].filter( item => item !== "MANIFEST_LIST")
+        /**This check modified to prevent snapshots for TB. This will be removed when TB supports TCM */
+        let isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB;
         //This check is for the TEXT element which gets created inside BL on Shift+Enter
         if(!blockListDetails) {
         // if (tempSlateWrapperConstants.indexOf(type) !== -1) {
-        if (tempSlateWrapperConstants.indexOf(type) !== -1 && asideData?.subtype !== 'tab') {
+        if (tempSlateWrapperConstants.indexOf(type) !== -1 && !isTbElement) {
             let containerElement = {
                 asideData: asideData,
                 parentUrn: parentUrn,
@@ -146,6 +148,19 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == asideData.id) {
                     item.elementdata.bodymatter.splice(outerAsideIndex, 0, createdElementData)
+                    /* To update redux store while creating new element inside TB->Tab->WE->New */
+                } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB && item.id === asideData?.parent?.id && asideData.index) {
+                    let indexes = asideData.index?.split("-");
+                    item = item.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                    if (item?.id === parentUrn.manifestUrn) {
+                        item?.elementdata?.bodymatter?.splice(index, 0, createdElementData);
+                    } else if (item?.subtype === ELEMENT_WORKEDEXAMPLE) {
+                        item?.elementdata?.bodymatter?.map(j => {
+                            if (j?.id === parentUrn.manifestUrn) {
+                                j?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                            }
+                        })
+                    }
                 } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
                     /* Add element inside 2c->WE->new */
                     item?.groupeddata?.bodymatter?.map((ele) => {
@@ -197,13 +212,26 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                             appendElementInsideShowhide(item, sectionType, asideData, 'elementdata', index, createdElementData);
                         }
                     }
+                    /* To update redux store while creating new element inside TB->Tab->Aside->New */
+                } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB && item.id === asideData?.parent?.id && asideData.index) {
+                    let indexes = asideData.index?.split("-");
+                    item = item.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                    if (item?.id === parentUrn.manifestUrn) {
+                        item?.elementdata?.bodymatter?.splice(index, 0, createdElementData);
+                    } else if (item?.subtype === ELEMENT_WORKEDEXAMPLE) {
+                        item?.elementdata?.bodymatter?.map(j => {
+                            if (j?.id === parentUrn.manifestUrn) {
+                                j?.contents?.bodymatter?.splice(index, 0, createdElementData);
+                            }
+                        })
+                    }
                 /* To update redux store while creating new element inside 2C->Aside->New */
-                } else if(asideData?.parent?.type === "groupedcontent" && item.id === asideData?.parent?.id){
+                } else if(asideData?.parent?.type === MULTI_COLUMN && item.id === asideData?.parent?.id){
                     item?.groupeddata?.bodymatter?.map((ele) => {
                         ele?.groupdata?.bodymatter?.map(i => {
                             if (i?.id === parentUrn.manifestUrn) {
                                 i?.elementdata?.bodymatter?.splice(index, 0, createdElementData);
-                            } else if(i?.subtype === "workedexample"){
+                            } else if(i?.subtype === ELEMENT_WORKEDEXAMPLE){
                                 i?.elementdata?.bodymatter?.map(j => {
                                     if (j?.id === parentUrn.manifestUrn) {
                                         j?.contents?.bodymatter?.splice(index, 0, createdElementData);
@@ -854,6 +882,9 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     newBodymatter[dataObj.containerIndex].groupeddata.bodymatter[dataObj.columnIndex].groupdata.bodymatter.move(oldIndex, newIndex);
                 } else if (containerTypeElem && containerTypeElem == 'TB') {
                     newBodymatter[dataObj.containerIndex].groupeddata.bodymatter.move(oldIndex, newIndex);
+                } else if (containerTypeElem && containerTypeElem == 'Tab') {
+                    const indexes = dataObj?.containerIndex?.split('-') || [];
+                    newBodymatter[indexes[0]].groupeddata.bodymatter[[indexes[1]]].groupdata.bodymatter[0].groupeddata.bodymatter[[dataObj.columnIndex]].groupdata.bodymatter.move(oldIndex, newIndex);
                 } else {
                     newParentData[slateId].contents.bodymatter.move(oldIndex, newIndex);
                 }

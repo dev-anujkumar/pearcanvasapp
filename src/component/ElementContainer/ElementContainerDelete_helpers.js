@@ -7,7 +7,7 @@ import {
     AUTHORING_ELEMENT_CREATED,
     GET_TCM_RESOURCES,
 } from "./../../constants/Action_Constants";
-import { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
+import ElementConstants, { elementTypeTCM, containerType, allowedFigureTypesForTCM } from "./ElementConstants";
 import config from '../../config/config';
 import store from '../../appstore/store.js';
 import { ShowLoader, HideLoader, TocRefreshVersioning, SendMessageForVersioning } from '../../constants/IFrameMessageTypes.js';
@@ -43,11 +43,12 @@ export const onDeleteSuccess = (params) => {
     const parentData = getState().appStore.slateLevelData;
     const newParentData = JSON.parse(JSON.stringify(parentData));
     let cutcopyParentData=  cutCopyParentUrn && cutCopyParentUrn.slateLevelData ?  cutCopyParentUrn.slateLevelData : null
-    console.log('onDeleteSuccess onDeleteSuccess', asideData);
 
 
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
-    if (asideData?.subtype !== 'tab') {
+    /** This check is to prevent the screenshots for TB element. It will be removed when TB supports TCM --*/
+    let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB;
+    if (!isTbElement) {
         const tcmDeleteArgs = {
             deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
             deleteElemData,
@@ -183,7 +184,7 @@ export const deleteFromStore = async (params) => {
             sh_Object?.interactivedata[sectionType]?.splice(cCIndex, 1);
         }
         /* To dez redux store while deleting element from TB->Tab->Column */
-    } else if (parentUrn?.elementType === "group" && asideData?.subtype === 'tab' && (parentUrn?.tbId === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
+    } else if (parentUrn?.elementType === "group" && asideData?.subtype === ElementConstants.TAB && (parentUrn?.tbId === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[elIndex[2]].groupdata.bodymatter.splice(elIndex[3], 1);
     } else if (parentUrn && parentUrn.elementType == "group" && (parentUrn?.mcId === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter.splice(elIndex[2], 1)
@@ -191,6 +192,12 @@ export const deleteFromStore = async (params) => {
         bodymatter.forEach((element, key) => {
             if (element.id === elmId) {
                 bodymatter.splice(key, 1);
+                /* To delete element from TB->Tab->AS/WE->element */
+            } else if (asideData?.parent?.type === ElementConstants.MULTI_COLUMN && asideData?.parent?.subtype === ElementConstants.TAB && element.id === asideData?.parent?.id) {
+                element = element.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]];
+                element?.groupdata?.bodymatter?.map(item => {
+                    delInsideWE(item, asideData, parentUrn, elmId);
+                })
             } else if (parentUrn && parentUrn.elementType == "element-aside" && asideData?.parent?.type !== 'showhide') {
                 if (element.id === parentUrn.manifestUrn) {
                     element.elementdata.bodymatter.forEach((ele, indexInner) => {

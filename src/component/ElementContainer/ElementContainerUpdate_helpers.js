@@ -26,7 +26,7 @@ import elementConstant from '../ElementSaprator/ElementSepratorConstants';
 import elementTypeConstant from './ElementConstants';
 
 
-const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT, TAB } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -853,35 +853,38 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     const noAdditionalFields = (updatedData.metaDataField == undefined && (updatedData.sectionType == undefined || updatedData.sectionType == 'bodymatter')) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     //This check will be removed once Blocklist will support TCM
-    if (asideData?.type !== "manifestlist" && asideData?.subtype !== 'tab') {
-    if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
-        const containerElement = {
-            asideData,
-            parentUrn,
-            poetryData,
-            showHideObj,
-            parentElement: allowedParentType.includes(parentElement?.type) ? parentElement : undefined,
-            metaDataField: parentElement && parentElement.type === 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
-            sectionType : allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : showHideType,
-            CurrentSlateStatus: currentSlateData?.status
-        },
-        elementUpdateData = {
-            currentParentData,
-            updateBodymatter,
-            response: responseData,
-            updatedId: updatedData.id,
-            slateManifestUrn: config.slateManifestURN,
-            CurrentSlateStatus: currentSlateData?.status,
-            figureData: oldFigureData,
-            cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
-            
-        }
+    // Check modified to prevent snapshots for TB element. This will be removed when TB supports TCM
+    const isTbElement = asideData?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
+    if (asideData?.type !== "manifestlist" && !isTbElement) {
+        if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
+            const containerElement = {
+                asideData,
+                parentUrn,
+                poetryData,
+                showHideObj,
+                parentElement: allowedParentType.includes(parentElement?.type) ? parentElement : undefined,
+                metaDataField: parentElement && parentElement.type === 'popup' && updatedData.metaDataField ? updatedData.metaDataField : undefined,
+                sectionType: allowedParentType.includes(parentElement?.type) && updatedData.sectionType ? updatedData.sectionType : showHideType,
+                CurrentSlateStatus: currentSlateData?.status
+            },
+                elementUpdateData = {
+                    currentParentData,
+                    updateBodymatter,
+                    response: responseData,
+                    updatedId: updatedData.id,
+                    slateManifestUrn: config.slateManifestURN,
+                    CurrentSlateStatus: currentSlateData?.status,
+                    figureData: oldFigureData,
+                    cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
 
-        if (!config.isCreateGlossary) {
-            await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
+                }
+
+            if (!config.isCreateGlossary) {
+                await tcmSnapshotsForUpdate(elementUpdateData, elementIndex, containerElement, dispatch, assetRemoveidForSnapshot);
+            }
+            config.isCreateGlossary = false
         }
-        config.isCreateGlossary = false
-    }}
+    }
     return false
 }
 

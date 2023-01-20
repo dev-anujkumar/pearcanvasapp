@@ -666,7 +666,7 @@ class SlateWrapper extends Component {
                 this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData, null, null, null)
                 break;
             case 'worked-exp-elem':
-                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, null, null, null, null)
+                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, asideData, null, null, null)
                 break;
             case 'opener-elem':
                 this.props.createElement(OPENER, indexToinsert, parentUrn, null, null, null, null)
@@ -817,7 +817,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'worked-exp-elem',
-                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, parentUrn),
+                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, parentUrn, asideData),
                 tooltipText: 'Worked Example',
                 tooltipDirection: 'left'
             },

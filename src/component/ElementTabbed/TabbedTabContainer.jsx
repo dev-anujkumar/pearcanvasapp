@@ -50,10 +50,9 @@ export const TabbedTabContainer = (props) => {
      * @param {object} parentUrn - contains data about parent container
      */
     const prepareSwapData = (event, parentUrn) => {
-        let swappedElementData;
-        let bodyMatterObj = props.element.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex] || [];
-        swappedElementData = bodyMatterObj[event.oldDraggableIndex];
-        // console.log('parentUrn in swap data function', parentUrn, props.element.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex], swappedElementData);
+        let bodyMatterObj = props.element.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter || [];
+        let swappedElementData = bodyMatterObj[event.oldDraggableIndex];
+        console.log('parentUrn in swap data function', props.element.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter, state.stateElement.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter);
         let dataObj = {
             oldIndex: event.oldDraggableIndex,
             newIndex: event.newDraggableIndex,
