@@ -9,6 +9,8 @@ import constants from "./constants.js";
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions';
+import { checkHTMLdataInsideString } from '../../constants/utility';
+import { tabTitlePlaceholder } from '../../constants/Element_Constants'
 
 
 export const TabbedTabContainer = (props) => {
@@ -30,7 +32,12 @@ export const TabbedTabContainer = (props) => {
         if (highlightTab) {
             return (
                 <React.Fragment>
-                    <TabbedTinyMCE {...props}/>
+                    <div className='tabTitleContainer'>
+                        <div className="floating-title-group">
+                            <TabbedTinyMCE {...props} />
+                            <label className={checkTabTitle(props) ? "transition-none" : "floating-title"}>{tabTitlePlaceholder}</label>
+                        </div>
+                    </div>
                 </React.Fragment>
             )
         } else {
@@ -41,6 +48,12 @@ export const TabbedTabContainer = (props) => {
                     </React.Fragment>
                 )
             })
+        }
+    }
+
+    const checkTabTitle = (props) => {
+        if(props.element?.hasOwnProperty('html') && props.element["html"].title){
+            return checkHTMLdataInsideString(props?.element?.html?.title)
         }
     }
 

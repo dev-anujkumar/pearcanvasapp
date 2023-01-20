@@ -1590,7 +1590,17 @@ export class TinyMceEditor extends Component {
                     }
                 }
             }
-           
+
+            // Restrict max char limit of tab title (25 char)
+            if (this.props?.element?.parentUrn?.subtype === ElementConstants.TAB) {
+                const keyCode = e.keyCode || e.which;
+                const allowedKeys = [8, 37, 38, 39, 40, 46] // Keys for Arrows, Del, BkSpc
+                if ((tinymce?.activeEditor?.getContent()?.length + 1 > 25) && !(allowedKeys.includes(keyCode))) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
         });
     }
 
@@ -3601,6 +3611,9 @@ export class TinyMceEditor extends Component {
                 }
                 default: break;
             }
+        }
+        if(this.props?.element?.parentUrn?.subtype === ElementConstants.TAB){
+            toolbar = config.tabTitleToolbar;
         }
         return toolbar;
     }

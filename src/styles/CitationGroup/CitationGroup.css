@@ -17,10 +17,6 @@ h4.citationTitle {
     min-height: 38px !important
 }
 
-h4.tabTitle {
-    border-bottom: 2px solid #737373;
-    height: 25%;
-}
 
 /* Style for citation title container */
 .citation-group-container>header{

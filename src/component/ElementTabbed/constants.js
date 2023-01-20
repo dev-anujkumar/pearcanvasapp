@@ -18,7 +18,7 @@ let constants = {
     },
     setClassByElementType: (parentElement) => {
         let { width, groupproportions } = parentElement;
-        return width ? `${width}-${groupproportions}` : "wider-33-33-33";
+        return width ? `tb-${width}-${groupproportions}` : "tb-text-width-30-70";
     }
 }
 

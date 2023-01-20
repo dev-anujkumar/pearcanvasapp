@@ -58,6 +58,7 @@ let cypressConfig = {
     playScriptToolbar:['insertMedia','formatSelector','decreaseindent','increaseindent','crossLinkingIcon', 'footnote', 'assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
     blockListToolbar:['formatSelector','alignment', 'IndexEntry','glossary','footnote','crossLinkingIcon', 'decreaseindent','increaseindent'],
     openerElementToolbar: ['undo', 'redo', 'insertMedia','formatSelector','casechange', 'alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote', 'assetpopover', 'mathml','chemml', 'strikethrough', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent', 'slatetag', 'calloutIcon',],
+    tabTitleToolbar: ['undo', 'redo', 'insertMedia','formatSelector','casechange', 'alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote', 'assetpopover', 'mathml','chemml', 'specialcharactor', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent', 'slatetag', 'calloutIcon',],
     APO_API_KEY : '7ij8zrLkCNR9DtAXx3KJ6yutoYnk4SAx',
     editorRefID:"",
     releaseCallCount: 0,
