@@ -331,7 +331,7 @@
   font-family: "Helvetica Neue", sans-serif;
   color: #000;
   line-height: 20px;
-  margin-bottom: 16px;
+  margin-bottom: 2px;
   font-size: 12px;
 }
 
@@ -1157,4 +1157,10 @@ ol li.listItemNumeroUnoLowerRoman {
   font-weight: 600;
   height: 22px;
   margin-top: 6px;
+}
+.unsupContent {
+  color: rgba(188,22,22,1);;
+  font-size: 12px;
+  line-height: 20px;
+  margin-bottom: 8px;
 }

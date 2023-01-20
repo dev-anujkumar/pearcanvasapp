@@ -29,7 +29,8 @@ class PopUp extends React.Component {
             wordPasteProceed: false,
             isChecked: false,
             focusedButton: this.setFocus(props),
-            deleteWarningPopupCheckbox: false
+            deleteWarningPopupCheckbox: false,
+            isPowerPasteInvalidContent: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
@@ -54,6 +55,9 @@ class PopUp extends React.Component {
         return newHtml;
     }
 
+    checkInvalidPowerPasteContent = (flag) => {
+        this.setState({isPowerPasteInvalidContent: flag})
+    }
     componentDidMount() {
         const refVal = this
         if (this.modelRef && this.modelRef.current && this.modelRef.current.querySelector("input, textarea")) {
@@ -433,6 +437,8 @@ class PopUp extends React.Component {
                     index={props.index}
                     onPowerPaste={props.onPowerPaste}
                     toggleWordPasteProceed={this.toggleWordPasteProceed}
+                    checkInvalidPowerPasteContent={this.checkInvalidPowerPasteContent}
+                    isPowerPasteInvalidContent={this.state.isPowerPasteInvalidContent}
                 />
             )
         } else if (props.withCheckBox) {
@@ -584,6 +590,7 @@ class PopUp extends React.Component {
                 <>
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
                     <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>
+                    {this.state.isPowerPasteInvalidContent && <div className='unsupContent'>Unsupported Content found which will not be pasted.</div>}
                 </>
             )
         } else if (props.LOPopup) {
