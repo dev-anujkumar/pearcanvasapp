@@ -56,7 +56,8 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             cutCopyParentUrn
         }
         // This check will remove when TB supports tcm 
-        if (asideData?.subtype !== ElementConstants.TAB) {
+        let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
+        if (!isTbElement) {
             const { prepareTCMSnapshotsForDelete } = (await import("./ElementContainerDelete_helpers.js"))
             prepareTCMSnapshotsForDelete(deleteData);
         }
@@ -129,7 +130,7 @@ export const updateStorePostDelete = (deleteParams) => {
     let elementToUpdate;
     console.log('updateStorePostDelete updateStorePostDelete', index, newIndex, asideData);
 
-    if (asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB) {
+    if (asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
         switch (newIndex.length) {
             case 6: // TB:Tab:c1:sh:show:p
                 elementToUpdate = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[newIndex[2]]?.groupdata?.bodymatter[newIndex[3]];
@@ -138,13 +139,20 @@ export const updateStorePostDelete = (deleteParams) => {
                 }
                 newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[newIndex[2]].groupdata.bodymatter[newIndex[3]] = elementToUpdate;
                 break;
-            // case 7: // 2c:c1:we:body:sh:show:p
-            //     elementToUpdate = newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]];
-            //     if (elementToUpdate?.type == 'showhide') {
-            //         elementToUpdate.interactivedata[showHideType[newIndex[5]]].splice(index, 1)
-            //     }
-            //     newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata.bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]] = elementToUpdate;
-            //     break;
+            case 7: // TB:Tab:c1:AS/WE:HEAD:sh:show:p
+                elementToUpdate = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[newIndex[2]]?.groupdata?.bodymatter[newIndex[3]].elementdata.bodymatter[newIndex[4]];
+                if (elementToUpdate?.type == 'showhide') {
+                    elementToUpdate.interactivedata[showHideType[newIndex[5]]].splice(index, 1)
+                }
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[newIndex[2]].groupdata.bodymatter[newIndex[3]].elementdata.bodymatter[newIndex[4]] = elementToUpdate;
+                break;
+            case 8: // TB:Tab:c1:WE:BODY:sh:show:p
+                elementToUpdate = newBodymatter[newIndex[0]]?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[newIndex[2]]?.groupdata?.bodymatter[newIndex[3]].elementdata.bodymatter[newIndex[4]].contents.bodymatter[newIndex[5]];
+                if (elementToUpdate?.type == 'showhide') {
+                    elementToUpdate.interactivedata[showHideType[newIndex[6]]].splice(index, 1)
+                }
+                newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[newIndex[2]].groupdata.bodymatter[newIndex[3]].elementdata.bodymatter[newIndex[4]].contents.bodymatter[newIndex[5]] = elementToUpdate;
+                break;
             case 1:/** Element on slate level */
             default:
                 newBodymatter.splice(index, 1)

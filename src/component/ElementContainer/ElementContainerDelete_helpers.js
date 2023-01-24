@@ -47,7 +47,7 @@ export const onDeleteSuccess = (params) => {
 
     /** [PCAT-8289] -- TCM Snapshot Data handling --*/
     /** This check is to prevent the screenshots for TB element. It will be removed when TB supports TCM --*/
-    let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB;
+    let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
     if (!isTbElement) {
         const tcmDeleteArgs = {
             deleteParentData: cutcopyParentData ? JSON.parse(JSON.stringify(cutCopyParentUrn.slateLevelData)) : newParentData,
@@ -171,7 +171,6 @@ export const deleteFromStore = async (params) => {
         bodymatter = newParentData[config.slateManifestURN]?.contents?.bodymatter;
     }
     const iList = index?.toString()?.split("-") || [];
-    console.log('deleteElement method type, index, parentUrn, asideData', type, index, parentUrn, asideData);
     /* update the store on /cut/paste of showhide elements */
     if(asideData?.type === SHOWHIDE && iList?.length >= 3) {
         /* Get the showhide Element */
@@ -193,7 +192,7 @@ export const deleteFromStore = async (params) => {
             if (element.id === elmId) {
                 bodymatter.splice(key, 1);
                 /* To delete element from TB->Tab->AS/WE->element */
-            } else if (asideData?.parent?.type === ElementConstants.MULTI_COLUMN && asideData?.parent?.subtype === ElementConstants.TAB && element.id === asideData?.parent?.id) {
+            } else if (asideData?.parent?.type === ElementConstants.MULTI_COLUMN && asideData?.parent?.subtype === ElementConstants.TAB && element.id === asideData?.parent?.id && asideData?.type !== ElementConstants.BLOCK_LIST) {
                 element = element.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]];
                 element?.groupdata?.bodymatter?.map(item => {
                     delInsideWE(item, asideData, parentUrn, elmId);
@@ -243,7 +242,17 @@ export const deleteFromStore = async (params) => {
                                 }
                             })
                         }
-                    })
+                    }) /* To update redux store while deleting element inside TB->Tab->Block Poetry->Stanza */
+                } else if (poetryData?.parent?.type === ElementConstants.MULTI_COLUMN && poetryData?.parent?.subtype === ElementConstants.TAB && element.id === poetryData?.parent?.id && poetryData.index) {
+                    const poetryIndex = poetryData.index?.split("-");
+                    element = element.groupeddata.bodymatter[poetryIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[poetryIndex[2]].groupdata.bodymatter[poetryIndex[3]];
+                    if (element.type == "poetry" && element.id == poetryData?.parentUrn) {
+                        element.contents?.bodymatter.forEach((stanza, innerIndex) => {
+                            if (stanza.id === elmId) {
+                                element.contents.bodymatter.splice(innerIndex, 1);
+                            }
+                        })
+                    }
                 } else if (element?.type == "groupedcontent" && element?.id === poetryData?.parent?.id) {  /* To update redux store while deleting new element inside Multi-column->Block Poetry->Stanza */
                   element.groupeddata?.bodymatter.forEach((ele) => {
                         ele.groupdata?.bodymatter.forEach((ele1) =>{
@@ -319,6 +328,10 @@ export const deleteFromStore = async (params) => {
             }else if (element?.type === "groupedcontent" && element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.type === "manifestlist"){
                 let blEleminAS = element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]];
                 deleteBlockListElement(elmId, blEleminAS); // check multicolumn has a blocklist inside it and then delete
+                // If Tab element has blocklist inside it then delete
+            } else if (element?.type === ElementConstants.MULTI_COLUMN && element?.subtype === ElementConstants.TAB && element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.type === ElementConstants.BLOCK_LIST) {
+                let blEleminAS = element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]];
+                deleteBlockListElement(elmId, blEleminAS);
             }else if (element?.type === "manifestlist") {
                 deleteBlockListElement(elmId, element)
             }

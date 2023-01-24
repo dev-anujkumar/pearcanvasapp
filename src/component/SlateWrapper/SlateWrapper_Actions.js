@@ -53,7 +53,6 @@ Array.prototype.move = function (from, to) {
 };
 
 export const createElement = (type, index, parentUrn, asideData, outerAsideIndex, loref, cb,poetryData,blockListDetails) => (dispatch, getState) => {
-    console.log('type, index, parentUrn, asideData', type, index, parentUrn, asideData);
     config.currentInsertedIndex = index;
     let  popupSlateData = getState().appStore.popupSlateData;
     const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
@@ -105,7 +104,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         /**This will be removed when BL supports TCM */
         const tempSlateWrapperConstants = [...slateWrapperConstants.elementType].filter( item => item !== "MANIFEST_LIST")
         /**This check modified to prevent snapshots for TB. This will be removed when TB supports TCM */
-        let isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB;
+        let isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
         //This check is for the TEXT element which gets created inside BL on Shift+Enter
         if(!blockListDetails) {
         // if (tempSlateWrapperConstants.indexOf(type) !== -1) {
@@ -285,7 +284,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                                     }
                                 })
                             }
-                    })
+                    }) /* To update redux store while creating new element inside TB->Tab->Block Poetry->Stanza */
+                } else if (poetryData?.parent?.type === MULTI_COLUMN && poetryData?.parent?.subtype === TAB && item.id === poetryData?.parent?.id && poetryData.index) {
+                    const poetryIndex = poetryData.index?.split("-");
+                    item = item.groupeddata.bodymatter[poetryIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[poetryIndex[2]].groupdata.bodymatter[poetryIndex[3]];
+                    item.contents?.bodymatter?.splice(index, 0, createdElementData);
                 }
                 /* To update redux store while creating new element inside 2C->Block Poetry->Stanza */
                 else if(poetryData?.parent?.type === "groupedcontent" && item.id === poetryData?.parent?.id){
@@ -307,7 +310,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })  
         /* To update redux store while creating new element inside TB->Tab->Column */
-        } else if (asideData && asideData.type === 'groupedcontent' && asideData.subtype === 'tab') {
+        } else if (asideData && asideData.type === MULTI_COLUMN && asideData.subtype === TAB) {
             const parentIndexes = asideData.index && asideData.index.split("-")
             let item = newParentData[config.slateManifestURN].contents.bodymatter[parentIndexes[0]];
             item.groupeddata.bodymatter[parentIndexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[parentIndexes[2]].groupdata.bodymatter.splice(index, 0, createdElementData);
@@ -361,6 +364,23 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
                 else { // level 4 
                     initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData)
+                } // Manifest List/Text element handelling for Tab element inside TB
+            } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter;
+                switch (indexes.length) {
+                    case 6: // TB:Tab:c1:BL Level 1 nesting
+                        initialdata.splice(index, 0, createdElementData);
+                        break;
+                    case 8: // TB:Tab:c1:BL Level 2 nesting
+                        initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
+                    case 10: // TB:Tab:c1:BL Level 3 nesting
+                        initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData);
+                        
+                        break;
+                    case 12: // TB:Tab:c1:BL Level 4 nesting
+                        initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter[indexes[10]].listitemdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
                 }
             }
             else if(asideData.parent && asideData.parent.type === "groupedcontent"){
@@ -425,6 +445,23 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else { // level 4 
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
+                // Manifest List Item handelling for Tab element inside TB
+             } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter;
+                switch (indexes.length) {
+                    case 6: // TB:Tab:c1:BL Level 1 nesting
+                        initialdata.splice(index, 0, createdElementData);
+                        break;
+                    case 8: // TB:Tab:c1:BL Level 2 nesting
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
+                    case 10: // TB:Tab:c1:BL Level 3 nesting
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
+                    case 12: // TB:Tab:c1:BL Level 4 nesting
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
+                }
              }
              else if(asideData.parent && asideData.parent.type === "groupedcontent"){
                 initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter;
@@ -485,6 +522,19 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
                 else { // level 4 
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
+                }
+            } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
+                initialdata = newParentData[config.slateManifestURN].contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter;
+                switch (indexes.length) {
+                    case 8: // TB:Tab:c1:BL Level 2 nesting
+                        initialdata.splice(index, 0, createdElementData);
+                        break;
+                    case 10: // TB:Tab:c1:BL Level 3 nesting
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
+                    case 12: // TB:Tab:c1:BL Level 4 nesting
+                        initialdata[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData);
+                        break;
                 }
             }
             else if(asideData.parent && asideData.parent.type === 'groupedcontent'){

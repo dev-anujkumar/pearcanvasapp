@@ -22,11 +22,10 @@ import config from '../../config/config';
 import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
 import { startPdfConversion,poolFunc} from '../PdfSlate/CypressPlusAction';
-import elementConstant from '../ElementSaprator/ElementSepratorConstants';
 import elementTypeConstant from './ElementConstants';
 
 
-const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT, TAB } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT, TAB, BLOCK_LIST } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -171,7 +170,7 @@ export const updateElementInStore = (paramsObj) => {
             }
         }
         /* Update data of element inside tab inside TB */
-    } else if (parentElement?.type === "groupedcontent" && asideData?.subtype === elementConstant.TAB) {
+    } else if (parentElement?.type === MULTI_COLUMN && asideData?.subtype === TAB) {
         const indexes = elementIndex.split("-")
         let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
         /** Updation of AutoNumbered Elements */
@@ -662,6 +661,21 @@ export const updateElementInStore = (paramsObj) => {
                     }
                     else{
                         _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
+                    } // check the update of BL in Tab element of TB
+                } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB && asideData?.type === BLOCK_LIST) {
+                    switch (indexes.length) {
+                        case 6: // TB:Tab:c1:BL Level 1 nesting
+                            _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]] = updatedData;
+                            break;
+                        case 8: // TB:Tab:c1:BL Level 2 nesting
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]] = updatedData;
+                            break;
+                        case 10: // TB:Tab:c1:BL Level 3 nesting
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]] = updatedData;
+                            break;
+                        case 12: // TB:Tab:c1:BL Level 4 nesting
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter[indexes[10]].listitemdata.bodymatter[indexes[11]] = updatedData;
+                            break;
                     }
                 }else if(asideData.parent && asideData.parent.type==="groupedcontent" && asideData?.type === 'manifestlist'){
                     if(indexes.length===5){
@@ -854,7 +868,7 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     const oldFigureData = getState().appStore.oldFiguredata
     //This check will be removed once Blocklist will support TCM
     // Check modified to prevent snapshots for TB element. This will be removed when TB supports TCM
-    const isTbElement = asideData?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
+    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
     if (asideData?.type !== "manifestlist" && !isTbElement) {
         if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
             const containerElement = {

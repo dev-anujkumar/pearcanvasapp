@@ -1259,8 +1259,15 @@ class ElementContainer extends Component {
         const { SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT } = elementTypeConstant;
         const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
         let parentElement
-        /* Update title/credit of block poetry inside multicolumn */
-        if (containerParent && this.props?.parentElement?.type == "groupedcontent" && this.props?.element?.type == "poetry") {
+        /* Update title/credit of block poetry inside Tab element of TB */
+        if (containerParent && this.props?.parentElement?.type == elementTypeConstant.MULTI_COLUMN && this.props?.parentElement?.subtype === elementTypeConstant.TAB && this.props?.element?.type == elementTypeConstant.POETRY_ELEMENT) {
+            const poetryIndex = this.props?.index?.split("-");
+            let poetryElement = this.props.parentElement.groupeddata.bodymatter[poetryIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[poetryIndex[2]].groupdata.bodymatter[poetryIndex[3]];
+            if (poetryElement.type === elementTypeConstant.POETRY_ELEMENT && poetryElement.id === this.props.element?.id) {
+                parentElement = poetryElement;
+            }
+            /* Update title/credit of block poetry inside multicolumn */
+        } else if (containerParent && this.props?.parentElement?.type == "groupedcontent" && this.props?.element?.type == "poetry") {
             this.props.parentElement?.groupeddata?.bodymatter.map((ele) => {
                 ele.groupdata?.bodymatter?.map((ele1) => {
                     if(ele1.type == "poetry" && ele1.id === this.props.element?.id) {

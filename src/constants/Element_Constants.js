@@ -24,6 +24,8 @@ export const AUDIO = "audio"
 export const VIDEO = "video"
 export const INTERACTIVE = "interactive"
 export const DEFAULT_ASSET="Asset data undefined"
+export const MULTI_COLUMN = "groupedcontent"
+export const TAB = "tab"
 export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
 
 /*---------------Element Interactive ----------------------*/ 

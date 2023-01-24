@@ -52,7 +52,7 @@ export const TabbedTabContainer = (props) => {
     }
 
     const checkTabTitle = (props) => {
-        if(props.element?.hasOwnProperty('html') && props.element["html"].title){
+        if (props.element?.hasOwnProperty('html') && props.element["html"].title) {
             return checkHTMLdataInsideString(props?.element?.html?.title)
         }
     }
