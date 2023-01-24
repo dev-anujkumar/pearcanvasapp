@@ -129,6 +129,10 @@ export const DELETE_SHOW_HIDE_ELEMENT = "DELETE_SHOW_HIDE_ELEMENT"
 export const OPEN_AUDIO_GLOSSARY_POPUP = 'OPEN_AUDIO_GLOSSARY_POPUP'
 export const ADD_AUDIO_GLOSSARY_POPUP ='ADD_AUDIO_GLOSSARY_POPUP'
 export const HANDLE_GLOSSARY_AUDIO_DATA = 'HANDLE_GLOSSARY_AUDIO_DATA'
+export const INSERT_NON_BREAKING_SPACE = 'Convert to non breaking space'
+export const NON_BREAKING_SPACE_SUPPORTED_ARRAY = ['element-authoredtext' , 'element-blockfeature', "element-learningobjectives", 'element-list']
+export const INSERT_SPECIAL_CHARACTER = "Insert Special Character"
+export const INSERT_A_BLANK = "Insert a Blank"
 
 /*--------------- Slate Title -------------------*/
 export const SLATE_TITLE = 'Untitled'

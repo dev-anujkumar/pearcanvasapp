@@ -264,6 +264,27 @@ span.answerLineContent {
   bottom: 5px;
   color: transparent;
 }
+span.non-breaking-space {
+  border-bottom: 1px solid #FF0000;
+  margin: 0px 1px;
+  position: relative;
+  bottom: 2px;
+  color: transparent;
+}
+.disable-non-breaking {
+  pointer-events: none !important;
+  opacity: 0.5;
+  color: gray !important;
+}
+.tox .tox-collection--list .tox-collection__item.add-padding {
+  padding-left: 34px !important;
+}
+.disable-non-breaking img {
+  margin-left: 0 !important;
+}
+.enable-image img {
+  margin-left: 0 !important;
+}
 .tox .tox-tbtn--disabled, .tox .tox-tbtn--disabled:hover, .tox .tox-tbtn:disabled, .tox .tox-tbtn:disabled:hover{
   opacity: 0.34!important;
   cursor:not-allowed!important
