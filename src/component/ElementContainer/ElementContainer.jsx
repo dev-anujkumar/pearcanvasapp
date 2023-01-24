@@ -2233,6 +2233,8 @@ class ElementContainer extends Component {
                     // checking if labelText is TB to render Tabbed 2 column element
                     if (labelText === TABBED_2_COLUMN.ELEMENT_TAG_NAME) {
                         editor = <Tabbed2Column
+                            userRole={this.props.userRole}
+                            pasteElement={this.props.pasteElement}
                             labelText = {TABBED_2_COLUMN.ELEMENT_TAG_NAME}
                             activeElement = {this.props.activeElement}
                             showBlocker = {this.props.showBlocker}
@@ -2300,6 +2302,8 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.TABBED_TAB:
                     editor = <TabbedTabContainer
+                        userRole={this.props.userRole}
+                        pasteElement={this.props.pasteElement}
                         labelText = {TABBED_TAB.ELEMENT_TAG_NAME}
                         activeElement = {this.props.activeElement}
                         showBlocker = {this.props.showBlocker}

@@ -167,7 +167,7 @@ export function ElementSaprator(props) {
         const parentContainerForShowHide = ["groupedcontent", "element-aside"]
         const hasPasteFromWordPermission = hasProjectPermission("paste_from_word");
         let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
-        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type))) {
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type)) || (parentUrn?.subtype === TAB) || (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB)) {
             return null;
         }
         let insertionIndex = firstOne ? index : index + 1

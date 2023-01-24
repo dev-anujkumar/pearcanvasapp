@@ -8,6 +8,7 @@ import constants from "./constants.js";
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions';
+import { TABBED_SOURCE } from '../../constants/Element_Constants'
 
 
 export const Tabbed2Column = (props) => {
@@ -117,6 +118,7 @@ export const Tabbed2Column = (props) => {
                                         userRole={props.userRole}
                                         pasteElement={props.pasteElement}
                                         handleCopyPastePopup={props.handleCopyPastePopup}
+                                        source={TABBED_SOURCE}
                                     />
                                 }
                                 <ElementContainer
@@ -154,6 +156,7 @@ export const Tabbed2Column = (props) => {
                                     pasteElement={props.pasteElement}
                                     handleCopyPastePopup={props.handleCopyPastePopup}
                                     dataId={props.element.id}
+                                    source={TABBED_SOURCE}
                                 />
                             </React.Fragment>
                         )

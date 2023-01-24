@@ -13,7 +13,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM, tbSidebarEndpoint } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
@@ -24,6 +24,7 @@ let imageSource = ['image','table','mathImage'],imageDestination = ['primary-ima
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
 import { updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
 import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
+import elementConstant from '../ElementSaprator/ElementSepratorConstants';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -32,7 +33,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     let oldElementFigureData ;
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
         inputPrimaryOptionType = inputPrimaryOptionsList[oldElementInfo['primaryOption']],
-        overallType = inputPrimaryOptionsList['enumType']
+        overallType = (oldElementData.subtype === elementConstant.TAB) ? tbSidebarEndpoint : inputPrimaryOptionsList['enumType']
 
     const inputSubTypeList = inputPrimaryOptionType['subtype'],
         inputSubType = inputSubTypeList[[oldElementInfo['secondaryOption']]]

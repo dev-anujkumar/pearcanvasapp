@@ -999,7 +999,7 @@ export default {
         'primary-tabbed-elem': {
             text: 'Tabbed 2 Column',
             toolbar: [],
-            enum: 'TABBED_COLUMN_TAB',
+            enum: 'TABBED_2_COLUMN',
             subtype: {
                 'secondary-tabbed-30-70': {
                     text: 'Distribution 1 : 30% - 70%',
