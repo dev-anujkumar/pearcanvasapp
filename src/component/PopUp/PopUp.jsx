@@ -11,7 +11,7 @@ import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
-import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
+import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
@@ -591,7 +591,7 @@ class PopUp extends React.Component {
                 <>
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
                     <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>
-                    {this.state.isPowerPasteInvalidContent && <div className='unsupContent'>Unsupported Content found which will not be pasted.</div>}
+                    {this.state.isPowerPasteInvalidContent && <div className='unsupContent'>{UNSUPPORTED_CONTENT_ERR_MSG}</div>}
                 </>
             )
         } else if (props.LOPopup) {
