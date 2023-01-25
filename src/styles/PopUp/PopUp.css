@@ -1099,7 +1099,7 @@ ol li.listItemNumeroUnoLowerRoman {
 }
 
 .disable-mouse-click {
-  /* pointer-events: none; */
+  pointer-events: none;
 }
 
 /**Popup Buttons Focus Classes Start*/
