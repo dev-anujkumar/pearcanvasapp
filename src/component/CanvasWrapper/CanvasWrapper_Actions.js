@@ -922,11 +922,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             entityURN,
             projectURN: config.projectUrn,
         });
-        if(slateData.data[newVersionManifestId].type === "popup"){
+        if(slateData?.data[newVersionManifestId]?.type === "popup"){
             let slateDetails = {
                 currentProjectId: config.projectUrn,
                 slateEntityUrn: config.slateEntityURN
-
             }
             dispatch(fetchAudioNarrationForContainer(slateDetails));
         }
