@@ -1598,7 +1598,8 @@ export class TinyMceEditor extends Component {
             if (this.props?.element?.parentUrn?.subtype === ElementConstants.TAB) {
                 const keyCode = e.keyCode || e.which;
                 const allowedKeys = [8, 37, 38, 39, 40, 46] // Keys for Arrows, Del, BkSpc
-                if ((tinymce?.activeEditor?.getContent()?.length + 1 > 25) && !(allowedKeys.includes(keyCode))) {
+                const cutPasteKeys = [67,86,88] // restrict Cut/Copy/Paste Operations
+                if ((tinymce?.activeEditor?.targetElm?.innerText?.length + 1 > 25) && !(allowedKeys.includes(keyCode)) || (e.ctrlKey && (cutPasteKeys.includes(keyCode)))) {
                     e.preventDefault();
                     e.stopPropagation();
                     return false;

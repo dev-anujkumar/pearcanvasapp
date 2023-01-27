@@ -2654,6 +2654,7 @@ class ElementContainer extends Component {
                     permissions={_props.permissions}
                     slateLevelData={this.props.slateLevelData}
                     handleBlur={this.handleBlur}
+                    asideData={this.props.asideData}
                 />
             )
         }
