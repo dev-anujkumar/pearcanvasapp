@@ -1168,3 +1168,8 @@ ol li.listItemNumeroUnoLowerRoman {
   margin-top: -4px;
   width: 22px !important;
 }
+
+.wPasteClswithInvalidContent {
+  height: 610px;
+  top: 306px;
+}
