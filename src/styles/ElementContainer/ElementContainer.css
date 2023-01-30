@@ -386,3 +386,7 @@ p.blockquoteTextCredit.mce-edit-focus.place-holder:focus::before {
     width: 22px;
     margin-bottom: -2px;
 }
+
+.tcm-icon {
+    width: 22px !important;
+}
