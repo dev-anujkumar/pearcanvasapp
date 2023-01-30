@@ -7,7 +7,7 @@
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
 import { setSemanticsSnapshots, fetchElementsTag, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
-import { getTitleSubtitleModel } from '../../constants/utility';
+import { getTitleSubtitleModel, removedDOMAttributes } from '../../constants/utility';
 /*************************Import Constants*************************/
 import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
@@ -892,6 +892,7 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
     snapshotData = handleBlankLineDom(snapshotData,'BlankLine');
     snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'');
     snapshotData = snapshotData && removeCalloutTitle(snapshotData);
+    snapshotData = snapshotData.includes("non-breaking-space") ? removedDOMAttributes(snapshotData, 'non-breaking-space') : snapshotData
     return snapshotData
 }
 /**
