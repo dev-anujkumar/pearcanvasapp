@@ -24,7 +24,7 @@ let imageSource = ['image','table','mathImage'],imageDestination = ['primary-ima
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
 import { updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
 import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
-import elementConstant from '../ElementSaprator/ElementSepratorConstants';
+import ElementConstants from '../ElementContainer/ElementConstants';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -33,7 +33,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     let oldElementFigureData ;
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
         inputPrimaryOptionType = inputPrimaryOptionsList[oldElementInfo['primaryOption']],
-        overallType = (oldElementData.subtype === elementConstant.TAB) ? tbSidebarEndpoint : inputPrimaryOptionsList['enumType']
+        overallType = (oldElementData?.subtype === ElementConstants.TAB) ? tbSidebarEndpoint : inputPrimaryOptionsList['enumType']
 
     const inputSubTypeList = inputPrimaryOptionType['subtype'],
         inputSubType = inputSubTypeList[[oldElementInfo['secondaryOption']]]
@@ -239,33 +239,37 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
-        if (elementType.indexOf(oldElementData.type) !== -1) {
-            if(oldElementData && (oldElementData.figuretype == "codelisting" || oldElementData.figuretype == "interactive")){
-                oldElementData.figuredata = oldElementFigureData
-            }           
-            let elementConversionData ={
-                currentSlateData:{
-                    status: currentSlateData.status,
-                    contentUrn: currentSlateData.contentUrn
-                },
-                oldElementData:oldElementData,
-                response:res.data
-            }
-            if (config.isPopupSlate) {
-                elementConversionData.currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
-            }
-            if (currentSlateData && currentSlateData.status === 'approved') {
-                await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
-            }
-            else {
-                /**
-                * @param {Object} newAppStore 
-                * @description - Adding showhide data into appstore variable to form snapshots of conversion
-                */
-                const newAppStore = showHideObj?.element?.type === "showhide" ? {...appStore, showHideObj } : appStore;
-                tcmSnapshotsForConversion(elementConversionData, indexes, newAppStore, dispatch)
-            }
+        // This check is added to prevent snapshots for TB element, it will be removed when TB element will support TCM
+        const isTbElement = appStore?.asideData?.subtype === ElementConstants.TAB || appStore?.asideData?.parent?.subtype === ElementConstants.TAB || appStore?.asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || appStore?.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
+        if (!isTbElement) {
+            if (elementType.indexOf(oldElementData.type) !== -1) {
+                if (oldElementData && (oldElementData.figuretype == "codelisting" || oldElementData.figuretype == "interactive")) {
+                    oldElementData.figuredata = oldElementFigureData
+                }
+                let elementConversionData = {
+                    currentSlateData: {
+                        status: currentSlateData.status,
+                        contentUrn: currentSlateData.contentUrn
+                    },
+                    oldElementData: oldElementData,
+                    response: res.data
+                }
+                if (config.isPopupSlate) {
+                    elementConversionData.currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
+                }
+                if (currentSlateData && currentSlateData.status === 'approved') {
+                    await tcmSnapshotsForConversion(elementConversionData, indexes, appStore, dispatch)
+                }
+                else {
+                    /**
+                    * @param {Object} newAppStore 
+                    * @description - Adding showhide data into appstore variable to form snapshots of conversion
+                    */
+                    const newAppStore = showHideObj?.element?.type === "showhide" ? { ...appStore, showHideObj } : appStore;
+                    tcmSnapshotsForConversion(elementConversionData, indexes, newAppStore, dispatch)
+                }
 
+            }
         }
         /**-----------------------------------------------------------------------------------------------------------*/
 
@@ -321,10 +325,22 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                         break;
                 }
             } else {
-                onUpdateSuccessInShowHide(res?.data, bodymatter, indexes);
-            }
+                onUpdateSuccessInShowHide(res?.data, bodymatter, indexes, appStore?.asideData);
+            } // Update store for element inside Tab of TB
+        } else if (appStore?.asideData?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.subtype === ElementConstants.TAB) {
+            bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]] = res.data;
         } else if (appStore.parentUrn.elementType === "group") {
             focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = res.data
+            // TB->Tab->AS/WE->Element
+        } else if(appStore?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parent?.subtype === ElementConstants.TAB) {
+            switch(indexes.length) {
+                case 5:
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = res.data;
+                    break;
+                case 6:
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = res.data;
+                    break;
+            }
         } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
             switch(indexes.length) {
                 case 4:
@@ -403,12 +419,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 elementWipType: "element-authoredtext"
             }
         }
+        
         //tcm conversion code   
         if (config.tcmStatus) {
             if (elementType.indexOf(oldElementData.type) !== -1) {
-                prepareDataForConversionTcm(oldElementData.id, getState, dispatch,res.data.id, res.data);
+                prepareDataForConversionTcm(oldElementData.id, getState, dispatch, res.data.id, res.data);
             }
-        }   
+        }
         dispatch({
             type: SET_ACTIVE_ELEMENT,
             payload: activeElementObject
@@ -577,7 +594,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         //Separate case for element conversion in showhide
         if(showHideObj || (appStore?.asideData?.type === 'showhide')) {
             const innerElementType = activeElement.elementType
-            let oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj)
+            let oldElementData = handleElementsInShowHide(bodymatter, indexes, innerElementType, showHideObj, '', appStore?.asideData);
             let showhideElement = {
                 currentElement: oldElementData.currentElement,
                 index: activeElement.index,
@@ -604,9 +621,25 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                 showHideType: findSectionType(indexes[1])
             }
             dispatch(convertElement(showhideElement.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement));
+            // If Element is inside Tab Element of TB element
+        } else if (appStore?.asideData?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.subtype === ElementConstants.TAB) {
+            let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+            dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj))
+            // TB->Tab->AS/WE->Element
+        } else if(appStore?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parent?.subtype === ElementConstants.TAB) {
+            let elementOldDataTab;
+            switch(indexes.length) {
+                case 5:
+                    elementOldDataTab = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                    break;
+                case 6:
+                    elementOldDataTab = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                    break;
+            }
+            dispatch(convertElement(elementOldDataTab, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
             let elementOldData2C;
             switch(indexes.length) {

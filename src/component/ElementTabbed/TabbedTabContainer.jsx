@@ -12,7 +12,7 @@ import { swapElement } from '../SlateWrapper/SlateWrapper_Actions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
 import { tabTitlePlaceholder } from '../../constants/Element_Constants'
 
-
+let tabbedTabElements = {}
 export const TabbedTabContainer = (props) => {
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
@@ -21,6 +21,7 @@ export const TabbedTabContainer = (props) => {
     );
 
     const renderTabElement = (tab) => {
+        tabbedTabElements = tab
         let tabElementData = tab?.groupdata?.bodymatter[0];
         let groupedDataBodymatter = tabElementData?.groupeddata && tabElementData?.groupeddata?.bodymatter || [];
         let highlightTab = false;
@@ -63,9 +64,8 @@ export const TabbedTabContainer = (props) => {
      * @param {object} parentUrn - contains data about parent container
      */
     const prepareSwapData = (event, parentUrn) => {
-        let bodyMatterObj = props.element.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter || [];
+        let bodyMatterObj = tabbedTabElements.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter || [];
         let swappedElementData = bodyMatterObj[event.oldDraggableIndex];
-        console.log('parentUrn in swap data function', props.element.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter, state.stateElement.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter);
         let dataObj = {
             oldIndex: event.oldDraggableIndex,
             newIndex: event.newDraggableIndex,

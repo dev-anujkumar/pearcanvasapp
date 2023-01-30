@@ -2484,7 +2484,7 @@ class ElementContainer extends Component {
                         {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
                         {labelText === TABBED_TAB.ELEMENT_TAG_NAME && this.renderTabTitleLabel(element)}
                         {((labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) || (labelText === MULTI_COLUMN_2C.ELEMENT_TAG_NAME) || (labelText === TABBED_TAB.ELEMENT_TAG_NAME)) && <div>{this.renderMultipleColumnLabels(element)}</div>}
-                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" elementType={element?.type} onClick={(e) => this.showDeleteElemPopup(e, true)} />)
+                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" elementType={element?.type} onClick={(e) => this.showDeleteElemPopup(e, true)} isButtonDisabled={(labelText === TABBED_TAB.ELEMENT_TAG_NAME) ? this.checkTabCount() : false} />)
                             : null}
                         {this.renderColorPaletteButton(element, permissions)}
                         {this.renderColorTextButton(element, permissions)}
@@ -2582,6 +2582,11 @@ class ElementContainer extends Component {
             </>
 
         );
+    }
+
+    // function to disable delete button if TB has single Tab
+    checkTabCount = () => {
+        return this.props?.parentElement?.groupeddata?.bodymatter?.length === 1 ? true : false;
     }
 
     // function to render Title label for tabbed element

@@ -25,7 +25,7 @@ import { startPdfConversion,poolFunc} from '../PdfSlate/CypressPlusAction';
 import elementTypeConstant from './ElementConstants';
 
 
-const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT, TAB, BLOCK_LIST } = ElementConstants;
+const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT, TAB, BLOCK_LIST, ELEMENT_ASIDE } = ElementConstants;
 
 export const updateNewVersionElementInStore = (paramObj) => {
     let { 
@@ -170,7 +170,7 @@ export const updateElementInStore = (paramsObj) => {
             }
         }
         /* Update data of element inside tab inside TB */
-    } else if (parentElement?.type === MULTI_COLUMN && asideData?.subtype === TAB) {
+    } else if (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB) {
         const indexes = elementIndex.split("-")
         let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
         /** Updation of AutoNumbered Elements */
@@ -218,7 +218,103 @@ export const updateElementInStore = (paramsObj) => {
                     _slateBodyMatter = updateLOInCanvasStore({ updatedLO, _slateBodyMatter, activeIndex: i });
                 }
             }
-        })
+        }) /** updation of elements inside aside and WE elements inside Tab element */
+    } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB && asideData?.type !== BLOCK_LIST) {
+        const indexes = elementIndex?.split("-");
+        if (asideData?.type === ELEMENT_ASIDE && parentElement?.type === FIGURE) {
+            /** updation of text and figure elements inside aside/WE of multicolumn */
+            let element;
+            switch (indexes.length) {
+                case 5: // AS/WE->HEAD->Element
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                    break;
+                case 6: // WE->BODY->Element
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                    break;
+            }
+            /** Updation of AutoNumbered Elements */
+            if (isAutoNumberingEnabled && element?.type == FIGURE && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                element = { ...element, ...updatedData }
+                const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                element = { ...dataToReturn }
+            }
+            switch (indexes.length) {
+                case 5: // AS/WE->HEAD->Element
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = {
+                        ...element,
+                        ...updatedData,
+                        elementdata: {
+                            ...element.elementdata,
+                            startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                            numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                            text: updatedData.elementdata ? updatedData.elementdata.text : null
+                        },
+                        tcm: _slateObject.tcm ? true : false
+                    }
+                    break;
+                case 6: // WE->BODY->Element
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = {
+                        ...element,
+                        ...updatedData,
+                        elementdata: {
+                            ...element.elementdata,
+                            startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                            numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                            text: updatedData.elementdata ? updatedData.elementdata.text : null
+                        },
+                        tcm: _slateObject.tcm ? true : false
+                    }
+                    break;
+            }
+        } else if (asideData?.type === ELEMENT_ASIDE && parentElement?.type === POOPUP_ELEMENT) {
+            let element;
+            switch (indexes.length) {
+                case 5: // AS/WE->HEAD->Pop up Element
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata;
+                    if (updatedData?.sectionType === "postertextobject") {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata.postertextobject[0] = {
+                            ...element.postertextobject[0],
+                            html: updatedData?.html,
+                            elementdata: {
+                                ...element.postertextobject[0].elementdata,
+                                text: updatedData?.elementdata?.text
+                            },
+                        }
+                    } else {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata["formatted-title"] = {
+                            ...element["formatted-title"],
+                            html: updatedData?.html,
+                            elementdata: {
+                                ...element["formatted-title"].elementdata,
+                                text: updatedData?.elementdata?.text
+                            },
+                        }
+                    }
+                    break;
+                case 6: // WE->BODY->Pop up Element
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata;
+                    if (updatedData?.sectionType === "postertextobject") {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata.postertextobject[0] = {
+                            ...element.postertextobject[0],
+                            html: updatedData?.html,
+                            elementdata: {
+                                ...element.postertextobject[0].elementdata,
+                                text: updatedData?.elementdata?.text
+                            },
+                        }
+                    } else {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata["formatted-title"] = {
+                            ...element["formatted-title"],
+                            html: updatedData?.html,
+                            elementdata: {
+                                ...element["formatted-title"].elementdata,
+                                text: updatedData?.elementdata?.text
+                            },
+                        }
+                    }
+                    break;
+            }
+        }
     } else if(asideData?.parent?.type === "groupedcontent" && asideData?.type !== 'manifestlist') {
         /** updation of aside and WE elements inside multicolumn */
         /* 2C:AS/WE:PS */

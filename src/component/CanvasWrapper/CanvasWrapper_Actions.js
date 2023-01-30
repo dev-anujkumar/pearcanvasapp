@@ -1008,7 +1008,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
         let indexesLen = indexes?.length, condition;
         /* update the store on update of figure elements inside showhide elements */
         if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-            oldPath = getPathOfFigureAsset(bodymatter, indexes, "path", activeElement?.id);
+            oldPath = getPathOfFigureAsset(bodymatter, indexes, "path", activeElement?.id, asideData);
         } else if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
@@ -1047,7 +1047,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 let indexesLen = indexes?.length, condition;
                 /* update the store on update of figure elements inside showhide elements */
                 if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "audioid", activeElement?.id);
+                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "audioid", activeElement?.id, asideData);
                 } else
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -1079,7 +1079,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 let indexesLen = indexes?.length, condition;
                 /* update the store on update of figure elements inside showhide elements */
                 if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "videoid", activeElement?.id);
+                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "videoid", activeElement?.id, asideData);
                 } else
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -1104,10 +1104,10 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
     return oldPath || ""
 }
 /* Return the image/audio/vedio path/Id */
-function getPathOfFigureAsset(bodymatter, indexes, keyName, activeID) {
+function getPathOfFigureAsset(bodymatter, indexes, keyName, activeID, asideData) {
     const indexesLen = indexes?.length;
     /* Get the showhide */
-    const sh_Object = getShowHideElement(bodymatter, indexesLen, indexes);
+    const sh_Object = getShowHideElement(bodymatter, indexesLen, indexes, null, asideData);
     if(sh_Object?.type === SHOW_HIDE) {
         /* Get the sectiontype of showhide */
         const sectionType = indexOfSectionType(indexes);
@@ -1137,7 +1137,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
         let indexesLen = indexes.length, condition;
          /* update the store on update of interactive elements inside showhide elements */
         if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-            oldPath = getPathOfFigureAsset(bodymatter, indexes, "interactiveid", activeElement?.id);
+            oldPath = getPathOfFigureAsset(bodymatter, indexes, "interactiveid", activeElement?.id, asideData);
         } else
         if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -1330,7 +1330,15 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                 targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]          
                 break;
             case 6:
-                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]]          
+                // TB->Tab->AS/WE->HEAD->Popup
+                if (targetPopupElement?.type === ElementConstants.MULTI_COLUMN && targetPopupElement?.subtype === ElementConstants.TAB) {
+                    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]];
+                } else {
+                    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]];
+                }
+                break;
+            case 7: // TB->Tab->AS/WE->BODY->Popup
+                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]].contents.bodymatter[popupElementIndex[5]];
                 break;
         }
         if (targetPopupElement) {
@@ -1354,7 +1362,15 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                     _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;          
                     break;
                 case 6:
-                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]] = targetPopupElement;          
+                    // TB->Tab->AS/WE->HEAD->Popup
+                    if (_slateObject.contents.bodymatter[popupElementIndex[0]]?.type === ElementConstants.MULTI_COLUMN && _slateObject.contents.bodymatter[popupElementIndex[0]]?.subtype === ElementConstants.TAB) {
+                        _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]] = targetPopupElement;
+                    } else {
+                        _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]] = targetPopupElement;
+                    }
+                    break;
+                case 7: // TB->Tab->AS/WE->BODY->Popup
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]].contents.bodymatter[popupElementIndex[5]] = targetPopupElement;
                     break;
                 default:
                     _slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement;
