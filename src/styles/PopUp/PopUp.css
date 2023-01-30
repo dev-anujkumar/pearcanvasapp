@@ -1173,3 +1173,11 @@ ol li.listItemNumeroUnoLowerRoman {
   height: 610px;
   top: 306px;
 }
+
+.approved-warning-txt{
+  padding-top: 16px;
+  font-size: 16px;
+  line-height: 1.38;
+  color: #000000;
+  width: 99%;
+}

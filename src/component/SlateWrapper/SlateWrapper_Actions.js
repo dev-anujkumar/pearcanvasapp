@@ -1614,3 +1614,20 @@ export const saveCaretPosition = (caretPosition) => (dispatch, getState) => {
         payload: caretPosition
     });
 }
+
+export const slateVersioning = () => {
+    // Api to change container status from approved to WIP
+    const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion`;
+    return axios.post(versioningStatus, null, {
+        headers: {
+            "Content-Type": "application/json",
+            'myCloudProxySession': config.myCloudProxySession
+        }
+    }).then(response => {
+        if(response?.data?.status === "success"){
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
+        }
+    }).catch(error => {
+        console.log("error", error)
+    })
+}
