@@ -259,6 +259,18 @@ describe('Testing PopUp component', () => {
         component.instance().isChecked=true
         expect(component.instance().props.showBlockCodeElemPopup).toEqual(true);
     });
+    it('testCase for isApprovedSlate',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            isApprovedSlate:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.isApprovedSlate).toEqual(true);
+    });
     it('testCase for isSubscribersSlate',() => {
         let props = {
             togglePopup:jest.fn(),

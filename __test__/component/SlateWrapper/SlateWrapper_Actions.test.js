@@ -874,6 +874,102 @@ describe('Tests Slate Wrapper Actions', () => {
         let pagenumber = 1;
         actions.updatePageNumber(pagenumber, elementId, asideDataType2, parentUrn)(dispatch, getState);
     })
+    it('slateVersioning action - testing --then', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8": {
+                        "contentUrn": "urn:pearson:entity:ccdcdaa7-f84f-438a-b062-70ba9cd3d85c",
+                        "id": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8",
+                        "numberedandlabel": true,
+                        "pageCount": 1,
+                        "pageLimit": 25,
+                        "pageNo": 0,
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                        "status": "approved",
+                        "type": "manifest",
+                        "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+                    }
+                },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({data: {status: "success"}}));
+        await store3.dispatch(actions.slateVersioning(false));
+    });
+    it('slateVersioning action - testing --then --else', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8": {
+                        "contentUrn": "urn:pearson:entity:ccdcdaa7-f84f-438a-b062-70ba9cd3d85c",
+                        "id": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8",
+                        "numberedandlabel": true,
+                        "pageCount": 1,
+                        "pageLimit": 25,
+                        "pageNo": 0,
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                        "status": "approved",
+                        "type": "manifest",
+                        "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+                    }
+                },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({data: {status: "success"}}));
+        await store3.dispatch(actions.slateVersioning(true));
+    });
+    it('slateVersioning action - testing --else', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8": {
+                        "contentUrn": "urn:pearson:entity:ccdcdaa7-f84f-438a-b062-70ba9cd3d85c",
+                        "id": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8",
+                        "numberedandlabel": true,
+                        "pageCount": 1,
+                        "pageLimit": 25,
+                        "pageNo": 0,
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                        "status": "approved",
+                        "type": "manifest",
+                        "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+                    }
+                },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.resolve({}));
+        await store3.dispatch(actions.slateVersioning(true));
+    });
+    it('slateVersioning action - testing -- catch', async () => {
+        initialState3 = {
+            appStore: {
+                slateLevelData: {
+                    "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8": {
+                        "contentUrn": "urn:pearson:entity:ccdcdaa7-f84f-438a-b062-70ba9cd3d85c",
+                        "id": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8",
+                        "numberedandlabel": true,
+                        "pageCount": 1,
+                        "pageLimit": 25,
+                        "pageNo": 0,
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                        "status": "wip",
+                        "type": "manifest",
+                        "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+                    }
+                },
+            },
+        }
+        store3 = mockStore(() => initialState3);
+        jest.mock('axios');
+        axios.post = jest.fn(() => Promise.reject({}));
+        await store3.dispatch(actions.slateVersioning(true));
+    });
     it('createElement action - MANIFEST_LIST - indexes - length - 3', async () => {
         initialState3 = {
             appStore: {
