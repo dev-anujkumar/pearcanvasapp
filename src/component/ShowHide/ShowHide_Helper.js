@@ -175,17 +175,17 @@ export function indexOfSectionType(indexes) {
  * @param {*} elementType type of inner element
  * @param {*} showHideObj showHide details
  */
-export const handleElementsInShowHide = (bodymatter, indexes, elementType, showHideObj, calledFrom) => {
+export const handleElementsInShowHide = (bodymatter, indexes, elementType, showHideObj, calledFrom, parentElement) => {
     let dataToSend = {}
     if (calledFrom == 'glossaryFootnote') {
         if (textElements.includes(elementType)) {
-            dataToSend = getTextElementInShowHide(bodymatter, indexes, showHideObj)
+            dataToSend = getTextElementInShowHide(bodymatter, indexes, showHideObj, parentElement)
         } else if (figElements.includes(elementType)) {
             dataToSend = getFigureElementsInShowHide(bodymatter, indexes, showHideObj)
         }
         return dataToSend
     } else {
-        return getTextElementInShowHide(bodymatter, indexes, showHideObj)//dataToSend
+        return getTextElementInShowHide(bodymatter, indexes, showHideObj, parentElement)//dataToSend
     }
 }
 
@@ -196,7 +196,7 @@ export const handleElementsInShowHide = (bodymatter, indexes, elementType, showH
  * @param {*} indexes Array of indexs
  * @param {*} showHideObj showHide details
  */
-const getTextElementInShowHide = (bodymatter, indexes, showHideObj) => {
+const getTextElementInShowHide = (bodymatter, indexes, showHideObj, parentElement) => {
     const indexLength = Array.isArray(indexes) ? indexes.length : 0;
     let currentElement = {}, showHideElement = {};
 
@@ -212,11 +212,23 @@ const getTextElementInShowHide = (bodymatter, indexes, showHideObj) => {
 					bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] : /* 2C:SH:Element */
 					bodymatter[indexes[0]]?.elementdata.bodymatter[indexes[1]]?.contents.bodymatter[indexes[2]]; /* WE:Body:SH:Element */
             break;
-        case 6:
-            showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]
+        case 6: /*TB:Tab:SH:Element */
+            if (parentElement?.grandParent?.asideData?.type === ElementConstants.MULTI_COLUMN && parentElement?.grandParent?.asideData?.subtype === ElementConstants.TAB) {
+                showHideElement =  bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+            } else { /* 2C:AS/WE-Head:SH:Element */
+                showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]
+            }
             break;
         case 7:
-            showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]?.contents?.bodymatter[indexes[4]]
+            // TB->Tab->AS/WE->HEAD->S/H
+            if (parentElement?.grandParent?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && parentElement?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
+                showHideElement =  bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+            } else {
+                showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]?.contents?.bodymatter[indexes[4]];
+            }
+            break;
+        case 8: // TB->Tab->WE->BODY->S/H
+            showHideElement =  bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
             break;
     }
     const showHideType = findSectionType(indexes[indexLength -2])
@@ -278,8 +290,8 @@ export const getShowHideIndex = (tempIndex) => {
  * @param {*} indexes element index
  * @returns 
  */
-export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => {
-    let showHideElement = getShowHideElement(bodymatter, indexes?.length, indexes);
+export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes, parentElement) => {
+    let showHideElement = getShowHideElement(bodymatter, indexes?.length, indexes, null, parentElement);
     if(showHideElement?.type === ElementConstants.SHOW_HIDE) {
         const showHideType = indexOfSectionType(indexes);
         if(showHideType) {
@@ -287,7 +299,7 @@ export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes) => {
         }
     }
 }
-export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, sectionType, indexes) => {
+export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeElemType, sectionType, indexes, asideParent = {}) => {
     try {
         let shAtIndex = indexes?.length;
         const indexLength = indexes?.length;
@@ -307,7 +319,7 @@ export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeE
                 shAtIndex = indexLength - 1;
         }
         /* Get the SH element to update footnote and glossery of inner element */
-        let sh_Object = getShowHideElement(bodymatter, shAtIndex, indexes,activeElemType);
+        let sh_Object = getShowHideElement(bodymatter, shAtIndex, indexes, activeElemType, asideParent);
         if(sh_Object?.type === ElementConstants.SHOW_HIDE && sectionType && shAtIndex) {
             const elementInSH = activeElemType === ElementConstants.BLOCKFEATURE ? sh_Object.interactivedata[sectionType][indexes[shAtIndex - 2]] : sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]];
             /* Folloing condition is to get element where Footnote and Glossery added */
