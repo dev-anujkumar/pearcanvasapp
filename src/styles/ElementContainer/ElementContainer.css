@@ -147,6 +147,12 @@
 .bl .cypress-editable.place-holder::before {
     margin-top: -2px !important;
 }
+.tb .bl .bl .bl .bl .cypress-editable.place-holder::before {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100px;
+    overflow: hidden
+}
 .bl .p {
     border: none !important;
 }
