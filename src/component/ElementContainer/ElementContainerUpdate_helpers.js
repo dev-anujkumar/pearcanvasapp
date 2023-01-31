@@ -170,7 +170,7 @@ export const updateElementInStore = (paramsObj) => {
             }
         }
         /* Update data of element inside tab inside TB */
-    } else if (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB) {
+    } else if (parentElement?.type === MULTI_COLUMN && asideData?.subtype === TAB) {
         const indexes = elementIndex.split("-")
         let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
         /** Updation of AutoNumbered Elements */
@@ -221,52 +221,7 @@ export const updateElementInStore = (paramsObj) => {
         }) /** updation of elements inside aside and WE elements inside Tab element */
     } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB && asideData?.type !== BLOCK_LIST) {
         const indexes = elementIndex?.split("-");
-        if (asideData?.type === ELEMENT_ASIDE && parentElement?.type === FIGURE) {
-            /** updation of text and figure elements inside aside/WE of multicolumn */
-            let element;
-            switch (indexes.length) {
-                case 5: // AS/WE->HEAD->Element
-                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
-                    break;
-                case 6: // WE->BODY->Element
-                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
-                    break;
-            }
-            /** Updation of AutoNumbered Elements */
-            if (isAutoNumberingEnabled && element?.type == FIGURE && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
-                element = { ...element, ...updatedData }
-                const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
-                element = { ...dataToReturn }
-            }
-            switch (indexes.length) {
-                case 5: // AS/WE->HEAD->Element
-                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = {
-                        ...element,
-                        ...updatedData,
-                        elementdata: {
-                            ...element.elementdata,
-                            startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
-                            numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
-                            text: updatedData.elementdata ? updatedData.elementdata.text : null
-                        },
-                        tcm: _slateObject.tcm ? true : false
-                    }
-                    break;
-                case 6: // WE->BODY->Element
-                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = {
-                        ...element,
-                        ...updatedData,
-                        elementdata: {
-                            ...element.elementdata,
-                            startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
-                            numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
-                            text: updatedData.elementdata ? updatedData.elementdata.text : null
-                        },
-                        tcm: _slateObject.tcm ? true : false
-                    }
-                    break;
-            }
-        } else if (asideData?.type === ELEMENT_ASIDE && parentElement?.type === POOPUP_ELEMENT) {
+        if (asideData?.type === ELEMENT_ASIDE && parentElement?.type === POOPUP_ELEMENT) {
             let element;
             switch (indexes.length) {
                 case 5: // AS/WE->HEAD->Pop up Element
@@ -311,6 +266,51 @@ export const updateElementInStore = (paramsObj) => {
                                 text: updatedData?.elementdata?.text
                             },
                         }
+                    }
+                    break;
+            }
+        } else if (asideData?.type === ELEMENT_ASIDE) {
+            /** updation of text and figure elements inside aside/WE of multicolumn */
+            let element;
+            switch (indexes.length) {
+                case 5: // AS/WE->HEAD->Element
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                    break;
+                case 6: // WE->BODY->Element
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                    break;
+            }
+            /** Updation of AutoNumbered Elements */
+            if (isAutoNumberingEnabled && element?.type == FIGURE && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                element = { ...element, ...updatedData }
+                const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                element = { ...dataToReturn }
+            }
+            switch (indexes.length) {
+                case 5: // AS/WE->HEAD->Element
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = {
+                        ...element,
+                        ...updatedData,
+                        elementdata: {
+                            ...element.elementdata,
+                            startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                            numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                            text: updatedData.elementdata ? updatedData.elementdata.text : null
+                        },
+                        tcm: _slateObject.tcm ? true : false
+                    }
+                    break;
+                case 6: // WE->BODY->Element
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = {
+                        ...element,
+                        ...updatedData,
+                        elementdata: {
+                            ...element.elementdata,
+                            startNumber: updatedData.elementdata ? updatedData.elementdata.startNumber : null,
+                            numberedlines: updatedData.elementdata ? updatedData.elementdata.numberedlines : null,
+                            text: updatedData.elementdata ? updatedData.elementdata.text : null
+                        },
+                        tcm: _slateObject.tcm ? true : false
                     }
                     break;
             }
@@ -466,7 +466,6 @@ export const updateElementInStore = (paramsObj) => {
                     }
                 }
             } else if (asideData && asideData.type == 'element-aside') {
-                
 
                 // xxxxxxxxxxxxxxxxxxxx  START update elements inside AS/WE inside S/H  xxxxxxxxxxxxxxxxxx //
                 if (asideData?.parent?.type === "showhide" && element.id == asideData?.parent?.id) {

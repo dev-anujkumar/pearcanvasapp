@@ -182,7 +182,10 @@ export const deleteFromStore = async (params) => {
             /* delete the element inside showhide on cut from sh */
             sh_Object?.interactivedata[sectionType]?.splice(cCIndex, 1);
         }
-        /* To dez redux store while deleting element from TB->Tab->Column */
+        /* To update redux store while deleting Tab element from TB */
+    } else if (parentUrn?.type === ElementConstants.MULTI_COLUMN && parentUrn?.subtype === ElementConstants.TAB && (asideData?.parentManifestUrn === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
+        newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter.splice(elIndex[1], 1);
+        /* To update redux store while deleting element from TB->Tab->Column */
     } else if (parentUrn?.elementType === "group" && asideData?.subtype === ElementConstants.TAB && (parentUrn?.tbId === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {
         newParentData[config.slateManifestURN].contents.bodymatter[elIndex[0]].groupeddata.bodymatter[elIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[elIndex[2]].groupdata.bodymatter.splice(elIndex[3], 1);
     } else if (parentUrn && parentUrn.elementType == "group" && (parentUrn?.mcId === newParentData[config.slateManifestURN]?.contents?.bodymatter[elIndex[0]]?.id)) {

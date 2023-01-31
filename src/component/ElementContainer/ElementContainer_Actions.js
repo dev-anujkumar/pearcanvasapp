@@ -20,7 +20,7 @@ import { handleAutonumberingOnCreate, handleAutonumberingForElementsInContainers
 import { autoNumber_ElementTypeToStoreKeysMapper, autoNumberFigureTypesForConverion, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForContainers } from '../FigureHeader/AutoNumber_helperFunctions';
 import { updateAutoNumberedElement } from './UpdateElements';
-const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB } = ElementConstants;
+const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB, MULTI_COLUMN } = ElementConstants;
 
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -273,7 +273,7 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
         /* asideDataFromAfrescoMetadata is used for editing figure metadata popup field(alttext, longDescription) inside ShowHide element */
         if((asideData?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.type === SHOW_HIDE ) && indexes?.length >= 3) {
             /* Get the showhide element object from slate data using indexes */
-            const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+            const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes, null, asideData);
             const section = indexOfSectionType(indexes); /* Get the section type */
             /* After getting showhide Object, add the new element */
             if(shObject?.type === SHOW_HIDE) {
@@ -358,10 +358,26 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                         }
                     
                     }
+                } /* TB:Tab:Fig && TB:Tab:AS/WE:Fig */
+            } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === MULTI_COLUMN && newBodymatter[indexes[0]].subtype === TAB) { 
+                switch (indexesLen) {
+                    case 4: // TB->Tab->Figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                        break;
+                    case 5: // TB->Tab->AS/WE->HEAD->Figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                        break;
+                    case 6: // TB->Tab->AS/WE->BODY->Figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                        break;
+                }
+                if (condition.versionUrn === elementId) {
+                    dataToSend = condition?.figuredata
+                    condition.figuredata = figureData
                 }
             } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === "groupedcontent") { /* 2C:AS:Fig */
                 if (indexesLen == 4) {
-                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];  
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                 } else if (indexesLen == 5) {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
                 }
