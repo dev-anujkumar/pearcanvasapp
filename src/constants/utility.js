@@ -982,3 +982,18 @@ export const removeMarkedIndexDOMAttributes = (innerHTML, currentMarkedIndexId) 
     }
     return markedIndexDiv?.innerHTML;
 }
+
+export const removedDOMAttributes = (innerHTML, className) => {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = innerHTML
+    while (tinyMCE.$(tempDiv).find(`span.${className}`)?.length) {
+        tinyMCE.$(tempDiv).find(`span.${className}`).each(function () {
+            let innerHtml = this?.innerHTML;
+            this.outerHTML = innerHtml;
+        });
+        if (tinyMCE.$(tempDiv).find(`span.${className}`)?.length === 0) {
+            break;
+        }
+    }
+    return tempDiv?.innerHTML;
+}

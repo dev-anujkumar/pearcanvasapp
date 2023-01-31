@@ -4261,7 +4261,7 @@ export class TinyMceEditor extends Component {
 
 
     render() {
-        const { slateLockInfo: { isLocked, userId } } = this.props;
+        const { slateLockInfo: { isLocked, userId }, contenteditable } = this.props;
         let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
         this.handlePlaceholder();
 
@@ -4310,7 +4310,7 @@ export class TinyMceEditor extends Component {
                         className={classes} 
                         placeholder={this.props.placeholder} 
                         suppressContentEditableWarning={true} 
-                        contentEditable={!lockCondition} 
+                        contentEditable={contenteditable === false ? contenteditable : !lockCondition} 
                         dangerouslySetInnerHTML={{ __html: model }} 
                     ></h4>
                 )
