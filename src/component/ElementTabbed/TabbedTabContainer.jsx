@@ -21,7 +21,7 @@ export const TabbedTabContainer = (props) => {
     );
 
     const renderTabElement = (tab) => {
-        tabbedTabElements = tab
+        tabbedTabElements[tab.contentUrn] = tab
         let tabElementData = tab?.groupdata?.bodymatter[0];
         let groupedDataBodymatter = tabElementData?.groupeddata && tabElementData?.groupeddata?.bodymatter || [];
         let highlightTab = false;
@@ -64,7 +64,7 @@ export const TabbedTabContainer = (props) => {
      * @param {object} parentUrn - contains data about parent container
      */
     const prepareSwapData = (event, parentUrn) => {
-        let bodyMatterObj = tabbedTabElements.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter || [];
+        let bodyMatterObj = tabbedTabElements[props?.element?.contentUrn]?.groupdata.bodymatter[0].groupeddata.bodymatter[parentUrn.columnIndex].groupdata.bodymatter || [];
         let swappedElementData = bodyMatterObj[event.oldDraggableIndex];
         let dataObj = {
             oldIndex: event.oldDraggableIndex,

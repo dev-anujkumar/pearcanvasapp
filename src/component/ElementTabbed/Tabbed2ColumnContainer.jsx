@@ -24,7 +24,7 @@ export const Tabbed2Column = (props) => {
      * @param {object} parentUrn - contains data about parent container
      */
     const prepareSwapData = (event, parentUrn) => {
-        let bodyMatterObj = tab2Element.groupeddata.bodymatter || [];
+        let bodyMatterObj = tab2Element[props?.element?.contentUrn].groupeddata.bodymatter || [];
         let swappedElementData = bodyMatterObj[event.oldDraggableIndex];
         console.log('prepareSwapData prepareSwapData', props.element.groupeddata);
         let dataObj = {
@@ -39,7 +39,7 @@ export const Tabbed2Column = (props) => {
     }
 
     const renderTabbedElement = (element) => {
-        tab2Element = element
+        tab2Element[element.contentUrn] = element
         if (element?.groupeddata?.bodymatter.length) {
             let parentUrn = {
                 type: 'groupedcontent',
