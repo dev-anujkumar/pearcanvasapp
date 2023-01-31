@@ -79,7 +79,9 @@ class ElementPoetry extends Component {
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'pe',
                                             poetryId: this.props.element.id,
-                                            sectionType: this?.props?.showHideType
+                                            sectionType: this?.props?.showHideType,
+                                            parentElement: this.props?.parentElement,
+                                            elementIndex: this.props?.index
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);

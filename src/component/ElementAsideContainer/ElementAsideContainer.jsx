@@ -154,7 +154,7 @@ class ElementAsideContainer extends Component {
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'we',
                                             elementIndex: this.props.index,
-                                            parentElement: { type: this.props?.parentElement?.type, showHideType: this.props?.showHideType }
+                                            parentElement: { type: this.props?.parentElement?.type, subtype: this.props?.parentElement?.subtype, showHideType: this.props?.showHideType }
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -224,7 +224,7 @@ class ElementAsideContainer extends Component {
             containerTypeElem: 'section',
             asideId: this.props.element.id,
             elementIndex: this.props.index,
-            parentElement: { type: this.props?.parentElement?.type, showHideType: this.props?.showHideType }
+            parentElement: { type: this.props?.parentElement?.type, subtype: this.props?.parentElement?.subtype, showHideType: this.props?.showHideType }
         }
 
         this.props.swapElement(dataObj, (bodyObj) => { })
