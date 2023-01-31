@@ -72,7 +72,8 @@ export class ElementMetaDataAnchor extends Component {
       let element = document.getElementsByClassName('learningObjectiveinnerText');
       element = Array.from(element);
       element.forEach((item) => {
-        item.classList.add("place-holder");
+        /* Handling placeholder flicker in case of cypressLF */
+        // item.classList.add("place-holder");
       })
     }
     let jsx;
@@ -118,20 +119,10 @@ export class ElementMetaDataAnchor extends Component {
         this.props.showBlocker(true);
         this.launchExternalFrameworkPopup()
       }
-    else{
-        this.props.showBlocker(true);
-        let slateManifestURN= config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-        let apiKeys_LO = {
-          'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
-          'strApiKey': config.STRUCTURE_APIKEY,
-          'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
-          'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-          'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
-          'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-          'myCloudProxySession': config.myCloudProxySession
-        };
-        sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: slateManifestURN, apiKeys_LO, wrapperURL: config.WRAPPER_URL } }) 
-      }
+      else if ( !loData ) {
+          this.props.showBlocker(true);
+          sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: '', apiKeys_LO: '', wrapperURL: config.WRAPPER_URL } }) 
+        }
     }
   }
 

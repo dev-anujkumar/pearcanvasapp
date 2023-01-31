@@ -77,7 +77,7 @@ class ElementButton extends Component {
                 </div>
                 break;
             case buttonTypes.EDIT_BUTTON_CYPRESSSPLUS:
-                buttonJSX = <Tooltip direction='picker' tooltipText="Edit in Cypress+"><span className={`btn-element small ${btnClassName} ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
+                buttonJSX = <Tooltip direction='picker' tooltipText="Edit in Cypress+"><span className={`btn-element small ${btnClassName} cypress-plus ${isSubscribersSlate ? 'subscriberSlate' : ''} ${elementTypeClassName}`} onClick={clickHandlerFn}>
                     {editInCypressPlus}
                 </span></Tooltip>
                 break;
@@ -98,7 +98,7 @@ class ElementButton extends Component {
                 : <span className={`btn-element delete-icon ${elementTypeClassName}`} onClick={clickHandlerFn}> <img src={deleteIcon} /></span>
                 break;
             case buttonTypes.TCM:
-                buttonJSX = <span className={`btn-element small tcm-icon`} title="Track Changes" onClick={clickHandlerFn}>
+                buttonJSX = <span className={`btn-element small tcm-icon ${btnClassName}`} title="Track Changes" onClick={clickHandlerFn}>
                     {tcmIcon}
                     </span>
                 break;

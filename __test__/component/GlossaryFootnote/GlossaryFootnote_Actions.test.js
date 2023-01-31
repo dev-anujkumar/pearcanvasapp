@@ -34,7 +34,7 @@ let  initialState = {
     asideData: {
         type: 'showhide'
     },
-    glossaryFootnoteReducer: {"elementIndex" : "0"},
+    glossaryFootnoteReducer: {"elementIndex" : "0","glossaryFootnoteValue":{"elementType":"test"}},
     glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
     markedIndexReducer: {"elementIndex": '0-0'}
 
@@ -60,7 +60,7 @@ let  initialState2 = {
     asideData: {
         type: 'showhide'
     },
-    glossaryFootnoteReducer: {"elementIndex" : "0"},
+    glossaryFootnoteReducer: {"elementIndex" : "0","glossaryFootnoteValue":{"elementType":"test"}},
     glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
     markedIndexReducer: {"elementIndex": '0-0'}
 
@@ -110,7 +110,7 @@ jest.mock('../../../src/appstore/store', () => {
                 asideData: {
                     type: 'showhide'
                 },
-                glossaryFootnoteReducer:{"elementIndex": "0"},
+                glossaryFootnoteReducer:{"elementIndex": "0-0","glossaryFootnoteValue":{"elementType":"test"}},
                 markedIndexReducer: {"elementIndex": "0-0-0-0"}
             }
         },
@@ -149,7 +149,7 @@ describe('Tests commentsPanel action', () => {
         initialState = {
              glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
              appStore:{slateLevelData:mockData},
-             glossaryFootnoteReducer:{"elementIndex": "0"}
+             glossaryFootnoteReducer:{"elementIndex": "0","glossaryFootnoteValue":{"elementType":"test"}}
         };
     });
  
@@ -474,6 +474,50 @@ describe('Tests commentsPanel action', () => {
        it('glossaryfootnoteid undefined', async () => {
         await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure',undefined,'FOOTNOTE','apple','fruit','image'); 
        });
+       it('glossaryfootnoteid if (audioGlossaryData && Object.keys(audioGlossaryData).length > 0) ', async () => {
+        let audioGlossaryData = {
+            "narrativeAudioUrn": "2ddad41f-a05e-4f99-b44c-4a9306bd2a36",
+            "location": "https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3",
+            "title": {
+                "en": "Progressive Audio sample Midsummer_Sky.mp3"
+            },
+            "format": "audio/mpeg"
+        }
+        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','test','test','test','apple','fruit','image','test','test','test',audioGlossaryData); 
+       });
+       it('glossaryfootnoteid if (figureGlossaryData  && Object.keys(figureGlossaryData ).length > 0) ', async () => {
+        let figureGlossaryData  = {
+            "narrativeAudioUrn": "2ddad41f-a05e-4f99-b44c-4a9306bd2a36",
+            "location": "https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3",
+            "title": {
+                "en": "Progressive Audio sample Midsummer_Sky.mp3"
+            },
+            "format": "audio/mpeg"
+        }
+        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','test','test','test','apple','fruit','image','test','test','test','test',figureGlossaryData ); 
+       });
+       it('glossaryfootnoteid if (indexEntries  && Object.keys(indexEntries ).length > 0) ', async () => {
+        let indexEntries  = {
+            "narrativeAudioUrn": "2ddad41f-a05e-4f99-b44c-4a9306bd2a36",
+            "location": "https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3",
+            "title": {
+                "en": "Progressive Audio sample Midsummer_Sky.mp3"
+            },
+            "format": "audio/mpeg"
+        }
+        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','test','test','test','apple','fruit','image','test','test','test','test','test',indexEntries ); 
+       });
+       it('glossaryfootnoteid line 827', async () => {
+        let indexEntries  = {
+            "narrativeAudioUrn": "2ddad41f-a05e-4f99-b44c-4a9306bd2a36",
+            "location": "https://cite-media-stg.pearson.com/legacy_paths/2ddad41f-a05e-4f99-b44c-4a9306bd2a36/Progressive%20Audio%20sample%20Midsummer_Sky.mp3",
+            "title": {
+                "en": "Progressive Audio sample Midsummer_Sky.mp3"
+            },
+            "format": "audio/mpeg"
+        }
+        await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','test','test','test','apple','fruit','image','poetry','test','creditsarray','test','test',indexEntries ); 
+       });
    })
 
    it('await functionalityglossaaryFootnotePopup Footnote- when tempindex equal to 2 typeWithPopup is popup --', () => {
@@ -647,5 +691,11 @@ describe('Tests commentsPanel action', () => {
     it('Testing saveImageDataFromAlfresco function conditional coverage imageData  --',  () => {
         store.dispatch(actions.saveImageDataFromAlfresco(message3))
     });
+
+    describe('testing UpdateElementWorkId  ', () => {
+        it('UpdateElementWorkId ', () => {
+            actions.UpdateElementWorkId('enableTinymceToolbar')
+        });
+    })
 
 })

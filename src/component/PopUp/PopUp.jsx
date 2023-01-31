@@ -11,7 +11,7 @@ import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
-import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT } from '../SlateWrapper/SlateWrapperConstants';
+import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
@@ -29,7 +29,8 @@ class PopUp extends React.Component {
             wordPasteProceed: false,
             isChecked: false,
             focusedButton: this.setFocus(props),
-            deleteWarningPopupCheckbox: false
+            deleteWarningPopupCheckbox: false,
+            isPowerPasteInvalidContent: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
@@ -54,6 +55,9 @@ class PopUp extends React.Component {
         return newHtml;
     }
 
+    checkInvalidPowerPasteContent = (flag) => {
+        this.setState({isPowerPasteInvalidContent: flag})
+    }
     componentDidMount() {
         const refVal = this
         if (this.modelRef && this.modelRef.current && this.modelRef.current.querySelector("input, textarea")) {
@@ -107,6 +111,7 @@ class PopUp extends React.Component {
             || e.target.matches('em') && e.target.parentNode && e.target.parentNode.tagName == 'DFN'
             || e.target.matches('dfn')
             || e.target.parentNode && (e.target.parentNode.tagName == 'INS' || e.target.parentNode && e.target.parentNode.tagName == 'DFS')
+            || (e.target.matches('abbr') || e.target.parentNode.matches('abbr')) && (e.target.getAttribute('asset-id') || e.target.parentNode.getAttribute('asset-id'))
         ) {
             if (config.isSavingElement) {
                 return false
@@ -399,7 +404,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-
+        if (props.isApprovedSlate) {
+            return (
+                <div className={`dialog-buttons`}>
+                    <span option={PRIMARY_BUTTON} className={`save-button`} onClick={props.approveNormalSlate}>{props.proceedButton}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
         else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -414,7 +426,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex) {
+        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -433,6 +445,8 @@ class PopUp extends React.Component {
                     index={props.index}
                     onPowerPaste={props.onPowerPaste}
                     toggleWordPasteProceed={this.toggleWordPasteProceed}
+                    checkInvalidPowerPasteContent={this.checkInvalidPowerPasteContent}
+                    isPowerPasteInvalidContent={this.state.isPowerPasteInvalidContent}
                 />
             )
         } else if (props.withCheckBox) {
@@ -457,7 +471,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate) {
             return null
         }
         else {
@@ -584,6 +598,7 @@ class PopUp extends React.Component {
                 <>
                     <h2 className='wordPastePopuptxt'>Paste from Word</h2>
                     <div className={`${props.wordPasteClass}`}>{props.dialogText}</div>
+                    {this.state.isPowerPasteInvalidContent && <div className='unsupContent'>{UNSUPPORTED_CONTENT_ERR_MSG}</div>}
                 </>
             )
         } else if (props.LOPopup) {
@@ -633,6 +648,14 @@ class PopUp extends React.Component {
             return (
                 <>
                     <div className={`dialog-window blockcode-warning-text`}>Please select a language from element settings panel to start editing the Block Code element.</div>
+                </>
+            )
+        }
+        else if (props.isApprovedSlate) {
+            return (
+                <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.approvePopupClass}`}>{props.dialogText}<br /><br /></div>
                 </>
             )
         }
@@ -705,7 +728,7 @@ class PopUp extends React.Component {
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? 'wordPasteClass' : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
+                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}

@@ -21,6 +21,7 @@ const _Toolbar = props => {
     const [openDropDown, setValueOpen] = useState(false);
     const [showHeader, setHeaderValue] = useState(true);
     const [UrnSearch, searchToggle] = useState(false);
+    const slateStatus = props.slateLevelData[config.slateManifestURN]?.status
     let searchInputRef = useRef();
 
     useEffect(() => {
@@ -122,7 +123,7 @@ const _Toolbar = props => {
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
                     <div className={props?.isLOExist ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
                         <div className="learningobjectiveicon">
-                            <div className="learningobjectiveicon slate-tag-icon" title="Slate Tag" onClick={_handleLODropdown}>
+                            <div className={`learningobjectiveicon slate-tag-icon ${slateStatus === "approved" ? "disable" : ""}`} title="Slate Tag" onClick={_handleLODropdown}>
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
                             </div>
                             {lodropdown &&
@@ -137,7 +138,7 @@ const _Toolbar = props => {
                     (props.addAudio && (!hasReviewerRole())) &&
                     <div className={isToolBarBlocked ? `audio-block ${accessToolbar} ${isToolBarBlocked}` : `audio-block ${accessToolbar}`}>
                         <div className="audioicon">
-                            <div className={`audio audioicon ${config.isCypressPlusEnabled ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
+                            <div className={`audio audioicon ${(config.isCypressPlusEnabled || slateStatus === 'approved') ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
                                 if (checkSlateLock(props.slateLockInfo)) {
                                     return false
                                 }
@@ -207,7 +208,8 @@ const mapStateToProps = (state) => {
         openAudio: state.audioReducer.openAudio,
         setSlateParent: state.appStore.setSlateParent,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
-        searchUrn: state.searchReducer.searchTerm
+        searchUrn: state.searchReducer.searchTerm,
+        slateLevelData: state.appStore.slateLevelData
     }
 }
 

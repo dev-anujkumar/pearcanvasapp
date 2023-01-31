@@ -59,6 +59,8 @@ import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunction
 import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
+import { fetchAudioNarrationForContainer} from '../AudioNarration/AudioNarration_Actions';
+
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -671,6 +673,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             const hasMergedPdf = pdfBodymatter?.length === 2 ? true : false
             dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
+        if(slateData?.data[newVersionManifestId]?.status === "approved"){
+            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': true });
+        }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
@@ -930,6 +935,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             entityURN,
             projectURN: config.projectUrn,
         });
+        if(slateData?.data[newVersionManifestId]?.type === "popup"){
+            let slateDetails = {
+                currentProjectId: config.projectUrn,
+                slateEntityUrn: config.slateEntityURN
+            }
+            dispatch(fetchAudioNarrationForContainer(slateDetails));
+        }
 
         // Read element URN to search from project URL
         let queryStrings = new URLSearchParams(window.location.search);

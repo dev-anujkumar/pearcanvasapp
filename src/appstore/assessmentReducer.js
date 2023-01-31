@@ -10,14 +10,16 @@ import {
     SAVE_AUTO_UPDATE_ID,
     ELM_NEW_ITEM_DATA,
     SET_INTERACTIVE_METADATA,
-    SET_ELM_PICKER_MSG
+    SET_ELM_PICKER_MSG,
+    UPDATE_ASSESSMENT_ID
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
     usageTypeListData: {},
     currentEditAssessment:{},
     itemUpdateEvent: false,
-    dataFromElm: {}
+    dataFromElm: {},
+    assessmenId: ''
 }
 
 const INITIAL_ACTION = {
@@ -99,6 +101,11 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             return {
                 ...state,
                 dataFromElm : action.payload
+            }
+        case UPDATE_ASSESSMENT_ID:
+            return {
+                ...state,
+                assessmenId: action.payload
             }
         default:
             return state

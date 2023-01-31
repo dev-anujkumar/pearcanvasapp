@@ -21,7 +21,7 @@ describe('Testing CommentsPanel component with props', () => {
     const instance = wrapper.instance()
     const spy = jest.spyOn(instance, 'getUser');
     let event = {target:{className:'assign-user-list-items asignee-selected'}};
-    wrapper.find("li.assign-user-list-items").at(0).simulate('click',event);
+    wrapper.find(".assign-user-list-items").at(0).simulate('click',event);
     expect(spy).toHaveBeenCalledTimes(1)
     })
 

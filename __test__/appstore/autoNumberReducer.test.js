@@ -8,7 +8,9 @@ import {
     GET_ALL_AUTO_NUMBER_ELEMENTS,
     UPDATE_AUTO_NUMBER_ELEMENTS_LIST,
     UPDATE_AUTONUMBERING_DROPDOWN_VALUE,
-    UPDATE_POPUP_PARENT_SLATE
+    UPDATE_POPUP_PARENT_SLATE,
+    GET_SLATE_LIST_IN_CONTAINER,
+    SET_POPUP_PARENT_CUT_COPY
 } from '../../src/constants/Action_Constants';
 
 const initialState = {
@@ -269,5 +271,45 @@ describe('testing for autoNumberReducer file --->', () => {
         expect(result).toEqual(output)
     });
 
+    it('case 10- GET_SLATE_LIST_IN_CONTAINER', () => {
+        let output = {
+            ...initialState,
+            tocContainerSlateList: {
+                id: 12
+            }
+        };
 
+        const mockData = {
+            tocContainerSlateList: {
+                id: 12
+            }
+        }
+
+        let result = autoNumberReducer(initialState, {
+            type: GET_SLATE_LIST_IN_CONTAINER,
+            payload: mockData.tocContainerSlateList
+        })
+        expect(result).toEqual(output)
+    });
+
+    it('case 11- SET_POPUP_PARENT_CUT_COPY', () => {
+        let output = {
+            ...initialState,
+            popupCutCopyParentData: {
+                id: 12
+            }
+        };
+
+        const mockData = {
+            popupCutCopyParentData: {
+                id: 12
+            }
+        }
+
+        let result = autoNumberReducer(initialState, {
+            type: SET_POPUP_PARENT_CUT_COPY,
+            payload: mockData.popupCutCopyParentData
+        })
+        expect(result).toEqual(output)
+    });
 })

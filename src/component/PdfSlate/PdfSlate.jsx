@@ -126,6 +126,7 @@ class PdfSlate extends Component {
 		/* ------ Call Update element API to save data ------- */
 		this.props.updateElement(reqBody, this.props.index, "", "", null, "", null)
 		hideBlocker();
+		this.props.setPdfSlateAssetId(this.state.pdfId)
 	}
 	
 	render(){

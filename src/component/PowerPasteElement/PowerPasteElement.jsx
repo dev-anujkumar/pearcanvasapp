@@ -12,6 +12,8 @@ import "tinymce/plugins/powerpaste/plugin.min.js"
 import "tinymce/plugins/powerpaste/js/wordimport.js"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import { powerpaste_list_content_style } from '../../config/PowerPasteListElementCss';
+import { handleImagePaste } from '../../constants/utility.js';
+import { UnsupportedContentString } from '../../constants/ToolTip_Constant.js'; 
 
 const PowerPasteElement = (props) => {
 
@@ -96,7 +98,12 @@ export const pastePostProcess = (data, props) => {
     const childNodes = data.node.children;
     const elements = [];
     createPastedElements(childNodes, elements);
-    
+    const updatedElements = []
+    //preparing content that needs to be pasted
+    data.node = prepareFinalPasteContent(elements,data.node,props)
+    //preparing content that needs to send in API
+    filterSupportedTagAndData(elements,updatedElements)
+
      /* if (childNodes.length === 1 && (childNodes[0].tagName === 'STRONG' || childNodes[0].tagName === 'GOOGLE-SHEETS-HTML-ORIGIN')) {
       const childElements = childNodes[0].children && childNodes[0].children.length ? childNodes[0].children : [];
       createPastedElements(childElements, elements);
@@ -110,17 +117,68 @@ export const pastePostProcess = (data, props) => {
       createPastedElements(childElements, elements);
     } */
     const parentIndex = props.index;
-    if (elements.length) {
+    if (updatedElements.length) {
       props.toggleWordPasteProceed(true)
       focusPopupButtons();
     }
-    props.onPowerPaste(elements, parentIndex);
-
+    props.onPowerPaste(updatedElements, parentIndex);
     // if valid data has been pasted in to editor once then make editor non-editable
     elements.length ? tinymce.activeEditor.getBody().setAttribute('contenteditable', false) : tinymce.activeEditor.getBody().setAttribute('contenteditable', true);
   }
 }
 
+/**
+ * This function identifies unsupported content during paste from word
+ * and replace that content with "Unsupported Content" message in text-editor
+ * @param {array} elements 
+ * @param {Object} nodeData 
+ * @param {Object} props 
+ * @returns Content that needs to be pasted on text-editor
+ */
+export const prepareFinalPasteContent = (elements,nodeData,props) => {
+  const spacesAndNewLineFormatArray = ["\n    ","\n  \n\n\n","\n   \n\n\n","\n\n\n"]
+  const allSupUnsupChildNodes = nodeData.childNodes
+  let contentToPaste = ""
+  const elementsHtml = elements.map(item => {return item.html})
+  for (let index = 0; index < allSupUnsupChildNodes.length; index++) {
+    const element = allSupUnsupChildNodes[index];
+    if(elementsHtml.includes(element.outerHTML)) {
+      let elementOuterHtml = element?.outerHTML
+      if(element?.outerHTML?.match(/<img ([\w\W]+?)>/g)) {
+        if(!props.isPowerPasteInvalidContent) {
+          props.checkInvalidPowerPasteContent(true)
+        }
+        elementOuterHtml = element?.outerHTML?.replace(/<img ([\w\W]+?)>/g,UnsupportedContentString)
+      }
+      contentToPaste += elementOuterHtml
+    } else if(!spacesAndNewLineFormatArray.includes(element?.data)){
+      if(!props.isPowerPasteInvalidContent) {
+        props.checkInvalidPowerPasteContent(true)
+      }
+      contentToPaste += UnsupportedContentString
+    }
+  }
+
+  const updatedPasteContent = document.createElement('div');
+  updatedPasteContent.innerHTML = contentToPaste;
+
+  return updatedPasteContent
+}
+
+/**
+ * This function filters the supported powerpaste tags and remove images
+ * from the content that needs to pass in powerpaste API as payload
+ * @param {Array} elements 
+ * @param {array} updatedElements 
+ */
+export const filterSupportedTagAndData = (elements,updatedElements) => {
+  elements.forEach(item => {
+   if(item.tagName !== 'IMG' && item?.html) {
+     item.html = handleImagePaste(item.html)
+     updatedElements.push(item)
+   }
+ })
+}
 /**
  * Processes and stores copied data to an array
  * @param {HTMLElement} childElements HTML element node object
@@ -148,7 +206,9 @@ export const createPastedElements = (childElements, elements) => {
           // otherwise calls addOListClasses method for adding list classes to html and if the list 
           // does not start with digits and has style attribute then remove it
           childElements[i].hasAttribute('style') ? powerPasteHelpers.addSpecificOListClasses(childElements[i], childElements[i], 1) : powerPasteHelpers.addOListClasses(childElements[i], 1);
-          childElements[i].hasAttribute('style') ? childElements[i].removeAttribute('style') : childElements[i];
+          if(childElements[i].hasAttribute('style')){
+            childElements[i].removeAttribute('style');
+          }
           elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
           break;
         case 'IMG':

@@ -123,6 +123,7 @@ export const GLOSSARY = 'Glossary'
 export const MARKEDINDEX_DIALOG_TEXT = 'Are you sure you want to remove the index marker entry? This action cannot be undone.'
 export const INDEX_REMOVED_TEXT = "Index removed successfully."
 export const INDEX_ADDED_TEXT = "Index added successfully."
+export const MARKEDINDEX_NO_RESULT_FOUND_TEXT = "No result found"
 
 export const CITATION_SOURCE = 'CITATION';
 export const ASIDE_SOURCE = 'ASIDE';

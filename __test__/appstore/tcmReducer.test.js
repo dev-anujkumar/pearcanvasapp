@@ -68,5 +68,8 @@ describe('Test tcmReducer', () => {
             }
         })
     })
+    it('Test Initial State', () => {
+        expect(reducer(INITIAL_STATE)).toEqual(INITIAL_STATE);
+    });
 
 });
