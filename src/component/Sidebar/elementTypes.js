@@ -999,32 +999,32 @@ export default {
         'primary-tabbed-elem': {
             text: 'Tabbed 2 Column',
             toolbar: [],
-            enum: 'TABBED_COLUMN_TAB',
+            enum: 'TABBED_2_COLUMN',
             subtype: {
                 'secondary-tabbed-30-70': {
                     text: 'Distribution 1 : 30% - 70%',
                     labelText: 'TB',
-                    enum: 'DISTRIBUTION_30_70'
+                    enum: 'TEXT_WIDTH_30_70'
                 },
-                'secondary-tabbed-20-40': {
+                'secondary-tabbed-40-60': {
                     text: 'Distribution 2 : 40% - 60%',
                     labelText: 'TB',
-                    enum: 'DISTRIBUTION_20_40'
+                    enum: 'TEXT_WIDTH_40_60'
                 },
                 'secondary-tabbed-50-50': {
                     text: 'Distribution 3 : 50% - 50%',
                     labelText: 'TB',
-                    enum: 'DISTRIBUTION_50_50'
+                    enum: 'TEXT_WIDTH_50_50'
                 },
                 'secondary-tabbed-60-40': {
                     text: 'Distribution 4 : 60% - 40%',
                     labelText: 'TB',
-                    enum: 'DISTRIBUTION_60_40'
+                    enum: 'TEXT_WIDTH_60_40'
                 },
                 'secondary-tabbed-70-30': {
                     text: 'Distribution 5 : 70% - 30%',
                     labelText: 'TB',
-                    enum: 'DISTRIBUTION_70_30'
+                    enum: 'TEXT_WIDTH_70_30'
                 }
             }
         },

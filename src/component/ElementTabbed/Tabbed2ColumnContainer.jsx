@@ -1,9 +1,16 @@
 import React, { useRef, useEffect, useState, useReducer } from 'react';
+import Sortable from 'react-sortablejs';
 import { connect } from 'react-redux';
+import config from "../../config/config.js";
 import ElementSaprator from '../ElementSaprator';
 import ElementContainer from '../ElementContainer';
+import constants from "./constants.js";
+import { sendDataToIframe } from '../../constants/utility.js';
+import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
+import { swapElement } from '../SlateWrapper/SlateWrapper_Actions';
+import { TABBED_SOURCE } from '../../constants/Element_Constants'
 
-
+let tab2Element = {}
 export const Tabbed2Column = (props) => {
     const [state, setState] = useReducer(
         (state, newState) => ({ ...state, ...newState }),
@@ -11,7 +18,28 @@ export const Tabbed2Column = (props) => {
         }
     );
 
+    /**
+     * Prepares data of elements to be swapped
+     * @param {object} event - event object
+     * @param {object} parentUrn - contains data about parent container
+     */
+    const prepareSwapData = (event, parentUrn) => {
+        let bodyMatterObj = tab2Element[props?.element?.contentUrn].groupeddata.bodymatter || [];
+        let swappedElementData = bodyMatterObj[event.oldDraggableIndex];
+        console.log('prepareSwapData prepareSwapData', props.element.groupeddata);
+        let dataObj = {
+            oldIndex: event.oldDraggableIndex,
+            newIndex: event.newDraggableIndex,
+            swappedElementData: swappedElementData,
+            currentSlateEntityUrn: parentUrn.contentUrn,
+            containerTypeElem: `${props.labelText}`,
+            containerIndex: props.index
+        }
+        return dataObj
+    }
+
     const renderTabbedElement = (element) => {
+        tab2Element[element.contentUrn] = element
         if (element?.groupeddata?.bodymatter.length) {
             let parentUrn = {
                 type: 'groupedcontent',
@@ -26,7 +54,40 @@ export const Tabbed2Column = (props) => {
                 parentManifestUrn: element.id,
                 parentContentUrn: element.contentUrn,
             }
-            return renderTabElement(element, element?.groupeddata?.bodymatter, parentUrn, asideData, props.index);
+            return (
+                <div>
+                    <Sortable
+                        options={{
+                            ...constants.sortableOptions,
+                            onStart: (evt) => {
+                                props.onClickCapture(evt)
+                            },
+
+                            // Element dragging ended
+                            onUpdate: (evt) => {
+                                if (config.savingInProgress) {
+                                    evt.preventDefault()
+                                    evt.stopPropagation()
+                                    return false
+                                }
+                                let dataObj = prepareSwapData(evt, parentUrn);
+                                props.swapElement(dataObj, () => { });
+                                props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
+                                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                            },
+                        }}
+                        tag="div"
+                        ref={(c) => {
+                            if (c) {
+                                //let sortable = c.sortable;
+                            }
+                        }}
+                        onChange={function (items, sortable, evt) { }}
+                    >
+                        {renderTabElement(element, element?.groupeddata?.bodymatter, parentUrn, asideData, props.index)}
+                    </Sortable>
+                </div>
+            )
         } else {
             return null;
         }
@@ -38,7 +99,7 @@ export const Tabbed2Column = (props) => {
                 return tabElements.map((tabElement, index) => {
                     if (tabElement?.groupdata?.bodymatter) {
                         parentUrn = {...parentUrn, tabEntity: tabElement.contentUrn, tabManifest: tabElement.id}
-                        let element = {...tabElement.groupdata.bodymatter[0], parentUrn: parentUrn};
+                        let element = {...tabElement, parentUrn: parentUrn};
                         return (
                             <React.Fragment key={tabElement.id}>
                                 {
@@ -58,6 +119,7 @@ export const Tabbed2Column = (props) => {
                                         userRole={props.userRole}
                                         pasteElement={props.pasteElement}
                                         handleCopyPastePopup={props.handleCopyPastePopup}
+                                        source={TABBED_SOURCE}
                                     />
                                 }
                                 <ElementContainer
@@ -95,6 +157,7 @@ export const Tabbed2Column = (props) => {
                                     pasteElement={props.pasteElement}
                                     handleCopyPastePopup={props.handleCopyPastePopup}
                                     dataId={props.element.id}
+                                    source={TABBED_SOURCE}
                                 />
                             </React.Fragment>
                         )
@@ -122,7 +185,9 @@ const mapStateToProps = state => ({
 
 const mapActionsToProps = (dispatch) => {
     return {
-
+        swapElement: (dataObj, cb) => {
+            dispatch(swapElement(dataObj, cb))
+        }
     }
 }
 

@@ -59,6 +59,8 @@ import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunction
 import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
+import { fetchAudioNarrationForContainer} from '../AudioNarration/AudioNarration_Actions';
+
 export const findElementType = (element, index) => {
     let elementType = {};
     elementType['tag'] = '';
@@ -282,22 +284,23 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"]  
                 }
-                if (element?.parentUrn?.subtype === 'tab') {
-                    elementType = {
-                        elementType: elementDataBank['group']["elementType"],
-                        primaryOption: elementDataBank['group']["primaryOption"],
-                        secondaryOption: elementDataBank['group']['wider-60-40']['secondaryOption']
-                    }
+                if (element.width && element.groupproportions && element.subtype === 'tab') {
+                    element['width'] = 'text-width';
+                    elementType["primaryOption"] = TABBED_2_COLUMN.ELEMENT_NAME;
+                    elementType["secondaryOption"] = elementDataBank[element.type][`tb-${element.width}-${element.groupproportions}`]["secondaryOption"]
                 } else if (element.width && element.groupproportions) {
                     // checking for column 3 proportion to set primaryOption 
                     if(element.groupproportions === MULTI_COLUMN_3C.ELEMENT_PROPORTION) elementType["primaryOption"] = MULTI_COLUMN_3C.ELEMENT_NAME; 
                     elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
-                } else if (element.subtype === 'tab') {
-                    element['width'] = 'text-width';
-                    elementType["primaryOption"] = TABBED_2_COLUMN.ELEMENT_NAME;
-                    elementType["secondaryOption"] = elementDataBank[element.type][element.width]["secondaryOption"]
                 } else {
                     elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"] 
+                }
+                break;
+            case "group":
+                elementType = {
+                    elementType: elementDataBank['group']["elementType"],
+                    primaryOption: elementDataBank['group']["primaryOption"],
+                    secondaryOption: elementDataBank['group']['wider-60-40']['secondaryOption']
                 }
                 break;
 
@@ -670,6 +673,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             const hasMergedPdf = pdfBodymatter?.length === 2 ? true : false
             dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
+        if(slateData?.data[newVersionManifestId]?.status === "approved"){
+            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': true });
+        }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
@@ -929,6 +935,13 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             entityURN,
             projectURN: config.projectUrn,
         });
+        if(slateData?.data[newVersionManifestId]?.type === "popup"){
+            let slateDetails = {
+                currentProjectId: config.projectUrn,
+                slateEntityUrn: config.slateEntityURN
+            }
+            dispatch(fetchAudioNarrationForContainer(slateDetails));
+        }
 
         // Read element URN to search from project URL
         let queryStrings = new URLSearchParams(window.location.search);
@@ -1007,7 +1020,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
         let indexesLen = indexes?.length, condition;
         /* update the store on update of figure elements inside showhide elements */
         if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-            oldPath = getPathOfFigureAsset(bodymatter, indexes, "path", activeElement?.id);
+            oldPath = getPathOfFigureAsset(bodymatter, indexes, "path", activeElement?.id, asideData);
         } else if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
@@ -1046,7 +1059,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 let indexesLen = indexes?.length, condition;
                 /* update the store on update of figure elements inside showhide elements */
                 if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "audioid", activeElement?.id);
+                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "audioid", activeElement?.id, asideData);
                 } else
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -1078,7 +1091,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 let indexesLen = indexes?.length, condition;
                 /* update the store on update of figure elements inside showhide elements */
                 if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "videoid", activeElement?.id);
+                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "videoid", activeElement?.id, asideData);
                 } else
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -1103,10 +1116,10 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
     return oldPath || ""
 }
 /* Return the image/audio/vedio path/Id */
-function getPathOfFigureAsset(bodymatter, indexes, keyName, activeID) {
+function getPathOfFigureAsset(bodymatter, indexes, keyName, activeID, asideData) {
     const indexesLen = indexes?.length;
     /* Get the showhide */
-    const sh_Object = getShowHideElement(bodymatter, indexesLen, indexes);
+    const sh_Object = getShowHideElement(bodymatter, indexesLen, indexes, null, asideData);
     if(sh_Object?.type === SHOW_HIDE) {
         /* Get the sectiontype of showhide */
         const sectionType = indexOfSectionType(indexes);
@@ -1136,7 +1149,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
         let indexesLen = indexes.length, condition;
          /* update the store on update of interactive elements inside showhide elements */
         if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-            oldPath = getPathOfFigureAsset(bodymatter, indexes, "interactiveid", activeElement?.id);
+            oldPath = getPathOfFigureAsset(bodymatter, indexes, "interactiveid", activeElement?.id, asideData);
         } else
         if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -1329,7 +1342,15 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                 targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]          
                 break;
             case 6:
-                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]]          
+                // TB->Tab->AS/WE->HEAD->Popup
+                if (targetPopupElement?.type === ElementConstants.MULTI_COLUMN && targetPopupElement?.subtype === ElementConstants.TAB) {
+                    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]];
+                } else {
+                    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]];
+                }
+                break;
+            case 7: // TB->Tab->AS/WE->BODY->Popup
+                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]].contents.bodymatter[popupElementIndex[5]];
                 break;
         }
         if (targetPopupElement) {
@@ -1353,7 +1374,15 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                     _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;          
                     break;
                 case 6:
-                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]] = targetPopupElement;          
+                    // TB->Tab->AS/WE->HEAD->Popup
+                    if (_slateObject.contents.bodymatter[popupElementIndex[0]]?.type === ElementConstants.MULTI_COLUMN && _slateObject.contents.bodymatter[popupElementIndex[0]]?.subtype === ElementConstants.TAB) {
+                        _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]] = targetPopupElement;
+                    } else {
+                        _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]] = targetPopupElement;
+                    }
+                    break;
+                case 7: // TB->Tab->AS/WE->BODY->Popup
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]].contents.bodymatter[popupElementIndex[5]] = targetPopupElement;
                     break;
                 default:
                     _slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement;

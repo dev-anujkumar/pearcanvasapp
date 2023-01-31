@@ -25,7 +25,7 @@ import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnot
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder } from '../constants/utility.js';
 import store from '../appstore/store';
-import { MULTIPLE_LINE_POETRY_ERROR_POPUP } from '../constants/Action_Constants';
+import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY, INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement, saveCaretPosition } from './SlateWrapper/SlateWrapper_Actions';
@@ -38,6 +38,7 @@ import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/A
 import ElementConstants from './ElementContainer/ElementConstants';
 import { moveCursor } from './Keyboard/KeyboardWrapper.jsx';
 import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
+import checkmark from '../images/ElementButtons/checkmark.svg';
 
 let context = {};
 let clickedX = 0;
@@ -565,7 +566,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
 
-                    if(editor.selection.getNode().className.includes('callout') || editor.selection.getNode().className.includes('markedForIndex')){
+                    if(editor.selection.getNode().className.includes('callout') || editor.selection.getNode().className.includes('markedForIndex') || editor.selection.getNode().className.includes('non-breaking-space')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
                             editor.insertContent(textSelected);
@@ -800,6 +801,9 @@ export class TinyMceEditor extends Component {
         }
         if (this.props.element && this.props?.element?.type === 'element-aside' && asideNumberingPlaceholders.includes(this.props.placeholder)) {
             this.props.onFigureImageFieldFocus(this.props.index);
+        }
+        if (this.props?.parentElement?.subtype === ElementConstants.TAB && this.props?.tabTitle) {
+            this.props.onTabTitleFieldFocus(this.props.index);
         }
         // cbFunc | is for callback delegates //
         let cbFunc = null;
@@ -1590,7 +1594,18 @@ export class TinyMceEditor extends Component {
                     }
                 }
             }
-           
+
+            // Restrict max char limit of tab title (25 char)
+            if (this.props?.element?.parentUrn?.subtype === ElementConstants.TAB) {
+                const keyCode = e.keyCode || e.which;
+                const allowedKeys = [8, 37, 38, 39, 40, 46] // Keys for Arrows, Del, BkSpc
+                const cutPasteKeys = [67,86,88] // restrict Cut/Copy/Paste Operations
+                if ((tinymce?.activeEditor?.targetElm?.innerText?.length + 1 > 25) && !(allowedKeys.includes(keyCode)) || (e.ctrlKey && (cutPasteKeys.includes(keyCode)))) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
         });
     }
 
@@ -1796,16 +1811,21 @@ export class TinyMceEditor extends Component {
             fetch: function (callback) {
                 var items = [{
                     type: 'menuitem',
-                    text: 'Insert Special Character',
+                    text: INSERT_SPECIAL_CHARACTER,
                     onAction: function () {
+                        if(editor?.selection?.getContent()?.includes("non-breaking-space")) return false
                         tinymce.activeEditor.execCommand('mceShowCharmap');
+                    },
+                    onSetup: function() {
+                        document.querySelector(`[title="${INSERT_SPECIAL_CHARACTER}"]`)?.classList?.add('add-padding')
                     }
                 }
                 ];
                 let blankLineOption = {
                     type: 'menuitem',
-                    text: 'Insert a Blank',
+                    text: INSERT_A_BLANK,
                     onAction: function () {
+                        if(editor?.selection?.getContent()?.includes("non-breaking-space")) return false
                         editor.selection.setContent('<span contentEditable="false" id="blankLine" class="answerLineContent"><br></span>');
                         if (self.props.element && self.props.element.type === "element-list") {
                             const listLiText = document.querySelector('#' + tinymce.activeEditor.id + ' li') ? document.querySelector('#' + tinymce.activeEditor.id + ' li').innerText : "";
@@ -1818,10 +1838,51 @@ export class TinyMceEditor extends Component {
                             }
                         } 
                         editor.targetElm.classList.remove('place-holder');
+                    },
+                    onSetup: function () {
+                        document.querySelector(`[title="${INSERT_A_BLANK}"]`)?.classList?.add('add-padding')
                     }
                 }
                 if (self.props?.element?.type != 'figure' && self.props?.element?.type !== 'element-aside' && self.props?.element?.type !== 'openerelement') {
                     items.push(blankLineOption)
+                }
+                let nonBreakingOption = {
+                    type: 'menuitem',
+                    text: INSERT_NON_BREAKING_SPACE,
+                    onAction: function () {
+                        if (editor?.selection?.getNode()?.className?.includes('non-breaking-space')) {
+                            let selectedSpace = window?.getSelection()?.toString();
+                            if (selectedSpace?.length) {
+                                editor.insertContent(selectedSpace);
+                            }
+                        } else {
+                            let selectedContent = editor?.selection?.getContent();
+                            if (selectedContent.includes("non-breaking-space")) return false
+                            if (selectedContent?.length === 1) {
+                                selectedContent = "&nbsp;"
+                            }
+                            editor.selection.setContent(`<span contentEditable="false" class="non-breaking-space">${selectedContent}</span>`);
+                        }
+                    },
+                    onSetup: function () {
+                        document.querySelector(`[title="${INSERT_NON_BREAKING_SPACE}"]`)?.classList?.add('add-padding')
+                        let activeSpace = tinymce?.activeEditor?.selection?.getNode()?.className;
+                        let selectedText = window?.getSelection()?.toString();
+                        selectedText = String(selectedText)?.replace(/</g, '&lt;')?.replace(/>/g, '&gt;');
+                        if (selectedText?.trim() !== "" || selectedText?.length === 0) {
+                            document.querySelector(`[title="${INSERT_NON_BREAKING_SPACE}"]`)?.classList?.add('disable-non-breaking')
+                        } 
+                        if (activeSpace === `non-breaking-space`) {
+                            let img = document.createElement("img");
+                            img.src = checkmark;
+                            document.querySelector(`[title="${INSERT_NON_BREAKING_SPACE}"]`)?.appendChild(img);
+                            document.querySelector(`[title="${INSERT_NON_BREAKING_SPACE}"]`)?.classList?.add('enable-image')
+                            document.querySelector(`[title="${INSERT_NON_BREAKING_SPACE}"]`)?.classList?.remove('add-padding')
+                        }
+                    }
+                }
+                if (NON_BREAKING_SPACE_SUPPORTED_ARRAY.includes(self.props?.element?.type) && self.props?.asideData?.type !== "manifestlist") {
+                    items.push(nonBreakingOption)
                 }
                 callback(items);
             }
@@ -2779,6 +2840,18 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                 }
+            } else if (indexesLen === 5) {
+                switch (tempIndex[4]) {
+                    case "1":
+                        if (!this.props.element.contents['formatted-title']) {
+                            return false;
+                        }
+                        break;
+                    case "4":
+                        if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                            return false;
+                        }
+                }
             }
             elementId = this.props.elementId
             let footNoteSpan = document.getElementById('footnote-attacher');
@@ -3602,6 +3675,9 @@ export class TinyMceEditor extends Component {
                 default: break;
             }
         }
+        if(this.props?.element?.parentUrn?.subtype === ElementConstants.TAB){
+            toolbar = config.tabTitleToolbar;
+        }
         return toolbar;
     }
 
@@ -4067,6 +4143,9 @@ export class TinyMceEditor extends Component {
             (this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title)) {
             this.props.onFigureImageFieldBlur(this.props.index);
         }
+        if (this.props?.parentElement?.subtype === ElementConstants.TAB && this.props?.tabTitle) {
+            this.props.onTabTitleFieldBlur(this.props.index);
+        }
 
         tinymce.$('span[data-mce-type="bookmark"]').each(function () {
             let innerHtml = this.innerHTML;
@@ -4214,7 +4293,7 @@ export class TinyMceEditor extends Component {
 
 
     render() {
-        const { slateLockInfo: { isLocked, userId } } = this.props;
+        const { slateLockInfo: { isLocked, userId }, contenteditable } = this.props;
         let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
         this.handlePlaceholder();
 
@@ -4263,7 +4342,7 @@ export class TinyMceEditor extends Component {
                         className={classes} 
                         placeholder={this.props.placeholder} 
                         suppressContentEditableWarning={true} 
-                        contentEditable={!lockCondition} 
+                        contentEditable={contenteditable === false ? contenteditable : !lockCondition} 
                         dangerouslySetInnerHTML={{ __html: model }} 
                     ></h4>
                 )

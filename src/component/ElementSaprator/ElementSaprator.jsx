@@ -147,7 +147,7 @@ export function ElementSaprator(props) {
             isChildElementNotAcceptedInPopup = asideNotAcceptedTypes.includes(props?.asideData?.type)
         }
         let allowToShowPasteIcon = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.elementSelection?.element?.type) ? false : true;
-        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation && !isChildElementNotAcceptedInPopup) {
+        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation && !isChildElementNotAcceptedInPopup && separatorProps?.asideData?.parent?.subtype !== TAB && separatorProps?.asideData?.grandParent?.asideData?.parent?.subtype !== TAB) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
                     <Tooltip direction='paste' tooltipText='Paste element'>
@@ -167,7 +167,7 @@ export function ElementSaprator(props) {
         const parentContainerForShowHide = ["groupedcontent", "element-aside"]
         const hasPasteFromWordPermission = hasProjectPermission("paste_from_word");
         let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
-        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type))) {
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type)) || (parentUrn?.subtype === TAB) || (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB)) {
             return null;
         }
         let insertionIndex = firstOne ? index : index + 1

@@ -12,7 +12,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -21,7 +21,7 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, APPROVE_NORMAL_SLATE, APPROVE_OWNER_SLATE
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -73,7 +73,8 @@ class SlateWrapper extends Component {
             powerPasteData: [],
             updatedindex:'',
             showOwnerSlatePopup: false,
-            parentUrn:null
+            parentUrn:null,
+            approvedSlate: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -279,6 +280,38 @@ class SlateWrapper extends Component {
         return false
     }
 
+    approveNormalSlate = () => {
+        this.togglePopup(false)
+        slateVersioning()
+    }
+
+    showApprovedWarningPopup = () => {
+        const { projectSubscriptionDetails: { projectSharingRole, projectSubscriptionDetails: { isSubscribed } } } = this.props
+        const ownerSlate = isOwnerRole(projectSharingRole, isSubscribed)
+        const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
+        if (this.state.approvedSlate && slatePublishStatus){
+            this.props.showBlocker(true)
+            showTocBlocker();
+            return (
+                <PopUp dialogText={ownerSlate ? APPROVE_OWNER_SLATE : APPROVE_NORMAL_SLATE}
+                    togglePopup={this.togglePopup}
+                    isApprovedSlate={true}
+                    warningHeaderText={`Warning`}
+                    approvePopupClass={`${ownerSlate ? "approved-warning-txt" : "lo-warning-txt"}`}
+                    approveNormalSlate = {this.approveNormalSlate}
+                />
+            )
+        } else{
+            return null
+        }
+    }
+
+    getApprovedPopup = () => {
+        this.setState({
+            approvedSlate: true,
+        })
+    }
+
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
         try {
@@ -294,8 +327,14 @@ class SlateWrapper extends Component {
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
                     const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
+                    const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
                     return (
                         <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
+                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) ? <div
+                                className='approved-overlay'
+                                onClick={this.getApprovedPopup}
+                            >
+                            </div> : null}
                             <div className='element-list'>
                                 <Sortable
                                     options={{
@@ -600,7 +639,8 @@ class SlateWrapper extends Component {
     togglePopup = (toggleValue, event) => {
         this.setState({
             showLockPopup: toggleValue,
-            showOwnerSlatePopup: toggleValue
+            showOwnerSlatePopup: toggleValue,
+            approvedSlate: toggleValue
         })
         this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
@@ -666,7 +706,7 @@ class SlateWrapper extends Component {
                 this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData, null, null, null)
                 break;
             case 'worked-exp-elem':
-                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, null, null, null, null)
+                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, asideData, null, null, null)
                 break;
             case 'opener-elem':
                 this.props.createElement(OPENER, indexToinsert, parentUrn, null, null, null, null)
@@ -817,7 +857,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'worked-exp-elem',
-                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, parentUrn),
+                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, parentUrn, asideData),
                 tooltipText: 'Worked Example',
                 tooltipDirection: 'left'
             },
@@ -829,7 +869,7 @@ class SlateWrapper extends Component {
             },
             {
                 buttonType: 'multi-column-group-tabbed-tab',
-                buttonHandler: () => this.splithandlerfunction('multi-column-group-tabbed-tab', index, firstOne, parentUrn),
+                buttonHandler: () => this.splithandlerfunction('multi-column-group-tabbed-tab', index, firstOne, parentUrn, asideData),
                 tooltipText: 'Tab',
                 tooltipDirection: 'left'
             },
@@ -1428,6 +1468,12 @@ class SlateWrapper extends Component {
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
         this.props.savePopupParentSlateData({});
+        let slateDetails = {
+            currentProjectId: config.projectUrn,
+            slateEntityUrn: config.slateEntityURN
+
+        }
+        store.dispatch(fetchAudioNarrationForContainer(slateDetails));
         if(config.tcmStatus){
             this.props.handleTCMData(config.slateManifestURN)
         }
@@ -1630,8 +1676,10 @@ class SlateWrapper extends Component {
                 {/* **************** Word Paste Popup ************ */}
                 {this.showWordPastePopup()}
                 {this.showLOWarningPopup()}{/* **************** LO Warning Popup ************ */}
-               {/* **************** Alfresco Popup ************ */}
-               {this.showAlfrescoPopup()}
+                {/* **************** Alfresco Popup ************ */}
+                {this.showAlfrescoPopup()}
+                {/* **************** Approved to WIP Warning Popup ************* */}
+                {this.showApprovedWarningPopup()}
             </React.Fragment>
         );
     }
@@ -1728,6 +1776,7 @@ export default connect(
         alfrescoPopup,
         showRemoveImageGlossaryPopup,
         isOwnersSubscribedSlate,
-        savePopupParentSlateData
+        savePopupParentSlateData,
+        slateVersioning
     }
 )(SlateWrapper);

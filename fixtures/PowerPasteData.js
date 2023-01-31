@@ -226,8 +226,10 @@ export const nodePara2 = [{
     removeAttribute: jest.fn(),
     children: [{
         tagName: "P",
-        getAttribute: jest.fn()
-    }]
+        getAttribute: jest.fn(),
+        outerHTML:"<p>TEST<p/>"
+    }],
+    outerHTML:"<p>TEST<p/>"
 }]
 
 export const nodeUL = [{
@@ -244,7 +246,8 @@ export const nodeUL = [{
         classList: {
             add: jest.fn()
         }
-    }]
+    }],
+    outerHTML:"<p>TEST<p/>"
 }]
 
 export const nodeOL = [{
@@ -351,3 +354,22 @@ export const nodeHEADING = [{
         }
     }]
 }]
+
+export const elementsData = [
+    {
+        "html": '<p class="paragraphNumeroUno">It is a <strong>long-established</strong> fact that a <sup>reader</sup> will be <strong>distracted</strong> by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English</p>',
+        "tagName": "P"
+    },
+    {
+        "html": '<p><img src="blob:https://local-dev.pearson.com/b559dfbb-9fc2-4135-a240-823cdf1aa738"></p>',
+        "tagName": "IMG"
+    },
+    {
+        "html": '<p class="paragraphNumeroUno">Sdasdas</p>',
+        "tagName": "P"
+    }
+]
+
+export const pasteElementNodeData = {
+    childNodes:[{outerHTML:'<p class="paragraphNumeroUno">It is a <strong>long-established</strong> fact that a <sup>reader</sup> will be <strong>distracted</strong> by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English</p>'},{outerHTML:'<p><img src="blob:https://local-dev.pearson.com/b559dfbb-9fc2-4135-a240-823cdf1aa738"></p>'},{outerHTML:'<p class="paragraphNumeroUno">Sdasdas</p></div>'},{data:"\n  \n\n\n"}]
+}
