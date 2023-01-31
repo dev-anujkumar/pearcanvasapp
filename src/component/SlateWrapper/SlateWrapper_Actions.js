@@ -1615,7 +1615,7 @@ export const saveCaretPosition = (caretPosition) => (dispatch, getState) => {
     });
 }
 
-export const slateVersioning = () => {
+export const slateVersioning = () => (dispatch, getState) => {
     // Api to change container status from approved to WIP
     const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion`;
     return axios.post(versioningStatus, null, {

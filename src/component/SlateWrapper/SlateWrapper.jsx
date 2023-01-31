@@ -282,7 +282,7 @@ class SlateWrapper extends Component {
 
     approveNormalSlate = () => {
         this.togglePopup(false)
-        slateVersioning()
+        this.props.slateVersioning()
     }
 
     showApprovedWarningPopup = () => {
