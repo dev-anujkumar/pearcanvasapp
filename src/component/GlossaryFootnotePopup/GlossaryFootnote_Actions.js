@@ -302,6 +302,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                case 5:
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].popupdata["formatted-title"];
                     break;
+                case 6: // TB->Tab->AS/WE->HEAD->Popup
+                    if (newBodymatter[tempIndex[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+                        glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].popupdata["formatted-title"];
+                    } else {  // Multicolumn->AS/WE->BODY->Popup
+                        glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]].popupdata["formatted-title"];
+                    }
+                    break;
+                case 7: // TB->Tab->AS/WE->BODY->Popup
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]].popupdata["formatted-title"];
+                    break;
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
@@ -848,7 +858,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
                 break;
             case 5: // when PE element is inside Tab element of TB
-                parentEntityUrn = newBodymatter[elemIndex[0]]?.groupeddata.bodymatter[elemIndex[1]]?.groupdata.bodymatter[0].groupeddata.bodymatter[elemIndex[2]]?.groupdata.bodymatter[elemIndex[3]].contentUrn;
+                if (typeWithPopup === ElementConstants.POETRY_ELEMENT) {
+                    parentEntityUrn = newBodymatter[elemIndex[0]]?.groupeddata.bodymatter[elemIndex[1]]?.groupdata.bodymatter[0].groupeddata.bodymatter[elemIndex[2]]?.groupdata.bodymatter[elemIndex[3]].contentUrn;
+                }
                 break;
         }
     }
@@ -1320,6 +1332,30 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     }
                     responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text)
                     newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].popupdata["formatted-title"] = responseElement;
+                    break;
+                }
+                case 6: { // TB->Tab->AS/WE->HEAD->Popup
+                    let titleDOM = document.getElementById(`cypress-${tempIndex[0]}-${tempIndex[1]}-${tempIndex[2]}-${tempIndex[3]}-${tempIndex[4]}-0`)
+                    let titleHTML = "";
+                    if (titleDOM) {
+                        titleHTML = titleDOM.innerHTML;
+                    }
+                    responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text);
+                    if (newBodymatter[tempIndex[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].popupdata["formatted-title"] = responseElement;
+                    } else {  // Multicolumn->AS/WE->BODY->Popup
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]].popupdata["formatted-title"] = responseElement;
+                    }
+                    break;
+                }
+                case 7: { // TB->Tab->AS/WE->BODY->Popup
+                    let titleDOM = document.getElementById(`cypress-${tempIndex[0]}-${tempIndex[1]}-${tempIndex[2]}-${tempIndex[3]}-${tempIndex[4]}-${tempIndex[5]}-0`);
+                    let titleHTML = "";
+                    if (titleDOM) {
+                        titleHTML = titleDOM.innerHTML;
+                    }
+                    responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text);
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]].popupdata["formatted-title"] = responseElement;
                     break;
                 }
             }
