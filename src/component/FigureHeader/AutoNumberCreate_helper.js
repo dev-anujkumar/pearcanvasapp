@@ -212,7 +212,14 @@ export const getSameElementsInsideElement = async (bodyMatter, numberedElements 
                         await getAllElementsInShowhide(element, numberedElements, createdElementData)
                         break;
                     case containerElements.MULTI_COLUMN:
-                        await getAllElementsInMultiColumn(element, numberedElements, createdElementData)
+                        if (element?.subtype === ElementConstants.TAB) {
+                            let tabElements = element?.groupeddata?.bodymatter;
+                            for (let tab of tabElements) {
+                                await getAllElementsInMultiColumn(tab.groupdata.bodymatter[0], numberedElements, createdElementData);
+                            }
+                        } else {
+                            await getAllElementsInMultiColumn(element, numberedElements, createdElementData);
+                        }
                         break;
                     case containerElements.POPUP:
                         getAllElementsInPopup(element, numberedElements, createdElementData);
