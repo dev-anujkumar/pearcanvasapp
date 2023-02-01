@@ -82,8 +82,8 @@
 .aside-container .dropdown {
     margin-left: -23px;
 }
-.multi-column .aside-container .dropdown {
-    margin-left: 0px;
+.multi-column .aside-container .horizontalLine, .multi-column .aside-container .dropdown, .tb .aside-container .horizontalLine, .tb .aside-container .dropdown {
+    margin-left: 0;
 }
 .section-break,.work-section-break{
     border : 0.5px solid black;

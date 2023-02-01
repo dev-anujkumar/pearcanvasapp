@@ -75,6 +75,10 @@
     right: 1% !important;
 }
 
+.tb .elementSapratorContainer .elemDiv-expand{
+    right: 1% !important;
+}
+
 .element-container .elemDiv-expand.paste-button-wrapper {
     right: 8px;
 }

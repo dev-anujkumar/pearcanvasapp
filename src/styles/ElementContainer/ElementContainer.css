@@ -53,7 +53,7 @@
     }
 }
 
-.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl) * {
+.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl):not(.tb):not(.tab) * {
     cursor: default !important;
 }
 
@@ -146,6 +146,12 @@
 }
 .bl .cypress-editable.place-holder::before {
     margin-top: -2px !important;
+}
+.tb .bl .bl .bl .bl .cypress-editable.place-holder::before {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100px;
+    overflow: hidden
 }
 .bl .p {
     border: none !important;

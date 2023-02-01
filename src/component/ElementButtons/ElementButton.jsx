@@ -48,7 +48,9 @@ import pasteIcon from '../../images/ElementButtons/contentPaste.png'
 import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
 import ButtonTypes from './ButtonTypes.js';
 import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
+import tabIcon from '../../images/ElementButtons/tabIcon.png'
 import ElementConstants from '../ElementContainer/ElementConstants'; 
+import blureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 class ElementButton extends Component {
    
   /**
@@ -57,7 +59,7 @@ class ElementButton extends Component {
   * @param clickHandlerFn Handler method to be called on click event
   *  
   */
-    renderButton = (type, clickHandlerFn, elementType, btnClassName = '') => {
+    renderButton = (type, clickHandlerFn, elementType, btnClassName = '', isButtonDisabled = false) => {
         let buttonJSX = null
         const elementTypeClassName = (elementType === ElementConstants.BLOCK_LIST) ? elementType : ''; 
         const { labelText,elementId,isSubscribersSlate } = this.props
@@ -92,8 +94,8 @@ class ElementButton extends Component {
                 buttonJSX = <span className={`btn-element element-label ${btnClassName} ${elementTypeClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
-                buttonJSX = <span className={`btn-element delete-icon ${elementTypeClassName}`} onClick={clickHandlerFn}>
-                    <img src={deleteIcon} /></span>
+                buttonJSX = isButtonDisabled ? <span className={`btn-element delete-icon ${elementTypeClassName} icon-disabled`} > <img src={blureDeleteIcon} /></span>
+                : <span className={`btn-element delete-icon ${elementTypeClassName}`} onClick={clickHandlerFn}> <img src={deleteIcon} /></span>
                 break;
             case buttonTypes.TCM:
                 buttonJSX = <span className={`btn-element small tcm-icon ${btnClassName}`} title="Track Changes" onClick={clickHandlerFn}>
@@ -212,6 +214,11 @@ class ElementButton extends Component {
                     {multiColumnContainer}
                 </span>
                 break;
+            case buttonTypes.TABBED_TAB:
+                buttonJSX = <span className="btn-element multi-column-group-tabbed-tab" onClick={clickHandlerFn}>
+                    <img src={tabIcon} />
+                </span>
+                break;
             case ButtonTypes.ELM_INTERACTIVE_ICON:
                 buttonJSX = <span className="" onClick={clickHandlerFn}>
                     {elmInteractiveIcon}
@@ -282,11 +289,11 @@ class ElementButton extends Component {
     }
     
     render() {
-        const { type, onClick, btnClassName, elementType } = this.props
+        const { type, onClick, btnClassName, elementType, isButtonDisabled } = this.props
         
         return(
             <>
-                {this.renderButton(type, onClick, elementType, btnClassName )}             
+                {this.renderButton(type, onClick, elementType, btnClassName, isButtonDisabled )}             
             </>
         )
     }
