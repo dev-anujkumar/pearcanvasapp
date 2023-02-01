@@ -394,6 +394,9 @@ export function typeOfContainerElements(elem, props) {
     let newData = containerTypeArray[elem.buttonType];
     /* Do not show Citation Group option if inside Multicolumn  */
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
+    /* Do not show Tabbed 2 column option inside Popup slate  */
+    newData = (elem?.buttonType === "multi-column-group" && config.isPopupSlate) ? {["2-column"]: newData["2-column"], ["3-column"]: newData["3-column"]} : newData;
+    /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
     /* Do not show SH and Pop up option if Aside/WE is inside SH  */
     /* Do not show block poetry option inside SH if SH is inside Aside/WE/MultiColumn */
     if ((asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) || (asideData?.grandParent?.asideData && Object.keys(asideData.grandParent.asideData).length)) {

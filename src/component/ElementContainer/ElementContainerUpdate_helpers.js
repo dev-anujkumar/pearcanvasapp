@@ -83,7 +83,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
  dispatch(fetchSlateData(asideData?.parent?.id,asideData?.parent?.contentUrn,0,asideData,CONTAINER_VERSIONING,false))
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
-        if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5) && asideData.type === "poetry") {
+        if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5 || indexes.length === 6) && asideData.type === "poetry") {
             dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }  else if (asideData && asideData.type == 'groupedcontent') {
             asideData.indexes = indexes;
@@ -1381,7 +1381,7 @@ const getShowhideParent = async (shParentData) => {
         } else if (asideData?.grandParent?.asideData?.type == 'element-aside') {
             if (asideData?.grandParent?.asideData?.parent?.type == 'groupedcontent') {
                 parentToCascade = asideData?.grandParent?.asideData?.parent
-                parentToCascade.contentUrn = parentToCascade.parentContentUrn
+                parentToCascade.contentUrn = parentToCascade.parentContentUrn ?  parentToCascade.parentContentUrn :  parentToCascade.contentUrn
             }
             else {
                 parentToCascade = asideData?.grandParent?.asideData

@@ -125,7 +125,7 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList, element
 					_slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]]?.contents.bodymatter[iList[2]]; /* WE:Body:SH:Element */
                 break;
             case 6: /* TB:Tab:SH:Element */
-                if (parentElement?.grandParent?.asideData?.subtype === ElementConstants.TAB) {
+                if (parentElement?.subtype === ElementConstants.TAB || parentElement?.parent?.subtype === ElementConstants.TAB || parentElement?.grandParent?.asideData?.subtype === ElementConstants.TAB) {
                     sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[iList[2]].groupdata.bodymatter[iList[3]];
                 } else {
                     /* 2C:AS/WE-Head:SH:Element */
@@ -133,7 +133,7 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList, element
                 }
                 break;
             case 7: /* TB:Tab:AS/WE-Head:SH:Element */
-                if (parentElement?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
+                if (parentElement?.parent?.subtype === ElementConstants.TAB || parentElement?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
                     sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[iList[2]].groupdata.bodymatter[iList[3]]?.elementdata.bodymatter[iList[4]];
                     /* 2C:WE-Body:SH:Element */ 
                 } else {

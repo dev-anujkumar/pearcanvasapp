@@ -814,7 +814,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 if(containerTypeElem === SHOW_HIDE) { /* Swap inner elements of ShowHide */
                     const indexes = elementIndex?.toString().split('-') || [];
                     /* Get the showhide element object from slate data using indexes */
-                    const shObject = getShowHideElement(newBodymatter, (indexes?.length + 2), indexes);
+                    const shObject = getShowHideElement(newBodymatter, (indexes?.length + 2), indexes, null, parentElement?.asideData);
                     /* After getting showhide Object, swap the elements */
                     if(!isEmpty(shObject) && shObject?.contentUrn === currentSlateEntityUrn) {
                         shObject?.interactivedata[sectionType]?.move(oldIndex, newIndex);
@@ -824,7 +824,13 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     //swap WE element
                     const indexs = elementIndex?.toString().split('-') || [];
                     let sectionType = parentElement?.showHideType;
-                    if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
+                    /* TB->Tab->AS/WE->HEAD: Swap Elements */
+                    if(parentElement?.type === ElementConstants.MULTI_COLUMN && parentElement?.subtype === ElementConstants.TAB && indexs?.length === 4) { 
+                        let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]];
+                        if (asid.contentUrn == currentSlateEntityUrn) {
+                            asid?.elementdata?.bodymatter?.move(oldIndex, newIndex);
+                        }
+                    } else if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:AS: Swap Elements */
                         let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]];
                         if (asid.contentUrn == currentSlateEntityUrn) {
                             asid?.elementdata?.bodymatter?.move(oldIndex, newIndex);
@@ -844,7 +850,14 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                 } else if (containerTypeElem && containerTypeElem == 'section') {
                     const indexs = elementIndex?.toString().split('-') || [];
                     let sectionType = parentElement?.showHideType;
-                    if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:WE:BODY:SECTION-BREAK: Swap Elements */
+                    /* TB->Tab->AS/WE->HEAD: Swap Elements */
+                    if(parentElement?.type === ElementConstants.MULTI_COLUMN && parentElement?.subtype === ElementConstants.TAB && indexs?.length === 4) { 
+                        newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]]?.elementdata?.bodymatter?.map(item => {
+                            if (item.contentUrn == currentSlateEntityUrn) {
+                                item?.contents?.bodymatter?.move(oldIndex, newIndex);
+                            }
+                        })
+                    } else if(parentElement?.type === "groupedcontent" && indexs?.length === 3) { /* 2C:WE:BODY:SECTION-BREAK: Swap Elements */
                         newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[indexs[2]]?.elementdata?.bodymatter?.map(item => {
                             if (item.contentUrn == currentSlateEntityUrn) {
                                 item?.contents?.bodymatter?.move(oldIndex, newIndex);
@@ -901,6 +914,13 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                                     })
                                 }
                             })
+                            /** ----------Swapping block poetry elements inside Tab Element----------------- */
+                        } else if (element?.type === ElementConstants.MULTI_COLUMN && element?.subtype === ElementConstants.TAB) {
+                            const indexs = elementIndex?.split('-') || [];
+                            let poetryElement = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]];
+                            if (poetryElement?.type === "poetry" && poetryElement?.id === poetryId) {
+                                poetryElement.contents.bodymatter.move(oldIndex, newIndex);
+                            }
                         } else if(element?.type === "groupedcontent"){  /** ----------Swapping block poetry elements inside Multicolumn Element----------------- */
                             element.groupeddata?.bodymatter.forEach((groupElem)=> {
                                 groupElem.groupdata?.bodymatter.forEach((groupElem1)=>{

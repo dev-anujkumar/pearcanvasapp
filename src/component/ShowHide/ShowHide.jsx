@@ -43,7 +43,7 @@ class ShowHide extends React.Component {
             containerTypeElem: element?.type,
             asideId: element?.id,
             elementIndex: index,
-            parentElement: { type: parentElement?.type }
+            parentElement: { type: parentElement?.type, asideData: this.props.asideData }
         }
 		/* call swap api */
         this.props.swapElement(payload, (bodyObj) => { })
