@@ -784,126 +784,63 @@ th ol li.listItemNumeroUnoNone:before {
     width: 91%;
 }
 /* TB > Tab > WE > SH > Elements*/
-.tb .tab .we .sh .fg{
+.tb .tab .we .sh .fg, .tb .tab .we .sh .mml, .tb .tab .we .sh .eq, .tb .tab .we .sh .tb{
     width: 90%;
 }
-.tb .tab .we .sh .tb{
-    width: 90%;
-}
-.tb .tab .we .sh .eq{
-    width: 90%;
-}
-.tb .tab .we .sh .mml{
-    width: 90%;
-}
-.tb .tab .we .sh .vid{
+
+.tb .tab .we .sh .vid, .tb .tab .we .sh .aud{
     width: 91%;
 }
-.tb .tab .we .sh .aud{
-    width: 91%;
-}
-.tb .tab .we .sh .bce{
+
+.tb .tab .we .sh .bce, .tb .tab .we .sh .te{
     width: 90%;
 }
-.tb .tab .we .sh .te{
-    width: 90%;
-}
+
 /* TB > Tab > Elements*/
-.tb .tab .te{
+.tb .tab .te, .tb .tab .elm, .tb .tab .quad{
     width: 92%;
 }
-.tb .tab .elm{
-    width: 92%;
-}
-.tb .tab .quad{
-    width: 92%;
-}
+
 /* TB > Tab > SH > Elements*/
-.tb .tab .sh .fg{
-    width: 91%;
-}
-.tb .tab .sh .tb{
-    width: 91%;
-}
-.tb .tab .sh .eq{
-    width: 91%;
-}
-.tb .tab .sh .mml{
-    width: 91%;
-}
-.tb .tab .sh .bce{
-    width: 91%;
-}
-.tb .tab .sh .te{
+
+.tb .tab .sh .bce,.tb .tab .sh .te, .tb .tab .sh .mml,.tb .tab .sh .eq, .tb .tab .sh .tb, .tb .tab .sh .fg{
     width: 91%;
 }
 /* TB > Tab > AS> Elements*/
 .tb .tab .as {
     width: 92%;
 }
-.tb .tab .as .elm{
-    width: 91%;
-}
-.tb .tab .as .quad{
+.tb .tab .as .elm,.tb .tab .as .quad{
     width: 91%;
 }
 /* TB > Tab > AS > SH > Elements*/
 .tb .tab .as .sh{
     width: 91%;
 }
-.tb .tab .as .sh .fg{
-    width: 90%;
-}
-.tb .tab .as .sh .mml{
-    width: 90%;
-}
-.tb .tab .as .sh .bce{
-    width: 90%;
-}
-.tb .tab .as .sh .te{
+.tb .tab .as .sh .fg,.tb .tab .as .sh .mml, .tb .tab .as .sh .bce,.tb .tab .as .sh .te{
     width: 90%;
 }
 /** Condition for TB > Tab > WE > SH > Figure*/
-.tb .tab .we .sh .figure-label-number {
+.tb .tab .we .sh .figure-label-number, .tb .tab .we .sh .figure-label-number-highlight, .tb .tab .we .sh .figure-number-dropdown {
     width: 185px;
 }
-.tb .tab .we .sh .figure-label-number-highlight {
-    width: 185px;
-}
-.tb .tab .we .sh .figure-number-dropdown {
-    width: 185px;
-}
+
 /** Condition for TB > Tab > AS > Figure*/
 
-.tb .tab .as .figure-label-number {
+.tb .tab .as .figure-label-number, .tb .tab .as .figure-label-number-highlight,.tb .tab .as .figure-number-dropdown  {
     width: 199px;
 }
-.tb .tab .as .figure-label-number-highlight {
-    width: 199px;
-}
-.tb .tab .as .figure-number-dropdown {
-    width: 199px;
-}
+
 /* TB > Tab > AS > SH > Fig Element*/
-.tb .tab .as .sh .figure-label-number{
+.tb .tab .as .sh .figure-label-number, .tb .tab .as .sh .figure-label-number-highlight, .tb .tab .as .sh .figure-number-dropdown{
     width: 186px;
 }
-.tb .tab .as .sh .figure-label-number-highlight{
-    width: 186px;
-}
-.tb .tab .as .sh .figure-number-dropdown{
-    width: 186px;
-}
+
 /* TB > Tab > WE > Fig Element*/
-.tb .tab .we .figure-label-number {
+.tb .tab .we .figure-label-number, .tb .tab .we .figure-label-number-highlight, .tb .tab .we .figure-number-dropdown {
     width: 215px;
 }
-.tb .tab .we .figure-label-number-highlight {
-    width: 215px;
-}
-.tb .tab .we .figure-number-dropdown {
-    width: 215px;
-}
+
 .figure-label-number-highlight{
     width: 230px;
     font-size: 14px;
@@ -985,32 +922,18 @@ th ol li.listItemNumeroUnoNone:before {
   top:25px;
 }
 /** Condition for TB > Tab > WE > SH > Figure*/
-.tb .tab .we .sh .figure-label {
+.tb .tab .we .sh .figure-label, .tb .tab .we .sh .figure-label-highlight, .tb .tab .we .sh .figure-dropdown, .tb .tab .as .sh .figure-label, .tb .tab .as .sh .figure-label-highlight  {
     width: 100px;
 }
-.tb .tab .we .sh .figure-label-highlight {
-    width: 100px;
-}
-.tb .tab .we .sh .figure-dropdown {
-    width: 100px;
-}
-.tb .tab .as .sh .figure-label {
-    width: 100px;
-}
-.tb .tab .as .sh .figure-label-highlight {
-    width: 100px;
-}
+
 .tb .tab .as .sh .figure-dropdown {
     width: 98px;
 }
-.tb .tab .as .sh .figure-header .image-label .figureLabel.cypress-editable
+.tb .tab .as .sh .figure-header .image-label .figureLabel.cypress-editable, .tb .tab .we .figure-header .image-label .figureLabel.cypress-editable
 {
     width: 92px !important;
 }
-.tb .tab .we .figure-header .image-label .figureLabel.cypress-editable
-{
-    width: 92px !important;
-}
+
 .figure-dropdown ul {
     padding: 4px 0px;
     margin: 0px;
