@@ -793,6 +793,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index
+                    if (versioning.subtype === "tab") {
+                        versioning.index = versioning.indexes ? versioning.indexes : versioning.index
+                    } 
                     if(typeof versioning.index === "number"){
                         index = versioning.index;
                     }

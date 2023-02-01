@@ -1940,7 +1940,7 @@ class ElementContainer extends Component {
 
 
         // checking whether element is tab element or child of tab element
-        const isTbElement = this.props.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.parent?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB || this.props?.asideData?.parentElementSubtype === ElementConstants.TAB || this.props?.element?.subtype === ElementConstants.TAB;
+        const isTbElement = this.props.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.parent?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB || this.props?.asideData?.parentElementSubtype === ElementConstants.TAB || this.props?.element?.subtype === ElementConstants.TAB;
 
         const commonProps = {
             index,
