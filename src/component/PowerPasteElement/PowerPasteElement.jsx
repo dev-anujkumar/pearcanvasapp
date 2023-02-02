@@ -136,6 +136,7 @@ export const pastePostProcess = (data, props) => {
  * @returns Content that needs to be pasted on text-editor
  */
 export const prepareFinalPasteContent = (elements,nodeData,props) => {
+  let isPreviousUnsupportedContent = false
   const spacesAndNewLineFormatArray = ["\n    ","\n  \n\n\n","\n   \n\n\n","\n\n\n"]
   const allSupUnsupChildNodes = nodeData.childNodes
   let contentToPaste = ""
@@ -143,6 +144,7 @@ export const prepareFinalPasteContent = (elements,nodeData,props) => {
   for (let index = 0; index < allSupUnsupChildNodes.length; index++) {
     const element = allSupUnsupChildNodes[index];
     if(elementsHtml.includes(element.outerHTML)) {
+      isPreviousUnsupportedContent = false
       let elementOuterHtml = element?.outerHTML
       if(element?.outerHTML?.match(/<img ([\w\W]+?)>/g)) {
         if(!props.isPowerPasteInvalidContent) {
@@ -155,7 +157,10 @@ export const prepareFinalPasteContent = (elements,nodeData,props) => {
       if(!props.isPowerPasteInvalidContent) {
         props.checkInvalidPowerPasteContent(true)
       }
+      if(!isPreviousUnsupportedContent) {
+        isPreviousUnsupportedContent = true
       contentToPaste += UnsupportedContentString
+      }
     }
   }
 
