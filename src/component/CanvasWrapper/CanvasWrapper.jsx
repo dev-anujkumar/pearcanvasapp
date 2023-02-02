@@ -18,7 +18,7 @@ import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole } from
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
-import {updateElement, getTableEditorData, clearElementStatus}from '../../component/ElementContainer/ElementContainer_Actions'
+import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupState, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
 import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
@@ -354,6 +354,8 @@ export default connect(
         fetchLOBList,
         fetchUserLocation,
         fetchDefaultLF,
-        setCautionBannerStatus
+        setCautionBannerStatus,
+        approvedSlatePopupState,
+        approvedSlatePopupStatus
     }
 )(CommunicationChannelWrapper(CanvasWrapper));
