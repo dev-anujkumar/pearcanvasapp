@@ -1082,11 +1082,10 @@ class ElementContainer extends Component {
                 break;
 
             case elementTypeConstant.TABBED_TAB:
-                if(this.tabTitleDifference(this.props.index, previousElementData) && previousElementData?.id) {
-                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
-                config.isSavingElement = true
-                console.log('elementContainer file', previousElementData);
-                this.props.updateTabTitle(previousElementData, this.props.index);
+                if (this.tabTitleDifference(this.props.index, previousElementData) && previousElementData?.id) {
+                    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                    config.isSavingElement = true;
+                    this.props.updateTabTitle(previousElementData, this.props.index, parentElement);
                 }
                 break;
 
@@ -3214,8 +3213,8 @@ const mapDispatchToProps = (dispatch) => {
         storeDeleteElementKeys : (objectkey) => {
             dispatch(storeDeleteElementKeys(objectkey));
         },
-        updateTabTitle: (previousElementData, index) => {
-            dispatch(updateTabTitle(previousElementData, index));
+        updateTabTitle: (previousElementData, index, parentElement) => {
+            dispatch(updateTabTitle(previousElementData, index, parentElement));
         }
     }
 }

@@ -925,7 +925,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     })
 }
 
-export const updateTabTitle = (previousData, index) => (dispatch, getState) => {
+export const updateTabTitle = (previousData, index, parentElement) => (dispatch, getState) => {
     const parentData = getState().appStore.slateLevelData;
     const currentParentData = JSON.parse(JSON.stringify(parentData));
     let currentSlateData = currentParentData[config.slateManifestURN];
@@ -942,7 +942,7 @@ export const updateTabTitle = (previousData, index) => (dispatch, getState) => {
             title: `<p>${titleHTML}</p`
         },
         contentUrn: previousData.contentUrn,
-        status: currentSlateData.status
+        status: parentElement?.status
     }
 
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${previousData.contentUrn}/metadata?isHtmlPresent=true`
@@ -968,23 +968,29 @@ export const updateTabTitle = (previousData, index) => (dispatch, getState) => {
         }
         else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
-            // const newVersionURN = res?.data?.versionUrn && res.data.versionUrn.trim() !== "" ? res.data.versionUrn : ""
-            let indexes = typeof index === 'number' ? index : index.split("-");
-            let elementToUpdate = currentSlateData.contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]];
-            elementToUpdate = {
-                ...elementToUpdate,
-                html: {
-                    title: `<p>${titleHTML}</p`
+            const newVersionURN = res?.data?.versionUrn && res.data.versionUrn.trim() !== "" ? res.data.versionUrn : "";
+            if (newVersionURN && newVersionURN !== '') { // Trigger Api for parent versioning
+                const CONTAINER_VERSIONING = "containerVersioning";
+                parentElement = {...parentElement, index: index}
+                dispatch(fetchSlateData(parentElement?.id, parentElement?.contentUrn, 0, parentElement, CONTAINER_VERSIONING, false));
+            } else {
+                let indexes = typeof index === 'number' ? index : index.split("-");
+                let elementToUpdate = currentSlateData.contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]];
+                elementToUpdate = {
+                    ...elementToUpdate,
+                    html: {
+                        title: `<p>${titleHTML}</p`
+                    }
                 }
+                currentSlateData.contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]] = elementToUpdate;
+                currentParentData[config.slateManifestURN] = currentSlateData;
+                dispatch({
+                    type: AUTHORING_ELEMENT_UPDATE,
+                    payload: {
+                        slateLevelData: currentParentData
+                    }
+                })
             }
-            currentSlateData.contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]] = elementToUpdate;
-            currentParentData[config.slateManifestURN] = currentSlateData;
-            dispatch({
-                type: AUTHORING_ELEMENT_UPDATE,
-                payload: {
-                    slateLevelData: currentParentData
-                }
-            })
         }
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         // config.conversionInProcess = false
