@@ -53,7 +53,9 @@ import {
     UPDATE_CARET_OFFSET,
     SET_REQUIRED_SLATE_DATA,
     CYPRESS_PLUS_ENABLED,
-    CHECK_ASIDE_NUMBER
+    CHECK_ASIDE_NUMBER,
+    APPROVED_SLATE_POPUP,
+    APPROVED_SLATE_POPUP_STATUS
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -841,5 +843,25 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
             type: CHECK_ASIDE_NUMBER,
             payload: false
         }))
+    });
+    it('case 57- APPROVED_SLATE_POPUP ', () => {
+        let output = {
+            ...initialState,
+            approvedPopupState: true
+        }
+        expect(reducer(initialState, {
+            type: APPROVED_SLATE_POPUP,
+            payload: true
+        })).toEqual(output);
+    });
+    it('case 58- APPROVED_SLATE_POPUP_STATUS ', () => {
+        let output = {
+            ...initialState,
+            approvedSlatePopupstatus: false
+        }
+        expect(reducer(initialState, {
+            type: APPROVED_SLATE_POPUP_STATUS,
+            payload: false
+        })).toEqual(output);
     });
 });

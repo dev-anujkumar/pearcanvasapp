@@ -12,7 +12,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup } from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -21,7 +21,7 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, APPROVE_NORMAL_SLATE, APPROVE_OWNER_SLATE
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -50,6 +50,7 @@ import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../compone
 import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import KeyboardUpDown from '../Keyboard/KeyboardUpDown.jsx';
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
+import { approvedSlatePopupState, approvedSlatePopupStatus } from '../ElementContainer/ElementContainer_Actions';
 
 let random = guid();
 
@@ -73,7 +74,7 @@ class SlateWrapper extends Component {
             powerPasteData: [],
             updatedindex:'',
             showOwnerSlatePopup: false,
-            parentUrn:null
+            parentUrn:null,
         }
         this.isDefaultElementInProgress = false;
     }
@@ -279,6 +280,38 @@ class SlateWrapper extends Component {
         return false
     }
 
+    approveNormalSlate = () => {
+        this.togglePopup(false)
+        this.props.approvedSlatePopupState(false)
+        this.props.approvedSlatePopupStatus(false)
+        this.props.slateVersioning()
+    }
+
+    showApprovedWarningPopup = () => {
+        const { projectSubscriptionDetails: { projectSharingRole, projectSubscriptionDetails: { isSubscribed } } } = this.props
+        const ownerSlate = isOwnerRole(projectSharingRole, isSubscribed)
+        const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
+        if (this.props.approvedSlatePopupstatus && slatePublishStatus && this.props.approvedPopupState){
+            this.props.showBlocker(true)
+            showTocBlocker();
+            return (
+                <PopUp dialogText={ownerSlate ? APPROVE_OWNER_SLATE : APPROVE_NORMAL_SLATE}
+                    togglePopup={this.togglePopup}
+                    isApprovedSlate={true}
+                    warningHeaderText={`Warning`}
+                    approvePopupClass={`${ownerSlate ? "approved-warning-txt" : "lo-warning-txt"}`}
+                    approveNormalSlate = {this.approveNormalSlate}
+                />
+            )
+        } else{
+            return null
+        }
+    }
+
+    getApprovedPopup = () => {
+        this.props.approvedSlatePopupStatus(true)
+    }
+
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
         try {
@@ -294,8 +327,14 @@ class SlateWrapper extends Component {
                     this['cloneCOSlateControlledSource_' + random] = this.renderElement(_slateBodyMatter, config.slateType, this.props.slateLockInfo)
                     let _context = this;
                     const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
+                    const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
                     return (
                         <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
+                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) ? <div
+                                className='approved-overlay'
+                                onClick={this.getApprovedPopup}
+                            >
+                            </div> : null}
                             <div className='element-list'>
                                 <Sortable
                                     options={{
@@ -606,6 +645,7 @@ class SlateWrapper extends Component {
         this.props.showSlateLockPopup(false);
         hideBlocker()
         this.prohibitPropagation(event)
+        this.props.approvedSlatePopupStatus(false)
     }
 
     proceedButtonHandling = (isChecked, toggleValue, e) => {
@@ -1624,8 +1664,10 @@ class SlateWrapper extends Component {
                 {/* **************** Word Paste Popup ************ */}
                 {this.showWordPastePopup()}
                 {this.showLOWarningPopup()}{/* **************** LO Warning Popup ************ */}
-               {/* **************** Alfresco Popup ************ */}
-               {this.showAlfrescoPopup()}
+                {/* **************** Alfresco Popup ************ */}
+                {this.showAlfrescoPopup()}
+                {/* **************** Approved to WIP Warning Popup ************* */}
+                {this.showApprovedWarningPopup()}
             </React.Fragment>
         );
     }
@@ -1683,7 +1725,9 @@ const mapStateToProps = state => {
         removeGlossaryImage:state.appStore.removeGlossaryImage,
         projectSubscriptionDetails:state?.projectInfo,
         activeElement: state.appStore.activeElement,
-        asideData: state.appStore.asideData
+        asideData: state.appStore.asideData,
+        approvedPopupState: state.appStore.approvedPopupState,
+        approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus
     };
 };
 
@@ -1722,6 +1766,9 @@ export default connect(
         alfrescoPopup,
         showRemoveImageGlossaryPopup,
         isOwnersSubscribedSlate,
-        savePopupParentSlateData
+        savePopupParentSlateData,
+        slateVersioning,
+        approvedSlatePopupState,
+        approvedSlatePopupStatus
     }
 )(SlateWrapper);

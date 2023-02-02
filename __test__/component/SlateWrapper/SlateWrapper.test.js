@@ -173,6 +173,7 @@ describe("SlateWrapper Component", () => {
         getCommentElements: jest.fn(),
         updateTimer: jest.fn(),
         commentSearchScrollTop : {},
+        slateVersioning: jest.fn(),
         ...actionProps
     };
     it("1.2 Test - componentDidMount ", () => {
@@ -592,6 +593,41 @@ describe("SlateWrapper Component", () => {
             compInstance.setState({showSplitSlatePopup: false});
             const spy = jest.spyOn(compInstance, 'showSplitSlatePopup')
             compInstance.showSplitSlatePopup();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+    })
+    describe("1.22 Test - showApprovedWarningPopup  ", () => {
+        it('1.22.1  Test - if case ', () => {
+            const compInstance = slateWrapInstance(props);
+            compInstance.setState({approvedSlate : true});                  
+            const spy = jest.spyOn(compInstance, 'getApprovedPopup')
+            compInstance.getApprovedPopup();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.22.1  Test - if case ', () => {
+            props.slateData["id-12345"] = {status: "approved",id:"id-123"};
+            const compInstance = slateWrapInstance(props);
+            compInstance.setState({approvedSlate : true});
+            const spy = jest.spyOn(compInstance, 'showApprovedWarningPopup')
+            compInstance.showApprovedWarningPopup();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.22.2  Test - else case ', () => {
+            const compInstance = slateWrapInstance(props);
+            compInstance.setState({approvedSlate: false});
+            const spy = jest.spyOn(compInstance, 'showApprovedWarningPopup')
+            compInstance.showApprovedWarningPopup();
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+        })
+        it('1.22.1  Test - if case ', () => {
+            const compInstance = slateWrapInstance(props);
+            compInstance.setState({approvedSlate : true});
+            const spy = jest.spyOn(compInstance, 'approveNormalSlate')
+            compInstance.approveNormalSlate();
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
