@@ -50,6 +50,7 @@ import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../compone
 import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import KeyboardUpDown from '../Keyboard/KeyboardUpDown.jsx';
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
+import { approvedSlatePopupState, approvedSlatePopupStatus } from '../ElementContainer/ElementContainer_Actions';
 
 let random = guid();
 
@@ -74,7 +75,6 @@ class SlateWrapper extends Component {
             updatedindex:'',
             showOwnerSlatePopup: false,
             parentUrn:null,
-            approvedSlate: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -282,6 +282,8 @@ class SlateWrapper extends Component {
 
     approveNormalSlate = () => {
         this.togglePopup(false)
+        this.props.approvedSlatePopupState(false)
+        this.props.approvedSlatePopupStatus(false)
         this.props.slateVersioning()
     }
 
@@ -289,7 +291,7 @@ class SlateWrapper extends Component {
         const { projectSubscriptionDetails: { projectSharingRole, projectSubscriptionDetails: { isSubscribed } } } = this.props
         const ownerSlate = isOwnerRole(projectSharingRole, isSubscribed)
         const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
-        if (this.state.approvedSlate && slatePublishStatus){
+        if (this.props.approvedSlatePopupstatus && slatePublishStatus && this.props.approvedPopupState){
             this.props.showBlocker(true)
             showTocBlocker();
             return (
@@ -307,9 +309,7 @@ class SlateWrapper extends Component {
     }
 
     getApprovedPopup = () => {
-        this.setState({
-            approvedSlate: true,
-        })
+        this.props.approvedSlatePopupStatus(true)
     }
 
     /*** renderSlate | renders slate editor area with all elements it contain*/
@@ -639,13 +639,13 @@ class SlateWrapper extends Component {
     togglePopup = (toggleValue, event) => {
         this.setState({
             showLockPopup: toggleValue,
-            showOwnerSlatePopup: toggleValue,
-            approvedSlate: toggleValue
+            showOwnerSlatePopup: toggleValue
         })
         this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
         hideBlocker()
         this.prohibitPropagation(event)
+        this.props.approvedSlatePopupStatus(false)
     }
 
     proceedButtonHandling = (isChecked, toggleValue, e) => {
@@ -1737,7 +1737,9 @@ const mapStateToProps = state => {
         removeGlossaryImage:state.appStore.removeGlossaryImage,
         projectSubscriptionDetails:state?.projectInfo,
         activeElement: state.appStore.activeElement,
-        asideData: state.appStore.asideData
+        asideData: state.appStore.asideData,
+        approvedPopupState: state.appStore.approvedPopupState,
+        approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus
     };
 };
 
@@ -1777,6 +1779,8 @@ export default connect(
         showRemoveImageGlossaryPopup,
         isOwnersSubscribedSlate,
         savePopupParentSlateData,
-        slateVersioning
+        slateVersioning,
+        approvedSlatePopupState,
+        approvedSlatePopupStatus
     }
 )(SlateWrapper);

@@ -169,6 +169,8 @@ export const WIRIS_ALT_TEXT_POPUP = 'WIRIS_ALT_TEXT_POPUP';
 
 /* --------------- TCM Versioning ------------------------*/
 export const VERSIONING_SLATEMANIFEST = "VERSIONING_SLATEMANIFEST"
+export const APPROVED_SLATE_POPUP = "APPROVED_SLATE_POPUP"
+export const APPROVED_SLATE_POPUP_STATUS = "APPROVED_SLATE_POPUP_STATUS"
 
 /* --------------- Learnosity Project ------------------------*/
 export const LEARNOSITY_PROJECT_INFO = "LEARNOSITY_PROJECT_INFO"
