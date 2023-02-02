@@ -29,7 +29,7 @@ import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKI
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement, saveCaretPosition } from './SlateWrapper/SlateWrapper_Actions';
-import { deleteElement } from './ElementContainer/ElementContainer_Actions';
+import { deleteElement, approvedSlatePopupStatus } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
@@ -1243,6 +1243,12 @@ export class TinyMceEditor extends Component {
             const currentSelection = tinymce?.activeEditor?.selection;
             const selectionNode = window.getSelection().anchorNode;
             const tinymceOffset = currentSelection.getRng().endOffset;
+            if(this.props?.slateLevelData[config.slateManifestURN]?.status === 'approved'){
+                this.props.approvedSlatePopupStatus(true)
+                e.preventDefault();
+                e.stopPropagation();
+                return false
+            }
             /**
              * get node vs window selection node
              * window selection is accurate and gives 
@@ -4452,5 +4458,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement, saveSelectedAlfrescoElement, saveCaretPosition }
+    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement, saveSelectedAlfrescoElement, saveCaretPosition, approvedSlatePopupStatus }
 )(TinyMceEditor);
