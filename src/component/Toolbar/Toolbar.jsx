@@ -159,7 +159,7 @@ const _Toolbar = props => {
                     (props.openAudio) &&
                     <div className="audio-block">
                         <div className="audioicon">
-                            <div className={`audio audioicon ${config.isCypressPlusEnabled ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
+                            <div className={`audio audioicon ${(config.isCypressPlusEnabled || slateStatus === 'approved') ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
                                 if (checkSlateLock(props.slateLockInfo)) {
                                     return false
                                 }
