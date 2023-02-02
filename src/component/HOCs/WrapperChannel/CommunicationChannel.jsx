@@ -277,6 +277,8 @@ function CommunicationChannel(WrappedComponent) {
                 case 'fetchAllSlateDataFromWrapper':
                     {
                         this.props.getAllSlatesData(message)
+                        this.props.approvedSlatePopupState(true)
+                        this.props.approvedSlatePopupStatus(false)
                         break;
                     }
                 case 'customDimensions':
