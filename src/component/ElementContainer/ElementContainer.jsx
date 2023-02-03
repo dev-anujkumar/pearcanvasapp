@@ -1709,10 +1709,11 @@ class ElementContainer extends Component {
     }
 
     toolbarHandling = (action = "") => {
+        const slateStatus = this.props.slateLevelData[config.slateManifestURN]?.status
         let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary')
         if (action === "add") {
             toolbar?.classList?.add("disable");
-        } else if (action === "remove") {
+        } else if (action === "remove" && slateStatus !== "approved") {
             toolbar?.classList?.remove("disable");
         }
     }

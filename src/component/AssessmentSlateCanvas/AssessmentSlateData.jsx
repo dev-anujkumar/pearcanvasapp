@@ -146,7 +146,8 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to handle LO icon for AS */
     setSlateTagIcon = () => {
-        if (document.getElementsByClassName("slate-tag-icon").length) {
+        const slateStatus = this.props?.slateLevelData[config.slateManifestURN]?.status
+        if (document.getElementsByClassName("slate-tag-icon").length && slateStatus !== "approved") {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         }
     }
@@ -822,6 +823,7 @@ const mapStateToProps = state => {
         assessmentReducer: state.assessmentReducer,
         isLearnosityProject: state.appStore.isLearnosityProjectInfo,
         projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
+        slateLevelData: state.appStore.slateLevelData
     };
 };
 

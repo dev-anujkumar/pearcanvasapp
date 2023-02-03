@@ -271,6 +271,7 @@ span.non-breaking-space {
   color: transparent;
   text-decoration-color: #FF0000;
   text-decoration-line: underline;
+  pointer-events: none;
 }
 .disable-non-breaking {
   pointer-events: none !important;
