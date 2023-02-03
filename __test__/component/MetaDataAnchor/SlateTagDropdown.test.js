@@ -186,7 +186,7 @@ describe('Test Rendering of metadaanchor on slate', () => {
         expect(event.target.innerText).toEqual(data);
     });
     it('handleclick', () => {
-        wrapper.find('div.learningobjectivedropdown ul li').at(1).simulate('click')
+        wrapper.find('div.learningobjectivedropdown ul li').at(0).simulate('click')
         let event = { target: { innerText: "Align to External Framework" } };
         const spyFunction = jest.spyOn(slateTagInstance, 'launchExternalFrameworkPopup');
         slateTagInstance.launchExternalFrameworkPopup(event);
@@ -297,7 +297,7 @@ describe('External LO - Test Rendering of metadaanchor on slate', () => {
         spyFunction.mockClear();
     })
     it('handleclick', () => {
-        wrapper.find('div.learningobjectivedropdown ul li').at(1).simulate('click')
+        wrapper.find('div.learningobjectivedropdown ul li').at(0).simulate('click')
         let event = { target: { innerText: "Align to External Framework" } };
         const spyFunction = jest.spyOn(slateTagInstance, 'launchExternalFrameworkPopup');
         slateTagInstance.launchExternalFrameworkPopup(event);
@@ -422,7 +422,7 @@ describe('External LO - Test Rendering of metadaanchor on slate', () => {
             let wrapper=mount(<Provider store={newStore}><SlateTagDropdown {...extLOprops} /> </Provider>)
             let slateTagInstance = wrapper.find('SlateTagDropdown').instance();
             let checkExtFrmWrkAs =slateTagInstance.checkExternalFrameworkAS();
-             wrapper.find('div.learningobjectivedropdown ul li').at(1).simulate('click')
+             wrapper.find('div.learningobjectivedropdown ul li').at(0).simulate('click')
             let event = { target: { innerText: "Align to External Framework" } };
              const spyFunction = jest.spyOn(slateTagInstance, 'toggleLoOptionsDropdownAS');
              slateTagInstance.toggleLoOptionsDropdownAS(event);
@@ -441,7 +441,7 @@ describe('External LO - Test Rendering of metadaanchor on slate', () => {
             let wrapper=mount(<Provider store={newStore}><SlateTagDropdown {...extLOprops} /> </Provider>)
             let slateTagInstance = wrapper.find('SlateTagDropdown').instance();
             let checkExtFrmWrkAs =slateTagInstance.checkExternalFrameworkAS();
-             wrapper.find('div.learningobjectivedropdown ul li').at(1).simulate('click')
+             wrapper.find('div.learningobjectivedropdown ul li').at(0).simulate('click')
             let event = { target: { innerText: "Align to External Framework" } };
              const spyFunction = jest.spyOn(slateTagInstance, 'toggleLoOptionsDropdownAS');
              slateTagInstance.toggleLoOptionsDropdownAS(event);
