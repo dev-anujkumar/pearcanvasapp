@@ -1123,6 +1123,7 @@ export const updateStore = (paramObj) => {
     const commonArgs = {
         updatedData, responseData, getState, dispatch
     }
+    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
     if ((updatedData?.loData) || updatedData.elementVersionType === "element-generateLOlist") {
         if (updatedData?.loData?.length && responseData?.loData?.length) {
             updateMetadataAnchorLOsinStore({...commonArgs,currentSlateData})
@@ -1142,7 +1143,7 @@ export const updateStore = (paramObj) => {
         } else if (currentSlateData.status === 'approved') {
             if (currentSlateData.type === "popup") {
                 if (config.tcmStatus) {
-                    if (elementTypeTCM.indexOf(updatedData.type) !== -1) {
+                    if (elementTypeTCM.indexOf(updatedData.type) !== -1 && !isTbElement) {
                         const tcmDataArgs = {
                             updatedDataID: updatedData.id, getState, dispatch, versionedData: responseData, updatedData
                         }
@@ -1199,6 +1200,7 @@ export const updateStoreInCanvas = (params) => {
     const autoNumberSettingsOption = getState().autoNumberReducer?.autoNumberOption
     const isAutoNumberingEnabled= getState().autoNumberReducer?.isAutoNumberingEnabled
     const autoNumberDetails = {autoNumberSettingsOption,isAutoNumberingEnabled}
+    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
     //tcm update code
     const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && (updatedData.sectionType == undefined || updatedData.sectionType == 'bodymatter')) ? true : false;
@@ -1207,7 +1209,7 @@ export const updateStoreInCanvas = (params) => {
         const isBlockListElement  = isElementInsideBlocklist({index:elementIndex},newslateData)
         if(asideData?.type !== "manifestlist") {
         if(!isBlockListElement) {
-            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields)) {
+            if (elementTypeTCM.indexOf(updatedData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isTbElement) {
                 const tcmDataArgs = {
                     updatedDataID: updatedData.id, getState, dispatch, versionedData, updatedData
                 }

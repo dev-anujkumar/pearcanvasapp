@@ -577,7 +577,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             //This check is for the TEXT element which gets created inside BL on Shift+Enter
             if(!blockListDetails && !(cypressPlusProjectStatus && createdElementData?.type === 'element-pdf')) {
                 //This check will be removed once BlockList will support TCM
-                if(type !== "MANIFEST_LIST") {
+                if(type !== "MANIFEST_LIST" && !isTbElement) {
                 if (slateWrapperConstants.elementType.indexOf(type) !== -1) {
                     prepareDataForTcmCreate(type, createdElementData, getState, dispatch);
                 }}

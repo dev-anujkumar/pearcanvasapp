@@ -421,7 +421,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         
         //tcm conversion code   
-        if (config.tcmStatus) {
+        if (config.tcmStatus && !isTbElement) {
             if (elementType.indexOf(oldElementData.type) !== -1) {
                 prepareDataForConversionTcm(oldElementData.id, getState, dispatch, res.data.id, res.data);
             }
