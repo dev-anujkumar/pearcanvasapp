@@ -4047,6 +4047,24 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 children: ['<p class="paragraphNumeroUno">hello</p>'],
                 classList: ["cypress-editable", "mce-content-body", "mce-edit-focus", 'place-holder']
             }
+            instance.props = {
+                ...props,
+                slateLevelData: {
+                    "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8": {
+                        "contentUrn": "urn:pearson:entity:ccdcdaa7-f84f-438a-b062-70ba9cd3d85c",
+                        "id": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8",
+                        "numberedandlabel": true,
+                        "pageCount": 1,
+                        "pageLimit": 25,
+                        "pageNo": 0,
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                        "status": "approved",
+                        "type": "manifest",
+                        "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+                    }
+                }
+            }
+
             const spyFunction = jest.spyOn(instance, 'editorKeydown')
             instance.isTabPressed(event);
             instance.editorKeydown(nextEditor2);
@@ -4240,6 +4258,20 @@ describe('------------------------------Test1 TINY_MCE_EDITOR-------------------
                 element: { type: "citation", status: "wip" },
                 model: {},
                 placeholder: "",
+                slateLevelData: {
+                    "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8": {
+                        "contentUrn": "urn:pearson:entity:ccdcdaa7-f84f-438a-b062-70ba9cd3d85c",
+                        "id": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8",
+                        "numberedandlabel": true,
+                        "pageCount": 1,
+                        "pageLimit": 25,
+                        "pageNo": 0,
+                        "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                        "status": "approved",
+                        "type": "manifest",
+                        "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+                    }
+                }
             }
             component.update();
             window.getSelection = () => {
