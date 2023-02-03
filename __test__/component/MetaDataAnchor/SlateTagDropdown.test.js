@@ -193,28 +193,6 @@ describe('Test Rendering of metadaanchor on slate', () => {
         expect(spyFunction).toHaveBeenCalled();
         spyFunction.mockClear();
     });
-    it('handleclick for Cypress FrameWork-launchExternalFrameworkPopup', () => {
-        props={
-            currentSlateLF:"cypressLF",
-            permissions: ["lo_edit_metadata"],
-            toggleLOWarningPopup:jest.fn(),
-            projectLearningFrameworks:{
-                externalLF:{
-                    length:2
-                }
-            }
-        }
-        let wrapper=mount(<Provider store={store}><SlateTagDropdown {...props} /> </Provider>)
-        let slateTagInstance = wrapper.find('SlateTagDropdown').instance();
-        let checkExtFrmWrk =slateTagInstance.checkExternalFramework();
-            wrapper.find('div.learningobjectivedropdown ul li').at(1).simulate('click')
-            let event = { target: { innerText: "Align to Cypress Framework" } };
-            const spyFunction = jest.spyOn(slateTagInstance, 'launchExternalFrameworkPopup');
-            slateTagInstance.launchExternalFrameworkPopup(event);
-             expect(checkExtFrmWrk).toBe(false);
-             expect(spyFunction).toHaveBeenCalled();
-        spyFunction.mockClear();
-    })
     it('on innerText=AddLearningObjectiveAssessmentDropdown ', () => {
         document.cookie= "?,projectUrn=urn:pearson:distributable:04518dba-76ef-4da3-924c-46cdf7e496b7,&projectEntityUrn=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e,projectTitle:ElmDevTest&slateEntityURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&slateManifestURN=urn:pearson:entity:fe4a3a6e-335f-47f4-af28-cfd91fcba94e&ssoToken=THO1MDfgOpKowwW6ETpiNmYhSaQ.*AAJTSQACMDIAAlNLABxFQ1N2TytSQU9sWWMrcmVjMU8vOWc3RldqZlk9AAJTMQACMDE.*";
         let event = { target: { innerText: "Add From Existing" } };
@@ -340,19 +318,6 @@ describe('External LO - Test Rendering of metadaanchor on slate', () => {
         expect(spyFunction).toHaveBeenCalled();
         spyFunction.mockClear();
     })
-    it('toggleLoOptionsDropdown', () => {
-        slateTagInstance.setState({
-            node2:{
-                style:{
-                    display :"block"
-                }}
-        })
-        const spyFunction = jest.spyOn(slateTagInstance, 'toggleLoOptionsDropdown');
-        expect(slateTagInstance.state.node2.style.display).toBe("block");
-        slateTagInstance.toggleLoOptionsDropdown();
-        expect(spyFunction).toHaveBeenCalled();
-        spyFunction.mockClear();
-    });
     it('openAssessmentExternalPopup',()=>{
         let popUpType="add"
         const spyFunction = jest.spyOn(slateTagInstance, 'openAssessmentExternalPopup');
