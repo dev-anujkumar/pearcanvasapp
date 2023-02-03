@@ -54,7 +54,6 @@ import {
     SET_REQUIRED_SLATE_DATA,
     CYPRESS_PLUS_ENABLED,
     CHECK_ASIDE_NUMBER,
-    APPROVED_SLATE_POPUP,
     APPROVED_SLATE_POPUP_STATUS
 
 } from '../../src/constants/Action_Constants';
@@ -844,17 +843,7 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
             payload: false
         }))
     });
-    it('case 57- APPROVED_SLATE_POPUP ', () => {
-        let output = {
-            ...initialState,
-            approvedPopupState: true
-        }
-        expect(reducer(initialState, {
-            type: APPROVED_SLATE_POPUP,
-            payload: true
-        })).toEqual(output);
-    });
-    it('case 58- APPROVED_SLATE_POPUP_STATUS ', () => {
+    it('case 57- APPROVED_SLATE_POPUP_STATUS ', () => {
         let output = {
             ...initialState,
             approvedSlatePopupstatus: false
