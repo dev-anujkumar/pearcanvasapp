@@ -193,6 +193,9 @@ export const createPastedElements = (childElements, elements) => {
   for (let i = 0; i < childElements.length; i++) {
     switch (childElements[i].tagName) {
       case 'P':
+          //commenting this code as when there is image in para, this code is converting whole
+          //para into a image tag, which is creating an issue because image support is not provided
+          // Note: Condition of Removing image from para is handled in filterSupportedTagAndData function
           // if (childElements[i].children.length && childElements[i].children[0].tagName === 'IMG') {
           //   let imgSrc = childElements[i].children[0].getAttribute('src');
           //   imgSrc = imgSrc ? imgSrc : childElements[i].children[0].getAttribute('data-image-src');
