@@ -193,14 +193,14 @@ export const createPastedElements = (childElements, elements) => {
   for (let i = 0; i < childElements.length; i++) {
     switch (childElements[i].tagName) {
       case 'P':
-          if (childElements[i].children.length && childElements[i].children[0].tagName === 'IMG') {
-            let imgSrc = childElements[i].children[0].getAttribute('src');
-            imgSrc = imgSrc ? imgSrc : childElements[i].children[0].getAttribute('data-image-src');
-            elements.push({html: imgSrc, tagName: childElements[i].children[0].tagName});
-          } else {
+          // if (childElements[i].children.length && childElements[i].children[0].tagName === 'IMG') {
+          //   let imgSrc = childElements[i].children[0].getAttribute('src');
+          //   imgSrc = imgSrc ? imgSrc : childElements[i].children[0].getAttribute('data-image-src');
+          //   elements.push({html: imgSrc, tagName: childElements[i].children[0].tagName});
+          // } else {
             const paraNode = powerPasteHelpers.addParagraphClass(childElements[i]);
             elements.push({ html: paraNode.outerHTML, tagName: childElements[i].tagName });
-          }
+          // }
         break;
         case 'UL':
           powerPasteHelpers.addUListClasses(childElements[i], 1);
