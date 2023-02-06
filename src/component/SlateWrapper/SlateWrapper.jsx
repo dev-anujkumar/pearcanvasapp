@@ -291,7 +291,8 @@ class SlateWrapper extends Component {
         const { projectSubscriptionDetails: { projectSharingRole, projectSubscriptionDetails: { isSubscribed } } } = this.props
         const ownerSlate = isOwnerRole(projectSharingRole, isSubscribed)
         const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
-        if (this.props.approvedSlatePopupstatus && slatePublishStatus){
+        const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
+        if (this.props.approvedSlatePopupstatus && slatePublishStatus && !popupSlate){
             this.props.showBlocker(true)
             showTocBlocker();
             return (

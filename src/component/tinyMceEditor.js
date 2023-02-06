@@ -566,7 +566,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
 
-                    if(editor.selection.getNode().className.includes('callout') || editor.selection.getNode().className.includes('markedForIndex') || (editor.selection.getNode().className.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => editor?.selection?.getContent().match(el)) && editor?.selection?.getContent().includes('class="non-breaking-space"')))){
+                    if(editor.selection.getNode().className.includes('callout') || editor.selection.getNode().className.includes('markedForIndex') || (editor.selection.getNode().className.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS?.some(el => editor?.selection?.getContent()?.match(el)) && editor?.selection?.getContent()?.includes('class="non-breaking-space"')))){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
                             editor.insertContent(textSelected);
@@ -1856,7 +1856,7 @@ export class TinyMceEditor extends Component {
                     type: 'menuitem',
                     text: INSERT_NON_BREAKING_SPACE,
                     onAction: function () {
-                        if (editor?.selection?.getNode()?.className?.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => editor?.selection?.getContent().match(el)) && editor?.selection?.getContent().includes('class="non-breaking-space"'))) {
+                        if (editor?.selection?.getNode()?.className?.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS?.some(el => editor?.selection?.getContent()?.match(el)) && editor?.selection?.getContent()?.includes('class="non-breaking-space"'))) {
                             let selectedSpace = window?.getSelection()?.toString();
                             if (selectedSpace?.length) {
                                 editor.insertContent(selectedSpace);
@@ -1878,7 +1878,7 @@ export class TinyMceEditor extends Component {
                         if (selectedText?.trim() !== "" || selectedText?.length === 0) {
                             document.querySelector(`[title="${INSERT_NON_BREAKING_SPACE}"]`)?.classList?.add('disable-non-breaking')
                         } 
-                        if (activeSpace === `non-breaking-space` || (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => editor?.selection?.getContent().match(el)) && editor?.selection?.getContent().includes('class="non-breaking-space"'))) {
+                        if (activeSpace === `non-breaking-space` || (ALLOWED_FORMATTING_TOOLBAR_TAGS?.some(el => editor?.selection?.getContent()?.match(el)) && editor?.selection?.getContent()?.includes('class="non-breaking-space"'))) {
                             let img = document.createElement("img");
                             img.src = checkmark;
                             document.querySelector(`[title="${INSERT_NON_BREAKING_SPACE}"]`)?.appendChild(img);
