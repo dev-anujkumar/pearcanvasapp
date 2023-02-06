@@ -146,8 +146,9 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to handle LO icon for AS */
     setSlateTagIcon = () => {
+        const popupSlate = (this.props?.slateLevelData[config.slateManifestURN]?.type === "popup")
         const slateStatus = this.props?.slateLevelData[config.slateManifestURN]?.status
-        if (document.getElementsByClassName("slate-tag-icon").length && slateStatus !== "approved") {
+        if (document.getElementsByClassName("slate-tag-icon").length && (slateStatus !== "approved" && !popupSlate)) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         }
     }

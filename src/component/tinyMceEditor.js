@@ -1243,7 +1243,8 @@ export class TinyMceEditor extends Component {
             const currentSelection = tinymce?.activeEditor?.selection;
             const selectionNode = window.getSelection().anchorNode;
             const tinymceOffset = currentSelection.getRng().endOffset;
-            if(this.props?.slateLevelData[config.slateManifestURN]?.status === 'approved'){
+            const popupSlate = (this.props?.slateLevelData[config.slateManifestURN]?.type === "popup")
+            if(this.props?.slateLevelData[config.slateManifestURN]?.status === 'approved' && !popupSlate){
                 this.props.approvedSlatePopupStatus(true)
                 e.preventDefault();
                 e.stopPropagation();
