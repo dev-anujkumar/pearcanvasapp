@@ -328,9 +328,10 @@ class SlateWrapper extends Component {
                     let _context = this;
                     const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
                     const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
+                    const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
                     return (
                         <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
-                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) ? <div
+                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate ? <div
                                 className='approved-overlay'
                                 onClick={this.getApprovedPopup}
                             >
