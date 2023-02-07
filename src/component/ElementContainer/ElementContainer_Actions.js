@@ -556,7 +556,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         if (config.tcmStatus) {
             const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
             //This check will be removed once BL will support TCM
-            if(type2BAdded !== "MANIFEST_LIST") {
+            // isTbElement condition restrict tcm operations for tb and its nested elements
+            if(type2BAdded !== "MANIFEST_LIST" && !isTbElement) {
             if (containersInSH.includes(type2BAdded)) {
                 prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);    
             } else {

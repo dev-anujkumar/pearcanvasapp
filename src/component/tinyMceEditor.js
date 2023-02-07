@@ -23,13 +23,13 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY, INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement, saveCaretPosition } from './SlateWrapper/SlateWrapper_Actions';
-import { deleteElement } from './ElementContainer/ElementContainer_Actions';
+import { deleteElement, approvedSlatePopupStatus } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
@@ -1243,6 +1243,12 @@ export class TinyMceEditor extends Component {
             const currentSelection = tinymce?.activeEditor?.selection;
             const selectionNode = window.getSelection().anchorNode;
             const tinymceOffset = currentSelection.getRng().endOffset;
+            if(this.props?.slateLevelData[config.slateManifestURN]?.status === 'approved'){
+                this.props.approvedSlatePopupStatus(true)
+                e.preventDefault();
+                e.stopPropagation();
+                return false
+            }
             /**
              * get node vs window selection node
              * window selection is accurate and gives 
@@ -1850,7 +1856,7 @@ export class TinyMceEditor extends Component {
                     type: 'menuitem',
                     text: INSERT_NON_BREAKING_SPACE,
                     onAction: function () {
-                        if (editor?.selection?.getNode()?.className?.includes('non-breaking-space')) {
+                        if (editor?.selection?.getNode()?.className?.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => editor?.selection?.getContent().match(el)) && editor?.selection?.getContent().includes('class="non-breaking-space"'))) {
                             let selectedSpace = window?.getSelection()?.toString();
                             if (selectedSpace?.length) {
                                 editor.insertContent(selectedSpace);
@@ -1872,7 +1878,7 @@ export class TinyMceEditor extends Component {
                         if (selectedText?.trim() !== "" || selectedText?.length === 0) {
                             document.querySelector(`[title="${INSERT_NON_BREAKING_SPACE}"]`)?.classList?.add('disable-non-breaking')
                         } 
-                        if (activeSpace === `non-breaking-space`) {
+                        if (activeSpace === `non-breaking-space` || (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => editor?.selection?.getContent().match(el)) && editor?.selection?.getContent().includes('class="non-breaking-space"'))) {
                             let img = document.createElement("img");
                             img.src = checkmark;
                             document.querySelector(`[title="${INSERT_NON_BREAKING_SPACE}"]`)?.appendChild(img);
@@ -4452,5 +4458,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement, saveSelectedAlfrescoElement, saveCaretPosition }
+    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement, saveSelectedAlfrescoElement, saveCaretPosition, approvedSlatePopupStatus }
 )(TinyMceEditor);

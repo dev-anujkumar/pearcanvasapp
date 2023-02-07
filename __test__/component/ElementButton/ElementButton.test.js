@@ -201,6 +201,11 @@ describe('Testing Button component with props', () => {
         expect(component.find('span.btn-element').hasClass('multi-column-group')).toBe(true);
         expect(component.find('rect').exists()).toBe(true);
     })
+    it('render TABBED_TAB Button component  ', () => {
+        const component = mount(<Button type={buttonTypes.TABBED_TAB} />);
+        expect(component.find('span.btn-element').hasClass('multi-column-group-tabbed-tab')).toBe(true);
+        expect(component.find('rect').exists()).toBe(false);
+    })
     it('render PASTE Button component  ', () => {
         const component = mount(<Button type={buttonTypes.PASTE} />);
         expect(component.find('span.btn-element').hasClass('paste-icon')).toBe(true);

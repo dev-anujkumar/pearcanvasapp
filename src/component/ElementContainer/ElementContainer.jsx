@@ -1709,10 +1709,11 @@ class ElementContainer extends Component {
     }
 
     toolbarHandling = (action = "") => {
+        const slateStatus = this.props.slateLevelData[config.slateManifestURN]?.status
         let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary')
         if (action === "add") {
             toolbar?.classList?.add("disable");
-        } else if (action === "remove") {
+        } else if (action === "remove" && slateStatus !== "approved") {
             toolbar?.classList?.remove("disable");
         }
     }
@@ -2529,7 +2530,7 @@ class ElementContainer extends Component {
                         (element?.elementdata?.assetid !== "" || this.state.pdfSlateAssetId !== "") && <Button type={`alfresco-TE-metadata`} btnClassName={` metadata-pdfElement ${btnClassName}`} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'alfresco-TE-metadata': 'alfresco-metadata'}`} btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />} 
-                        {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} btnClassName={element.type === elementTypeConstant.PDF_SLATE && 'pdf-tcm-icon'}/>)}
+                        {(feedback && ! isTbElement) ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : ((tcm && !isTbElement) && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} btnClassName={element.type === elementTypeConstant.PDF_SLATE && 'pdf-tcm-icon'}/>)}
                     </div> : ''}
                     {this.state.popup && <PopUp
                         togglePopup={this.handleCommentPopup}
