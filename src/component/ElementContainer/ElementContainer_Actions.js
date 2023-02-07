@@ -537,12 +537,10 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             return false;
         }
         let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
-        console.log('showhide in asideeeee', elementId, type, index, parentContentUrn, cb, parentElement);
         /* Create inner elements in ShowHide */
         const indexes = index?.toString().split('-') || [];
         /* Get the showhide element object from slate data using indexes */
         const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes, null, parentElement);
-        console.log('addElementInShowHide first step', shObject, parentElement);
         /* After getting showhide Object, add the new element */
         if(shObject?.id === elementId) {
             if(shObject?.interactivedata?.hasOwnProperty(type)) {
@@ -942,7 +940,7 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
             title: `<p>${titleHTML}</p`
         },
         contentUrn: previousData.contentUrn,
-        status: parentElement?.status
+        status: parentElement.hasOwnProperty('status') ? parentElement.status : 'wip'
     }
 
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${previousData.contentUrn}/metadata?isHtmlPresent=true`
