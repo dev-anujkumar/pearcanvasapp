@@ -6,7 +6,7 @@ import { communicationAssessmentSlateData, slateWithCitationElement} from "../..
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
 import { slateLevelData, addNewComment, slateLevelDataWithApproved, slateLevelDataWithoutApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData } from "../../../fixtures/containerActionsTestingData"
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, UPDATE_TABLE_ELEMENT_EDITED_DATA,SET_ELEMENT_STATUS, APPROVED_SLATE_POPUP, APPROVED_SLATE_POPUP_STATUS } from '../../../src/constants/Action_Constants';
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, UPDATE_TABLE_ELEMENT_EDITED_DATA,SET_ELEMENT_STATUS, APPROVED_SLATE_POPUP_STATUS } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
 import axios from "axios"
@@ -2468,24 +2468,6 @@ describe("Test case for saveTEMetadata ",()=>{
                 expect(spyGetSaveTEMetadata).toHaveBeenCalled()
                 spyGetSaveTEMetadata.mockClear()
             });
-    })
-})
-
-describe("approvedSlatePopupState Testing", ()=>{
-    it('testing------- approvedSlatePopupState ------method', () => {
-        let store = mockStore(() => initialState2);
-        const expectedActions = [
-            { 
-                type: APPROVED_SLATE_POPUP,
-                payload: {}
-            }
-          ]
-       const spyUpdateMultipleColumnData  = jest.spyOn(actions, 'approvedSlatePopupState') 
-       actions.approvedSlatePopupState({}, "testing", store.dispatch);
-       expect(spyUpdateMultipleColumnData).toHaveBeenCalled();
-       store.dispatch(actions.approvedSlatePopupState({}, 'testing'));
-       expect(store.getActions().type).toEqual(expectedActions.type);
-       spyUpdateMultipleColumnData.mockClear();
     })
 })
 

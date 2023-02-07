@@ -44,7 +44,6 @@ import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaM
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
-import { approvedSlatePopupState } from '../ElementContainer/ElementContainer_Actions';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL
@@ -1733,7 +1732,6 @@ export const saveCaretPosition = (caretPosition) => (dispatch, getState) => {
 }
 
 export const slateVersioning = () => (dispatch, getState) => {
-    dispatch(approvedSlatePopupState(false))
     // Api to change container status from approved to WIP
     const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion`;
     return axios.post(versioningStatus, null, {

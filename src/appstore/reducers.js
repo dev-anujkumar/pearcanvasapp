@@ -61,7 +61,6 @@ import {
     UPDATE_CARET_OFFSET,
     DELETE_ELEMENT_KEYS,
     SET_REQUIRED_SLATE_DATA,
-    APPROVED_SLATE_POPUP,
     APPROVED_SLATE_POPUP_STATUS
 } from '../constants/Action_Constants';
 
@@ -134,7 +133,6 @@ const INITIAL_STATE = {
     caretPosition: '',
     deletedElementKeysData: {},
     getRequiredSlateData: {},
-    approvedPopupState: true,
     approvedSlatePopupstatus: false
 };
 
@@ -440,11 +438,6 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 getRequiredSlateData: action.payload
             }
-        case APPROVED_SLATE_POPUP:
-            return {
-                ...state,
-                approvedPopupState: action.payload
-            }    
         case APPROVED_SLATE_POPUP_STATUS:
             return {
                 ...state,
