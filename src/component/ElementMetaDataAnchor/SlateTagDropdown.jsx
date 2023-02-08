@@ -31,9 +31,6 @@ class SlateTagDropdown extends React.Component {
         document.addEventListener('mousedown', this.handleClick, false);
     }
     componentDidMount(){
-      if(this.props.isLOExist){
-        this.node1.style.height='84px';
-      }
       this.setDropdownPosition();
     }
     handleClick = (e) => {
