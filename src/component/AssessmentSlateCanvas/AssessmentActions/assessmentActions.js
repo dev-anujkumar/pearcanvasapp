@@ -159,9 +159,9 @@ export const fetchAssessmentItems = (itemEntityUrn, apiParams) => dispatch => {
  */
 export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
     let { assessmentWorkUrn, projDURN, containerURN, assessmentItemWorkUrn, interactiveId, elementId } = assessmentData
-    let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
+    let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${config.parentContainerUrn}&projectUrn=${projDURN}`;
     if (assessmentItemWorkUrn.trim() != "") {
-        url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
+        url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${config.parentContainerUrn}&projectUrn=${projDURN}`;
     } else if(interactiveId){
         url = `${config.ELM_PORTAL_URL}/launch/editor/interactive/${interactiveId}/editInPlace?containerUrn=${containerURN}&projectUrn=${projDURN}`;
     }
