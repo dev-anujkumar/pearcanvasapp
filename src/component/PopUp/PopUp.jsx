@@ -407,8 +407,8 @@ class PopUp extends React.Component {
         if (props.isApprovedSlate) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span option={PRIMARY_BUTTON} className={`save-button`} onClick={props.approveNormalSlate}>{props.proceedButton}</span>
-                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                    <span option={SECONDARY_BUTTON} className={`save-button`} onClick={props.approveNormalSlate}>{props.proceedButton}</span>
+                    <span option={PRIMARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
         }
