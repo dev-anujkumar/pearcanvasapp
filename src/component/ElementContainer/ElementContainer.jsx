@@ -482,11 +482,19 @@ class ElementContainer extends Component {
 
     tabTitleDifference = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`);
+        const defaultHTML = [`<p class="paragraphNumeroUno"><br/></p>`, `<p></p>`]
         let titleHTML = titleDOM ? titleDOM.innerHTML : ""
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
         titleHTML = this.removeClassesFromHtml(createLabelNumberTitleModel('', '', titleHTML));
-        let oldTitleHTML = previousElementData.hasOwnProperty('html') ? this.removeClassesFromHtml(previousElementData.html.title) : `<p class="paragraphNumeroUno"><br/></p>`;
-        return titleHTML !== oldTitleHTML
+        // let oldTitleHTML = previousElementData.hasOwnProperty('html') ? this.removeClassesFromHtml(previousElementData.html.title) : 
+        let oldTitleHTML = "";
+        if(previousElementData.hasOwnProperty('html')){
+            oldTitleHTML = this.removeClassesFromHtml(previousElementData.html.title)
+            return oldTitleHTML!== titleHTML
+        }
+        else {
+            return defaultHTML.includes(titleHTML) ? false : true;
+        }
     }
 
     /**
