@@ -1480,12 +1480,6 @@ class SlateWrapper extends Component {
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
         this.props.savePopupParentSlateData({});
-        let slateDetails = {
-            currentProjectId: config.projectUrn,
-            slateEntityUrn: config.slateEntityURN
-
-        }
-        store.dispatch(fetchAudioNarrationForContainer(slateDetails));
         if(config.tcmStatus){
             this.props.handleTCMData(config.slateManifestURN)
         }

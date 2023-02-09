@@ -129,7 +129,6 @@ class SlateTagDropdown extends React.Component {
         setTimeout(() => {
           this.node2.style.left = '10px';
           this.node3.style.left = '10px';
-          this.node3.style.top = '65px';
         }, 0);
       }
     }
