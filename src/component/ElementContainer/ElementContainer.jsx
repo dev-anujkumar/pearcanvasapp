@@ -2725,12 +2725,13 @@ class ElementContainer extends Component {
         const {slateLockInfo} = this.props
         this.props.setActiveElement(this.props.element);
         let lockedUserId = slateLockInfo?.userId?.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
-        if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
+        //comment below if condition as we're not allowing click on comment icon when slate is locked by another user
+        // if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
             sendDataToIframe({
                 'type': AddOrViewComment,
                 'message': { "id": elementId, "mode": type, "viewInCypress": false }
             });
-        }
+        // }
         e.stopPropagation();
     }
 
