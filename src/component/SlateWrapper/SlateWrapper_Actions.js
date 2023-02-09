@@ -1626,6 +1626,7 @@ export const slateVersioning = () => (dispatch, getState) => {
     }).then(response => {
         if(response?.data?.status === "success"){
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
+            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
         }
     }).catch(error => {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })

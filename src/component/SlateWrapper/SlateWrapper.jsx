@@ -302,6 +302,7 @@ class SlateWrapper extends Component {
                     warningHeaderText={`Warning`}
                     approvePopupClass={`${ownerSlate ? "approved-warning-txt" : "lo-warning-txt"}`}
                     approveNormalSlate = {this.approveNormalSlate}
+                    hideCanvasBlocker={this.props.showBlocker}
                 />
             )
         } else{

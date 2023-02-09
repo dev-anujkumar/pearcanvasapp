@@ -76,23 +76,14 @@ class PopUp extends React.Component {
             this.modelRef.current.addEventListener('keydown', this.handleKeyDown);
         }
         /**  Focus on Popup PRIMARY Button or SECONDARY Button*/
-        if (this.props.isApprovedSlate) {
-            this.setState({
-                focusedButton: PRIMARY_BUTTON
-            })
-            blurElement(SECONDARY_BUTTON);
-            focusElement(PRIMARY_BUTTON);
-
-        }else{
-            focusElement(this.state.focusedButton);
-        }
+        focusElement(this.state.focusedButton);
         if (this.props.WordPastePopup) {
             document.addEventListener('mousedown', this.handleClickOutside);
         }
     }
 
     componentWillUnmount() {
-        if (this.props.showConfirmation) {
+        if (this.props.showConfirmation || this.props.isApprovedSlate) {
             hideBlocker();
             this.props.hideCanvasBlocker(false)
         }
@@ -159,7 +150,7 @@ class PopUp extends React.Component {
                 return PRIMARY_BUTTON
             }
         } else {
-            if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup || props.removeMarkedIndex) {
+            if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate) {
                 return PRIMARY_BUTTON;
             } else {
                 return SECONDARY_BUTTON;
