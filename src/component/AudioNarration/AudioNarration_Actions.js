@@ -80,7 +80,7 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
         dispatch({ type: ADD_AUDIO_GLOSSARY_POPUP, payload: true })
     }
     else{
-        var storeData = store.getState()
+        const storeData = store.getState()
         const slateEntityURN = storeData?.appStore?.slateLevelData[config.slateManifestURN]?.type === 'popup' ? config.tempSlateEntityURN : slateData.slateEntityUrn
         let url = `${config.AUDIO_NARRATION_URL}context/v3/${slateData.currentProjectId}/container/${slateEntityURN}/narrativeAudio`;
         try {
@@ -184,7 +184,7 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
 }
 
 export const addAudioNarrationForContainer = (audioData, isGlossary='') => async(dispatch, getState) => {
-    var storeData = store.getState();
+    const storeData = store.getState();
         let slateData = {
             currentProjectId: config.projectUrn,
             slateEntityUrn: config.slateEntityURN
@@ -221,7 +221,7 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
 
 
     }else{
-        let slateEntityURN = storeData?.appStore?.slateLevelData[config.slateManifestURN]?.type === 'popup' ? config.tempSlateEntityURN : slateData.slateEntityUrn
+        const slateEntityURN = storeData?.appStore?.slateLevelData[config.slateManifestURN]?.type === 'popup' ? config.tempSlateEntityURN : slateData.slateEntityUrn
         let url = `${config.AUDIO_NARRATION_URL}context/v2/${slateData.currentProjectId}/container/${slateEntityURN}/narrativeAudio`;
         try {
             let audioPutResponse = await axios.put(url, audioData, {
