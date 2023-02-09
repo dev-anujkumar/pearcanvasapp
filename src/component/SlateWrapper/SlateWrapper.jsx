@@ -75,6 +75,7 @@ class SlateWrapper extends Component {
             updatedindex:'',
             showOwnerSlatePopup: false,
             parentUrn:null,
+            updateAssessment: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -1364,11 +1365,19 @@ class SlateWrapper extends Component {
             this.props.showBlocker(true)
             showTocBlocker();
             const dialogText = ` All other Assessment Items in this project will now be updated to the new version of this Assessment`
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+            setTimeout(() => {
+                this.setState({
+                    updateAssessment: true
+                })
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+            }, 4000);
             return (
                 <PopUp dialogText={dialogText}
                     active={true}
                     saveButtonText='OK'
                     showConfirmation={true}
+                    assessmentConfirmation={`${this.state.updateAssessment ? "updateAssessment-enable" : "updateAssessment-disable"}`}
                     assessmentClass="lock-message"
                     togglePopup={this.toggleAssessmentPopup}
                     hideCanvasBlocker={this.props.showBlocker}
