@@ -188,7 +188,8 @@ class SlateWrapper extends Component {
                 }
                 _state = {
                     ..._state,
-                    previousSlateId: _slateId
+                    previousSlateId: _slateId,
+                    updateAssessment: false
                 };
                 for (let i = tinymce.editors.length - 1; i > -1; i--) {
                     let ed_id = tinymce.editors[i].id;
