@@ -482,11 +482,18 @@ class ElementContainer extends Component {
 
     tabTitleDifference = (index, previousElementData) => {
         let titleDOM = document.getElementById(`cypress-${index}-0`);
+        const defaultHTML = [`<p class="paragraphNumeroUno"><br/></p>`, `<p></p>`]
         let titleHTML = titleDOM ? titleDOM.innerHTML : ""
         titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
         titleHTML = this.removeClassesFromHtml(createLabelNumberTitleModel('', '', titleHTML));
-        let oldTitleHTML = previousElementData.hasOwnProperty('html') ? this.removeClassesFromHtml(previousElementData.html.title) : `<p class="paragraphNumeroUno"><br/></p>`;
-        return titleHTML !== oldTitleHTML
+        let oldTitleHTML = "";
+        if(previousElementData.hasOwnProperty('html')){
+            oldTitleHTML = this.removeClassesFromHtml(previousElementData.html.title)
+            return oldTitleHTML!== titleHTML
+        }
+        else {
+            return defaultHTML.includes(titleHTML) ? false : true;
+        }
     }
 
     /**
@@ -2838,12 +2845,13 @@ class ElementContainer extends Component {
         const {slateLockInfo} = this.props
         this.props.setActiveElement(this.props.element);
         let lockedUserId = slateLockInfo?.userId?.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
-        if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
+        //comment below if condition as we're not allowing click on comment icon when slate is locked by another user
+        // if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
             sendDataToIframe({
                 'type': AddOrViewComment,
                 'message': { "id": elementId, "mode": type, "viewInCypress": false }
             });
-        }
+        // }
         e.stopPropagation();
     }
 

@@ -8,7 +8,7 @@ import {
     AddEditLearningObjectiveDropdown,
     ViewLearningObjectiveSlateDropdown,
     UnlinkSlateDropdown,
-    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToCypress, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AlignToCypressSlateDropdown, AddEditLOsAssessmentSlate, ViewLOsAssessmentSlate, AddToExternalFrameworkAS, ViewExternalFrameworkAS
+    OpenLOPopup, ViewLearningObjectiveSlate, ViewLearningObjectiveAssessment, AddLearningObjectiveSlate, AddLearningObjectiveAssessment, AddEditLearningObjective, UnlinkSlate, AddLearningObjectiveAssessmentDropdown, AlignToExternalFramework, AlignToExternalFrameworkSlateDropdown, AddEditLOsAssessmentSlate, ViewLOsAssessmentSlate, AddToExternalFrameworkAS, ViewExternalFrameworkAS
 }
     from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe , hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
@@ -31,9 +31,6 @@ class SlateTagDropdown extends React.Component {
         document.addEventListener('mousedown', this.handleClick, false);
     }
     componentDidMount(){
-      if(this.props.isLOExist){
-        this.node1.style.height='84px';
-      }
       this.setDropdownPosition();
     }
     handleClick = (e) => {
@@ -123,17 +120,6 @@ class SlateTagDropdown extends React.Component {
     }
         this.props.closeLODropdown();
 
-    }
-
-    toggleLoOptionsDropdown = () => {
-      sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
-      sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
-      if(this.node2.style.display=='block'){
-        this.node2.style.display='none'
-      }
-      else{
-        this.node2.style.display='block'
-      }
     }
 
     setDropdownPosition(){
@@ -353,9 +339,6 @@ class SlateTagDropdown extends React.Component {
         <div>
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
               <ul>
-                <div className={"option-disabled"}>
-                <li onClick={this.toggleLoOptionsDropdown}><span>{AlignToCypressSlateDropdown}</span><span className='lo-navigation-icon option-disabled'>{loNextIcon}</span></li>
-                </div>
                 <div>
                   {
                     !isExternalLoInAssessment?                

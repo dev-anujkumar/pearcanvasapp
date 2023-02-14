@@ -183,7 +183,21 @@ const store = mockStore({
             videoid: 'id'
         },
         deletedElementKeysData: "test",
-        cypressPlusProjectStatus: true
+        cypressPlusProjectStatus: true,
+        slateLevelData: {
+            "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8": {
+                "contentUrn": "urn:pearson:entity:ccdcdaa7-f84f-438a-b062-70ba9cd3d85c",
+                "id": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8",
+                "numberedandlabel": true,
+                "pageCount": 1,
+                "pageLimit": 25,
+                "pageNo": 0,
+                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                "status": "approved",
+                "type": "manifest",
+                "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+            }
+        }
     },
     slateLockReducer: {
         slateLockInfo: {

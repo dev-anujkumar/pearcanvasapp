@@ -5,6 +5,7 @@ import  mockData, {message, message2,message3}  from "../../../src/appstore/mock
 import axios from 'axios';
 const middlewares = [thunk];
 import { JSDOM } from 'jsdom'
+import { config } from 'dotenv';
 const mockStore = configureMockStore(middlewares);
 jest.mock('axios');
 global.document = (new JSDOM()).window.Element;
@@ -58,7 +59,10 @@ let  initialState2 = {
         }
     },
     asideData: {
-        type: 'showhide'
+        type: 'showhide',
+        parent: {
+            type: 'showhide' 
+        }
     },
     glossaryFootnoteReducer: {"elementIndex" : "0","glossaryFootnoteValue":{"elementType":"test"}},
     glossaaryFootnoteValue:{ "type":"","popUpStatus":false},
@@ -86,7 +90,6 @@ jest.mock('../../../src/config/config.js', () => ({
     parentEntityUrn : "bodyMatter",
     slateType: "assessment"
 }));
-let responseData = {};
 jest.mock('../../../src/appstore/store', () => {
     return {
         getState: () => {
@@ -128,14 +131,6 @@ jest.mock('./../../../src/component/ShowHide/ShowHide_Helper', () => {
     }
 })
 describe('Tests commentsPanel action', () => {
-    // beforeAll(() => {
-    //     Object.defineProperty(global, 'document', {
-    //         getElementById:()=>{
-    //             return {innerHTML:'tests'}
-    //         },
-    //         querySelector : () => {}
-    //     });
-    //   })
 
       beforeAll(() => {
         const div = document.createElement('div');
@@ -163,6 +158,15 @@ describe('Tests commentsPanel action', () => {
             expect(err).toEqual(err)
         });
    });
+   it('glossaaryFootnotePopup : poetryField---', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"Glossary",'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','figure','1-0-0','image','term text--', "popup", "formatted-subtitle","poetryField");
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+    }).catch((err)=>{
+        expect(err).toEqual(err)
+    });
+});
     it('glossaaryFootnotePopup glossary---', async () => {
         let result = await actions.glossaaryFootnotePopup(false, "Glossary", 'urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d', 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a', 'figure', '01-21-1-23-21', 'image', 'term text--');
         result(store.dispatch).then((item) => {
@@ -339,7 +343,7 @@ describe('Tests commentsPanel action', () => {
                     }
         await actions.saveGlossaryAndFootnote('urn:pearson:work:e55c1c98-ffe6-487d-b8b2-f8f45513d66d','figure','dsusiudfd','FOOTNOTE','apple','fruit','tableasmarkup', 'term', 'popup'); 
        });
-       it('testing new func ===>element-blockfeature ', async () => {
+       it('testing new func ===>element-blockfeature > if ', async () => {
         document.querySelector = () => { return false; }
         document.getElementById = ()=>{
                         return {innerHTML:'tests'}
@@ -594,6 +598,751 @@ describe('Tests commentsPanel action', () => {
         expect(err).toEqual(err)
     });
    });
+    // if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent")
+    it('glossaaryFootnotePopup > length = 4 --', async () => {
+    let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","figure","13-0-0-0","image","","figure",undefined);
+    let store = mockStore(() => initialState2);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+    }).catch((err) => {
+        expect(err).toEqual(err)
+    });
+   });
+   // if (elementType === ElementConstants.FIGURE && newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB)
+   it('glossaaryFootnotePopup > case 5 --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","figure","12-0-0-1-2","image","","figure",undefined);
+    let store = mockStore(() => initialState2);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+    }).catch((err) => {
+        expect(err).toEqual(err)
+    });
+   });
+   it('glossaaryFootnotePopup > case 6 --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","figure","12-0-0-0-1-2","image","","figure",undefined);
+    let store = mockStore(() => initialState2);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+    }).catch((err) => {
+        expect(err).toEqual(err)
+    });
+   });
+   it('glossaaryFootnotePopup > case 7 --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","figure","12-0-0-0-0-0-0","image","","figure",undefined);
+    let store = mockStore(() => initialState2);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+    }).catch((err) => {
+        expect(err).toEqual(err)
+    });
+   });
+   // if (elementType === 'element-blockfeature' && blockfeatureType !== "pullquote" )
+   it('glossaaryFootnotePopup > ist if --', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","element-blockfeature","12-0-0-1-1-2","image","","figure",undefined);
+    let store = mockStore(() => initialState2);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+    }).catch((err) => {
+        expect(err).toEqual(err)
+    });
+   });
+   it('glossaaryFootnotePopup > ist if > else--', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","element-blockfeature",1,"image","","figure",undefined);
+    let store = mockStore(() => initialState2);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        expect(item.payload.elementIndex).toEqual("0-0-0-1-1-2");
+    }).catch((err) => {
+        expect(err).toEqual(err)
+    });
+   });
+   it('glossaaryFootnotePopup > 2nd if > case 5--', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","element-blockfeature","12-0-0-1-1","image","","figure",undefined);
+    let store = mockStore(() => initialState2);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+    }).catch((err) => {
+        expect(err).toEqual(err)
+    });
+   });
+   it('glossaaryFootnotePopup > 2nd if > case 7--', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","element-blockfeature","12-0-0-0-0-0-0","image","","figure",undefined);
+    let store = mockStore(() => initialState2);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+    }).catch((err) => {
+        expect(err).toEqual(err)
+    });
+   });
+   it('glossaaryFootnotePopup > 2nd if > case 8--', async() => {
+    let result = await actions.glossaaryFootnotePopup(true,"Footnote","urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925","urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6","element-blockfeature","12-0-0-1-9-1-0-0","image","","figure",undefined);
+    let store = mockStore(() => initialState2);
+    result(store.dispatch).then((item)=>{
+        expect(typeof(item)).toEqual('object');
+        expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+    }).catch((err) => {
+        expect(err).toEqual(err)
+    });
+   });
+    it('glossaaryFootnotePopup > 2nd if > case 9--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "12-8-3-3-0-0-1-0-0", "image", "", "figure", undefined);
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if (elementType === 'element-blockfeature' && newBodymatter[tempIndex[0]]?.type == 'groupedcontent')
+    it('glossaaryFootnotePopup > case 4 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "7-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 5 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "7-0-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 6 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "7-0-0-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 7 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "7-0-0-0-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 8 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "7-0-0-0-0-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if (elementType === 'element-blockfeature' && newBodymatter[updatedIndex]?.type == 'element-aside')
+    it('glossaaryFootnotePopup > case 3 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "13-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 4 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "13-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 5 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "13-0-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 6 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "13-0-0-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if (newBodymatter[tempIndex[0]]?.type === 'showhide' && elementType === 'element-blockfeature') 
+    it('glossaaryFootnotePopup > case 4 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "6-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 5 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "6-0-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 6 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "6-0-0-0-0-0", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if (elementType === 'element-blockfeature' && blockfeatureType === "pullquote" )
+    it('glossaaryFootnotePopup > ist if --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "12-0-0-0-0-0", "pullquote", "", "figure", undefined);
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > ist if > else--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", 1, "pullquote", "", "figure", undefined);
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("0-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > 2nd if > case 4--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "12-0-0-1", "pullquote", "", "figure", undefined);
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > 2nd if > case 5--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "12-0-0-1-1", "pullquote", "", "figure", undefined);
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > 2nd if > case 7--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "12-0-0-1-1-0-0", "pullquote", "", "figure", undefined);
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > 2nd if > case 8--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "12-0-0-1-9-1-0-0", "pullquote", "", "figure", undefined);
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > 2nd if > case 9--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "12-8-3-3-0-0-1-0-0", "pullquote", "", "figure", undefined);
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if (elementType === 'element-blockfeature' && newBodymatter[tempIndex[0]]?.type == 'groupedcontent')
+    it('glossaaryFootnotePopup > case 3 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "7-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 4 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "7-0-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 5 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "7-0-0-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 6 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "7-0-0-0-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 7 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "7-0-0-0-0-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if (elementType === 'element-blockfeature' && newBodymatter[updatedIndex]?.type == 'element-aside')
+    it('glossaaryFootnotePopup > case 2 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "13-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 3 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "13-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 4 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "13-0-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 5 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "13-0-0-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if (newBodymatter[tempIndex[0]]?.type === 'showhide' && elementType === 'element-blockfeature') 
+    it('glossaaryFootnotePopup > case 3 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "6-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 4 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "6-0-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 5 --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-blockfeature", "6-0-0-0-0", "pullquote", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if (typeWithPopup && typeWithPopup === "popup" 
+    it('glossaaryFootnotePopup > case 2--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-0", "", "", "figure", "popup");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 3--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-2-9", "", "", "figure", "popup");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 4--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-0-2-9", "", "", "figure", "popup");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 5--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-0-0-2-9", "", "", "figure", "popup");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 6 > if --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-0-0-1-1-2", "", "", "figure", "popup");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 6 > else --', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "11-0-0-1-1-2", "", "", "figure", "popup");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+            expect(item.payload.elementIndex).toEqual("12-0-0-1-1-2");
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 7--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-0-0-1-1-2-9", "", "", "figure", "popup");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if (typeWithPopup && typeWithPopup === "poetry" 
+    it('glossaaryFootnotePopup > case 2 > 1--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-1", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 2 > 4--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-4", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 3 > if > 1--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "13-2-1", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 3 > if > 4--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "13-2-4", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 3 > else--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "1-2-9", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 4 > 1st if > 1--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "13-0-2-1", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 4 > 1st if > 4--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "13-0-2-4", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 4 > 2nd if > 1--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-0-2-1", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 4 > 2nd if > 4--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-0-2-4", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > case 4 > else--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "1-0-2-1", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > length 5 > case 1--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "1-0-2-9-1", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup > length 5 > case 4--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "1-0-2-9-4", "", "", "figure", "poetry");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // TB->Tab->PS or TB->Tab->As->PS or TB->Tab->WE->PS
+    it('glossaaryFootnotePopup--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-dialogue", "12-0-0-0-0", "", "", "figure", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup-- 1st if', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-dialogue", "14-0-0-0-0", "", "", "figure", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup-- else', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-dialogue", "15-0-0-0-0", "", "", "figure", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent")
+    it('glossaaryFootnotePopup--', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-dialogue", "12-0-0-0", "", "", "figure", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup-- 1st if', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-dialogue", "16-0-0-0", "", "", "figure", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup-- 2nd if', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "element-dialogue", "17-0-0-0", "", "", "figure", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    // if (newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB)
+    it('glossaaryFootnotePopup-- case 4', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-0-0-0", "", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup-- case 5', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-0-0-0-0", "", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup-- case 6', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "12-0-0-0-0-0", "", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
+    it('glossaaryFootnotePopup-- case 6 > else', async () => {
+        let result = await actions.glossaaryFootnotePopup(true, "Footnote", "urn:pearson:work:18ffa9eb-1ec3-409f-96b8-baf087f9d925", "urn:pearson:work:09e27f33-425c-450b-ba79-f46ff25c1ce6", "", "15-0-0-0-0-0", "", "", "", "");
+        let store = mockStore(() => initialState2);
+        result(store.dispatch).then((item) => {
+            expect(typeof (item)).toEqual('object');
+            expect(item.type).toEqual('OPEN_GLOSSARY_FOOTNOTE');
+        }).catch((err) => {
+            expect(err).toEqual(err)
+        });
+    });
     describe('testing setFormattingToolbar ', () => {
         it('setFormattingToolbar', () => {
             document.querySelector = () => { return {classList : {
