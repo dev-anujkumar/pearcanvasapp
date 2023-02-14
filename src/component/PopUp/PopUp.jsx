@@ -83,7 +83,7 @@ class PopUp extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.props.showConfirmation) {
+        if (this.props.showConfirmation || this.props.isApprovedSlate) {
             hideBlocker();
             this.props.hideCanvasBlocker(false)
         }
@@ -150,7 +150,7 @@ class PopUp extends React.Component {
                 return PRIMARY_BUTTON
             }
         } else {
-            if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup || props.removeMarkedIndex) {
+            if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate) {
                 return PRIMARY_BUTTON;
             } else {
                 return SECONDARY_BUTTON;
@@ -407,8 +407,8 @@ class PopUp extends React.Component {
         if (props.isApprovedSlate) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span option={SECONDARY_BUTTON} className={`save-button`} onClick={props.approveNormalSlate}>{props.proceedButton}</span>
-                    <span option={PRIMARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button`} onClick={props.approveNormalSlate}>{props.proceedButton}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
         }
@@ -722,13 +722,13 @@ class PopUp extends React.Component {
     }
 
     render() {
-        const { active, assessmentClass, isGlossary, isTCMCanvasPopup, alfrescoExpansionMetaData } = this.props;
+        const { active, assessmentClass, isGlossary, isTCMCanvasPopup, alfrescoExpansionMetaData, assessmentConfirmation } = this.props;
         return (
             <div className="model">
                 {
                     active ?
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
-                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
+                            <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentConfirmation} ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
                                 {this.renderCloseSymbol(this.props)}
                                 {this.renderDialogText(this.props)}

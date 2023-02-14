@@ -75,6 +75,7 @@ class SlateWrapper extends Component {
             updatedindex:'',
             showOwnerSlatePopup: false,
             parentUrn:null,
+            updateAssessment: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -187,7 +188,8 @@ class SlateWrapper extends Component {
                 }
                 _state = {
                     ..._state,
-                    previousSlateId: _slateId
+                    previousSlateId: _slateId,
+                    updateAssessment: false
                 };
                 for (let i = tinymce.editors.length - 1; i > -1; i--) {
                     let ed_id = tinymce.editors[i].id;
@@ -302,6 +304,7 @@ class SlateWrapper extends Component {
                     warningHeaderText={`Warning`}
                     approvePopupClass={`${ownerSlate ? "approved-warning-txt" : "lo-warning-txt"}`}
                     approveNormalSlate = {this.approveNormalSlate}
+                    hideCanvasBlocker={this.props.showBlocker}
                 />
             )
         } else{
@@ -1375,11 +1378,19 @@ class SlateWrapper extends Component {
             this.props.showBlocker(true)
             showTocBlocker();
             const dialogText = ` All other Assessment Items in this project will now be updated to the new version of this Assessment`
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+            setTimeout(() => {
+                this.setState({
+                    updateAssessment: true
+                })
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+            }, 4000);
             return (
                 <PopUp dialogText={dialogText}
                     active={true}
                     saveButtonText='OK'
                     showConfirmation={true}
+                    assessmentConfirmation={`${this.state.updateAssessment ? "updateAssessment-enable" : "updateAssessment-disable"}`}
                     assessmentClass="lock-message"
                     togglePopup={this.toggleAssessmentPopup}
                     hideCanvasBlocker={this.props.showBlocker}
@@ -1470,12 +1481,6 @@ class SlateWrapper extends Component {
         this.props.openPopupSlate(undefined, popupId)
         this.props.setActiveElement(config.cachedActiveElement.element, config.cachedActiveElement.index)
         this.props.savePopupParentSlateData({});
-        let slateDetails = {
-            currentProjectId: config.projectUrn,
-            slateEntityUrn: config.slateEntityURN
-
-        }
-        store.dispatch(fetchAudioNarrationForContainer(slateDetails));
         if(config.tcmStatus){
             this.props.handleTCMData(config.slateManifestURN)
         }
