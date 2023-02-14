@@ -116,6 +116,9 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
         },
         prepareAsideTitleForUpdate: () => {
             return jest.fn()
+        },
+        updateTabTitle: () => {
+            return jest.fn()
         }
     }
 })
@@ -267,7 +270,11 @@ const store = mockStore({
         markedIndexCurrentValue: {},
         markedIndexValue: { "type": "", "popUpStatus": false }
     },
-    autoNumberReducer: mockAutoNumberReducerEmpty
+    autoNumberReducer: mockAutoNumberReducerEmpty,
+    projectInfo: {
+        projectSharingRole: '',
+        projectSubscriptionDetails: {}
+    }
 });
 
 const store2 = mockStore({
@@ -396,7 +403,11 @@ const store2 = mockStore({
         markedIndexCurrentValue: {},
         markedIndexValue: { "type": "", "popUpStatus": false }
     },
-    autoNumberReducer: mockAutoNumberReducerEmpty1
+    autoNumberReducer: mockAutoNumberReducerEmpty1,
+    projectInfo: {
+        projectSharingRole: '',
+        projectSubscriptionDetails: {}
+    }
 });
 
 config["elementStatus"] = {}
@@ -500,6 +511,28 @@ describe('Test for element container component', () => {
             let props = {
                 element: wipData.multicolumn,
                 permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->TB container Element', () => {
+            let props = {
+                element: wipData['tabbed-2-column'],
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
+        it('Render Element Container ----->Tab container Element', () => {
+            let props = {
+                element: wipData['tab'],
+                permissions: [],
+                parentElement: wipData['tabbed-2-column'],
+                multipleColumnData: [{containerId: "urn:pearson:manifest:3fdc3860-4568-4091-aeae-bf10b8e1e9f7", columnIndex: "Ttl", columnId: "urn:pearson:manifest:73c11fa8-acec-4b8e-b435-0ec6cb3e5912"}]
             };
             let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
@@ -870,6 +903,33 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
+
+        it('Render Element Container ----->handleBlur for poetry element inside Tab element', () => {
+            let props = {
+                element: wipData.poetry,
+                permissions: [],
+                index: '1-0-0-1',
+                parentElement: wipData['tabbed-2-column']
+            };
+
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const elementDiv = document.createElement('div');
+            elementDiv.setAttribute('id', "cypress-1-0");
+
+            elementDiv.innerHTML = '<p class="pullQuoteNumeroUno">Hello Test</h3>'
+            elementDiv.textContent = ""
+            const elementDivChild = document.createElement('div');
+            elementDivChild.setAttribute('id', "cypress-1-1");
+            elementDivChild.textContent = ""
+            elementDiv.appendChild(elementDivChild);
+            document.body.appendChild(elementDiv);
+            const spyhandleBlur = jest.spyOn(elementContainerInstance, 'handleBlur')
+            elementContainerInstance.handleBlur("", "", 1);
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+
         it('Render Element Container ----->labelClickHandler', () => {
             let props = {
                 element: wipData.figure,
@@ -1840,6 +1900,28 @@ describe('Test for element container component', () => {
             elementContainer.update()
             expect(spyhandleFocus).toHaveBeenCalled()
             spyhandleFocus.mockClear()
+        })
+        it('Test-handleFocus Function- for Tab element', () => {
+            document.querySelector = () => {
+                return {
+                    classList: {
+                        remove: jest.fn(),
+                        add: jest.fn()
+                    }
+                }
+            }
+            event = {
+                ...event,
+                target: {
+                    textContent: 'Ttl'
+                }
+            }
+            const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+            elementContainerInstance.handleFocus('', null, event, 'TB');
+            elementContainerInstance.forceUpdate();
+            elementContainer.update();
+            expect(spyhandleFocus).toHaveBeenCalled();
+            spyhandleFocus.mockClear();
         })
         xit('Test-handleTCM Function', () => {
             const spyhandleTCM  = jest.spyOn(elementContainerInstance, 'handleTCM')
@@ -3898,6 +3980,32 @@ describe('Test-Other Functions', () => {
             figuredata: {
                 figuretype: "authoredtext"
             }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
+    it("handleContentChange for type - Tab element title tabTitleDifference if case", () => {
+        const previousElementData = {
+            id: 'urn:pearson:manifest:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+            type: "group",
+            html: {
+                title: "<p>tab title</p>"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, null, null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+    it("handleContentChange for type - Tab element title tabTitleDifference else case", () => {
+        const previousElementData = {
+            id: 'urn:pearson:manifest:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+            type: "group"
         }
         config.savingInProgress = false
         const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
