@@ -1679,7 +1679,7 @@ class ElementContainer extends Component {
         let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary')
         if (action === "add") {
             toolbar?.classList?.add("disable");
-        } else if (action === "remove" && (slateStatus !== "approved")) {
+        } else if (action === "remove" && (slateStatus !== "approved" || slateStatus === "approved" && popupSlate)) {
             toolbar?.classList?.remove("disable");
         }
     }
