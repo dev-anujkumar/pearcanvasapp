@@ -1417,6 +1417,42 @@ describe('2 Test handleElementConversion  ', () => {
             expect(spyconversionElement).toHaveBeenCalled()
             spyconversionElement.mockClear()
         });
+        it('1.4.4 if (appStore?.asideData?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.subtype === ElementConstants.TAB) ', () => {
+            const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase30;
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        it('1.4.5 if(appStore?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parent?.subtype === ElementConstants.TAB) ', () => {
+            const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase31;
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        it('1.4.6 if(appStore?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parent?.subtype === ElementConstants.TAB) > case 5 ', () => {
+            const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase32;
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
+        it('1.4.7 if(appStore?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parent?.subtype === ElementConstants.TAB) > case 6 ', () => {
+            const { initState, elementData, store, activeElement, fromToolbar,showHideObj } = testData?.testcase33;
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            const storeMock = mockStore(() => initState);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'handleElementConversion');
+            storeMock.dispatch(sidebarAction.handleElementConversion(elementData, store, activeElement, fromToolbar,showHideObj)); 
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
     });
 });
 describe('3 Test setBCEMetadata ', () => {
