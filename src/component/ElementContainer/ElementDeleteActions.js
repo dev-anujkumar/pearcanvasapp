@@ -128,7 +128,6 @@ export const updateStorePostDelete = (deleteParams) => {
     } = deleteParams
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
     let elementToUpdate;
-    console.log('updateStorePostDelete updateStorePostDelete', index, newIndex, asideData);
 
     if (asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
         switch (newIndex.length) {
@@ -222,7 +221,6 @@ export const updateStorePostDelete = (deleteParams) => {
         }
     }
     
-    console.log('newBodymatter', newBodymatter)
     // return newBodymatter
     newParentData[config.slateManifestURN].contents.bodymatter = newBodymatter
     dispatch({
