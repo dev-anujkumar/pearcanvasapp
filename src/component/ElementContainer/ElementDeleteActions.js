@@ -56,7 +56,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             cutCopyParentUrn
         }
         // This check will remove when TB supports tcm 
-        let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
+        let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
         if (!isTbElement) {
             const { prepareTCMSnapshotsForDelete } = (await import("./ElementContainerDelete_helpers.js"))
             prepareTCMSnapshotsForDelete(deleteData);
