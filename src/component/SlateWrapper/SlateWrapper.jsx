@@ -12,7 +12,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
-import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
+import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning, setNewElementCount } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
@@ -44,7 +44,7 @@ import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
 import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
-import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
+import { ADD_FIGURE_GLOSSARY_POPUP, newElementCreateInitialState, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
 import store from '../../appstore/store';
 import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
@@ -676,7 +676,7 @@ class SlateWrapper extends Component {
       })
   }
 
-    splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex ,poetryData) => {
+    splithandlerfunction = async(type, index, firstOne, parentUrn, asideData, outerAsideIndex ,poetryData) => {
         if (this.checkLockStatus()) {
             this.togglePopup(true)
             return false
@@ -692,29 +692,49 @@ class SlateWrapper extends Component {
         } else {
             indexToinsert = Number(index + 1)
         }
+        let elementCount = this.props.newElementCount[type]
+        elementCount = Number(elementCount)
         /* For showing the spinning loader send HideLoader message to Wrapper component */
         if (type) { sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); }
         switch (type) {
             case 'image-elem':
-                this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData, null, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                await this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData, null, null, null);
+                indexToinsert++;
+                }
                 break;
             case 'audio-elem':
-                this.props.createElement(VIDEO, indexToinsert, parentUrn, asideData, null, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                await this.props.createElement(VIDEO, indexToinsert, parentUrn, asideData, null, null, null);
+                indexToinsert++
+                }
                 break;
             case 'interactive-elem':
-                this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData, null, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData, null, null, null);
+                indexToinsert++
+                }
                 break;
             case 'assessment-elem':
-                this.props.createElement(ASSESSMENT, indexToinsert, parentUrn, asideData, null, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                await this.props.createElement(ASSESSMENT, indexToinsert, parentUrn, asideData, null, null, null);
+                indexToinsert++;
+                }
                 break;
             case 'container-elem':
-                this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData, null, null, null)
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData, null, null, null)
+                indexToinsert++
+                }
                 break;
             case 'worked-exp-elem':
-                this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, null, null, null, null)
+                for(let index = 0; index < elementCount; index++) {
+                await this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, null, null, null, null)
+                indexToinsert++
+                }
                 break;
             case 'opener-elem':
-                this.props.createElement(OPENER, indexToinsert, parentUrn, null, null, null, null)
+                await this.props.createElement(OPENER, indexToinsert, parentUrn, null, null, null, null)
                 break;
             case 'section-break-elem':
                 parentUrn.contentUrn = asideData.contentUrn
@@ -755,52 +775,99 @@ class SlateWrapper extends Component {
                 this.props.createElement(CITATION, indexToinsert, parentUrn, asideData, null, null);
                 break;
             case 'show-hide-elem':
-                this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                await this.props.createElement(SHOW_HIDE, indexToinsert, parentUrn, asideData, null, null);
+                indexToinsert++
+                }
                 break;
             case 'popup-elem':
-                this.props.createElement(POP_UP, indexToinsert, parentUrn, asideData, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(POP_UP, indexToinsert, parentUrn, asideData, null, null);
+                indexToinsert++
+                }
                 break;
             case 'smartlink-elem':
-                this.props.createElement(SMARTLINK, indexToinsert, parentUrn, asideData, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(SMARTLINK, indexToinsert, parentUrn, asideData, null, null);
+                indexToinsert++
+                }
                 break;
             case 'poetry-elem':
-                this.props.createElement(POETRY, indexToinsert, parentUrn,asideData,null,null,null,poetryData);
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(POETRY, indexToinsert, parentUrn,asideData,null,null,null,poetryData);
+                indexToinsert++
+            }
                 break;
+
             case 'stanza-elem':
-                this.props.createElement(STANZA, indexToinsert, parentUrn,asideData,null,null,null,poetryData);
+                for(let index = 0; index < elementCount; index++) {
+                await this.props.createElement(STANZA, indexToinsert, parentUrn,asideData,null,null,null,poetryData);
+                indexToinsert++
+                }
                 break;
             case 'figure-mml-elem':
-                this.props.createElement(FIGURE_MML, indexToinsert, parentUrn, asideData, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(FIGURE_MML, indexToinsert, parentUrn, asideData, null, null);
+                indexToinsert++;
+                }
                 break;
             case 'blockcode-elem':
-                this.props.createElement(BLOCKCODE, indexToinsert, parentUrn, asideData, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(BLOCKCODE, indexToinsert, parentUrn, asideData, null, null);
+                indexToinsert++
+                }
                 break;
             case 'table-editor-elem-button':
-                this.props.createElement(TABLE_EDITOR, indexToinsert, parentUrn, asideData, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                await this.props.createElement(TABLE_EDITOR, indexToinsert, parentUrn, asideData, null, null);
+                indexToinsert++;
+                }
                 break;
             case 'multi-column-group':
-                this.props.createElement(MULTI_COLUMN, indexToinsert, parentUrn, asideData, null, null, null, null)
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(MULTI_COLUMN, indexToinsert, parentUrn, asideData, null, null, null, null)
+                indexToinsert++
+                }
                 break;
             case 'multi-column-group-column-3':
-                this.props.createElement(MULTI_COLUMN_3C, indexToinsert, parentUrn, asideData, null, null, null, null)
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(MULTI_COLUMN_3C, indexToinsert, parentUrn, asideData, null, null, null, null)
+                indexToinsert++
+                }
                 break;
             case 'elm-interactive-elem':
-                this.props.createElement(MMI_ELM, indexToinsert, parentUrn, asideData, null, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(MMI_ELM, indexToinsert, parentUrn, asideData, null, null, null);
+                indexToinsert++;
+                }
                 break;
             case 'element-dialogue':
-                this.props.createElement(ELEMENT_DIALOGUE, indexToinsert, parentUrn, asideData, null, null, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(ELEMENT_DIALOGUE, indexToinsert, parentUrn, asideData, null, null, null, null);
+                indexToinsert++
+                }
                 break;
             case 'element-discussion': 
-                this.props.createElement(ELEMENT_DISCUSSION, indexToinsert, parentUrn, asideData, null, null, null, null);
+            for(let index = 0; index < elementCount; index++) {
+                await  this.props.createElement(ELEMENT_DISCUSSION, indexToinsert, parentUrn, asideData, null, null, null, null);
+                indexToinsert++
+            }
                 break;
             case 'blocklist-elem':
-                this.props.createElement(MANIFEST_LIST, indexToinsert, parentUrn, asideData, null, null, null, null,null);
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(MANIFEST_LIST, indexToinsert, parentUrn, asideData, null, null, null, null,null);
+                indexToinsert++
+                }
                 break;
             case 'text-elem':
             default:
-                this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                await this.props.createElement(TEXT, indexToinsert, parentUrn, asideData, null, null, null, null, null);
+                indexToinsert++;
+                }
                 break;
         }
+        this.props.setNewElementCount(newElementCreateInitialState)
     }
 
     elementSepratorProps = (index, firstOne, parentUrn, asideData, outerAsideIndex , poetryData) => {
@@ -1733,7 +1800,8 @@ const mapStateToProps = state => {
         projectSubscriptionDetails:state?.projectInfo,
         activeElement: state.appStore.activeElement,
         asideData: state.appStore.asideData,
-        approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus
+        approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
+        newElementCount: state.appStore.newElementCount
     };
 };
 
@@ -1774,6 +1842,7 @@ export default connect(
         isOwnersSubscribedSlate,
         savePopupParentSlateData,
         slateVersioning,
-        approvedSlatePopupStatus
+        approvedSlatePopupStatus,
+        setNewElementCount
     }
 )(SlateWrapper);

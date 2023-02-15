@@ -15,6 +15,7 @@ import ElementContainerType from '../ElementContainerType/ElementContainerType.j
 import { getPasteValidated, MANIFEST_LIST } from '../../constants/Element_Constants.js';
 import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { setNewElementCount } from '../SlateWrapper/SlateWrapper_Actions.js';
 
 const { TEXT, 
     IMAGE, 
@@ -53,6 +54,17 @@ export function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
     const [data, setData] = useState([]);
     const [pasteIcon, togglePaste] = useState(true);
+    const [counter,setCounter] = useState({
+        'text-elem':{count: '1'},
+        'image-elem':{count: '1'},
+        'audio-elem':{count: '1'},
+        'block-text-button':{count: '1'},
+        'interactive-elem-button':{count: '1'},
+        'table-editor-elem-button':{count: '1'},
+        'assessment-elem':{count: '1'},
+        'container-elem-button':{count: '1'},
+        'worked-exp-elem':{count: '1'},
+    });
     const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
     let propsData={data,setData,showInteractiveOption,setshowInteractiveOption,props}
     const { esProps, elementType, sectionBreak, permissions } = props
@@ -218,7 +230,7 @@ export function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData,counter,setCounter)}
                         </ul>
                     </div>
                 </div>
@@ -268,7 +280,7 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData) {
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData,counter, setCounter) {
     let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER || TOC_PARENT_TYPES.includes(config.parentOfParentItem)) {
@@ -370,10 +382,11 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     showDiscussion={props.showDiscussion}
                     asideData={props.asideData}
                     elementIndex={props.index}
+                    setElementCount={props.setNewElementCount}
                 >
                 </ElementContainerType>
             }
-                <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText}>
+                <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText} calledFrom='elem-sep' elementType={elem.buttonType} counter={counter} setCounter={setCounter} setElementCount={props.setNewElementCount}>
                     <li>
                         <Button type={elem.buttonType} onClick={(event) => buttonHandlerFunc(event)} />
                     </li>
@@ -474,6 +487,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapActionToProps = {
-    cloneContainer
+    cloneContainer,
+    setNewElementCount
 }
 export default connect(mapStateToProps, mapActionToProps)(ElementSaprator)

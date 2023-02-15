@@ -244,3 +244,16 @@ export const UPDATE_CHAPTER_POPUP_DATA = 'UPDATE_CHAPTER_POPUP_DATA';
 export const SET_POPUP_PARENT_CUT_COPY = "SET_POPUP_PARENT_CUT_COPY";
 
 export const BANNER_IS_VISIBLE = "BANNER_IS_VISIBLE"
+export const SET_NEW_ELEMENT_COUNT="SET_NEW_ELEMENT_COUNT"
+
+export const newElementCreateInitialState = {
+    'text-elem':1,
+    'image-elem':1,
+    'audio-elem':1,
+    'block-text-button':1,
+    'interactive-elem-button':1,
+    'table-editor-elem-button':1,
+    'assessment-elem':1,
+    'container-elem-button':1,
+    'worked-exp-elem':1,
+}

@@ -1633,3 +1633,10 @@ export const slateVersioning = () => (dispatch, getState) => {
         console.log("error", error)
     })
 }
+
+export const setNewElementCount = (data) => (dispatch) => {
+    return dispatch({
+        type: "SET_NEW_ELEMENT_COUNT",
+        payload: data
+    })
+}

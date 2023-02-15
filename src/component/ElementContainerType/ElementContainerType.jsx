@@ -64,6 +64,7 @@ export default function ElementContainerType(props) {
         const hideElementList = ["show-hide-elem", "popup-elem", "elm-interactive-elem", "interactive-elem", "element-discussion"];
         const hideElementListMulticolumn = ["Add Pop Up","Add Discussion"]
         return propsData && propsData.map((item, index) => {
+            console.log('item',item)
             if ((elementType === "element-aside" && asideData?.parent?.type === "groupedcontent" && text === "block-text-button" && item.text === "Block Poetry") ||
             ((elementType === "element-aside" || elementType === "group") && config.isPopupSlate && text === "block-text-button" && item.text === "Block Poetry") ||
             (text === "interactive-elem-button" && (elementType === "group" && hideElementListMulticolumn.includes(item.text)))
@@ -74,7 +75,12 @@ export default function ElementContainerType(props) {
             }
             else {
                 return (
-                    <li key={index} onClick={() => buttonHandlerFunc(item)}>{item.text}</li>
+                    <span style={{display:'flex'}}>
+                    <li key={index} onClick={() => buttonHandlerFunc(item)}>{item.text}
+                    </li>
+                    <input id={`counter-${item.buttonType}`} type='number' min='1' max='5' defaultValue={1} onChange={(e) => props.setElementCount({[item.buttonType]:e.target.value})} style={{width:'30px'}}/>
+
+                                         </span>
                 )
             }
         })
