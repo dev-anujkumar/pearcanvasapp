@@ -1731,9 +1731,9 @@ export const saveCaretPosition = (caretPosition) => (dispatch, getState) => {
     });
 }
 
-export const slateVersioning = () => (dispatch, getState) => {
+export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
     // Api to change container status from approved to WIP
-    const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion`;
+    const versioningStatus = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/container/${config.slateEntityURN}/newversion?updateRCSlate=${updateRCSlate}`;
     return axios.post(versioningStatus, null, {
         headers: {
             "Content-Type": "application/json",
