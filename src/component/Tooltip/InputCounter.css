@@ -1,0 +1,39 @@
+span {
+    cursor: pointer;
+}
+
+.number {
+    margin: 8px 0px 0px 0px;
+}
+
+.minus,
+.plus {
+    width: 20px;
+    height: 20px;
+    padding: 4px 5px 8px 0px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    z-index: 999;
+}
+
+input {
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    font-size: 26px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: inline-block;
+    vertical-align: middle;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

@@ -386,7 +386,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 >
                 </ElementContainerType>
             }
-                <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText} calledFrom='elem-sep' elementType={elem.buttonType} counter={counter} setCounter={setCounter} setElementCount={props.setNewElementCount}>
+                <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText} calledFrom="elem-sep" elementType={elem.buttonType} counter={counter} setCounter={setCounter} setElementCount={props.setNewElementCount}>
                     <li>
                         <Button type={elem.buttonType} onClick={(event) => buttonHandlerFunc(event)} />
                     </li>
