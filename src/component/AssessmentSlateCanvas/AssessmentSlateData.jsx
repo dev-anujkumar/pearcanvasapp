@@ -148,7 +148,7 @@ class AssessmentSlateData extends Component {
     setSlateTagIcon = () => {
         const popupSlate = (this.props?.slateLevelData[config.slateManifestURN]?.type === "popup")
         const slateStatus = this.props?.slateLevelData[config.slateManifestURN]?.status
-        if (document.getElementsByClassName("slate-tag-icon").length && (slateStatus !== "approved" && !popupSlate)) {
+        if (document.getElementsByClassName("slate-tag-icon").length && (slateStatus !== "approved" && !popupSlate && !config?.isCypressPlusEnabled)) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         }
     }
