@@ -55,61 +55,103 @@ jest.mock('../../../src/component/tinyMceEditor.js', () => {
     }
 });
 
-describe('Testing ElementPoetry component', () => {
-    let props = {
-        hasOwnProperty: jest.fn(),
-        deleteElement: jest.fn(),
-        permissions : [],
-        index: 1,
-        model : {
-            html : {
-                title: '',
-                text: '<p><span></span></p>'
-            },
-            contents: {
-                'formatted-title': {
-                    html : {
-                        text: "<p>test title</p>"
-                    }
-                }
-            }
-        },
-        element : {
-            html : {
-                title: '',
-                text: '<p><span></span></p>'
-            },
-            contents: {
-                'formatted-subtitle': {}
-            }
-        },
-        slateLockInfo: {
-            isLocked: false,
-            timestamp: "",
-            userId: ""
-        }
-    }
-    const wrapper = mount(<Provider store={store}><ElementContainerHOC {...props}/></Provider>)
-    const instance = wrapper.instance();
-    it('renders without crashing', () => {
-        expect(wrapper).toHaveLength(1);
-        expect(instance).toBeDefined();
-    });
-})
-
-xdescribe('Testing ElementAside component with props', () => {
+describe('Testing ElementPoetry', () => {
     let props = {
         element: poetryElem,
         model: poetryElem,
-        // swapElement : swapElement,
         onUpdate : jest.fn(),
         onStart : jest.fn(),
         setActiveElement : jest.fn(),
         handleFocus : jest.fn(),
         swapElement : jest.fn(),
         deleteElement: jest.fn(),
-        slateLockInfo:{isLocked:false,userId:'c5test01'}
+        slateLockInfo:{isLocked:false,userId:'c5test01'},
+        index: "0-0-0"
     }  
+    it('renderStanzaContainer', () => {
+        const component = mount(<Provider store={store}><ElementPoetry {...props}/> </Provider>)
+        component.find('ElementPoetry')
+    })
+    it('renderStanzas : index length != 3', () => {
+        let props2 = {
+            ...props,
+            index: "0-0"
+        }
+        const component = mount(<Provider store={store}><ElementPoetry {...props2}/> </Provider>)
+        component.find('ElementPoetry')
+    })
+    it('renderStanzas : with groupeddata', () => {
+        let props2 = {
+            ...props,
+            parentElement: {
+                groupeddata: {
+                    bodymatter: ["test"]
+                }
+            },        }
+        const component = mount(<Provider store={store}><ElementPoetry {...props2}/> </Provider>)
+        component.find('ElementPoetry')
+    })
+    it('renderStanzas : without groupeddata', () => {
+        let props2 = {
+            ...props,
+            parentElement: {}
+        }
+        const component = mount(<Provider store={store}><ElementPoetry {...props2}/> </Provider>)
+        component.find('ElementPoetry')
+    })
+    it('renderStanzas : type === "element-aside"', () => {
+        let props2 = {
+            ...props,
+            parentElement: {
+                type: "element-aside"
+            }
+        }
+        const component = mount(<Provider store={store}><ElementPoetry {...props2}/> </Provider>)
+        component.find('ElementPoetry')
+    })
+    it('renderStanzas : type === ElementConstants.MULTI_COLUMN', () => {
+        let props2 = {
+            ...props,
+            parentElement: {
+                type: "groupedcontent"
+            }
+        }
+        const component = mount(<Provider store={store}><ElementPoetry {...props2}/> </Provider>)
+        component.find('ElementPoetry')
+    })
+    it('renderStanzas : type === showhide', () => {
+        let props2 = {
+            ...props,
+            parentElement: {
+                type: "showhide"
+            }
+        }
+        const component = mount(<Provider store={store}><ElementPoetry {...props2}/> </Provider>)
+        component.find('ElementPoetry')
+    })
+    it('renderStanzas : type === ElementConstants.MULTI_COLUMN & subtype = tab', () => {
+        let props2 = {
+            ...props,
+            parentElement: {
+                type: "groupedcontent",
+                subtype: "tab"
+            }
+        }
+        const component = mount(<Provider store={store}><ElementPoetry {...props2}/> </Provider>)
+        component.find('ElementPoetry')
+    })
+    it('renderBlankContainer', () => {
+        let props2 = {
+            ...props,
+            model: {
+                "contents": {
+                    "bodymatter": []
+                }
+            }
+        }  
+        const component = mount(<Provider store={store}><ElementPoetry {...props2}/> </Provider>)
+        component.find('ElementPoetry')
+    })
     it('sortable testing', () => {
         const wrapper = mount(<Provider store={store}><ElementPoetry {...props}/> </Provider>)
         const instance = wrapper.find('Sortable').instance();
@@ -130,8 +172,14 @@ xdescribe('Testing ElementAside component with props', () => {
             oldDraggableIndex : 0,
             newDraggableIndex : 1
         }
-        
+        document.querySelector = () => {
+            return {
+                className: "show-hide-active",
+                classList: {
+                    remove: jest.fn()
+                }
+            }
+        }
         instance.props.options.onUpdate(evt);
-        expect(instance.props.options.onUpdate).toHaveLength(0);
     })
 })

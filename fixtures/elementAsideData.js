@@ -452,6 +452,24 @@ export const  element = [{
 	"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
 }]
 
+export const  element2 = {
+	"id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+	"type": "groupedcontent",
+	"subtype": "tab",
+	"schema": "http://schemas.pearson.com/wip-authoring/element/1",
+	"elementdata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "asdfasdfasdf"
+	},
+	"html": {
+		"text": "<p class=\"paragraphNumeroUno\"></p>"
+	},
+	"comments": true,
+	"tcm": true,
+	"versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+	"contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+}
+
 export const section = 
 	{
 		"id": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c",

@@ -341,7 +341,7 @@ const checkForSwappedElement = async (elemData, data) => {
 }
 
 const getContentUrnFromMultiColumn = async (bodymatter, data) => {
-    if(bodymatter.length > 0) {
+    if(bodymatter?.length > 0) {
         for(let i in bodymatter){
             let colData = bodymatter[i];
             if(colData?.groupdata?.bodymatter.length > 0){
