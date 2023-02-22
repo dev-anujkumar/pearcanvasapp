@@ -6,6 +6,7 @@ import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { hideTocBlocker } from '../../js/toggleLoader'
 import { tcmSnapshotsForUpdate, fetchElementWipData } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
+import ElementConstants from '../ElementContainer/ElementConstants';
 const {
     REACT_APP_API_URL
 } = config
@@ -48,7 +49,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         const asideParent = store.getState().appStore?.asideData
         if (showHideElement || asideParent?.type === 'showhide' && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry') && elementType !== 'element-blockfeature') { /** Glossary-Footnotes inside Show-Hide */
             /* Get the element where footnote/Glossery is added */
-            glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex)
+            glossaryFootElem = onGlossaryFnUpdateSuccessInShowHide("GetElementWithFnGlry_SH", newBodymatter, elementType, asideParent?.sectionType, tempIndex, asideParent)
             if(tempIndex.length == 4 && glossaryFootElem[tempIndex[0]]?.type === "showhide" && elementType === 'element-blockfeature'){
                 glossaryFootElem = newBodymatter[tempIndex[0]]?.interactivedata?.show[tempIndex[0]]
             }
@@ -60,6 +61,19 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
         }
         else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type !== "groupedcontent"){ //Figure inside WE
             glossaryFootElem = newBodymatter[tempIndex[0]].elementdata.bodymatter[tempIndex[1]].contents.bodymatter[tempIndex[2]]
+            // Support Glossary/Footnote of elements inside Tab element of TB
+        } else if (elementType === ElementConstants.FIGURE && newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+            switch (tempIndex.length) {
+                case 5:  // Figure element inside Tab of TB
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]];
+                    break;
+                case 6:  // TB->Tab->AS/WE->HEAD->Figure element
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]];
+                    break;
+                case 7:  // TB->Tab->AS/WE->BODY->Figure element
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]];
+                    break;        
+            }
         }else if(tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent"){ //Figure inside Multi-Column
             glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]]
         }
@@ -87,8 +101,33 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             if (typeof index === 'string' && index.includes('-')) {
                 let tempUpdatedIndex = index.split('-');
                 updatedIndex = tempUpdatedIndex[0];
-            }
-            if (elementType === 'element-blockfeature' && newBodymatter[tempIndex[0]]?.type == 'groupedcontent') {
+            } // Blockquote element is inside Tab element of TB
+            if (elementType === ElementConstants.BLOCKFEATURE && newBodymatter[tempIndex[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+                let indexesLen = tempIndex.length;
+                switch (indexesLen) {
+                    case 5: // Blockquote element is inside Tab of TB
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]];
+                        break;
+                    case 6: // TB->Tab->AS/WE->HEAD->BQ
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]];
+                        break;
+                    case 7: 
+                        let elementInTab = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]];
+                        // TB->Tab->AS/WE->BODY->BQ
+                        if (elementInTab.type === ElementConstants.ELEMENT_ASIDE && elementInTab.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) { 
+                            glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]];
+                        } else if (elementInTab.type === ElementConstants.SHOW_HIDE) { // TB->Tab->SH->BQ
+                            glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]].interactivedata[asideParent.sectionType][tempIndex[5]];
+                        }
+                        break;
+                    case 8: // TB->Tab->AS/WE->HEAD->S/H->BQ
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].interactivedata[asideParent.sectionType][tempIndex[6]];
+                        break;
+                    case 9: // TB->Tab->AS/WE->BODY->S/H->BQ
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]].interactivedata[asideParent.sectionType][tempIndex[7]];
+                        break;
+                }
+            } else if (elementType === 'element-blockfeature' && newBodymatter[tempIndex[0]]?.type == 'groupedcontent') {
                 let indexesLen = tempIndex.length;
                 switch (indexesLen) {
                     case 4:
@@ -156,8 +195,33 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             if (typeof index === 'string' && index.includes('-')) {
                 let tempUpdatedIndex = index.split('-');
                 updatedIndex = tempUpdatedIndex[0];
-            }
-            if (elementType === 'element-blockfeature' && newBodymatter[tempIndex[0]]?.type == 'groupedcontent') {
+            } // Pullquote element is inside Tab element of TB
+            if (elementType === ElementConstants.BLOCKFEATURE && newBodymatter[tempIndex[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+                let indexesLen = tempIndex.length;
+                switch (indexesLen) {
+                    case 4: // Pullquote element is inside Tab of TB
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]];
+                        break;
+                    case 5: // TB->Tab->AS/WE->HEAD->PQ
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]];
+                        break;
+                    case 6: 
+                        let elementInTab = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]];
+                        // TB->Tab->AS/WE->BODY->PQ
+                        if (elementInTab.type === ElementConstants.ELEMENT_ASIDE && elementInTab.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) { 
+                            glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]];
+                        } else if (elementInTab.type === ElementConstants.SHOW_HIDE) { // TB->Tab->SH->BQ
+                            glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]].interactivedata[asideParent.sectionType][tempIndex[5]];
+                        }
+                        break;
+                    case 7: // TB->Tab->AS/WE->HEAD->S/H->PQ
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].interactivedata[asideParent.sectionType][tempIndex[6]];
+                        break;
+                    case 8: // TB->Tab->AS/WE->BODY->S/H->PQ
+                        glossaryFootElem = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]].interactivedata[asideParent.sectionType][tempIndex[7]];
+                        break;
+                }
+            } else if (elementType === 'element-blockfeature' && newBodymatter[tempIndex[0]]?.type == 'groupedcontent') {
                 let indexesLen = tempIndex.length;
                 switch (indexesLen) {
                     case 3:
@@ -238,6 +302,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                case 5:
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].popupdata["formatted-title"];
                     break;
+                case 6: // TB->Tab->AS/WE->HEAD->Popup
+                    if (newBodymatter[tempIndex[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+                        glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].popupdata["formatted-title"];
+                    } else {  // Multicolumn->AS/WE->BODY->Popup
+                        glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]].popupdata["formatted-title"];
+                    }
+                    break;
+                case 7: // TB->Tab->AS/WE->BODY->Popup
+                    glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]].popupdata["formatted-title"];
+                    break;
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
@@ -294,6 +368,27 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                             break;
                     }
                 }
+            } else if (indexesLen === 5) { /* footnote for PE title inside Tab element in TB */
+                switch (tempIndex[4]) {
+                    case "1":
+                        glossaryFootElem = (newBodymatter[tempIndex[0]]?.groupeddata.bodymatter[tempIndex[1]]?.groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]]?.groupdata.bodymatter[tempIndex[3]]?.contents['formatted-title'] ? newBodymatter[tempIndex[0]]?.groupeddata.bodymatter[tempIndex[1]]?.groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]]?.groupdata.bodymatter[tempIndex[3]]?.contents['formatted-title'] : { html: '' });
+                        break;
+                    case "4":
+                        glossaryFootElem = (newBodymatter[tempIndex[0]]?.groupeddata.bodymatter[tempIndex[1]]?.groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]]?.groupdata.bodymatter[tempIndex[3]]?.contents['creditsarray'] ? newBodymatter[tempIndex[0]]?.groupeddata.bodymatter[tempIndex[1]]?.groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]]?.groupdata.bodymatter[tempIndex[3]]?.contents['creditsarray'][0] : {});
+                        break;
+                }
+            } // TB->Tab->PS or TB->Tab->As->PS or TB->Tab->WE->PS
+        } else if ((tempIndex.length >= 5 && tempIndex.length <= 8) && elementType === ElementConstants.ELEMENT_DIALOGUE && newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]].subtype === ElementConstants.TAB) { 
+            let elementInsideTab = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]];
+            if (elementInsideTab.type === ElementConstants.ELEMENT_ASIDE && elementInsideTab.subtype === "sidebar") {
+                glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]];
+            } else if (elementInsideTab.type === ElementConstants.ELEMENT_ASIDE && elementInside2C.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) {
+                glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]];
+                if (glossaryFootElem.type === ElementConstants.ELEMENT_SECTION_BREAK) {
+                    glossaryFootElem = glossaryFootElem.contents.bodymatter[tempIndex[5]];
+                }
+            } else {
+                glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]];
             }
         } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // MultiColumn->PS or MultiColumn->As->PS or MultiColumn->WE->PS
             let elementInside2C = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]];
@@ -350,6 +445,24 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     glossaryFootElem = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
                     if (indexesLen == 5 && glossaryFootElem.type === 'manifest') {
                         glossaryFootElem = glossaryFootElem.contents.bodymatter[indexes[4]];
+                    } // To support glossary/footnote inside element of Tab of TB
+                } else if (newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+                    switch (indexesLen) {
+                        case 4: // Text elements inside Tab element in TB
+                            glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                            break;
+                        case 5: // TB->Tab->AS/WE->HEAD->Element
+                            glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                            break;
+                        case 6: 
+                            let elementInTab = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                            // TB->Tab->WE->BODY->Element
+                            if (elementInTab?.type === ElementConstants.ELEMENT_ASIDE && elementInTab?.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) {
+                                glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                            } else { // PE element stanza inside Tab element in TB
+                                glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].contents.bodymatter[indexes[5]];
+                            }
+                            break;         
                     }
                 } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {  // to support glossary in text elements inside WE/AS of MultiColumn
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
@@ -652,7 +765,9 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let elementIndex = indexElement
         if (typeof index === 'string' && index.includes('-')) {
             let tempIndex = index && typeof (index) !== 'number' && index.split('-');
-            if (tempIndex.length == 8) {
+            if (tempIndex.length === 9) {
+                elementIndex = tempIndex[0] + '-' + tempIndex[1] + '-' + tempIndex[2] + '-' + tempIndex[3] + '-' + tempIndex[4] + '-' + tempIndex[5] + '-' + tempIndex[6] + '-' + tempIndex[7] + '-' + tempIndex[8]
+            } else if (tempIndex.length == 8) {
                 elementIndex = tempIndex[0] + '-' + tempIndex[1] + '-' + tempIndex[2] + '-' + tempIndex[3] + '-' + tempIndex[4] + '-' + tempIndex[5] + '-' + tempIndex[6] + '-' + tempIndex[7]
             } else if (tempIndex.length == 7) {
                 elementIndex = tempIndex[0] + '-' + tempIndex[1] + '-' + tempIndex[2] + '-' + tempIndex[3] + '-' + tempIndex[4] + '-' + tempIndex[5] + '-' + tempIndex[6]
@@ -740,6 +855,11 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
                 else {
                     parentEntityUrn = newBodymatter[elemIndex[0]].elementdata.bodymatter[elemIndex[1]].contents.bodymatter[elemIndex[2]].contentUrn
+                }
+                break;
+            case 5: // when PE element is inside Tab element of TB
+                if (typeWithPopup === ElementConstants.POETRY_ELEMENT) {
+                    parentEntityUrn = newBodymatter[elemIndex[0]]?.groupeddata.bodymatter[elemIndex[1]]?.groupdata.bodymatter[0].groupeddata.bodymatter[elemIndex[2]]?.groupdata.bodymatter[elemIndex[3]].contentUrn;
                 }
                 break;
         }
@@ -857,52 +977,56 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let currentSlateData = currentParentData[config.slateManifestURN];
         let poetryData;
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
-        if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
-            let showhideTypeVal = "", showHideObject = undefined
-            if((showHideElement ||  asideParent?.type === 'showhide') && elementType !== 'element-blockfeature' ){ /** Glossary-Footnotes inside Show-Hide */
-                showhideTypeVal = asideParent?.sectionType;//findSectionType(shTypeIndex?.toString())
-                let showhideElement = getShowHideElement(tcmBodymatter, innerSH_Index.length, innerSH_Index, elementType)
-                let innerSH_Element = showhideTypeVal && showhideElement?.interactivedata[showhideTypeVal][innerSH_Index]
-                showHideObject = {
-                    currentElement: innerSH_Element,
-                    index: innerSH_Index,
-                    element: showhideElement,
-                    showHideType: showhideTypeVal
+        // This check is added to prevent snapshots for TB element, it will be removed when TB element will support TCM
+        const isTbElement = asideParent?.subtype === ElementConstants.TAB || asideParent?.parent?.subtype === ElementConstants.TAB || asideParent?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideParent?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
+        if (!isTbElement) {
+            if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
+                let showhideTypeVal = "", showHideObject = undefined
+                if ((showHideElement || asideParent?.type === 'showhide') && elementType !== 'element-blockfeature') { /** Glossary-Footnotes inside Show-Hide */
+                    showhideTypeVal = asideParent?.sectionType;//findSectionType(shTypeIndex?.toString())
+                    let showhideElement = getShowHideElement(tcmBodymatter, innerSH_Index.length, innerSH_Index, elementType, asideParent);
+                    let innerSH_Element = showhideTypeVal && showhideElement?.interactivedata[showhideTypeVal][innerSH_Index]
+                    showHideObject = {
+                        currentElement: innerSH_Element,
+                        index: innerSH_Index,
+                        element: showhideElement,
+                        showHideType: showhideTypeVal
+                    }
                 }
-            }
-            if(typeWithPopup === 'stanza' && asideParent?.grandParent) {
-                // stanza is inside container
-                poetryData = {
-                    type: "poetry",
-                    parentUrn: asideParent,
-                    id: asideParent.id,
-                    contentUrn : asideParent.contentUrn
+                if (typeWithPopup === 'stanza' && asideParent?.grandParent) {
+                    // stanza is inside container
+                    poetryData = {
+                        type: "poetry",
+                        parentUrn: asideParent,
+                        id: asideParent.id,
+                        contentUrn: asideParent.contentUrn
+                    }
                 }
-            }
-            let elementUpdateData ={
-                currentParentData: currentParentData,
-                updateBodymatter:tcmBodymatter,
-                response: res.data,
-                updatedId:elementWorkId,
-                slateManifestUrn: config.slateManifestURN,
-                CurrentSlateStatus: currentSlateData?.status,
-                cypressPlusProjectStatus: store.getState()?.appStore?.isCypressPlusEnabled
-            },
-                containerElement = {
-                    asideData:tcmParentData.asideData,
-                    parentUrn:tcmParentData.parentUrn,
-                    parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter,index,'popup') : undefined,
-                    metaDataField: data.metaDataField ? data.metaDataField : undefined,
-                    sectionType: showhideTypeVal,
+                let elementUpdateData = {
+                    currentParentData: currentParentData,
+                    updateBodymatter: tcmBodymatter,
+                    response: res.data,
+                    updatedId: elementWorkId,
+                    slateManifestUrn: config.slateManifestURN,
                     CurrentSlateStatus: currentSlateData?.status,
-                    showHideObj: showHideObject,
-                    poetryData
-                };
-            if (currentSlateData && currentSlateData.status === 'approved') {
-                await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
-            }
-            else {
-                tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+                    cypressPlusProjectStatus: store.getState()?.appStore?.isCypressPlusEnabled
+                },
+                    containerElement = {
+                        asideData: tcmParentData.asideData,
+                        parentUrn: tcmParentData.parentUrn,
+                        parentElement: data.metaDataField ? fetchElementWipData(tcmMainBodymatter, index, 'popup') : undefined,
+                        metaDataField: data.metaDataField ? data.metaDataField : undefined,
+                        sectionType: showhideTypeVal,
+                        CurrentSlateStatus: currentSlateData?.status,
+                        showHideObj: showHideObject,
+                        poetryData
+                    };
+                if (currentSlateData && currentSlateData.status === 'approved') {
+                    await tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+                }
+                else {
+                    tcmSnapshotsForUpdate(elementUpdateData, index, containerElement, store.dispatch, "");
+                }
             }
         }
         /**-------------------------------------------------------------------------------------------------------------*/
@@ -912,7 +1036,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
 
         if (showHideElement || asideParent?.type === 'showhide'  && (newBodymatter[tempIndex[0]]?.interactivedata?.[asideParent?.sectionType][tempIndex[2]]?.type!=='poetry') && elementType !== 'element-blockfeature') {/** Glossary-Footnotes inside Show-Hide */
-            newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex)
+            newBodymatter = onGlossaryFnUpdateSuccessInShowHide(res.data, newBodymatter, elementType, asideParent?.sectionType, tempIndex, asideParent)
             if(tempIndex.length == 4 && asideParent?.type === 'showhide' && elementType === 'element-blockfeature'){
                 newBodymatter[tempIndex[0]].interactivedata.show[tempIndex[2]] = res.data;
             }
@@ -922,8 +1046,20 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 newBodymatter[tempIndex[0]].interactivedata[asideParent.parent.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]] = res.data;
             } else {
                 newBodymatter[tempIndex[0]].interactivedata[asideParent.parent.showHideType][tempIndex[2]].elementdata.bodymatter[tempIndex[3]] = res.data;
+            } // Support Glossary/Footnote of elements inside Tab element of TB
+        } else if (elementType === ElementConstants.FIGURE && newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+            switch (tempIndex.length) {
+                case 5: // TB->Tab->Figure element
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]] = res.data;
+                    break;
+                case 6:  // TB->Tab->AS/WE->HEAD->Figure element
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]] = res.data;
+                    break;
+                case 7:  // TB->Tab->AS/WE->BODY->Figure element
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]] = res.data;
+                    break;
             }
-        }
+        } 
         else if (tempIndex.length == 4 && elementType == 'figure' && newBodymatter[tempIndex[0]].type === "groupedcontent") { //Figure inside a Multi-column container
             newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]] = res.data
         } else if (tempIndex.length == 4 && elementType == 'figure' && typeWithPopup !== "popup") {//Figure inside a WE
@@ -954,7 +1090,33 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 let tempUpdatedIndex = index.split('-');
                 updatedIndex = tempUpdatedIndex[0];
             }
-            if (newBodymatter[tempIndex[0]]?.type === 'groupedcontent' && elementType === 'element-blockfeature') {
+            if (elementType === ElementConstants.BLOCKFEATURE && newBodymatter[tempIndex[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+                let indexesLen = tempIndex.length;
+                switch (indexesLen) {
+                    case 5: // Blockquote element is inside Tab of TB
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]] = res.data;
+                        break;
+                    case 6: // TB->Tab->AS/WE->HEAD->BQ
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]] = res.data;
+                        break;
+                    case 7: 
+                        let elementInTab = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]];
+                        // TB->Tab->AS/WE->BODY->BQ
+                        if (elementInTab.type === ElementConstants.ELEMENT_ASIDE && elementInTab.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) { 
+                            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]] = res.data;
+                        } else if (elementInTab.type === ElementConstants.SHOW_HIDE) { // TB->Tab->SH->BQ
+                            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].interactivedata[asideParent.sectionType][tempIndex[5]] = res.data;
+                        }
+                        break;
+                    case 8: // TB->Tab->AS/WE->HEAD->S/H->BQ
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].interactivedata[asideParent.sectionType][tempIndex[6]] = res.data;
+                        break;
+                    case 9: // TB->Tab->AS/WE->BODY->S/H->BQ
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]].interactivedata[asideParent.sectionType][tempIndex[7]] = res.data;
+                        break;
+
+                }
+            } else if (newBodymatter[tempIndex[0]]?.type === 'groupedcontent' && elementType === 'element-blockfeature') {
                 let indexesLen = tempIndex.length;
                 switch (indexesLen) {
                     case 4: {
@@ -1030,8 +1192,33 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             if (typeof index === 'string' && index.includes('-')) {
                 let tempUpdatedIndex = index.split('-');
                 updatedIndex = tempUpdatedIndex[0];
-            }
-            if (newBodymatter[tempIndex[0]]?.type === 'groupedcontent' && elementType === 'element-blockfeature') {
+            } // Pullquote element is inside Tab element of TB
+            if (elementType === ElementConstants.BLOCKFEATURE && newBodymatter[tempIndex[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+                let indexesLen = tempIndex.length;
+                switch (indexesLen) {
+                    case 4: // Pullquote element is inside Tab of TB
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]] = res.data;
+                        break;
+                    case 5: // TB->Tab->AS/WE->HEAD->PQ
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]] = res.data;
+                        break;
+                    case 6: 
+                        let elementInTab = newBodymatter[tempIndex[0]]?.groupeddata?.bodymatter[tempIndex[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[tempIndex[2]]?.groupdata?.bodymatter[tempIndex[3]];
+                        // TB->Tab->AS/WE->BODY->PQ
+                        if (elementInTab.type === ElementConstants.ELEMENT_ASIDE && elementInTab.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) { 
+                            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]] = res.data;
+                        } else if (elementInTab.type === ElementConstants.SHOW_HIDE) { // TB->Tab->SH->BQ
+                            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].interactivedata[asideParent.sectionType][tempIndex[5]] = res.data;
+                        }
+                        break;
+                    case 7: // TB->Tab->AS/WE->HEAD->S/H->PQ
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].interactivedata[asideParent.sectionType][tempIndex[6]] = res.data;
+                        break;
+                    case 8: // TB->Tab->AS/WE->BODY->S/H->PQ
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]].interactivedata[asideParent.sectionType][tempIndex[7]] = res.data;
+                        break;
+                }
+            } else if (newBodymatter[tempIndex[0]]?.type === 'groupedcontent' && elementType === 'element-blockfeature') {
                 let indexesLen = tempIndex.length;
                 switch (indexesLen) {
                     case 3: {
@@ -1147,6 +1334,30 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].popupdata["formatted-title"] = responseElement;
                     break;
                 }
+                case 6: { // TB->Tab->AS/WE->HEAD->Popup
+                    let titleDOM = document.getElementById(`cypress-${tempIndex[0]}-${tempIndex[1]}-${tempIndex[2]}-${tempIndex[3]}-${tempIndex[4]}-0`)
+                    let titleHTML = "";
+                    if (titleDOM) {
+                        titleHTML = titleDOM.innerHTML;
+                    }
+                    responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text);
+                    if (newBodymatter[tempIndex[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].popupdata["formatted-title"] = responseElement;
+                    } else {  // Multicolumn->AS/WE->BODY->Popup
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[tempIndex[3]].contents.bodymatter[tempIndex[4]].popupdata["formatted-title"] = responseElement;
+                    }
+                    break;
+                }
+                case 7: { // TB->Tab->AS/WE->BODY->Popup
+                    let titleDOM = document.getElementById(`cypress-${tempIndex[0]}-${tempIndex[1]}-${tempIndex[2]}-${tempIndex[3]}-${tempIndex[4]}-${tempIndex[5]}-0`);
+                    let titleHTML = "";
+                    if (titleDOM) {
+                        titleHTML = titleDOM.innerHTML;
+                    }
+                    responseElement.html.text = createTitleSubtitleModel(titleHTML, responseElement.html.text);
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]].popupdata["formatted-title"] = responseElement;
+                    break;
+                }
             }
         }
         else if (typeWithPopup && typeWithPopup === 'poetry') {
@@ -1233,6 +1444,70 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                             break;
                     }
                 }
+            } else if (indexesLen === 5) { /* footnote for PE title inside Tab element in TB */
+                switch (tempIndex[4]) {
+                    case "1":
+                        let responseElement = {...res.data}
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].contents['formatted-title']
+                        res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
+                        responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].contents['formatted-title'] = responseElement;
+                        break;
+                    case "4":
+                        if (!newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].contents['creditsarray']) {
+                            newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].contents['creditsarray'] = [];
+                        }
+                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].contents['creditsarray'][0] = res.data;
+                        break;
+                }
+            } // TB->Tab->PS or TB->Tab->As->PS or TB->Tab->WE->PS
+        } else if ((tempIndex.length >= 5 && tempIndex.length <= 8) && elementType === ElementConstants.ELEMENT_DIALOGUE && newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]].subtype === ElementConstants.TAB) { 
+            if (res.data.html.hasOwnProperty('text')) {
+                delete res.data.html.text;
+            }
+            let elementInsideTab = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]];
+            if (elementInsideTab.type === ElementConstants.ELEMENT_ASIDE && elementInsideTab.subtype === "sidebar") {
+                res.data = {
+                    ...res.data,
+                    html: {
+                        ...res.data.html,
+                        actTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].html.actTitle,
+                        credits: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].html.credits,
+                        dialogueContent: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].html.dialogueContent,
+                        sceneTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].html.sceneTitle
+                    }
+                }
+                newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]] = res.data;
+            } else if (elementInsideTab.type === ElementConstants.ELEMENT_ASIDE && elementInside2C.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) {
+                let glossaryFootnoteElementOfWe = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]];
+                if (glossaryFootnoteElementOfWe.type === ElementConstants.ELEMENT_SECTION_BREAK) {
+                    glossaryFootnoteElementOfWe = glossaryFootnoteElementOfWe.contents.bodymatter[tempIndex[5]];
+                }
+                glossaryFootnoteElementOfWe = {
+                    ...glossaryFootnoteElementOfWe,
+                    html: {
+                        ...glossaryFootnoteElementOfWe.html,
+                        glossaryentries: res.data.html.glossaryentries,
+                        footnotes: res.data.html.footnotes
+                    }
+                }
+                if (newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].type === ElementConstants.ELEMENT_SECTION_BREAK) {
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]].contents.bodymatter[tempIndex[5]] = glossaryFootnoteElementOfWe;
+                } else {
+                    newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].elementdata.bodymatter[tempIndex[4]] = glossaryFootnoteElementOfWe;
+                }
+            } else {
+                res.data = {
+                    ...res.data,
+                    html: {
+                        ...res.data.html,
+                        actTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].html.actTitle,
+                        credits: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].html.credits,
+                        dialogueContent: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].html.dialogueContent,
+                        sceneTitle: newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].html.sceneTitle
+                    }
+                }
+                newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]] = res.data;
             }
         } else if ((tempIndex.length >= 4 && tempIndex.length <= 7) && elementType === "element-dialogue" && newBodymatter[tempIndex[0]].type === "groupedcontent") { // MultiColumn->PS or MultiColumn->As->PS or MultiColumn->WE->PS
             if (res.data.html.hasOwnProperty('text')) {
@@ -1393,6 +1668,24 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
                     } else {
                         newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
+                    } // To support glossary/footnote inside elements of Tab inside TB
+                } else if (newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
+                    switch (indexesLen) {
+                        case 4: // TB->Tab->Element
+                            newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]] = res.data;
+                            break;
+                        case 5: // TB->Tab->AS/WE->HEAD->Element
+                            newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = res.data;
+                            break;
+                        case 6: 
+                            let elementInTab = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                            // TB->Tab->WE->BODY->Element
+                            if (elementInTab?.type === ElementConstants.ELEMENT_ASIDE && elementInTab?.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) {
+                                newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = res.data;
+                            } else { // PE element stanza inside Tab element in TB
+                                newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].contents.bodymatter[indexes[5]] = res.data;
+                            }
+                            break;
                     }
                 } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {
                     // aside inside multi column
@@ -1451,10 +1744,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 }
             }
         }
-        //tcm update code  for glossary/footnote 
-        if (config.tcmStatus) {
-            if (elementTypeData.indexOf(elementType) !== -1) {
-                prepareDataForUpdateTcm(elementWorkId, res.data.id, res.data);
+        // This check is added to prevent snapshots for TB element, it will be removed when TB element will support TCM
+        if (!isTbElement) {
+            //tcm update code  for glossary/footnote
+            if (config.tcmStatus) {
+                if (elementTypeData.indexOf(elementType) !== -1) {
+                    prepareDataForUpdateTcm(elementWorkId, res.data.id, res.data);
+                }
             }
         }
 

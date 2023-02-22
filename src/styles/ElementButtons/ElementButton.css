@@ -60,6 +60,10 @@
     background-color: #fa5d54;
     padding-bottom: 3px;
 }
+.btn-element.delete-icon.icon-disabled {
+    opacity: 40%;
+    pointer-events: none !important;
+}
 
 .btn-element.split-icon,
 .btn-element.expand-icon,
@@ -153,7 +157,7 @@
     margin-right: 0;
 }
 
-.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor,.interactive-elem-button,.citation-elem,.container-elem-button, .block-text-button , .btn-element.stanza-elem, .table-editor-elem, .multi-column-group{
+.btn-element.text-elem, .image-elem, .audio-elem, .interactive-elem, .container-elem, .worked-exp-elem, .assessment-elem, .opener-elem, .section-break-elem, .metadata-anchor,.interactive-elem-button,.citation-elem,.container-elem-button, .block-text-button , .btn-element.stanza-elem, .table-editor-elem, .multi-column-group, .multi-column-group-tabbed-tab{
     width: 30px;
     height: 30px;
     display: flex;
@@ -174,7 +178,7 @@
 .multi-column-group:hover{
     border: solid 1px #434343;
 }
-.text-elem:hover, .image-elem:hover, .audio-elem:hover, .interactive-elem:hover, .container-elem:hover, .worked-exp-elem:hover, .assessment-elem:hover, .opener-elem:hover, .section-break-elem:hover, .metadata-anchor:hover,.interactive-elem-button:hover, .citation-elem:hover,.container-elem-button:hover,.block-text-button:hover , .stanza-elem:hover, .table-editor-elem:hover{
+.text-elem:hover, .image-elem:hover, .audio-elem:hover, .interactive-elem:hover, .container-elem:hover, .worked-exp-elem:hover, .assessment-elem:hover, .opener-elem:hover, .section-break-elem:hover, .metadata-anchor:hover,.interactive-elem-button:hover, .citation-elem:hover,.container-elem-button:hover,.block-text-button:hover , .stanza-elem:hover, .table-editor-elem:hover, .multi-column-group-tabbed-tab:hover{
     opacity: 1;
     fill: black!important;
     border: solid 1px #434343;

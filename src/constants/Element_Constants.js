@@ -24,6 +24,8 @@ export const AUDIO = "audio"
 export const VIDEO = "video"
 export const INTERACTIVE = "interactive"
 export const DEFAULT_ASSET="Asset data undefined"
+export const MULTI_COLUMN = "groupedcontent"
+export const TAB = "tab"
 export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
 
 /*---------------Element Interactive ----------------------*/ 
@@ -109,6 +111,7 @@ export const disabledPrimaryOption = [
     "primary-element-citation",
     "primary-multicolumn",
     "primary-multicolumn-3c",
+    "primary-tabbed-elem"
 ];
 // this constant is used by sidebar
 export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive", 'assessment']
@@ -128,13 +131,15 @@ export const POETRY_SOURCE = 'POETRY';
 export const MULTICOLUMN_SOURCE = 'MULTICOLUMN';
 export const TEXT_SOURCE = 'TEXT';
 export const SHOW_HIDE = "SHOWHIDE";
+export const TABBED_SOURCE = "TABBED_2_COLUMN"
 export const SOURCE_MAP = {
     [CITATION_SOURCE]: { 'support': ['ELEMENT_CITATION'], 'notSupport': [] },
-    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN'] },
+    [ASIDE_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'ELEMENT_CITATION', 'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','MULTI_COLUMN', 'TABBED_2_COLUMN'] },
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
-    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','POP_UP'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
-    [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION'] },
-    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST', 'COLUMN_VIEW_1', 'COLUMN_VIEW_2', 'COLUMN_VIEW_3','COLUMN_VIEW_4'], 'notSupport': [] }
+    [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','POP_UP','TAB_ELEMENT', 'TABBED_2_COLUMN'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
+    [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION','TAB_ELEMENT'] },
+    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST', 'COLUMN_VIEW_1', 'COLUMN_VIEW_2', 'COLUMN_VIEW_3','COLUMN_VIEW_4'], 'notSupport': [] },
+    [TABBED_SOURCE]: { 'support': ['TAB_ELEMENT'], 'notSupport': [] },
 };
 const SHOWHIDE = "SHOW_HIDE";
 // This mapping is used for conditional rendering of Paste Button inside Elements
@@ -285,6 +290,18 @@ export const externalLOWarningtxt = `Performing this action will remove the curr
 export const CYPRESS_LF = "cypressLF";
 export const EXTERNAL_LF =  "externalLF";
 
+/** Tabbed 2 column element - TABBED_2_COLUMN */
+export const TABBED_2_COLUMN = {
+    "ELEMENT_TAG_NAME": "TB",
+    "ELEMENT_NAME" : "primary-tabbed-elem"
+}
+
+/** Tabbed tab element - TAB_2_COLUMN */
+export const TABBED_TAB = {
+    "ELEMENT_TAG_NAME": "Tab",
+    "ELEMENT_NAME" : "primary-tab-elem"
+}
+
 /** Multi column - 3 column constants */
 export const MULTI_COLUMN_3C = {
     "ELEMENT_TAG_NAME": "3C",
@@ -312,3 +329,9 @@ export const BLOCK_LIST_ELEMENT_EVENT_MAPPING = {
 
 /** Not supported TCM revet functionality element types */
 export const notAllowedTCMElementTypes = ['openerelement', 'tableasmarkup', 'manifestlist', 'element-generateLOlist']
+
+/* Tab Title Placeholder */
+export const tabTitlePlaceholder = "Enter tab name (max. 25 characters)"
+
+/* TB sidebar conversion endpoint */
+export const tbSidebarEndpoint = "tabbed-2-column"

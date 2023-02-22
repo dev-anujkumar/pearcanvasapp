@@ -752,6 +752,95 @@ th ol li.listItemNumeroUnoNone:before {
     position: relative;
     padding: 3px 4px;
 }
+/* TB > Tab > WE > Elements*/
+.tb .tab .we {
+    width: 92%;
+}
+.tb .tab .we .fg{
+    width: 91%;
+}
+.tb .tab .we .tb{
+    width: 91%;
+}
+.tb .tab .we .eq{
+    width: 91%;
+}
+.tb .tab .we .sh {
+    width: 91%;
+}
+.tb .tab .we .te {
+    width: 91%;
+}
+.tb .tab .we .elm{
+    width: 91%;
+}
+.tb .tab .we .quad{
+    width: 91%;
+}
+.tb .tab .we .mml{
+    width: 91%;
+}
+.tb .tab .we .bce{
+    width: 91%;
+}
+/* TB > Tab > WE > SH > Elements*/
+.tb .tab .we .sh .fg, .tb .tab .we .sh .mml, .tb .tab .we .sh .eq, .tb .tab .we .sh .tb{
+    width: 90%;
+}
+
+.tb .tab .we .sh .vid, .tb .tab .we .sh .aud{
+    width: 91%;
+}
+
+.tb .tab .we .sh .bce, .tb .tab .we .sh .te{
+    width: 90%;
+}
+
+/* TB > Tab > Elements*/
+.tb .tab .te, .tb .tab .elm, .tb .tab .quad{
+    width: 92%;
+}
+
+/* TB > Tab > SH > Elements*/
+
+.tb .tab .sh .bce,.tb .tab .sh .te, .tb .tab .sh .mml,.tb .tab .sh .eq, .tb .tab .sh .tb, .tb .tab .sh .fg{
+    width: 91%;
+}
+/* TB > Tab > AS> Elements*/
+.tb .tab .as {
+    width: 92%;
+}
+.tb .tab .as .elm,.tb .tab .as .quad{
+    width: 91%;
+}
+/* TB > Tab > AS > SH > Elements*/
+.tb .tab .as .sh{
+    width: 91%;
+}
+.tb .tab .as .sh .fg,.tb .tab .as .sh .mml, .tb .tab .as .sh .bce,.tb .tab .as .sh .te{
+    width: 90%;
+}
+/** Condition for TB > Tab > WE > SH > Figure*/
+.tb .tab .we .sh .figure-label-number, .tb .tab .we .sh .figure-label-number-highlight, .tb .tab .we .sh .figure-number-dropdown {
+    width: 185px;
+}
+
+/** Condition for TB > Tab > AS > Figure*/
+
+.tb .tab .as .figure-label-number, .tb .tab .as .figure-label-number-highlight,.tb .tab .as .figure-number-dropdown  {
+    width: 199px;
+}
+
+/* TB > Tab > AS > SH > Fig Element*/
+.tb .tab .as .sh .figure-label-number, .tb .tab .as .sh .figure-label-number-highlight, .tb .tab .as .sh .figure-number-dropdown{
+    width: 186px;
+}
+
+/* TB > Tab > WE > Fig Element*/
+.tb .tab .we .figure-label-number, .tb .tab .we .figure-label-number-highlight, .tb .tab .we .figure-number-dropdown {
+    width: 215px;
+}
+
 .figure-label-number-highlight{
     width: 230px;
     font-size: 14px;
@@ -832,6 +921,19 @@ th ol li.listItemNumeroUnoNone:before {
   z-index: 99;
   top:25px;
 }
+/** Condition for TB > Tab > WE > SH > Figure*/
+.tb .tab .we .sh .figure-label, .tb .tab .we .sh .figure-label-highlight, .tb .tab .we .sh .figure-dropdown, .tb .tab .as .sh .figure-label, .tb .tab .as .sh .figure-label-highlight  {
+    width: 100px;
+}
+
+.tb .tab .as .sh .figure-dropdown {
+    width: 98px;
+}
+.tb .tab .as .sh .figure-header .image-label .figureLabel.cypress-editable, .tb .tab .we .figure-header .image-label .figureLabel.cypress-editable
+{
+    width: 92px !important;
+}
+
 .figure-dropdown ul {
     padding: 4px 0px;
     margin: 0px;
@@ -1106,6 +1208,28 @@ th ol li.listItemNumeroUnoNone:before {
     align-self: center;
     margin-left: -358px;
 }
+/* TB > Tab > WE > SH > Table Element*/
+.tb .tab .we .sh .table-asset-button {
+    margin-left: -222px;
+}
+/* TB > Tab > WE > Table Element*/
+.tb .tab .we .table-asset-button {
+    margin-left: -270px;
+}
+/* TB > Tab > SH > Table Element*/
+.tb .tab .sh .table-asset-button{
+    margin-left: -270px;
+}
+/* TB > Tab > Table Element*/
+
+.tb .tab .table-asset-button{
+    margin-left: -300px;
+}
+/* TB > Tab > AS > SH > Table Element*/
+
+.tb .tab .as .sh .table-asset-button{
+    margin-left: -230px;
+}
 
 .table-asset-button-label {
     width: 79px;
@@ -1117,3 +1241,8 @@ th ol li.listItemNumeroUnoNone:before {
     color: #005a70;
 }
 /**Table Element(TE) Styling End*/
+
+/*Tab Title*/
+.tabTitleContainer{
+    padding: 19px 12px 0 12px;
+}

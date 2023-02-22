@@ -802,6 +802,9 @@ export class TinyMceEditor extends Component {
         if (this.props.element && this.props?.element?.type === 'element-aside' && asideNumberingPlaceholders.includes(this.props.placeholder)) {
             this.props.onFigureImageFieldFocus(this.props.index);
         }
+        if (this.props?.parentElement?.subtype === ElementConstants.TAB && this.props?.tabTitle) {
+            this.props.onTabTitleFieldFocus(this.props.index);
+        }
         // cbFunc | is for callback delegates //
         let cbFunc = null;
         // alreadyExist | is to check if glossary&footnote tab is open //
@@ -1039,7 +1042,7 @@ export class TinyMceEditor extends Component {
                     lastCont = this.lastContent;
                 }
                 this.lastContent = activeElement.innerHTML;
-                if (!isMediaElement && !activeElement.children.length && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' && this.props.element.type !== "element-blockfeature"|| (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
+                if (!isMediaElement && !activeElement.children.length && this.props?.asideData?.parentElementSubtype !== "tab" && this.props.element.type !== "citations" && this.props.element.type !== 'poetry' && this.props.element.type !== "element-blockfeature"|| (activeElement.children.length === 1 && activeElement.children[0].tagName === "BR" && activeElement.nodeName !== "CODE")) {
                     //code to avoid deletion of editor first child(like p,h1,blockquote etc)
                     let div = document.createElement('div');
                     div.innerHTML = lastCont;
@@ -1241,7 +1244,7 @@ export class TinyMceEditor extends Component {
             const selectionNode = window.getSelection().anchorNode;
             const tinymceOffset = currentSelection.getRng().endOffset;
             const popupSlate = (this.props?.slateLevelData[config.slateManifestURN]?.type === "popup")
-            if(this.props?.slateLevelData[config.slateManifestURN]?.status === 'approved' && !popupSlate){
+            if(this.props?.slateLevelData[config.slateManifestURN]?.status === 'approved' && !popupSlate && !config?.isCypressPlusEnabled){
                 this.props.approvedSlatePopupStatus(true)
                 e.preventDefault();
                 e.stopPropagation();
@@ -1598,7 +1601,18 @@ export class TinyMceEditor extends Component {
                     }
                 }
             }
-           
+
+            // Restrict max char limit of tab title (25 char)
+            if (this.props?.element?.parentUrn?.subtype === ElementConstants.TAB) {
+                const keyCode = e.keyCode || e.which;
+                const allowedKeys = [8, 37, 38, 39, 40, 46] // Keys for Arrows, Del, BkSpc
+                const cutPasteKeys = [67,86,88] // restrict Cut/Copy/Paste Operations
+                if ((tinymce?.activeEditor?.targetElm?.innerText?.length + 1 > 25) && !(allowedKeys.includes(keyCode)) || (e.ctrlKey && (cutPasteKeys.includes(keyCode)))) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }
         });
     }
 
@@ -2833,6 +2847,18 @@ export class TinyMceEditor extends Component {
                             return false;
                         }
                 }
+            } else if (indexesLen === 5) {
+                switch (tempIndex[4]) {
+                    case "1":
+                        if (!this.props.element.contents['formatted-title']) {
+                            return false;
+                        }
+                        break;
+                    case "4":
+                        if (!(this.props.element.contents['creditsarray'] ? this.props.element.contents['creditsarray'][0] : null)) {
+                            return false;
+                        }
+                }
             }
             elementId = this.props.elementId
             let footNoteSpan = document.getElementById('footnote-attacher');
@@ -3656,6 +3682,9 @@ export class TinyMceEditor extends Component {
                 default: break;
             }
         }
+        if(this.props?.element?.parentUrn?.subtype === ElementConstants.TAB){
+            toolbar = config.tabTitleToolbar;
+        }
         return toolbar;
     }
 
@@ -4120,6 +4149,9 @@ export class TinyMceEditor extends Component {
         if (((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) || 
             (this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title)) {
             this.props.onFigureImageFieldBlur(this.props.index);
+        }
+        if (this.props?.parentElement?.subtype === ElementConstants.TAB && this.props?.tabTitle) {
+            this.props.onTabTitleFieldBlur(this.props.index);
         }
 
         tinymce.$('span[data-mce-type="bookmark"]').each(function () {

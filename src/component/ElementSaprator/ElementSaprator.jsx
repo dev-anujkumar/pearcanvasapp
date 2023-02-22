@@ -47,7 +47,9 @@ const { TEXT,
     SHOW_HIDE,
     POPUP,
     ELEMENT_DISCUSSION,
-    HIDE_SPLIT_SLATE_CONTAINER
+    HIDE_SPLIT_SLATE_CONTAINER,
+    TABBED_TAB,
+    TAB
  } = elementTypeConstant
 
 export function ElementSaprator(props) {
@@ -56,7 +58,7 @@ export function ElementSaprator(props) {
     const [pasteIcon, togglePaste] = useState(true);
     const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
     let propsData={data,setData,showInteractiveOption,setshowInteractiveOption,props}
-    const { esProps, elementType, sectionBreak, permissions } = props
+    const { esProps, elementType, sectionBreak, permissions, subtype } = props
     let buttonRef = useRef(null)
 
     /**
@@ -146,7 +148,7 @@ export function ElementSaprator(props) {
             isChildElementNotAcceptedInPopup = asideNotAcceptedTypes.includes(props?.asideData?.type)
         }
         let allowToShowPasteIcon = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.elementSelection?.element?.type) ? false : true;
-        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation && !isChildElementNotAcceptedInPopup) {
+        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation && !isChildElementNotAcceptedInPopup && separatorProps?.asideData?.parent?.subtype !== TAB && separatorProps?.asideData?.grandParent?.asideData?.parent?.subtype !== TAB) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
                     <Tooltip direction='paste' tooltipText='Paste element'>
@@ -166,7 +168,7 @@ export function ElementSaprator(props) {
         const parentContainerForShowHide = ["groupedcontent", "element-aside"]
         const hasPasteFromWordPermission = hasProjectPermission("paste_from_word");
         let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
-        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type))) {
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type)) || (parentUrn?.subtype === TAB) || (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB)) {
             return null;
         }
         let insertionIndex = firstOne ? index : index + 1
@@ -219,7 +221,7 @@ export function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData, subtype)}
                         </ul>
                     </div>
                 </div>
@@ -240,13 +242,16 @@ ElementSaprator.propTypes = {
  * @description: Rendering the element picker dropdown based on type of Container Element
  */
 
-function renderConditionalButtons(esProps,sectionBreak,elementType){
+function renderConditionalButtons(esProps,sectionBreak,elementType,subtype){
     let updatedEsProps = esProps.filter((btnObj) => {        
       let  buttonType = btnObj.buttonType;
         if (elementType == CITATION_GROUP_ELEMENT && sectionBreak) { /** Container : Citation Group |Render Citation Element*/
             return buttonType == CITATION;
         } else if (elementType == POETRY){                           /** Container : Poetry Element |Render Stanza Element*/
             return buttonType === STANZA_ELEMENT;
+        }
+        else if (elementType === SINGLE_COLUMN && subtype === TAB) { /** Container : Tabbed 2-Column Element*/
+            return buttonType === TABBED_TAB;
         }
         else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
             let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT, CONTAINER_BUTTON, WORKED_EXP ];                  
@@ -257,9 +262,9 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
         } 
         else {
         if (sectionBreak) {                                          /** Container : Other cases in Wored Example*/
-            return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER && buttonType !== TABBED_TAB;
         } else {                                                     /** Container : Aside| Section in WE*/
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER;
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER && buttonType !== TABBED_TAB;
         }
     }
     })
@@ -269,12 +274,12 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData) {
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData,subtype) {
     let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER || TOC_PARENT_TYPES.includes(config.parentOfParentItem)) {
         if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT || elementType == SINGLE_COLUMN) {
-            esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
+            esProps = renderConditionalButtons(esProps, sectionBreak, elementType, subtype);
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
                     return buttonType !== METADATA_ANCHOR;
@@ -283,7 +288,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         }else {            
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT;
+                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== TABBED_TAB;
             })
         }
 
@@ -310,16 +315,16 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
                     return buttonType !== SECTION_BREAK && buttonType !== OPENER 
-                    && buttonType !== CITATION && btnObj.buttonType !== STANZA_ELEMENT;
+                    && buttonType !== CITATION && btnObj.buttonType !== STANZA_ELEMENT && btnObj.buttonType !== TABBED_TAB;
                 })
             }else{
                 updatedEsProps = esProps.filter((btnObj) => {
                     return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION 
-                    && btnObj.buttonType !== STANZA_ELEMENT;
+                    && btnObj.buttonType !== STANZA_ELEMENT && btnObj.buttonType !== TABBED_TAB;
                 })
             }
             if (elementType == ELEMENT_ASIDE || elementType == POETRY || elementType == CITATION_GROUP_ELEMENT || elementType == SINGLE_COLUMN) {
-                esProps = renderConditionalButtons(esProps, sectionBreak,elementType);
+                esProps = renderConditionalButtons(esProps, sectionBreak, elementType, subtype);
                     updatedEsProps = esProps.filter((btnObj) => {
                         buttonType = btnObj.buttonType;
                         return buttonType !== METADATA_ANCHOR;
@@ -329,12 +334,12 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
         }
         else if (elementType == ELEMENT_ASIDE || elementType == CITATION_GROUP_ELEMENT || elementType === POETRY || elementType == SINGLE_COLUMN) {
-                updatedEsProps = renderConditionalButtons(esProps, sectionBreak, elementType);
+                updatedEsProps = renderConditionalButtons(esProps, sectionBreak, elementType, subtype);
         }          
         else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION && buttonType !== STANZA_ELEMENT;
+                return buttonType !== SECTION_BREAK && buttonType !== OPENER && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== TABBED_TAB;
             })
         }
     }
@@ -391,6 +396,10 @@ export function typeOfContainerElements(elem, props) {
     let newData = containerTypeArray[elem.buttonType];
     /* Do not show Citation Group option if inside Multicolumn  */
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
+    /* Do not show Tabbed 2 column option inside Popup slate  */
+
+    newData = (elem?.buttonType === "multi-column-group" && (config.isPopupSlate || !config.ENABLE_TAB_ELEMENT)) ? {["2-column"]: newData["2-column"], ["3-column"]: newData["3-column"]} : newData;
+    /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
     /* Do not show SH and Pop up option if Aside/WE is inside SH  */
     /* Do not show block poetry option inside SH if SH is inside Aside/WE/MultiColumn */
     if ((asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) || (asideData?.grandParent?.asideData && Object.keys(asideData.grandParent.asideData).length)) {

@@ -617,6 +617,16 @@ describe('Testing functions', () => {
         separatorFunctions.renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)
     })
 
+    it('Testing renderConditionalButtons function -  element type = group, subtype = tab', () => {
+        let sectionBreak = ''
+        let closeDropDown = ''
+        config.slateType = 'adsdfsdf'
+        config.parentEntityUrn = 'urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527'
+        esProps.buttonType = 'interactive-elem-button'
+        config.isPopupSlate = true
+        separatorFunctions.renderDropdownButtons(esProps, "group", sectionBreak, closeDropDown, propsData, "tab")
+    })
+
     it('Testing pasteElement function - cut', () => {
         const separatorProps = {
             index: 2,
@@ -1198,6 +1208,21 @@ describe('Testing functions', () => {
         expect(spyTypeOfContainerElements).toHaveBeenCalled()
     })
 
+    it('Testing renderDropdownButtons function - asideData - groupedcontent', () => {
+        const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
+        const element = {
+            buttonType: 'container-elem-button'
+        }
+        const props = {
+            asideData: {
+                type: "groupedcontent",
+                subtype: "tab"
+            }
+        }
+        separatorFunctions.typeOfContainerElements(element, props);
+        expect(spyTypeOfContainerElements).toHaveBeenCalled()
+    })
+
     it('Testing renderDropdownButtons function - asideData - showhide', () => {
         const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
         const element = {
@@ -1270,4 +1295,18 @@ describe('Testing functions', () => {
         separatorFunctions.typeOfContainerElements(element, props);
         expect(spyTypeOfContainerElements).toHaveBeenCalled()
     });
+
+    it('Testing typeOfContainerElements - elem?.buttonType === "multi-column-group" && config.isPopupSlate', () => {
+        const spyTypeOfContainerElements = jest.spyOn(separatorFunctions, "typeOfContainerElements");
+        const element = {
+            buttonType: 'multi-column-group'
+        }
+        const props = {
+            asideData: {
+                type: "groupedcontent"
+            }
+        }
+        separatorFunctions.typeOfContainerElements(element, props);
+        expect(spyTypeOfContainerElements).toHaveBeenCalled()
+    })
 });

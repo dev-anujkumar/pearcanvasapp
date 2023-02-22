@@ -57,6 +57,8 @@ export default {
 
 /****************Multi Column element************************ */
     MULTI_COLUMN: "groupedcontent",
+    TABBED_TAB: "group",
+    TAB: "tab",
 
 /****************Element Dialogue************************ */  
     ELEMENT_DIALOGUE: "element-dialogue",

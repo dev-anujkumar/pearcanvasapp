@@ -5,7 +5,7 @@
 import axios from 'axios';
 import config from '../config/config';
 import { sendDataToIframe } from '../constants/utility';
-import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING } from '../constants/Element_Constants';
+import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING, MULTI_COLUMN, TAB } from '../constants/Element_Constants';
 import store from '../appstore/store';
 /**
   * @description data after selecting an asset from alfresco c2 module
@@ -214,8 +214,9 @@ export const checkBlockListElement = (data, keypressed) => {
 
 export const isNestingLimitReached = (index,asideData,parentElement) => {
     let BLOCK_LIST_NESTING_LIMIT = 4  // This is default block list nesting limit.
-    if(asideData.parent && (asideData.parent.type === "showhide"|| asideData.parent.type === "groupedcontent") || parentElement?.type === "element-aside") BLOCK_LIST_NESTING_LIMIT = 5;
-    if(typeof index === 'string' && index.includes('-') && index.split("-").length< BLOCK_LIST_NESTING_LIMIT * 2){
+    if (asideData.parent && (asideData.parent.type === "showhide" || asideData.parent.type === "groupedcontent") || parentElement?.type === "element-aside") BLOCK_LIST_NESTING_LIMIT = 5;
+    BLOCK_LIST_NESTING_LIMIT = asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB ? 6 : BLOCK_LIST_NESTING_LIMIT;
+    if(typeof index === 'string' && index.includes('-') && index.split("-").length < BLOCK_LIST_NESTING_LIMIT * 2){
         return false;
     }
     return true;

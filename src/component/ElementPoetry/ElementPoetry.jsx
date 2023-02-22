@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import ElementContainerWrapper from "../HOCs/ElementContainerHOC";
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
+import ElementConstants from '../ElementContainer/ElementConstants';
 import { sendDataToIframe, guid } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
@@ -78,7 +79,9 @@ class ElementPoetry extends Component {
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'pe',
                                             poetryId: this.props.element.id,
-                                            sectionType: this?.props?.showHideType
+                                            sectionType: this?.props?.showHideType,
+                                            parentElement: this.props?.parentElement,
+                                            elementIndex: this.props?.index
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -142,13 +145,14 @@ class ElementPoetry extends Component {
     * @param {*} parentUrn is the URN of poetry elememt
     */
     renderStanzas = (stanzas, parentIndex, parentUrn) => {
-        const { id, type, contentUrn, groupeddata } = this.props?.parentElement || {};
+        const { id, type, subtype, contentUrn, groupeddata } = this.props?.parentElement || {};
         let poetryData = {
             type: "poetry",
             parentUrn: this.props.elementId,
             id: this.props.elementId,
             contentUrn : this.props.model.contentUrn,
-            element : this.props.model,           
+            element : this.props.model,
+            index : this.props?.index        
         };
          /* @columnIndex@ */
          const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
@@ -161,10 +165,21 @@ class ElementPoetry extends Component {
         poetryData = (type === "element-aside") ? {...poetryData, parent: { id, type, contentUrn }} : poetryData;
         
         /* Adding parent id and type to update redux store while creating new element inside 2c->Block Poetry->Stanza */
-        poetryData = (type === "groupedcontent") ? {...poetryData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
+        poetryData = (type === ElementConstants.MULTI_COLUMN & !subtype) ? {...poetryData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
         
         /* Adding parent id , type and showHideType to update redux store while creating new element inside SH->Block Poetry->Stanza */
         poetryData = (type === "showhide") ? { ...poetryData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType } } : poetryData;
+        /* Adding parent id and type to update redux store while creating new element inside TB->Tab->Aside->New */
+        if (type === ElementConstants.MULTI_COLUMN && subtype === ElementConstants.TAB) {
+            let indexes = this.props?.index?.toString()?.split('-') || [];
+            let columnDetails = {
+                columnIndex: Number(indexes[2]),
+                columnId: groupeddata?.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]?.id,
+                columnContentUrn: groupeddata?.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]?.contentUrn,
+                columnName: Number(indexes[2]) === 0 ? "C1" : "C2"
+            }
+            poetryData = {...poetryData, parent: {...this.props.parentElement, columnDetails: columnDetails}}
+        }
         try {
             if (stanzas !== undefined) {
                 if (stanzas.length === 0) {

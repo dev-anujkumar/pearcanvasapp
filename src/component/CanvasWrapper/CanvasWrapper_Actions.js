@@ -39,13 +39,13 @@ import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsP
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
-import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES, SET_LEARNOSITY_CONTENT } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, fetchAnySlateData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
@@ -284,13 +284,23 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"]  
                 }
-                if (element.width && element.groupproportions) {
+                if (element.width && element.groupproportions && element.subtype === 'tab') {
+                    element['width'] = 'text-width';
+                    elementType["primaryOption"] = TABBED_2_COLUMN.ELEMENT_NAME;
+                    elementType["secondaryOption"] = elementDataBank[element.type][`tb-${element.width}-${element.groupproportions}`]["secondaryOption"]
+                } else if (element.width && element.groupproportions) {
                     // checking for column 3 proportion to set primaryOption 
                     if(element.groupproportions === MULTI_COLUMN_3C.ELEMENT_PROPORTION) elementType["primaryOption"] = MULTI_COLUMN_3C.ELEMENT_NAME; 
                     elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
-                }
-                else {
+                } else {
                     elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"] 
+                }
+                break;
+            case "group":
+                elementType = {
+                    elementType: elementDataBank['group']["elementType"],
+                    primaryOption: elementDataBank['group']["primaryOption"],
+                    secondaryOption: elementDataBank['group']['wider-60-40']['secondaryOption']
                 }
                 break;
 
@@ -323,11 +333,11 @@ export const findElementType = (element, index) => {
             elementType: ''
         }
     }
-    
     elementType['elementId'] = element.id;
     elementType['index'] = index;
     elementType['elementWipType'] = element.type;
     elementType['toolbar'] = [];
+    
     if (elementType.elementType && elementType.elementType !== '') {
         elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption] && elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
         elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption] && elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
@@ -783,6 +793,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     let index
+                    if (versioning.subtype === "tab") {
+                        versioning.index = versioning.indexes ? versioning.indexes : versioning.index
+                    } 
                     if(typeof versioning.index === "number"){
                         index = versioning.index;
                     }
@@ -1003,7 +1016,7 @@ const setOldImagePath = (getState, activeElement, elementIndex = 0) => {
         let indexesLen = indexes?.length, condition;
         /* update the store on update of figure elements inside showhide elements */
         if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-            oldPath = getPathOfFigureAsset(bodymatter, indexes, "path", activeElement?.id);
+            oldPath = getPathOfFigureAsset(bodymatter, indexes, "path", activeElement?.id, asideData);
         } else if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
             if (condition.versionUrn == activeElement.id) {
@@ -1042,7 +1055,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 let indexesLen = indexes?.length, condition;
                 /* update the store on update of figure elements inside showhide elements */
                 if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "audioid", activeElement?.id);
+                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "audioid", activeElement?.id, asideData);
                 } else
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -1074,7 +1087,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 let indexesLen = indexes?.length, condition;
                 /* update the store on update of figure elements inside showhide elements */
                 if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "videoid", activeElement?.id);
+                    oldPath = getPathOfFigureAsset(bodymatter, indexes, "videoid", activeElement?.id, asideData);
                 } else
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -1099,10 +1112,10 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
     return oldPath || ""
 }
 /* Return the image/audio/vedio path/Id */
-function getPathOfFigureAsset(bodymatter, indexes, keyName, activeID) {
+function getPathOfFigureAsset(bodymatter, indexes, keyName, activeID, asideData) {
     const indexesLen = indexes?.length;
     /* Get the showhide */
-    const sh_Object = getShowHideElement(bodymatter, indexesLen, indexes);
+    const sh_Object = getShowHideElement(bodymatter, indexesLen, indexes, null, asideData);
     if(sh_Object?.type === SHOW_HIDE) {
         /* Get the sectiontype of showhide */
         const sectionType = indexOfSectionType(indexes);
@@ -1132,7 +1145,7 @@ const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
         let indexesLen = indexes.length, condition;
          /* update the store on update of interactive elements inside showhide elements */
         if(asideData?.type === SHOW_HIDE && indexesLen >= 3) {
-            oldPath = getPathOfFigureAsset(bodymatter, indexes, "interactiveid", activeElement?.id);
+            oldPath = getPathOfFigureAsset(bodymatter, indexes, "interactiveid", activeElement?.id, asideData);
         } else
         if (indexesLen == 2) {
             condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
@@ -1325,7 +1338,15 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                 targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]          
                 break;
             case 6:
-                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]]          
+                // TB->Tab->AS/WE->HEAD->Popup
+                if (targetPopupElement?.type === ElementConstants.MULTI_COLUMN && targetPopupElement?.subtype === ElementConstants.TAB) {
+                    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]];
+                } else {
+                    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]];
+                }
+                break;
+            case 7: // TB->Tab->AS/WE->BODY->Popup
+                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]].contents.bodymatter[popupElementIndex[5]];
                 break;
         }
         if (targetPopupElement) {
@@ -1349,7 +1370,15 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                     _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;          
                     break;
                 case 6:
-                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]] = targetPopupElement;          
+                    // TB->Tab->AS/WE->HEAD->Popup
+                    if (_slateObject.contents.bodymatter[popupElementIndex[0]]?.type === ElementConstants.MULTI_COLUMN && _slateObject.contents.bodymatter[popupElementIndex[0]]?.subtype === ElementConstants.TAB) {
+                        _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]] = targetPopupElement;
+                    } else {
+                        _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]] = targetPopupElement;
+                    }
+                    break;
+                case 7: // TB->Tab->AS/WE->BODY->Popup
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]].contents.bodymatter[popupElementIndex[5]] = targetPopupElement;
                     break;
                 default:
                     _slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement;
@@ -1481,11 +1510,16 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
                 response: response.data,
                 cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
             };
+
+            const isTbElement = containerElement?.asideData?.parent?.subtype === TAB
+            // restricting Tcm operations for TB and its nested elements
+            if(!isTbElement) {
             // disable TCM for all PDF slates in Cypress+ Enabled Projects
             if(config.tcmStatus && !(slateData?.cypressPlusProjectStatus && slateData?.response?.type === 'element-pdf')){
                 prepareDataForTcmCreate(parentElement, _requestData.metaDataField, response.data, getState, dispatch)
             }
             tcmSnapshotsForCreate(slateData, _requestData.metaDataField, containerElement, dispatch);
+        }
         }
         appendCreatedElement(argObj, response.data)
 
@@ -1702,6 +1736,10 @@ export const fetchLearnosityContent = () => dispatch => {
            dispatch({
                type: LEARNOSITY_PROJECT_INFO,
                 payload: response.data
+            });
+            sendDataToIframe({
+                'type': SET_LEARNOSITY_CONTENT,
+                'message': response.data
             });
         }
     })

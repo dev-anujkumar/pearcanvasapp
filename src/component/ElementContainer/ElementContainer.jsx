@@ -17,13 +17,13 @@ import OpenerElement from "../OpenerElement";
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
-         prepareImageDataFromTable, storeDeleteElementKeys } from './ElementContainer_Actions';
+         prepareImageDataFromTable, storeDeleteElementKeys, updateTabTitle } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
@@ -45,6 +45,8 @@ import ElementPoetry from '../ElementPoetry';
 import ElementPoetryStanza from '../ElementPoetry/ElementPoetryStanza.jsx';
 import MultiColumnContext from "./MultiColumnContext.js"
 import MultipleColumnContainer from "../MultipleColumnElement/MultipleColumnContainer.jsx";
+import Tabbed2Column from '../ElementTabbed/Tabbed2ColumnContainer.jsx';
+import TabbedTabContainer from '../ElementTabbed/TabbedTabContainer.jsx';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
 import CutCopyDialog from '../CutCopyDialog';
 import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
@@ -80,11 +82,13 @@ import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTyp
 import { checkHTMLdataInsideString, getCookieByName } from '../../constants/utility'; 
 import { prepareBqHtml } from '../../js/utils';
 import { hideToc } from '../../js/toggleLoader';
+import ElementConstants from './ElementConstants.js';
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
+
 class ElementContainer extends Component {
     constructor(props) {
         super(props);
@@ -320,6 +324,13 @@ class ElementContainer extends Component {
         if (!(this.props.permissions && (this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) && !hasReviewerRole()) {
             return true
         }
+        // Prevent TB element to be highlighted when we click on Tab element properties
+        /* ---------------------------------------XX--------------------------------------- */
+        const tabLabels = ['Ttl', 'C1', 'C2'];
+        if (labelText === 'TB' && event.target.textContent && tabLabels.includes(event.target.textContent)) {
+            return true;
+        }
+        /* ---------------------------------------XX--------------------------------------- */
         if (updateFromC2Flag == "updateFromC2") {
             if (this.props.element.type === "openerelement") {
                 this.setState({
@@ -467,6 +478,22 @@ class ElementContainer extends Component {
             oldTitleHTML = this.removeClassesFromHtml(previousElementData?.html?.title)
         }
         return titleHTML !== oldTitleHTML
+    }
+
+    tabTitleDifference = (index, previousElementData) => {
+        let titleDOM = document.getElementById(`cypress-${index}-0`);
+        const defaultHTML = [`<p class="paragraphNumeroUno"><br/></p>`, `<p></p>`]
+        let titleHTML = titleDOM ? titleDOM.innerHTML : ""
+        titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+        titleHTML = this.removeClassesFromHtml(createLabelNumberTitleModel('', '', titleHTML));
+        let oldTitleHTML = "";
+        if(previousElementData.hasOwnProperty('html')){
+            oldTitleHTML = this.removeClassesFromHtml(previousElementData.html.title)
+            return oldTitleHTML!== titleHTML
+        }
+        else {
+            return defaultHTML.includes(titleHTML) ? false : true;
+        }
     }
 
     /**
@@ -1061,6 +1088,14 @@ class ElementContainer extends Component {
                 }
                 break;
 
+            case elementTypeConstant.TABBED_TAB:
+                if (this.tabTitleDifference(this.props.index, previousElementData) && previousElementData?.id) {
+                    sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
+                    config.isSavingElement = true;
+                    this.props.updateTabTitle(previousElementData, this.props.index, parentElement);
+                }
+                break;
+
             case elementTypeConstant.FIGURE:
                 switch (previousElementData.figuretype) {
                     case elementTypeConstant.FIGURE_IMAGE:
@@ -1246,8 +1281,15 @@ class ElementContainer extends Component {
         const { SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT } = elementTypeConstant;
         const containerParent = [SHOW_HIDE, MULTI_COLUMN, POETRY_ELEMENT].includes(this.props?.parentElement?.type);
         let parentElement
-        /* Update title/credit of block poetry inside multicolumn */
-        if (containerParent && this.props?.parentElement?.type == "groupedcontent" && this.props?.element?.type == "poetry") {
+        /* Update title/credit of block poetry inside Tab element of TB */
+        if (containerParent && this.props?.parentElement?.type == elementTypeConstant.MULTI_COLUMN && this.props?.parentElement?.subtype === elementTypeConstant.TAB && this.props?.element?.type == elementTypeConstant.POETRY_ELEMENT) {
+            const poetryIndex = this.props?.index?.split("-");
+            let poetryElement = this.props.parentElement.groupeddata.bodymatter[poetryIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[poetryIndex[2]].groupdata.bodymatter[poetryIndex[3]];
+            if (poetryElement.type === elementTypeConstant.POETRY_ELEMENT && poetryElement.id === this.props.element?.id) {
+                parentElement = poetryElement;
+            }
+            /* Update title/credit of block poetry inside multicolumn */
+        } else if (containerParent && this.props?.parentElement?.type == "groupedcontent" && this.props?.element?.type == "poetry") {
             this.props.parentElement?.groupeddata?.bodymatter.map((ele) => {
                 ele.groupdata?.bodymatter?.map((ele1) => {
                     if(ele1.type == "poetry" && ele1.id === this.props.element?.id) {
@@ -1679,7 +1721,7 @@ class ElementContainer extends Component {
         let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary')
         if (action === "add") {
             toolbar?.classList?.add("disable");
-        } else if (action === "remove" && (slateStatus !== "approved" || slateStatus === "approved" && popupSlate)) {
+        } else if (action === "remove" && (slateStatus !== "approved" || slateStatus === "approved" && (popupSlate || config?.isCypressPlusEnabled))) {
             toolbar?.classList?.remove("disable");
         }
     }
@@ -1887,7 +1929,8 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn } = this.props;
+        element = (parentUrn?.type === 'groupedcontent' && parentUrn?.subtype === 'tab') ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
         let anyOpenComment = allComments?.filter(({ commentStatus, commentOnEntity }) => commentOnEntity === element.id).length > 0
@@ -1902,6 +1945,11 @@ class ElementContainer extends Component {
         feedback = tcmStatus.feedback
         const isBlockquote = (this.props.element?.elementdata?.type === "blockquote"  || this.props.element?.elementdata?.type === "marginalia")
         /* TODO need better handling with a function and dynamic component rendering with label text*/
+
+
+        // checking whether element is tab element or child of tab element
+        const isTbElement = this.props.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.parent?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB || this.props?.asideData?.parentElementSubtype === ElementConstants.TAB || this.props?.element?.subtype === ElementConstants.TAB;
+
         const commonProps = {
             index,
             elementId: element.id,
@@ -2211,8 +2259,32 @@ class ElementContainer extends Component {
                     break;
 
                 case elementTypeConstant.MULTI_COLUMN:
-                    // checking if labelText is 3C to render 3 column component
-                    if (labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) {
+                    // checking if labelText is TB to render Tabbed 2 column element
+                    if (labelText === TABBED_2_COLUMN.ELEMENT_TAG_NAME) {
+                        editor = <Tabbed2Column
+                            userRole={this.props.userRole}
+                            pasteElement={this.props.pasteElement}
+                            labelText = {TABBED_2_COLUMN.ELEMENT_TAG_NAME}
+                            activeElement = {this.props.activeElement}
+                            showBlocker = {this.props.showBlocker}
+                            permissions = {permissions}
+                            index = {index}
+                            element = {element}
+                            slateLockInfo = {slateLockInfo}
+                            handleCommentspanel = {handleCommentspanel}
+                            isBlockerActive = {this.props.isBlockerActive}
+                            onClickCapture = {this.props.onClickCapture}
+                            elementSepratorProps = {elementSepratorProps}
+                            setActiveElement = {this.props.setActiveElement}
+                            onListSelect = {this.props.onListSelect}
+                            handleFocus = {this.handleFocus}
+                            handleBlur = {this.handleBlur}
+                            deleteElement = {this.deleteElement}
+                            handleUndoOption = {this.handleUndoOption}
+                            splithandlerfunction = {this.props.splithandlerfunction}
+                        />
+                        // checking if labelText is 3C to render 3 column component
+                    } else if (labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) {
                         editor = editor = <MultiColumnContext.Provider value={{
                             activeElement: this.props.activeElement,
                             showBlocker: this.props.showBlocker,
@@ -2256,6 +2328,31 @@ class ElementContainer extends Component {
                         }}><MultipleColumnContainer labelText={labelText} userRole={this.props.userRole} pasteElement={this.props.pasteElement}  handleCopyPastePopup={this.props.handleCopyPastePopup}  closeUndoTimer = {this.props.closeUndoTimer}/>
                         </MultiColumnContext.Provider>;
                     }
+                    break;
+                case elementTypeConstant.TABBED_TAB:
+                    editor = <TabbedTabContainer
+                        userRole={this.props.userRole}
+                        pasteElement={this.props.pasteElement}
+                        labelText = {TABBED_TAB.ELEMENT_TAG_NAME}
+                        activeElement = {this.props.activeElement}
+                        showBlocker = {this.props.showBlocker}
+                        permissions = {permissions}
+                        index = {index}
+                        element = {element}
+                        parentElement = {this.props.parentElement}
+                        slateLockInfo = {slateLockInfo}
+                        handleCommentspanel = {handleCommentspanel}
+                        isBlockerActive = {this.props.isBlockerActive}
+                        onClickCapture = {this.props.onClickCapture}
+                        elementSepratorProps = {elementSepratorProps}
+                        setActiveElement = {this.props.setActiveElement}
+                        onListSelect = {this.props.onListSelect}
+                        handleFocus = {this.handleFocus}
+                        handleBlur = {this.handleBlur}
+                        deleteElement = {this.deleteElement}
+                        handleUndoOption = {this.handleUndoOption}
+                        splithandlerfunction = {this.props.splithandlerfunction}
+                        />
                     break;
 
                 case elementTypeConstant.ELEMENT_DIALOGUE:
@@ -2408,15 +2505,16 @@ class ElementContainer extends Component {
         const inContainer = this.props.parentUrn ? true : false;
         let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
         let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
-                return (
+        return (
             <>
                 <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                     {this.renderCopyComponent(this.props, index, inContainer, tcm)}
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        <Button type="element-label"  elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
+                        <Button type="element-label" elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
                         {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
-                        {(labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME || MULTI_COLUMN_2C.ELEMENT_TAG_NAME) && <div>{this.renderMultipleColumnLabels(element)}</div>}
-                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" elementType={element?.type} onClick={(e) => this.showDeleteElemPopup(e, true)} />)
+                        {labelText === TABBED_TAB.ELEMENT_TAG_NAME && this.renderTabTitleLabel(element)}
+                        {((labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) || (labelText === MULTI_COLUMN_2C.ELEMENT_TAG_NAME) || (labelText === TABBED_TAB.ELEMENT_TAG_NAME)) && <div>{this.renderMultipleColumnLabels(element)}</div>}
+                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" elementType={element?.type} onClick={(e) => this.showDeleteElemPopup(e, true)} isButtonDisabled={(labelText === TABBED_TAB.ELEMENT_TAG_NAME) ? this.checkTabCount() : false} />)
                             : null}
                         {this.renderColorPaletteButton(element, permissions)}
                         {this.renderColorTextButton(element, permissions)}
@@ -2428,9 +2526,9 @@ class ElementContainer extends Component {
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
@@ -2440,7 +2538,7 @@ class ElementContainer extends Component {
                         (element?.elementdata?.assetid !== "" || this.state.pdfSlateAssetId !== "") && <Button type={`alfresco-TE-metadata`} btnClassName={` metadata-pdfElement ${btnClassName}`} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'alfresco-TE-metadata': 'alfresco-metadata'}`} btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />} 
-                        {feedback ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : (tcm && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} btnClassName={element.type === elementTypeConstant.PDF_SLATE && 'pdf-tcm-icon'}/>)}
+                        {(feedback && ! isTbElement) ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : ((tcm && !isTbElement) && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} btnClassName={element.type === elementTypeConstant.PDF_SLATE && 'pdf-tcm-icon'}/>)}
                     </div> : ''}
                     {this.state.popup && <PopUp
                         togglePopup={this.handleCommentPopup}
@@ -2519,14 +2617,34 @@ class ElementContainer extends Component {
         );
     }
 
+    // function to disable delete button if TB has single Tab
+    checkTabCount = () => {
+        return this.props?.parentElement?.groupeddata?.bodymatter?.length === 1 ? true : false;
+    }
+
+    // function to render Title label for tabbed element
+    renderTabTitleLabel = (element) => {
+        let activeColumnLabel = '';
+        for (let propsElementObject of this.props.multipleColumnData) {
+            if (propsElementObject.containerId === element.groupdata?.bodymatter[0].id) {
+                activeColumnLabel = propsElementObject.columnIndex;
+            }
+        }
+        return (
+            <Button btnClassName={activeColumnLabel === `Ttl` ? "activeTagBgColor" : ""} labelText='Ttl' onClick={() => this.updateColumnValues('Ttl', element.groupdata?.bodymatter[0])} type="label-clickable-button" />
+        )
+    }
+
     // function to render multiple columns for 3 column container based on bodymatter
     renderMultipleColumnLabels = (element) => {
-        let activeColumnLabel = "C1"
+        element = (this.props?.parentUrn?.type === 'groupedcontent' && this.props?.parentUrn?.subtype === 'tab') ? element.groupdata?.bodymatter[0] : element;
+        let activeColumnLabel = "C1";
         for (let propsElementObject of this.props.multipleColumnData) {
             if (propsElementObject.containerId === element.id) {
                 activeColumnLabel = propsElementObject.columnIndex;
             }
         }
+        
         if (element && 'groupeddata' in element && element.groupeddata && 'bodymatter' in element.groupeddata &&
             element.groupeddata.bodymatter && element.groupeddata.bodymatter.length > 0) {
             return element.groupeddata.bodymatter.map((bodymatter, index) => {
@@ -2546,6 +2664,7 @@ class ElementContainer extends Component {
             containerId: objKey,
             columnIndex: `C${index + 1}`
         }
+        multipleColumnObjData = index === 'Ttl' ? {...multipleColumnObjData, columnIndex: 'Ttl'} : multipleColumnObjData;
         setTimeout(() => {
             this.props.updateMultipleColumnData(multipleColumnObjData, objKey);
         }, 0)
@@ -2573,6 +2692,7 @@ class ElementContainer extends Component {
                     permissions={_props.permissions}
                     slateLevelData={this.props.slateLevelData}
                     handleBlur={this.handleBlur}
+                    asideData={this.props.asideData}
                 />
             )
         }
@@ -2945,6 +3065,7 @@ class ElementContainer extends Component {
             }
             return this.renderElement(element);
         } catch (error) {
+            console.log("error log is here", error)
             return (
                 <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
             )
@@ -3101,6 +3222,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         storeDeleteElementKeys : (objectkey) => {
             dispatch(storeDeleteElementKeys(objectkey));
+        },
+        updateTabTitle: (previousElementData, index, parentElement) => {
+            dispatch(updateTabTitle(previousElementData, index, parentElement));
         }
     }
 }

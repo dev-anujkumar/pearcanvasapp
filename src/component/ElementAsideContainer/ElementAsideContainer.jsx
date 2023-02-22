@@ -18,6 +18,7 @@ import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.j
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe } from '../../constants/utility';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
+import ElementConstants from '../ElementContainer/ElementConstants';
 // IMPORT - Assets //
 
 let random = guid();
@@ -153,7 +154,7 @@ class ElementAsideContainer extends Component {
                                             currentSlateEntityUrn: parentUrn.contentUrn,
                                             containerTypeElem: 'we',
                                             elementIndex: this.props.index,
-                                            parentElement: { type: this.props?.parentElement?.type, showHideType: this.props?.showHideType }
+                                            parentElement: { type: this.props?.parentElement?.type, subtype: this.props?.parentElement?.subtype, showHideType: this.props?.showHideType }
                                         }
                                         this.props.swapElement(dataObj, (bodyObj) => { })
                                         this.props.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
@@ -223,7 +224,7 @@ class ElementAsideContainer extends Component {
             containerTypeElem: 'section',
             asideId: this.props.element.id,
             elementIndex: this.props.index,
-            parentElement: { type: this.props?.parentElement?.type, showHideType: this.props?.showHideType }
+            parentElement: { type: this.props?.parentElement?.type, subtype: this.props?.parentElement?.subtype, showHideType: this.props?.showHideType }
         }
 
         this.props.swapElement(dataObj, (bodyObj) => { })
@@ -384,7 +385,7 @@ class ElementAsideContainer extends Component {
     renderElement(_elements, parentUrn, parentIndex, elementLength) {
         let firstSection = true;
         let showSectionBreak;
-        const { id, type, groupeddata, contentUrn } = this.props?.parentElement || {};
+        const { id, type, subtype, groupeddata, contentUrn } = this.props?.parentElement || {};
         let asideData = {
             type: "element-aside",
             subtype :this.props.element.subtype, 
@@ -400,9 +401,20 @@ class ElementAsideContainer extends Component {
         const columnContentUrn = groupeddata?.bodymatter[columnIndex]?.contentUrn;
         const multiColumnType = groupeddata?.bodymatter?.length ? `${groupeddata?.bodymatter?.length}C` : undefined;
         /* Adding parent id and type to update redux store while creating new element inside 2c->Aside->New */
-        asideData = (type === "groupedcontent") ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : asideData;
+        asideData = (type === ElementConstants.MULTI_COLUMN && !subtype) ? {...asideData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : asideData;
         /* Adding parent id, type and contentUrn update redux store while creating new element inside S/H->Aside->New */
-        asideData = (type === "showhide") ? {...asideData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType }} : asideData;
+        asideData = (type === ElementConstants.SHOW_HIDE) ? {...asideData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType }} : asideData;
+        /* Adding parent id and type to update redux store while creating new element inside TB->Tab->Aside->New */
+        if (type === ElementConstants.MULTI_COLUMN && subtype === ElementConstants.TAB) {
+            let indexes = this.props?.index?.toString()?.split('-') || [];
+            let columnDetails = {
+                columnIndex: Number(indexes[2]),
+                columnId: groupeddata?.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]?.id,
+                columnContentUrn: groupeddata?.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]?.contentUrn,
+                columnName: Number(indexes[2]) === 0 ? "C1" : "C2"
+            }
+            asideData = {...asideData, parent: {...this.props.parentElement, columnDetails: columnDetails}}
+        }
         try {
             if (_elements !== undefined) {
                 if (_elements.length == 0) {

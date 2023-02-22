@@ -22,7 +22,7 @@ import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownData
 import { updateAutoNumberedElement } from './UpdateElements';
 import { updateAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import store from '../../appstore/store';
-const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
+const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB, MULTI_COLUMN } = ElementConstants;
 
 const { 
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -86,6 +86,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             case "groupedcontent":
             case "manifestlist":
             case "manifestlistitem":
+            case "group":
                 return {
                     "projectUrn": config.projectUrn,
                     "entityUrn": contentUrn
@@ -275,7 +276,7 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
         /* asideDataFromAfrescoMetadata is used for editing figure metadata popup field(alttext, longDescription) inside ShowHide element */
         if((asideData?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.type === SHOW_HIDE ) && indexes?.length >= 3) {
             /* Get the showhide element object from slate data using indexes */
-            const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+            const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes, null, asideData);
             const section = indexOfSectionType(indexes); /* Get the section type */
             /* After getting showhide Object, add the new element */
             if(shObject?.type === SHOW_HIDE) {
@@ -360,10 +361,26 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                         }
                     
                     }
+                } /* TB:Tab:Fig && TB:Tab:AS/WE:Fig */
+            } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === MULTI_COLUMN && newBodymatter[indexes[0]].subtype === TAB) { 
+                switch (indexesLen) {
+                    case 4: // TB->Tab->Figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                        break;
+                    case 5: // TB->Tab->AS/WE->HEAD->Figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                        break;
+                    case 6: // TB->Tab->AS/WE->BODY->Figure
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                        break;
+                }
+                if (condition.versionUrn === elementId) {
+                    dataToSend = condition?.figuredata
+                    condition.figuredata = figureData
                 }
             } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === "groupedcontent") { /* 2C:AS:Fig */
                 if (indexesLen == 4) {
-                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];  
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                 } else if (indexesLen == 5) {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
                 }
@@ -504,7 +521,9 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
         };
         //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed 
-        if(type2BAdded !== "MANIFEST_LIST") {
+        // check modified to prevent snapshots for TB element
+        const isTbElement = parentElement?.grandParent?.asideData?.subtype === TAB || parentElement?.grandParent?.asideData?.parent?.subtype === TAB;
+        if (type2BAdded !== "MANIFEST_LIST" && !isTbElement) {
         if (slateWrapperConstants?.elementType?.indexOf(type2BAdded) !== -1) {
             if (currentSlateData.status === 'approved') {
                 await tcmSnapshotsForCreate(slateData, type2BAdded, containerElement, dispatch);
@@ -521,7 +540,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         /* Create inner elements in ShowHide */
         const indexes = index?.toString().split('-') || [];
         /* Get the showhide element object from slate data using indexes */
-        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes);
+        const shObject = getShowHideElement(newBodymatter, (indexes?.length), indexes, null, parentElement);
         /* After getting showhide Object, add the new element */
         if(shObject?.id === elementId) {
             if(shObject?.interactivedata?.hasOwnProperty(type)) {
@@ -537,7 +556,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         if (config.tcmStatus) {
             const { prepareDataForTcmCreate } = (await import("../SlateWrapper/slateWrapperAction_helper.js"))
             //This check will be removed once BL will support TCM
-            if(type2BAdded !== "MANIFEST_LIST") {
+            // isTbElement condition restrict tcm operations for tb and its nested elements
+            if(type2BAdded !== "MANIFEST_LIST" && !isTbElement) {
             if (containersInSH.includes(type2BAdded)) {
                 prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);    
             } else {
@@ -900,6 +920,87 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         config.conversionInProcess = false
         config.savingInProgress = false
         config.isSavingElement = false
+        console.error(" Error >> ", err)
+    })
+}
+
+export const updateTabTitle = (previousData, index, parentElement) => (dispatch, getState) => {
+    const parentData = getState().appStore.slateLevelData;
+    const currentParentData = JSON.parse(JSON.stringify(parentData));
+    let currentSlateData = currentParentData[config.slateManifestURN];
+    let titleDOM = document.getElementById(`cypress-${index}-0`)
+    let titleHTML = titleDOM ? titleDOM.innerHTML : ""
+    titleHTML = titleHTML.replace(/<br data-mce-bogus="1">/g, '').replace(/\&nbsp;/g, '').trim();
+    config.savingInProgress = true;
+    config.isSavingElement = true;
+    let dataToSend = {
+        projectUrn: config.projectUrn,
+        subtype: previousData.subtype,
+        type: previousData.type,
+        html: {
+            title: `<p>${titleHTML}</p`
+        },
+        contentUrn: previousData.contentUrn,
+        status: parentElement.hasOwnProperty('status') ? parentElement.status : 'wip'
+    }
+
+    let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${previousData.contentUrn}/metadata?isHtmlPresent=true`
+    return axios.put(url, dataToSend, {
+        headers: {
+            "Content-Type": "application/json",
+            'myCloudProxySession': config.myCloudProxySession
+        }
+    }).then(res => {
+        if (currentSlateData?.status === 'approved') {
+            if (currentSlateData.type === "popup") {
+                sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
+                sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
+                dispatch(fetchSlateData(currentSlateData.id, currentSlateData.contentUrn, 0, currentSlateData, ""));
+            }
+            else {
+                sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
+            }
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            // config.conversionInProcess = false
+            config.savingInProgress = false
+            config.isSavingElement = false
+        }
+        else {
+            sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+            const newVersionURN = res?.data?.versionUrn && res.data.versionUrn.trim() !== "" ? res.data.versionUrn : "";
+            if (newVersionURN && newVersionURN !== '') { // Trigger Api for parent versioning
+                const CONTAINER_VERSIONING = "containerVersioning";
+                parentElement = {...parentElement, index: index}
+                dispatch(fetchSlateData(parentElement?.id, parentElement?.contentUrn, 0, parentElement, CONTAINER_VERSIONING, false));
+            } else {
+                let indexes = typeof index === 'number' ? index : index.split("-");
+                let elementToUpdate = currentSlateData.contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]];
+                elementToUpdate = {
+                    ...elementToUpdate,
+                    html: {
+                        title: `<p>${titleHTML}</p`
+                    }
+                }
+                currentSlateData.contents.bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]] = elementToUpdate;
+                currentParentData[config.slateManifestURN] = currentSlateData;
+                dispatch({
+                    type: AUTHORING_ELEMENT_UPDATE,
+                    payload: {
+                        slateLevelData: currentParentData
+                    }
+                })
+            }
+        }
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        // config.conversionInProcess = false
+        config.savingInProgress = false;
+        config.isSavingElement = false;
+    }).catch(err => {
+        sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
+        dispatch({ type: ERROR_POPUP, payload: { show: true } })
+        // config.conversionInProcess = false
+        config.savingInProgress = false;
+        config.isSavingElement = false;
         console.error(" Error >> ", err)
     })
 }

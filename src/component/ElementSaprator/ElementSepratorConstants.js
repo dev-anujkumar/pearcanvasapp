@@ -31,7 +31,9 @@ export default {
     ELEMENT_DISCUSSION : "discussion",
     SHOW_HIDE: 'showhide',
     POPUP: 'popup',
-    HIDE_SPLIT_SLATE_CONTAINER:['part','volume']
+    HIDE_SPLIT_SLATE_CONTAINER:['part','volume'],
+    TABBED_TAB : "multi-column-group-tabbed-tab",
+    TAB : 'tab'
 }
 
 /** This array contains data for element picker popup with key as button-type */
@@ -58,6 +60,7 @@ export const containerTypeArray = {
     },
     "multi-column-group": {
         "2-column": "multi-column-group",
-        "3-column": "multi-column-group-column-3"
+        "3-column": "multi-column-group-column-3",
+        "Tabbed 2-column": "multi-column-group-tabbed_2_column"
     }
 }

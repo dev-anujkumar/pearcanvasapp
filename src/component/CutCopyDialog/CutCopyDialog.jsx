@@ -2,6 +2,7 @@ import React from 'react'
 import store from '../../appstore/store';
 import config from './../../config/config';
 import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions';
+import elementConstant from '../ElementSaprator/ElementSepratorConstants';
 
 // function to be called on click of refresh option
 const refreshElement = (props) => {
@@ -41,10 +42,10 @@ const CutCopyDialog = props => {
 export default CutCopyDialog;
 
 export const renderCutCopyOption = (componentProps) => {
-    const { userRole,permissions, element: { type,subtype } } = componentProps
+    const { userRole,permissions, asideData, element: { type,subtype } } = componentProps
     const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list", "figure", "stanza", "element-citation","citations","poetry","groupedcontent","showhide","discussion","popup","element-dialogue"],
             allowedRoles = ["admin", "manager", "edit", "default_user"]
-    if ((acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) ) {
+    if ((acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) && asideData?.parent?.subtype !== elementConstant.TAB && asideData?.grandParent?.asideData?.parent?.subtype !== elementConstant.TAB) {
         return (
             <>
                 <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "copy")}>
