@@ -513,8 +513,8 @@ describe("SlateWrapper Component", () => {
             'worked-exp-elem', 'opener-elem', 'section-break-elem', 'metadata-anchor', 'citation-elem',
             'citations-group-elem', 'show-hide-elem', 'popup-elem', 'smartlink-elem', 'poetry-elem',
             'stanza-elem', 'figure-mml-elem', 'blockcode-elem', 'table-editor-elem-button', 'multi-column-group',
-            'multi-column-group-column-3', 'elm-interactive-elem', 'element-dialogue', 'element-discussion',
-            'text-elem'];
+            'multi-column-group-column-3','multi-column-group-tabbed-tab','multi-column-group-tabbed_2_column', 'elm-interactive-elem', 'element-dialogue', 'element-discussion',
+            'text-elem','blocklist-elem'];
         const index = 0, firstOne = true, outerAsideIndex = 1, poetryData = {};
         const parentUrn = {id:"123"};
         const asideData = {id:"123"};

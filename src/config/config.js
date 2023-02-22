@@ -64,7 +64,8 @@ let config = {
     SLATE_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
     ENABLE_WIRIS_PLUGIN: true,
     EDIT_DISCUSSION_SPA_URL: 'https://stg-discussionauthoring.pearson.com/',
-    BROKER_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-qa-publishTitleInterim'
+    BROKER_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-qa-publishTitleInterim',
+    ENABLE_TAB_ELEMENT:false
 };
 
 if (process.env.NODE_ENV === "development") {

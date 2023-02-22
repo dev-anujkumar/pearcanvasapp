@@ -299,7 +299,7 @@ class SlateWrapper extends Component {
         const ownerSlate = isOwnerRole(projectSharingRole, isSubscribed)
         const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
         const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
-        if (this.props.approvedSlatePopupstatus && slatePublishStatus && !popupSlate){
+        if (this.props.approvedSlatePopupstatus && slatePublishStatus && !popupSlate && !config?.isCypressPlusEnabled){
             this.props.showBlocker(true)
             showTocBlocker();
             console.log('config',config)
@@ -341,7 +341,7 @@ class SlateWrapper extends Component {
                     const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
                     return (
                         <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
-                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate ? <div
+                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate && !config?.isCypressPlusEnabled ? <div
                                 className='approved-overlay'
                                 onClick={this.getApprovedPopup}
                             >
