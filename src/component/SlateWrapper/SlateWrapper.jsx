@@ -778,10 +778,16 @@ class SlateWrapper extends Component {
 
                 break;
             case 'citation-elem':
-                this.props.createElement(ELEMENT_CITATION, indexToinsert, parentUrn, asideData, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                   await this.props.createElement(ELEMENT_CITATION, indexToinsert, parentUrn, asideData, null, null);
+                indexToinsert++
+                }
                 break;
             case 'citations-group-elem':
-                this.props.createElement(CITATION, indexToinsert, parentUrn, asideData, null, null);
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(CITATION, indexToinsert, parentUrn, asideData, null, null);
+                indexToinsert++
+                }
                 break;
             case 'show-hide-elem':
                 for(let index = 0; index < elementCount; index++) {
@@ -845,10 +851,16 @@ class SlateWrapper extends Component {
                 }
                 break;
             case 'multi-column-group-tabbed_2_column':
-                this.props.createElement(TABBED_2_COLUMN, indexToinsert, parentUrn, asideData, null, null, null, null)
+                for(let index = 0; index < elementCount; index++) {
+                    await this.props.createElement(TABBED_2_COLUMN, indexToinsert, parentUrn, asideData, null, null, null, null)
+                indexToinsert++;
+                }
                 break;
             case 'multi-column-group-tabbed-tab':
-                this.props.createElement(TABBED_COLUMN_TAB, indexToinsert, parentUrn, asideData, null, null, null, null)
+                for(let index = 0; index < elementCount; index++) {
+                   await this.props.createElement(TABBED_COLUMN_TAB, indexToinsert, parentUrn, asideData, null, null, null, null)
+                indexToinsert++;
+                }
                 break;
             case 'elm-interactive-elem':
                 for(let index = 0; index < elementCount; index++) {
