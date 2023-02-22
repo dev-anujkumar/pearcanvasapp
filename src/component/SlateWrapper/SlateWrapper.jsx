@@ -285,6 +285,10 @@ class SlateWrapper extends Component {
     approveNormalSlate = () => {
         this.togglePopup(false)
         let updateRCSlate = false;
+        // In this condition, we are setting a flag to identify whether we need to
+        // update slate after versioning in Resource collection, this flag is used by newversion wrapper API
+        // updateRCSlate = true (update slate in RC using VCS API at backend)
+        //updateRCSlate = false (Do not update slate in RC)
         const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
         if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && !popupSlate) {
             updateRCSlate = true
@@ -302,7 +306,6 @@ class SlateWrapper extends Component {
         if (this.props.approvedSlatePopupstatus && slatePublishStatus && !popupSlate && !config?.isCypressPlusEnabled){
             this.props.showBlocker(true)
             showTocBlocker();
-            console.log('config',config)
             return (
                 <PopUp dialogText={ownerSlate ? APPROVE_OWNER_SLATE : APPROVE_NORMAL_SLATE}
                     togglePopup={this.togglePopup}
