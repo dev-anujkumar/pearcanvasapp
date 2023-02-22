@@ -54,17 +54,6 @@ export function ElementSaprator(props) {
     const [showClass, setShowClass] = useState(false);
     const [data, setData] = useState([]);
     const [pasteIcon, togglePaste] = useState(true);
-    const [counter,setCounter] = useState({
-        'text-elem':{count: '1'},
-        'image-elem':{count: '1'},
-        'audio-elem':{count: '1'},
-        'block-text-button':{count: '1'},
-        'interactive-elem-button':{count: '1'},
-        'table-editor-elem-button':{count: '1'},
-        'assessment-elem':{count: '1'},
-        'container-elem-button':{count: '1'},
-        'worked-exp-elem':{count: '1'},
-    });
     const [showInteractiveOption, setshowInteractiveOption] = useState({status:false,type:""});
     let propsData={data,setData,showInteractiveOption,setshowInteractiveOption,props}
     const { esProps, elementType, sectionBreak, permissions } = props
@@ -230,7 +219,7 @@ export function ElementSaprator(props) {
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
-                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData,counter,setCounter)}
+                            {renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData)}
                         </ul>
                     </div>
                 </div>
@@ -280,7 +269,7 @@ function renderConditionalButtons(esProps,sectionBreak,elementType){
 /**
  * @description: rendering the dropdown
  */
-export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData,counter, setCounter) {
+export function renderDropdownButtons(esProps, elementType, sectionBreak, closeDropDown, propsData) {
     let {data,setData,showInteractiveOption,setshowInteractiveOption,props} =propsData
     let updatedEsProps, buttonType;
     if (config.parentEntityUrn == FRONT_MATTER || config.parentEntityUrn == BACK_MATTER || TOC_PARENT_TYPES.includes(config.parentOfParentItem)) {
@@ -386,7 +375,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                 >
                 </ElementContainerType>
             }
-                <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText} calledFrom="elem-sep" elementType={elem.buttonType} counter={counter} setCounter={setCounter} setElementCount={props.setNewElementCount}>
+                <Tooltip key={key} direction={elem.tooltipDirection} tooltipText={elem.tooltipText} calledFrom="elem-sep" elementType={elem.buttonType}  setElementCount={props.setNewElementCount}>
                     <li>
                         <Button type={elem.buttonType} onClick={(event) => buttonHandlerFunc(event)} />
                     </li>
