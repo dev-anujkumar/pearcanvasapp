@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import '../../styles/Tooltip/Tooltip.css'
 import InputCounter from './InputCounter.jsx'
 
-const showTooltip = ['block-text-button','interactive-elem-button','container-elem-button',' multi-column-group']
+const showTooltip = ['block-text-button','interactive-elem-button','container-elem-button','multi-column-group','opener-elem']
 export default function Tooltip(props) {
     /**
      * Hooks declearation

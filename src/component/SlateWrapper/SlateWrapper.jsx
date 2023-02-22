@@ -14,7 +14,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning, setNewElementCount } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName } from '../../constants/utility.js';
-import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
+import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
@@ -867,6 +867,7 @@ class SlateWrapper extends Component {
                 }
                 break;
         }
+        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         this.props.setNewElementCount(newElementCreateInitialState)
     }
 

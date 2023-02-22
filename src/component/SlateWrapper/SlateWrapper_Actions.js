@@ -97,7 +97,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     ).then(async createdElemData => {
         const parentData = getState().appStore.slateLevelData;
         const newParentData = JSON.parse(JSON.stringify(parentData));
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        // sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         let currentSlateData = newParentData[config.slateManifestURN];
         const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
@@ -531,7 +531,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }
             })
         }
-        sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
+        // sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         dispatch({type: ERROR_POPUP, payload:{show: true}})
         console.log("create Api fail", error);
         if (cb) {
