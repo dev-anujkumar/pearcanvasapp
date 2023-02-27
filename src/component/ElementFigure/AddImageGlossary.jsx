@@ -53,7 +53,8 @@ class AddImageGlossary extends Component {
                         citeNodeRef: citeNodeRef,
                         elementId: this.props.elementId,
                         calledFrom: 'GlossaryImage',
-                        calledFromImageGlossaryFootnote: this.props.isImageGlossary
+                        calledFromImageGlossaryFootnote: this.props.isImageGlossary,
+                        currentAsset: { type: "image" }
                     }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                     const messageDataToSave = {

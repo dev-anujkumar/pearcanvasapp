@@ -76,7 +76,8 @@ class AddAudioBook extends React.Component {
                     let messageObj = {appName:'cypress', citeName:  citeName, 
                         citeNodeRef: citeNodeRef,
                         elementId: this.props.elementId,
-                        calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary 
+                        calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary,
+                        currentAsset: { type: "audio" }
                     }
 
                         sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })

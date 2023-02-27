@@ -63,10 +63,10 @@ export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlf
         const imageId = imageArgs?.id?.split(':')
         currentAssetId = imageId[0] === 'imageAssetContent' ? imageId[1] : (imageId?.pop() || "")
     }
-    const currentAsset = currentAssetId?.trim() !== "" ? {
-        id: currentAssetId || "",
+    const currentAsset = {
+        id: currentAssetId?.trim() !== "" ? currentAssetId : "",
         type: 'image',
-    } : null;
+    };
     let alfrescoPath = config.alfrescoMetaData;
     if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {

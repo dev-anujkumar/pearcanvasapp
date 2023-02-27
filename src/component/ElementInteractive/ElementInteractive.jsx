@@ -707,11 +707,11 @@ class Interactive extends React.Component {
 
         if (figureData) {
             const id = figureData.interactiveid;
-            const type = figureData.interactivetype;
-            currentAsset = id ? {
-                id: id.split(':').pop(), // get last
+            const type = figureData.interactivetype === 'pdf'? "smartlink:pdf" : figureData.interactivetype;
+            currentAsset =  {
+                id: id ? id.split(':').pop() : '', // get last
                 type,
-            } : null;
+            };
         }
         var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {

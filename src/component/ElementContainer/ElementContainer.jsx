@@ -360,7 +360,7 @@ class ElementContainer extends Component {
             }
             config.lastActiveElementId = element?.id
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
-            if(this.props.element.type === "manifestlist" && this.props.parentElement.type === "element-aside"){
+            if(this.props.element?.type === "manifestlist" && this.props.parentElement?.type === "element-aside"){
                 this.toolbarHandling('add')
             }
             this.props.fetchCommentByElement(this.props.element.id);
