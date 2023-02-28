@@ -79,8 +79,8 @@ export const updateNewVersionElementInStore = (paramObj) => {
     else if (asideData?.type == "poetry" && asideData?.grandParent?.asideData?.type === 'showhide') {
         dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         /* Condition for update Approved poetry inside S/H */ 
-    } else if(asideData?.type=== MULTI_COLUMN && asideData?.subtype === TAB){
- dispatch(fetchSlateData(asideData?.parent?.id,asideData?.parent?.contentUrn,0,asideData,CONTAINER_VERSIONING,false))
+    } else if (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB) {
+        dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false))
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
         if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5 || indexes.length === 6) && asideData.type === "poetry") {
@@ -956,7 +956,6 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
         currentParentData,
         showHideObj
     } = params
-    console.log('collectDataAndPrepareTCMSnapshot', asideData);
     const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
     const isPopupOrShowhideElement = ((parentElement?.type === POOPUP_ELEMENT) || (parentElement?.type === SHOW_HIDE && !(updatedData?.metaDataField || updatedData?.sectionType === 'creditsarray'))|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 

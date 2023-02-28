@@ -5,7 +5,7 @@ import * as actions from '../../../src/component/ElementContainer/ElementContain
 import { communicationAssessmentSlateData, slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
-import { slateLevelData, addNewComment, slateLevelDataWithApproved, slateLevelDataWithoutApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData } from "../../../fixtures/containerActionsTestingData"
+import { slateLevelData, addNewComment, slateLevelDataWithApproved, slateLevelDataWithoutApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData, popupSlateLevelDataWithApproved } from "../../../fixtures/containerActionsTestingData"
 import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, UPDATE_TABLE_ELEMENT_EDITED_DATA,SET_ELEMENT_STATUS, APPROVED_SLATE_POPUP_STATUS } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
@@ -2096,6 +2096,45 @@ describe('Tests ElementContainer Actions', () => {
                         spyupdateFigureData.mockClear()
                     })
                 })
+                describe('Testing updateFigureData for figures inside TB element',() => {
+                    const initialSt = { 
+                        appStore: {
+                            slateLevelData : defaultSlateDataFigure.slateLevelData
+                        }
+                    }
+                    let store = mockStore(() => initialSt);
+    
+                    const figureData = {},
+                        dispatch = jest.fn(),
+                        getState = store.getState;
+    
+                    const spyupdateFigureData = jest.spyOn(actions, 'updateFigureData');
+    
+                    it("1- updateFigureData tab index length - 4", () => {
+                        config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
+                        const elementId = "urn:pearson:work:c09a47c6-3bfb-4e6c-a004-87c7e76e2cfd";
+                        const elementIndex = "7-0-0-1";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
+                    it("1- updateFigureData tab index length - 5", () => {
+                        config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
+                        const elementIndex = "7-0-0-2-1";
+                        const elementId = "urn:pearson:work:8f9ad3d2-ee6e-43da-a8d6-ae6cfbe6d133";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
+                    it("1- updateFigureData tab index length - 6", () => {
+                        config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
+                        const elementIndex = "7-0-0-2-3-2";
+                        const elementId = "urn:pearson:work:8f9ad3d2-ee6e-43da-a8d6-ae6cfbe6d133";
+                        actions.updateFigureData(figureData, elementIndex, elementId, cb)(dispatch, getState)
+                        expect(spyupdateFigureData).toHaveBeenCalled()
+                        spyupdateFigureData.mockClear()
+                    })
+                })
             })
         })
         it('testing------- updateMultipleColumnData------method', () => {
@@ -2158,6 +2197,93 @@ describe('Tests ElementContainer Actions', () => {
             store.dispatch(actions.updateAudioVideoDataForCompare({}));
             expect(store.getActions().type).toEqual(expectedActions.type);
             spyUpdateAudioVideoDataForCompare.mockClear();
+        })
+    })
+    describe("Testing for updateTabTitle function", () => {
+        it("testing updateTabTitle", () => {
+            const initialState = {
+                appStore: {
+                    slateLevelData: defaultSlateDataFigure.slateLevelData
+                }
+            }
+            let store = mockStore(() => initialState);
+            config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c";
+            let index = "7-0";
+            let previousData = {
+                contentUrn: "test",
+                type: "group",
+                subtype: "subtype"
+            };
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    res: 200
+                });
+            });
+            const spyupdateTabTitle = jest.spyOn(actions, 'updateTabTitle');
+            return store.dispatch(actions.updateTabTitle(previousData, index, {})).then(() => {
+                expect(spyupdateTabTitle).toHaveBeenCalled();
+                spyupdateTabTitle.mockClear();
+            });
+        })
+        it("testing updateTabTitle if slate is approved", () => {
+            const initialState = {
+                appStore: {
+                    slateLevelData: slateLevelDataWithApproved.slateLevelData
+                }
+            }
+            let store = mockStore(() => initialState);
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            let index = "7-0";
+            let previousData = {
+                contentUrn: "test",
+                type: "group",
+                subtype: "subtype"
+            };
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 201,
+                    res: {
+                        versionUrn: 'versionUrn'
+                    }
+                });
+            });
+            const spyupdateTabTitle = jest.spyOn(actions, 'updateTabTitle');
+            return store.dispatch(actions.updateTabTitle(previousData, index, {})).then(() => {
+                expect(spyupdateTabTitle).toHaveBeenCalled();
+                spyupdateTabTitle.mockClear();
+            });
+        })
+        it("testing updateTabTitle if slate is approved and is popup slate", () => {
+            const initialState = {
+                appStore: {
+                    slateLevelData: popupSlateLevelDataWithApproved.slateLevelData
+                }
+            }
+            let store = mockStore(() => initialState);
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            let index = "7-0";
+            let previousData = {
+                contentUrn: "test",
+                type: "group",
+                subtype: "subtype"
+            };
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 201,
+                    res: {
+                        versionUrn: 'versionUrn'
+                    }
+                });
+            });
+            const spyupdateTabTitle = jest.spyOn(actions, 'updateTabTitle');
+            return store.dispatch(actions.updateTabTitle(previousData, index, {})).then(() => {
+                expect(spyupdateTabTitle).toHaveBeenCalled();
+                spyupdateTabTitle.mockClear();
+            });
         })
     })
 })
@@ -2488,3 +2614,4 @@ describe("approvedSlatePopupStatus Testing", ()=>{
        spyUpdateMultipleColumnData.mockClear();
     })
 })
+

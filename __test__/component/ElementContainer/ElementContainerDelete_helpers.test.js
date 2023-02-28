@@ -4,7 +4,7 @@ import * as deleteHelpers from '../../../src/component/ElementContainer/ElementC
 import { delInsideWe } from '../../../src/component/ElementContainer/ElementContainerDelete_helpers';
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
-import { slateLevelData, slateLevelDataWithApproved, newslateShowhideData, showhidetestData, slateLevelData3, slateLevelData4, slateLevelData5, slateLevelData6 } from "../../../fixtures/containerActionsTestingData";
+import { slateLevelData, slateLevelDataWithApproved, newslateShowhideData, showhidetestData, slateLevelData3, slateLevelData4, slateLevelData5, slateLevelData6, defaultSlateDataFigure, newTabSlate } from "../../../fixtures/containerActionsTestingData";
 import { JSDOM } from 'jsdom'
 import { mockAutoNumberReducerEmpty } from '../FigureHeader/AutoNumberApiTestData';
 const middlewares = [thunk];
@@ -1703,5 +1703,155 @@ describe('Tests ElementContainer Actions - Update helper methods', () => {
         deleteHelpers.deleteFromStore(args)
         expect(spydeleteFromStore).toHaveBeenCalled()
         spydeleteFromStore.mockClear()
+    })
+})
+
+describe('Delete tab from TB element', () => {
+    it("deleteFromStore for deleting Tab element from TB element", () => {
+        const args = {
+            newParentData: defaultSlateDataFigure.slateLevelData,
+            type: "manifest",
+            parentUrn: { type: 'groupedcontent', subtype: 'tab' },
+            asideData: { parentManifestUrn: 'urn:pearson:manifest:60098dca-a50e-4813-a8ab-56834a89ad26' },
+            contentUrn: '',
+            index: '7-1',
+            poetryData: null,
+            cutCopyParentUrn: null,
+            showHideObj: {},
+            dispatch: jest.fn(),
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
+        }
+        config.slateManifestURN = 'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c';
+
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore");
+        deleteHelpers.deleteFromStore(args);
+        expect(spydeleteFromStore).toHaveBeenCalled();
+        spydeleteFromStore.mockClear();
+    })
+    it("deleteFromStore for deleting any element from Tab inside TB element", () => {
+        const args = {
+            newParentData: defaultSlateDataFigure.slateLevelData,
+            type: "manifest",
+            parentUrn: { elementType: 'group', tbId: 'urn:pearson:manifest:60098dca-a50e-4813-a8ab-56834a89ad26' },
+            asideData: { subtype: 'tab' },
+            contentUrn: '',
+            index: '7-0-1-0',
+            poetryData: null,
+            cutCopyParentUrn: null,
+            showHideObj: {},
+            dispatch: jest.fn(),
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
+        }
+        config.slateManifestURN = 'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c';
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore");
+        deleteHelpers.deleteFromStore(args);
+        expect(spydeleteFromStore).toHaveBeenCalled();
+        spydeleteFromStore.mockClear();
+    })
+    it("deleteFromStore for deleting any element from AS/WE inside Tab inside TB element", () => {
+        const args = {
+            newParentData: defaultSlateDataFigure.slateLevelData,
+            type: "manifest",
+            parentUrn: { },
+            asideData: { index: '7-0-0-4', parent: { type: 'groupedcontent', subtype: 'tab', id: 'urn:pearson:manifest:60098dca-a50e-4813-a8ab-56834a89ad26' }},
+            contentUrn: '',
+            index: '7-0-1-0',
+            poetryData: null,
+            cutCopyParentUrn: null,
+            showHideObj: {},
+            dispatch: jest.fn(),
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
+        }
+        config.slateManifestURN = 'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c';
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore");
+        deleteHelpers.deleteFromStore(args);
+        expect(spydeleteFromStore).toHaveBeenCalled();
+        spydeleteFromStore.mockClear();
+    })
+    it("deleteFromStore for deleting any stanza element from poetry inside Tab inside TB element", () => {
+        const args = {
+            newParentData: newTabSlate.slateLevelData,
+            type: "",
+            parentUrn: { },
+            asideData: { },
+            contentUrn: '',
+            index: '',
+            elmId: 'urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5',
+            poetryData: { index: '1-0-0-1-1', type: 'poetry', parentUrn: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854', parent: { type: 'groupedcontent', subtype: 'tab', id: 'urn:pearson:manifest:60098dca-a50e-4813-a8ab-56834a89ad26' }},
+            cutCopyParentUrn: null,
+            showHideObj: {},
+            dispatch: jest.fn(),
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
+        }
+        config.slateManifestURN = 'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c';
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore");
+        deleteHelpers.deleteFromStore(args);
+        expect(spydeleteFromStore).toHaveBeenCalled();
+        spydeleteFromStore.mockClear();
+    })
+    it("deleteFromStore for deleting any stanza element from poetry inside Tab inside TB element else case", () => {
+        const args = {
+            newParentData: newTabSlate.slateLevelData,
+            type: "",
+            parentUrn: { },
+            asideData: { },
+            contentUrn: '',
+            index: '',
+            elmId: 'urn:pearson:entity:44d43f1b-3bdf-4386-a06c-bfa779f28hh5',
+            poetryData: { index: '1-0-0-0-1', type: 'poetry', parentUrn: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f2854', parent: { type: 'groupedcontent', subtype: 'tab', id: 'urn:pearson:manifest:60098dca-a50e-4813-a8ab-56834a89ad26' }},
+            cutCopyParentUrn: null,
+            showHideObj: {},
+            dispatch: jest.fn(),
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
+        }
+        config.slateManifestURN = 'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c';
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore");
+        deleteHelpers.deleteFromStore(args);
+        expect(spydeleteFromStore).toHaveBeenCalled();
+        spydeleteFromStore.mockClear();
+    })
+    it("deleteFromStore for deleting any Block list element from Tab inside TB element", () => {
+        const args = {
+            newParentData: newTabSlate.slateLevelData,
+            type: "",
+            parentUrn: { },
+            asideData: { index: '1-0-0-2' },
+            contentUrn: '',
+            index: '1-0-0-2',
+            poetryData: {},
+            cutCopyParentUrn: null,
+            showHideObj: {},
+            dispatch: jest.fn(),
+            getState: () => {
+                return {
+                    autoNumberReducer: mockAutoNumberReducerEmpty
+                }
+            }
+        }
+        config.slateManifestURN = 'urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c';
+        const spydeleteFromStore = jest.spyOn(deleteHelpers, "deleteFromStore");
+        deleteHelpers.deleteFromStore(args);
+        expect(spydeleteFromStore).toHaveBeenCalled();
+        spydeleteFromStore.mockClear();
     })
 })

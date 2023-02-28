@@ -60,6 +60,51 @@ const showHide = {
     "index":"0-0-0-2"
 };
 
+const groupedcontent = {
+    type: "groupedcontent",
+    containerUrn: "urn:pearson:manifest:4ca82b86-a138-403f-bc93-2ff437ecde42",
+    groupeddata: {
+        bodymatter: [
+            {
+                groupdata: {
+                    bodymatter: [{
+                        contentUrn: "urn:pearson:entity:7b2a37bc-6c56-4e79-be08-11b13bfa9085",
+                        id: "urn:pearson:manifest:02cf1bcf-a5cc-4f73-b29a-0e90d5c33c81",
+                        index: "0-0-0-0-0",
+                        interactivedata: {
+                            hide: [{
+                                contentUrn: "urn:pearson:entity:104326ec-ee53-4ed2-970e-f00189be13ca",
+                                elementdata: {
+                                    text: "test1"
+                                },
+                                id: "urn:pearson:work:6c397f2b-ffde-4ba1-b389-cb1039e59326",
+                                type: "element-authoredtext"
+                            }],
+                            postertextobject: [{
+                                contentUrn: "urn:pearson:entity:003023de-6215-45d5-a617-9da65105468c",
+                                elementdata: {
+                                    text: "Reveal Answer:"
+                                },
+                                id: "urn:pearson:work:6c397f2b-ffde-4ba1-b389-cb1039e59326",
+                                type: "element-authoredtext"
+                            }],
+                            show: [{
+                                id: "urn:pearson:work:48df93ce-5c9c-45fc-bfb5-a93e66dfeaaa",
+                                contentUrn: "urn:pearson:entity:e60a2672-cc1e-4bbc-bd89-136d0dbe083c",
+                                title: {
+                                    test: "test1"
+                                },
+                                type: "element-authoredtext"
+                            }],
+                        },
+                        type: "showhide"
+                    }]
+                }
+            }]
+    },
+
+}
+
 describe('1. ShowHide test cases', () => {
 
     describe(' test cases for find section Type', () => {
@@ -145,16 +190,40 @@ describe('1. ShowHide test cases', () => {
             showHideHelper.getShowHideElement(slateBodyMattter, 5, ["0","0","0","0","0"]);
             expect(spyonGetShowHideElement).toHaveBeenCalled();
         });
+        it('getShowHIdeElement :case 5', () => {
+            const slateBodyMattter = [{elementdata:{ bodymatter: [{ contents: { bodymatter: [{...groupedcontent}]}}]},type:"groupedcontent"}];
+            const spyonGetShowHideElement = jest.spyOn(showHideHelper, "getShowHideElement");
+            showHideHelper.getShowHideElement(slateBodyMattter, 5, ["0","0","0","0","0"]);
+            expect(spyonGetShowHideElement).toHaveBeenCalled();
+        });
         it('getShowHIdeElement :case 6', () => {
             const slateBodyMattter = [{groupeddata:{ bodymatter: [{ groupdata: { bodymatter: [{ elementdata: { bodymatter: [{...showHide}]}}]}}]}}];
             const spyonGetShowHideElement = jest.spyOn(showHideHelper, "getShowHideElement");
             showHideHelper.getShowHideElement(slateBodyMattter, 6, ["0","0","0","0","0","0"]);
             expect(spyonGetShowHideElement).toHaveBeenCalled();
         });
+        it('getShowHIdeElement :case 6 > if', () => {
+            const slateBodyMattter = [{groupeddata:{ bodymatter: [{ groupdata: { bodymatter: [{ elementdata: { bodymatter: [{...showHide}]}}]}}]}}];
+            const spyonGetShowHideElement = jest.spyOn(showHideHelper, "getShowHideElement");
+            showHideHelper.getShowHideElement(slateBodyMattter, 6, ["0","0","0","0","0","0"],'',{grandParent:{asideData:{subtype: "tab"}}});
+            expect(spyonGetShowHideElement).toHaveBeenCalled();
+        });
         it('getShowHIdeElement :case 7', () => {
             const slateBodyMattter = [{groupeddata:{ bodymatter: [{ groupdata: { bodymatter: [{ elementdata: { bodymatter: [{ contents: { bodymatter: [{...showHide}]}}]}}]}}]}}];
             const spyonGetShowHideElement = jest.spyOn(showHideHelper, "getShowHideElement");
             showHideHelper.getShowHideElement(slateBodyMattter, 7, ["0","0","0","0","0","0","0"]);
+            expect(spyonGetShowHideElement).toHaveBeenCalled();
+        });
+        it('getShowHIdeElement :case 7 > if', () => {
+            const slateBodyMattter = [{groupeddata:{ bodymatter: [{ groupdata: { bodymatter: [{ elementdata: { bodymatter: [{ contents: { bodymatter: [{...showHide}]}}]}}]}}]}}];
+            const spyonGetShowHideElement = jest.spyOn(showHideHelper, "getShowHideElement");
+            showHideHelper.getShowHideElement(slateBodyMattter, 7, ["0","0","0","0","0","0","0"],'',{grandParent:{asideData:{parent:{subtype: "tab"}}}});
+            expect(spyonGetShowHideElement).toHaveBeenCalled();
+        });
+        it('getShowHIdeElement :case 8', () => {
+            const slateBodyMattter = [{groupeddata:{ bodymatter: [{ groupdata: { bodymatter: [{ elementdata: { bodymatter: [{ contents: { bodymatter: [{...showHide}]}}]}}]}}]}}];
+            const spyonGetShowHideElement = jest.spyOn(showHideHelper, "getShowHideElement");
+            showHideHelper.getShowHideElement(slateBodyMattter, 8, ["0","0","0","0","0","0","0","0"]);
             expect(spyonGetShowHideElement).toHaveBeenCalled();
         });
     });
@@ -402,7 +471,64 @@ describe('1. ShowHide test cases', () => {
                 expect(spyonhandleElementsInShowHide).toHaveBeenCalled();
             });
         })
-        it('getTextElementInShowHide case 6:', () => {
+        it('getTextElementInShowHide case 6: if', () => {
+            let bodymatter = {
+                type: "groupedcontent",
+                containerUrn: "urn:pearson:manifest:4ca82b86-a138-403f-bc93-2ff437ecde42",
+                groupeddata: {
+                    bodymatter: [
+                        {
+                            groupdata: {
+                                bodymatter: [{
+                                    contentUrn: "urn:pearson:entity:7b2a37bc-6c56-4e79-be08-11b13bfa9085",
+                                    id: "urn:pearson:manifest:02cf1bcf-a5cc-4f73-b29a-0e90d5c33c81",
+                                    index: "0-0-0-0-0",
+                                    interactivedata: {
+                                        hide: [{
+                                            contentUrn: "urn:pearson:entity:104326ec-ee53-4ed2-970e-f00189be13ca",
+                                            elementdata: {
+                                                text: "test1"
+                                            },
+                                            id: "urn:pearson:work:6c397f2b-ffde-4ba1-b389-cb1039e59326",
+                                            type: "element-authoredtext"
+                                        }],
+                                        postertextobject: [{
+                                            contentUrn: "urn:pearson:entity:003023de-6215-45d5-a617-9da65105468c",
+                                            elementdata: {
+                                                text: "Reveal Answer:"
+                                            },
+                                            id: "urn:pearson:work:6c397f2b-ffde-4ba1-b389-cb1039e59326",
+                                            type: "element-authoredtext"
+                                        }],
+                                        show: [{
+                                            id: "urn:pearson:work:48df93ce-5c9c-45fc-bfb5-a93e66dfeaaa",
+                                            contentUrn: "urn:pearson:entity:e60a2672-cc1e-4bbc-bd89-136d0dbe083c",
+                                            title: {
+                                                test: "test1"
+                                            },
+                                            type: "element-authoredtext"
+                                        }],
+                                    },
+                                    type: "showhide"
+                                }]
+                            }
+                        }]
+                },
+            };
+            let parentElement = {
+                grandParent: {
+                    asideData: {
+                        type: "groupedcontent",
+                        subtype: "tab"
+                    }
+                }
+            }
+            let indexes = ["0", "0", "0", "0", "0", '0'];
+            const spyonhandleElementsInShowHide = jest.spyOn(showHideHelper, "handleElementsInShowHide");
+            showHideHelper.handleElementsInShowHide(bodymatter, indexes, elementType, showHideObj, calledFrom, parentElement);
+            expect(spyonhandleElementsInShowHide).toHaveBeenCalled();
+        });
+        it('getTextElementInShowHide case 6', () => {
             let bodymatter = [{
                 containerUrn: "urn:pearson:manifest:4ca82b86-a138-403f-bc93-2ff437ecde42",
                 groupeddata: {
@@ -516,6 +642,114 @@ describe('1. ShowHide test cases', () => {
                 },
             }];
             let indexes = ["0", "0", "0", "0", "0", "0", "0"];
+            const spyonhandleElementsInShowHide = jest.spyOn(showHideHelper, "handleElementsInShowHide");
+            showHideHelper.handleElementsInShowHide(bodymatter, indexes, elementType, showHideObj, calledFrom);
+            expect(spyonhandleElementsInShowHide).toHaveBeenCalled();
+        });
+        it('getTextElementInShowHide case 6: if', () => {
+            let bodymatter = {
+                type: "groupedcontent",
+                containerUrn: "urn:pearson:manifest:4ca82b86-a138-403f-bc93-2ff437ecde42",
+                groupeddata: {
+                    bodymatter: [
+                        {
+                            groupdata: {
+                                bodymatter: [{
+                                    contentUrn: "urn:pearson:entity:7b2a37bc-6c56-4e79-be08-11b13bfa9085",
+                                    id: "urn:pearson:manifest:02cf1bcf-a5cc-4f73-b29a-0e90d5c33c81",
+                                    index: "0-0-0-0-0",
+                                    interactivedata: {
+                                        hide: [{
+                                            contentUrn: "urn:pearson:entity:104326ec-ee53-4ed2-970e-f00189be13ca",
+                                            elementdata: {
+                                                text: "test1"
+                                            },
+                                            id: "urn:pearson:work:6c397f2b-ffde-4ba1-b389-cb1039e59326",
+                                            type: "element-authoredtext"
+                                        }],
+                                        postertextobject: [{
+                                            contentUrn: "urn:pearson:entity:003023de-6215-45d5-a617-9da65105468c",
+                                            elementdata: {
+                                                text: "Reveal Answer:"
+                                            },
+                                            id: "urn:pearson:work:6c397f2b-ffde-4ba1-b389-cb1039e59326",
+                                            type: "element-authoredtext"
+                                        }],
+                                        show: [{
+                                            id: "urn:pearson:work:48df93ce-5c9c-45fc-bfb5-a93e66dfeaaa",
+                                            contentUrn: "urn:pearson:entity:e60a2672-cc1e-4bbc-bd89-136d0dbe083c",
+                                            title: {
+                                                test: "test1"
+                                            },
+                                            type: "element-authoredtext"
+                                        }],
+                                    },
+                                    type: "showhide"
+                                }]
+                            }
+                        }]
+                },
+            };
+            let parentElement = {
+                grandParent: {
+                    asideData: {
+                        parent:{
+                            type: "groupedcontent",
+                            subtype: "tab"    
+                        }
+                    }
+                }
+            }
+            let indexes = ["0", "0", "0", "0", "0", '0', "0"];
+            const spyonhandleElementsInShowHide = jest.spyOn(showHideHelper, "handleElementsInShowHide");
+            showHideHelper.handleElementsInShowHide(bodymatter, indexes, elementType, showHideObj, calledFrom, parentElement);
+            expect(spyonhandleElementsInShowHide).toHaveBeenCalled();
+        });
+        it('getTextElementInShowHide case 8:', () => {
+            let bodymatter = {
+                type: "groupedcontent",
+                containerUrn: "urn:pearson:manifest:4ca82b86-a138-403f-bc93-2ff437ecde42",
+                groupeddata: {
+                    bodymatter: [
+                        {
+                            groupdata: {
+                                bodymatter: [{
+                                    contentUrn: "urn:pearson:entity:7b2a37bc-6c56-4e79-be08-11b13bfa9085",
+                                    id: "urn:pearson:manifest:02cf1bcf-a5cc-4f73-b29a-0e90d5c33c81",
+                                    index: "0-0-0-0-0",
+                                    interactivedata: {
+                                        hide: [{
+                                            contentUrn: "urn:pearson:entity:104326ec-ee53-4ed2-970e-f00189be13ca",
+                                            elementdata: {
+                                                text: "test1"
+                                            },
+                                            id: "urn:pearson:work:6c397f2b-ffde-4ba1-b389-cb1039e59326",
+                                            type: "element-authoredtext"
+                                        }],
+                                        postertextobject: [{
+                                            contentUrn: "urn:pearson:entity:003023de-6215-45d5-a617-9da65105468c",
+                                            elementdata: {
+                                                text: "Reveal Answer:"
+                                            },
+                                            id: "urn:pearson:work:6c397f2b-ffde-4ba1-b389-cb1039e59326",
+                                            type: "element-authoredtext"
+                                        }],
+                                        show: [{
+                                            id: "urn:pearson:work:48df93ce-5c9c-45fc-bfb5-a93e66dfeaaa",
+                                            contentUrn: "urn:pearson:entity:e60a2672-cc1e-4bbc-bd89-136d0dbe083c",
+                                            title: {
+                                                test: "test1"
+                                            },
+                                            type: "element-authoredtext"
+                                        }],
+                                    },
+                                    type: "showhide"
+                                }]
+                            }
+                        }]
+                },
+            };
+            let indexes = ["0", "0", "0", "0", "0", "0", "0", "0"];
             const spyonhandleElementsInShowHide = jest.spyOn(showHideHelper, "handleElementsInShowHide");
             showHideHelper.handleElementsInShowHide(bodymatter, indexes, elementType, showHideObj, calledFrom);
             expect(spyonhandleElementsInShowHide).toHaveBeenCalled();

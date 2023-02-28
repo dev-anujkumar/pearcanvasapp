@@ -39,7 +39,7 @@ import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsP
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
-import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES, SET_LEARNOSITY_CONTENT } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, fetchAnySlateData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
@@ -1736,6 +1736,10 @@ export const fetchLearnosityContent = () => dispatch => {
            dispatch({
                type: LEARNOSITY_PROJECT_INFO,
                 payload: response.data
+            });
+            sendDataToIframe({
+                'type': SET_LEARNOSITY_CONTENT,
+                'message': response.data
             });
         }
     })

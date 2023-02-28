@@ -274,7 +274,6 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 slateElements = [];
         }
 
-        console.log('slateElements slateElements', slateElements);
         let elementObj = slateElements?.find(element => element.contentUrn === createdElementData.contentUrn);
         let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
         const activeLabelElements = slateElements?.filter(img => img.displayedlabel === createdElementData.displayedlabel);
