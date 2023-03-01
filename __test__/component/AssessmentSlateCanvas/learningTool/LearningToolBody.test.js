@@ -8,25 +8,25 @@ jest.mock('../../../../src/constants/utility.js', () => ({
     handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
 }));
 describe('Testing Learning Tool LearningToolBody component', () => {
+    let props = {
+        apiResponse: tempFiguresForResults,
+        selectedResultData: selectedResult,
+        learningToolPageLimit: [25,50],
+        selectedFigure: jest.fn(),
+        learningToolTableHeaders: [
+            'Learning App Type',
+            'Discipline',
+            'Title',
+            'Date Modified',
+            'Keyword(s)',
+            'Template ID'
+        ],
+        searchLoading: false,
+        showLTBody:true,
+        errorFlag:false,
+        learningSystems: apiList
+    }
     describe('Dropdown Menus Testing-With Results', () => {
-        let props = {
-            apiResponse: tempFiguresForResults,
-            selectedResultData: selectedResult,
-            learningToolPageLimit: [25,50],
-            selectedFigure: jest.fn(),
-            learningToolTableHeaders: [
-                'Learning App Type',
-                'Discipline',
-                'Title',
-                'Date Modified',
-                'Keyword(s)',
-                'Template ID'
-            ],
-            searchLoading: false,
-            showLTBody:true,
-            errorFlag:false,
-            learningSystems: apiList
-        }
         let event = {
             preventDefault: jest.fn()
         }
@@ -54,33 +54,55 @@ describe('Testing Learning Tool LearningToolBody component', () => {
             wrapper.find('.paginationButtons button.rightPage').simulate('click', event);
         });
     })
-    describe('LearningToolBody Testing-ErrorComp', () => {
-        let props = {
-            apiResponse: [],
-            selectedResultData: {},
-            learningToolPageLimit: [25,50],
-            selectedFigure: jest.fn(),
-            learningToolTableHeaders: [
-                'Learning App Type',
-                'Discipline',
-                'Title',
-                'Date Modified',
-                'Keyword(s)',
-                'Template ID'
-            ],
-            learningSystems: apiList
+    describe('Dropdown Menus Testing- errorFlag = true', () => {
+        let props1 = {
+            ...props,
+            errorFlag:true,
         }
         let wrapper;
-
         beforeEach(() => {
-            wrapper = mount(<LearningToolBody {...props} />);
+            wrapper = mount(<LearningToolBody {...props1} />);
         });
-
         afterEach(() => {
             jest.clearAllMocks();
         });
-        xit('Render LearningToolBody-ErrorComp', () => {
-            expect(wrapper.find('p.ErrorComp')).toHaveLength(1);
+
+        it('Render LearningToolBody', () => {
+            expect(wrapper.find('.learningToolBody')).toHaveLength(1);
+        });
+    })
+    describe('Dropdown Menus Testing- searchLoading = true', () => {
+        let props2 = {
+            ...props,
+            searchLoading: true,
+        }
+        let wrapper;
+        beforeEach(() => {
+            wrapper = mount(<LearningToolBody {...props2} />);
+        });
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
+        it('Render LearningToolBody', () => {
+            expect(wrapper.find('.learningToolBody')).toHaveLength(1);
+        });
+    })
+    describe('Dropdown Menus Testing- apiResponseLearningTemp.length == 0', () => {
+        let props3 = {
+            ...props,
+            apiResponse: [],
+        }
+        let wrapper;
+        beforeEach(() => {
+            wrapper = mount(<LearningToolBody {...props3} />);
+        });
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
+        it('Render LearningToolBody', () => {
+            expect(wrapper.find('.learningToolBody')).toHaveLength(1);
         });
     })
 });

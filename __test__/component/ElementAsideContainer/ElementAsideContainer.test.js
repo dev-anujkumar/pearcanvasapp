@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
 import ElementAsideContainer from '../../../src/component/ElementAsideContainer/ElementAsideContainer';
-import { elementAsideWorkExample, elementAside, element, section,asideNumbering } from '../../../fixtures/elementAsideData';
+import { elementAsideWorkExample, elementAside, element, element2, section,asideNumbering } from '../../../fixtures/elementAsideData';
 import { threeMultiColumnContainer } from '../../../fixtures/multiColumnContainer';
 import { showHide } from '../../../fixtures/ElementSHowHideData';
 import { swapElement} from '../../../src/component/SlateWrapper/SlateWrapper_Actions';
@@ -365,6 +365,28 @@ describe('Testing ElementAside component with props', () => {
             index: "0-0-0"
         }  
         const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>)
+    })
+
+    it('renderElement > type === ElementConstants.MULTI_COLUMN && subtype === ElementConstants.TAB', () => {
+        let props = {
+            element: elementAsideWorkExample,
+            parentElement: element2,
+            index: "0-0-0"
+        }  
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>);
+        const instance = wrapper.find('ElementAsideContainer').instance();
+        let parentEntityUrn = "urn:pearson:entity:b4cbda8f-7a22-4df5-965a-18623a581ec1"
+        instance.renderElement(element2, parentEntityUrn)
+    })
+    it('renderElement > type === ElementConstants.MULTI_COLUMN && subtype === ElementConstants.TAB > no indexes', () => {
+        let props = {
+            element: elementAsideWorkExample,
+            parentElement: element2,
+        }  
+        const wrapper = mount(<Provider store={store}>< ElementAsideContainer {...props}/> </Provider>);
+        const instance = wrapper.find('ElementAsideContainer').instance();
+        let parentEntityUrn = "urn:pearson:entity:b4cbda8f-7a22-4df5-965a-18623a581ec1"
+        instance.renderElement(element2, parentEntityUrn)
     })
 })
 
