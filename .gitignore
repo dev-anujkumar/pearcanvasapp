@@ -12,7 +12,6 @@
 # misc
 /*.pem
 /*.vscode
-/package-lock.json
 
 #Sonarqube
 /.scannerwork
