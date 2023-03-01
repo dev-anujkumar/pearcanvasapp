@@ -199,7 +199,7 @@ class OpenerElement extends Component {
                     citeName: globalAlfrescoPath?.repoName,
                     citeNodeRef: globalAlfrescoPath?.nodeRef,
                     elementId: this.props.elementId,
-                    type: "image"
+                    currentAsset: { type: "image" }
                 }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                 const messageDataToSave = {
