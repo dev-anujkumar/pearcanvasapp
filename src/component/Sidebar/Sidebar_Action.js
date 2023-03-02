@@ -656,7 +656,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
             // Tab Element of TB element
         } else if (appStore?.asideData?.parentElementType === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parentElementSubtype === ElementConstants.TAB) {
-            let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0];
+            let elementOldData = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0];
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         }
         else {

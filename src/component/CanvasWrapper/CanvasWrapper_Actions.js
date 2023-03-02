@@ -284,7 +284,7 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"]  
                 }
-                if (element.width && element.subtype === 'tab') {
+                if (element?.width && element?.subtype === 'tab') {
                     elementType["primaryOption"] = TABBED_2_COLUMN.ELEMENT_NAME;
                     elementType["secondaryOption"] = elementDataBank[element.type]["wider-60-40"]["secondaryOption"]
                 } else if (element.width && element.groupproportions) {
@@ -298,9 +298,9 @@ export const findElementType = (element, index) => {
             case "group":
                 element['width'] = 'text-width';
                 elementType = {
-                    elementType: elementDataBank[element.type]["elementType"],
+                    elementType: elementDataBank[element?.type]["elementType"],
                     primaryOption: elementDataBank['group']["primaryOption"],
-                    secondaryOption: elementDataBank['group'][`tab-${element.width}-${element.groupdata.bodymatter[0].groupproportions}`]['secondaryOption']
+                    secondaryOption: elementDataBank['group'][`tab-${element?.width}-${element?.groupdata?.bodymatter[0]?.groupproportions}`]['secondaryOption']
                 }
                 break;
 
