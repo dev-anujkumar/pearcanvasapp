@@ -284,10 +284,9 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank[element.type]["primaryOption"]  
                 }
-                if (element.width && element.groupproportions && element.subtype === 'tab') {
-                    element['width'] = 'text-width';
+                if (element.width && element.subtype === 'tab') {
                     elementType["primaryOption"] = TABBED_2_COLUMN.ELEMENT_NAME;
-                    elementType["secondaryOption"] = elementDataBank[element.type][`tb-${element.width}-${element.groupproportions}`]["secondaryOption"]
+                    elementType["secondaryOption"] = elementDataBank[element.type]["wider-60-40"]["secondaryOption"]
                 } else if (element.width && element.groupproportions) {
                     // checking for column 3 proportion to set primaryOption 
                     if(element.groupproportions === MULTI_COLUMN_3C.ELEMENT_PROPORTION) elementType["primaryOption"] = MULTI_COLUMN_3C.ELEMENT_NAME; 
@@ -297,10 +296,11 @@ export const findElementType = (element, index) => {
                 }
                 break;
             case "group":
+                element['width'] = 'text-width';
                 elementType = {
-                    elementType: elementDataBank['group']["elementType"],
+                    elementType: elementDataBank[element.type]["elementType"],
                     primaryOption: elementDataBank['group']["primaryOption"],
-                    secondaryOption: elementDataBank['group']['wider-60-40']['secondaryOption']
+                    secondaryOption: elementDataBank['group'][`tab-${element.width}-${element.groupdata.bodymatter[0].groupproportions}`]['secondaryOption']
                 }
                 break;
 
