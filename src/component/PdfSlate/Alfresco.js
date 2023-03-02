@@ -27,7 +27,8 @@ export const handleC2MediaClick = (props) => {
                     appName:'cypress',
                     citeName: citeName,
                     citeNodeRef: citeNodeRef,
-                    elementId: props.element.id
+                    elementId: props.element.id,
+                    currentAsset: { type: "Pdf" }
                 }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                 const messageDataToSave = {

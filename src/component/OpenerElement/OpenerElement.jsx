@@ -147,7 +147,8 @@ class OpenerElement extends Component {
                         appName:'cypress',
                         citeName: citeName,
                         citeNodeRef: citeNodeRef,
-                        elementId: this.props.elementId
+                        elementId: this.props.elementId,
+                        currentAsset : {type: "image"}
                     }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                     const messageDataToSave = {
@@ -197,7 +198,8 @@ class OpenerElement extends Component {
                     appName:'cypress',
                     citeName: globalAlfrescoPath?.repoName,
                     citeNodeRef: globalAlfrescoPath?.nodeRef,
-                    elementId: this.props.elementId
+                    elementId: this.props.elementId,
+                    currentAsset: { type: "image" }
                 }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                 const messageDataToSave = {
