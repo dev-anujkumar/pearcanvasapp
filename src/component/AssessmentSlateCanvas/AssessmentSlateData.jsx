@@ -416,8 +416,7 @@ class AssessmentSlateData extends Component {
                             usageType: this.state.activeAssessmentUsageType,
                             elementType: this.state.activeAssessmentType,
                             resourceType: Resource_Type.ASSESSMENT,
-                            elementUrn: this.props.model.id,
-                            parentMatter: config.parentOfParentItem
+                            elementUrn: this.props.model.id
                         }
                     });
                     break;

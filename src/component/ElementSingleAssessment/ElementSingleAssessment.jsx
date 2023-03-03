@@ -357,8 +357,7 @@ class ElementSingleAssessment extends Component {
                         usageType: this.state.activeAsseessmentUsageType,
                         elementType: this.state.elementType,
                         resourceType: Resource_Type.ASSESSMENT_ITEM,
-                        elementUrn: this.props.model.id,
-                        parentMatter: config.parentOfParentItem
+                        elementUrn: this.props.model.id
                     }
                 });
             }
