@@ -641,7 +641,7 @@ margin-left:6px;
       width : 32px!important;
     }
   }
-  @media only screen and (max-width: 1200px) {
+  @media only screen and (max-width: 1250px) {
     button[aria-label="formatSelector"].tox-tbtn--select{
       max-width : 80px!important;
     }
