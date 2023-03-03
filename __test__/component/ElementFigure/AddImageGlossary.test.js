@@ -64,7 +64,7 @@ describe('Testing handleC2MediaClick component', () => {
         alfrescoPopup:function() {},
         permissions: ['alfresco_crud_access','add_multimedia_via_alfresco'],
         accessDenied:  jest.fn()
-    }
+    } 
     let alfrescoPath = {
         alfresco: {
             nodeRef: "ebaaf975-a68b-4ca6-9604-3d37111b847a",
