@@ -94,14 +94,14 @@ export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlf
         }
     } else {
         if (permissions.includes('alfresco_crud_access')) {
-            handleSiteOptionsDropdown(alfrescoPath, element.id)
+            handleSiteOptionsDropdown(alfrescoPath, element.id, currentAsset)
         } else {
             // props.accessDenied(true)
         }
     }
 }
 
-function handleSiteOptionsDropdown (alfrescoPath, id) {
+function handleSiteOptionsDropdown (alfrescoPath, id, currentAsset) {
     let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
     let SSOToken = config.ssoToken;
     return axios.get(url,
@@ -119,7 +119,8 @@ function handleSiteOptionsDropdown (alfrescoPath, id) {
             alfrescoPath: alfrescoPath, 
             alfrescoListOption: response.data.list.entries,
             id,
-            editor: true
+            editor: true,
+            currentAsset
         }
             sendDataToIframe({ 'type': 'openInlineAlsfrescoPopup', 'message': payloadObj })
         })
