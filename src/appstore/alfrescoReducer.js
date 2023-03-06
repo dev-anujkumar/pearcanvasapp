@@ -22,7 +22,8 @@ const INITIAL_STATE = {
     calledFromImageGlossaryFootnote: false,
     savedElement:{},
     savedAltLongDesData: {
-    }
+    },
+    currentAsset:{}
 }
 
 const INITIAL_ACTION = {
@@ -42,7 +43,8 @@ export default function alfrescoReducer(state = INITIAL_STATE, action = INITIAL_
                 isInlineEditorOpen: action.payload.editor,
                 locationData: action.payload.locationData,
                 calledFromGlossaryFootnote: action.payload.isGlossary,
-                calledFromImageGlossaryFootnote: action.payload.isImageGlossary
+                calledFromImageGlossaryFootnote: action.payload.isImageGlossary,
+                currentAsset: action.payload.currentAsset
             }
         case SAVE_ALFRESCO_ASSET_DATA:
             return {

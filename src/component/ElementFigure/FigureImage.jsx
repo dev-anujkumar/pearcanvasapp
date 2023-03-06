@@ -385,7 +385,7 @@ class FigureImage extends Component {
             }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                let payloadObj = await handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData);
+                let payloadObj = await handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData, currentAsset);
                 this.props.alfrescoPopup(payloadObj);
             } else {
                 this.props.accessDenied(true)
