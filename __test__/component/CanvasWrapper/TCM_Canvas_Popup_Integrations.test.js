@@ -36,19 +36,29 @@ describe('Testing handleTCM function to call fetchAllDataMapper function', () =>
         axios.get = jest.fn(() => Promise.resolve(res));
         store.dispatch(handleTCM(element, index))       
     })
+    const latestPendingTransaction = {
+        "elemSURN": "urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45",
+        "elemSnapshot": "{\"contentSnapshot\":\"<p class=\\\"paragraphNumeroUno\\\">dsadsa</p>\",\"glossorySnapshot\":\"[]\",\"footnoteSnapshot\":\"[]\",\"assetPopOverSnapshot\":\"[]\"}",
+        "elemWIPData": "{\"id\":\"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45\",\"type\":\"element-authoredtext\",\"schema\":\"http://schemas.pearson.com/wip-authoring/element/1\",\"elementdata\":{\"schema\":\"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext\",\"text\":\"dsadsa\"},\"versionUrn\":\"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45\",\"contentUrn\":\"urn:pearson:entity:39946858-117e-405c-8c69-e1afb2302442\"}",
+        "elementType": "P",
+        "elementEditor": "C5, C5 Test02",
+        "changeType": "test",
+        "changeStatus": "Pending",
+        "changeTime": "1625820563474",
+        "lastUpdatedTimestamp": "1625820563474",
+        "slateType": "slate",
+        "slateID": "urn:pearson:manifest:2cf2dc69-3e52-43f9-a412-737ff7d8f55b"
+    }
     it('Test-handleTCM if latestPendingTransaction is present and latestAcceptedTransaction data is not present', () => {
-        const res = {data : [{"elemURN":"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45","latestPendingTransaction":{"elemSURN":"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45","elemSnapshot":"{\"contentSnapshot\":\"<p class=\\\"paragraphNumeroUno\\\">dsadsa</p>\",\"glossorySnapshot\":\"[]\",\"footnoteSnapshot\":\"[]\",\"assetPopOverSnapshot\":\"[]\"}","elemWIPData":"{\"id\":\"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45\",\"type\":\"element-authoredtext\",\"schema\":\"http://schemas.pearson.com/wip-authoring/element/1\",\"elementdata\":{\"schema\":\"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext\",\"text\":\"dsadsa\"},\"versionUrn\":\"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45\",\"contentUrn\":\"urn:pearson:entity:39946858-117e-405c-8c69-e1afb2302442\"}","elementType":"P","elementEditor":"C5, C5 Test02","changeType":"Update","changeStatus":"Pending","changeTime":"1625820563474","lastUpdatedTimestamp":"1625820563474","slateType":"slate","slateID":"urn:pearson:manifest:2cf2dc69-3e52-43f9-a412-737ff7d8f55b"}}]}
-        axios.get = jest.fn(() => Promise.resolve(res));
+        axios.get = jest.fn(() => Promise.resolve({"data":[{"elemURN":"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45","latestPendingTransaction":{...latestPendingTransaction, "changeType":"Update"}}]}));
         store.dispatch(handleTCM(element, index))       
     })
-    it('Test-handleTCM if latestPendingTransaction is present and latestAcceptedTransaction data is not present', () => {
-        const res = {data : [{"elemURN":"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45","latestPendingTransaction":{"elemSURN":"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45","elemSnapshot":"{\"contentSnapshot\":\"<p class=\\\"paragraphNumeroUno\\\">dsadsa</p>\",\"glossorySnapshot\":\"[]\",\"footnoteSnapshot\":\"[]\",\"assetPopOverSnapshot\":\"[]\"}","elemWIPData":"{\"id\":\"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45\",\"type\":\"element-authoredtext\",\"schema\":\"http://schemas.pearson.com/wip-authoring/element/1\",\"elementdata\":{\"schema\":\"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext\",\"text\":\"dsadsa\"},\"versionUrn\":\"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45\",\"contentUrn\":\"urn:pearson:entity:39946858-117e-405c-8c69-e1afb2302442\"}","elementType":"P","elementEditor":"C5, C5 Test02","changeType":"create","changeStatus":"Pending","changeTime":"1625820563474","lastUpdatedTimestamp":"1625820563474","slateType":"slate","slateID":"urn:pearson:manifest:2cf2dc69-3e52-43f9-a412-737ff7d8f55b"}}]}
-        axios.get = jest.fn(() => Promise.resolve(res));
+    it('Test-handleTCM if latestPendingTransaction is present and latestAcceptedTransaction data is not present > create', () => {
+        axios.get = jest.fn(() => Promise.resolve({"data":[{"elemURN":"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45","latestPendingTransaction":{...latestPendingTransaction, "changeType":"create"}}]}));
         store.dispatch(handleTCM(element, index))       
     })
-    it('Test-handleTCM if latestPendingTransaction is present and latestAcceptedTransaction data is not present', () => {
-        const res = {data : [{"elemURN":"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45","latestPendingTransaction":{"elemSURN":"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45","elemSnapshot":"{\"contentSnapshot\":\"<p class=\\\"paragraphNumeroUno\\\">dsadsa</p>\",\"glossorySnapshot\":\"[]\",\"footnoteSnapshot\":\"[]\",\"assetPopOverSnapshot\":\"[]\"}","elemWIPData":"{\"id\":\"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45\",\"type\":\"element-authoredtext\",\"schema\":\"http://schemas.pearson.com/wip-authoring/element/1\",\"elementdata\":{\"schema\":\"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext\",\"text\":\"dsadsa\"},\"versionUrn\":\"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45\",\"contentUrn\":\"urn:pearson:entity:39946858-117e-405c-8c69-e1afb2302442\"}","elementType":"P","elementEditor":"C5, C5 Test02","changeType":"delete","changeStatus":"Pending","changeTime":"1625820563474","lastUpdatedTimestamp":"1625820563474","slateType":"slate","slateID":"urn:pearson:manifest:2cf2dc69-3e52-43f9-a412-737ff7d8f55b"}}]}
-        axios.get = jest.fn(() => Promise.resolve(res));
+    it('Test-handleTCM if latestPendingTransaction is present and latestAcceptedTransaction data is not present > delete', () => {
+        axios.get = jest.fn(() => Promise.resolve({"data":[{"elemURN":"urn:pearson:work:cde78307-24c9-4e0d-b676-05231ee69b45","latestPendingTransaction":{...latestPendingTransaction, "changeType":"delete"}}]}));
         store.dispatch(handleTCM(element, index))       
     })
     
