@@ -94,7 +94,7 @@ export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlf
         }
     } else {
         if (permissions.includes('alfresco_crud_access')) {
-            handleSiteOptionsDropdown(alfrescoPath, element.id, currentAsset)
+            handleSiteOptionsDropdown(alfrescoPath, element.id, currentAsset);
         } else {
             // props.accessDenied(true)
         }
