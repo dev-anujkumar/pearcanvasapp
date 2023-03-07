@@ -238,7 +238,7 @@ function CommunicationChannel(WrappedComponent) {
                                     dataToSend.id = assessmenId
                                     dataToSend.versionUrn = assessmenId
                                 }
-                                if(assessmenId || message?.fromCE){
+                                if(assessmenId || message?.fromCE || message?.fromTOCWrapper){
                                     this.props.updateElement(dataToSend, 0, null, null, null, null, null, isFromRC, this.props?.getRequiredSlateData?.getRequiredSlateData);
                                 }
                                 if(message.assessmentSlateData)

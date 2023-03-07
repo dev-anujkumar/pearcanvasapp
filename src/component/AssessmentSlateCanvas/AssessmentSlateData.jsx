@@ -52,7 +52,7 @@ class AssessmentSlateData extends Component {
         let newMessage = { assessmentResponseMsg: false };
         this.props.isLOExist(newMessage);
         if (this.props.model?.elementdata?.assessmentid) {
-            this.sendDataAssessment(this.props);
+            this.sendDataAssessment(this.props, true);
             const assessmentFormat = this.props.model && this.props.setAssessmentFormat(this.props.model)
             this.setState({
                 activeAssessmentType: assessmentFormat
@@ -134,7 +134,7 @@ class AssessmentSlateData extends Component {
                 if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                     this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
                 }
-                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentUrn, apiKeys_LO, externalLFUrn:externalLFUrn, isElementUpdate, currentContainerUrn: config.slateManifestURN } });
+                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentUrn, apiKeys_LO, externalLFUrn:externalLFUrn, isElementUpdate, currentContainerUrn: config.slateManifestURN, loAssociation: Object.values(this.props.slateLevelData)[0].contents.bodymatter[0].elementdata.loAssociation } });
             }
             else { //set tag to grey heresss                 
                 let newMessage = { assessmentResponseMsg: false };
