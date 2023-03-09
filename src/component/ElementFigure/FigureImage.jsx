@@ -341,8 +341,8 @@ class FigureImage extends Component {
 
         const figureDataObj = this.props.model.figuredata;
         const currentAsset = figureDataObj ? {
-            id: figureDataObj.imageid.split(':').pop(), // get last
-            type: figureDataObj.type,
+            id: figureDataObj?.imageid ? figureDataObj.imageid.split(':').pop() : '', // get last
+            type: this.props?.model?.figuretype ?? null,
         } : null;
 
         let that = this;
@@ -385,7 +385,7 @@ class FigureImage extends Component {
             }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                let payloadObj = await handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData);
+                let payloadObj = await handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData, currentAsset);
                 this.props.alfrescoPopup(payloadObj);
             } else {
                 this.props.accessDenied(true)

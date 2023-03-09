@@ -52,7 +52,7 @@ class AssessmentSlateData extends Component {
         let newMessage = { assessmentResponseMsg: false };
         this.props.isLOExist(newMessage);
         if (this.props.model?.elementdata?.assessmentid) {
-            this.sendDataAssessment(this.props);
+            this.sendDataAssessment(this.props, true);
             const assessmentFormat = this.props.model && this.props.setAssessmentFormat(this.props.model)
             this.setState({
                 activeAssessmentType: assessmentFormat
@@ -134,7 +134,7 @@ class AssessmentSlateData extends Component {
                 if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                     this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
                 }
-                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentUrn, apiKeys_LO, externalLFUrn:externalLFUrn, isElementUpdate, currentContainerUrn: config.slateManifestURN } });
+                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentUrn, apiKeys_LO, externalLFUrn:externalLFUrn, isElementUpdate, currentContainerUrn: config.slateManifestURN, loAssociation: this.props?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter[0]?.elementdata?.loAssociation } });
             }
             else { //set tag to grey heresss                 
                 let newMessage = { assessmentResponseMsg: false };
@@ -148,7 +148,7 @@ class AssessmentSlateData extends Component {
     setSlateTagIcon = () => {
         const popupSlate = (this.props?.slateLevelData[config.slateManifestURN]?.type === "popup")
         const slateStatus = this.props?.slateLevelData[config.slateManifestURN]?.status
-        if (document.getElementsByClassName("slate-tag-icon").length && (slateStatus !== "approved" && !popupSlate)) {
+        if (document.getElementsByClassName("slate-tag-icon").length && (slateStatus !== "approved" && !popupSlate && !config?.isCypressPlusEnabled)) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
         }
     }
@@ -416,7 +416,8 @@ class AssessmentSlateData extends Component {
                             usageType: this.state.activeAssessmentUsageType,
                             elementType: this.state.activeAssessmentType,
                             resourceType: Resource_Type.ASSESSMENT,
-                            elementUrn: this.props.model.id
+                            elementUrn: this.props.model.id,
+                            parentMatter: config.parentOfParentItem    // sending parent matter details to elm
                         }
                     });
                     break;

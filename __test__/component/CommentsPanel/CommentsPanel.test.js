@@ -213,17 +213,41 @@ describe('Testing CommentsPanel component with props', () => {
     it('tests toggle panel function ', () => {
       instance1.togglePanel();
     });
+
+    it('componentDidUpdate', () => {
+      jest.spyOn(instance1, 'componentDidUpdate')
+      let nextProps = {
+          togglePanel: true,
+      }
+      instance1.componentDidUpdate(nextProps);
+      expect(instance1.componentDidUpdate).toHaveBeenCalled()
+      expect(instance1.props.togglePanel).toBe(false)
+  })
+  
+
     it('tests getWorkflowRoleOption function ', () => {
       let workflowRoles = ["role"]
       instance.getWorkflowRoleOption(workflowRoles);
     });
     it('tests getWorkflowRoleOption function ', () => {
-      let workflowRoles = ["admin", "manager"]
+      let workflowRoles = []
+      instance1.getWorkflowRoleOption(workflowRoles);
+    });
+    it('tests getWorkflowRoleOption function ', () => {
+      let workflowRoles = ["", "",]
+      instance1.getWorkflowRoleOption(workflowRoles);
+    });
+    it('tests getWorkflowRoleOption function ', () => {
+      let workflowRoles = ["admin", "",]
       instance1.getWorkflowRoleOption(workflowRoles);
     });
     it('tests getRoleOption function ', () => {
       let users = [{roleName: "admin", roleName: "manager"}]
       instance.getRoleOption (users);
+    });
+    it('tests getRoleOption function ', () => {
+      let users = [{roleName: "manager", roleName: "team"}]
+      instance1.getRoleOption (users);
     });
     it('tests updateRole function ', () => {
       instance.updateRole();

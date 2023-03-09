@@ -21,7 +21,7 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, APPROVE_NORMAL_SLATE, APPROVE_OWNER_SLATE
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, APPROVE_NORMAL_SLATE, APPROVE_OWNER_SLATE, ALLOWED_SLATES_IN_RC
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -284,7 +284,16 @@ class SlateWrapper extends Component {
 
     approveNormalSlate = () => {
         this.togglePopup(false)
-        this.props.slateVersioning()
+        let updateRCSlate = false;
+        // In this condition, we are setting a flag to identify whether we need to
+        // update slate after versioning in Resource collection, this flag is used by newversion wrapper API
+        // updateRCSlate = true (update slate in RC using VCS API at backend)
+        //updateRCSlate = false (Do not update slate in RC)
+        const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
+        if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && !popupSlate) {
+            updateRCSlate = true
+        }
+        this.props.slateVersioning(updateRCSlate)
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
         this.props.approvedSlatePopupStatus(false)
     }
@@ -294,7 +303,7 @@ class SlateWrapper extends Component {
         const ownerSlate = isOwnerRole(projectSharingRole, isSubscribed)
         const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
         const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
-        if (this.props.approvedSlatePopupstatus && slatePublishStatus && !popupSlate){
+        if (this.props.approvedSlatePopupstatus && slatePublishStatus && !popupSlate && !config?.isCypressPlusEnabled){
             this.props.showBlocker(true)
             showTocBlocker();
             return (
@@ -335,7 +344,7 @@ class SlateWrapper extends Component {
                     const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
                     return (
                         <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
-                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate ? <div
+                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate && !config?.isCypressPlusEnabled ? <div
                                 className='approved-overlay'
                                 onClick={this.getApprovedPopup}
                             >

@@ -725,7 +725,7 @@ class Sidebar extends Component {
     }
 
     handleBceBlur = () => {
-        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-1`)
+        let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-2`)
         if (activeBCEElementNode) {
             activeBCEElementNode.focus()
             activeBCEElementNode.blur()

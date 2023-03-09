@@ -63,10 +63,10 @@ export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlf
         const imageId = imageArgs?.id?.split(':')
         currentAssetId = imageId[0] === 'imageAssetContent' ? imageId[1] : (imageId?.pop() || "")
     }
-    const currentAsset = currentAssetId?.trim() !== "" ? {
-        id: currentAssetId || "",
+    const currentAsset = {
+        id: currentAssetId?.trim() !== "" ? currentAssetId : "",
         type: 'image',
-    } : null;
+    };
     let alfrescoPath = config.alfrescoMetaData;
     if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {
@@ -94,14 +94,14 @@ export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlf
         }
     } else {
         if (permissions.includes('alfresco_crud_access')) {
-            handleSiteOptionsDropdown(alfrescoPath, element.id)
+            handleSiteOptionsDropdown(alfrescoPath, element.id, currentAsset);
         } else {
             // props.accessDenied(true)
         }
     }
 }
 
-function handleSiteOptionsDropdown (alfrescoPath, id) {
+function handleSiteOptionsDropdown (alfrescoPath, id, currentAsset) {
     let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
     let SSOToken = config.ssoToken;
     return axios.get(url,
@@ -119,7 +119,8 @@ function handleSiteOptionsDropdown (alfrescoPath, id) {
             alfrescoPath: alfrescoPath, 
             alfrescoListOption: response.data.list.entries,
             id,
-            editor: true
+            editor: true,
+            currentAsset
         }
             sendDataToIframe({ 'type': 'openInlineAlsfrescoPopup', 'message': payloadObj })
         })

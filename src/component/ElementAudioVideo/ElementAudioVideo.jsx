@@ -312,7 +312,7 @@ class ElementAudioVideo extends Component {
             })
         }
     }
-    handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{
+    handleSiteOptionsDropdown = (alfrescoPath, id, locationData, currentAsset) =>{
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
@@ -330,7 +330,8 @@ class ElementAudioVideo extends Component {
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
                 id,
-                locationData
+                locationData,
+                currentAsset
             }
                 that.props.alfrescoPopup(payloadObj)
             })
@@ -375,12 +376,12 @@ class ElementAudioVideo extends Component {
 
         if (figureData) {
             const id = figureData.videoid || figureData.audioid;
-            const type = 'videoid' in figureData ? 'video' : ('audioid' in figureData ? 'audio' : null);
+            const type = this.props?.model?.figuretype ?? null;
         
-            currentAsset = id ? {
-                id: id.split(':').pop(), // get last
+            currentAsset = {
+                id: id ? id.split(':').pop() : '', // get last
                 type,
-            } : null;
+            };
         }
         
 
@@ -422,7 +423,7 @@ class ElementAudioVideo extends Component {
         }
         else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData)
+                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, this.state.alfrescoSiteData, currentAsset);
             }
             else {
                 this.props.accessDenied(true)

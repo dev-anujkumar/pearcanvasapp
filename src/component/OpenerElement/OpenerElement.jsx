@@ -88,7 +88,7 @@ class OpenerElement extends Component {
         hideTocBlocker()
     }
     
-    handleSiteOptionsDropdown = (alfrescoPath, id) =>{
+    handleSiteOptionsDropdown = (alfrescoPath, id, currentAsset) =>{
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
@@ -105,7 +105,8 @@ class OpenerElement extends Component {
                let payloadObj = {launchAlfrescoPopup: true, 
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
-                id
+                id,
+                currentAsset
             }
                 that.props.alfrescoPopup(payloadObj)
             })
@@ -147,7 +148,8 @@ class OpenerElement extends Component {
                         appName:'cypress',
                         citeName: citeName,
                         citeNodeRef: citeNodeRef,
-                        elementId: this.props.elementId
+                        elementId: this.props.elementId,
+                        currentAsset : {type: "image"}
                     }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                     const messageDataToSave = {
@@ -163,7 +165,8 @@ class OpenerElement extends Component {
         }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId)
+                let currentAsset = {type: "image"}
+                this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, currentAsset);
             }
             else {
                 this.props.accessDenied(true)
@@ -197,7 +200,8 @@ class OpenerElement extends Component {
                     appName:'cypress',
                     citeName: globalAlfrescoPath?.repoName,
                     citeNodeRef: globalAlfrescoPath?.nodeRef,
-                    elementId: this.props.elementId
+                    elementId: this.props.elementId,
+                    currentAsset: { type: "image" }
                 }
                 sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
                 const messageDataToSave = {

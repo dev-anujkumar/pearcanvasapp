@@ -452,6 +452,51 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     })
+
+    it('Test - isNestingLimitReached - else block', () => {
+        let asideData = {
+            parent: {
+            }
+        }
+        let parentElement = {
+            type: "element-aside"
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
+        const indexes = "1-0-1"
+        tinyMceFn.isNestingLimitReached(indexes,asideData,parentElement);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    it('Test - isNestingLimitReached - else block', () => {
+        let asideData = {
+            parent: {
+                type: "groupedcontent",
+                subtype: "tab"
+            }
+        }
+        let parentElement = {
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
+        const indexes = "1-0-1"
+        tinyMceFn.isNestingLimitReached(indexes,asideData,parentElement);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
+
+    
+    it('Test - isNestingLimitReached - else block', () => {
+        let asideData = {
+
+        }
+        let parentElement = {
+        }
+        const spyFunc = jest.spyOn(tinyMceFn, 'isNestingLimitReached');
+        const indexes = "1-0-1"
+        tinyMceFn.isNestingLimitReached(indexes,asideData,parentElement);
+        expect(spyFunc).toHaveBeenCalled();
+        spyFunc.mockClear();
+    })
     
     it('Test - checkBlockListElement - data as {}', () => {
         const spyFunc = jest.spyOn(tinyMceFn, 'checkBlockListElement');

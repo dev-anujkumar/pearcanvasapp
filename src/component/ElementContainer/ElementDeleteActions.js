@@ -56,7 +56,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             cutCopyParentUrn
         }
         // This check will remove when TB supports tcm 
-        let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
+        let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
         if (!isTbElement) {
             const { prepareTCMSnapshotsForDelete } = (await import("./ElementContainerDelete_helpers.js"))
             prepareTCMSnapshotsForDelete(deleteData);
@@ -128,7 +128,6 @@ export const updateStorePostDelete = (deleteParams) => {
     } = deleteParams
     let newBodymatter = newParentData[config.slateManifestURN].contents.bodymatter;
     let elementToUpdate;
-    console.log('updateStorePostDelete updateStorePostDelete', index, newIndex, asideData);
 
     if (asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
         switch (newIndex.length) {
@@ -222,7 +221,6 @@ export const updateStorePostDelete = (deleteParams) => {
         }
     }
     
-    console.log('newBodymatter', newBodymatter)
     // return newBodymatter
     newParentData[config.slateManifestURN].contents.bodymatter = newBodymatter
     dispatch({

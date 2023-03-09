@@ -360,7 +360,7 @@ class ElementContainer extends Component {
             }
             config.lastActiveElementId = element?.id
             this.props.setActiveElement(element, index, this.props.parentUrn, this.props.asideData, "", showHideObj);
-            if(this.props.element.type === "manifestlist" && this.props.parentElement.type === "element-aside"){
+            if(this.props.element?.type === "manifestlist" && this.props.parentElement?.type === "element-aside"){
                 this.toolbarHandling('add')
             }
             this.props.fetchCommentByElement(this.props.element.id);
@@ -1721,7 +1721,7 @@ class ElementContainer extends Component {
         let toolbar = document.querySelector('div#tinymceToolbar .tox-toolbar__primary')
         if (action === "add") {
             toolbar?.classList?.add("disable");
-        } else if (action === "remove" && (slateStatus !== "approved" && !popupSlate)) {
+        } else if (action === "remove" && (slateStatus !== "approved" || slateStatus === "approved" && (popupSlate || config?.isCypressPlusEnabled))) {
             toolbar?.classList?.remove("disable");
         }
     }
