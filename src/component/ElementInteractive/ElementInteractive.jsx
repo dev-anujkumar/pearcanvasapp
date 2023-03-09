@@ -410,7 +410,8 @@ class Interactive extends React.Component {
                     usageType: '',
                     elementType: ELM_INT,
                     resourceType: Resource_Type.INTERACTIVE,
-                    elementUrn: this.props.model.id
+                    elementUrn: this.props.model.id,
+                    parentMatter: config.parentOfParentItem    // sending parent matter details to elm
                 }
             });
         }
