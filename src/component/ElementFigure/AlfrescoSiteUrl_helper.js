@@ -39,7 +39,7 @@ export const getAlfrescositeResponse = (elementId, callback) => {
 }
 
 
-export const handleSiteOptionsDropdown = (alfrescoPath, id, locationData) => {
+export const handleSiteOptionsDropdown = (alfrescoPath, id, locationData, currentAsset) => {
     let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
         return axios.get(url,
@@ -58,7 +58,8 @@ export const handleSiteOptionsDropdown = (alfrescoPath, id, locationData) => {
                     alfrescoPath: alfrescoPath,
                     alfrescoListOption: response.data.list.entries,
                     id,
-                    locationData
+                    locationData,
+                    currentAsset
                 }
                 return payloadObj;
             })

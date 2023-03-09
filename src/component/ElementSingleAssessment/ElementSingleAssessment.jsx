@@ -358,7 +358,7 @@ class ElementSingleAssessment extends Component {
                         elementType: this.state.elementType,
                         resourceType: Resource_Type.ASSESSMENT_ITEM,
                         elementUrn: this.props.model.id,
-                        parentMatter: config.parentOfParentItem
+                        parentMatter: config.parentOfParentItem    // sending parent matter details to elm
                     }
                 });
             }

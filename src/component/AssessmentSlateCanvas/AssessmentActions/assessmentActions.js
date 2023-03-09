@@ -158,6 +158,7 @@ export const fetchAssessmentItems = (itemEntityUrn, apiParams) => dispatch => {
  * This action creator is used to launch Elm Assessment Portal from Cypress
  */
 export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
+    // sending durn when assessment/assessment item/elm interactives are inside frontmatter or backmatter in the url to launch elm
     const elmContainerUrn = config.parentContainerUrn && config.parentOfParentItem !== "frontmatter" && config.parentOfParentItem !== "backmatter"
     let { assessmentWorkUrn, projDURN, assessmentItemWorkUrn, interactiveId, elementId } = assessmentData
     let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${elmContainerUrn ? config.parentContainerUrn : projDURN}&projectUrn=${projDURN}`;

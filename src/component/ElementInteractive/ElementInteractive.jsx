@@ -411,7 +411,7 @@ class Interactive extends React.Component {
                     elementType: ELM_INT,
                     resourceType: Resource_Type.INTERACTIVE,
                     elementUrn: this.props.model.id,
-                    parentMatter: config.parentOfParentItem
+                    parentMatter: config.parentOfParentItem    // sending parent matter details to elm
                 }
             });
         }
@@ -658,7 +658,7 @@ class Interactive extends React.Component {
         }
     }
 
-    handleSiteOptionsDropdown = (alfrescoPath, id) =>{
+    handleSiteOptionsDropdown = (alfrescoPath, id, currentAsset) =>{
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
@@ -675,7 +675,8 @@ class Interactive extends React.Component {
                let payloadObj = {launchAlfrescoPopup: true, 
                 alfrescoPath: alfrescoPath, 
                 alfrescoListOption: response.data.list.entries,
-                elementId: id
+                elementId: id,
+                currentAsset
             }
                 that.props.alfrescoPopup(payloadObj)
             })
@@ -741,7 +742,7 @@ class Interactive extends React.Component {
         }
         } else {
             if (this.props.permissions.includes('alfresco_crud_access')) {
-               this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId)
+               this.handleSiteOptionsDropdown(alfrescoPath, this.props.elementId, currentAsset);
             }
             else {
                 this.props.accessDenied(true)
