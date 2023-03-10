@@ -15,7 +15,7 @@ import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE } from '../SlateWrapper/Slat
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_Constants.js';
-import { POD_DEFAULT_VALUE, TABBED_TAB } from '../../constants/Element_Constants';
+import { POD_DEFAULT_VALUE, TABBED_2_COLUMN } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
@@ -538,7 +538,6 @@ class Sidebar extends Component {
                     </ul>
                 </div>;
             }
-
             return secondaryOptions;
         }
 
@@ -1003,7 +1002,7 @@ class Sidebar extends Component {
     render = () => {
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.tag !== TABBED_TAB.ELEMENT_TAG_NAME && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.tag !== TABBED_2_COLUMN.ELEMENT_TAG_NAME && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}

@@ -374,28 +374,25 @@ const elementDataBank = {
         },
         "wider-33-33-33" : {
             "secondaryOption" : "secondary-multicolumn-3c-wider"
-        },
-        "tb-text-width-30-70" : {
-            "secondaryOption" : "secondary-tabbed-30-70"
-        },
-        "tb-text-width-40-60" : {
-            "secondaryOption" : "secondary-tabbed-40-60"
-        },
-        "tb-text-width-50-50" : {
-            "secondaryOption" : "secondary-tabbed-50-50"
-        },
-        "tb-text-width-60-40" : {
-            "secondaryOption" : "secondary-tabbed-60-40"
-        },
-        "tb-text-width-70-30" : {
-            "secondaryOption" : "secondary-tabbed-70-30"
         }
     },
     "group": {
         "elementType" : "group",
         "primaryOption" : "primary-tab",
-        "wider-60-40" : {
-            "secondaryOption" : "secondary-multicolumn-wider"
+        "tab-text-width-30-70" : {
+            "secondaryOption" : "secondary-tabbed-30-70"
+        },
+        "tab-text-width-40-60" : {
+            "secondaryOption" : "secondary-tabbed-40-60"
+        },
+        "tab-text-width-50-50" : {
+            "secondaryOption" : "secondary-tabbed-50-50"
+        },
+        "tab-text-width-60-40" : {
+            "secondaryOption" : "secondary-tabbed-60-40"
+        },
+        "tab-text-width-70-30" : {
+            "secondaryOption" : "secondary-tabbed-70-30"
         }
     },
     "element-dialogue" : {
