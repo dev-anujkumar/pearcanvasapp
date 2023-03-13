@@ -33,7 +33,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     let oldElementFigureData ;
     const inputPrimaryOptionsList = elementTypes[oldElementInfo['elementType']],
         inputPrimaryOptionType = inputPrimaryOptionsList[oldElementInfo['primaryOption']],
-        overallType = (oldElementData?.subtype === ElementConstants.TAB) ? tbSidebarEndpoint : inputPrimaryOptionsList['enumType']
+        overallType = inputPrimaryOptionsList['enumType']
 
     const inputSubTypeList = inputPrimaryOptionType['subtype'],
         inputSubType = inputSubTypeList[[oldElementInfo['secondaryOption']]]
@@ -350,6 +350,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res?.data;
                     break;
             }
+            // Tab Element of TB element
+        } else if (appStore?.asideData?.parentElementType === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parentElementSubtype === ElementConstants.TAB) {
+            focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0] = res.data;
         }
         else {
             indexes.forEach(index => {
@@ -651,6 +654,10 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     break;
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
+            // Tab Element of TB element
+        } else if (appStore?.asideData?.parentElementType === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parentElementSubtype === ElementConstants.TAB) {
+            let elementOldData = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0];
+            dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         }
         else {
             indexes.forEach(index => {
