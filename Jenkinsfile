@@ -6,7 +6,7 @@ import com.pearson.paf.SnykOrgs
 reactBuildPush(artifactPath: "cypress-canvas/cypress-canvas",
         accountBucketName: "paf-static-content-artifact-nonprd-us-east-1-928847",
         buildDir: "dist",
-        projectName: "cypress-canvas_ui",
+        projectName: "cypress-canvas",
         appName: "zip",
         jenkinsPath: "PACE-Cypress",
         failOnIssues: false,
