@@ -8,7 +8,7 @@ reactBuildPush(artifactPath: "cypress-canvas/cypress-canvas",
         buildDir: "dist",
         projectName: "cypress-canvas_ui",
         appName: "zip",
-        jenkinsPath: "PACE-Cypres",
+        jenkinsPath: "PACE-Cypress",
         failOnIssues: false,
         failOnError: false,
 )
