@@ -16,7 +16,7 @@ import SectionSeperator from './SectionSeperator.jsx';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
 import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
-import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe } from '../../constants/utility';
+import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import ElementConstants from '../ElementContainer/ElementConstants';
 // IMPORT - Assets //
@@ -116,6 +116,7 @@ class ElementAsideContainer extends Component {
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
                         <div className={`container-aside ${isDiffDesignType ? designtype : ''}`} data-id={_containerId} container-type={_containerType}>
+                            {!hasReviewerRole() ?
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
@@ -174,7 +175,7 @@ class ElementAsideContainer extends Component {
                                 onChange={function (items, sortable, evt) { }}
                             >
                                 {this['cloneCOSlateControlledSource_2' + random]}
-                            </Sortable>
+                            </Sortable> : <>{this['cloneCOSlateControlledSource_2' + random]}</> }
                         </div>
                     )
                 }
@@ -257,6 +258,7 @@ class ElementAsideContainer extends Component {
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
+                {!hasReviewerRole() ?
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
@@ -292,7 +294,7 @@ class ElementAsideContainer extends Component {
 
                 >
                     {this['cloneCOSlateControlledSource_1' + random]}
-                </Sortable>
+                </Sortable> : <>{this['cloneCOSlateControlledSource_1' + random]}</> }
             </div>
         )
     }
@@ -337,6 +339,7 @@ class ElementAsideContainer extends Component {
                     handleUndoOption = {this.props.handleUndoOption}
                     closeUndoTimer = {this.props.closeUndoTimer}
                 />
+                {!hasReviewerRole() ? 
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
@@ -371,7 +374,7 @@ class ElementAsideContainer extends Component {
                     onChange={function (items, sortable, evt) { }}
                 >
                     {this['cloneCOSlateControlledSource_3' + random]}
-                </Sortable>
+                </Sortable> : <>{this['cloneCOSlateControlledSource_3' + random]}</> }
             </div>
         )
     }

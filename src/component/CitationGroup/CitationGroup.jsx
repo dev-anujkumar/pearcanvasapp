@@ -7,7 +7,7 @@ import CGTinyMCE from './CGTinyMCE.jsx'
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
 import './../../styles/CitationGroup/CitationGroup.css';
-import { guid, sendDataToIframe } from '../../constants/utility.js';
+import { guid, hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
 import ElementSaprator from '../ElementSaprator';
 import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -176,6 +176,7 @@ export class CitationGroup extends Component {
                     this['cloneCOSlateControlledSource_3' + random] = this.renderElement(_bodyMatter, parentUrn, index)
                     return (
                         <div className="container-citation" data-id={_containerId} container-type={_containerType}>
+                            {!hasReviewerRole() ?
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
@@ -218,7 +219,7 @@ export class CitationGroup extends Component {
                                 onChange={function (items, sortable, evt) { }}
                             >
                                 {this['cloneCOSlateControlledSource_3' + random]}
-                            </Sortable>
+                            </Sortable> : <>{this['cloneCOSlateControlledSource_3' + random]}</> }
                         </div>
                     )
                 }

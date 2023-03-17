@@ -1,9 +1,12 @@
 import React from 'react';
+import { hasReviewerRole } from '../../../constants/utility.js';
 import Sortable from 'react-sortablejs';
 
 function SortElement(props) {
 
 	return (
+		<div>
+			{!hasReviewerRole() ?
 			<Sortable
 				options={{
 					sort: true,  // sorting inside list
@@ -30,7 +33,9 @@ function SortElement(props) {
 				onChange={function (items, sortable, evt) { }}
 			>
 				{props.children}
-			</Sortable>
+			</Sortable> : <>{props.children}</> 
+			}
+		</div> 
 	)
 }
 

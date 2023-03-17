@@ -4,7 +4,7 @@ import ElementContainerWrapper from "../HOCs/ElementContainerHOC";
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import ElementConstants from '../ElementContainer/ElementConstants';
-import { sendDataToIframe, guid } from '../../constants/utility.js';
+import { sendDataToIframe, guid, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
@@ -45,6 +45,7 @@ class ElementPoetry extends Component {
                     this['cloneCOSlateControlledSource_2' + random] = this.renderStanzas(_bodyMatter, index, parentUrn)
                     return (
                         <div>
+                            {!hasReviewerRole() ?
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
@@ -101,7 +102,8 @@ class ElementPoetry extends Component {
                                 onChange={function (items, sortable, evt) { }}
                             >
                                 {this['cloneCOSlateControlledSource_2' + random]}
-                            </Sortable>
+                            </Sortable> : <>{this['cloneCOSlateControlledSource_2' + random]}</>
+                            }
                         </div>
                     )
                 }

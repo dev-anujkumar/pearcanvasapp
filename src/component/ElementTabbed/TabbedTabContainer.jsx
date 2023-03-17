@@ -6,7 +6,7 @@ import ElementSaprator from '../ElementSaprator';
 import ElementContainer from '../ElementContainer';
 import TabbedTinyMCE from './TabbedTinyMce.jsx';
 import constants from "./constants.js";
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
@@ -93,6 +93,7 @@ export const TabbedTabContainer = (props) => {
             }
             return (
                 <div className={`container-multi-column-group-3c ${constants.setClassByElementType(column)} column-${columnIndex}`} data-id={_columnId} container-type={_columnType}>
+                    {!hasReviewerRole() ?
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
@@ -122,7 +123,8 @@ export const TabbedTabContainer = (props) => {
                         onChange={function (items, sortable, evt) { }}
                     >
                         {renderElement(tab, _bodyMatter, parentUrn, index)}
-                    </Sortable>
+                    </Sortable> : <>{renderElement(tab, _bodyMatter, parentUrn, index)}</>
+                }
                 </div>
             )
         } catch (error) {

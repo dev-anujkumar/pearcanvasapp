@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 /** Contants and utitlity functions */
 import constants from "./constants.js";
-import { guid, sendDataToIframe } from '../../constants/utility.js';
+import { guid, sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext';
 import { MULTICOLUMN_SOURCE } from '../../constants/Element_Constants.js';
 import { checkSlateLock } from '../../js/slateLockUtility.js';
@@ -194,6 +194,7 @@ class MultipleColumnContainer extends PureComponent {
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
                 <div className={`container-multi-column-group-3c ${constants.setClassByElementType(this.context.element)} column-${columnIndex}`} data-id={_containerId} container-type={_containerType}>
+                    {!hasReviewerRole() ?
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
@@ -223,7 +224,7 @@ class MultipleColumnContainer extends PureComponent {
                         onChange={function (items, sortable, evt) { }}
                     >
                         {this['cloneCOSlateControlledSource_4' + random]}
-                    </Sortable>
+                    </Sortable> : <>{this['cloneCOSlateControlledSource_4' + random]}</>  }
                 </div>
             )
         } catch (error) {
