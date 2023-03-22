@@ -83,7 +83,7 @@ module.exports = {
             },
             {
                 // Loads images into CSS and Javascript files
-                test: /\.(png|svg|jpg|gif)$/,
+                test: /\.(png|jpg|gif)$/,
                 use: [{ loader: "url-loader" }]
             },
             {
@@ -91,7 +91,33 @@ module.exports = {
                 // Rules are set in MiniCssExtractPlugin
                 test: /\.css$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader']
-            }
+            },
+            {
+                test: /\.svg$/,
+                use: [
+                  {
+                    loader: require.resolve('@svgr/webpack'),
+                    options: {
+                      prettier: false,
+                      svgo: false,
+                      svgoConfig: {
+                        plugins: [{ removeViewBox: false }],
+                      },
+                      titleProp: true,
+                      ref: true,
+                    },
+                  },
+                  {
+                    loader: require.resolve('file-loader'),
+                    options: {
+                      name: 'static/media/[name].[hash].[ext]',
+                    },
+                  },
+                ],
+                issuer: {
+                  and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
+                },
+              }
         ]
     },
     plugins: [
@@ -178,8 +204,8 @@ module.exports = {
                     // https://github.com/terser-js/terser/issues/120
                     inline: 2,
                   },
-                  keep_classnames: true,
-                  keep_fnames: true,
+                  keep_classnames: false,
+                  keep_fnames: false,
                   mangle: {
                     safari10: true,
                   },
