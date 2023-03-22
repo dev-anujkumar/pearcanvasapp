@@ -19,8 +19,7 @@ import { POD_DEFAULT_VALUE, TABBED_2_COLUMN } from '../../constants/Element_Cons
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Autocomplete, TextField } from '@mui/material';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -516,7 +515,7 @@ class Sidebar extends Component {
                             noOptionsText={'No result found'}
                             style={{ width: 210 }}
                             ListboxProps={{ style: { maxHeight: "270px" } }}
-                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? '' : secondaryOptionObject[this.state.activeSecondaryOption]}
+                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? {"text": "","labelText": "BCE","enum": ""} : secondaryOptionObject[this.state.activeSecondaryOption]}
                             options={languageDropdownOptions}
                             onChange={(e,value)=>{this.handleSecondaryLanguageChange(e,value)}}
                             getOptionLabel={(option) => option.text}

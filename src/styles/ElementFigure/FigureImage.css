@@ -1091,9 +1091,10 @@ th ol li.listItemNumeroUnoNone:before {
 .label-color-change {
     color: #005a70 !important;
 }
-.figure-preview div.MuiFilledInput-multiline {
-    padding: 15px !important;
-    margin: 5px 0px 10px 0px;
+.figure-preview div.MuiFilledInput-root {
+    padding: 16px 0px 0px 15px !important;
+    margin: 5px 0px 10px 0px !important;
+    height: 45px !important;
 }
 .figure-preview .MuiFilledInput-underline.Mui-disabled:before {
     border-bottom-style: none;
