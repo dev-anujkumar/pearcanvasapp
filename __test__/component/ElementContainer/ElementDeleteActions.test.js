@@ -1,6 +1,6 @@
 import { deleteElementAction, prepareDeleteRequestData, showError, updateStorePostDelete } from "../../../src/component/ElementContainer/ElementDeleteActions";
 import config from '../../../src/config/config.js';
-import { mockSlateLevelData } from "./ElementDeleteActionsMockData";
+import { mockSlateLevelData, mockSlateLevelData2 } from "./ElementDeleteActionsMockData";
 
 const axios = require('axios');
 jest.mock('axios');
@@ -17,6 +17,19 @@ let getState = () => {
         appStore: {
             slateLevelData: {
                 ...mockSlateLevelData
+            }
+        },
+        autoNumberReducer: {
+            isAutoNumberingEnabled: true
+        }
+    }
+}
+
+let getState2 = () => {
+    return {
+        appStore: {
+            slateLevelData: {
+                ...mockSlateLevelData2
             }
         },
         autoNumberReducer: {
@@ -49,11 +62,39 @@ describe('deleteElementAction ', () => {
         let result = await deleteElementAction(elementId, type, eleIndex, activeElement, containerElements, cb);
         result(dispatch, getState);
     });
+    it('testing------- deleteElementAction ------action- isTbElement exists', async () => {
+        axios.post.mockImplementation(() => Promise.resolve({}))
+        config.slateManifestURN = "urn:pearson:manifest:bf216cc4-4350-49e0-afd9-f0e3f1ab0be9";
+        config.tcmStatus = true;
+        let result = await deleteElementAction(elementId, type, eleIndex, activeElement, {asideData:{grandParent:{asideData:{parent:{subtype:"tab"}}}}}, cb);
+        result(dispatch, getState);
+    });
+    it('testing------- deleteElementAction ------action- config.tcmStatus = true > eleIndex is number', async () => {
+        axios.post.mockImplementation(() => Promise.resolve({}))
+        config.slateManifestURN = "urn:pearson:manifest:bf216cc4-4350-49e0-afd9-f0e3f1ab0be9";
+        config.tcmStatus = true;
+        let result = await deleteElementAction(elementId, type, 0, activeElement, {isSectionBreak:{type:"test"}}, cb);
+        result(dispatch, getState);
+    });
     it('testing------- deleteElementAction ------action- config.tcmStatus = false', async () => {
         axios.post.mockImplementation(() => Promise.resolve({}))
         config.slateManifestURN = "urn:pearson:manifest:bf216cc4-4350-49e0-afd9-f0e3f1ab0be9";
         config.tcmStatus = false;
         let result = await deleteElementAction(elementId, type, eleIndex, activeElement, containerElements, cb);
+        result(dispatch, getState);
+    });
+    it('testing------- deleteElementAction ------action- currentSlateData.status === approved', async () => {
+        axios.post.mockImplementation(() => Promise.resolve({}))
+        config.slateManifestURN = "urn:pearson:manifest:bf216cc4-4350-49e0-afd9-f0e3f1ab0be9";
+        config.tcmStatus = true;
+        let result = await deleteElementAction(elementId, type, eleIndex, activeElement, containerElements, cb);
+        result(dispatch, getState2);
+    });
+    it('testing------- deleteElementAction ------action- without cb', async () => {
+        axios.post.mockImplementation(() => Promise.resolve({}))
+        config.slateManifestURN = "urn:pearson:manifest:bf216cc4-4350-49e0-afd9-f0e3f1ab0be9";
+        config.tcmStatus = true;
+        let result = await deleteElementAction(elementId, type, eleIndex, activeElement, containerElements);
         result(dispatch, getState);
     });
 });
@@ -78,9 +119,19 @@ describe('UpdateStorePostDelete all cases', () => {
         let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{type:'showhide',interactivedata:{'show':[]}}] } } }
         updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,'0',0]})
     })
+    it('testing updateStorePostDelete case 3 > else', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+        let newParentData = {'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{type:'test',interactivedata:{'show':[]}}] } } }
+        updateStorePostDelete({...deleteParams,isSectionBreak,newParentData,newIndex:[0,0,0]})
+    })
     it('testing updateStorePostDelete case 4', () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
         let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{elementdata:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}}]}} }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,'0',0]})
+    })
+    it('testing updateStorePostDelete case 4 > else', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{elementdata:{bodymatter:[{type:'test',interactivedata:{'show':[]}}]}}]}} }
         updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,'0',0]})
     })
     describe('testing updateStorePostDelete case 5', () => {
@@ -93,10 +144,19 @@ describe('UpdateStorePostDelete all cases', () => {
             let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}  }]}}]}} }
             updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0]})
         })
+        it('case > else', () => {
+            let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[{type:'test',interactivedata:{'show':[]}}]}  }]}}]}} }
+            updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0]})
+        })
     })
     it('testing updateStorePostDelete case 6', () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
         let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{elementdata:{bodymatter:[{contents:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}  }]}}]}} }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0]})
+    })
+    it('testing updateStorePostDelete case 6 > else', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{elementdata:{bodymatter:[{contents:{bodymatter:[{type:'test',interactivedata:{'show':[]}}]}  }]}}]}} }
         updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0]})
     })
     it('testing updateStorePostDelete case 7', () => {
@@ -104,10 +164,60 @@ describe('UpdateStorePostDelete all cases', () => {
         let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {elementdata:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]} }  ]}  }]}}]}} }
         updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,0,'0',0]})
     })
+    it('testing updateStorePostDelete case 7 > else', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {elementdata:{bodymatter:[{type:'test',interactivedata:{'show':[]}}]} }  ]}  }]}}]}} }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,0,'0',0]})
+    })
     it('testing updateStorePostDelete case 8', () => {
         config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
         let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {elementdata:{bodymatter: [{contents:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}}]  } }  ]}  }]}}]}} }
         updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,0,0,'0',0]})
+    })
+    describe('testing updateStorePostDelete for tab element', () => {
+        it('case 6', () => {
+            let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {groupeddata:{bodymatter:[{groupdata:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}}]}}  ]}  }]}}]}} }
+            updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,0,0,0],asideData:{grandParent:{asideData:{parent:{subtype:"tab"}}}}})
+        })
+        it('case 6 > else', () => {
+            let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {groupeddata:{bodymatter:[{groupdata:{bodymatter:[{type:'test',interactivedata:{'show':[]}}]}}]}}  ]}  }]}}]}} }
+            updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,0,0,0],asideData:{grandParent:{asideData:{parent:{subtype:"tab"}}}}})
+        })
+        it('case 7', () => {
+            let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {groupeddata:{bodymatter:[{groupdata:{bodymatter:[{elementdata:{bodymatter: [{type:'showhide',interactivedata:{'show':[]}}]  } }]}}]}}  ]}  }]}}]}} }
+            updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0,0,0],asideData:{grandParent:{asideData:{parent:{subtype:"tab"}}}}})
+        })
+        it('case 7 > else', () => {
+            let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {groupeddata:{bodymatter:[{groupdata:{bodymatter:[{elementdata:{bodymatter: [{type:'test',interactivedata:{'show':[]}}]  } }]}}]}}  ]}  }]}}]}} }
+            updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,'0',0,0,0],asideData:{grandParent:{asideData:{parent:{subtype:"tab"}}}}})
+        })
+        it('case 8', () => {
+            let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {groupeddata:{bodymatter:[{groupdata:{bodymatter:[{elementdata:{bodymatter: [{contents:{bodymatter:[{type:'showhide',interactivedata:{'show':[]}}]}}] } }]}}]}}  ]}  }]}}]}} }
+            updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,0,0,0,0,0],asideData:{grandParent:{asideData:{parent:{subtype:"tab"}}}}})
+        })
+        it('case 8 > else', () => {
+            let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {groupeddata:{bodymatter:[{groupdata:{bodymatter:[{elementdata:{bodymatter: [{contents:{bodymatter:[{type:'test',interactivedata:{'show':[]}}]}}] } }]}}]}}  ]}  }]}}]}} }
+            updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0,0,0,0,0,0],asideData:{grandParent:{asideData:{parent:{subtype:"tab"}}}}})
+        })
+        it('case 1', () => {
+            let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter:[{groupeddata:{bodymatter:[{groupdata:{bodymatter:[ {groupeddata:{bodymatter:[{groupdata:{bodymatter:[{elementdata:{bodymatter: [{contents:{bodymatter:[{type:'test',interactivedata:{'show':[]}}]}}] } }]}}]}}  ]}  }]}}]}} }
+            updateStorePostDelete({...deleteParams,newParentData,newIndex:[0],asideData:{grandParent:{asideData:{parent:{subtype:"tab"}}}}})
+        })
+    })
+    it('testing updateStorePostDelete if (asideData?.parent?.type === showhide && asideData?.type === "manifestlist")', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter: [{interactivedata:{'show':[]}}]} } }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0],asideData:{parent:{type:"showhide",showHideType:"show"},type:"manifestlist"}})
+    })
+    it('testing updateStorePostDelete if (asideData?.parent?.type === showhide && asideData?.type === "manifestlist") > if > else', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter: [{interactivedata:{}}]} } }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0],asideData:{parent:{type:"showhide",showHideType:""},type:"manifestlist"}})
+    })
+    it('testing updateStorePostDelete if (asideData?.parent?.type === showhide && asideData?.type === "manifestlist") > else', () => {
+        config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+        let newParentData = { 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e': { contents: { bodymatter: [{interactivedata:{'show':[]}}]} } }
+        updateStorePostDelete({...deleteParams,newParentData,newIndex:[0,0,0],asideData:{parent:{type:"showhide",showHideType:"show"},type:"test"}})
     })
 });
 
@@ -141,5 +251,8 @@ describe('prepareDeleteRequestData testing',() => {
     })
     it('prepareDeleteRequestData case 5',() => {
         prepareDeleteRequestData("element-aside",{...payloadParams,elementIndex:[],parentElement:{type:''}})
+    })
+    it('prepareDeleteRequestData manifest',() => {
+        prepareDeleteRequestData("element-aside",{...payloadParams,isSectionBreak:{type:"manifest"}})
     })
 })
