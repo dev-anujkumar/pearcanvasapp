@@ -7,7 +7,7 @@ import '../../styles/CanvasSlateHeader/CanvasSlateHeader.css';
 import Button from '../ElementButtons/ElementButton.jsx';
 import config from '../../config/config'
 import { SlateLockStatus} from '../../constants/IFrameMessageTypes.js';
-import { sendDataToIframe, isSubscriberRole } from '../../constants/utility.js';
+import { sendDataToIframe } from '../../constants/utility.js';
 
 /**
 * @description - CanvasSlateHeader is a class based component. It is defined simply

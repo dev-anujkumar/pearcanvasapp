@@ -8,7 +8,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { connect } from 'react-redux';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
-import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex, getCookieByName } from '../../constants/utility.js';
+import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex, getCookieByName, hasReviewerRole } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI, handleCommonEvents } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
 import PopUp from '../PopUp';
@@ -310,7 +310,7 @@ class ElementDialogue extends React.PureComponent {
                         labelText={labelText}
                     />
                     {
-                        this.props.permissions && this.props.permissions.includes('elements_add_remove') ?
+                        this.props.permissions && this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() ?
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => this.handleDialogueInnerElementsDelete(e, index, element, labelText)}

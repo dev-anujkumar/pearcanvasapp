@@ -74,7 +74,7 @@ class GlossaryFootnotePopup extends Component {
         const { glossaryFootnoteValue, closePopup, saveContent, permissions, glossaryFootNoteCurrentValue } = this.props;
         const glossaryFootnote = glossaryFootnoteValue.type;
         let id = glossaryFootnote === GLOSSARY ? 'glossary-1' : 'footnote-0';
-        let accessToolbar = (permissions && permissions.includes('access_formatting_bar')) ? "" : " disableToolbar"
+        let accessToolbar = ((permissions && permissions.includes('access_formatting_bar')) && !hasReviewerRole()) ? "" : " disableToolbar"
 
         let footnoteContentText = glossaryFootNoteCurrentValue.footnoteContentText;
         if (glossaryFootNoteCurrentValue.footnoteContentText && glossaryFootNoteCurrentValue.footnoteContentText.includes('imageAssetContent')) {

@@ -114,10 +114,10 @@ class OpenAudioBook extends React.Component {
                 <div className="remove-button">
                     
                     { (!hasReviewerRole() && !subscriberContent) &&
-                        <button className="remove-text" onClick={() => this.openConfirmationBox(isGlossary)} className="audioRemoveButton audioRemoveRound">Remove</button>
+                        <button className="remove-text audioRemoveButton audioRemoveRound" onClick={() => this.openConfirmationBox(isGlossary)}>Remove</button>
                     }
-                    {
-                        isGlossary && <button className="remove-text" onClick={() => this.handleReplaceButton()} className="audioReplaceeButton audioRemoveRound">Replace</button>
+                    { (!hasReviewerRole() && !subscriberContent) &&
+                        isGlossary && <button className="remove-text audioReplaceeButton audioRemoveRound" onClick={() => this.handleReplaceButton()} >Replace</button>
                     }   
                 </div>
             </div>

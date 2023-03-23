@@ -26,9 +26,7 @@ class ElementPopup extends React.Component {
         this.popupBorderRef = React.createRef()
     }
     componentDidMount = () => {
-        const { projectSharingRole, projectSubscriptionDetails } = this?.props?.projectSubscriptionDetails;
-        let subscriberContent = isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed)
-        if (!subscriberContent) this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick);
+        this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick);
     }
     componentWillUnmount = () => {
         this.popupBorderRef.current.removeEventListener('click', this.handlepopupSlateClick);
