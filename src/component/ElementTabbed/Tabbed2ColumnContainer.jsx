@@ -56,10 +56,10 @@ export const Tabbed2Column = (props) => {
             }
             return (
                 <div>
-                    {!hasReviewerRole() ? 
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
+                            disabled: hasReviewerRole(),
                             onStart: (evt) => {
                                 props.onClickCapture(evt)
                             },
@@ -86,7 +86,7 @@ export const Tabbed2Column = (props) => {
                         onChange={function (items, sortable, evt) { }}
                     >
                         {renderTabElement(element, element?.groupeddata?.bodymatter, parentUrn, asideData, props.index)}
-                    </Sortable> : <>{renderTabElement(element, element?.groupeddata?.bodymatter, parentUrn, asideData, props.index)}</> }
+                    </Sortable> 
                 </div>
             )
         } else {

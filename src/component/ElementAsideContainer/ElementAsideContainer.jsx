@@ -54,7 +54,7 @@ class ElementAsideContainer extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.asideRef && !this.asideRef.current.contains(event.target) && !this.props.isAutoNumberingEnabled) {
+        if (this.asideRef && !this.asideRef?.current?.contains(event.target) && !this.props.isAutoNumberingEnabled) {
             this.handleAsideBlur(event);
         }
     }
@@ -116,10 +116,10 @@ class ElementAsideContainer extends Component {
                     this['cloneCOSlateControlledSource_2' + random] = this.renderElement(_bodyMatter, parentUrn, index, elementLength)
                     return (
                         <div className={`container-aside ${isDiffDesignType ? designtype : ''}`} data-id={_containerId} container-type={_containerType}>
-                            {!hasReviewerRole() ?
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
+                                    disabled: hasReviewerRole(),
                                     //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                     animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                     dragoverBubble: false,
@@ -175,7 +175,7 @@ class ElementAsideContainer extends Component {
                                 onChange={function (items, sortable, evt) { }}
                             >
                                 {this['cloneCOSlateControlledSource_2' + random]}
-                            </Sortable> : <>{this['cloneCOSlateControlledSource_2' + random]}</> }
+                            </Sortable>
                         </div>
                     )
                 }
@@ -258,10 +258,10 @@ class ElementAsideContainer extends Component {
         return (
             <div className="section" data-id={_elementId} >
                 <hr className="work-section-break" />
-                {!hasReviewerRole() ?
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
+                        disabled: hasReviewerRole(),
                        // preventOnFilter: true, // Call event.preventDefault() when triggered filter
                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                         dragoverBubble: false,
@@ -294,7 +294,7 @@ class ElementAsideContainer extends Component {
 
                 >
                     {this['cloneCOSlateControlledSource_1' + random]}
-                </Sortable> : <>{this['cloneCOSlateControlledSource_1' + random]}</> }
+                </Sortable>
             </div>
         )
     }
@@ -339,10 +339,10 @@ class ElementAsideContainer extends Component {
                     handleUndoOption = {this.props.handleUndoOption}
                     closeUndoTimer = {this.props.closeUndoTimer}
                 />
-                {!hasReviewerRole() ? 
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
+                        disabled: hasReviewerRole(),
                         //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                         dragoverBubble: false,
@@ -374,7 +374,7 @@ class ElementAsideContainer extends Component {
                     onChange={function (items, sortable, evt) { }}
                 >
                     {this['cloneCOSlateControlledSource_3' + random]}
-                </Sortable> : <>{this['cloneCOSlateControlledSource_3' + random]}</> }
+                </Sortable>
             </div>
         )
     }

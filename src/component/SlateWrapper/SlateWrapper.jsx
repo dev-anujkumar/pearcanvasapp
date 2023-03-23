@@ -351,10 +351,10 @@ class SlateWrapper extends Component {
                             >
                             </div> : null}
                             <div className='element-list'>
-                                {!hasReviewerRole() ? 
                                 <Sortable 
                                     options={{
                                         sort: true,  // sorting inside list
+                                        disabled: hasReviewerRole(),
                                         //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                         dragoverBubble: false,
@@ -401,7 +401,7 @@ class SlateWrapper extends Component {
                                     onChange={function (items, sortable, evt) { }}
                                 >
                                     {this['cloneCOSlateControlledSource_' + random]}
-                                </Sortable> : <>{this['cloneCOSlateControlledSource_' + random]}</> }
+                                </Sortable> 
                             </div>
                             <SlateFooter elements={_slateBodyMatter} projectSharingRole={projectSharingRole} isSubscribed={isSubscribed}/>
                         </div>

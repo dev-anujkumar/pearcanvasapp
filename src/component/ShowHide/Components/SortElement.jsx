@@ -1,15 +1,14 @@
 import React from 'react';
-import { hasReviewerRole } from '../../../constants/utility.js';
 import Sortable from 'react-sortablejs';
 
 function SortElement(props) {
 
 	return (
 		<div>
-			{!hasReviewerRole() ?
 			<Sortable
 				options={{
 					sort: true,  // sorting inside list
+					disabled: props.hasReviewerRole,
 					//preventOnFilter: true, // Call event.preventDefault() when triggered filter
 					animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
 					dragoverBubble: false,
@@ -33,8 +32,7 @@ function SortElement(props) {
 				onChange={function (items, sortable, evt) { }}
 			>
 				{props.children}
-			</Sortable> : <>{props.children}</> 
-			}
+			</Sortable>
 		</div> 
 	)
 }

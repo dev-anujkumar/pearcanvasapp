@@ -194,10 +194,10 @@ class MultipleColumnContainer extends PureComponent {
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
                 <div className={`container-multi-column-group-3c ${constants.setClassByElementType(this.context.element)} column-${columnIndex}`} data-id={_containerId} container-type={_containerType}>
-                    {!hasReviewerRole() ?
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
+                            disabled: hasReviewerRole(),
                             onStart: (evt) => {
                                 this.context.onClickCapture(evt)
                             },
@@ -224,7 +224,7 @@ class MultipleColumnContainer extends PureComponent {
                         onChange={function (items, sortable, evt) { }}
                     >
                         {this['cloneCOSlateControlledSource_4' + random]}
-                    </Sortable> : <>{this['cloneCOSlateControlledSource_4' + random]}</>  }
+                    </Sortable>
                 </div>
             )
         } catch (error) {

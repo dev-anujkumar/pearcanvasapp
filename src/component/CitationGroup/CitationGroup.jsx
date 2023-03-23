@@ -176,10 +176,10 @@ export class CitationGroup extends Component {
                     this['cloneCOSlateControlledSource_3' + random] = this.renderElement(_bodyMatter, parentUrn, index)
                     return (
                         <div className="container-citation" data-id={_containerId} container-type={_containerType}>
-                            {!hasReviewerRole() ?
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
+                                    disabled: hasReviewerRole(),
                                     //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                     animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                     dragoverBubble: false,
@@ -219,7 +219,7 @@ export class CitationGroup extends Component {
                                 onChange={function (items, sortable, evt) { }}
                             >
                                 {this['cloneCOSlateControlledSource_3' + random]}
-                            </Sortable> : <>{this['cloneCOSlateControlledSource_3' + random]}</> }
+                            </Sortable>
                         </div>
                     )
                 }

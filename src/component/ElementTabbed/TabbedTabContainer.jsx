@@ -93,10 +93,10 @@ export const TabbedTabContainer = (props) => {
             }
             return (
                 <div className={`container-multi-column-group-3c ${constants.setClassByElementType(column)} column-${columnIndex}`} data-id={_columnId} container-type={_columnType}>
-                    {!hasReviewerRole() ?
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
+                            disabled: hasReviewerRole(),
                             onStart: (evt) => {
                                 props.onClickCapture(evt)
                             },
@@ -123,8 +123,7 @@ export const TabbedTabContainer = (props) => {
                         onChange={function (items, sortable, evt) { }}
                     >
                         {renderElement(tab, _bodyMatter, parentUrn, index)}
-                    </Sortable> : <>{renderElement(tab, _bodyMatter, parentUrn, index)}</>
-                }
+                    </Sortable>
                 </div>
             )
         } catch (error) {
