@@ -344,9 +344,9 @@ class SlateWrapper extends Component {
                     const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
                     return (
                         <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
-                            {(slatePublishStatus && !hasReviewerRole()) && !popupSlate && !config?.isCypressPlusEnabled ? <div
+                            {(slatePublishStatus) && !popupSlate && !config?.isCypressPlusEnabled ? <div
                                 className='approved-overlay'
-                                onClick={this.getApprovedPopup}
+                                onClick={!hasReviewerRole() && this.getApprovedPopup}
                             >
                             </div> : null}
                             <div className='element-list'>
