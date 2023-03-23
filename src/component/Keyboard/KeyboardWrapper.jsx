@@ -293,7 +293,7 @@ const KeyboardWrapper = (props) => {
         return <div onFocus={() => {
             // element is directly clicked via mouse
             dispatch(selectElement(id));
-        }} id={id} className={`${hasReviewerRole() ? "pointer-events-none": "" }`}> {props.children} </div>
+        }} id={id} > {props.children} </div>
     else return <>{props.children}</>
 }
 export default KeyboardWrapper;

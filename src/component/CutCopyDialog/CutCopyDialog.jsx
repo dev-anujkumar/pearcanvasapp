@@ -31,7 +31,7 @@ const CutCopyDialog = props => {
                 <div className="copyUrn" onClick={(e) => { copyToClipBoard(e, props) }}>Copy {props.element.id.includes('work') ? 'Work' : 'Manifest'} URN</div>
             </div>
             {
-                showRefreshOption && <div className="copyUrn" onClick={() => refreshElement(props)}>
+                showRefreshOption && !hasReviewerRole() && <div className="copyUrn" onClick={() => refreshElement(props)}>
                     Refresh
                 </div>
             }

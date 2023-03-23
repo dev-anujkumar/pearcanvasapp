@@ -2457,9 +2457,8 @@ class ElementContainer extends Component {
             renderImages : this.props.tableElementAssetData
         }
         let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
-        let isSubscriber = isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
-        let showEditButton = ( !isSubscriber && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton', this.props.permissions)));
-        let showAlfrescoExpandButton = ( !isSubscriber && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton', this.props.permissions)));
+        let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton', this.props.permissions)));
+        let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton', this.props.permissions)));
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -2527,9 +2526,9 @@ class ElementContainer extends Component {
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment', isSubscriber)} />}          
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment', isSubscriber)} type="view-comment" elementType={element?.type} />}
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment', isSubscriber)} type="comment-flagged" elementType={element?.type} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
@@ -2842,9 +2841,9 @@ class ElementContainer extends Component {
         });   
     }
 
-    addOrViewComment = (e, elementId, type, isSubscriber) => {
+    addOrViewComment = (e, elementId, type) => {
         this.props.setActiveElement(this.props.element);
-        if (!isSubscriber) {
+        if (!hasReviewerRole()) {
             sendDataToIframe({
                 'type': AddOrViewComment,
                 'message': { "id": elementId, "mode": type, "viewInCypress": false }
