@@ -4,20 +4,20 @@ import { connect } from 'react-redux';
 import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
-import SlateWrapper from '../SlateWrapper';
-import Sidebar from '../Sidebar';
-import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
-import Toolbar from '../Toolbar';
-import PopUp from '../PopUp';
+const SlateWrapper = React.lazy(() => import('../SlateWrapper'));
+const Sidebar = React.lazy(() => import('../Sidebar'));
+const AssetPopoverSearch = React.lazy(() => import('../AssetPopover/AssetPopoverSearch.jsx'));
+const Toolbar = React.lazy(() => import('../Toolbar'));
+const PopUp = React.lazy(() => import('../PopUp'));
+const MarkIndexPopup = React.lazy(() => import('../MarkIndexPopup/MarkIndexPopup'));
 import config from './../../config/config';
-import MarkIndexPopup from '../MarkIndexPopup/MarkIndexPopup';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
 import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
-import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
+const GlossaryFootnoteMenu = React.lazy(() => import('../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx'));
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
 import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus } from './CanvasWrapper_Actions';
