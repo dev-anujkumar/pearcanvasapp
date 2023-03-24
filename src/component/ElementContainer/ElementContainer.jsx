@@ -2506,6 +2506,7 @@ class ElementContainer extends Component {
         const inContainer = this.props.parentUrn ? true : false;
         let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
         let isSubscriber = isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
+        console.log('SSSSSSSSSSSS', isSubscriber)
         return (
             <>
                 <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
@@ -2844,12 +2845,10 @@ class ElementContainer extends Component {
 
     addOrViewComment = (e, elementId, type) => {
         this.props.setActiveElement(this.props.element);
-        if (!hasReviewerRole()) {
             sendDataToIframe({
                 'type': AddOrViewComment,
                 'message': { "id": elementId, "mode": type, "viewInCypress": false }
             });
-        }
         e.stopPropagation();
     }
 
