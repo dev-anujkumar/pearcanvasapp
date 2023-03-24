@@ -340,9 +340,10 @@ class FigureImage extends Component {
         }
 
         const figureDataObj = this.props.model.figuredata;
+        const figureType = this.props?.model?.figuretype ? "image" : null;
         const currentAsset = figureDataObj ? {
             id: figureDataObj?.imageid ? figureDataObj.imageid.split(':').pop() : '', // get last
-            type: this.props?.model?.figuretype ?? null,
+            type: figureType,
         } : null;
 
         let that = this;
