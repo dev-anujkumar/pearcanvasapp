@@ -70,19 +70,23 @@ export const guid = () => {
 
 export const hasProjectPermission = (value) => {
     const authStore = store.getState();
+    const {projectInfo} = authStore;
+    let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     let permissions = authStore && authStore.appStore.permissions;
-    let hasPermissions = permissions && permissions.includes(value)
+    let hasPermissions = permissions && permissions.includes(value) && !isSubscriber;
     return hasPermissions;
 }
 
 
 export const hasReviewerRole = (value) => {
+    const authStore = store.getState();
+    const {projectInfo} = authStore;
+    let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     if (value) {
         return !(hasProjectPermission(value) ? true : false)
     }
-    const authStore = store.getState();
-    let hasRole = authStore.appStore && (authStore.appStore.roleId === "comment_only"
-        && (hasProjectPermission('note_viewer'))) ? true : false;
+    let hasRole = (authStore.appStore && (authStore.appStore.roleId === "comment_only"
+        && (hasProjectPermission('note_viewer'))) || isSubscriber);
     return hasRole;
 }
 /**

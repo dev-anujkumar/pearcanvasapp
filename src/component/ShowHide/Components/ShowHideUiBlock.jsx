@@ -1,5 +1,6 @@
 import React from 'react';
 import { SHOW_HIDE } from '../../../constants/Element_Constants.js';
+import { hasReviewerRole } from '../../../constants/utility.js';
 import ElementContainer from '../../ElementContainer/ElementContainer.jsx';
 import { ElementSaprator } from '../../ElementSaprator/ElementSaprator.jsx';
 import { addElementInShowHide, showHideConstants } from '../ShowHide_Helper';
@@ -127,6 +128,7 @@ const ShowHideUiBlock = (props) => {
 			<SortElement 
 				onSortUpdate = {onSortUpdate}
 				sectionType = {sectionType}
+				hasReviewerRole = {hasReviewerRole()}
 			>
 				{ renderNestedElements() }
 			</SortElement>	

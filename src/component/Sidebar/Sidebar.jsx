@@ -1002,7 +1002,7 @@ class Sidebar extends Component {
     render = () => {
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.tag !== TABBED_2_COLUMN.ELEMENT_TAG_NAME && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}

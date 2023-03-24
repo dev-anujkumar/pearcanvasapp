@@ -13,7 +13,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -223,7 +223,7 @@ class SlateWrapper extends Component {
             }
             return _state;
         }
-        else if(isOwnerRole(projectSharingRole,isSubscribed) || isSubscriberRole(projectSharingRole,isSubscribed)){
+        else if(isOwnerRole(projectSharingRole,isSubscribed)){
             _state={
                 ..._state,
                 showOwnerSlatePopup: true
@@ -344,15 +344,16 @@ class SlateWrapper extends Component {
                     const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
                     return (
                         <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
-                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate && !config?.isCypressPlusEnabled ? <div
+                            {(slatePublishStatus) && !popupSlate && !config?.isCypressPlusEnabled ? <div
                                 className='approved-overlay'
-                                onClick={this.getApprovedPopup}
+                                onClick={!hasReviewerRole() && this.getApprovedPopup}
                             >
                             </div> : null}
                             <div className='element-list'>
-                                <Sortable
+                                <Sortable 
                                     options={{
                                         sort: true,  // sorting inside list
+                                        disabled: hasReviewerRole(),
                                         //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                         dragoverBubble: false,
@@ -399,7 +400,7 @@ class SlateWrapper extends Component {
                                     onChange={function (items, sortable, evt) { }}
                                 >
                                     {this['cloneCOSlateControlledSource_' + random]}
-                                </Sortable>
+                                </Sortable> 
                             </div>
                             <SlateFooter elements={_slateBodyMatter} projectSharingRole={projectSharingRole} isSubscribed={isSubscribed}/>
                         </div>
@@ -519,8 +520,6 @@ class SlateWrapper extends Component {
                 lockDuration = 5400
             this.setSlateLock(slateId, lockDuration)
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
-        }else if(isSubscriberRole(projectSharingRole,isSubscribed)){
-            return true
         }
         else {
             const slateId = Object.keys(this.props.slateData)[0],
@@ -615,17 +614,6 @@ class SlateWrapper extends Component {
                     warningHeaderText={`Warning`}
                     lOPopupClass="lo-warning-txt"
                     withCheckBox={true}
-                />
-            )
-        }
-        else if (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup ) {
-            this.props.showBlocker(true)
-            showTocBlocker();
-            return (
-                <PopUp
-                    togglePopup={this.togglePopup}
-                    isSubscribersSlate={true}
-                    lOPopupClass="lo-warning-txt"
                 />
             )
         }

@@ -192,7 +192,7 @@ class OpenGlossaryAssets extends Component {
                             {!hasReviewerRole() &&
                                 <button onClick={() => this.openAudioConfirmationBox(true)} className="remove-text audioRemoveButton audioRemoveRound">Remove</button>
                             }
-                            {
+                            {!hasReviewerRole() &&
                                 <button onClick={() => this.handleReplaceAudioButton()} className="remove-text audioReplaceeButton audioRemoveRound">Replace</button>
                             }
                         </div>
@@ -223,7 +223,7 @@ class OpenGlossaryAssets extends Component {
                             {!hasReviewerRole() &&
                                 <button onClick={() => this.openImageConfirmationBox()} className="remove-text audioRemoveButton audioRemoveRound">Remove</button>
                             }
-                            {
+                            {!hasReviewerRole() &&
                                 <button onClick={() => this.handleReplaceImageButton()} className="remove-text audioReplaceeButton audioRemoveRound">Replace</button>
                             }
                         </div>

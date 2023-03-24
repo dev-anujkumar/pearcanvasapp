@@ -16,7 +16,7 @@ import SectionSeperator from './SectionSeperator.jsx';
 import { checkSlateLock } from "../../js/slateLockUtility.js"
 import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
-import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe } from '../../constants/utility';
+import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import ElementConstants from '../ElementContainer/ElementConstants';
 // IMPORT - Assets //
@@ -54,7 +54,7 @@ class ElementAsideContainer extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.asideRef && !this.asideRef.current.contains(event.target) && !this.props.isAutoNumberingEnabled) {
+        if (this.asideRef && !this.asideRef?.current?.contains(event.target) && !this.props.isAutoNumberingEnabled) {
             this.handleAsideBlur(event);
         }
     }
@@ -119,6 +119,7 @@ class ElementAsideContainer extends Component {
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
+                                    disabled: hasReviewerRole(),
                                     //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                     animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                     dragoverBubble: false,
@@ -260,6 +261,7 @@ class ElementAsideContainer extends Component {
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
+                        disabled: hasReviewerRole(),
                        // preventOnFilter: true, // Call event.preventDefault() when triggered filter
                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                         dragoverBubble: false,
@@ -340,6 +342,7 @@ class ElementAsideContainer extends Component {
                 <Sortable
                     options={{
                         sort: true,  // sorting inside list
+                        disabled: hasReviewerRole(),
                         //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                         dragoverBubble: false,
