@@ -2505,6 +2505,7 @@ class ElementContainer extends Component {
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false;
         let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
+        let isSubscriber = isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
         return (
             <>
                 <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
@@ -2526,9 +2527,9 @@ class ElementContainer extends Component {
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => !isSubscriber && this.addOrViewComment(e, element.id,'addComment')} />}          
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => !isSubscriber && this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => !isSubscriber && this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
