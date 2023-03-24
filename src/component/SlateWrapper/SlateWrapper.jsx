@@ -12,6 +12,7 @@ import { LargeLoader, SmalllLoader } from './ContentLoader.jsx';
 import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
+import { hasReviewerRole } from '../../constants/utility';
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
 import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
@@ -350,9 +351,10 @@ class SlateWrapper extends Component {
                             >
                             </div> : null}
                             <div className='element-list'>
-                                <Sortable
+                                <Sortable 
                                     options={{
                                         sort: true,  // sorting inside list
+                                        disabled: hasReviewerRole(),
                                         //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                         dragoverBubble: false,
@@ -399,7 +401,7 @@ class SlateWrapper extends Component {
                                     onChange={function (items, sortable, evt) { }}
                                 >
                                     {this['cloneCOSlateControlledSource_' + random]}
-                                </Sortable>
+                                </Sortable> 
                             </div>
                             <SlateFooter elements={_slateBodyMatter} projectSharingRole={projectSharingRole} isSubscribed={isSubscribed}/>
                         </div>

@@ -5,7 +5,7 @@ import config from "../../config/config.js";
 import ElementSaprator from '../ElementSaprator';
 import ElementContainer from '../ElementContainer';
 import constants from "./constants.js";
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions';
 import { TABBED_SOURCE } from '../../constants/Element_Constants'
@@ -59,6 +59,7 @@ export const Tabbed2Column = (props) => {
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
+                            disabled: hasReviewerRole(),
                             onStart: (evt) => {
                                 props.onClickCapture(evt)
                             },
@@ -85,7 +86,7 @@ export const Tabbed2Column = (props) => {
                         onChange={function (items, sortable, evt) { }}
                     >
                         {renderTabElement(element, element?.groupeddata?.bodymatter, parentUrn, asideData, props.index)}
-                    </Sortable>
+                    </Sortable> 
                 </div>
             )
         } else {
