@@ -111,7 +111,7 @@ export const disabledPrimaryOption = [
     "primary-element-citation",
     "primary-multicolumn",
     "primary-multicolumn-3c",
-    "primary-tabbed-elem"
+    "primary-tab"
 ];
 // this constant is used by sidebar
 export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive", 'assessment']

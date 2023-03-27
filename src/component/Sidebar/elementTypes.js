@@ -1001,30 +1001,10 @@ export default {
             toolbar: [],
             enum: 'TABBED_2_COLUMN',
             subtype: {
-                'secondary-tabbed-30-70': {
-                    text: 'Distribution 1 : 30% - 70%',
-                    labelText: 'TB',
-                    enum: 'TEXT_WIDTH_30_70'
-                },
-                'secondary-tabbed-40-60': {
-                    text: 'Distribution 2 : 40% - 60%',
-                    labelText: 'TB',
-                    enum: 'TEXT_WIDTH_40_60'
-                },
-                'secondary-tabbed-50-50': {
-                    text: 'Distribution 3 : 50% - 50%',
-                    labelText: 'TB',
-                    enum: 'TEXT_WIDTH_50_50'
-                },
-                'secondary-tabbed-60-40': {
+                'secondary-multicolumn-wider': {
                     text: 'Distribution 4 : 60% - 40%',
                     labelText: 'TB',
                     enum: 'TEXT_WIDTH_60_40'
-                },
-                'secondary-tabbed-70-30': {
-                    text: 'Distribution 5 : 70% - 30%',
-                    labelText: 'TB',
-                    enum: 'TEXT_WIDTH_70_30'
                 }
             }
         },
@@ -1034,15 +1014,36 @@ export default {
         'primary-tab': {
             text: 'Tab 2 Column',
             toolbar: [],
-            enum: 'TAB_ELEMENT',
+            enum: 'TABBED_2_COLUMN',
             subtype: {
-                'secondary-multicolumn-wider': {
-                    text: 'Wider than text width 60/40%',
+                'secondary-tabbed-30-70': {
+                    text: 'Distribution 1 : 30% - 70%',
                     labelText: 'Tab',
-                    enum: 'WIDER_60_40'
+                    enum: 'TEXT_WIDTH_30_70'
+                },
+                'secondary-tabbed-40-60': {
+                    text: 'Distribution 2 : 40% - 60%',
+                    labelText: 'Tab',
+                    enum: 'TEXT_WIDTH_40_60'
+                },
+                'secondary-tabbed-50-50': {
+                    text: 'Distribution 3 : 50% - 50%',
+                    labelText: 'Tab',
+                    enum: 'TEXT_WIDTH_50_50'
+                },
+                'secondary-tabbed-60-40': {
+                    text: 'Distribution 4 : 60% - 40%',
+                    labelText: 'Tab',
+                    enum: 'TEXT_WIDTH_60_40'
+                },
+                'secondary-tabbed-70-30': {
+                    text: 'Distribution 5 : 70% - 30%',
+                    labelText: 'Tab',
+                    enum: 'TEXT_WIDTH_70_30'
                 }
             }
-        }
+        },
+        enumType: 'tabbed-2-column'
     },
     "element-dialogue" : {
         "primary-element-dialogue": {

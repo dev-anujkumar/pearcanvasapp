@@ -1,16 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import { makeStyles } from '@material-ui/core/styles';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+import { Button, Dialog, DialogActions, DialogTitle, FormControl, Select, MenuItem, InputLabel, DialogContent, DialogContentText } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { styled } from '@mui/material/styles';
 import '../../styles/AlfrescoPopup/AlfrescoPopup.css'
 import config from '../../config/config'
 import { sendDataToIframe, getPrimaryButtonClass, PRIMARY_BUTTON, SECONDARY_BUTTON } from '../../constants/utility';
@@ -18,35 +9,60 @@ import axios from 'axios';
 import { alfrescoPopup, saveSelectedAlfrescoElement } from "../AlfrescoPopup/Alfresco_Action";
 import { connect } from 'react-redux';
 
-const useStyles = makeStyles((theme) => ({
-    formControl: {
-        margin: '0 24px',
-        minWidth: 120,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
-    dropdownItem: {
-        height: '40px',
-        width: '350px',
-        fontWeight: '500'
-    }
-}));
+const CustomizedFormControl = styled(FormControl)`
+    margin: 0px 24px;
+    min-width: 120px;
+`;
+
+const CustomizedMenuItem = styled(MenuItem)`
+    height: 40px;
+    width: 350px;
+    font-weight: 500;
+`;
 
 const MenuProps = {
     PaperProps: {
-      style: {
-        width: 360,
-        height: 208
-      },
+        sx: {
+            width: 360,
+            height: 208,
+            '@media (max-width: 1822px)': {
+                top: '416px !important',
+            },
+            '@media (max-width: 1708px)': {
+                top: '388px !important',
+            },
+            '@media (max-width: 1581px)': {
+                top: '344px !important',
+            },
+            '@media (max-width: 1367px)': {
+                top: '307px !important',
+            },
+            '@media (max-width: 1242px)': {
+                top: '278px !important',
+            },
+            '@media (max-width: 1280px)': {
+                top: '281px !important',
+            },
+            '@media (width: 1422px)': {
+                top: '315px !important',
+            },
+            '@media (width: 1600px)': {
+                top: '358px !important',
+            },
+            '@media (width: 1163px)': {
+                top: '254px !important',
+            },
+            '@media (width: 1024px)': {
+                top: '219px !important',
+            },
+        },
     },
-  };
+};
 
 function AlfrescoPopup(props) {
     const [open, setOpen] = React.useState(true);
     const [selectedOption, setOption] = React.useState('');
     const [projectMetadata, setMetaData] = React.useState()
-    const classes = useStyles();
     const focusedButton = React.useRef(SECONDARY_BUTTON);
     const primaryButton = React.useRef(null);
     const secondaryButton = React.useRef(null);
@@ -185,7 +201,7 @@ function AlfrescoPopup(props) {
                         <span className='small-title'>Location in Alfresco</span>
                     </DialogContentText>
                 </DialogContent>
-                <FormControl variant="filled" className={classes.formControl}>
+                <CustomizedFormControl variant="filled">
                     {selectedOption === '' &&
                         <InputLabel id="filled-age-native-simple">Select One</InputLabel>
                     }
@@ -204,15 +220,14 @@ function AlfrescoPopup(props) {
                         }}
                     >
                         {props.alfrescoListOption.map((values, index) => (
-                        <MenuItem 
+                        <CustomizedMenuItem 
                             ref={menuRef} 
                             key={index} 
                             value={values.entry.id}
-                            className={classes.dropdownItem}
-                        ><span className='dropdown-items'>{values.entry.site.title}</span></MenuItem>
+                        ><span className='dropdown-items'>{values.entry.site.title}</span></CustomizedMenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </CustomizedFormControl>
                 <DialogActions className="alfresco-popup-action-buttons">
                     <Button id={SECONDARY_BUTTON} ref={secondaryButton} variant="outlined" className="active-button-class secondary" onClick={handleClose}>Cancel</Button>
                     <Button

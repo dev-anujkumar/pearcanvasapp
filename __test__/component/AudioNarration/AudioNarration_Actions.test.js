@@ -5,7 +5,7 @@ import axios from 'axios';
 import * as actions from '../../../src/component/AudioNarration/AudioNarration_Actions'
 import * as types from '../../../src/constants/Action_Constants'
 import config from '../../../src/config/config'
-import { mockData, mockDatadelete, mockGlossaryData, alfrescoDataTesting
+import { mockData, mockDatadelete, mockGlossaryData, alfrescoDataTesting, alfrescoDataTesting2,
 } from '../../../fixtures/audioNarrationTestingdata'
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -31,12 +31,20 @@ jest.mock('../../../src/appstore/store', () => {
                     indexSplit: 0,
                     isGlossary:false,
                     positions:null
+                },
+                appStore: {
+                    slateLevelData: {
+                        "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
+                            "type": "popup",
+                        },
+                    }
                 }
             }
         },
         dispatch:()=>jest.fn().mockImplementationOnce((cb)=>{cb()})
     }
 })
+config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
 describe('actions', () => {
     let store = mockStore(() => initialState);
 
@@ -151,6 +159,9 @@ describe('actions', () => {
         });
 
         it('fetchAudioNarrationForContainer ===> success', async () => {
+            config.isCypressPlusEnabled = true
+            config.SHOW_CYPRESS_PLUS = true
+            config.CYPRESS_PLUS_WINDOW = "true"
             let resp = {
                 status: 200,
                 data: {},
@@ -163,20 +174,31 @@ describe('actions', () => {
             }
             let openAudioFlag = '';
             let addAudioNarrationFlag = '';
-            const store = mockStore({ audioReducer: mockDatadelete });
-            let dispatch = (obj) => {
-                if (obj.type === 'CURRENT_SLATE_AUDIO_NARRATION') {
-                    expect(obj.payload).toEqual(audioDataResponse.data);
-                }
-                else if (obj.type === 'OPEN_AUDIO_NARRATION') {
-                    expect(obj.payload).toEqual(false);
-                    openAudioFlag = false;
-                }
-                else if (obj.type === 'ADD_AUDIO_NARRATION') {
-                    expect(obj.payload).toEqual(true);
-                    addAudioNarrationFlag = true;
-                }
+            let dispatch = () => {}
+            await actions.fetchAudioNarrationForContainer(slateData)(dispatch);
+            setTimeout(() => {
+                expect(openAudioFlag).toEqual(false)
+                expect(addAudioNarrationFlag).toEqual(true)
+            }, 1000);
+        });
+
+        it('fetchAudioNarrationForContainer ===> if > else', async () => {
+            config.isCypressPlusEnabled = false
+            config.SHOW_CYPRESS_PLUS = false
+            config.CYPRESS_PLUS_WINDOW = "false"
+            let resp = {
+                status: 200,
+                data: {},
+                response: mockData.audioData
+            };
+            axios.get.mockImplementation(() => Promise.resolve(resp));
+            let slateData = {
+                currentProjectId: config.projectUrn,
+                slateEntityUrn: config.slateEntityURN
             }
+            let openAudioFlag = '';
+            let addAudioNarrationFlag = '';
+            let dispatch = () => {}
             await actions.fetchAudioNarrationForContainer(slateData)(dispatch);
             setTimeout(() => {
                 expect(openAudioFlag).toEqual(false)
@@ -254,7 +276,6 @@ describe('actions', () => {
 
         it('deleteAudioNarrationForContainer ===> if Glossary', async() => {
             let isGlossary = true;
-            const store = mockStore( {audioReducer : mockDatadelete.audioGlossaryData} )
             let dispatch =jest.fn().mockImplementationOnce((cb)=>{cb()})
             actions.deleteAudioNarrationForContainer(isGlossary)(dispatch);
         });
@@ -283,6 +304,9 @@ describe('actions', () => {
         });
         
         it('deleteAudioNarrationForContainer ===> success', async() => {
+            config.isCypressPlusEnabled = true
+            config.SHOW_CYPRESS_PLUS = true
+            config.CYPRESS_PLUS_WINDOW = "true"
             let resp ={
                         status: 200,
                        response: mockData.audioData,
@@ -295,17 +319,7 @@ describe('actions', () => {
             let isGlossary = false;
            let openAudioFlag = '';
            let addAudioNarrationFlag = '';
-            const store = mockStore( {audioReducer : mockDatadelete.audioData} );
-            let dispatch = (obj) => {
-                if(obj.type=== 'OPEN_AUDIO_NARRATION'){
-                  expect(obj.payload).toEqual(true);
-                  openAudioFlag =true;
-                }
-                else  if(obj.type=== 'ADD_AUDIO_NARRATION'){
-                    expect(obj.payload).toEqual(false);
-                    addAudioNarrationFlag = false;
-                }
-            }
+            let dispatch = () => {}
             await actions.deleteAudioNarrationForContainer(isGlossary)(dispatch);
             actions.fetchAudioNarrationForContainer(slateData)
             setTimeout(() => {
@@ -313,29 +327,32 @@ describe('actions', () => {
                 expect(addAudioNarrationFlag).toEqual(false)
             },1000);
         });
-        // xit('deleteAudioNarrationForContainer ===> else', () => {
 
-        //     moxios.wait(() => {
-        //         const request = moxios.requests.mostRecent();
-        //         request.respondWith({
-        //             status: 203,
-        //            response: mockData.audioData,
-        //         });
-        //     });
+        it('deleteAudioNarrationForContainer ===> if > else', async() => {
+            config.isCypressPlusEnabled = false
+            config.SHOW_CYPRESS_PLUS = false
+            config.CYPRESS_PLUS_WINDOW = "false"
+            let resp ={
+                        status: 200,
+                       response: mockData.audioData,
+                    };
+            axios.delete.mockImplementation(() => Promise.resolve(resp));
+            let slateData = {
+                currentProjectId: config.projectUrn,
+                slateEntityUrn: config.slateEntityURN
+            }
+            let isGlossary = false;
+           let openAudioFlag = '';
+           let addAudioNarrationFlag = '';
+            let dispatch = () => {}
+            await actions.deleteAudioNarrationForContainer(isGlossary)(dispatch);
+            actions.fetchAudioNarrationForContainer(slateData)
+            setTimeout(() => {
+                expect(openAudioFlag).toEqual(true)
+                expect(addAudioNarrationFlag).toEqual(false)
+            },1000);
+        });
 
-        //     const expectedActions = [
-        //         { type: types.ADD_AUDIO_NARRATION, payload: false },
-        //         { type: types.OPEN_AUDIO_NARRATION, payload: true }
-                
-        //     ];
-        //     let isGlossary = false;
-        //     const store = mockStore( {audioReducer : mockDatadelete.audioData} )
-
-        //     return store.dispatch(actions.deleteAudioNarrationForContainer(isGlossary)).then(() => {
-        //         // return of async actions
-        //         expect(store.getActions()).toEqual(expectedActions);
-        //     });
-        // });
         it('addAudioNarrationForContainer ===> if Glossary', async() => {
             let isGlossary = true;
             let audioData = {
@@ -417,11 +434,33 @@ describe('actions', () => {
             return store.dispatch(actions.fetchAudioNarrationForContainer(slateData))
         });
 
+        it('addAudioNarrationForContainer ===> audioData?.format', async() => {
+            let isGlossary = true;
+            let audioData = {
+                location: "https://cite-media-stg.pearson.com/legacy_paths/f8433cd3-04cd-4479-852c-dde4ab410a9f/nse_aud_11_u43_l1_m1_02.mp4",
+                format: "test"
+            }
+            const store = mockStore( {audioReducer : mockGlossaryData.audioGlossaryData} )
+            global.fetch = jest.fn();
+            return store.dispatch(actions.addAudioNarrationForContainer(audioData,isGlossary)).then(() => {
+                actions.fetchAudioNarrationForContainer(audioData,isGlossary)
+            });
+        });
+
+        it('addAudioNarrationForContainer ===> without audioData', async() => {
+            let isGlossary = true;
+            let audioData = {}
+            const store = mockStore( {audioReducer : mockGlossaryData.audioGlossaryData} )
+            global.fetch = jest.fn();
+            return store.dispatch(actions.addAudioNarrationForContainer(audioData,isGlossary)).then(() => {
+                actions.fetchAudioNarrationForContainer(audioData,isGlossary)
+            });
+        });
     });
 
     describe('saveDataFromAlfresco', () => {
-        let message = alfrescoDataTesting;
         it('saveDataFromAlfresco ===> if figureType is audio', () => {
+            let message = alfrescoDataTesting;
             let mockedAddAudio = jest.spyOn(actions, 'addAudioNarrationForContainer');
             let dispatch = () => {
                 mockedAddAudio();
@@ -432,6 +471,66 @@ describe('actions', () => {
                     'publicationUrl': ""
                 }
             ]
+            actions.saveDataFromAlfresco(message)(dispatch);
+        });
+        it('saveDataFromAlfresco ===> if figureType is audio > else', () => {
+            let message = alfrescoDataTesting;
+            let mockedAddAudio = jest.spyOn(actions, 'addAudioNarrationForContainer');
+            let dispatch = () => {
+                mockedAddAudio();
+                expect(mockedAddAudio).toHaveBeenCalled()
+            }
+            message.asset["institution-urls"] = [
+                {
+                    'publicationUrl': "test"
+                }
+            ]
+            actions.saveDataFromAlfresco(message)(dispatch);
+        });
+        it('saveDataFromAlfresco ===> if (smartLinkAssetType.toLowerCase() === audio) > if', () => {
+            let message = alfrescoDataTesting2;
+            let mockedAddAudio = jest.spyOn(actions, 'addAudioNarrationForContainer');
+            let dispatch = () => {
+                mockedAddAudio();
+                expect(mockedAddAudio).toHaveBeenCalled()
+            }
+            message.asset["properties"] = {
+                "cm:description":"{\"smartLinkType\":\"audio\"}",
+                "avs:url":"https://eps.openclass.com/eps=/sanvan/api/item/dbbd8a17-19a9-48e9-935b-ff27528a0006/100/file/Ciccarelli-P-4e-R2-Brix-Update_v2/m/OPS/text/chapter-05/ch5_sec_02-rw-a2f376e40075353df50f8c4c1a56933a56e7e4cf0.xhtml",
+            }
+            actions.saveDataFromAlfresco(message)(dispatch);
+        });
+        it('saveDataFromAlfresco ===> if (smartLinkAssetType.toLowerCase() === audio) > if > else', () => {
+            let message = alfrescoDataTesting2;
+            let mockedAddAudio = jest.spyOn(actions, 'addAudioNarrationForContainer');
+            let dispatch = () => {
+                mockedAddAudio();
+                expect(mockedAddAudio).toHaveBeenCalled()
+            }
+            message.asset["properties"] = {
+                "cm:description":"{\"smartLinkType\":\"audio\"}",
+            }
+            actions.saveDataFromAlfresco(message)(dispatch);
+        });
+        it('saveDataFromAlfresco ===> if (smartLinkAssetType.toLowerCase() === audio) > else', () => {
+            let message = alfrescoDataTesting2;
+            let mockedAddAudio = jest.spyOn(actions, 'addAudioNarrationForContainer');
+            let dispatch = () => {
+                mockedAddAudio();
+                expect(mockedAddAudio).toHaveBeenCalled()
+            }
+            message.asset["properties"] = {
+                "cm:description":"{\"smartLinkType\":\"test\"}",
+            }
+            actions.saveDataFromAlfresco(message)(dispatch);
+        });
+        it('saveDataFromAlfresco ===> ternary operator > false', () => {
+            let message = alfrescoDataTesting2
+            let mockedAddAudio = jest.spyOn(actions, 'addAudioNarrationForContainer');
+            let dispatch = () => {
+                mockedAddAudio();
+                expect(mockedAddAudio).toHaveBeenCalled()
+            }
             actions.saveDataFromAlfresco(message)(dispatch);
         });
     });

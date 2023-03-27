@@ -1448,7 +1448,6 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                 switch (tempIndex[4]) {
                     case "1":
                         let responseElement = {...res.data}
-                        newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].contents['formatted-title']
                         res.data.html.text = res.data.html.text.replace(/<p>|<\/p>/g, "")
                         responseElement.html.text = createTitleSubtitleModel("", res.data.html.text)
                         newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[tempIndex[2]].groupdata.bodymatter[tempIndex[3]].contents['formatted-title'] = responseElement;

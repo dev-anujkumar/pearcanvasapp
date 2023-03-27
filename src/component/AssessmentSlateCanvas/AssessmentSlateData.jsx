@@ -10,7 +10,7 @@ import RootCiteTdxComponent from './assessmentCiteTdx/RootCiteTdxComponent.jsx';
 /** ----- Import - Dependencies ----- */
 import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
-import { sendDataToIframe, hasReviewerRole, defaultMathImagePath } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, defaultMathImagePath, isSubscriberRole } from '../../constants/utility.js';
 import { TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
 import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, ELM_UPDATE_MSG, ELM_UPDATE_POPUP_HEAD, ELM_UPDATE_BUTTON, FULL_ASSESSMENT_LEARNOSITY, Resource_Type, UPDATE_ASSESSMENT_TYPE,CHANGE_USAGE_TYPE } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
@@ -52,7 +52,9 @@ class AssessmentSlateData extends Component {
         let newMessage = { assessmentResponseMsg: false };
         this.props.isLOExist(newMessage);
         if (this.props.model?.elementdata?.assessmentid) {
-            this.sendDataAssessment(this.props, true);
+            const isSubscribed = isSubscriberRole(this.props?.projectSubscriptionDetails?.projectSharingRole, this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)
+            const sendMessageForSlateTag = !isSubscribed
+            this.sendDataAssessment(this.props, sendMessageForSlateTag);
             const assessmentFormat = this.props.model && this.props.setAssessmentFormat(this.props.model)
             this.setState({
                 activeAssessmentType: assessmentFormat
@@ -825,7 +827,8 @@ const mapStateToProps = state => {
         assessmentReducer: state.assessmentReducer,
         isLearnosityProject: state.appStore.isLearnosityProjectInfo,
         projectLearningFrameworks: state.metadataReducer.projectLearningFrameworks,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        projectSubscriptionDetails:state?.projectInfo,
     };
 };
 
