@@ -6,7 +6,7 @@ import {
     fetchSlateData,
     createPopupUnit
 } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { sendDataToIframe, getTitleSubtitleModel, isSubscriberRole } from '../../constants/utility.js';
+import { sendDataToIframe, getTitleSubtitleModel, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import { findKey } from "lodash";
@@ -27,6 +27,11 @@ class ElementPopup extends React.Component {
     }
     componentDidMount = () => {
         this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick);
+        if(hasReviewerRole){
+            document.getElementById(`cypress-${this.props.index}-0`).setAttribute('contenteditable', false);
+            document.getElementById(`cypress-${this.props.index}-1`).setAttribute('contenteditable', false);
+            document.getElementById(`cypress-${this.props.index}-2`).setAttribute('contenteditable', false);
+        }
     }
     componentWillUnmount = () => {
         this.popupBorderRef.current.removeEventListener('click', this.handlepopupSlateClick);
