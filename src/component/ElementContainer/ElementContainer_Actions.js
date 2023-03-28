@@ -1042,7 +1042,7 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
  * @param {*} imagesArrayOfObj 
  */
 const getImageFromHTMLElement = async (node, imagesArrayOfObj) => {
-    if(node?.nodeName === 'IMG' && node?.className === "imageAssetContent inlineImage"){
+    if(node?.nodeName === 'IMG' && node?.className === "imageAssetContent"){
         const attributes = node.attributes;
         const id = attributes['data-id'].nodeValue;
         const src = attributes['data-mce-src'].nodeValue;
