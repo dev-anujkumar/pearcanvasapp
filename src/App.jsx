@@ -70,8 +70,8 @@ class App extends Component {
         return (
             <Provider store={store}>
                 <div id='app_container' className='app'>
-                <Suspense fallback={<h1>Loading profile...</h1>}>
-                    <CanvasWrapper isConfigLoaded={this.state.isConfigLoaded} />
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <CanvasWrapper isConfigLoaded={this.state.isConfigLoaded} />
                     </Suspense>
                 </div>
             </Provider>

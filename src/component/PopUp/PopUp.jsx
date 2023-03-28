@@ -2,12 +2,12 @@
 * Root Component of PopUp .
 */
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import '../../styles/PopUp/PopUp.css';
 import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
-import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
+const PowerPasteElement = React.lazy(() => import('../PowerPasteElement/PowerPasteElement.jsx'));
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
@@ -441,13 +441,15 @@ class PopUp extends React.Component {
             )
         } else if (props.WordPastePopup) {
             return (
-                <PowerPasteElement
-                    index={props.index}
-                    onPowerPaste={props.onPowerPaste}
-                    toggleWordPasteProceed={this.toggleWordPasteProceed}
-                    checkInvalidPowerPasteContent={this.checkInvalidPowerPasteContent}
-                    isPowerPasteInvalidContent={this.state.isPowerPasteInvalidContent}
-                />
+                <Suspense fallback={<div></div>}>
+                    <PowerPasteElement
+                        index={props.index}
+                        onPowerPaste={props.onPowerPaste}
+                        toggleWordPasteProceed={this.toggleWordPasteProceed}
+                        checkInvalidPowerPasteContent={this.checkInvalidPowerPasteContent}
+                        isPowerPasteInvalidContent={this.state.isPowerPasteInvalidContent}
+                    />
+                </Suspense>
             )
         } else if (props.withCheckBox) {
             const { isChecked } = this.state

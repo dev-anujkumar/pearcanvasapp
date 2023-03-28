@@ -13,8 +13,6 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 //const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 //const WebpackMd5Hash = require('webpack-md5-hash');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const CompressionPlugin = require("compression-webpack-plugin");
-const zlib = require("zlib");
 const USEHASH = '[contenthash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
 const DOTENV = require('dotenv').config({ path: __dirname + '/.env' });
 
@@ -123,25 +121,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new CompressionPlugin({
-            filename: "[path][base].br",
-            algorithm: "brotliCompress",
-            test: /\.(js|css|html|png|jpg|gif|svg)$/,
-            compressionOptions: {
-                params: {
-                    [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
-                },
-            },
-            threshold: 10240,
-            minRatio: 0.8
-        }),
-        new CompressionPlugin({
-            filename: "[path][base].gz",
-            algorithm: "gzip",
-            test: /\.(js|css|html|png|jpg|gif|svg)$/,
-            threshold: 10240,
-            minRatio: 0.8,
-        }),
         // To cleanup dis folder every time with unwanted assets
         new HtmlWebpackPlugin({
             // All the JS resources will be placed at head element
@@ -180,32 +159,6 @@ module.exports = {
     ],
     // To show the console error with exact file name
     devtool: devtool,
-    // Webapck dev server basic configuration
-    devServer: {
-        // Webpack dev server will lookup for this dir
-        static: {
-            directory: path.join(__dirname, 'dist'),
-          },
-        //contentBase: path.join(__dirname, 'dist'),
-        // Enable gzip compression for everything served:
-        compress: true,
-        allowedHosts: ['local-dev.pearson.com'],
-        https: true,
-        open: true,
-        //overlay: true,
-      	host:'local-dev.pearson.com',
-        port: 443,
-        //index: 'index.html',
-        //hot: true,
-        proxy: [{
-            context: ['**/configurationjs**', '/pluginwiris_engine/**'],
-            target: 'https://dev-structuredauthoring.pearson.com/',
-            secure: false,
-            pathRewrite: {
-                '^/static/js': '/tinywiris/tinymce4/js/tinymce'
-            }
-        }]
-    },
     optimization: {
         runtimeChunk: 'single', // To extract the manifest and runtime
         splitChunks: {
