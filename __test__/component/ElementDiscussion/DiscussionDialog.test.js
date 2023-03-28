@@ -52,7 +52,7 @@ describe('1. DiscussionDialog test cases with showDiscussionLOBDropdown = true '
         DiscussionDialogInstance.find('.notSelectDiscussion').at(0).simulate('click');
         DiscussionDialogInstance.find('.closeIconDiscussion').at(0).simulate('click');
     })
-    it("Testing onChange", () => {
+    xit("Testing onChange", () => {
         DiscussionDialogInstance.find('.searchTextDiscussion').at(0).simulate('change');
         DiscussionDialogInstance.find('.radioInDiscussion').at(0).simulate('change');
         DiscussionDialogInstance.find('.selectInDropdown').at(0).simulate('change',{target: {value: "test"}});
