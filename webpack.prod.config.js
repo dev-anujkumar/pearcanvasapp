@@ -83,7 +83,7 @@ module.exports = {
             },
             {
                 // Loads images into CSS and Javascript files
-                test: /\.(png|jpg|gif)$/,
+                test: /\.(png|svg|jpg|gif)$/,
                 use: [{ loader: "url-loader" }]
             },
             {
@@ -91,33 +91,7 @@ module.exports = {
                 // Rules are set in MiniCssExtractPlugin
                 test: /\.css$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader']
-            },
-            {
-                test: /\.svg$/,
-                use: [
-                  {
-                    loader: require.resolve('@svgr/webpack'),
-                    options: {
-                      prettier: false,
-                      svgo: false,
-                      svgoConfig: {
-                        plugins: [{ removeViewBox: false }],
-                      },
-                      titleProp: true,
-                      ref: true,
-                    },
-                  },
-                  {
-                    loader: require.resolve('file-loader'),
-                    options: {
-                      name: 'static/media/[name].[hash].[ext]',
-                    },
-                  },
-                ],
-                issuer: {
-                  and: [/\.(ts|tsx|js|jsx|md|mdx)$/],
-                },
-              }
+            }
         ]
     },
     plugins: [
