@@ -12,9 +12,8 @@ import store from './appstore/store';
 import config from './config/config';
 import cypressConfig from './config/cypressConfig';
 import { requestConfigURI } from './constants/utility';
-// import CanvasWrapper from './component/CanvasWrapper';
 const CanvasWrapper = React.lazy(() => import('./component/CanvasWrapper'));
-import { modifyObjKeys } from './js/appUtils'
+import { modifyObjKeys } from './js/appUtils';
 // IMPORT - Assets // 
 import './styles/style.css';
 

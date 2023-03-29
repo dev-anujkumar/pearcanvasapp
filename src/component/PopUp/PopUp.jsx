@@ -8,6 +8,7 @@ import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
 const PowerPasteElement = React.lazy(() => import('../PowerPasteElement/PowerPasteElement.jsx'));
+import CommonLoader from '../CommonLoader/CommonLoader.jsx';
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
@@ -441,7 +442,7 @@ class PopUp extends React.Component {
             )
         } else if (props.WordPastePopup) {
             return (
-                <Suspense fallback={<div></div>}>
+                <Suspense fallback={<CommonLoader/>}>
                     <PowerPasteElement
                         index={props.index}
                         onPowerPaste={props.onPowerPaste}

@@ -1,0 +1,44 @@
+#commonLoader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -75px 0 0 -75px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 90px;
+    height: 90px;
+    -webkit-animation: spinn 2s linear infinite;
+    animation: spinn 2s linear infinite;
+    z-index: 999999;
+}
+@-webkit-keyframes spinn {
+    from { -webkit-transform: rotate(0deg); opacity: 1; }
+    50% { -webkit-transform: rotate(180deg); opacity: 1; }
+    to { -webkit-transform: rotate(360deg); opacity: 1; }
+}
+    
+@-moz-keyframes spinn {
+    from { -moz-transform: rotate(0deg); opacity: 1; }
+    50% { -moz-transform: rotate(180deg); opacity: 1; }
+    to { -moz-transform: rotate(360deg); opacity: 0.7; }
+}
+    
+@-ms-keyframes spinn {
+    from { -ms-transform: rotate(0deg); opacity: 1; }
+    50% { -ms-transform: rotate(180deg); opacity: 1; }
+    to { -ms-transform: rotate(360deg); opacity: 1; }
+}
+    
+@-o-keyframes spinn {
+    from { -o-transform: rotate(0deg); opacity: 1; }
+    50% { -o-transform: rotate(180deg); opacity: 1; }
+    to { -o-transform: rotate(360deg); opacity: 1; }
+}
+    
+@keyframes spinn {
+    from { transform: rotate(0deg); opacity: 1; }
+    50% { transform: rotate(180deg); opacity: 1; }
+    to { transform: rotate(360deg); opacity: 1; }
+}
+    
