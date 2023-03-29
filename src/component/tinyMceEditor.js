@@ -752,7 +752,7 @@ export class TinyMceEditor extends Component {
                 }
             }
             /** Open Alfresco Picker to update inline image in list on double-click*/
-            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT ) || (this?.props?.element?.type === "element-blockfeature") || (this?.props?.element?.type === "element-learningobjectives"))) {
+            if ( !hasReviewerRole && e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT ) || (this?.props?.element?.type === "element-blockfeature") || (this?.props?.element?.type === "element-learningobjectives"))) {
                 const imageArgs = {
                     id: e.target?.dataset?.id,
                     handleBlur:this.handleBlur
@@ -3383,8 +3383,6 @@ export class TinyMceEditor extends Component {
         }
     }
     getNodeContent = (node) => {
-        const { slateLockInfo: { isLocked, userId } } = this.props;
-        let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
         switch (this.props.tagName) {
             case 'p':
                 let paraModel = this.props.model
@@ -3878,7 +3876,7 @@ export class TinyMceEditor extends Component {
                 }
             }
             let activeEditorNode = document.getElementById(activeEditorId)
-            if (activeEditorNode) {
+            if (activeEditorNode && !hasReviewerRole) {
                 activeEditorNode.contentEditable = true;
             }
             this.editorConfig.selector = '#' + currentTarget.id;
@@ -4307,7 +4305,7 @@ export class TinyMceEditor extends Component {
 
     render() {
         const { slateLockInfo: { isLocked, userId }, contenteditable } = this.props;
-        let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
+        let lockCondition = ((isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '')) || hasReviewerRole);
         this.handlePlaceholder();
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
