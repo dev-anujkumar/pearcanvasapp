@@ -433,6 +433,7 @@ class ElementSingleAssessment extends Component {
                 updateElmVersion={this.openUpdateElmPopup}
                 buttonText={ELM_UPDATE_BUTTON}
                 embeddedElmClass={'embedded-assessment'}
+                status={false}
             />)
         }
     }

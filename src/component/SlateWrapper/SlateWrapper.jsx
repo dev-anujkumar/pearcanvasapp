@@ -1375,24 +1375,37 @@ class SlateWrapper extends Component {
             this.props.showBlocker(true)
             showTocBlocker();
             const dialogText = ` All other Assessment Items in this project will now be updated to the new version of this Assessment`
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-            setTimeout(() => {
-                this.setState({
-                    updateAssessment: true
-                })
-                sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-            }, 4000);
-            return (
-                <PopUp dialogText={dialogText}
-                    active={true}
-                    saveButtonText='OK'
-                    showConfirmation={true}
-                    assessmentConfirmation={`${this.state.updateAssessment ? "updateAssessment-enable" : "updateAssessment-disable"}`}
-                    assessmentClass="lock-message"
-                    togglePopup={this.toggleAssessmentPopup}
-                    hideCanvasBlocker={this.props.showBlocker}
-                />
-            )
+            if (this.props?.slateData[config.slateManifestURN]?.contents?.bodymatter[0]?.type !== 'element-assessment') {
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                setTimeout(() => {
+                    this.setState({
+                        updateAssessment: true
+                    })
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+                }, 4000);
+                return (
+                    <PopUp dialogText={dialogText}
+                        active={true}
+                        saveButtonText='OK'
+                        showConfirmation={true}
+                        assessmentConfirmation={`${this.state.updateAssessment ? "updateAssessment-enable" : "updateAssessment-disable"}`}
+                        assessmentClass="lock-message"
+                        togglePopup={this.toggleAssessmentPopup}
+                        hideCanvasBlocker={this.props.showBlocker}
+                    />
+                )
+            } else {
+                return (
+                    <PopUp dialogText={dialogText}
+                        active={true}
+                        saveButtonText='OK'
+                        showAssessmentConfirmation={true}
+                        assessmentClass="lock-message"
+                        togglePopup={this.toggleAssessmentPopup}
+                        hideCanvasBlocker={this.props.showBlocker}
+                    />
+                )
+            }
         }
         else {
             return null

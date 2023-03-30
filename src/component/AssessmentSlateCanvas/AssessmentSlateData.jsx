@@ -242,30 +242,8 @@ class AssessmentSlateData extends Component {
         this.toggleUpdatePopup(true, event);
     }
 
-    /*** @description This function is used to render Version update Popup */
-    showCustomPopup = () => {
-        if (this.state.showUpdatePopup) {
-            this.showCanvasBlocker(true);
-            return (
-                <PopUp
-                    dialogText={ELM_UPDATE_MSG}
-                    active={true}
-                    togglePopup={this.toggleUpdatePopup}
-                    isElmUpdatePopup={true}
-                    updateElmAssessment={this.updateElmAssessment}
-                    isInputDisabled={true}
-                    isElmUpdateClass="elm-update"
-                    elmHeaderText={ELM_UPDATE_POPUP_HEAD}
-                />
-            )
-        }
-        else {
-            return null
-        }
-    }
 
     updateElmAssessment = async (event) => {
-        this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
         let oldWorkUrn = this.props.assessmentSlateObj.assessmentId
         let oldReducerData = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
@@ -291,21 +269,6 @@ class AssessmentSlateData extends Component {
         });
         this.props.handleCanvasBlocker.disableHeader(false);
         this.props.handleCanvasBlocker.hideTocBlocker(false);
-    }
-
-    /**
-     * @description This function is used to toggle update elm popup
-     * @param {*} toggleValue Boolean value
-     * @param {*} event event object
-     */
-    toggleUpdatePopup = (toggleValue, event) => {
-        if (event) {
-            event.preventDefault();
-        }
-        this.setState({
-            showUpdatePopup: toggleValue
-        })
-        this.showCanvasBlocker(toggleValue);
     }
 
     updateElmOnSaveEvent = (props) => {
@@ -613,8 +576,9 @@ class AssessmentSlateData extends Component {
         if (elmAssessment) {
             return (<ElmUpdateButton
                 elmAssessment={elmAssessment}
-                updateElmVersion={this.updateElm}
+                updateElmVersion={this.updateElmAssessment}
                 buttonText={ELM_UPDATE_BUTTON}
+                status={true}
             />)
         }
     }

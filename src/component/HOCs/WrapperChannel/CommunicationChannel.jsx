@@ -449,6 +449,11 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.setCautionBannerStatus(message.status)
                     }
                     break;
+                case 'refreshSlateOnAssessmentUpdate':
+                    if (message && message.action === "approve" && message.source === "elm" && message.type === "assessment") {
+                        this.handleRefreshSlate();
+                    }
+                    break;
             }
         }
 
