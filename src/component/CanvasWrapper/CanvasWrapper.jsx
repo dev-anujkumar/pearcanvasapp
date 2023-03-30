@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
-const SlateWrapper = React.lazy(() => import('../SlateWrapper'));
+import SlateWrapper from '../SlateWrapper';
 const Sidebar = React.lazy(() => import('../Sidebar'));
 const AssetPopoverSearch = React.lazy(() => import('../AssetPopover/AssetPopoverSearch.jsx'));
 const Toolbar = React.lazy(() => import('../Toolbar'));
