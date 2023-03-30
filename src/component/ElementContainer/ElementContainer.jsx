@@ -9,7 +9,6 @@ import ElementInteractive from '../ElementInteractive';
 import ElementAsideContainer from '../ElementAsideContainer';
 import ElementMetaDataAnchor from '../ElementMetaDataAnchor';
 import ElementMetaLOList from '../ElementMetaLOList';
-import CommonLoader from '../CommonLoader/CommonLoader.jsx';
 const ElementBlockquote = React.lazy(() => import('../ElementAuthoring/ElementBlockquote.jsx'));
 import ElementLearningObjectiveItem from '../ElementLearningObjectiveItem';
 import Button from './../ElementButtons';
@@ -1979,7 +1978,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.OPENER:
                     const { activeColorIndex, activeTextColorIndex } = this.state
-                    editor = <Suspense fallback={<CommonLoader/>}><OpenerElement accessDenied={this.props.accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} textColor={config.textcolors[activeTextColorIndex]} index={index} handleFocus={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} /></Suspense>
+                    editor = <Suspense fallback={<div></div>}><OpenerElement accessDenied={this.props.accessDenied} permissions={permissions} backgroundColor={config.colors[activeColorIndex]} textColor={config.textcolors[activeTextColorIndex]} index={index} handleFocus={this.handleFocus} handleBlur={this.handleBlur} elementId={element.id} element={element} slateLockInfo={slateLockInfo} updateElement={this.updateOpenerElement} /></Suspense>
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
@@ -1987,7 +1986,7 @@ class ElementContainer extends Component {
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
                     {isBlockquote ?
-                    editor = <Suspense fallback={<CommonLoader/>}><ElementBlockquote tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} /></Suspense>
+                    editor = <Suspense fallback={<div></div>}><ElementBlockquote tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} /></Suspense>
                     :
                     editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />}
                     break;
@@ -2099,7 +2098,7 @@ class ElementContainer extends Component {
                     labelText = 'Pop'
                     break;
                 case elementTypeConstant.SHOW_HIDE:
-                    editor = <Suspense fallback={<CommonLoader/>}><ShowHide
+                    editor = <Suspense fallback={<div></div>}><ShowHide
                         onListSelect={this.props.onListSelect}
                         showDeleteElemPopup={this.showDeleteElemPopup}
                         setActiveElement={this.props.setActiveElement}
@@ -2162,12 +2161,12 @@ class ElementContainer extends Component {
                         handleBlur: this.handleBlur,
                         deleteElement: this.deleteElement,
                         handleUndoOption: this.handleUndoOption
-                    }}><Suspense fallback={<CommonLoader/>}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} closeUndoTimer = {this.props.closeUndoTimer}/></Suspense>
+                    }}><Suspense fallback={<div></div>}><CitationGroup userRole={this.props.userRole} pasteElement={this.props.pasteElement} closeUndoTimer = {this.props.closeUndoTimer}/></Suspense>
                     </CitationGroupContext.Provider >;
                     labelText = 'CG'
                     break;
                 case elementTypeConstant.CITATION_ELEMENT:
-                    editor = <Suspense fallback={<CommonLoader/>}><CitationElement
+                    editor = <Suspense fallback={<div></div>}><CitationElement
                         activeElement={this.props.activeElement}
                         showBlocker={this.props.showBlocker}
                         permissions={permissions}
@@ -2185,7 +2184,7 @@ class ElementContainer extends Component {
                     labelText = 'CT'
                     break;
                 case elementTypeConstant.POETRY_ELEMENT:
-                    editor = <Suspense fallback={<CommonLoader/>}><ElementPoetry index={index}
+                    editor = <Suspense fallback={<div></div>}><ElementPoetry index={index}
                         asideData={this.props.asideData}
                         accessDenied={this.props.accessDenied}
                         handleCommentspanel={handleCommentspanel}
@@ -2226,7 +2225,7 @@ class ElementContainer extends Component {
                     labelText = 'PE'
                     break;
                 case elementTypeConstant.POETRY_STANZA:
-                    editor = <Suspense fallback={<CommonLoader/>}><ElementPoetryStanza index={index}
+                    editor = <Suspense fallback={<div></div>}><ElementPoetryStanza index={index}
                         asideData={this.props.asideData}
                         permissions={permissions}
                         openAssetPopoverPopUp={this.openAssetPopoverPopUp}
@@ -2261,7 +2260,7 @@ class ElementContainer extends Component {
                 case elementTypeConstant.MULTI_COLUMN:
                     // checking if labelText is TB to render Tabbed 2 column element
                     if (labelText === TABBED_2_COLUMN.ELEMENT_TAG_NAME) {
-                        editor = <Suspense fallback={<CommonLoader/>}><Tabbed2Column
+                        editor = <Suspense fallback={<div></div>}><Tabbed2Column
                             userRole={this.props.userRole}
                             pasteElement={this.props.pasteElement}
                             labelText = {TABBED_2_COLUMN.ELEMENT_TAG_NAME}
@@ -2330,7 +2329,7 @@ class ElementContainer extends Component {
                     }
                     break;
                 case elementTypeConstant.TABBED_TAB:
-                    editor = <Suspense fallback={<CommonLoader/>}><TabbedTabContainer
+                    editor = <Suspense fallback={<div></div>}><TabbedTabContainer
                         userRole={this.props.userRole}
                         pasteElement={this.props.pasteElement}
                         labelText = {TABBED_TAB.ELEMENT_TAG_NAME}
@@ -2356,7 +2355,7 @@ class ElementContainer extends Component {
                     break;
 
                 case elementTypeConstant.ELEMENT_DIALOGUE:
-                    editor = <Suspense fallback={<CommonLoader/>}><ElementDialogue
+                    editor = <Suspense fallback={<div></div>}><ElementDialogue
                         permissions={permissions}
                         btnClassName={this.state.btnClassName}
                         borderToggle={this.state.borderToggle}
@@ -2394,7 +2393,7 @@ class ElementContainer extends Component {
                     labelText = 'PS'
                     break;
                 case elementTypeConstant.ELEMENT_DISCUSSION:
-                    editor = <Suspense fallback={<CommonLoader/>}><ElementDiscussion
+                    editor = <Suspense fallback={<div></div>}><ElementDiscussion
                         permissions={permissions}
                         btnClassName={this.state.btnClassName}
                         borderToggle={this.state.borderToggle}
@@ -2438,7 +2437,7 @@ class ElementContainer extends Component {
                     break;
 
                 case elementTypeConstant.BLOCK_LIST:
-                    editor = <Suspense fallback={<CommonLoader/>}><BlockListWrapper grandParentManifestList={this.props?.currentManifestList} asideData={this.props?.asideData} pasteElement={this.props.pasteElement} indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} isBlockList={true}/></Suspense>;
+                    editor = <Suspense fallback={<div></div>}><BlockListWrapper grandParentManifestList={this.props?.currentManifestList} asideData={this.props?.asideData} pasteElement={this.props.pasteElement} indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} isBlockList={true}/></Suspense>;
                     labelText = 'BL'
                     break;
 
@@ -2523,7 +2522,7 @@ class ElementContainer extends Component {
                     <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" + labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick={(e) => this.handleFocus("", "", e, labelText)} spellcheck={`${spellCheckToggle}`}>
                         {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
                         {/* {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>} */}
-                        {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <Suspense fallback={<CommonLoader/>}><OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /></Suspense> )}
+                        {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <Suspense fallback={<div></div>}><OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /></Suspense> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
                         {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          
