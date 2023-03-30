@@ -737,6 +737,10 @@ export class TinyMceEditor extends Component {
     editorClick = (editor) => {
         editor.on('click', (e) => {
             let blockListData = checkBlockListElement(this.props, "TAB");
+            //tinymce editor readonly when reviewer or subscriber
+            if(hasReviewerRole()){
+                tinymce.activeEditor.mode.set("readonly");
+            }
             if (e && e.target && e.target.classList.contains('Wirisformula')) {
                 this.wirisClick++;
                 if (!this.wirisClickTimeout) {
@@ -2429,6 +2433,10 @@ export class TinyMceEditor extends Component {
     }
     editorPaste = (editor) => {
         editor.on('paste', (e) => {
+            //restrict paste when user is reviewer or subscriber
+            if(hasReviewerRole()){
+                e.preventDefault();
+            }
             if (this.props.isAutoNumberingEnabled && (autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && this.props?.placeholder === 'Number' && this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
                 const currentValue = e.clipboardData.getData('Text');
                 const isNum = /^[1-9][0-9]*$/.test(currentValue);
@@ -2446,7 +2454,7 @@ export class TinyMceEditor extends Component {
             }
 
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-            if (activeElement.nodeName === "CODE") {
+            if (activeElement?.nodeName === "CODE") {
                 let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
                 if (syntaxEnabled && syntaxEnabled.checked) {
                     this.notFormatting = true;
@@ -3826,7 +3834,9 @@ export class TinyMceEditor extends Component {
                     let elementContainerNodes = document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')
                     if (elementContainerNodes.length)
                         elementContainerNodes[0].innerHTML = tempContainerHtml;
-                    document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
+                    if(document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0]?.innerHTML){
+                        document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
+                    }
                 }
                 else {
                     document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
