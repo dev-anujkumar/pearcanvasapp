@@ -503,7 +503,7 @@ class Sidebar extends Component {
                 //Removing Select option from dropdown values
                 if (languageDropdownOptions.length )  languageDropdownOptions = languageDropdownOptions.filter(option => option.text !== 'Select')
                 const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
-                let pointerClass = hasReviewerRole() ? "pointer-events-none" : ''
+                const pointerClass = hasReviewerRole() ? "pointer-events-none" : ''
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
                     {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>

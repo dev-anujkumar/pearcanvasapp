@@ -410,7 +410,7 @@ class FigureImage extends Component {
         if (e) {
             e.stopPropagation();
         }
-        if (this.props?.model?.figuretype === "tableasmarkup") {
+        if (!hasReviewerRole() && this.props?.model?.figuretype === "tableasmarkup") {
             this.launchSPA();
         }
         else {
