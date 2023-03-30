@@ -23,12 +23,12 @@ const FigureTableAsset = (props) => {
                     <div className="tableAssetWrapper">
                         {
                             props.model.figuretype === "tableasmarkup" && (props.model.figuredata.tableasHTML && (props.model.figuredata.tableasHTML !== "" || props.model.figuredata.tableasHTML !== undefined)) ?
-                                <div className="table-asset-wrapper-with-asset" onClick={(e) => props.addFigureResource(e)}>
+                                <div className="table-asset-wrapper-with-asset" onClick={!hasReviewerRole() && ((e) => props.addFigureResource(e))}>
                                     <div id={`${props.index}-tableData`} className={imageDimension} dangerouslySetInnerHTML={{ __html: props.model.figuredata.tableasHTML }} ></div>
                                 </div> :
                                 <div className="table-asset-wrapper-without-asset">
                                     <img className="blankTable" src={blankTable} />
-                                    <button className="table-asset-button" onClick={(e) => props.addFigureResource(e)}>
+                                    <button className="table-asset-button" onClick={!hasReviewerRole() && ((e) => props.addFigureResource(e))}>
                                         <span className="table-asset-button-label">
                                             {FIGURE_TABLE_BUTTON_TITLE}
                                         </span>
