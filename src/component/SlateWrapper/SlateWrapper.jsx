@@ -515,7 +515,7 @@ class SlateWrapper extends Component {
                 lockOwnerName: `${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`
             })
             return true
-        }else if(isOwnerRole(projectSharingRole,isSubscribed)){
+        }else if(!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed)){
             const slateId = Object.keys(this.props.slateData)[0],
                 lockDuration = 5400
             this.setSlateLock(slateId, lockDuration)
@@ -603,7 +603,7 @@ class SlateWrapper extends Component {
                     lockForTOC={false}
                 />
             )
-        } else if (isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) {
+        } else if (!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) {
             this.props.showBlocker(true)
             showTocBlocker();
             return (
