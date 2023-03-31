@@ -4,6 +4,7 @@ import tableIcon from "../../../src/images/ElementButtons/tableIcon.svg";
 import blankTable from "../../../src/images/ElementButtons/combined-shape.svg";
 /**Import Constants */
 import { FIGURE_TABLE_TITLE, FIGURE_TABLE_BUTTON_TITLE } from './ElementFigure_Constants'
+import { hasReviewerRole } from '../../constants/utility';
 
 /**
  * This is Pure Component to render Table Asset of FigureImage Component
