@@ -4,6 +4,7 @@ import { slateData, slateData2 } from '../../../fixtures/slateTestingData.js'
 import SlateWrapper from '../../../src/component/SlateWrapper';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import * as utils from '../../../src/constants/utility';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
@@ -39,28 +40,6 @@ jest.mock('../../../src/component/ElementContainer', () => {
 jest.mock('../../../src/component/ElementSaprator', () => {
     return function () {
         return (<div>null</div>)
-    }
-});
-
-jest.mock('../../../src/constants/utility', () => {
-    return { 
-        sendDataToIframe: jest.fn(),
-        defaultMathImagePath: ()=>{
-            return true
-        },
-        guid: ()=>{
-            return "abcd123"
-        },
-        isOwnerRole:()=>{
-            return true
-        },
-        isSubscriberRole:()=>{
-            return true
-        },
-        getSlateType:()=>{
-            return 'slateType'
-        },
-        getCookieByName: () => false
     }
 });
 
@@ -158,6 +137,27 @@ const slateWrapInstance = (props, initialSt = initialState) => {
 }
 
 describe("SlateWrapper Component", () => {
+    jest.mock('../../../src/constants/utility', () => {
+        return { 
+            sendDataToIframe: jest.fn(),
+            defaultMathImagePath: ()=>{
+                return true
+            },
+            guid: ()=>{
+                return "abcd123"
+            },
+            isOwnerRole:()=>{
+                return true
+            },
+            isSubscriberRole:()=>{
+                return true
+            },
+            getSlateType:()=>{
+                return 'slateType'
+            },
+            getCookieByName: () => false
+        }
+    });
     config.ssoToken = "1214";
     let props = {
         slateData: slateData,
@@ -1143,5 +1143,58 @@ describe("SlateWrapper Component", () => {
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
+    })
+})
+describe("SlateWrapper Component", () => {
+    config.ssoToken = "1214";
+    let props = {
+        slateData: slateData,
+        permissions : [],
+        toggleTocDelete: true,
+        loadMorePages:jest.fn(),
+        showSlateLockPopupValue:true,
+        showConfirmationPopup:true,
+        showBlocker:jest.fn(),
+        releaseSlateLock: jest.fn(),
+        commentSearchScrollTop: "123",
+        accesDeniedPopup: true,
+        getCommentElements: jest.fn(),
+        updateTimer: jest.fn(),
+        commentSearchScrollTop : {},
+        slateVersioning: jest.fn(),
+        ...actionProps
+    };
+    it('2.1 Not a OWNER or SUBSCRIBER > owner(false) subscriber(false)', () => {
+        jest.spyOn(utils, 'isOwnerRole').mockReturnValueOnce(false);
+        jest.spyOn(utils, 'isSubscriberRole').mockReturnValueOnce(false);
+        config.slateType = "assessment";
+        config.isDefaultElementInProgress = false;
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'renderElement')
+        compInstance.renderElement([], "pdfslate", "");
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('2.2 OWNER > owner(true) subscriber(false)', () => {
+        jest.spyOn(utils, 'isOwnerRole').mockReturnValueOnce(true);
+        jest.spyOn(utils, 'isSubscriberRole').mockReturnValueOnce(false);
+        config.slateType = "assessment";
+        config.isDefaultElementInProgress = false;
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'renderElement')
+        compInstance.renderElement([], "pdfslate", "");
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('2.3 SUBSCRIBER > owner(false) subscriber(true)', () => {
+        jest.spyOn(utils, 'isOwnerRole').mockReturnValueOnce(false);
+        jest.spyOn(utils, 'isSubscriberRole').mockReturnValueOnce(true);
+        config.slateType = "assessment";
+        config.isDefaultElementInProgress = false;
+        const compInstance = slateWrapInstance(props);
+        const spy = jest.spyOn(compInstance, 'renderElement')
+        compInstance.renderElement([], "pdfslate", "");
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
     })
 })

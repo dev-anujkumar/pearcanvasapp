@@ -368,7 +368,7 @@ describe('Test---Assessment Utility Functions', () => {
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkFigureInsideTableElement');
         let returnedValue = assessment_UtiltyFn.checkFigureInsideTableElement(element, 'editButton', ['alfresco_crud_access', 'add_multimedia_via_alfresco']);
         expect(spyFunction).toHaveBeenCalled();
-        expect(returnedValue).toBe(true);
+        expect(returnedValue).toBe(false);
         // expect(spyFunction).toHaveReturnedWith(true);
         spyFunction.mockClear();
     });

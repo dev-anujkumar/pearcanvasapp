@@ -8,30 +8,13 @@ import thunk from 'redux-thunk';
 const middlewares = [thunk];
 import { Provider } from 'react-redux';
 import slateLevelData from '../Sidebar/slateData';
+import * as utils from '../../../src/constants/utility';
 
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
         return (<div>null</div>)
     }
 })
-
-jest.mock('../../../src/constants/utility.js', () => {
-    return {
-        getLabelNumberTitleHTML: () => {
-            return jest.fn()
-        },
-        hasReviewerRole: () => {
-            return false
-        },
-        sendDataToIframe: () => {
-            return jest.fn()
-        },
-        getCookieByName: () => {
-            return null;
-        },
-        handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
-    }
-});
 
 global.fetch = jest.fn().mockImplementation(() => {
     return new Promise((resolve, reject) => {
@@ -46,6 +29,23 @@ jest.mock('../../../src/component/ElementFigure/FigureUserInterface', () => {
 });
 
 describe('Testing Element Audio-Video component', () => {
+    jest.mock('../../../src/constants/utility.js', () => {
+        return {
+            getLabelNumberTitleHTML: () => {
+                return jest.fn()
+            },
+            hasReviewerRole: () => {
+                return false
+            },
+            sendDataToIframe: () => {
+                return jest.fn()
+            },
+            getCookieByName: () => {
+                return null;
+            },
+            handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
+        }
+    });
     const mockStore = configureMockStore(middlewares);
     let activeElement = {
         elementId: 'urn:pearson:work:30660a48-cc43-42e6-8cb1-14dbc1563f27',
@@ -722,5 +722,58 @@ describe('Testing Element Audio-Video component', () => {
             elementAudioVideoInstance.deleteElementAsset()
             expect(deleteElementAsset).toHaveBeenCalled()
         })
+    })
+});
+describe('Conditional coverage when hasReviewerRole is true -> Testing Element Audio-Video component', () => {
+    const mockStore = configureMockStore(middlewares);
+    let activeElement = {
+        elementId: 'urn:pearson:work:30660a48-cc43-42e6-8cb1-14dbc1563f27',
+        elementType: 'video-audio',
+        elementWipType: 'figure',
+        index: 1,
+        primaryOption: 'primary-video',
+        secondaryOption: 'secondary-video-smartlink',
+        tag: 'VID',
+        toolbar: [],
+        addfigureGlossarupopup: false
+    }
+    const elementAudioVideoData = mockStore({
+        appStore: {
+            activeElement,
+            slateLevelData
+        },
+        alfrescoReducer: {
+            alfrescoAssetData: {},
+
+        }
+    })
+    it('renders without crashing', () => {
+        let props = {
+            model: {},
+            index: "",
+            slateLockInfo: {
+                isLocked: false,
+                userId: 'c5Test01'
+            },
+            handleFocus: function () { },
+            permissions: permissions,
+            changedSiteData: {
+                guid: '',
+                title: '',
+                id: '',
+                visibility: ''
+            },
+            updateFigureData: jest.fn(),
+            handleBlur: jest.fn(),
+            handleFocus: jest.fn(),
+            accessDenied: jest.fn(),
+            alfrescoElementId: jest.fn(),
+            alfrescoAssetData: jest.fn(),
+            launchAlfrescoPopup: jest.fn(),
+        }
+        jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
+        let elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>);
+        const elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+        expect(elementAudioVideoInstance).toBeDefined();
     })
 });

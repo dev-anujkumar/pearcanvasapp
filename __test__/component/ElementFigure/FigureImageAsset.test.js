@@ -4,6 +4,7 @@ import FigureImageAsset from '../../../src/component/ElementFigure/FigureImageAs
 import { figureImageAssetWithImage, figureImageAssetWithOutImage, figureImageAssetWithOutImageBranch } from '../../../fixtures/FigureImageAssetTestingData';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import * as utils from '../../../src/constants/utility';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -79,6 +80,7 @@ describe('Testing Coponent FigureImageAsset', () => {
             expect(component.find('div.figurebutton')).toHaveLength(1);
         })
         it('When clicked on `Select an Image` function addFigureResource is called', () => {
+            jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
             expect(component.find('div.figurebutton')).toHaveLength(1);
             component.find('div.figurebutton').simulate('click');
             expect(props.addFigureResource).toHaveBeenCalled();
@@ -147,6 +149,7 @@ describe('Testing Coponent FigureImageAsset', () => {
             expect(component2.find('div.updatefigurebutton')).toHaveLength(1);
         })
         it('When clicked on `Update Image` function addFigureResource is called', () => {
+            jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
             expect(component2.find('div.updatefigurebutton')).toHaveLength(1);
             component2.find('div.updatefigurebutton').simulate('click');
             expect(props3.addFigureResource).toHaveBeenCalled();

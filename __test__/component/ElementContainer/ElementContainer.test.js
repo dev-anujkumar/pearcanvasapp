@@ -45,7 +45,7 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     createLabelNumberTitleModel: jest.fn(),
     getLabelNumberTitleHTML: jest.fn(() => ({'formattedLabel': ''})),
     getTitleSubtitleModel: jest.fn(()=> ''),
-    isSubscriberRole:jest.fn(()=>{return true}),
+    isOwnerRole:jest.fn(()=>{return true}),
     removeSpellCheckDOMAttributes: jest.fn(() => ''),
     checkHTMLdataInsideString: () => {
         return ({
