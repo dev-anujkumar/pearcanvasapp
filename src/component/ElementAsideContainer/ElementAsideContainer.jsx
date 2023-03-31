@@ -54,7 +54,7 @@ class ElementAsideContainer extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.asideRef && !this.asideRef.current.contains(event.target) && !this.props.isAutoNumberingEnabled) {
+        if (this.asideRef && !this.asideRef?.current?.contains(event.target) && !this.props?.isAutoNumberingEnabled) {
             this.handleAsideBlur(event);
         }
     }
