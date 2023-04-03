@@ -12,6 +12,7 @@ import store from './appstore/store';
 import config from './config/config';
 import cypressConfig from './config/cypressConfig';
 import { requestConfigURI } from './constants/utility';
+import { initializeGTM } from '../src/js/google_analytics'
 const CanvasWrapper = React.lazy(() => import('./component/CanvasWrapper'));
 import { modifyObjKeys } from './js/appUtils';
 // IMPORT - Assets // 
@@ -39,6 +40,7 @@ class App extends Component {
                 let uri = response.data.env;
                 cypressConfig.currentEnv = uri;
                 modifyObjKeys(config, response.data)
+                initializeGTM(response.data)
                 const search = window.location.search;
                 const params = new URLSearchParams(search);
                 const projectUrn = params.get('projectUrn');
