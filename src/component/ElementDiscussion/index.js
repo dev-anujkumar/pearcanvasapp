@@ -76,8 +76,9 @@ const ElementDiscussion = (props) => {
       );
     }
   };
+  const isReviewer = hasReviewerRole();
   return (
-    <div className="containerDiscussion">
+    <div className={`containerDiscussion ${isReviewer ? "pointer-events-none" : ""}`}>
       <div>
         <div className="figureElement">
           <div>

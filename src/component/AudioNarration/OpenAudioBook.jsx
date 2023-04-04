@@ -91,7 +91,6 @@ class OpenAudioBook extends React.Component {
             mediaTitle = audioData.data[0].title.en;
         }
         
-        const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' && this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)
         return (
             <div className={!isGlossary ?'audiodropdown':'glossary-audiodropdown'} style={isGlossary ? this.props.position :null}  id='openAudioBook' ref={this.wrapperRef} >
                 <div className="audio-close">
@@ -113,11 +112,11 @@ class OpenAudioBook extends React.Component {
 
                 <div className="remove-button">
                     
-                    { (!hasReviewerRole() && !subscriberContent) &&
-                        <button className="remove-text" onClick={() => this.openConfirmationBox(isGlossary)} className="audioRemoveButton audioRemoveRound">Remove</button>
+                    { (!hasReviewerRole()) &&
+                        <button className="remove-text audioRemoveButton audioRemoveRound" onClick={() => this.openConfirmationBox(isGlossary)}>Remove</button>
                     }
-                    {
-                        isGlossary && <button className="remove-text" onClick={() => this.handleReplaceButton()} className="audioReplaceeButton audioRemoveRound">Replace</button>
+                    { (!hasReviewerRole()) &&
+                        isGlossary && <button className="remove-text audioReplaceeButton audioRemoveRound" onClick={() => this.handleReplaceButton()} >Replace</button>
                     }   
                 </div>
             </div>

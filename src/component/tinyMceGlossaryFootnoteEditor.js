@@ -459,7 +459,7 @@ export class ReactEditor extends React.Component {
   render() {
     let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue;
     let {markedIndexIcon} = this.props;
-
+    const isReviewer = hasReviewerRole();
     // && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
     let glossaryFootNoteCurrentValue;
     try{
@@ -471,8 +471,8 @@ export class ReactEditor extends React.Component {
     glossaryFootNoteCurrentValue = glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     
     return (
-      <div className="glossary-toolbar">
-        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
+      <div className={`glossary-toolbar ${isReviewer? "pointer-events-none" : ""}`}>
+        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable={`${!isReviewer}`} id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
         {/* {markedIndexIcon && (this.props.elementType === "element-authoredtext" || this.props.elementType === 'element-list') ? <span dangerouslySetInnerHTML={{__html: markedIndexIcon}} onClick={ this.openMarkedIndexPopUp }></span>: null} */}
       </div>
     )
