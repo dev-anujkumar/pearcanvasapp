@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY, INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -152,7 +152,10 @@ export class TinyMceEditor extends Component {
                     editor.shortcuts.remove('meta+b', '', '');
                     editor.shortcuts.remove('meta+i', '', '');
                 }
-                if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
+                const authStore = store.getState();
+                const { projectInfo } = authStore;
+                let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+                if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove')) && !isSubscriber)) {
                     if (editor && editor.id) {
                         document.getElementById(editor.id).setAttribute('contenteditable', false);
                     }
@@ -734,6 +737,10 @@ export class TinyMceEditor extends Component {
     editorClick = (editor) => {
         editor.on('click', (e) => {
             let blockListData = checkBlockListElement(this.props, "TAB");
+            //tinymce editor readonly when reviewer or subscriber
+            if(hasReviewerRole()){
+                tinymce.activeEditor.mode.set("readonly");
+            }
             if (e && e.target && e.target.classList.contains('Wirisformula')) {
                 this.wirisClick++;
                 if (!this.wirisClickTimeout) {
@@ -749,7 +756,7 @@ export class TinyMceEditor extends Component {
                 }
             }
             /** Open Alfresco Picker to update inline image in list on double-click*/
-            if (e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT ) || (this?.props?.element?.type === "element-blockfeature") || (this?.props?.element?.type === "element-learningobjectives"))) {
+            if ( !hasReviewerRole && e?.target?.nodeName == 'IMG' && e.target.classList.contains('imageAssetContent') && (e?.detail == 2) && (this?.props?.element?.type == 'element-list' || (this?.props?.element?.type === ElementConstants.AUTHORED_TEXT ) || (this?.props?.element?.type === "element-blockfeature") || (this?.props?.element?.type === "element-learningobjectives"))) {
                 const imageArgs = {
                     id: e.target?.dataset?.id,
                     handleBlur:this.handleBlur
@@ -2426,6 +2433,10 @@ export class TinyMceEditor extends Component {
     }
     editorPaste = (editor) => {
         editor.on('paste', (e) => {
+            //restrict paste when user is reviewer or subscriber
+            if(hasReviewerRole()){
+                e.preventDefault();
+            }
             if (this.props.isAutoNumberingEnabled && (autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && this.props?.placeholder === 'Number' && this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
                 const currentValue = e.clipboardData.getData('Text');
                 const isNum = /^[1-9][0-9]*$/.test(currentValue);
@@ -2443,7 +2454,7 @@ export class TinyMceEditor extends Component {
             }
 
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-            if (activeElement.nodeName === "CODE") {
+            if (activeElement?.nodeName === "CODE") {
                 let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
                 if (syntaxEnabled && syntaxEnabled.checked) {
                     this.notFormatting = true;
@@ -3380,8 +3391,6 @@ export class TinyMceEditor extends Component {
         }
     }
     getNodeContent = (node) => {
-        const { slateLockInfo: { isLocked, userId } } = this.props;
-        let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
         switch (this.props.tagName) {
             case 'p':
                 let paraModel = this.props.model
@@ -3736,8 +3745,11 @@ export class TinyMceEditor extends Component {
         /*
             Adding br tag in lists because on first conversion from p tag to list, br tag gets removed
         */
-        let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor && tinymce.activeEditor.id)
-        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
+        let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor && tinymce.activeEditor.id);
+        const authStore = store.getState();
+        const {projectInfo} = authStore;
+        let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+        if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove')) && !isSubscriber)) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
                 tinymceActiveEditorNode.setAttribute('contenteditable', false)
             }
@@ -3822,7 +3834,9 @@ export class TinyMceEditor extends Component {
                     let elementContainerNodes = document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')
                     if (elementContainerNodes.length)
                         elementContainerNodes[0].innerHTML = tempContainerHtml;
-                    document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
+                    if(document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0]?.innerHTML){
+                        document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
+                    }
                 }
                 else {
                     document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
@@ -3872,7 +3886,7 @@ export class TinyMceEditor extends Component {
                 }
             }
             let activeEditorNode = document.getElementById(activeEditorId)
-            if (activeEditorNode) {
+            if (activeEditorNode && !hasReviewerRole) {
                 activeEditorNode.contentEditable = true;
             }
             this.editorConfig.selector = '#' + currentTarget.id;
@@ -4301,7 +4315,7 @@ export class TinyMceEditor extends Component {
 
     render() {
         const { slateLockInfo: { isLocked, userId }, contenteditable } = this.props;
-        let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
+        let lockCondition = ((isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '')) || hasReviewerRole);
         this.handlePlaceholder();
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
@@ -4416,8 +4430,11 @@ export class TinyMceEditor extends Component {
         
     }
     normalKeyDownHandler = (e) => {
-        if (this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {        // when user doesn't have edit permission
-            if (tinymce.activeEditor && tinymce.activeEditor.id) {
+        if (tinymce.activeEditor && tinymce.activeEditor.id) {
+        const authStore = store.getState();
+        const {projectInfo} = authStore;
+        let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+        if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove')) && !isSubscriber)) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
         }

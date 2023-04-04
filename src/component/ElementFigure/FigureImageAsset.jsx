@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 /**Import Assets */
 import { DEFAULT_IMAGE_SOURCE } from '../../constants/Element_Constants';
+import { hasReviewerRole } from '../../constants/utility';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 /**Import Constants */
@@ -16,7 +17,7 @@ const FigureImageAsset = (props) => {
     const updateFigureRef = useRef(null);
     const deleteFigureRef = useRef(null);
     const [focusBackground, serFocusBackgrond] = useState(false);
-
+    const isReviewer = hasReviewerRole();
 
 
 
@@ -87,12 +88,12 @@ const FigureImageAsset = (props) => {
 
                             <KeyboardWrapper index={`${props.index}-image-asset-1`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusUpdate}>
-                                    <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={updateFigureRef} className='updatefigurebutton' onClick={(e) => props.addFigureResource(e)}>{UPDATE_FIGURE_IMAGE_BUTTON_TITLE}</div>
+                                    <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={updateFigureRef} className={`updatefigurebutton ${isReviewer ? "pointer-events-none" : ""}`} onClick={(e) => props.addFigureResource(e)}>{UPDATE_FIGURE_IMAGE_BUTTON_TITLE}</div>
                                 </div>
                             </KeyboardWrapper>
                             <KeyboardWrapper index={`${props.index}-image-asset-2`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusDelete}>
-                                  <div onBlur={removeFocus} onKeyDown={triggerClickOnEnter} tabIndex={0} ref={deleteFigureRef} className='deletefigurebutton' onClick={() => props.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                                  <div onBlur={removeFocus} onKeyDown={triggerClickOnEnter} tabIndex={0} ref={deleteFigureRef} className={`deletefigurebutton ${isReviewer ? "pointer-events-none" : ""}`} onClick={() => props.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                                 </div>
                                </KeyboardWrapper>
                             </div> : ''
