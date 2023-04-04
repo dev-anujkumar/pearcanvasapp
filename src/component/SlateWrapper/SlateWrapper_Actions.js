@@ -44,6 +44,7 @@ import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaM
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
+import { triggerCustomEventsGTM } from '../../js/google_analytics';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL
@@ -85,7 +86,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     if (ELEMENT_TYPES_FOR_AUTO_NUMBER.includes(type) && isAutoNumberingEnabled) {
         _requestData["isAutoNumberingEnabled"] = true;
     }
-
+    triggerCustomEventsGTM('create-element-type',_requestData );
     return axios.post(`${config.REACT_APP_API_URL}v1/slate/element`,
         JSON.stringify(_requestData),
         {

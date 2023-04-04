@@ -5,7 +5,7 @@ var callback = function (status, responseText) { response = { status: status, re
 let IF_MATCH = "";
 import store from '../appstore/store';
 import config_object from '../config/config';
-import { sendToDataLayer } from '../constants/ga';
+import { triggerCustomEventsGTM } from '../js/google_analytics';
 import {sendDataToIframe} from '../constants/utility';
 ajax.x = function () {
     if ('withCredentials' in new XMLHttpRequest()) {
@@ -73,6 +73,7 @@ ajax.put = function (url, data, cb, contentType, sync) {
 
 export function publishTitleDelay(project, section, cite, callBack, isPreview, type) {
     try {
+        const startTime = performance.now();
         var content_url = config_object.PROJECT_PREVIEW_ENDPOINT;
         let PREVIEW_ARN = (type === 'projectPreview') ? config_object.PROJECT_PREVIEW_ARN : config_object.BROKER_PREVIEW_ARN
         let content_data = {};
@@ -89,6 +90,11 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview, t
 
         if (parsedResponse.data && parsedResponse.data.previewURL) {
             let previewURL = parsedResponse.data.previewURL;
+            const elapsedTime = performance.now() - startTime;
+            triggerCustomEventsGTM('preview-type', {
+                elapsedTime,
+                ...content_data
+            });
             window.open(previewURL, '_blank');
             if (callBack) { callBack(); }
         } else {
@@ -127,10 +133,9 @@ export const c4PublishObj = {
             let previewURL = parsedResponse.data.previewURL;
             
             const elapsedTime = performance.now() - startTime;
-            sendToDataLayer('slate-preview', {
+            triggerCustomEventsGTM('preview-type', {
                 elapsedTime,
-                slateURN: section,
-                projectURN: project,
+                ...content_data
             });
             
             _.delay(() => {

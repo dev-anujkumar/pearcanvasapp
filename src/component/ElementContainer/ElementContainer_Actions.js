@@ -2,6 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '../../constants/utility.js';
+import { triggerCustomEventsGTM } from '../../js/google_analytics';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
@@ -107,7 +108,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1], elementParentEntityUrn }
-
+    triggerCustomEventsGTM('delete-element-type',_requestData );
     const deleteElemData = await axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
