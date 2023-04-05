@@ -150,7 +150,7 @@ class ElementAudioVideo extends Component {
             frenchSubtitle = audioDes?.frenchCC ?? "";
             spanishSubtitle = audioDes?.spanishCC ?? "";
         
-            if(audioDes?.audioDescEnabled === "Yes"){
+            if(audioDes?.audioDescription){
                 tracks.push(
                     {
                         path: audioDes?.audioDescription,//.split("?")[0];
