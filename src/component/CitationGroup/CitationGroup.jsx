@@ -7,7 +7,7 @@ import CGTinyMCE from './CGTinyMCE.jsx'
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
 import './../../styles/CitationGroup/CitationGroup.css';
-import { guid, sendDataToIframe } from '../../constants/utility.js';
+import { guid, hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
 import ElementSaprator from '../ElementSaprator';
 import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
@@ -179,6 +179,7 @@ export class CitationGroup extends Component {
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
+                                    disabled: hasReviewerRole(),
                                     //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                     animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                     dragoverBubble: false,

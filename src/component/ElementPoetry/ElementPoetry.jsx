@@ -4,7 +4,7 @@ import ElementContainerWrapper from "../HOCs/ElementContainerHOC";
 import ElementContainer from '../ElementContainer';
 import ElementSaprator from '../ElementSaprator';
 import ElementConstants from '../ElementContainer/ElementConstants';
-import { sendDataToIframe, guid } from '../../constants/utility.js';
+import { sendDataToIframe, guid, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
@@ -48,6 +48,7 @@ class ElementPoetry extends Component {
                             <Sortable
                                 options={{
                                     sort: true,  // sorting inside list
+                                    disabled: hasReviewerRole(),
                                     animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                     dragoverBubble: false,
                                     removeCloneOnHide: true, // Remove the clone element when it is not showing, rather than just hiding it
