@@ -5,7 +5,7 @@ var callback = function (status, responseText) { response = { status: status, re
 let IF_MATCH = "";
 import store from '../appstore/store';
 import config_object from '../config/config';
-import { triggerCustomEventsGTM } from '../js/google_analytics';
+import { triggerCustomEventsGTM } from '../js/ga';
 import {sendDataToIframe} from '../constants/utility';
 ajax.x = function () {
     if ('withCredentials' in new XMLHttpRequest()) {

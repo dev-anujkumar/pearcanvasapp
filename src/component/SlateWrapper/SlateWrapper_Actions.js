@@ -44,7 +44,7 @@ import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaM
 import { handleAutoNumberingOnSwapping } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_helper';
 import { autoNumberFigureTypesAllowed, AUTO_NUMBER_PROPERTIES, ELEMENT_TYPES_FOR_AUTO_NUMBER, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
-import { triggerCustomEventsGTM } from '../../js/google_analytics';
+import { triggerCustomEventsGTM } from '../../js/ga';
 const {
     MANUAL_OVERRIDE,
     NUMBERED_AND_LABEL

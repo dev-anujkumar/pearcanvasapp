@@ -2,7 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '../../constants/utility.js';
-import { triggerCustomEventsGTM } from '../../js/google_analytics';
+import { triggerCustomEventsGTM } from '../../js/ga';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
