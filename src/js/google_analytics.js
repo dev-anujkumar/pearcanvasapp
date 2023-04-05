@@ -9,7 +9,6 @@ let isGtmInitialized = false
 export const initializeGTM = (env) => {
   const auth = env.GOOGLE_TAG_MANAGER_AUTH || 'uMmKRWMnVp0n5ln33vV-MA'
   const preview = env.GOOGLE_TAG_MANAGER_PREVIEW || 'env-21'
-  // env.GTM_ID ='GTM-N6W3WRM' // new
   // env.GTM_ID ='GTM-NFMDD8B' // old
   const GTM_ID = env.GTM_ID || 'GTM-N6W3WRM'
   console.log(GTM_ID, "inside GTM",env)
