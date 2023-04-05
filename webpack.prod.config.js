@@ -190,7 +190,6 @@ module.exports = {
                     // https://github.com/facebook/create-react-app/issues/2488
                     ascii_only: true,
                   },
-                  sourceMap: true
                 },
               }),
               new CssMinimizerPlugin(),
