@@ -153,11 +153,7 @@ module.exports = {
         },
         sideEffects: false,
         minimizer: [
-            new TerserPlugin({
-                cache: true,
-                parallel: true,
-                sourceMap: true
-            }),
+            new TerserPlugin(),
              new CssMinimizerPlugin()
         ]
     }
