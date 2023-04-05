@@ -178,8 +178,6 @@ module.exports = {
                     // https://github.com/terser-js/terser/issues/120
                     inline: 2,
                   },
-                  keep_classnames: false,
-                  keep_fnames: false,
                   mangle: {
                     safari10: true,
                   },
