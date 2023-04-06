@@ -245,6 +245,10 @@ class ElementContainer extends Component {
                 this.handleUndoOptionTimer();
             }
         }
+        // Closing cut/copy menu on click outside
+        if(this.state.showCopyPopup && !event?.target?.classList.contains('copyUrn')){
+            this.setState({ showCopyPopup: false })
+        }
     }
 
     componentWillUnmount() {
