@@ -28,9 +28,9 @@ class ElementPopup extends React.Component {
     componentDidMount = () => {
         this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick);
         if(hasReviewerRole){
-            document.getElementById(`cypress-${this.props.index}-0`).setAttribute('contenteditable', false);
-            document.getElementById(`cypress-${this.props.index}-1`).setAttribute('contenteditable', false);
-            document.getElementById(`cypress-${this.props.index}-2`).setAttribute('contenteditable', false);
+            document.getElementById(`cypress-${this.props.index}-0`)?.setAttribute('contenteditable', false);
+            document.getElementById(`cypress-${this.props.index}-1`)?.setAttribute('contenteditable', false);
+            document.getElementById(`cypress-${this.props.index}-2`)?.setAttribute('contenteditable', false);
         }
     }
     componentWillUnmount = () => {

@@ -6,6 +6,7 @@ import config from '../../../src/config/config.js';
 import { mount} from 'enzyme';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import * as utils from '../../../src/constants/utility';
 
 const mockStore = configureMockStore();
 
@@ -386,6 +387,7 @@ describe('Testing ElementSaprator rendering', () => {
             onClickCapture: jest.fn(),
             source: ''
         }
+        jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
         let Es = mount(<Provider store={store}><ElementSaprator {...props} esProps = {esProps} permissions ={permissions} elementType = {elementType} firstOne= {firstOne}/></Provider>);
     })
 
