@@ -43,6 +43,29 @@ jest.mock('../../../src/component/ElementSaprator', () => {
     }
 });
 
+jest.mock('../../../src/constants/utility', () => {
+    return { 
+        sendDataToIframe: jest.fn(),
+        hasReviewerRole: jest.fn(),
+        defaultMathImagePath: ()=>{
+            return true
+        },
+        guid: ()=>{
+            return "abcd123"
+        },
+        isOwnerRole:()=>{
+            return true
+        },
+        isSubscriberRole:()=>{
+            return true
+        },
+        getSlateType:()=>{
+            return 'slateType'
+        },
+        getCookieByName: () => false
+    }
+});
+
 const initialState = {
     slateLockReducer: { slateLockInfo: {
         isLocked: false,
