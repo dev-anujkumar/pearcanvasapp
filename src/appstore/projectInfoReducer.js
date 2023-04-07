@@ -1,6 +1,7 @@
-import { UPDATE_PROJECT_INFO, UPDATE_DISCUSSION_ITEMS, UPDATE_USAGE_TYPE, UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, UPDATE_LOB_WORKFLOW, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS, BANNER_IS_VISIBLE } from "../constants/Action_Constants";
+import { UPDATE_PROJECT_INFO, UPDATE_DISCUSSION_ITEMS, UPDATE_USAGE_TYPE, UPDATE_LOB_PERMISSIONS, SET_PROJECT_SHARING_ROLE, SET_PROJECT_SUBSCRIPTION_DETAILS, OWNERS_SUBSCRIBED_SLATE, UPDATE_LOB_WORKFLOW, PROJECT_LOB_LIST, NO_DISCUSSION_ITEMS, BANNER_IS_VISIBLE, SUBSCRIBERS_SUBSCRIBED_SLATE } from "../constants/Action_Constants";
 
 var isOwnerKeyExist= localStorage.getItem('hasOwnerEdit');
+let isSubscriberKeyExist = localStorage.getItem('hasSubscriberView');
 const initialState = {
   usageType: [],
   discussionItems: [],
@@ -15,7 +16,8 @@ const initialState = {
   workflowRole:{},
   LOBList:[],
   showDiscussionLOBDropdown: false,
-  isBannerVisible: false
+  isBannerVisible: false,
+  isSubscribersSubscribedSlateChecked : isSubscriberKeyExist ? false : true
 }
 
 export const projectInfo = (state = initialState, action={type:'', payload:{}}) => {
@@ -89,6 +91,11 @@ export const projectInfo = (state = initialState, action={type:'', payload:{}}) 
             return {
                 ...state,
                 isOwnersSubscribedSlateChecked: action.payload
+            }
+        case SUBSCRIBERS_SUBSCRIBED_SLATE:
+            return {
+              ...state,
+              isSubscribersSubscribedSlateChecked: action.payload
             }
           case BANNER_IS_VISIBLE:
             return {

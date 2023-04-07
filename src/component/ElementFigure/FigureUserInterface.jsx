@@ -548,7 +548,7 @@ class FigureUserInterface extends Component {
 
         let captionsHtml = removeUnoClass(element.html?.captions);
         let creditsHtml = removeUnoClass(element.html?.credits);
-
+        const isReviewer = hasReviewerRole() ? "pointer-events-none" : "";
         captionsHtml = captionsHtml?.replace("<p>", '')?.replace("</p>", '');
         creditsHtml = creditsHtml?.replace("<p>", '')?.replace("</p>", '');
         return (
@@ -564,7 +564,7 @@ class FigureUserInterface extends Component {
                                     previewClass={""}
                                     figLabelClass={figLabelClass}
                                     figTitleClass={figTitleClass}
-                                /> : <><header className="figure-header new-figure-image-header">
+                                /> : <><header className={`figure-header new-figure-image-header ${isReviewer}`}>
 
                                 <div className='figure-label-field'>
                                     <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
@@ -626,7 +626,7 @@ class FigureUserInterface extends Component {
                             {
                                 element.figuretype === INTERACTIVE && imageDimension === '' ?
                                     <div>
-                                        <div className={`Rectangle-button ${index}`} onClick={() => this.toggleHyperlinkEditable('show', index)} >
+                                        <div className={`Rectangle-button ${index} ${isReviewer}`} onClick={() => this.toggleHyperlinkEditable('show', index)} >
                                             <span className="Enter-Button-Label">{posterText ? posterText : "Enter Button Label"}</span>
                                         </div>
                                         <div className={`hide-field actionPUdiv ${index}`} >
@@ -636,7 +636,7 @@ class FigureUserInterface extends Component {
                                     :
                                     null
                             }
-                            <div className="figure-element-container interface-container">
+                            <div className={`figure-element-container interface-container ${isReviewer}`}>
                                 <div id="figure_add_div" className={`pearson-component image figureData ${element.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                                     {this.renderAssetSection(element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite, imageDimension)}
                                 </div>
