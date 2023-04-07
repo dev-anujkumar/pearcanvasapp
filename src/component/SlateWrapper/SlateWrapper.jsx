@@ -31,7 +31,7 @@ import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
-import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlate, isSubscribersSubscribedSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
@@ -75,7 +75,8 @@ class SlateWrapper extends Component {
             updatedindex:'',
             showOwnerSlatePopup: false,
             parentUrn:null,
-            updateAssessment: false
+            updateAssessment: false,
+            showSubscriberSlatePopup: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -227,6 +228,11 @@ class SlateWrapper extends Component {
             _state={
                 ..._state,
                 showOwnerSlatePopup: true
+            }
+        }else if(isSubscriberRole(projectSharingRole,isSubscribed)){
+            _state={
+                ..._state,
+                showSubscriberSlatePopup: true
             }
         }
         else {
@@ -520,6 +526,11 @@ class SlateWrapper extends Component {
                 lockDuration = 5400
             this.setSlateLock(slateId, lockDuration)
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
+        }else if(isSubscriberRole(projectSharingRole, isSubscribed)){
+            const slateId = Object.keys(this.props.slateData)[0],
+                lockDuration = 5400
+            this.setSlateLock(slateId, lockDuration)
+            return this.props.projectSubscriptionDetails.isSubscribersSubscribedSlateChecked
         }
         else {
             const slateId = Object.keys(this.props.slateData)[0],
@@ -584,6 +595,7 @@ class SlateWrapper extends Component {
     showLockPopup = () => {
         const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
         var isOwnerKeyExist= localStorage.getItem('hasOwnerEdit');
+        let isSubscribersKeyExist = localStorage.getItem('hasSubscriberView');
         if (this.state.showLockPopup) {
             const { lockOwner } = this.state
             this.props.showBlocker(true)
@@ -603,11 +615,13 @@ class SlateWrapper extends Component {
                     lockForTOC={false}
                 />
             )
-        } else if (!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) {
-            this.props.showBlocker(true)
+        } else if ((!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) || (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showSubscriberSlatePopup && isSubscribersKeyExist === null )) {
+            const subscriberPopupDailogText = <>This is a subscribed content and cannot be edited.<br /><br />If you wish to edit the content, please use <strong>Copy Content</strong> feature from TOC or go to the owner project. Kindly note that the edits in owner project will be reflected for all the subscribers</>
+            this.props.showBlocker(true);
             showTocBlocker();
+            let dailogText = isOwnerRole(projectSharingRole,isSubscribed) ? OWNER_SLATE_POPUP : subscriberPopupDailogText;
             return (
-                <PopUp dialogText={OWNER_SLATE_POPUP}
+                <PopUp dialogText={dailogText}
                     togglePopup={this.togglePopup}
                     isOwnersSlate={true}
                     proceed={this.proceedButtonHandling}
@@ -641,7 +655,8 @@ class SlateWrapper extends Component {
     togglePopup = (toggleValue, event) => {
         this.setState({
             showLockPopup: toggleValue,
-            showOwnerSlatePopup: toggleValue
+            showOwnerSlatePopup: toggleValue,
+            showSubscriberSlatePopup: toggleValue
         })
         this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
@@ -651,17 +666,26 @@ class SlateWrapper extends Component {
     }
 
     proceedButtonHandling = (isChecked, toggleValue, e) => {
-        this.setState({
-            showOwnerSlatePopup: toggleValue
-        })
+        const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
+        if(isSubscriberRole(projectSharingRole, isSubscribed)){
+            this.setState({
+                showSubscriberSlatePopup: toggleValue
+            })
+        }
+        if(isOwnerRole(projectSharingRole, isSubscribed)){
+            this.setState({
+                showOwnerSlatePopup: toggleValue
+            })
+        }
         this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
         hideBlocker()
         this.prohibitPropagation(e);
         if (isChecked) {
-            releaseOwnerPopup(isChecked);
+            releaseOwnerPopup(isChecked, projectSharingRole, isSubscribed);
         }
         this.props.isOwnersSubscribedSlate(false);
+        this.props.isSubscribersSubscribedSlate(false);
     }
 
     handleCopyPastePopup = (wordPastePopup,index,parentUrn, asideData)=>{
@@ -1783,6 +1807,7 @@ export default connect(
         isOwnersSubscribedSlate,
         savePopupParentSlateData,
         slateVersioning,
-        approvedSlatePopupStatus
+        approvedSlatePopupStatus,
+        isSubscribersSubscribedSlate
     }
 )(SlateWrapper);
