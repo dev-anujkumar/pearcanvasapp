@@ -147,7 +147,8 @@ module.exports = {
                 defaultVendors: {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
-                    chunks: 'all'
+                    chunks: 'all',
+                    reuseExistingChunk: true
                 }
             }
         },
@@ -177,6 +178,8 @@ module.exports = {
                     // https://github.com/terser-js/terser/issues/120
                     inline: 2,
                   },
+                  keep_classnames: false,
+                  keep_fnames: false,
                   mangle: {
                     safari10: true,
                   },

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { discussionCloseIcon, searchDisussion } from "../../images/ElementButtons/ElementButtons.jsx";
-import { Tooltip } from "@material-ui/core";
-import { withStyles } from "@material-ui/core/styles";
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import { withStyles } from '@mui/styles';
+import { Select, MenuItem, Tooltip } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import clsx from "clsx";
 
 //Function for display tooltip in title
@@ -27,11 +25,29 @@ const getSelectedItemFromId = (id) => {
 };
 
 // handle LOB dropdown select menu position
-const LOBDropdownMenuStyles = {
-  top: '-252px',
-  left: '-16px',
-  width: '125px',
-  height: '211px',
+const selectMenuProps = {
+  PaperProps: {
+    sx: {
+      height: 'auto',
+      width: '93px',
+      top: '91px !important',
+      '@media screen and (max-width: 1396px)': {
+        left: '182px !important',
+      },
+      '@media screen and (min-width: 1396px) and (max-width: 1535px)': {
+        left: '199px !important',
+      },
+      '@media screen and (min-width: 1536px) and (max-width: 1705px)': {
+        left: '213px !important',
+      },
+      '@media screen and (min-width: 1706px) and (max-width: 1919px)': {
+        left: '230px !important',
+      },
+      '@media screen and (min-width: 1920px)': {
+        left: '252px !important',
+      },
+    },
+  },
 }
 
 const DiscussionDialog = ({
@@ -98,7 +114,7 @@ const DiscussionDialog = ({
           <div className={showDiscussionLOBDropdown ? "LOBDropdownAndSearchboxContainer" : ""}>
             {showDiscussionLOBDropdown && <div className="LOBDropdownContainer"><div className="LOB-label">LOB</div>
             <div className="LOBDropdown" >
-              <Select MenuProps={{style: LOBDropdownMenuStyles}} className={defaultLOBDropdownValue === "select" ? "selectInDropdown" : "LOBInDropdown"} value={defaultLOBDropdownValue} IconComponent={CustomDropDownIcon} onChange={(e) => setSelectedLOBValue(e.target.value)}>
+              <Select variant="standard" MenuProps={selectMenuProps} className={defaultLOBDropdownValue === "select" ? "selectInDropdown" : "LOBInDropdown"} value={defaultLOBDropdownValue} IconComponent={CustomDropDownIcon} onChange={(e) => setSelectedLOBValue(e.target.value)}>
                 <MenuItem value="select" className="selectOption">Select</MenuItem>
                 {options.map((x) => (<MenuItem className="LOBMenuList" value={x.lineOfBusiness}>{x.label}</MenuItem>))}
               </Select>
@@ -157,7 +173,7 @@ const DiscussionDialog = ({
                         name={elemendId + "-" + item.discussionUrn}
                         value={item.title}
                       />
-                      <TitleTooltip  title={item.title} arrow>
+                      <TitleTooltip  placement="bottom-end" title={item.title} arrow>
                       <label htmlFor={item.title} className="radioLabelDiscussion">
                         {item.title}
                       </label>

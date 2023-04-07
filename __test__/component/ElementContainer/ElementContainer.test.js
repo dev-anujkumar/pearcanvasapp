@@ -1535,6 +1535,16 @@ describe('Test for element container component', () => {
             jest.spyOn(elementContainerInstance, 'handleClickOutside')
             elementContainerInstance.handleClickOutside(event);
         })
+        it('Test handleClickOutside > 2nd if', () => {
+            elementContainerInstance.setState({
+                showCopyPopup : true
+            })
+            const event = {
+                target: { classList: { contains: () => { return false } } }
+            }
+            jest.spyOn(elementContainerInstance, 'handleClickOutside')
+            elementContainerInstance.handleClickOutside(event);
+        })
     })
     describe('Test- OpenerElement-Functions', () => {
         let openerData=wipData.opener
