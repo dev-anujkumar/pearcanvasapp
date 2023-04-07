@@ -868,7 +868,7 @@ export class TinyMceEditor extends Component {
                 let parent = e.target.closest("dfn");
                 uri = parent.getAttribute('data-uri');
             }
-            this.glossaryBtnInstance.setDisabled(true)
+            this.glossaryBtnInstance?.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
                     this.toggleGlossaryandFootnoteIcon(true);
@@ -3839,8 +3839,10 @@ export class TinyMceEditor extends Component {
                     }
                 }
                 else {
-                    document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
-                    document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
+                    if (document.getElementById(activeEditorId)?.innerHTML && currentTarget?.id && document.getElementById(currentTarget.id)?.innerHTML && tempContainerHtml && tempNewContainerHtml) {
+                        document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
+                        document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
+                    }
                 }
         }
 

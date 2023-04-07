@@ -76,8 +76,11 @@ const redirectParent = (urlToBeRedirected) => {
 const logoutWithModernOpenAM = () => {
     // remove owner slate popup flag from local storage
     const isOwnerKey = localStorage.getItem('hasOwnerEdit');
+    const isSubscriberKey =  localStorage.getItem('hasSubscriberView'); 
     if (isOwnerKey) {
         localStorage.removeItem('hasOwnerEdit');
+    }else if(isSubscriberKey){
+        localStorage.removeItem('hasSubscriberView');
     }
     deleteCookie('PearsonSSOSession', 'pearson.com');
     deleteCookie('myCloudProxySession', 'pearson.com');

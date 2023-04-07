@@ -9,6 +9,7 @@ import FigureImage from '../../../src/component/ElementFigure/FigureImage';
 import { figureImage50TextElementDefault,figureImage50TextElementWithData,mathImage50TextElementDefault, tableImage50TextElementDefault,tableImage50TextElementWithData,mathImage50TextElementWithData,testDataFromNewAlfresco,tableasmarkupWithoutData,tableasmarkupWithData,codelistingWithoutData,codelistingWithData,blockmathWithData,blockmathWithoutData } from '../../../fixtures/ElementFigureTestingData.js'
 import config from '../../../src/config/config';
 import { mockNumberedElements, mockIndexedElements, mockSlateFiguresList} from '../FigureHeader/AutoNumberApiTestData';
+import * as utils from '../../../src/constants/utility';
 jest.mock('../../../src/component/tinyMceEditor.js',()=>{
     return function () {
         return (<div>null</div>)
@@ -450,6 +451,7 @@ describe('Testing Figure image component', () => {
             },
             stopPropagation() { }
         }
+        jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
         const elementFigure = mount(<Provider store={store}><FigureImage type={type} model={figureImage50TextElementDefault} index="30" {...props}/></Provider>);
         let elementFigureInstance = elementFigure.find('FigureImage').instance();
         const spydataFromAlfresco = jest.spyOn(elementFigureInstance, 'dataFromNewAlfresco')

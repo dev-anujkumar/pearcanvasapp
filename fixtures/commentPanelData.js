@@ -107,21 +107,30 @@ export const commentWithReply = {
     "isMember": false,
     "isAdmin": false,
     "roleId": "default_user",
-    "eTag": null
+    "eTag": null,
+    "firstName":"Kashif",
+    "lastName":"Khan",
+    "label":"Khan,Kashif",
   }, {
     "userId": "alf04",
     "email": "alf04.mail@pearson.com",
     "isMember": false,
     "isAdmin": false,
     "roleId": "default_user",
-    "eTag": null
+    "eTag": null,
+    "label":"Khan,Kashif",
+    "firstName":"Kashif",
+    "lastName":"Khan",
   }, {
     "userId": "blueprint-editor",
     "email": "blueprint-editor@pearson.com",
     "isMember": false,
     "isAdmin": false,
     "roleId": "default_user",
-    "eTag": null
+    "eTag": null,
+    "label":"Khan,Kashif",
+    "firstName":"Kashif",
+    "lastName":"Khan",
   }]
 
   export const permissions = [
