@@ -6,6 +6,7 @@ import configureMockStore from 'redux-mock-store';
 import ReactEditor from '../../../src/component/tinyMceGlossaryFootnoteEditor'
 import { tinymceFormulaIcon,tinymceFormulaChemistryIcon } from '../../../src/images/TinyMce/TinyMce';
 import { JSDOM } from 'jsdom'
+import * as utils from '../../../src/constants/utility';
 global.document = (new JSDOM()).window.Element;
 if(!global.Element.prototype.hasOwnProperty("innerText")){
     Object.defineProperty(global.Element.prototype, 'innerText', {
@@ -25,6 +26,7 @@ describe('Testing tinyMce component for glossary footnote with  props', () => {
         glossaryFootNoteCurrentValue: "",
         className: "place-holder"
     }
+    jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
    const tinyMceEditor = mount(<Provider store={store}><ReactEditor {...props}  /></Provider> , {attachTo: window.domNode} )
     it('Test for glossary', () => {
         tinyMceEditor.setProps({

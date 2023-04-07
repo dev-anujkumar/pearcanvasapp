@@ -45,7 +45,7 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     createLabelNumberTitleModel: jest.fn(),
     getLabelNumberTitleHTML: jest.fn(() => ({'formattedLabel': ''})),
     getTitleSubtitleModel: jest.fn(()=> ''),
-    isSubscriberRole:jest.fn(()=>{return true}),
+    isOwnerRole:jest.fn(()=>{return true}),
     removeSpellCheckDOMAttributes: jest.fn(() => ''),
     checkHTMLdataInsideString: () => {
         return ({
@@ -1531,6 +1531,16 @@ describe('Test for element container component', () => {
                 contains: jest.fn(),
                 stopPropagation() { },
                 preventDefault() { }
+            }
+            jest.spyOn(elementContainerInstance, 'handleClickOutside')
+            elementContainerInstance.handleClickOutside(event);
+        })
+        it('Test handleClickOutside > 2nd if', () => {
+            elementContainerInstance.setState({
+                showCopyPopup : true
+            })
+            const event = {
+                target: { classList: { contains: () => { return false } } }
             }
             jest.spyOn(elementContainerInstance, 'handleClickOutside')
             elementContainerInstance.handleClickOutside(event);

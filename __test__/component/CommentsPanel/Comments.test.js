@@ -2,6 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import Comments from '../../../src/component/CommentsPanel/Comments';
 import { comment, users, permissions } from '../../../fixtures/commentPanelData.js'
+import config from '../../../src/config/config';
 import { stub } from 'sinon';
 
 jest.mock('../../../src/component/CommentMention/CommentMention', () => () => (<div />))
@@ -18,6 +19,11 @@ describe('Testing CommentsPanel component with props', () => {
     users: users,
     permissions: permissions
   }
+  let props1 ={
+    users:[],
+    permissions:[],
+  }
+  
   let wrapper = mount(
     <Comments
       updateElementComment={updateElementComment}
@@ -31,9 +37,24 @@ describe('Testing CommentsPanel component with props', () => {
       {...props}
     />)
 
+    let new_wrapper = mount(
+      <Comments
+        updateElementComment={updateElementComment}
+        updateAssignee={updateAssignee}
+        updateRole={updateRole}
+        updateResolveComment={updateResolveComment}
+        toggleReply={toggleReply}
+        getProjectUsers={getProjectUsers}
+        deleteComment={deleteComment}
+        comment={comment}
+        {...props1}
+      />)
+
   const instance = wrapper.instance();
+  const instance1 = new_wrapper.instance();
   describe('Testing rendering component with props', () => {
     it('should have comment-wrapper', () => {
+      instance.setState({showReplyComments : true})
       expect(wrapper.find(".comment-wrapper")).toHaveLength(1)
     }),
 
@@ -57,7 +78,6 @@ describe('Testing CommentsPanel component with props', () => {
   })
 
   describe('Testing functions with props', () => {
-
     it('renders update assignee function correctly', () => {
       const spy = jest.spyOn(instance, 'updateAssignee');
       instance.updateAssignee();
@@ -92,6 +112,25 @@ describe('Testing CommentsPanel component with props', () => {
       expect(actionMenu.props.className).toEqual('comment-action-menu action-menu');
       expect(actionMenu.props.children).toHaveLength(5);
     });
+    it('render action menu from correctly from same user', () => {
+      config.userId ="c5test01"
+      let actionMenu = instance.actionsMenu();
+      expect(actionMenu.props.className).toEqual('comment-action-menu action-menu');
+      expect(actionMenu.props.children).toHaveLength(5);
+    });
+    it('render action menu from correctly from same user', () => {
+      config.userId ="test012"
+      let actionMenu = instance.actionsMenu();
+      expect(actionMenu.props.className).toEqual('comment-action-menu action-menu');
+      expect(actionMenu.props.children).toHaveLength(5);
+    });
+
+    it('render action menu from correctly from same user', () => {
+      config.userId ="test012"
+      let actionMenu = instance1.actionsMenu();
+      expect(actionMenu.props.className).toEqual('comment-action-menu action-menu');
+      expect(actionMenu.props.children).toHaveLength(5);
+    });
 
     it('render remove comment from correctly', () => {
       const spy = jest.spyOn(instance, 'toggleActionsMenu');
@@ -106,9 +145,7 @@ describe('Testing CommentsPanel component with props', () => {
     it('render UpdateComment comment from correctly', () => {
       instance.updateComment('this is comment');
       expect(instance.state.updatedFields.text).toEqual('this is comment');
-
     });
-
   })
 
   describe('test toggle reply function', () => {
@@ -139,7 +176,11 @@ describe('Testing CommentsPanel component with props', () => {
       instance.changeAssignee(true)
       const isSelectAssignee = wrapper.state().isSelectAssignee;
       expect(isSelectAssignee).toEqual(false);
-
+    });
+    it('test  change assignee with user length 0', () => {
+      instance1.changeAssignee(true)
+      const isSelectAssignee = new_wrapper.state().isSelectAssignee;
+      expect(isSelectAssignee).toEqual(false);
     });
 
     it('test new assignee function with value ', () => {
@@ -148,7 +189,6 @@ describe('Testing CommentsPanel component with props', () => {
       const isSelectAssignee = wrapper.state().isSelectAssignee
       expect(isSelectAssignee).toEqual(true);
       expect(newAssignee).toEqual("test");
-
     });
 
     it('test new role function with value ', () => {
@@ -196,6 +236,14 @@ describe('Testing CommentsPanel component with props', () => {
     })
   })
 
+  it('Test componentWillUnmount', () => {
+    jest.spyOn(instance, 'componentWillUnmount')
+    document.removeEventListener = () => {
+        return true
+    }
+    instance.componentWillUnmount();
+    expect(instance.componentWillUnmount).toHaveBeenCalled()
+});
 
 })
 

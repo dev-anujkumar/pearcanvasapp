@@ -722,9 +722,11 @@ export const prepareDialogueDom = (model) => {
 /**sets Owner key in localstorage
  * @param data - whether the checkout is checked or not
  */
-export const releaseOwnerPopup=(data)=>{
-    if(data){
+export const releaseOwnerPopup=(data, projectSharingRole, isSubscribed)=>{
+    if(data && isOwnerRole(projectSharingRole, isSubscribed)){
         localStorage.setItem('hasOwnerEdit', true);
+    }else if( data && isSubscriberRole(projectSharingRole, isSubscribed)){
+        localStorage.setItem('hasSubscriberView', true);
     }
 
 }

@@ -3,12 +3,14 @@ import DialogueSaprator from '../../../src/component/ElementDialogue/DialogueSep
 import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
+import * as utils from '../../../src/constants/utility';
 
 const mockStore = configureMockStore();
 let initialState = {}
 let store = mockStore(initialState);
 
 describe('1. DialogueSaprator test cases with firstOne ', () => {
+    jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
     let props = {
         addElement: jest.fn(),
         firstOne: "test"
