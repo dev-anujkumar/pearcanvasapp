@@ -43,7 +43,7 @@ div.mce-resizehandle{
     margin-bottom: 0.5em !important;
     font-size: 100%;
     padding:0px;
-    font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
+    font-family: Georgia Pro, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
 }
 
 .element-container .buttonWidgetPU p.paragraphNumeroUno{
@@ -60,7 +60,7 @@ h3.pullQuoteNumeroUno{
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     margin-left: 0em;
-    font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
+    font-family: Georgia Pro, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
 }
 blockquote.blockquoteMarginaliaAttr {
     padding: 1.0em 0.25em 1.5em;
