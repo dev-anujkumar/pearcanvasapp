@@ -6,6 +6,7 @@ const middlewares = [thunk];
 import configureMockStore from 'redux-mock-store';
 import ElementDialogue from '../../../src/component/ElementDialogue/ElementDialogue';
 import config from '../../../src/config/config';
+import * as utils from '../../../src/constants/utility';
 
 const oldPSData = {
 	"contentUrn":"urn:pearson:entity:4e474860-267a-452d-8e4e-159b1dc8dfde",
@@ -290,6 +291,7 @@ describe('1. Dialogue element test cases', () => {
 			 	elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083180"
 			}
 		}
+        jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
 		const compInstance = dialogueInstance(prop);
         expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'handleOuterBlur')

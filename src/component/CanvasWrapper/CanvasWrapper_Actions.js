@@ -33,7 +33,8 @@ import {
     UPDATE_AUTONUMBER_MAPPER_KEYS,
     PROJECT_LOB_LIST,
     NO_DISCUSSION_ITEMS,
-    BANNER_IS_VISIBLE
+    BANNER_IS_VISIBLE,
+    SUBSCRIBERS_SUBSCRIBED_SLATE
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1815,6 +1816,17 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
  export const isOwnersSubscribedSlate = (showPopup) => (dispatch, getState) => {
     return dispatch({
         type: OWNERS_SUBSCRIBED_SLATE,
+        payload: showPopup
+    })
+}
+
+/**
+ * Action Creator
+ * Retrieves the Subscriber's Slate status
+ */
+export const isSubscribersSubscribedSlate = (showPopup) => (dispatch, getState) => {
+    return dispatch({
+        type: SUBSCRIBERS_SUBSCRIBED_SLATE,
         payload: showPopup
     })
 }
