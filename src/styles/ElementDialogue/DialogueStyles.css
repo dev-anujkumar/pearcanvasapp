@@ -1,5 +1,6 @@
 .stageDirectionItalicFont {
     font-style: italic!important;
+    min-height: 64px;
 }
 
 #startLineSetting {
