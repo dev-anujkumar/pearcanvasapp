@@ -880,7 +880,7 @@ export class TinyMceEditor extends Component {
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
             if (isAudioExists || isFigureImageExists) {
-                if (e.currentTarget.classList.contains('mce-edit-focus')) {
+                if (e.currentTarget.classList.contains('mce-edit-focus') || hasReviewerRole()) {
                     const parentPosition = getParentPosition(e.currentTarget);
                     const slateWrapperNode = document.getElementById('slateWrapper')
                     const scrollTop = slateWrapperNode && slateWrapperNode.scrollTop || 0;
@@ -3834,7 +3834,7 @@ export class TinyMceEditor extends Component {
                     let elementContainerNodes = document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')
                     if (elementContainerNodes.length)
                         elementContainerNodes[0].innerHTML = tempContainerHtml;
-                    if(document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0]?.innerHTML){
+                    if(document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0]?.innerHTML && tempContainerHtml){
                         document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
                     }
                 }

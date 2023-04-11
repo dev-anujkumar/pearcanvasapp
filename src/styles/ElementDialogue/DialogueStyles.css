@@ -1,6 +1,9 @@
 .stageDirectionItalicFont {
     font-style: italic!important;
-    min-height: 64px;
+}
+
+.stageDirectionItalicFont.cypress-editable{
+    min-height: 64px !important;
 }
 
 #startLineSetting {
