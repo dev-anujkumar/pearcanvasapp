@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import TinyMceEditor from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
+import { Grammarly, GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 export class ElementAuthoring extends Component {
   constructor(props) {
     super(props);
@@ -12,6 +13,8 @@ export class ElementAuthoring extends Component {
     const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue, openMarkedIndexPopUp, markedIndexValue } = this.props
      return (
        <KeyboardWrapper enable={this.props.element?.elementdata?.type !== "blockquote"} index={this.props.index}>
+            <Grammarly clientId="client_51D8CAHFNoRRMxzmiXDpY6">
+          <GrammarlyEditorPlugin>
            <TinyMceEditor
            isBlockList={this.props.isBlockList}
           openAssetPopoverPopUp ={openAssetPopoverPopUp}
@@ -38,6 +41,8 @@ export class ElementAuthoring extends Component {
           markedIndexValue={markedIndexValue}
           parentManifestListItem={this?.props?.parentManifestListItem}
         />
+        </GrammarlyEditorPlugin>
+        </Grammarly>
        </KeyboardWrapper>
        
     )
