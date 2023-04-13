@@ -527,9 +527,6 @@ class SlateWrapper extends Component {
             this.setSlateLock(slateId, lockDuration)
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
         }else if(isSubscriberRole(projectSharingRole, isSubscribed)){
-            const slateId = Object.keys(this.props.slateData)[0],
-                lockDuration = 5400
-            this.setSlateLock(slateId, lockDuration)
             return this.props.projectSubscriptionDetails.isSubscribersSubscribedSlateChecked
         }
         else {
