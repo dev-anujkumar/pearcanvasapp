@@ -41,6 +41,7 @@ export class ReactMarkedIndexEditor extends React.Component {
           this.addMathmlFormulaButton(editor);
         }
         this.editorClick(editor);
+        this.editorPaste(editor);
         this.onEditorBlur(editor);
         this.setDefaultIcons(editor)
         editor.on('keyup', (e) => { this.editorOnKeyup(e, editor) });
@@ -108,18 +109,16 @@ export class ReactMarkedIndexEditor extends React.Component {
     });
   }
 
-  /**
-   * Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula
-   * @param {*} editor Editor instance
-   */
-  revertingTempContainerHtml = editor => {
-    let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
-    let elementNode = document.getElementById(editor.id)
-    revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g, 'data-mathml').replace(/temp_Wirisformula/g, 'Wirisformula');
-    if (elementNode) {
-      elementNode.innerHTML = revertingTempContainerHtml;
-    }
-  }
+
+  editorPaste = (editor) => {
+    editor.on('paste', (e) => {
+        //restrict paste when user is reviewer or subscriber
+        if(hasReviewerRole()){
+            e.preventDefault();
+        }
+    });
+}
+
   /**
   * Called on Keyup
   * @param {*} e Event Object
@@ -510,7 +509,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     return (
-        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable="true" id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
+        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable={!hasReviewerRole()} id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
     )
   }
 }

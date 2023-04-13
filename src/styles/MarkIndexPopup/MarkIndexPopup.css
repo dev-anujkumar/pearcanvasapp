@@ -23,6 +23,15 @@
 .index-body{
    padding: 5px 12px;
 }
+
+.index-body.pointer-events-none{
+    pointer-events: none !important;
+}
+
+.blurButton{
+    opacity: 0.5;
+    pointer-events: none;
+}
 .index-text{
     display: flex;
     padding: 3px 0 8px 0;
