@@ -31,14 +31,9 @@ export const triggerCustomEventsGTM = (event, data) => {
     console.log(isGtmInitialized,"isGtmInitialized",window.dataLayer)
     if (isGtmInitialized && window && window.dataLayer) {
         console.log(event,"Push data event",data)
-        let ee= {
-          event: event,
-          slate_data: data
-      }
-      window.dataLayer.push(ee);
-        // window.dataLayer.push({
-        //     event,
-        // ...data
-        // });
+        window.dataLayer.push({
+            event,
+        ...data
+        });
     }
 }
