@@ -868,7 +868,7 @@ export class TinyMceEditor extends Component {
                 let parent = e.target.closest("dfn");
                 uri = parent.getAttribute('data-uri');
             }
-            this.glossaryBtnInstance?.setDisabled(true)
+            this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
                     this.toggleGlossaryandFootnoteIcon(true);
@@ -2454,7 +2454,7 @@ export class TinyMceEditor extends Component {
             }
 
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-            if (activeElement?.nodeName === "CODE") {
+            if (activeElement.nodeName === "CODE") {
                 let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
                 if (syntaxEnabled && syntaxEnabled.checked) {
                     this.notFormatting = true;
@@ -3834,15 +3834,11 @@ export class TinyMceEditor extends Component {
                     let elementContainerNodes = document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')
                     if (elementContainerNodes.length)
                         elementContainerNodes[0].innerHTML = tempContainerHtml;
-                    if(document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0]?.innerHTML && tempContainerHtml){
-                        document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
-                    }
+                    document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
                 }
                 else {
-                    if (document.getElementById(activeEditorId)?.innerHTML && currentTarget?.id && document.getElementById(currentTarget.id)?.innerHTML && tempContainerHtml && tempNewContainerHtml) {
-                        document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
-                        document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
-                    }
+                    document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
+                    document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
                 }
         }
 
@@ -4317,7 +4313,7 @@ export class TinyMceEditor extends Component {
 
     render() {
         const { slateLockInfo: { isLocked, userId }, contenteditable } = this.props;
-        let lockCondition = ((isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '')) || hasReviewerRole);
+        let lockCondition = isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '');
         this.handlePlaceholder();
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";
