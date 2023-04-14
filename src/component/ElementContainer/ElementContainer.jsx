@@ -1277,6 +1277,8 @@ class ElementContainer extends Component {
      * Will be called on element blur and a saving call will be made
      */
     handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}, triggeredFrom = '') => {
+        // restrict saving call incase of read only content
+        if(hasReviewerRole()) return;
         const { elementType, primaryOption, secondaryOption, elementId } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
