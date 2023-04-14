@@ -251,7 +251,7 @@ componentWillMount() {
             <span className="printIndex-label">Index Settings</span>
             <span className="marked-close-icon"><Close onClick={this.closePopUp} /></span>
           </div>
-          <div className={`index-body ${hasReviewerRole() ? "pointer-events-none": ""}`}>
+          <div className="index-body">
             <div className="index-text">
               <ErrorOutline />
               <span>This data is used for print only</span>
@@ -269,7 +269,7 @@ componentWillMount() {
               </div>
             </div>
 
-            <div className="markedindex-secondlevel-header">
+            <div className={`markedindex-secondlevel-header ${hasReviewerRole() ? "crossReferenceReadOnly" : ""}`}>
               <div id="index-secondlevel-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
                 <div className="markedindex-secondlevel-label">
                   <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel} className='markedindex-editor place-holder sub-entry' id='markedindex-1' markedLabelId="secondLevel" />

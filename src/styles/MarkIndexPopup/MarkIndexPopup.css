@@ -237,6 +237,11 @@
     min-width: 180px;
 }
 
+.markedindex-secondlevel-header.crossReferenceReadOnly{
+    min-height: 64px;
+    max-height: 86px;
+}
+
 .markedindex-secondlevel-header .tooltip .tooltiptext.tooltip-bottom {
     width: auto;
     top: 100%;

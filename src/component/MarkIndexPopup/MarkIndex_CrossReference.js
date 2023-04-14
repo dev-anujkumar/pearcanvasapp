@@ -4,6 +4,7 @@ import Tooltip from '../Tooltip';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor";
 import { CrossRefCheckbox } from './CrossRefCheckBox';
 import { MARKEDINDEX_NO_RESULT_FOUND_TEXT } from './../../constants/Element_Constants';
+import { hasReviewerRole } from '../../constants/utility';
 
 
 export const CrossReference = ({crossRefValue}) => {
@@ -87,7 +88,7 @@ export const CrossReference = ({crossRefValue}) => {
     }
     return (
         <div ref={wrapperRef}>
-            <div className="markedindex-secondlevel-header">
+            <div className={`markedindex-secondlevel-header ${hasReviewerRole() ? "crossReferenceReadOnly" : ""}`}>
                 <div id="index-secondlevel-attacher">
                     <Tooltip direction="bottom cross-ref-tooltip" showClass={crossRef.length === 0 ? true : false} tooltipText={crossRef.join(',')}>
                         <div className="markedindex-secondlevel-label" onClick={handleDropDownClick}>
