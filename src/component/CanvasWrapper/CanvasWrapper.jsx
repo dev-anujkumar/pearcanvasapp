@@ -1,26 +1,26 @@
 // IMPORT - Plugins //
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import { connect } from 'react-redux';
 import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
-import Sidebar from '../Sidebar';
-import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
-import Toolbar from '../Toolbar';
-import PopUp from '../PopUp';
+const Sidebar = React.lazy(() => import('../Sidebar'));
+const AssetPopoverSearch = React.lazy(() => import('../AssetPopover/AssetPopoverSearch.jsx'));
+const Toolbar = React.lazy(() => import('../Toolbar'));
+const PopUp = React.lazy(() => import('../PopUp'));
+const MarkIndexPopup = React.lazy(() => import('../MarkIndexPopup/MarkIndexPopup'));
 import config from './../../config/config';
-import MarkIndexPopup from '../MarkIndexPopup/MarkIndexPopup';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
 import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
-import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
+const GlossaryFootnoteMenu = React.lazy(() => import('../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx'));
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus } from './CanvasWrapper_Actions';
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -191,7 +191,7 @@ export class CanvasWrapper extends Component {
                                 </div>
                                 }
                                 <div id='artboard-container' className='artboard-container'>
-                                    {this.props.showApoSearch ? <AssetPopoverSearch showBlocker={this.props.showCanvasBlocker}/> : ''}
+                                    {this.props.showApoSearch ? <Suspense fallback={<div></div>}><AssetPopoverSearch showBlocker={this.props.showCanvasBlocker}/></Suspense> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
                                         <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked} closeUndoTimer = {this.props.closeUndoTimer}/>
@@ -355,6 +355,7 @@ export default connect(
         fetchUserLocation,
         fetchDefaultLF,
         setCautionBannerStatus,
-        approvedSlatePopupStatus
+        approvedSlatePopupStatus,
+        isSubscribersSubscribedSlate
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

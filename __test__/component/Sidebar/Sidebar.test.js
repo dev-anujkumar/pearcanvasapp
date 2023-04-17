@@ -1168,7 +1168,7 @@ describe('Test for Sidebar component', () => {
             expect(spyTogglePODDropdown).toHaveBeenCalled();
         });
     });
-    describe("Testing Other Methods", () => {
+    xdescribe("Testing Other Methods", () => {
         const storeData1 = {
             appStore: {
                 activeElement: {

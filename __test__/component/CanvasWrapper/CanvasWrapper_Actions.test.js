@@ -33,7 +33,8 @@ import {
     SET_PROJECT_SHARING_ROLE,
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
-    GET_TCM_RESOURCES
+    GET_TCM_RESOURCES,
+    SUBSCRIBERS_SUBSCRIBED_SLATE
 } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
@@ -3437,6 +3438,21 @@ it('Test: isOwnersSubscribedSlate function', () => {
 
     const spyFunction = jest.spyOn(canvasActions, 'isOwnersSubscribedSlate')
     canvasActions.isOwnersSubscribedSlate(showPopup)(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    spyFunction.mockClear()
+})
+it('Test: isSubscribersSubscribedSlate function', () => {
+    const expectedActions = {
+        type: SUBSCRIBERS_SUBSCRIBED_SLATE,
+        payload: true
+    };
+    const showPopup = true
+    let dispatch = (obj) => {
+        expect(obj).toEqual(expectedActions);
+    }
+
+    const spyFunction = jest.spyOn(canvasActions, 'isSubscribersSubscribedSlate')
+    canvasActions.isSubscribersSubscribedSlate(showPopup)(dispatch);
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })

@@ -7,7 +7,7 @@ import '../../styles/PopUp/PopUp.css';
 import PropTypes from 'prop-types'
 import { SECTION_BREAK_DELETE_TEXT, notAllowedTCMElementTypes } from '../../constants/Element_Constants'
 import { showTocBlocker, showBlocker, hideBlocker } from '../../js/toggleLoader';
-import PowerPasteElement from "../PowerPasteElement/PowerPasteElement.jsx";
+import PowerPasteElement from '../PowerPasteElement/PowerPasteElement.jsx';
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';

@@ -859,7 +859,7 @@ class Interactive extends React.Component {
         try {
             return (
                     <>
-                        <div className={SMARTLINK_CONTEXTS.includes(model?.figuredata?.interactivetype) ? `figureElement ${isReviewer}` : `interactive-element ${isReviewer}`} onClick = {this.handleClickElement}>
+                        <div className={SMARTLINK_CONTEXTS.includes(model?.figuredata?.interactivetype) ? `figureElement` : `interactive-element`} onClick = {this.handleClickElement}>
                             {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                             {this.renderInteractiveType(model, itemId, index, slateLockInfo)}
                             {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} resetPage={this.resetPage} isReset={this.state.isReset} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
