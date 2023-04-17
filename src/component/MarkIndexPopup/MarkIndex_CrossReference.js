@@ -4,7 +4,6 @@ import Tooltip from '../Tooltip';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor";
 import { CrossRefCheckbox } from './CrossRefCheckBox';
 import { MARKEDINDEX_NO_RESULT_FOUND_TEXT } from './../../constants/Element_Constants';
-import { hasReviewerRole } from '../../constants/utility';
 
 
 export const CrossReference = ({crossRefValue}) => {
