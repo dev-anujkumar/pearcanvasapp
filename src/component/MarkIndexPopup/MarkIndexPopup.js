@@ -269,7 +269,7 @@ componentWillMount() {
               </div>
             </div>
 
-            <div className={`markedindex-secondlevel-header ${hasReviewerRole() ? "crossReferenceReadOnly" : ""}`}>
+            <div className="markedindex-secondlevel-header">
               <div id="index-secondlevel-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
                 <div className="markedindex-secondlevel-label">
                   <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel} className='markedindex-editor place-holder sub-entry' id='markedindex-1' markedLabelId="secondLevel" />

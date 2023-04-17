@@ -88,7 +88,7 @@ export const CrossReference = ({crossRefValue}) => {
     }
     return (
         <div ref={wrapperRef}>
-            <div className={`markedindex-secondlevel-header ${hasReviewerRole() ? "crossReferenceReadOnly" : ""}`}>
+            <div className="markedindex-secondlevel-header">
                 <div id="index-secondlevel-attacher">
                     <Tooltip direction="bottom cross-ref-tooltip" showClass={crossRef.length === 0 ? true : false} tooltipText={crossRef.join(',')}>
                         <div className="markedindex-secondlevel-label" onClick={handleDropDownClick}>
