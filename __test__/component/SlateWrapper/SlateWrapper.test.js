@@ -151,7 +151,8 @@ const actionProps = {
     showWrongImagePopup: jest.fn(),
     alfrescoPopup: jest.fn(),
     showRemoveImageGlossaryPopup: jest.fn(),
-    isOwnersSubscribedSlate: jest.fn()
+    isOwnersSubscribedSlate: jest.fn(),
+    isSubscribersSubscribedSlate: jest.fn()
 }
 const slateWrapInstance = (props, initialSt = initialState) => {
     const store = mockStore(initialSt);
