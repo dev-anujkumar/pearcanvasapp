@@ -65,8 +65,7 @@ let config = {
     ENABLE_WIRIS_PLUGIN: true,
     EDIT_DISCUSSION_SPA_URL: 'https://stg-discussionauthoring.pearson.com/',
     BROKER_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-qa-publishTitleInterim',
-    ENABLE_TAB_ELEMENT:false,
-    GRAMMARLY_CLIENT_ID: "client_51D8CAHFNoRRMxzmiXDpY6"
+    ENABLE_TAB_ELEMENT:false
 };
 
 if (process.env.NODE_ENV === "development") {
