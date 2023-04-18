@@ -334,6 +334,10 @@ p.blockquoteTextCredit.mce-edit-focus.place-holder:focus::before {
     content: attr(data-placeholder);
 }
 
+p.blockquoteTextCredit {
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia Pro, serif !important;
+}
+
 .hideElement {
     display: none;
 }

@@ -238,6 +238,7 @@ componentWillMount() {
   render() {
     let buttonText = ""
     const {markedIndexValue, markedIndexGlossary } =  this.props.markedIndexData;
+    const isReadOnly = hasReviewerRole() ? "blurButton" : "";
     if(Object.keys(markedIndexValue).includes('isNewIndex')){
       buttonText = markedIndexValue.isNewIndex ? 'Add': 'Update'
     } else {
@@ -281,10 +282,10 @@ componentWillMount() {
 
             <div className="button-group">
               <Tooltip direction="removeMarkedIndex" tooltipText="Remove Index entry">
-                {buttonText === 'Update' ? <span className='deleteMarkedIndexbutton' onClick={() => this.showMarkedIndexWarningPopup(true)}><img className='markedindex-delete-icon' src={figureDeleteIcon} /></span> : ''}
+                {buttonText === 'Update' ? <span className={`deleteMarkedIndexbutton ${isReadOnly}`} onClick={() => this.showMarkedIndexWarningPopup(true)}><img className='markedindex-delete-icon' src={figureDeleteIcon} /></span> : ''}
               </Tooltip>
               <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>
-              <span className="printIndex-save-button" disabled={false} onClick={this.saveMarkedIndex}>{buttonText}</span>
+              <span className={`printIndex-save-button ${isReadOnly}`} disabled={false} onClick={this.saveMarkedIndex}>{buttonText}</span>
             </div>
           </div>
           {this.showMarkedIndexRemoveConfirmationPopup()}
