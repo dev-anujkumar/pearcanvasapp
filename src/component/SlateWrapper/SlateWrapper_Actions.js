@@ -11,6 +11,7 @@ import {
     UPDATE_PAGENUMBER_FAIL,
     SET_SLATE_TYPE,
     SET_SLATE_ENTITY,
+    SET_GRAMMARLY_FLAG,
     ACCESS_DENIED_POPUP,
     FETCH_SLATE_DATA,
     SET_PARENT_NODE,
@@ -1263,6 +1264,13 @@ export const setSlateEntity = (setSlateEntityParams) => (dispatch, getState) => 
     return dispatch({
         type: SET_SLATE_ENTITY,
         payload: setSlateEntityParams
+    })
+}
+
+export const setGrammarlyFlag = (setGrammarlyParams) => (dispatch, getState) => {
+    return dispatch({
+        type: SET_GRAMMARLY_FLAG,
+        payload: setGrammarlyParams
     })
 }
 
