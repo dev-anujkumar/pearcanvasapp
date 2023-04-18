@@ -520,7 +520,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     return (
-        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable={!hasReviewerRole()} id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
+        <p ref={this.editorRef} className={`${this.placeHolderClass} ${hasReviewerRole() ? "crossReferenceReadOnly" : ""}`} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable={!hasReviewerRole()} id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
     )
   }
 }

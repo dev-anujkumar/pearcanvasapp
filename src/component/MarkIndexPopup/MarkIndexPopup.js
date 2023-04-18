@@ -251,7 +251,7 @@ componentWillMount() {
             <span className="printIndex-label">Index Settings</span>
             <span className="marked-close-icon"><Close onClick={this.closePopUp} /></span>
           </div>
-          <div className={`index-body ${hasReviewerRole() ? "pointer-events-none": ""}`}>
+          <div className="index-body">
             <div className="index-text">
               <ErrorOutline />
               <span>This data is used for print only</span>

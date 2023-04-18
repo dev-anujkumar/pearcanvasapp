@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
@@ -298,7 +298,7 @@ describe('Testing communication channel', () => {
             ]
         }
     }
-    let wrapper = mount(<Provider store={store}><CanvasWrapper {...props} /></Provider>)
+    let wrapper = mount(<Suspense fallback={<div>Loading...</div>}><Provider store={store}><CanvasWrapper {...props} /></Provider></Suspense>)
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
     expect(wrapper).toHaveLength(1);
     expect(channelInstance).toBeDefined();
@@ -2123,7 +2123,7 @@ describe('Testing communication channel', () => {
         }
     }
     let store2 = mockStore(initialState2);
-    let wrapper2 = mount(<Provider store={store2}><CanvasWrapper {...props} /></Provider>)
+    let wrapper2 = mount(<Suspense fallback={<div>Loading...</div>}><Provider store={store2}><CanvasWrapper {...props} /></Provider></Suspense>)
     let channelInstance2 = wrapper2.find('CommunicationWrapper').instance();
     test('Test for getPermissions case - permissions present', () => {
         let event = {
@@ -2579,7 +2579,7 @@ describe('Testing communication channel', () => {
             currentSlateAncestorData: {}
         }
     })
-    const wrapper1 = mount(<Provider store={store1}><CanvasWrapper {...props} /></Provider>)
+    const wrapper1 = mount(<Suspense fallback={<div>Loading...</div>}><Provider store={store1}><CanvasWrapper {...props} /></Provider></Suspense>)
     const channelInstance1 = wrapper1.find('CommunicationWrapper').instance();
 
     test('Test for cancelCEPopup case - empty currentSlateLOData', () => {

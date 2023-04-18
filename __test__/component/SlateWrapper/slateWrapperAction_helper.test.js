@@ -100,6 +100,126 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
 
+    it("onPasteSuccess >  if (asideData && asideData.type == 'element-aside') > 1st if", async () => {
+        const store = mockStore(() => initialState);
+        const params = {
+            responseData: responseData,
+            index: 3,
+            dispatch: jest.fn(),
+            getState: store.getState,
+            parentUrn:{
+                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e'
+            },
+            asideData: {
+                type: 'element-aside',
+            },
+            cutIndex: 0
+        }
+        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
+        helperMethods.onPasteSuccess(params);
+        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
+    });
+
+    it("onPasteSuccess >  if (asideData && asideData.type == 'element-aside') > 2nd if", async () => {
+        const store = mockStore(() => initialState);
+        const params = {
+            responseData: responseData,
+            index: 3,
+            dispatch: jest.fn(),
+            getState: store.getState,
+            parentUrn:{
+                manifestUrn:'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d'
+            },
+            asideData: {
+                type: 'element-aside',
+                id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5f",
+            },
+            cutIndex: 0
+        }
+        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
+        helperMethods.onPasteSuccess(params);
+        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
+    });
+
+    it("onPasteSuccess > if (asideData?.parent?.type === SHOW_HIDE && item.id === asideData?.parent?.id && asideData?.parent?.showHideType) > if > 2nd if", async () => {
+        const store = mockStore(() => initialState);
+        const params = {
+            responseData: responseData,
+            index: 3,
+            dispatch: jest.fn(),
+            getState: store.getState,
+            parentUrn:{
+                elementType: "manifest",
+                manifestUrn: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d"
+            },
+            asideData: {
+                type: 'element-aside',
+                parent: {
+                    type: "showhide",
+                    id: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
+                    showHideType: "show"
+                },
+                index: "0-0-0",
+                subtype: "workedexample"
+            },
+            cutIndex: 0
+        }
+        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
+        helperMethods.onPasteSuccess(params);
+        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
+    });
+
+    it("onPasteSuccess > if (asideData?.parent?.type === SHOW_HIDE && item.id === asideData?.parent?.id && asideData?.parent?.showHideType) > if > else", async () => {
+        const store = mockStore(() => initialState);
+        const params = {
+            responseData: responseData,
+            index: 3,
+            dispatch: jest.fn(),
+            getState: store.getState,
+            parentUrn:{
+            },
+            asideData: {
+                type: 'element-aside',
+                parent: {
+                    type: "showhide",
+                    id: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
+                    showHideType: "show"
+                },
+                index: "0-0-0",
+            },
+            cutIndex: 0
+        }
+        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
+        helperMethods.onPasteSuccess(params);
+        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
+    });
+
+    it("onPasteSuccess >  if (asideData && asideData.type == 'citations')", async () => {
+        const store = mockStore(() => initialState);
+        const params = {
+            responseData: responseData,
+            index: 3,
+            dispatch: jest.fn(),
+            getState: store.getState,
+            parentUrn:{
+                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e'
+            },
+            asideData: {
+                type: 'citations',
+                index: "0-0-0",
+                parent : {
+                    type: "showhide",
+                    showHideType: "show",
+                    id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
+                }
+            },
+            cutIndex: 0
+        }
+        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
+        helperMethods.onPasteSuccess(params);
+        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
+    });
+
     it("onPasteSuccess when response type is not element-aside", async () => {
         const store = mockStore(() => initialState);
         const responseData1 = {
@@ -139,471 +259,6 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
 
-    xit("onPasteSuccess when aside type:  element-aside", async () => {
-        const store = mockStore(() => initialState);
-        const responseData1 = {
-            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-            "type": "element-aside",
-            "subtype": "",
-            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            },
-            "html": {
-                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-            },
-            "comments": false,
-            "tcm": true,
-            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-        };
-        const params = {
-            responseData: responseData1,
-            index: 3,
-            dispatch: jest.fn(),
-            getState: store.getState,
-            parentUrn:{
-                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e'
-            },
-            asideData: {
-                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                type: 'element-aside',
-                sectionType: {
-                    type: 'element-aside'
-                },
-                parent: {
-                    type: 'groupedcontent'
-                }
-            }
-        }
-        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
-        helperMethods.onPasteSuccess(params);
-        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
-    });
-
-    xit("onPasteSuccess when aside type:  element-aside and asidedata parentid is given", async () => {
-        // initialState2.selectionReducer.selection.operationType = "cut";
-        const store = mockStore(() => initialState);
-        const responseData1 = {
-            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-            "type": "element-aside",
-            "subtype": "",
-            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            },
-            "html": {
-                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-            },
-            "comments": false,
-            "tcm": true,
-            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-        };
-        const params = {
-            responseData: responseData1,
-            index: 3,
-            dispatch: jest.fn(),
-            getState: store.getState,
-            parentUrn:{
-                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
-                elementType:'manifest'
-            },
-            asideData: {
-                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c542',
-                type: 'element-aside',
-                sectionType: {
-                    type: 'element-aside'
-                },
-                index:'0-0-0',
-                parent: {
-                    id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                    type: 'groupedcontent'
-                },
-                subtype:'workedexample'
-            }
-        }
-        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
-        helperMethods.onPasteSuccess(params);
-        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
-    });
-
-    xit("onPasteSuccess when aside type:  element-aside and asidedata parentid is given", async () => {
-        // initialState2.selectionReducer.selection.operationType = "cut";
-        const store = mockStore(() => initialState);
-        const responseData1 = {
-            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-            "type": "element-aside",
-            "subtype": "",
-            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            },
-            "html": {
-                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-            },
-            "comments": false,
-            "tcm": true,
-            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-        };
-        const params = {
-            responseData: responseData1,
-            index: 3,
-            dispatch: jest.fn(),
-            getState: store.getState,
-            parentUrn:{
-                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
-                elementType:'manifest'
-            },
-            asideData: {
-                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c542',
-                type: 'element-aside',
-                sectionType: {
-                    type: 'element-aside'
-                },
-                // index:'0-0-0',
-                parent: {
-                    id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                    type: 'groupedcontent'
-                },
-                subtype:'workedexample'
-            }
-        }
-        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
-        helperMethods.onPasteSuccess(params);
-        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
-    });
-
-    xit("onPasteSuccess when aside type:  element-aside,asidedata subtype: workedexample asidedata subtype: workedexample and index length is not 5", async () => {
-        initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
-        const store = mockStore(() => initialState);
-        const responseData1 = {
-            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-            "type": "element-aside",
-            "subtype": "",
-            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            },
-            "html": {
-                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-            },
-            "comments": false,
-            "tcm": true,
-            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-        };
-        const params = {
-            responseData: responseData1,
-            index: 3,
-            dispatch: jest.fn(),
-            getState: store.getState,
-            parentUrn:{
-                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
-                elementType:'manifest'
-            },
-            asideData: {
-                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c542',
-                type: 'element-aside',
-                sectionType: {
-                    type: 'element-aside'
-                },
-                index:'0-0-0',
-                parent: {
-                    id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                    type: 'groupedcontent'
-                },
-                subtype:'workedexample'
-            }
-        }
-        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
-        helperMethods.onPasteSuccess(params);
-        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
-    });
-    xit("onPasteSuccess when aside type:  element-aside,asidedata subtype is not workedexample and index length is not 5", async () => {
-        initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
-        const store = mockStore(() => initialState);
-        const responseData1 = {
-            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-            "type": "element-aside",
-            "subtype": "",
-            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            },
-            "html": {
-                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-            },
-            "comments": false,
-            "tcm": true,
-            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-        };
-        const params = {
-            responseData: responseData1,
-            index: 3,
-            dispatch: jest.fn(),
-            getState: store.getState,
-            parentUrn:{
-                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
-                elementType:'manifest'
-            },
-            asideData: {
-                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c542',
-                type: 'element-aside',
-                sectionType: {
-                    type: 'element-aside'
-                },
-                index:'0-0-0',
-                parent: {
-                    id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                    type: 'groupedcontent'
-                },
-                // subtype:'workedexample'
-            }
-        }
-        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
-        helperMethods.onPasteSuccess(params);
-        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
-    });
-    xit("onPasteSuccess when aside parent type: showhide,asidedata subtype is workedexample and index length is not 5", async () => {
-        initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
-        const store = mockStore(() => initialState);
-        const responseData1 = {
-            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-            "type": "element-aside",
-            "subtype": "",
-            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            },
-            "html": {
-                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-            },
-            "comments": false,
-            "tcm": true,
-            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-        };
-        const params = {
-            responseData: responseData1,
-            index: 3,
-            dispatch: jest.fn(),
-            getState: store.getState,
-            parentUrn:{
-                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
-                elementType:'manifest'
-            },
-            asideData: {
-                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c542',
-                type: 'element-aside',
-                sectionType: {
-                    type: 'element-aside'
-                },
-                index:'0-0-0',
-                parent: {
-                    id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                    type: 'showhide',
-                    showHideType: {
-                        type:'hide'
-                    }
-                },
-                subtype:'workedexample'
-            }
-        }
-        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
-        helperMethods.onPasteSuccess(params);
-        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
-    });
-    xit("onPasteSuccess when aside type: citations,asidedata subtype is not workedexample and index length is not 5", async () => {
-        initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
-        const store = mockStore(() => initialState);
-        const responseData1 = {
-            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-            "type": "element-aside",
-            "subtype": "",
-            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            },
-            "html": {
-                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-            },
-            "comments": false,
-            "tcm": true,
-            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-        };
-        const params = {
-            responseData: responseData1,
-            index: 3,
-            dispatch: jest.fn(),
-            getState: store.getState,
-            parentUrn:{
-                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
-                elementType:'manifest'
-            },
-            asideData: {
-                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c542',
-                type: 'element-aside',
-                sectionType: {
-                    type: 'element-aside'
-                },
-                // index:'0-0-0',
-                parent: {
-                    id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                    type: 'showhide',
-                    showHideType: {
-                        type:'hide'
-                    }
-                },
-                // subtype:'workedexample'
-            }
-        }
-        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
-        helperMethods.onPasteSuccess(params);
-        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
-    });
-    xit("onPasteSuccess when aside type: citations,asidedata subtype is not workedexample and index length is not 5 else case", async () => {
-        const initialState3 = {
-            appStore : {
-                slateLevelData: createstoreWithFigure.slateLevelData,
-                activeElement: {},
-                splittedElementIndex: 0,
-                pageNumberData: {},
-                popupSlateData: {
-                    type: "popup"
-                }
-            },
-            tcmReducer:{tcmSnapshot:["78","9"]},
-            commentsPanelReducer: { comments: [] },
-            selectionReducer: {
-                selection: {
-                    activeAnimation: true,
-                    deleteElm: {
-                        id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", 
-                        type: "element-authoredtext", 
-                        parentUrn: undefined, 
-                        asideData: undefined,
-                        contentUrn: "urn:pearson:entity:da9f3f72-2cc7-4567-8fb9-9a887c360979"
-                    },
-                    element: {id: "urn:pearson:work:2b71e769-6e07-4776-ad94-13bedb5fff62", type: "element-authoredtext", schema: "http://schemas.pearson.com/wip-authoring/element/1"},
-                    inputSubType: "NA",
-                    inputType: "AUTHORED_TEXT",
-                    operationType: "copy",
-                    sourceSlateEntityUrn: "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb",
-                    sourceSlateManifestUrn: "urn:pearson:manifest:e30674d0-f7b1-4974-833f-5f2e19a9fea6"
-                }
-            }
-        }
-    
-        const store = mockStore(() => initialState3);
-        const responseData1 = {
-            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-            "type": "element-aside",
-            "subtype": "",
-            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            },
-            "html": {
-                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-            },
-            "comments": false,
-            "tcm": true,
-            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-        };
-        const params = {
-            responseData: responseData1,
-            index: 3,
-            dispatch: jest.fn(),
-            getState: store.getState,
-            parentUrn:{
-                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
-                elementType:'manifest'
-            },
-            asideData: {
-                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c542',
-                type: 'element-aside',
-                sectionType: {
-                    type: 'element-aside'
-                },
-                index:'0-0-0',
-                parent: {
-                    id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                    type: 'showhide',
-                    showHideType: {
-                        type:'hide'
-                    }
-                },
-                // subtype:'workedexample'
-            }
-        }
-        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
-        helperMethods.onPasteSuccess(params);
-        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
-    });
-
-    xit("onPasteSuccess when aside parent type: showhide,asidedata subtype is not workedexample and index length is not 5", async () => {
-        initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
-        const store = mockStore(() => initialState);
-        const responseData1 = {
-            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
-            "type": "element-aside",
-            "subtype": "",
-            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-            "elementdata": {
-                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                "text": ""
-            },
-            "html": {
-                "text": "<p class=\"paragraphNumeroUno\"><br></p>"
-            },
-            "comments": false,
-            "tcm": true,
-            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
-            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
-        };
-        const params = {
-            responseData: responseData1,
-            index: 3,
-            dispatch: jest.fn(),
-            getState: store.getState,
-            parentUrn:{
-                manifestUrn:'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e',
-                elementType:'manifest'
-            },
-            asideData: {
-                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c542',
-                type: 'citations',
-                sectionType: {
-                    type: 'element-aside'
-                },
-                // index:'0-0-0',
-                parent: {
-                    id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                    type: 'showhide',
-                    showHideType: {
-                        type:'hide'
-                    }
-                },
-                // subtype:'workedexample'
-            }
-        }
-        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
-        helperMethods.onPasteSuccess(params);
-        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
-    });
     it("onPasteSuccess when aside parent type: showhide,asidedata subtype is not workedexample and showHideType is not given", async () => {
         initialState.selectionReducer.selection.sourceElementIndex = '0-0-0-0-0-0';
         const store = mockStore(() => initialState);
@@ -655,8 +310,6 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
 
-
-
     it("onPasteSuccess - poetryData - parentUrn", async () => {
         const store = mockStore(() => initialState);
         const params = {
@@ -669,7 +322,24 @@ describe('Tests Slate Wrapper Action helper methods', () => {
                 parent: {
                     showHideType: 'show'
                 },
-                parentUrn: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b'
+                parentUrn: 'urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e'
+            }
+        }
+        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
+        helperMethods.onPasteSuccess(params);
+        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
+    });
+
+    it("onPasteSuccess - if (asideData && asideData.type === 'groupedcontent') ", async () => {
+        const store = mockStore(() => initialState);
+        const params = {
+            responseData: responseData,
+            index: 3,
+            dispatch: jest.fn(),
+            getState: store.getState,
+            asideData: {
+                type: "groupedcontent",
+                // id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
             }
         }
         const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
@@ -707,42 +377,6 @@ describe('Tests Slate Wrapper Action helper methods', () => {
             cutIndex: 1,
             dispatch: jest.fn(),
             getState: store.getState,
-        }
-        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
-        helperMethods.onPasteSuccess(params);
-        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
-    });
-    xit("onPasteSuccess - No poetryData - parentUrn ", async () => {
-        const store = mockStore(() => initialState);
-        const params = {
-            responseData: responseData,
-            index: 3,
-            dispatch: jest.fn(),
-            getState: store.getState,
-            // poetryData: {
-            //     type: 'poetry',
-            //     parent: {
-            //         showHideType: 'show'
-            //     },
-            //     parentUrn: 'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b'
-            // },
-            asideData: {
-                id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                type: 'groupedcontent',
-                sectionType: {
-                    type: 'element-aside'
-                },
-                index:'0-0-0',
-                parent: {
-                    id:'urn:pearson:work:1786a007-d28e-4d5e-8098-ac071e9c54b7',
-                    type: 'groupedcontent',
-                    // showHideType: {
-                    //     type:'hide'
-                    // }
-                },
-                // subtype:'workedexample'
-            }
-
         }
         const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
         helperMethods.onPasteSuccess(params);
@@ -1043,6 +677,30 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         helperMethods.prepareDataForTcmCreate(type, createdElementData1, store.getState, store.dispatch)
         expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
     });
+    it('testing------- prepareDataForTcmCreate for showTcmIconInAside  > else------function', () => {
+        const store = mockStore(() => initialState)
+        const type = "CONTAINER";
+        let createdElementData1 = {
+            type: "test",
+            id: 2,
+            elementdata: {
+                bodymatter: [
+                    { type: "showhide" },
+
+                    {
+                        type: "manifest",
+                        contents: {
+                            bodymatter: [{ type: "showhide" }, { type: "different" }]
+                        }
+                    },
+                    { type: "different" }
+                ]
+            }
+        }
+        const spyPrepareDataForTcmCreate = jest.spyOn(helperMethods, 'prepareDataForTcmCreate')
+        helperMethods.prepareDataForTcmCreate(type, createdElementData1, store.getState, store.dispatch)
+        expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
+    });
     it('testing------- prepareDataForTcmCreate for  showTcmIconInMultiCol ------function', () => {
         const store = mockStore(() => initialState)
         const type = "MULTI_COLUMN_3C";
@@ -1057,6 +715,25 @@ describe('Tests Slate Wrapper Action helper methods', () => {
                 ]
             },
             type: "groupedcontent"
+        };
+        const spyPrepareDataForTcmCreate = jest.spyOn(helperMethods, 'prepareDataForTcmCreate')
+        helperMethods.prepareDataForTcmCreate(type, createdElementData5, store.getState, store.dispatch)
+        expect(spyPrepareDataForTcmCreate).toHaveBeenCalled()
+    });
+    it('testing------- prepareDataForTcmCreate for  showTcmIconInMultiCol > else------function', () => {
+        const store = mockStore(() => initialState)
+        const type = "MULTI_COLUMN_3C";
+        let createdElementData5 = {
+            groupeddata: {
+                bodymatter: [
+                    {
+                        groupdata: {
+                            bodymatter: [{ type: "element-aside" }, { type: "showhide" }, { type: "different" }]
+                        }
+                    }
+                ]
+            },
+            type: "test"
         };
         const spyPrepareDataForTcmCreate = jest.spyOn(helperMethods, 'prepareDataForTcmCreate')
         helperMethods.prepareDataForTcmCreate(type, createdElementData5, store.getState, store.dispatch)
@@ -1121,6 +798,20 @@ describe('Tests Slate Wrapper Action helper methods', () => {
             data: {}
         };
         mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${slateEntityUrn}/elementids`).reply(200, responseData);
+        const spycheckElementExistence = jest.spyOn(helperMethods, 'checkElementExistence');
+        helperMethods.checkElementExistence(slateEntityUrn, elementEntity);
+        expect(spycheckElementExistence).toHaveBeenCalled();
+    });
+
+    it('testing------- checkElementExistence passing slateEntityUrn and elementEntity > catch ------', () => {
+        const slateEntityUrn = 'urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e';
+        const elementEntity = 'element';
+        let mock = new MockAdapter(axios);
+        const responseData = {
+            status: 404,
+            data: {}
+        };
+        mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${slateEntityUrn}/elementids`).reply(404, responseData);
         const spycheckElementExistence = jest.spyOn(helperMethods, 'checkElementExistence');
         helperMethods.checkElementExistence(slateEntityUrn, elementEntity);
         expect(spycheckElementExistence).toHaveBeenCalled();
@@ -1232,5 +923,22 @@ describe('Tests Slate Wrapper Action helper methods', () => {
         helperMethods.fetchStatusAndPaste(params);
         jest.advanceTimersByTime(3000); //Mock code inside setInterval
         expect(spyfetchStatusAndPaste).toHaveBeenCalled();
+    });
+    it("onPasteSuccess - if (item.type == poetry && item.id == poetryData.id) ", async () => {
+        const store = mockStore(() => initialState);
+        const params = {
+            responseData: responseData,
+            index: 3,
+            dispatch: jest.fn(),
+            getState: store.getState,
+            poetryData: {
+                type: 'poetry',
+                id: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5k",
+                parentUrn: "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5k"
+            }
+        }
+        const spyonPasteSuccess = jest.spyOn(helperMethods, "onPasteSuccess");
+        helperMethods.onPasteSuccess(params);
+        expect(spyonPasteSuccess).toHaveBeenCalledWith(params);
     });
 })
