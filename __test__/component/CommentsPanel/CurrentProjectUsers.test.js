@@ -5,7 +5,7 @@ import { users } from '../../../fixtures/commentPanelData.js'
 
 describe('Testing CommentsPanel component with props', () => {
   let new_props = {
-    currentAssingnee: "Khan,Kashif",
+    currentAssingnee: "test09,abc",
     newAssigneeUser: function newAssigneeUser() { },
     users: users,
   }
