@@ -450,7 +450,9 @@ function CommunicationChannel(WrappedComponent) {
                     }
                     break;
                 case 'refreshSlateOnAssessmentUpdate':
-                    if (message && message.action === "approve" && message.source === "elm" && message.type === "assessment") {
+                    const assessmentSlateData = this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
+                    const assessmentSlateCheck = assessmentSlateData.type === 'element-assessment' && assessmentSlateData.elementdata.assessmentid === message.assessmentUrn
+                    if (message && message.action === "approve" && message.source === "elm" && message.type === "assessment" && assessmentSlateCheck) {
                         this.handleRefreshSlate();
                     }
                     break;

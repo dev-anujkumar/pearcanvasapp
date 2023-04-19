@@ -19,6 +19,7 @@ import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } f
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
 import { handlePostMsgOnAddAssess, handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling';
+import moment from 'moment';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -538,8 +539,10 @@ class AssessmentSlateData extends Component {
     renderAssessmentSlate = () => {
         this.setSlateTagIcon();
 
-        const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj } = this.props;
+        const { getAssessmentData, getAssessmentDataPopup, assessmentSlateObj, assessmentReducer } = this.props;
         const { activeAssessmentType, showCiteTdxComponent, changeLearningData, activeAssessmentUsageType } = this.state;
+        const oldReducerData = assessmentReducer[assessmentSlateObj.assessmentId]
+        const assessmentCreatedDate = oldReducerData?.createdDate ? oldReducerData?.createdDate : ''
         let slatePlaceholder = assessmentSlateObj && activeAssessmentType && this.setAssessmentPlaceholder(activeAssessmentType, assessmentSlateObj)
         let assessmentSlateJSX;
 
@@ -548,7 +551,7 @@ class AssessmentSlateData extends Component {
         } else if (changeLearningData && activeAssessmentType === LEARNING_TEMPLATE) {
             return <LearningTool closePopUp={this.closeLTLAPopUp} linkLearningApp={this.linkLearningApp} closelearningPopup={this.closelearningPopup} />
         } else if (getAssessmentData && getAssessmentDataPopup === false && changeLearningData === false) {
-            assessmentSlateJSX = this.state.isUpdateFinal ? this.showNewAssessmentSlate(activeAssessmentType, activeAssessmentUsageType) : this.showFinalAssessmentSlate(slatePlaceholder, activeAssessmentType, assessmentSlateObj, activeAssessmentUsageType);
+            assessmentSlateJSX = this.state.isUpdateFinal ? this.showNewAssessmentSlate(activeAssessmentType, activeAssessmentUsageType) : this.showFinalAssessmentSlate(slatePlaceholder, activeAssessmentType, assessmentSlateObj, activeAssessmentUsageType, assessmentCreatedDate);
         } else if (getAssessmentData && (getAssessmentDataPopup === true || learningToolStatus)) {
             assessmentSlateJSX = this.showSuccessMessage(slatePlaceholder.title,activeAssessmentUsageType);
         } else {
@@ -745,7 +748,7 @@ class AssessmentSlateData extends Component {
     * @param assessmentSlateObj details about assessment
     * @param assessmentUsageType Usage type
     */
-    showFinalAssessmentSlate = (slatePlaceholder, assessmentType, assessmentSlateObj, assessmentUsageType) => {
+    showFinalAssessmentSlate = (slatePlaceholder, assessmentType, assessmentSlateObj, assessmentUsageType, assessmentCreatedDate) => {
         let assessmentSlate = <div className="slate_fetch_canvas">
             <div className="slate_assessment_data_container">
                 <div className="slate_assessment_data_content">
@@ -754,6 +757,10 @@ class AssessmentSlateData extends Component {
                         <div className="slate_assessment_data_title">{slatePlaceholder.title}</div>
                         <div className="slate_assessment_data_id">{slatePlaceholder.showID}</div>
                         <div className="slate_assessment_data_id_lo">{assessmentSlateObj.assessmentId}</div>
+                        <div className="assessment-dateModified">
+                            <div className="last-updated-time">Last Updated:</div>
+                            <div className="last-updated-time-format">{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</div>
+                        </div>
                         <div className="slate_assessment_data_format_lo">{assessmentType}</div>
                         <div className="slate_assessment_change_button" onClick={(e) => this.mainAddAssessment(e, assessmentType)}>{slatePlaceholder.changeTypeValue}</div>
                     </div>
