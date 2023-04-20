@@ -70,6 +70,8 @@ function CommunicationChannel(WrappedComponent) {
                     this.setCurrentSlate(message);
                     break;
                 case 'deleteTocItem':
+                case 'deleteTocMultipleItem':
+                case 'deleteTocMultipleItemWithPendingTrack':
                     this.onDeleteTocItem(message);
                     break;
                 case 'deleteTocItemWithPendingTrack':
