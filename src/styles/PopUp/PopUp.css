@@ -1098,8 +1098,9 @@ ol li.listItemNumeroUnoLowerRoman {
   margin-right: 2px;
 }
 
-.disable-mouse-click {
-  pointer-events: none;
+.enable-scrolling {
+  overflow: auto;
+  /* pointer-events: none; */
 }
 
 /**Popup Buttons Focus Classes Start*/
