@@ -70,6 +70,10 @@ export const CHANGE_USAGE_TYPE= "The usage type for the Elm assessment is differ
 export const ELEMENT_TYPE_PDF = "element-pdf";
 export const SLATE_TYPE_PDF = "pdfslate";
 
+/*--------------- LTI Slate ----------------*/
+export const ELEMENT_TYPE_LTI = "element-tcc";
+export const SLATE_TYPE_LTI = "ltislate";
+
 /*--------------- Normal Slate - Section ----------------*/
 export const SLATE_TYPE_SECTION = "section";
 

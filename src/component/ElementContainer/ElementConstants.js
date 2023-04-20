@@ -69,6 +69,9 @@ export default {
 /**************** PDF Slate Element ************************ */  
     PDF_SLATE : "element-pdf",
 
+/**************** LTI Slate Element ************************ */  
+    LTI_SLATE : "element-tcc",
+
 /**************** Block list Element ************************ */  
     BLOCK_LIST : "manifestlist"
 }
@@ -103,3 +106,6 @@ export const containersInSH = ['CONTAINER', 'CITATION', 'WORKED_EXAMPLE', 'POETR
 
 export const TE_POP_UP_HEADER_TEXT = 'Select an Image';
 export const TE_POP_UP_NORMAL_TEXT = 'Please select an image to open it in Alfresco for editing in a different tab on your browser';
+export const TCC_ELEMENT = "TCC-Element*";
+export const TCC_ELEMENT_SUBTYPE = "Subtype";
+export const TCC_BOTTOM_NOTE = "*TCC stands for Thin Common Cartridge";

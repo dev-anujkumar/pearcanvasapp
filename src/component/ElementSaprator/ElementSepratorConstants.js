@@ -32,6 +32,7 @@ export default {
     SHOW_HIDE: 'showhide',
     POPUP: 'popup',
     HIDE_SPLIT_SLATE_CONTAINER:['part','volume'],
+    LTI_SLATE: "element-tcc",
     TABBED_TAB : "multi-column-group-tabbed-tab",
     TAB : 'tab'
 }

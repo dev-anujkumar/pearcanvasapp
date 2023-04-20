@@ -139,7 +139,12 @@
     float: left;
     width: 24.2%;
     font-size: 14px;
-    
+  }
+  .slate_assessment_data_label_subtype{
+    margin-top: 10px;
+    float: left;
+    width: 24.2%;
+    font-size: 14px;
   }
   .enhanced_label{
     margin-top: 5%;
@@ -155,7 +160,11 @@
     text-overflow: ellipsis;
     word-break: break-all;
     white-space: nowrap;
-    
+  }
+  .slate_assessment_detail_subtype{
+    margin-top: 10px;
+    font-size: 14px;
+    word-wrap: break-word;
   }
   .slate_assessment_data_title:hover{
     overflow: visible; 
@@ -165,7 +174,6 @@
   .enhanced_title {
     margin-top: 6%;
   }
-
   .slate_assessment_data_id{
     font-size: 14px;
     overflow:hidden;
@@ -181,6 +189,16 @@
   .slate_pdf_data_id {
     font-size: 14px;
     white-space: nowrap;
+  }
+  .slate_lti_data_link {
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: underline;
+    word-wrap: break-word;
+  }
+  .slate_assessment_tcc_data_note{
+    margin-top: 19.5em;
+    margin-left: -7em;
   }
   .slate_assessment_change_button{
     font-size: 13px;
@@ -411,7 +429,7 @@ span.approved-button.enable svg path#path2 {
   left: 35%;
   cursor: pointer !important;
 }
-.pdf-slate .addLOdata {
+.pdf-slate .addLOdata .lti-slate{
   display: none;
 }
 .slate_cypress_plus_enhance{
