@@ -1,5 +1,5 @@
 // IMPORT - Plugins //
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import { connect } from 'react-redux';
 import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
@@ -23,7 +23,7 @@ import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopu
 import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
-import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
+import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled, setGrammarlyFlag } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType,updateLastAlignedLO, fetchDefaultLF } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
@@ -191,7 +191,7 @@ export class CanvasWrapper extends Component {
                                 </div>
                                 }
                                 <div id='artboard-container' className='artboard-container'>
-                                    {this.props.showApoSearch ? <AssetPopoverSearch showBlocker={this.props.showCanvasBlocker}/> : ''}
+                                    {this.props.showApoSearch ? <Suspense fallback={<div></div>}><AssetPopoverSearch showBlocker={this.props.showCanvasBlocker}/></Suspense> : ''}
                                     {/* slate wrapper component combines slate content & slate title */}
                                     <RootContext.Provider value={{ isPageNumberEnabled: this.props.pageNumberToggle }}>
                                         <SlateWrapper loadMorePages={this.loadMorePages} handleCommentspanel={this.handleCommentspanel} slateData={slateData} navigate={this.navigate} showBlocker={this.props.showCanvasBlocker} convertToListElement={this.props.convertToListElement} tocDeleteMessage={this.props.tocDeleteMessage} updateTimer={this.updateTimer} isBlockerActive={this.props.showBlocker} isLOExist={this.props.isLOExist} updatePageLink={this.props.updatePageLink} hideElementSeperator={isToolBarBlocked} closeUndoTimer = {this.props.closeUndoTimer}/>
@@ -303,6 +303,7 @@ export default connect(
         setUpdatedSlateTitle,
         setSlateType,
         setSlateEntity,
+        setGrammarlyFlag,
         publishContent,
         fetchAuthUser,
         handleSlateRefresh,

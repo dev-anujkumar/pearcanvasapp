@@ -17,6 +17,7 @@ import {
     SET_UPDATED_SLATE_TITLE,
     SET_SLATE_TYPE,
     SET_SLATE_ENTITY,
+    SET_GRAMMARLY_FLAG,
     GET_PROJECT_PERMISSIONS,
     SET_OLD_IMAGE_PATH,
     UPDATE_PAGENUMBER_SUCCESS,
@@ -203,6 +204,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 setSlateEntity: action.payload
+            }
+        case SET_GRAMMARLY_FLAG:
+            return {
+                ...state,
+                setGrammarlyFlag: action.payload
             }
         case SET_PARENT_NODE:
             return {

@@ -449,6 +449,9 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.setCautionBannerStatus(message.status)
                     }
                     break;
+                case 'getGrammarlyFlag':
+                        this.props.setGrammarlyFlag(message)
+                    break;
             }
         }
 

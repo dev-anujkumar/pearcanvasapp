@@ -546,7 +546,7 @@ class ElementContainer extends Component {
             isAltTextLongDescModified = this.props.oldFigureDataForCompare.tableasHTML !== previousElementData.figuredata.tableasHTML
         }
         if(previousElementData.figuretype === 'image') {
-            isAltTextLongDescModified = this.props.oldFigureDataForCompare !== previousElementData.figureData
+            isAltTextLongDescModified = this.props.oldFigureDataForCompare !== previousElementData.figuredata
         }
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
@@ -585,8 +585,8 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
-                || podwidth !== (previousElementData.figuredata.podwidth ?
-                    previousElementData.figuredata.podwidth : '') && podwidth !== null|| isAltTextLongDescModified
+                || (podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : '') && podwidth !== null) 
+                || isAltTextLongDescModified
             );
         }
 
@@ -725,6 +725,7 @@ class ElementContainer extends Component {
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
         
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
         let podwidth = this.props?.activeElement?.podwidth;
@@ -741,7 +742,7 @@ class ElementContainer extends Component {
             previousElementData.figuredata.interactivetype === 'table') {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
-            posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
+            posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`;
 
             let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
@@ -1277,6 +1278,8 @@ class ElementContainer extends Component {
      * Will be called on element blur and a saving call will be made
      */
     handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}, triggeredFrom = '') => {
+        // restrict saving call incase of read only content
+        if(hasReviewerRole()) return;
         const { elementType, primaryOption, secondaryOption, elementId } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
@@ -1986,13 +1989,13 @@ class ElementContainer extends Component {
                     labelText = 'OE'
                     break;
                 case elementTypeConstant.AUTHORED_TEXT:
-                    editor = <ElementAuthoring isBlockList={this.props.isBlockList} element={element} model={element.html} onListSelect={this.props.onListSelect} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} placeholder={this.props.placeholder}/>;
+                    editor = <ElementAuthoring isBlockList={this.props.isBlockList} element={element} model={element.html} onListSelect={this.props.onListSelect} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} placeholder={this.props.placeholder} setGrammarlyFlag={this.props.setGrammarlyFlag}/>;
                     break;
                 case elementTypeConstant.BLOCKFEATURE:
                     {isBlockquote ?
                     editor = <Suspense fallback={<div></div>}><ElementBlockquote tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} /></Suspense>
                     :
-                    editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} />}
+                    editor = <ElementAuthoring tagName="blockquote" element={element} onListSelect={this.props.onListSelect} model={element.html} {...commonProps} setGrammarlyFlag={this.props.setGrammarlyFlag} />}
                     break;
                 case elementTypeConstant.LEARNING_OBJECTIVE_ITEM:
                     editor = <ElementLearningObjectiveItem model={element.html} element={element} {...commonProps} />;
@@ -3273,7 +3276,8 @@ const mapStateToProps = (state) => {
         tableElementAssetData: state.appStore.tableElementAssetData,
         popupParentSlateData: state.autoNumberReducer.popupParentSlateData,
         deletedKeysValue: state.appStore.deletedElementKeysData,
-        pageNumberToggle: state.toolbarReducer.pageNumberToggle
+        pageNumberToggle: state.toolbarReducer.pageNumberToggle,
+        setGrammarlyFlag: state.appStore.setGrammarlyFlag
     }
 }
 
