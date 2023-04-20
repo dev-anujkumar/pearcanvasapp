@@ -1017,6 +1017,33 @@ li.listItemNumeroUnoLowerRoman, li.listItemNumeroUnoNone {
     margin-top: 0em;
     margin-bottom: 0.5em;
 }
-label{
-
+li p.paragraphNumeroUno {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-size: 100%;
+}
+ol, ul {
+    margin-left: 2em;
+    margin-top: 0em;
+    margin-bottom: 1.7em;
+    padding-left: 0.85em;
+    counter-reset: item;
+}
+ol li {
+    display: block;
+    padding: 0 0 0 0.5em;
+    /* text-indent: 0em; */
+}
+ol li.listItemNumeroUno:before, ol li.listItemNumeroUnoNumber:before, ol li.listItemNumeroUnoLowerAlpha:before, ol li.listItemNumeroUnoUpperAlpha:before,
+ol li.listItemNumeroUnoUpperRoman:before, ol li.listItemNumeroUnoLowerRoman:before, ol li.listItemNumeroUnoNone:before, ol li.listItemNummerEins:before,
+ol li.listItemNummerEinsNumber:before, ol li.listItemNummerEinsLowerAlpha:before, ol li.listItemNummerEinsUpperAlpha:before,
+ol li.listItemNummerEinsUpperRoman:before, ol li.listItemNummerEinsLowerRoman:before, ol li.listItemNummerEinsNone:before {
+    content: counter(item) ". ";
+    counter-increment: item;
+    font-weight: bold;
+    padding-right: 0.1em;
+    text-align: right;
+    position: absolute;
+    width: 4.5em;
+    margin: 0 0 1em -4.9em;
 }
