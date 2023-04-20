@@ -1396,7 +1396,8 @@ class SlateWrapper extends Component {
             this.props.showBlocker(true)
             showTocBlocker();
             const dialogText = ` All other Assessment Items in this project will now be updated to the new version of this Assessment`
-            if (this.props?.slateData[config.slateManifestURN]?.contents?.bodymatter[0]?.type !== 'element-assessment') {
+            // It opens different popup for assessment-slate when we update the assessment from the elm and different for assessment-item update
+            if (this.props?.slateData[config.slateManifestURN]?.contents?.bodymatter[0]?.type !== 'element-assessment') {      // this condition is to check whether the current slate is assessmentslate or not
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                 setTimeout(() => {
                     this.setState({
