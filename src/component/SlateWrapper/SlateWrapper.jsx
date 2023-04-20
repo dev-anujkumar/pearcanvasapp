@@ -349,7 +349,7 @@ class SlateWrapper extends Component {
                     const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
                     const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
                     return (
-                        <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
+                        <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
                             {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate && !config?.isCypressPlusEnabled ? <div
                                 className='approved-overlay'
                                 onClick={!hasReviewerRole() && this.getApprovedPopup}
@@ -613,7 +613,7 @@ class SlateWrapper extends Component {
                 />
             )
         } else if ((!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) || (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showSubscriberSlatePopup && isSubscribersKeyExist === null )) {
-            const subscriberPopupDailogText = <>This is a subscribed content and cannot be edited.<br /><br />If you wish to edit the content, please use <strong>Copy Content</strong> feature from TOC or go to the owner project. Kindly note that the edits in owner project will be reflected for all the subscribers</>
+            const subscriberPopupDailogText = <>This is a non-editable content as it is subscribed from another project. You may contact the owner of this content to make any changes.</>
             this.props.showBlocker(true);
             showTocBlocker();
             let dailogText = isOwnerRole(projectSharingRole,isSubscribed) ? OWNER_SLATE_POPUP : subscriberPopupDailogText;
@@ -622,7 +622,7 @@ class SlateWrapper extends Component {
                     togglePopup={this.togglePopup}
                     isOwnersSlate={true}
                     proceed={this.proceedButtonHandling}
-                    warningHeaderText={`Warning`}
+                    warningHeaderText={`Editing Disabled`}
                     lOPopupClass="lo-warning-txt"
                     withCheckBox={true}
                 />

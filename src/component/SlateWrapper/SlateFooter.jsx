@@ -7,7 +7,7 @@ export function SlateFooter(props) {
     return (
         <div>
             {
-                Number(config.page + 1) >= config.totalPageCount || props.elements.length < config.pageLimit ? <div className={`slate-footer ${isOwnerRole(projectSharingRole, isSubscribed) ? ' ownerSlateBackGround' : ''} ${isSubscriberRole(projectSharingRole, isSubscribed) ? ' subscribedSlateBackGround' : ''}`}></div> : <div className="loaderContainer"><div className="moreloader"></div></div>
+                Number(config.page + 1) >= config.totalPageCount || props.elements.length < config.pageLimit ? <div className={`slate-footer ${isOwnerRole(projectSharingRole, isSubscribed) ? ' ownerSlateBackGround' : ''}`}></div> : <div className="loaderContainer"><div className="moreloader"></div></div>
             }
         </div>
     )

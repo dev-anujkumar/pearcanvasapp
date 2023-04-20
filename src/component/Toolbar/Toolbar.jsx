@@ -11,11 +11,11 @@ import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, 
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
-import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
+import { hasReviewerRole, isSubscriberRole, sendDataToIframe } from '../../constants/utility.js';
 import SearchComponent from './Search/Search.jsx';
 
 const _Toolbar = props => {
-    const { isToolBarBlocked } = props;
+    const { isToolBarBlocked, projectSubscriptionDetails } = props;
     const [lodropdown, setLODropdown] = useState(false);
     const [addDropDown, setValueAdd] = useState(false);
     const [openDropDown, setValueOpen] = useState(false);
@@ -116,13 +116,17 @@ const _Toolbar = props => {
         searchTerm = '';
     }
 
+    const isSubscribed = isSubscriberRole(projectSubscriptionDetails.projectSharingRole, projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed )
+    const bannerSubscriber = isSubscribed ? 'read-only-banner' : ''
     return (
-        <>
+        <div className={`${bannerSubscriber}`}>
+            { isSubscribed ? 
+            <div className='Read-onlt-text'>Read-only | Subscribed Slate</div> : ''}
             <div className='toolbar-container'>
                 <div className={`header ${isToolBarBlocked} ${accessToolbar}`} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
-                    <div className={props?.isLOExist ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
+                    <div className={props?.isLOExist || isSubscribed ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
                         <div className="learningobjectiveicon">
                             <div className={`learningobjectiveicon slate-tag-icon ${(slateStatus === "approved" && !popupSlate) ? "disable" : ""}`} title="Slate Tag" onClick={_handleLODropdown}>
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
@@ -136,7 +140,7 @@ const _Toolbar = props => {
 
                 {/* ***********************Audio Narration in toolbar******************************************** */}
                 {   /* Add Audio if there is no audio exists in slate */
-                    (props.addAudio && (!hasReviewerRole())) &&
+                    (props.addAudio && (!hasReviewerRole() || isSubscribed)) &&
                     <div className={isToolBarBlocked ? `audio-block ${accessToolbar} ${isToolBarBlocked}` : `audio-block ${accessToolbar}`}>
                         <div className="audioicon">
                             <div className={`audio audioicon ${(config.isCypressPlusEnabled || (slateStatus === 'approved' && !popupSlate)) ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
@@ -192,7 +196,7 @@ const _Toolbar = props => {
                     {showHeader ? collapseHeader : expandHeader}
                 </div>
             </div>
-        </>   
+        </div>   
     )
 }
 

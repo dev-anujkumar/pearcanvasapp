@@ -640,7 +640,7 @@ class PopUp extends React.Component {
         else if (props.isSubscribersSlate) {
             return (
                 <>
-                    <div className={`${props.lOPopupClass}`}>This is a subscribed content and cannot be edited.<br /><br />If you wish to edit the content, please use <strong>Copy Content</strong> feature from TOC or go to the owner project. Kindly note that the edits in owner project will be reflected for all the subscribers</div>
+                    <div className={`${props.lOPopupClass}`}>This is a non-editable content as it is subscribed from another project. You may contact the owner of this content to make any changes.</div>
                 </>
             )
         }

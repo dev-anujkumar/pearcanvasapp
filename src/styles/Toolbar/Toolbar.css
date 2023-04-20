@@ -669,3 +669,18 @@ margin-left:6px;
       height: 22px !important;
     }
   }
+
+  /************************* read-only tooltip *************************************************/
+.read-only-banner{
+  height: 48px;
+  background: #FBE4CC;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-top: #ea7600 2px solid;
+  border-bottom: #ea7600 2px solid;
+}
+.Read-onlt-text{
+  font-weight: 600;
+}
