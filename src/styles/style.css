@@ -623,7 +623,6 @@ h4.heading4ImageFullscreenTitle, h4.heading4ImageFullscreenTableImageTitle, h4.h
     font-weight: 400;
     line-height: 1.45em;
     letter-spacing: 0.01em;
-    letter-spacing: 0.02em;
 }
 h4.heading4WidgetPDFNumberLabel, h4.heading4WidgetPUNumberLabel, h4.heading4WidgetPUSLNumberLabel, h4.heading4WidgetEWLNumberLabel {
     color: #007FA3;
@@ -960,7 +959,6 @@ aside.asideSidebar01 {
 .dialogueLine, .poetryLine {
     color: #000;
     display: block;
-    font-family: Georgia,serif,Palatino,Palatino Linotype,Palatino LT STD!important;
     min-height: 22px;
 }
 
@@ -970,6 +968,9 @@ sup, sub {
     top: -0.4em;
 }
 
+sub {
+    top: 0.4em;
+}
 
 
 H2.heading2learningObjectiveItem {
@@ -1046,4 +1047,36 @@ ol li.listItemNummerEinsUpperRoman:before, ol li.listItemNummerEinsLowerRoman:be
     position: absolute;
     width: 4.5em;
     margin: 0 0 1em -4.9em;
+}
+table pre {
+    font-family: monospace;
+    font-size: .95em;
+}
+em {
+    font-style: italic;
+}
+table code {
+    color: #000;
+    font-family: monospace;
+    font-size: .95em;
+}
+table .Wirisformula {
+    margin-top: -5px;
+}
+dfn.GlossaryTerm {
+    color: #007FA3;
+    font-family: inherit;
+    font-weight: Bold;
+    font-style: normal;
+    border-bottom: 1px dotted #000;
+}
+dfn.GlossaryTerm:hover {
+    color: #9E007E;
+    cursor: pointer;
+    border-bottom: none;
+}
+p code {
+    color: #000;
+    font-family: monospace;
+    font-size: 1.05em;
 }
