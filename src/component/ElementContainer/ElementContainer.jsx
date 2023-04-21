@@ -993,16 +993,16 @@ class ElementContainer extends Component {
                     let blankLineLabel = titleDOMNode && titleDOMNode.getElementsByClassName("answerLineContent")
                     let blankLineTitle = subtitleDOMNode && subtitleDOMNode.getElementsByClassName("answerLineContent")
                     if (parentElement.type === "poetry" || parentElement.type === "popup") {
-                        if ((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
+                        if ((titleDOMNode?.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
                             titleHTML = ""
                         }
-                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length) && !(blankLineTitle && blankLineTitle.length)) {
+                        if ((subtitleDOMNode?.textContent === '') && !(imgTaginTitle && imgTaginTitle.length) && !(blankLineTitle && blankLineTitle.length)) {
                             subtitleHTML = ""
                         }
-                        tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
+                        tempDiv.innerHTML = createTitleSubtitleModel((titleHTML || ''), subtitleHTML)
                     }
                     else if (parentElement.type === "citations") {
-                        if ((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
+                        if ((titleDOMNode?.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
                             titleHTML = ""
                         }
                         tempDiv.innerHTML = createTitleSubtitleModel("", titleHTML)
