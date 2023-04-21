@@ -71,7 +71,7 @@ export const ELEMENT_TYPE_PDF = "element-pdf";
 export const SLATE_TYPE_PDF = "pdfslate";
 
 /*--------------- LTI Slate ----------------*/
-export const ELEMENT_TYPE_LTI = "element-tcc";
+export const ELEMENT_TYPE_TCC = "element-tcc";
 export const SLATE_TYPE_LTI = "ltislate";
 
 /*--------------- Normal Slate - Section ----------------*/

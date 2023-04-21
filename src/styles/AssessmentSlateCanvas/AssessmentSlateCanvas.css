@@ -197,7 +197,7 @@
     word-wrap: break-word;
   }
   .slate_assessment_tcc_data_note{
-    margin-top: 19.5em;
+    margin-top: 21em;
     margin-left: -7em;
   }
   .slate_assessment_change_button{
@@ -429,7 +429,7 @@ span.approved-button.enable svg path#path2 {
   left: 35%;
   cursor: pointer !important;
 }
-.pdf-slate .addLOdata .lti-slate{
+.pdf-slate .addLOdata {
   display: none;
 }
 .slate_cypress_plus_enhance{

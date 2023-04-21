@@ -46,7 +46,7 @@ export const renderCutCopyOption = (componentProps) => {
     const { userRole,permissions, asideData, element: { type,subtype } } = componentProps
     const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list", "figure", "stanza", "element-citation","citations","poetry","groupedcontent","showhide","discussion","popup","element-dialogue"],
             allowedRoles = ["admin", "manager", "edit", "default_user"]
-    if ( !hasReviewerRole() && (acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) && asideData?.parent?.subtype !== elementConstant.TAB && asideData?.grandParent?.asideData?.parent?.subtype !== elementConstant.TAB && type !== elementConstant.LTI_SLATE) {
+    if ( !hasReviewerRole() && (acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) && asideData?.parent?.subtype !== elementConstant.TAB && asideData?.grandParent?.asideData?.parent?.subtype !== elementConstant.TAB && type !== elementConstant.TCC_ELEMENT_TYPE) {
         return (
             <>
                 <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "copy")}>

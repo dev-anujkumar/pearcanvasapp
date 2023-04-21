@@ -70,7 +70,7 @@ export default {
     PDF_SLATE : "element-pdf",
 
 /**************** LTI Slate Element ************************ */  
-    LTI_SLATE : "element-tcc",
+    TCC_ELEMENT : "element-tcc",
 
 /**************** Block list Element ************************ */  
     BLOCK_LIST : "manifestlist"
