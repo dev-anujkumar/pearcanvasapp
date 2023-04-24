@@ -1380,69 +1380,6 @@ export const createstoreWithFigure = {
                     },
                     { "type": "figure", "figuretype": "image", "subtype": "image50Text", "schema": "http://schemas.pearson.com/wip-authoring/figure/1", "alignment": "half-text", "title": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [] }, "subtitle": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] }, "captions": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] }, "credits": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] }, "figuredata": { "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png", "height": "1225", "width": "1440", "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image", "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c" }, "html": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "title": "", "subtitle": "", "caption": "", "credit": "", "postertext": "", "tableasHTML": "" }, "comments": false, "tcm": false, "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89", "id": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d23", "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d23" },
                     {
-                        "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
-                        "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
-                        "type": "citations",
-                        "contents": {
-                            "formatted-title": {
-                                "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
-                            },
-                            "bodymatter": [
-                            {
-                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
-                                "type": "element-citation",
-                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                                "elementdata": {
-                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                                    "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
-                                    "textsemantics":
-                                    [
-                                        {
-                                            "type": "strong",
-                                            "charStart": 81,
-                                            "charEnd": 105
-                                        }
-                                    ]
-                                },
-                                "html" : {
-                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
-                                },
-                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
-                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
-                            },
-                            {
-                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
-                                "type": "element-citation",
-                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                                "elementdata": {
-                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
-                                },
-                                "html" : {
-                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
-                                },
-                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
-                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
-                            },
-                            {
-                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
-                                "type": "element-citation",
-                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
-                                "elementdata": {
-                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
-                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
-                                },
-                                "html" : {
-                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
-                                },
-                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
-                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637"
-                            }
-                        ]
-                        },
-                        "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
-                        "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e"
-                    },{
                         "id": "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
                         "type": "showhide",
                         "subtype": "",
@@ -1538,7 +1475,571 @@ export const createstoreWithFigure = {
                                 }
                             ]
                         }
-                    }
+                    },
+                    // "type": "citations",
+                    {
+                        "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                        "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                        "type": "citations",
+                        "contents": {
+                            "formatted-title": {
+                                "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                            },
+                            "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                    "textsemantics":
+                                    [
+                                        {
+                                            "type": "strong",
+                                            "charStart": 81,
+                                            "charEnd": 105
+                                        }
+                                    ]
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                            },
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
+                            },
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637"
+                            }
+                        ]
+                        },
+                        "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                        "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                        "elementdata": {
+                            "bodymatter": [
+                                {
+                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                    "type": "element-authoredtext",
+                                    "subtype": "",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": ""
+                                    },
+                                    "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                    },
+                                    "comments": false,
+                                    "tcm": true,
+                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                },
+                            ],
+                        "backmatter": [ ]
+                        },
+                        "interactivedata": {
+                            "postertextobject": [
+                                {
+                                    "type": "element-authoredtext",
+                                    "contentUrn": "urn:pearson:entity:5e36e9b2-08f6-4841-bb2f-1beb08f28905",
+                                    "id": "urn:pearson:work:305cc470-3d3e-45f8-ae5d-4b10eff07e8f"
+                                }
+                            ],
+                            "show": [
+                                {
+                                    "id": "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a0",
+                                    "type": "citations",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                                    "versionUrn": "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a0",
+                                    "contentUrn": "urn:pearson:entity:e1d634f7-3edf-4f57-9e45-a351ae35b2b6",
+                                    "contents": {
+                                        "bodymatter": [{
+                                            "id": "urn:pearson:work:3a25600b-fd17-4bec-8757-e1ca9ffcfcd9",
+                                            "type": "element-citation",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                            "elementdata": {
+                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                "text": ""
+                                            },
+                                            "html": {
+                                                "text": "<p class=\"paragraphNumeroUnoCitation\"><br></p>"
+                                            },
+                                            "versionUrn": "urn:pearson:work:3a25600b-fd17-4bec-8757-e1ca9ffcfcd9",
+                                            "contentUrn": "urn:pearson:entity:7ab462bf-f9ad-42db-a0d4-c2f35e509cdd",
+                                            "status": "wip"
+                                        }]
+                                    },
+                                    "elementdata": {
+                                        "bodymatter": [
+                                            {
+                                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                                "type": "element-authoredtext",
+                                                "subtype": "",
+                                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                "contents": {
+                                                    "formatted-title": {
+                                                        "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                                                    },
+                                                    "bodymatter": [
+                                                    {
+                                                        "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                                        "type": "element-citation",
+                                                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                        "elementdata": {
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                            "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                                            "textsemantics":
+                                                            [
+                                                                {
+                                                                    "type": "strong",
+                                                                    "charStart": 81,
+                                                                    "charEnd": 105
+                                                                }
+                                                            ]
+                                                        },
+                                                        "html" : {
+                                                            "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                                        },
+                                                        "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                                        "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                                                    }
+                                                ]
+                                                },
+                                                "elementdata": {
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                    "text": ""
+                                                },
+                                                "html": {
+                                                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                                },
+                                                "comments": false,
+                                                "tcm": true,
+                                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                            },
+                                        ],
+                                    "backmatter": [ ]
+                                    },
+                                },{
+                                    "id": "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                                    "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157bs4aw",
+                                    "type": "element-aside",
+                                    "subtype": "sidebar",
+                                    "designtype": "sidebar",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "bodymatter": [
+                                            {
+                                                "type": "figure",
+                                                "figuretype": "image",
+                                                "subtype": "image50Text",
+                                                "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+                                                "alignment": "half-text",
+                                                "title": {
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                    "text": "", "textsemantics": [], "mathml": []
+                                                },
+                                                "subtitle": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] },
+                                                "captions": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] },
+                                                "credits": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "text": "", "textsemantics": [], "mathml": [], "footnotes": [] },
+                                                "figuredata": { "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png", "height": "1225", "width": "1440", "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image", "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c" },
+                                                "html": { "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext", "title": "", "subtitle": "", "caption": "", "credit": "", "postertext": "", "tableasHTML": "" },
+                                                "comments": false,
+                                                "tcm": false,
+                                                "contentUrn": "urn:pearson:entity:853c3a70-01e4-41e3-b3d7-ee2d157b0d89",
+                                                "id": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d23",
+                                                "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231"
+                                            },
+                                            {
+                                                "figuretype": "assessment",
+                                                "figuredata": { 'elementdata':{} },
+                                                "id": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d20",
+                                                "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d230"
+                                            }
+                                        ]
+                                    }
+                                }, {
+                                    "id": "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a1",
+                                    "type": "poetry",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                                    "versionUrn": "urn:pearson:manifest:ef6d234d-5965-4976-8e21-0e093c5ba7a0",
+                                    "contentUrn": "urn:pearson:entity:e1d634f7-3edf-4f57-9e45-a351ae35b2b6",
+                                    "contents": {
+                                        "bodymatter": [{
+                                            "id": "urn:pearson:work:3a25600b-fd17-4bec-8757-e1ca9ffcfcd9",
+                                            "type": "element-citation",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                            "elementdata": {
+                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                "text": ""
+                                            },
+                                            "html": {
+                                                "text": "<p class=\"paragraphNumeroUnoCitation\"><br></p>"
+                                            },
+                                            "versionUrn": "urn:pearson:work:3a25600b-fd17-4bec-8757-e1ca9ffcfcd9",
+                                            "contentUrn": "urn:pearson:entity:7ab462bf-f9ad-42db-a0d4-c2f35e509cdd",
+                                            "status": "wip"
+                                        }]
+                                    }
+                                }
+                            ],
+                            "hide": [
+                                {
+                                    "id": "urn:pearson:manifest:11c71298-c804-48f1-a8cc-323d107ba1be",
+                                    "type": "element-aside",
+                                    "subtype": "workedexample",
+                                    "designtype": "sidebar",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "elementdata": {
+                                        "bodymatter": [
+                                            {
+                                                "id": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c",
+                                                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                                                "type": "manifest",
+                                                "contents": {
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/manifest/1#/definitions/manifest",
+                                                    "frontmatter": [],
+                                                    "bodymatter": [
+                                                        {
+                                                            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                                                            "type": "element-authoredtext",
+                                                            "subtype": "",
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                            "elementdata": {
+                                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                "text": "asdfasdfasdf"
+                                                            },
+                                                            "headers": [
+                                                                {
+                                                                    "charStart": 0,
+                                                                    "charEnd": -1,
+                                                                    "level": 4
+                                                                }
+                                                            ],
+                                                            "html": {
+                                                                "text": "<h5 class=\"heading5NummerEins\">Heading 5</h5>"
+                                                            },
+                                                            "comments": true,
+                                                            "tcm": true,
+                                                            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                                            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                                        },
+                                                        {
+                                                            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0v",
+                                                            "type": "element-authoredtext",
+                                                            "subtype": "",
+                                                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                            "elementdata": {
+                                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                                "text": "asdfasdfasdf"
+                                                            },
+                                                            "html": {
+                                                                "text": "<p class=\"heading1NummerEins\">Heading 1</p>"
+                                                            },
+                                                            "comments": true,
+                                                            "tcm": true,
+                                                            "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                                            "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                                        }
+                                                    ],
+                                                    "backmatter": []
+                                                },
+                                                "contentUrn": "urn:pearson:entity:08942f6d-8fd3-4a39-b72d-8bdc33eb289a",
+                                                "versionUrn": "urn:pearson:manifest:f0c610b8-337d-47b0-9680-83b73481289c"
+                                            },{
+                                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b",
+                                                "type": "element-authoredtext",
+                                                "subtype": "",
+                                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                                "elementdata": {
+                                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                    "text": "asdfasdfasdf"
+                                                },
+                                                "headers": [
+                                                    {
+                                                        "charStart": 0,
+                                                        "charEnd": -1,
+                                                        "level": 4
+                                                    }
+                                                ],
+                                                "html": {
+                                                    "text": "<h5 class=\"heading5NummerEins\">Heading 5</h5>"
+                                                },
+                                                "comments": true,
+                                                "tcm": true,
+                                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                            },{
+                                                "figuretype": "assessment",
+                                                "figuredata": { 'elementdata':{} },
+                                                "id": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d20",
+                                                "versionUrn": "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d230"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                    },
+                    // "type": "element-aside"
+                    {
+                        "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5f",
+                        "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                        "type": "element-aside",
+                        "contents": {
+                            "formatted-title": {
+                                "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                            },
+                            "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                    "textsemantics":
+                                    [
+                                        {
+                                            "type": "strong",
+                                            "charStart": 81,
+                                            "charEnd": 105
+                                        }
+                                    ]
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                            },
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
+                            },
+                            {
+                                "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
+                                "type": "element-citation",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                                },
+                                "html" : {
+                                    "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                                },
+                                "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
+                                "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637"
+                            }
+                        ]
+                        },
+                        "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                        "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                        "elementdata": {
+                            "bodymatter": [
+                                {
+                                    "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                    "type": "element-authoredtext",
+                                    "subtype": "",
+                                    "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                    "contents": {
+                                        "formatted-title": {
+                                            "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                                        },
+                                        "bodymatter": [
+                                        {
+                                            "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                            "type": "element-citation",
+                                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                            "elementdata": {
+                                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                                "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                                "textsemantics":
+                                                [
+                                                    {
+                                                        "type": "strong",
+                                                        "charStart": 81,
+                                                        "charEnd": 105
+                                                    }
+                                                ]
+                                            },
+                                            "html" : {
+                                                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                            },
+                                            "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                            "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                                        }
+                                    ]
+                                    },
+                                    "elementdata": {
+                                        "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                        "text": ""
+                                    },
+                                    "html": {
+                                        "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                    },
+                                    "comments": false,
+                                    "tcm": true,
+                                    "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                    "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                                },
+                            ],
+                        "backmatter": [ ]
+                        },
+            
+                    },
+                //  "type": "poetry",
+                {
+                    "id": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5k",
+                    "schema": "http://schemas.pearson.com/wip-authoring/citations/1",
+                    "type": "poetry",
+                    "contents": {
+                        "formatted-title": {
+                            "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                        },
+                        "bodymatter": [
+                        {
+                            "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                            "type": "element-citation",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                "textsemantics":
+                                [
+                                    {
+                                        "type": "strong",
+                                        "charStart": 81,
+                                        "charEnd": 105
+                                    }
+                                ]
+                            },
+                            "html" : {
+                                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                            },
+                            "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                            "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                        },
+                        {
+                            "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636",
+                            "type": "element-citation",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                            },
+                            "html" : {
+                                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                            },
+                            "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e",
+                            "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636"
+                        },
+                        {
+                            "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637",
+                            "type": "element-citation",
+                            "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                            "elementdata": {
+                                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                "text": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+                            },
+                            "html" : {
+                                "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4e" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27636">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>`
+                            },
+                            "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r43",
+                            "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27637"
+                        }
+                    ]
+                    },
+                    "contentUrn": "urn:pearson:entity:bea88dc0-f9c3-4d5e-9950-1f47e8d367t5",
+                    "versionUrn": "urn:pearson:manifest:44d43f1b-3bdf-4386-a06c-bfa779f27t5e",
+                    "elementdata": {
+                        "bodymatter": [
+                            {
+                                "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0d",
+                                "type": "element-authoredtext",
+                                "subtype": "",
+                                "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                "contents": {
+                                    "formatted-title": {
+                                        "id":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","type":"element-authoredtext","schema":"http://schemas.pearson.com/wip-authoring/element/1","elementdata":{"schema":"http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext","text":""},"html":{"text":`This is the optional title for Citations. It would be taken from the element-authoredtext object referenced by the formatted-title.`},"versionUrn":"urn:pearson:work:3247d017-9f4b-4260-b3f2-7d9b175ccd76","contentUrn":"urn:pearson:entity:0ab3a13b-4045-4389-b8da-911e2e2701d7","status":"wip","tcm":false,"feedback":false,"comments":false
+                                    },
+                                    "bodymatter": [
+                                    {
+                                        "id": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635",
+                                        "type": "element-citation",
+                                        "schema": "http://schemas.pearson.com/wip-authoring/element/1",
+                                        "elementdata": {
+                                            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                            "text": "Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. Psychological Monographs, 47(211).",
+                                            "textsemantics":
+                                            [
+                                                {
+                                                    "type": "strong",
+                                                    "charStart": 81,
+                                                    "charEnd": 105
+                                                }
+                                            ]
+                                        },
+                                        "html" : {
+                                            "text":`<p class="paragraphNumeroUnoCitation" data-contenturn="urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d" data-versionurn="urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635">Allport, G. W., &amp; Odbert, H. S. (1936). Trait names: A psycho-lexical study. <em>Psychological Monographs,</em> 47(211). The CITE classes for the containing the WiP's "element-citation" content should be decided based on the context of usage as described below. It follows the same logic as when paragraphNumeroUno and paragraphNummerEins. If the citation grouping.</p>`
+                                        },
+                                        "contentUrn": "urn:pearson:entity:fea111d6-7278-470c-934b-d96e334a7r4d",
+                                        "versionUrn": "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635"
+                                    }
+                                ]
+                                },
+                                "elementdata": {
+                                    "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                                    "text": ""
+                                },
+                                "html": {
+                                    "text": "<p class=\"paragraphNumeroUno\"><br></p>"
+                                },
+                                "comments": false,
+                                "tcm": true,
+                                "versionUrn": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+                                "contentUrn": "urn:pearson:entity:b70a5dbe-cc3b-456d-87fc-e369ac59c527"
+                            },
+                        ],
+                    "backmatter": [ ]
+                    },
+        
+                },
                 ]
             },
         }

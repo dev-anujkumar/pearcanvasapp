@@ -6,7 +6,7 @@ import ElementSaprator from '../ElementSaprator';
 import ElementContainer from '../ElementContainer';
 import TabbedTinyMCE from './TabbedTinyMce.jsx';
 import constants from "./constants.js";
-import { sendDataToIframe } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions';
 import { checkHTMLdataInsideString } from '../../constants/utility';
@@ -96,6 +96,7 @@ export const TabbedTabContainer = (props) => {
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
+                            disabled: hasReviewerRole(),
                             onStart: (evt) => {
                                 props.onClickCapture(evt)
                             },

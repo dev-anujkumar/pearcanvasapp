@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
-import { sendDataToIframe, defaultMathImagePath, isOwnerRole} from '../../../constants/utility.js';
+import { sendDataToIframe, defaultMathImagePath, isOwnerRole, isSubscriberRole} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
@@ -447,6 +447,13 @@ function CommunicationChannel(WrappedComponent) {
                 case 'bannerIsVisible':
                     if (message && message.hasOwnProperty('status')) {
                         this.props.setCautionBannerStatus(message.status)
+                    }
+                    break;
+                case 'refreshSlateOnAssessmentUpdate':
+                    const assessmentSlateData = this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
+                    const assessmentSlateCheck = assessmentSlateData?.type === 'element-assessment' && assessmentSlateData?.elementdata?.assessmentid === message?.assessmentUrn
+                    if (message && message.action === "approve" && message.source === "elm" && message.type === "assessment" && assessmentSlateCheck) {
+                        this.handleRefreshSlate();
                     }
                     break;
             }
@@ -925,8 +932,11 @@ function CommunicationChannel(WrappedComponent) {
         resetOwnerSlatePopupFlag = () => {
             const { projectSubscriptionDetails } = this.props;
             const isOwnerKeyExist = localStorage.getItem('hasOwnerEdit');
+            const isSubscribersKeyExist = localStorage.getItem('hasSubscriberView');
             if (isOwnerRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isOwnerKeyExist) {
                 this.props.isOwnersSubscribedSlate(true);
+            }else if(isSubscriberRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isSubscribersKeyExist){
+                this.props.isSubscribersSubscribedSlate(true);
             }
         }
 

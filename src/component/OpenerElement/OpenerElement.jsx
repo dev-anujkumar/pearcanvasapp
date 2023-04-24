@@ -437,7 +437,7 @@ class OpenerElement extends Component {
     }   
     renderExistingCOImage = () => {
         let COImg = <div className="exisiting-opener-element-image-view">
-            <div className="update-image-label" onClick={()=>{this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
+            <div className="update-image-label" onClick={()=>{ !hasReviewerRole() && this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
             <span className="color_Dropdown_arrow">{dropdownArrow}</span>
             </div>
           {this.state.updateImageOptions? <ul className="image-global-button">

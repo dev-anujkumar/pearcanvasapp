@@ -25,7 +25,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -244,6 +244,10 @@ class ElementContainer extends Component {
             if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
                 this.handleUndoOptionTimer();
             }
+        }
+        // Closing cut/copy menu on click outside
+        if(this.state.showCopyPopup && !event?.target?.classList.contains('copyUrn')){
+            this.setState({ showCopyPopup: false })
         }
     }
 
@@ -542,7 +546,7 @@ class ElementContainer extends Component {
             isAltTextLongDescModified = this.props.oldFigureDataForCompare.tableasHTML !== previousElementData.figuredata.tableasHTML
         }
         if(previousElementData.figuretype === 'image') {
-            isAltTextLongDescModified = this.props.oldFigureDataForCompare !== previousElementData.figureData
+            isAltTextLongDescModified = this.props.oldFigureDataForCompare !== previousElementData.figuredata
         }
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
@@ -581,8 +585,8 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
-                || podwidth !== (previousElementData.figuredata.podwidth ?
-                    previousElementData.figuredata.podwidth : '') && podwidth !== null|| isAltTextLongDescModified
+                || (podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : '') && podwidth !== null) 
+                || isAltTextLongDescModified
             );
         }
 
@@ -721,6 +725,7 @@ class ElementContainer extends Component {
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
         
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
         let podwidth = this.props?.activeElement?.podwidth;
@@ -737,7 +742,7 @@ class ElementContainer extends Component {
             previousElementData.figuredata.interactivetype === 'table') {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
-            posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
+            posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`;
 
             let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
@@ -988,16 +993,16 @@ class ElementContainer extends Component {
                     let blankLineLabel = titleDOMNode && titleDOMNode.getElementsByClassName("answerLineContent")
                     let blankLineTitle = subtitleDOMNode && subtitleDOMNode.getElementsByClassName("answerLineContent")
                     if (parentElement.type === "poetry" || parentElement.type === "popup") {
-                        if ((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
+                        if ((titleDOMNode?.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
                             titleHTML = ""
                         }
-                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length) && !(blankLineTitle && blankLineTitle.length)) {
+                        if ((subtitleDOMNode?.textContent === '') && !(imgTaginTitle && imgTaginTitle.length) && !(blankLineTitle && blankLineTitle.length)) {
                             subtitleHTML = ""
                         }
-                        tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
+                        tempDiv.innerHTML = createTitleSubtitleModel((titleHTML || ''), subtitleHTML)
                     }
                     else if (parentElement.type === "citations") {
-                        if ((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
+                        if ((titleDOMNode?.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
                             titleHTML = ""
                         }
                         tempDiv.innerHTML = createTitleSubtitleModel("", titleHTML)
@@ -1273,6 +1278,8 @@ class ElementContainer extends Component {
      * Will be called on element blur and a saving call will be made
      */
     handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}, triggeredFrom = '') => {
+        // restrict saving call incase of read only content
+        if(hasReviewerRole()) return;
         const { elementType, primaryOption, secondaryOption, elementId } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
@@ -1403,7 +1410,7 @@ class ElementContainer extends Component {
      * @param {e} event
      */
     renderColorPaletteButton = (element, permissions,isSubscribersSlate) => {
-        const isPermitted = permissions.includes('elements_add_remove')
+        const isPermitted = permissions.includes('elements_add_remove') && !hasReviewerRole();
         if (element.type === elementTypeConstant.OPENER && isPermitted) {
             return (
                 <>
@@ -1454,7 +1461,7 @@ class ElementContainer extends Component {
      * @param {e} event
      */
     renderColorTextButton = (element, permissions,isSubscribersSlate) => {
-        const isPermitted = permissions.includes('elements_add_remove')
+        const isPermitted = permissions.includes('elements_add_remove') && !hasReviewerRole();
         if (element.type === elementTypeConstant.OPENER && isPermitted) {
             return (
                 <>
@@ -2455,14 +2462,15 @@ class ElementContainer extends Component {
             normalText: TE_POP_UP_NORMAL_TEXT,
             renderImages : this.props.tableElementAssetData
         }
-        let showEditButton = checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton', this.props.permissions);
-        let showAlfrescoExpandButton = checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton', this.props.permissions);
+        let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
+        let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton', this.props.permissions)));
+        let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton', this.props.permissions)));
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
         if (element.type === elementTypeConstant.FIGURE && element.figuretype === elementTypeConstant.FIGURE_CODELISTING) {
             if ((element.figuredata && element.figuredata.programlanguage && element.figuredata.programlanguage == "Select") || (this.props.activeElement.secondaryOption === "secondary-blockcode-language-default" && this.props.activeElement.elementId === element.id)) {
-                bceOverlay = <div className="bce-overlay disabled" onClick={(event) => {this.handleFocus("", "", event);this.showBlockCodeElemWarningPopup(event,true);}}></div>;
+                bceOverlay = <div className="bce-overlay disabled" onClick={(event) => {this.handleFocus("", "", event); !hasReviewerRole() && this.showBlockCodeElemWarningPopup(event,true);}}></div>;
                 borderToggle = (this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? 'showBorder' : 'hideBorder';
                 btnClassName = '';
             }
@@ -2502,8 +2510,8 @@ class ElementContainer extends Component {
         /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
         const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
         const inContainer = this.props.parentUrn ? true : false;
-        let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
         let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
+        let isSubscriber = isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
         return (
             <>
                 <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
@@ -2525,18 +2533,18 @@ class ElementContainer extends Component {
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) =>  !isSubscriber && this.addOrViewComment(e, element.id,'addComment')} />}          
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
                         {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
                         }
                          {/*Displaying Expand in Alfresco option for PDF Slates when a PDF is added  */}
-                        {permissions && permissions?.includes('alfresco_crud_access') && element?.type === elementTypeConstant.PDF_SLATE &&
+                        {permissions && permissions?.includes('alfresco_crud_access') && !hasReviewerRole() && element?.type === elementTypeConstant.PDF_SLATE &&
                         (element?.elementdata?.assetid !== "" || this.state.pdfSlateAssetId !== "") && <Button type={`alfresco-TE-metadata`} btnClassName={` metadata-pdfElement ${btnClassName}`} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
-                        {permissions && permissions.includes('elements_add_remove') && showEditButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
-                        {permissions && permissions.includes('elements_add_remove') && showAlfrescoExpandButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'alfresco-TE-metadata': 'alfresco-metadata'}`} btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />} 
+                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole()  && showEditButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole()  && showAlfrescoExpandButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'alfresco-TE-metadata': 'alfresco-metadata'}`} btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />} 
                         {(feedback && ! isTbElement) ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : ((tcm && !isTbElement) && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} btnClassName={element.type === elementTypeConstant.PDF_SLATE && 'pdf-tcm-icon'}/>)}
                     </div> : ''}
                     {this.state.popup && <PopUp
@@ -2841,16 +2849,11 @@ class ElementContainer extends Component {
     }
 
     addOrViewComment = (e, elementId, type) => {
-        const {slateLockInfo} = this.props
         this.props.setActiveElement(this.props.element);
-        let lockedUserId = slateLockInfo?.userId?.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
-        //comment below if condition as we're not allowing click on comment icon when slate is locked by another user
-        // if (slateLockInfo?.isLocked && config.userId === lockedUserId) {
             sendDataToIframe({
                 'type': AddOrViewComment,
                 'message': { "id": elementId, "mode": type, "viewInCypress": false }
             });
-        // }
         e.stopPropagation();
     }
 
@@ -2973,34 +2976,32 @@ class ElementContainer extends Component {
      * @description - This function is used to open alfresco metadata in new window.
      */
 
-    handleAlfrescoMetadataWindow = (e) => {       
-        if(this.props?.element?.figuretype === TABLE_ELEMENT){
+    handleAlfrescoMetadataWindow = (e) => {
+        if (this.props?.element?.figuretype === TABLE_ELEMENT) {
             this.showAlfrescoExpansionPopup(e, true, this.props.element)
-        }else {
+        } else {
             let imageId;
             if (this.props.element.type === 'element-pdf') {
-                imageId =this.state.pdfSlateAssetId ||  this.props?.element?.elementdata?.assetid 
+                imageId = this.state.pdfSlateAssetId || this.props?.element?.elementdata?.assetid
             } else {
-            switch(this.props?.element?.figuretype){
-             case IMAGE:
-                imageId=this.props?.element?.figuredata?.imageid
-                break;
-             case AUDIO :
-                imageId=this.props?.element?.figuredata?.audioid
-                break;
-             case VIDEO:
-                imageId=this.props?.element?.figuredata?.videoid
-                break;
-             case  INTERACTIVE:
-                imageId=this.props?.element?.figuredata?.interactiveid
-                break;
-             default: imageId=null
+                const figureData = this.props?.element?.figuredata || {};
+                if (figureData['imageid']) {
+                    imageId = this.props?.element?.figuredata?.imageid;
+                } else if (figureData['audioid']) {
+                    imageId = this.props?.element?.figuredata?.audioid;
+                } else if (figureData['videoid']) {
+                    imageId = this.props?.element?.figuredata?.videoid;
+                } else if (figureData['interactiveid']) {
+                    imageId = this.props?.element?.figuredata?.interactiveid;
+                } else {
+                    imageId = null;
+                }
+            }
+            if (imageId) {
+                imageId = imageId.replace('urn:pearson:alfresco:', '');
+                this.openInNewWindow(imageId);
             }
         }
-        imageId = imageId.replace('urn:pearson:alfresco:', '');
-        this.openInNewWindow(imageId)
-    }
-   
     }
 
     /**

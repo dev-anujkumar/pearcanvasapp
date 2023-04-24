@@ -9,6 +9,9 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 let hasReviewerRole = jest.fn(() => false)
 const initialState = {
+    appStore:{
+        permissions:[]
+    },
     audioReducer: {
         audioData:  {
             "containerUrn": "urn:pearson:manifest:3e986eb4-47de-4abe-a4b6-903702c43742",
@@ -152,6 +155,8 @@ describe('when audio is selected from glossary',()=>{
 
     let narrativeAudioInstance = narrativeAudio.find('OpenAudioBook').instance();
     narrativeAudio.find('.close-icon-audio').simulate('click');
+    narrativeAudio.find('.audioRemoveButton').simulate('click');
+    narrativeAudio.find('.audioReplaceeButton').simulate('click');
 
     test('renders without crashing', () => {
         expect(narrativeAudio).toHaveLength(1);

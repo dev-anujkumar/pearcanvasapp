@@ -58,6 +58,25 @@ jest.mock('../../../src/js/utils', () => {
 })
 jest.mock('../../../src/appstore/store.js', () => {
     return {
+        getState: () => {
+            return {
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                },
+                appStore:{
+                    slateLevelData:{}
+                },
+                autoNumberReducer: mockAutoNumberReducerEmpty,
+                toolbarReducer : {
+                    spellCheckToggle : false
+                }
+            }
+        },
         dispatch: jest.fn()
     }
 })
@@ -80,7 +99,9 @@ jest.mock('../../../src/constants/utility.js', () => {
         validFirstNodeTags: ['span','dfn'],
         findStylingOrder: () => {
             return ['em']
-        }
+        },
+        isSubscriberRole: jest.fn(),
+        withoutCursorInitailizedElements: ['figure', 'element-aside']
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {

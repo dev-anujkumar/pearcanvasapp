@@ -13,7 +13,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -31,7 +31,7 @@ import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
-import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlate, isSubscribersSubscribedSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
@@ -75,7 +75,8 @@ class SlateWrapper extends Component {
             updatedindex:'',
             showOwnerSlatePopup: false,
             parentUrn:null,
-            updateAssessment: false
+            updateAssessment: false,
+            showSubscriberSlatePopup: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -223,10 +224,15 @@ class SlateWrapper extends Component {
             }
             return _state;
         }
-        else if(isOwnerRole(projectSharingRole,isSubscribed) || isSubscriberRole(projectSharingRole,isSubscribed)){
+        else if(isOwnerRole(projectSharingRole,isSubscribed)){
             _state={
                 ..._state,
                 showOwnerSlatePopup: true
+            }
+        }else if(isSubscriberRole(projectSharingRole,isSubscribed)){
+            _state={
+                ..._state,
+                showSubscriberSlatePopup: true
             }
         }
         else {
@@ -346,13 +352,14 @@ class SlateWrapper extends Component {
                         <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
                             {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate && !config?.isCypressPlusEnabled ? <div
                                 className='approved-overlay'
-                                onClick={this.getApprovedPopup}
+                                onClick={!hasReviewerRole() && this.getApprovedPopup}
                             >
                             </div> : null}
                             <div className='element-list'>
-                                <Sortable
+                                <Sortable 
                                     options={{
                                         sort: true,  // sorting inside list
+                                        disabled: hasReviewerRole(),
                                         //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                         dragoverBubble: false,
@@ -399,7 +406,7 @@ class SlateWrapper extends Component {
                                     onChange={function (items, sortable, evt) { }}
                                 >
                                     {this['cloneCOSlateControlledSource_' + random]}
-                                </Sortable>
+                                </Sortable> 
                             </div>
                             <SlateFooter elements={_slateBodyMatter} projectSharingRole={projectSharingRole} isSubscribed={isSubscribed}/>
                         </div>
@@ -514,13 +521,13 @@ class SlateWrapper extends Component {
                 lockOwnerName: `${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`
             })
             return true
-        }else if(isOwnerRole(projectSharingRole,isSubscribed)){
+        }else if(!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed)){
             const slateId = Object.keys(this.props.slateData)[0],
                 lockDuration = 5400
             this.setSlateLock(slateId, lockDuration)
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
-        }else if(isSubscriberRole(projectSharingRole,isSubscribed)){
-            return true
+        }else if(isSubscriberRole(projectSharingRole, isSubscribed)){
+            return this.props.projectSubscriptionDetails.isSubscribersSubscribedSlateChecked
         }
         else {
             const slateId = Object.keys(this.props.slateData)[0],
@@ -585,6 +592,7 @@ class SlateWrapper extends Component {
     showLockPopup = () => {
         const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
         var isOwnerKeyExist= localStorage.getItem('hasOwnerEdit');
+        let isSubscribersKeyExist = localStorage.getItem('hasSubscriberView');
         if (this.state.showLockPopup) {
             const { lockOwner } = this.state
             this.props.showBlocker(true)
@@ -604,28 +612,19 @@ class SlateWrapper extends Component {
                     lockForTOC={false}
                 />
             )
-        } else if (isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) {
-            this.props.showBlocker(true)
+        } else if ((!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) || (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showSubscriberSlatePopup && isSubscribersKeyExist === null )) {
+            const subscriberPopupDailogText = <>This is a subscribed content and cannot be edited.<br /><br />If you wish to edit the content, please use <strong>Copy Content</strong> feature from TOC or go to the owner project. Kindly note that the edits in owner project will be reflected for all the subscribers</>
+            this.props.showBlocker(true);
             showTocBlocker();
+            let dailogText = isOwnerRole(projectSharingRole,isSubscribed) ? OWNER_SLATE_POPUP : subscriberPopupDailogText;
             return (
-                <PopUp dialogText={OWNER_SLATE_POPUP}
+                <PopUp dialogText={dailogText}
                     togglePopup={this.togglePopup}
                     isOwnersSlate={true}
                     proceed={this.proceedButtonHandling}
                     warningHeaderText={`Warning`}
                     lOPopupClass="lo-warning-txt"
                     withCheckBox={true}
-                />
-            )
-        }
-        else if (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup ) {
-            this.props.showBlocker(true)
-            showTocBlocker();
-            return (
-                <PopUp
-                    togglePopup={this.togglePopup}
-                    isSubscribersSlate={true}
-                    lOPopupClass="lo-warning-txt"
                 />
             )
         }
@@ -653,7 +652,8 @@ class SlateWrapper extends Component {
     togglePopup = (toggleValue, event) => {
         this.setState({
             showLockPopup: toggleValue,
-            showOwnerSlatePopup: toggleValue
+            showOwnerSlatePopup: toggleValue,
+            showSubscriberSlatePopup: toggleValue
         })
         this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
@@ -663,17 +663,26 @@ class SlateWrapper extends Component {
     }
 
     proceedButtonHandling = (isChecked, toggleValue, e) => {
-        this.setState({
-            showOwnerSlatePopup: toggleValue
-        })
+        const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
+        if(isSubscriberRole(projectSharingRole, isSubscribed)){
+            this.setState({
+                showSubscriberSlatePopup: toggleValue
+            })
+        }
+        if(isOwnerRole(projectSharingRole, isSubscribed)){
+            this.setState({
+                showOwnerSlatePopup: toggleValue
+            })
+        }
         this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
         hideBlocker()
         this.prohibitPropagation(e);
         if (isChecked) {
-            releaseOwnerPopup(isChecked);
+            releaseOwnerPopup(isChecked, projectSharingRole, isSubscribed);
         }
         this.props.isOwnersSubscribedSlate(false);
+        this.props.isSubscribersSubscribedSlate(false);
     }
 
     handleCopyPastePopup = (wordPastePopup,index,parentUrn, asideData)=>{
@@ -1387,24 +1396,38 @@ class SlateWrapper extends Component {
             this.props.showBlocker(true)
             showTocBlocker();
             const dialogText = ` All other Assessment Items in this project will now be updated to the new version of this Assessment`
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-            setTimeout(() => {
-                this.setState({
-                    updateAssessment: true
-                })
-                sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-            }, 4000);
-            return (
-                <PopUp dialogText={dialogText}
-                    active={true}
-                    saveButtonText='OK'
-                    showConfirmation={true}
-                    assessmentConfirmation={`${this.state.updateAssessment ? "updateAssessment-enable" : "updateAssessment-disable"}`}
-                    assessmentClass="lock-message"
-                    togglePopup={this.toggleAssessmentPopup}
-                    hideCanvasBlocker={this.props.showBlocker}
-                />
-            )
+            // It opens different popup for assessment-slate when we update the assessment from the elm and different for assessment-item update
+            if (this.props?.slateData[config.slateManifestURN]?.contents?.bodymatter[0]?.type !== 'element-assessment') {      // this condition is to check whether the current slate is assessmentslate or not
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                setTimeout(() => {
+                    this.setState({
+                        updateAssessment: true
+                    })
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+                }, 4000);
+                return (
+                    <PopUp dialogText={dialogText}
+                        active={true}
+                        saveButtonText='OK'
+                        showConfirmation={true}
+                        assessmentConfirmation={`${this.state.updateAssessment ? "updateAssessment-enable" : "updateAssessment-disable"}`}
+                        assessmentClass="lock-message"
+                        togglePopup={this.toggleAssessmentPopup}
+                        hideCanvasBlocker={this.props.showBlocker}
+                    />
+                )
+            } else {
+                return (
+                    <PopUp dialogText={dialogText}
+                        active={true}
+                        saveButtonText='OK'
+                        showAssessmentConfirmation={true}
+                        assessmentClass="lock-message"
+                        togglePopup={this.toggleAssessmentPopup}
+                        hideCanvasBlocker={this.props.showBlocker}
+                    />
+                )
+            }
         }
         else {
             return null
@@ -1795,6 +1818,7 @@ export default connect(
         isOwnersSubscribedSlate,
         savePopupParentSlateData,
         slateVersioning,
-        approvedSlatePopupStatus
+        approvedSlatePopupStatus,
+        isSubscribersSubscribedSlate
     }
 )(SlateWrapper);

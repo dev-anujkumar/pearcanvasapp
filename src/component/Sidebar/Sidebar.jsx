@@ -502,12 +502,13 @@ class Sidebar extends Component {
                 //Removing Select option from dropdown values
                 if (languageDropdownOptions.length )  languageDropdownOptions = languageDropdownOptions.filter(option => option.text !== 'Select')
                 const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+                const disableClass = hasReviewerRole() ? "pointer-events-none" : ''
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
                     {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
-                    </div>) : (<div className={`element-dropdown-title bce ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                    </div>) : (<div className={`element-dropdown-title bce ${disabled} ${disableClass}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         <Autocomplete
                             disablePortal
                             disableClearable
@@ -1001,7 +1002,7 @@ class Sidebar extends Component {
     render = () => {
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.tag !== TABBED_2_COLUMN.ELEMENT_TAG_NAME && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}

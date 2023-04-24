@@ -25,6 +25,7 @@ export const MARKEDINDEX = 'MARKEDINDEX';
 export const validStylesTagList = ['strong','em','u','s','sup','sub','code'];
 export const allowedFormattings = ['bold','italic','underline','strikethrough','superscript','subscript'];
 export const validFirstNodeTags = ['span','dfn'];
+export const withoutCursorInitailizedElements = ['figure', 'element-aside']
 
 export const requestConfigURI = () => {
     let uri = '';
@@ -70,19 +71,23 @@ export const guid = () => {
 
 export const hasProjectPermission = (value) => {
     const authStore = store.getState();
+    const {projectInfo} = authStore;
+    let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     let permissions = authStore && authStore.appStore.permissions;
-    let hasPermissions = permissions && permissions.includes(value)
+    let hasPermissions = permissions && permissions.includes(value) && !isSubscriber;
     return hasPermissions;
 }
 
 
 export const hasReviewerRole = (value) => {
+    const authStore = store.getState();
+    const {projectInfo} = authStore;
+    let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     if (value) {
         return !(hasProjectPermission(value) ? true : false)
     }
-    const authStore = store.getState();
-    let hasRole = authStore.appStore && (authStore.appStore.roleId === "comment_only"
-        && (hasProjectPermission('note_viewer'))) ? true : false;
+    let hasRole = (authStore.appStore && (authStore.appStore.roleId === "comment_only"
+        && (hasProjectPermission('note_viewer'))) || isSubscriber);
     return hasRole;
 }
 /**
@@ -718,9 +723,11 @@ export const prepareDialogueDom = (model) => {
 /**sets Owner key in localstorage
  * @param data - whether the checkout is checked or not
  */
-export const releaseOwnerPopup=(data)=>{
-    if(data){
+export const releaseOwnerPopup=(data, projectSharingRole, isSubscribed)=>{
+    if(data && isOwnerRole(projectSharingRole, isSubscribed)){
         localStorage.setItem('hasOwnerEdit', true);
+    }else if( data && isSubscriberRole(projectSharingRole, isSubscribed)){
+        localStorage.setItem('hasSubscriberView', true);
     }
 
 }

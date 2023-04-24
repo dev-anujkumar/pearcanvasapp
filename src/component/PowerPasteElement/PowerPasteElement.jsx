@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 
 //Helper methods and constants
 import powerPasteHelpers from "./powerpaste_helpers.js";
-import { SECONDARY_BUTTON, focusPopupButtons, blurPopupButtons } from '../PopUp/PopUp_helpers.js';
+import { PRIMARY_BUTTON, SECONDARY_BUTTON, focusPopupButtons, blurPopupButtons, focusElement, isPrimaryButtonFocused, isSecondaryButtonFocused } from '../PopUp/PopUp_helpers.js';
 
 // Tinymce library and plugins
 import tinymce from 'tinymce/tinymce';
@@ -50,7 +50,7 @@ const PowerPasteElement = (props) => {
     powerpaste_word_import: 'clean',
     powerpaste_html_import: 'clean',
     smart_paste: false,
-    // auto_focus: `textarea-${props.index}`,
+    auto_focus: `textarea-${props.index}`,
     paste_preprocess: (plugin, data) => pastePreProcess(data),
     paste_postprocess: (plugin, data) => pastePostProcess(data, props),
     setup: (editor) => {
@@ -284,6 +284,14 @@ export const editorBlur = (editor) => {
  */
 export const editorClick = (editor) => {
   editor.on('click', () => {
-    blurPopupButtons();
+    if (editor.getContent()?.length === 0) {
+      blurPopupButtons();
+    } else {
+      if (isPrimaryButtonFocused()) {
+        focusElement(PRIMARY_BUTTON);
+      } else if (isSecondaryButtonFocused()) {
+        focusElement(SECONDARY_BUTTON);
+      }
+    }
   });
 }

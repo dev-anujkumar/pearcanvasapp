@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -112,6 +112,7 @@ import {
     SlateLockMockState,
     AssetPopOverMockState
 } from '../../../fixtures/slateTestingData.js';
+import { mount, shallow } from 'enzyme';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -218,9 +219,9 @@ describe('Testing <CanvasWrapper> Component', () => {
             }
         }
     }
-    let wrapper = mount(<Provider store={store}>
+    let wrapper = mount(<Suspense fallback={<div>Loading...</div>}><Provider store={store}>
         <CanvasWrapper {...props} />
-    </Provider>)
+    </Provider></Suspense>)
 
     test('renders without crashing', () => {
         const div = document.createElement('div');
@@ -253,9 +254,9 @@ describe('Testing <CanvasWrapper> Component', () => {
             }
         });
         let props = {toggleCommentsPanel:() => jest.fn()}
-        let wrapper = mount(<Provider store={store}>
-            <CanvasWrapper {...props} />
-        </Provider>)
+        let wrapper = mount(<Suspense fallback={<div>Loading...</div>}><Provider store={store}>
+        <CanvasWrapper {...props} />
+    </Provider></Suspense>)
         let canvasWrapperInstance = wrapper.find('CanvasWrapper').instance();
         test('should call loadMorePages ', () => {
             let cb = jest.fn();
