@@ -66,7 +66,11 @@ let config = {
     EDIT_DISCUSSION_SPA_URL: 'https://stg-discussionauthoring.pearson.com/',
     BROKER_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-qa-publishTitleInterim',
     ENABLE_TAB_ELEMENT:false,
-    MYCLOUD_END_POINT:'https://mycloud.preprod.pearson.com/auth/json/pearson'
+    MYCLOUD_END_POINT:'https://mycloud.preprod.pearson.com/auth/json/pearson',
+    NARRATIVE_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/narrativeapi-readonly/',
+    MANIFEST_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/manifestapi-readonly/',
+    STRUCTURE_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/structureapi-readonly/',
+    PROJECT_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/projectapi-readonly/'
 };
 
 if (process.env.NODE_ENV === "development") {

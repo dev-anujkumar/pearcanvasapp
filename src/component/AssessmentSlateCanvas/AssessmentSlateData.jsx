@@ -128,7 +128,7 @@ class AssessmentSlateData extends Component {
                 'strApiKey': config.STRUCTURE_APIKEY,
                 'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
                 'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+                'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
             };
             let assessmentUrn = nextProps && nextProps.model && nextProps.model.elementdata.assessmentid.length > 0 ? nextProps.model.elementdata.assessmentid : '';
