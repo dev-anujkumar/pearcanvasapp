@@ -335,3 +335,6 @@ export const tabTitlePlaceholder = "Enter tab name (max. 25 characters)"
 
 /* TB sidebar conversion endpoint */
 export const tbSidebarEndpoint = "tabbed-2-column"
+
+/* Fetch Learning objectives for these slates*/
+export const FETCH_LO_FOR_SLATES = ['section','pdfslate','ltislate']

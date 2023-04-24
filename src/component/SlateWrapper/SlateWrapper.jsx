@@ -542,6 +542,9 @@ class SlateWrapper extends Component {
      * @param {*} event event object
      */
     checkSlateLockStatus = (event) => {
+        if(config.slateType === SLATE_TYPE_LTI) {
+            return;
+        }
         if (this.checkLockStatus()) {
             this.prohibitPropagation(event)
             this.togglePopup(true)

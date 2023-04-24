@@ -486,6 +486,16 @@ describe("SlateWrapper Component", () => {
             expect(spy).toHaveBeenCalled();
             spy.mockClear()
         })
+        it('1.14.3  Test - when slate type is LTI ', () => {
+            config.savingInProgress = true;
+            config.slateType="ltislate"
+            const compInstance = slateWrapInstance(props);
+            const spy = jest.spyOn(compInstance, 'checkSlateLockStatus')
+            compInstance.checkSlateLockStatus(event);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear()
+            config.slateType="section"
+        })
     })
     it('1.15  Test - openCustomPopup ', () => {
         const compInstance = slateWrapInstance(props);

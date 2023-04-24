@@ -1,4 +1,8 @@
+/**
+ * Element TCC is the default read only element added on LTI Slates in TCC Projects
+ */
 import React from "react";
+import { connect } from "react-redux";
 import {
   TCC_ELEMENT,
   TCC_ELEMENT_SUBTYPE,
@@ -6,13 +10,21 @@ import {
 } from "../ElementContainer/ElementConstants";
 
 const ElementTCC = (props) => {
-  const { element, currentSlateAncestorData } = props;
+  const { element, slateTitleUpdated } = props;
 
   const subType = element?.subtype;
-  const title = currentSlateAncestorData?.title;
+  let html = slateTitleUpdated;
+  let div = document.createElement("div");
+  div.innerHTML = html;
+  let slateTitleData = div.innerText
 
-  const handleClick = () => {
-    window.open(tcc_project_link);
+  /**
+   * Redirecting to secure url in new tab
+   */
+  const handleUrlClick = () => {
+    if (element?.elementdata?.secure_launch_url) {
+      window.open(element.elementdata.secure_launch_url);
+    }
   };
 
   return (
@@ -22,9 +34,9 @@ const ElementTCC = (props) => {
           <div className="slate_assessment_data_content">
             <div className="slate_assessment_data_label">{TCC_ELEMENT}</div>
             <div className="slate_assessment_data_details">
-              <div className="slate_assessment_data_title">{title}</div>
-              <div className="slate_lti_data_link" onClick={handleClick}>
-                {element?.elementdata?.secure_launch_url}
+              <div className="slate_assessment_data_title">{slateTitleData}</div>
+              <div className="slate_lti_data_link" onClick={handleUrlClick}>
+                {element?.elementdata?.secure_launch_url ?? "N/A"}
               </div>
             </div>
             <div className="slate_assessment_data_label_subtype">
@@ -45,4 +57,9 @@ const ElementTCC = (props) => {
   );
 };
 
-export default ElementTCC;
+const mapStateToProps = (state) => {
+  return {
+      slateTitleUpdated: state.appStore.slateTitleUpdated,
+  }
+}
+export default connect(mapStateToProps,{})(ElementTCC);
