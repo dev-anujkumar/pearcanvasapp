@@ -135,14 +135,21 @@
     width:100%;
     color: #424242;
   }
-  .slate_assessment_data_label{
+  .slate_assessment_data_label_tcc{
+    font-family: "Open Sans","sans-serif";
     float: left;
+    letter-spacing: 0.2px;
+    font-weight: 500;
     width: 24.2%;
     font-size: 14px;
   }
   .slate_assessment_data_label_subtype{
-    margin-top: 10px;
+    margin-top: 24px;
+    font-family: "Open Sans","sans-serif";
+    letter-spacing: 0.2px;
     float: left;
+    line-height: 20px;
+    font-weight: 500;
     width: 24.2%;
     font-size: 14px;
   }
@@ -162,9 +169,12 @@
     white-space: nowrap;
   }
   .slate_assessment_detail_subtype{
-    margin-top: 10px;
-    font-size: 14px;
-    word-wrap: break-word;
+    margin-top: 24px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    font-family: "Open Sans","sans-serif";
+    font-size: 15px;
   }
   .slate_assessment_data_title:hover{
     overflow: visible; 
@@ -192,13 +202,20 @@
   }
   .slate_lti_data_link {
     cursor: pointer;
-    font-size: 14px;
+    font-family: "Open Sans","sans-serif";
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: 0.2px;
     text-decoration: underline;
     word-wrap: break-word;
   }
   .slate_assessment_tcc_data_note{
-    margin-top: 21em;
-    margin-left: -7em;
+    margin-top: 23em;
+    margin-left: -8em;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: "Open Sans","sans-serif";
+    letter-spacing: 0.2px;
   }
   .slate_assessment_change_button{
     font-size: 13px;

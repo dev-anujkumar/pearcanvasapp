@@ -32,7 +32,7 @@ const ElementTCC = (props) => {
       <div className="slate_fetch_canvas">
         <div className="slate_assessment_date_container">
           <div className="slate_assessment_data_content">
-            <div className="slate_assessment_data_label">{TCC_ELEMENT}</div>
+            <div className="slate_assessment_data_label_tcc">{TCC_ELEMENT}</div>
             <div className="slate_assessment_data_details">
               <div className="slate_assessment_data_title">{slateTitleData}</div>
               <div className="slate_lti_data_link" onClick={handleUrlClick}>
