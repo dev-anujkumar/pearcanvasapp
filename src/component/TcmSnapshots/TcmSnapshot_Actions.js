@@ -91,7 +91,7 @@ const callSnapshotAPI = async (snapshotData) => {
 */
 export const getLatestVersion = async (containerUrn) => {
     try {
-        const response = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
+        const response = await axios.get(`${config.STRUCTURE_READONLY_ENDPOINT}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
             headers: {
                 "Content-Type": "application/json",
                 'myCloudProxySession': config.myCloudProxySession
@@ -110,7 +110,7 @@ export const getLatestVersion = async (containerUrn) => {
 */
 export const slateLinkDetails = async (containerUrn) => {
     try {
-        const response = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}`, {
+        const response = await axios.get(`${config.STRUCTURE_READONLY_ENDPOINT}context/v2/${config.projectUrn}/container/${containerUrn}`, {
             headers: {
                 "Content-Type": "application/json",
                 'myCloudProxySession': config.myCloudProxySession

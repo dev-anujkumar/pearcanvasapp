@@ -681,7 +681,7 @@ export const fetchStatusAndPaste = async (params) => {
             return prepareAndPasteElement(newContainerData, insertionIndex, pasteElement, dispatch,parentUrn,asideData)
         }
         try {
-            const getStatusApiUrl = `${config.AUDIO_NARRATION_URL}container/request/${requestId}`
+            const getStatusApiUrl = `${config.STRUCTURE_READONLY_ENDPOINT}container/request/${requestId}`
             statusAPICallInProgress = true
             const statusResponse = await axios.get(
                 getStatusApiUrl,

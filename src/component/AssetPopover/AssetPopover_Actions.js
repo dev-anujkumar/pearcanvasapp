@@ -159,7 +159,7 @@ export async function getAssetPopoverId(workUrn) {
 
 export const getCurrentlyLinkedImage = async (id, cb) => {
 
-  let url = config.NARRATIVE_API_ENDPOINT + "entity/" + id + "/versions";
+  let url = config.NARRATIVE_READONLY_ENDPOINT + "entity/" + id + "/versions";
   let currentlyLinkedData = {};
 
   try {
@@ -214,7 +214,7 @@ export const getElementVersionContent = async (elementId) =>{
   let currentlyLinkedData = {};
   if(elementId?.match(/work/g)){
     try {
-      let workUrl = config.NARRATIVE_API_ENDPOINT+"v2/" + elementId + "/content"
+      let workUrl = config.NARRATIVE_READONLY_ENDPOINT+"v2/" + elementId + "/content"
       sendDataToIframe({'type': ShowLoader,'message': { status: true }});
       let response = await fetch(workUrl, {
         method: 'GET',
