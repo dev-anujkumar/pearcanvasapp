@@ -34,22 +34,25 @@ jest.mock('../../../src/js/toggleLoader', () => ({
     showTocBlocker: jest.fn()
 }))
 jest.mock('../../../src/constants/utility.js', () => {
-    return { sendDataToIframe: jest.fn(),
-    getLabelNumberTitleHTML: () => {
-        return jest.fn()
-    },
-    hasReviewerRole: () => {
-        return false
-    },
-    sendDataToIframe: () => {
-        return jest.fn()
-    },
-    createLabelNumberTitleModel: () => {
-        return ""
-    },
-    guid: jest.fn(),
-    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )}
- })
+    return {
+        sendDataToIframe: jest.fn(),
+        getLabelNumberTitleHTML: () => {
+            return jest.fn()
+        },
+        hasReviewerRole: () => {
+            return false
+        },
+        sendDataToIframe: () => {
+            return jest.fn()
+        },
+        createLabelNumberTitleModel: () => {
+            return ""
+        },
+        guid: jest.fn(),
+        handleTinymceEditorPlugins: jest.fn(() => 'lists advlist placeholder charmap paste image casechange'),
+        withoutCursorInitailizedElements: ['figure', 'element-aside']
+    }
+})
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const store = mockStore({
