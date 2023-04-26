@@ -472,7 +472,7 @@ export const resetLOBDiscussionItems = ()  => async (dispatch) => {
 }
 
 export const getProjectDetails = () => (dispatch, getState) => {
-    let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
+    let lobURL = `${config.PROJECT_READONLY_ENDPOINT}distributable/v2/${config.projectUrn}`;
     // console.log("the lob url is " + lobURL)
     return axios.get(lobURL, {
         headers: {
@@ -1754,7 +1754,7 @@ export const fetchLearnosityContent = () => dispatch => {
  * This API fetches the Learning Framework(s) linked to the project
  */
 export const fetchProjectLFs = () => dispatch => {
-    axios.get(`${config.ASSET_POPOVER_ENDPOINT}v2/${config.projectUrn}/learningframeworks`, {
+    axios.get(`${config.MANIFEST_READONLY_ENDPOINT}v2/${config.projectUrn}/learningframeworks`, {
         headers: {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": "application/json",

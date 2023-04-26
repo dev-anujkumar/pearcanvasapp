@@ -100,7 +100,8 @@ jest.mock('../../../src/constants/utility.js', () => {
         findStylingOrder: () => {
             return ['em']
         },
-        isSubscriberRole: jest.fn()
+        isSubscriberRole: jest.fn(),
+        withoutCursorInitailizedElements: ['figure', 'element-aside']
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {

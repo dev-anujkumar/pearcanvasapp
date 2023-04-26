@@ -40,7 +40,7 @@ const {
  * This action creator is used to fetch usage-type based on entityType
  */
 export const fetchUsageTypeData = (entityType) => (dispatch) => {
-    let url = `${config.AUDIO_NARRATION_URL}/usagetypes/v3/${entityType}?locale=en`;
+    let url = `${config.STRUCTURE_READONLY_ENDPOINT}/usagetypes/v3/${entityType}?locale=en`;
     return axios.get(url, {
         headers: {
             myCloudProxySession: config.myCloudProxySession

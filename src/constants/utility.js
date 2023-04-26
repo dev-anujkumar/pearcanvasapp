@@ -25,6 +25,7 @@ export const MARKEDINDEX = 'MARKEDINDEX';
 export const validStylesTagList = ['strong','em','u','s','sup','sub','code'];
 export const allowedFormattings = ['bold','italic','underline','strikethrough','superscript','subscript'];
 export const validFirstNodeTags = ['span','dfn'];
+export const withoutCursorInitailizedElements = ['figure', 'element-aside']
 
 export const requestConfigURI = () => {
     let uri = '';

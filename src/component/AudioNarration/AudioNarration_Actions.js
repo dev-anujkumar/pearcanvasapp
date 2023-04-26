@@ -82,7 +82,7 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
     else{
         const storeData = store.getState()
         const slateEntityURN = storeData?.appStore?.slateLevelData[config.slateManifestURN]?.type === 'popup' ? config.tempSlateEntityURN : slateData.slateEntityUrn
-        let url = `${config.AUDIO_NARRATION_URL}context/v3/${slateData.currentProjectId}/container/${slateEntityURN}/narrativeAudio`;
+        let url = `${config.STRUCTURE_READONLY_ENDPOINT}context/v3/${slateData.currentProjectId}/container/${slateEntityURN}/narrativeAudio`;
         try {
             let audioDataResponse = await axios.get(url,{
                 headers: {

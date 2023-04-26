@@ -134,7 +134,7 @@ export class ElementMetaDataAnchor extends Component {
       'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
       'strApiKey': config.STRUCTURE_APIKEY,
       'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-      'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+      'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
       'myCloudProxySession': config.myCloudProxySession
     };

@@ -79,7 +79,6 @@ let cypressConfig = {
     TCM_CUT_COPY_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/cut-copy-snapshots` :"http://localhost:5000/cut-copy-snapshots",
     getENVConfig: process.env.NODE_ENV === "development" ? 'https://dev-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/' : '/cypress/canvas-srvr/cypress-api/',
     TINYMCE_SPELL_CHECKER_URL: process.env.NODE_ENV === "development" ? 'http://localhost:8080/ephox-spelling/': '/cypress/tinymce-srvr/ephox-spelling/',
-    MYCLOUD_END_POINT:'https://mycloudtest.pearson.com/auth/json/pearson',
     prodUrl : 'https://structuredauthoring.pearson.com',
     sitePointing : 'dev',
     conversionInProcess : false,

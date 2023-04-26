@@ -133,6 +133,7 @@ class Interactive extends React.Component {
                 buttonText={ELM_UPDATE_BUTTON}
                 embeddedElmClass="elm-int-status-alignment"
                 elementType={ELM_INT}
+                status={false}
             />)
         }
     }
