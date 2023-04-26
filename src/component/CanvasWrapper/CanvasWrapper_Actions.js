@@ -472,7 +472,7 @@ export const resetLOBDiscussionItems = ()  => async (dispatch) => {
 }
 
 export const getProjectDetails = () => (dispatch, getState) => {
-    let lobURL = `${config.PROJECT_READONLY_ENDPOINT}distributable/v2${config.projectUrn}`;
+    let lobURL = `${config.PROJECT_READONLY_ENDPOINT}distributable/v2/${config.projectUrn}`;
     // console.log("the lob url is " + lobURL)
     return axios.get(lobURL, {
         headers: {
