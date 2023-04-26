@@ -161,11 +161,11 @@ class SlateTagDropdown extends React.Component {
     const {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     } = this.prepareExtFrameworkData();
-
     const currentSlateLF=this.props.currentSlateLF;
     const defaultLF=this.props.defaultLF;
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
-    const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
+    const slatePublishStatus = this.props?.slatePublishStatus
+    const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed || slatePublishStatus
    if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
       this.props.toggleLOWarningPopup(true,e.target.innerText);
     } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {

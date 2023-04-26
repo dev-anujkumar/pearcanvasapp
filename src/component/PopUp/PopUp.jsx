@@ -11,7 +11,7 @@ import PowerPasteElement from '../PowerPasteElement/PowerPasteElement.jsx';
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
-import { DELETE_INSTRUCTION_FOR_TCM, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG } from '../SlateWrapper/SlateWrapperConstants';
+import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
@@ -383,17 +383,17 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-        if (props.isOwnersSlate) {
+        if (props.isCurrentSlate === 'owner') {
             return (
                 <div className={`dialog-buttons`}>
                     <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.proceed(this.state.isChecked, false, e)}>{props.proceedButton}</span>
                     <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
-        } else if (props.isSubscribersSlate) {
+        } else if (props.isCurrentSlate === 'subscriber') {
             return (
                 <div className={`subscriberSlate-buttons`}>
-                    <span option={PRIMARY_BUTTON} className="lo-save-button" onClick={(e) => props.togglePopup(false, e)}>OK</span>
+                    <span option={PRIMARY_BUTTON} className="subscriberSlate-ok-button" onClick={(e) => props.proceed(this.state.isChecked, false, e)}>OK</span>
                 </div>
             )
         }
@@ -401,14 +401,6 @@ class PopUp extends React.Component {
             return (
                 <div className={`dialog-buttons`}>
                     <span option={PRIMARY_BUTTON} className="lo-save-button" onClick={(e) => props.togglePopup(false, e)}>OK</span>
-                </div>
-            )
-        }
-        if (props.isApprovedSlate) {
-            return (
-                <div className={`dialog-buttons`}>
-                    <span option={PRIMARY_BUTTON} className={`save-button`} onClick={props.approveNormalSlate}>{props.proceedButton}</span>
-                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
         }
@@ -454,7 +446,7 @@ class PopUp extends React.Component {
             return (
                 <div className="OwnersSlateInputLine">
                     <input className="OwnersSlateCheckBox" type="checkbox" checked={isChecked} onChange={this.handleChange} />
-                    <p>{DO_NOT_SHOW_TXT}</p>
+                    {props.isCurrentSlate === "subscriber" ? <p>{DONT_ASK_TEXT}</p> : <p>{DO_NOT_SHOW_TXT}</p>}
                 </div>
             )
         }
@@ -629,7 +621,7 @@ class PopUp extends React.Component {
                 </>
             )
         }
-        else if (props.isOwnersSlate) {
+        else if (props.isCurrentSlate === 'owner') {
             return (
                 <>
                     <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
@@ -637,9 +629,10 @@ class PopUp extends React.Component {
                 </>
             )
         }
-        else if (props.isSubscribersSlate) {
+        else if (props.isCurrentSlate === 'subscriber') {
             return (
                 <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
                     <div className={`${props.lOPopupClass}`}>This is a non-editable content as it is subscribed from another project. You may contact the owner of this content to make any changes.</div>
                 </>
             )
@@ -730,7 +723,7 @@ class PopUp extends React.Component {
                         <div tabIndex="0" className={`model-popup ${this.props.wirisAltTextClass ?? assessmentClass}`} ref={this.modelRef}>
                             <div className={this.props.isWordPastePopup ? `wordPasteClass ${this.state.isPowerPasteInvalidContent ? 'wPasteClswithInvalidContent': ''}` : this.props.alfrescoExpansionPopup ? alfrescoExpansionMetaData.renderImages.length > 4 ? `modal-content alfresco-long-popup` : `modal-content alfresco-short-popup`  :`modal-content ${assessmentConfirmation} ${assessmentClass}`} id={isGlossary ? 'popup' : 'popup-visible'}>
                                 {this.renderTcmPopupIcons(this.props)}
-                                {this.renderCloseSymbol(this.props)}
+                                {this.props.isCurrentSlate !== 'subscriber' ? this.renderCloseSymbol(this.props) : ''}
                                 {this.renderDialogText(this.props)}
                                 {this.renderPopupCheckbox(this.props)}
                                 <div ref={this.wordPastePopupTextAreaRef} className={this.props.isWordPastePopup ? `dialog-input-poc ${this.state.wordPasteProceed && 'enable-scrolling'}` : `dialog-input ${assessmentClass}`}>

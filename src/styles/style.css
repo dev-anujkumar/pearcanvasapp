@@ -1102,3 +1102,11 @@ ol ol {
     margin-left: 1.25em;
     margin-bottom: 0.5em;
 }
+
+.pointer-events-none{
+    pointer-events: none;
+}
+
+.hide-buttons{
+    display: none;
+}

@@ -57,7 +57,7 @@ const FigureImageAsset = (props) => {
     return (
        
             <div className={`figure-image-container`}>
-                <div id="figure_add_div" className={`pearson-component image figureData ${imageClass} ${props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
+                <div id="figure_add_div" className={`pearson-component image figureData  ${isReviewer ? 'pointer-events-none' : ''} ${imageClass} ${props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                     {
                         props.model.figuredata && props.model.figuredata.imageid ?
                             <img src={props.imgSrc ? props.imgSrc : (props?.model?.figuredata?.path !== "" ? props.model.figuredata.path : '')}
@@ -88,12 +88,12 @@ const FigureImageAsset = (props) => {
 
                             <KeyboardWrapper index={`${props.index}-image-asset-1`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusUpdate}>
-                                    <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={updateFigureRef} className={`updatefigurebutton ${isReviewer ? "pointer-events-none" : ""}`} onClick={(e) => props.addFigureResource(e)}>{UPDATE_FIGURE_IMAGE_BUTTON_TITLE}</div>
+                                    <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={updateFigureRef} className={`updatefigurebutton ${isReviewer ? "hide-buttons" : ""}`} onClick={(e) => props.addFigureResource(e)}>{UPDATE_FIGURE_IMAGE_BUTTON_TITLE}</div>
                                 </div>
                             </KeyboardWrapper>
                             <KeyboardWrapper index={`${props.index}-image-asset-2`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusDelete}>
-                                  <div onBlur={removeFocus} onKeyDown={triggerClickOnEnter} tabIndex={0} ref={deleteFigureRef} className={`deletefigurebutton ${isReviewer ? "pointer-events-none" : ""}`} onClick={() => props.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                                  <div onBlur={removeFocus} onKeyDown={triggerClickOnEnter} tabIndex={0} ref={deleteFigureRef} className={`deletefigurebutton ${isReviewer ? "hide-buttons" : ""}`} onClick={() => props.toggleDeletePopup(true)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                                 </div>
                                </KeyboardWrapper>
                             </div> : ''

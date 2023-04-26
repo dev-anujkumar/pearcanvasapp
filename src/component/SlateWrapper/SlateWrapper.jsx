@@ -350,11 +350,6 @@ class SlateWrapper extends Component {
                     const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
                     return (
                         <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
-                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate && !config?.isCypressPlusEnabled ? <div
-                                className='approved-overlay'
-                                onClick={!hasReviewerRole() && this.getApprovedPopup}
-                            >
-                            </div> : null}
                             <div className='element-list'>
                                 <Sortable 
                                     options={{
@@ -616,13 +611,15 @@ class SlateWrapper extends Component {
             const subscriberPopupDailogText = <>This is a non-editable content as it is subscribed from another project. You may contact the owner of this content to make any changes.</>
             this.props.showBlocker(true);
             showTocBlocker();
+            const isCurrentSlate = isOwnerRole(projectSharingRole,isSubscribed) ? 'owner' : 'subscriber'
             let dailogText = isOwnerRole(projectSharingRole,isSubscribed) ? OWNER_SLATE_POPUP : subscriberPopupDailogText;
+            let headerText = isOwnerRole(projectSharingRole,isSubscribed) ? 'Warning' : 'Editing Disabled';
             return (
                 <PopUp dialogText={dailogText}
                     togglePopup={this.togglePopup}
-                    isOwnersSlate={true}
+                    isCurrentSlate={isCurrentSlate}
                     proceed={this.proceedButtonHandling}
-                    warningHeaderText={`Editing Disabled`}
+                    warningHeaderText={headerText}
                     lOPopupClass="lo-warning-txt"
                     withCheckBox={true}
                 />
@@ -1669,12 +1666,16 @@ class SlateWrapper extends Component {
             )
         }
         const slateType = getSlateType(this.props.slateData[config.slateManifestURN])
+        const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
+        const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
                      {
                         this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'popup' ?
-                          <button className="popup-button" onClick={this.saveAndClose}>SAVE & CLOSE</button>
+                            <button className="popup-button" onClick={this.saveAndClose}>
+                                {isSubscriberRole(projectSharingRole, isSubscribed) || slatePublishStatus ? 'CLOSE' : 'SAVE & CLOSE'}
+                            </button>
                           :this.renderSlateHeader(this.props)
                     } 
                 </div>

@@ -1036,3 +1036,8 @@ th ol li.listItemNumeroUnoNone:before {
   background: #4e4e4e; 
   -webkit-box-shadow: inset 0 0 6px transparent; 
 } 
+
+/* hide media buttons in case of subscriber */
+.remove-media-button{
+    display: none;
+}

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import config from '../../config/config';
 
 import '../../styles/Toolbar/Toolbar.css';
+import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css'
 import SlateTagDropdown from '../ElementMetaDataAnchor/SlateTagDropdown.jsx';
 
 import { toggleElemBordersAction } from './Toolbar_Actions.js';
@@ -13,9 +14,11 @@ import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { hasReviewerRole, isSubscriberRole, sendDataToIframe } from '../../constants/utility.js';
 import SearchComponent from './Search/Search.jsx';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
 
 const _Toolbar = props => {
-    const { isToolBarBlocked, projectSubscriptionDetails } = props;
+    const { isToolBarBlocked } = props;
     const [lodropdown, setLODropdown] = useState(false);
     const [addDropDown, setValueAdd] = useState(false);
     const [openDropDown, setValueOpen] = useState(false);
@@ -109,6 +112,15 @@ const _Toolbar = props => {
         }
     }
 
+    const approveNormalSlate  = () =>{
+        let updateWIP = false;
+        const slatePublishStatus = (props.slateLevelData[config.slateManifestURN]?.status === "approved")
+        if(slatePublishStatus && !popupSlate) {
+            updateWIP = true
+        }
+        props.slateVersioning(updateWIP)
+    }
+
     let searchElm = UrnSearch;
     let searchTerm = props.searchUrn || '';
     if(config.isPopupSlate) {
@@ -116,23 +128,42 @@ const _Toolbar = props => {
         searchTerm = '';
     }
 
-    const isSubscribed = isSubscriberRole(projectSubscriptionDetails.projectSharingRole, projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed )
-    const bannerSubscriber = isSubscribed ? 'read-only-banner' : ''
+    const isSubscribed = isSubscriberRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed)
+    const slatePublishStatus = (props.slateLevelData[config.slateManifestURN]?.status === "approved")
+    const bannerClass = isSubscribed ? 'read-only-banner' : (slatePublishStatus ? 'approved-banner' : 'banner')
+    const approvedtoolbar = slatePublishStatus ? 'hideToolbar' : ''
+    const toolbarClass = isSubscribed || slatePublishStatus ? 'subscribe-approved-container' : 'toolbar-container'
+    const separatorClass = isSubscribed || slatePublishStatus ? 'separatorClass' : ''
     return (
-        <div className={`${bannerSubscriber}`}>
+        <div className={bannerClass}>
+            <div className={toolbarClass}>
+
+            {/* ************** isSubscriber ************** */}
             { isSubscribed ? 
-            <div className='Read-onlt-text'>Read-only | Subscribed Slate</div> : ''}
-            <div className='toolbar-container'>
-                <div className={`header ${isToolBarBlocked} ${accessToolbar}`} id="tinymceToolbar"></div>
+            <div className='toolbar-text'>
+                <VisibilityIcon />
+                <div className='read-only'>Read-only | Subscribed Slate</div>
+            </div> :
+            slatePublishStatus ? 
+            <div className='toolbar-text'>
+                <VisibilityIcon />
+                <div className='read-only'>Read-only | Approved Content </div>
+                <p className='toolbar-para-text'>- Editing content will create a new version of this slate</p>
+                <button variant="outlined" color="primary" className="edit-content-btn" onClick={approveNormalSlate}>
+                    Edit Content
+                </button>
+            </div> : ''  }
+
+                <div className={`header ${isToolBarBlocked} ${accessToolbar} ${approvedtoolbar}`} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
-                    <div className={props?.isLOExist || isSubscribed ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
+                    <div className={props?.isLOExist ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
                         <div className="learningobjectiveicon">
-                            <div className={`learningobjectiveicon slate-tag-icon ${(slateStatus === "approved" && !popupSlate) ? "disable" : ""}`} title="Slate Tag" onClick={_handleLODropdown}>
+                            <div className={`learningobjectiveicon slate-tag-icon ${(slateStatus === "approved"  && !props.isLOExist && !popupSlate) ? "disable" : ""}`} title="Slate Tag" onClick={_handleLODropdown}>
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
                             </div>
                             {lodropdown &&
-                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} lastAlignedExternalLO={props.lastAlignedExternalLO} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} showCanvasBlocker={props.showCanvasBlocker} projectSubscriptionDetails = {props.projectSubscriptionDetails} />
+                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} lastAlignedExternalLO={props.lastAlignedExternalLO} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} showCanvasBlocker={props.showCanvasBlocker} projectSubscriptionDetails = {props.projectSubscriptionDetails} slatePublishStatus={slatePublishStatus}/>
                             }
                         </div>
                     </div>
@@ -140,7 +171,7 @@ const _Toolbar = props => {
 
                 {/* ***********************Audio Narration in toolbar******************************************** */}
                 {   /* Add Audio if there is no audio exists in slate */
-                    (props.addAudio && (!hasReviewerRole() || isSubscribed)) &&
+                    (props.addAudio && (!hasReviewerRole())) &&
                     <div className={isToolBarBlocked ? `audio-block ${accessToolbar} ${isToolBarBlocked}` : `audio-block ${accessToolbar}`}>
                         <div className="audioicon">
                             <div className={`audio audioicon ${(config.isCypressPlusEnabled || (slateStatus === 'approved' && !popupSlate)) ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
@@ -164,7 +195,7 @@ const _Toolbar = props => {
                     (props.openAudio) &&
                     <div className="audio-block">
                         <div className="audioicon">
-                            <div className={`audio audioicon ${(config.isCypressPlusEnabled || (slateStatus === 'approved' && !popupSlate)) ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
+                            <div className={`audio audioicon ${(config.isCypressPlusEnabled || (slateStatus === 'approved' && !props.openAudio && !popupSlate)) ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
                                 if (checkSlateLock(props.slateLockInfo)) {
                                     return false
                                 }
@@ -174,7 +205,7 @@ const _Toolbar = props => {
                             }}>
                                 {audioNarrationEnable}
                             </div>
-                            {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} projectSubscriptionDetails = {props.projectSubscriptionDetails} />}
+                            {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} projectSubscriptionDetails = {props.projectSubscriptionDetails} slatePublishStatus = {slatePublishStatus} />}
                         </div>
                     </div>
                 }
@@ -182,7 +213,7 @@ const _Toolbar = props => {
             </div>
             {/* ***********************Collapse Header******************************************** */}
             <div className="side-icons">
-                {<div className="icon search-urn" onClick={e => { handleSearchToggle(e, true) }}>
+                {<div className={`icon search-urn ${separatorClass}`} onClick={e => { handleSearchToggle(e, true) }}>
                     {searchIcon}
                     <SearchComponent
                         search={searchElm}
@@ -220,7 +251,8 @@ const mapStateToProps = (state) => {
 
 const mapActionToProps = {
     toggleElemBorders: toggleElemBordersAction,
-    checkSlateLock
+    checkSlateLock,
+    slateVersioning
 }
 
 const Toolbar = connect(mapStateToProps, mapActionToProps)(_Toolbar)
