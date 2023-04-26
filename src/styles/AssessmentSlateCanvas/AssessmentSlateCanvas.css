@@ -460,5 +460,28 @@ font-size: 14px;
 font-weight: bold;
 }
 
-
 /* Ends - PDF Slate Canvas css */
+
+.assessment-dateModified{
+  display: flex;
+  margin-top: 2px;
+}
+.last-updated-time {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+  margin-right: 4px;
+  color: #15850c;
+}
+
+.last-updated-time-format {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+  color: #15850c;
+}

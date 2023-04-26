@@ -22,7 +22,7 @@ export const handleAlfrescoSiteUrl = (elementId, data) => {
 }
 
 export const getAlfrescositeResponse = (elementId, callback) => {
-    let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/platformMetadata/alfresco`
+    let url = `${config.NARRATIVE_READONLY_ENDPOINT}v2/${elementId}/platformMetadata/alfresco`
     fetch(url, {
         method: 'GET',
         headers: {
