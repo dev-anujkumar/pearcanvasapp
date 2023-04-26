@@ -580,6 +580,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
     localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
+    const elemBorderToggle = store?.getState()?.toolbarReducer?.elemBorderToggle;
     if (config.totalPageCount <= page) {
         page = config.totalPageCount;
     }
@@ -674,8 +675,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             const hasMergedPdf = pdfBodymatter?.length === 2 ? true : false
             dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
-        if(slateData?.data[newVersionManifestId]?.status === "approved"){
+        const slatePublishStatus = slateData?.data[newVersionManifestId]?.status === "approved" && slateData?.data[newVersionManifestId]?.type !== "popup";
+        if(slatePublishStatus){
             sendDataToIframe({ 'type': 'slateVersionStatus', 'message': true });
+        }
+        else {
+            const borderStatus = {
+                approvedStatus: false,
+                elemBorderToggle: !elemBorderToggle
+            }
+            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': borderStatus });
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });

@@ -78,16 +78,25 @@ export const hasProjectPermission = (value) => {
     return hasPermissions;
 }
 
+export const isApproved = () =>{
+    const authStore = store.getState();
+    const {appStore, projectInfo} = authStore;
+    const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+    const slatePublishStatus = appStore.slateLevelData[config.slateManifestURN]?.type !== "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved";
+    const isPopupReadOnly = appStore.slateLevelData[config.slateManifestURN]?.type === "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && appStore.slateLevelData[config.tempSlateManifestURN]?.status === "approved";
+    return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber);
+}
+
 
 export const hasReviewerRole = (value) => {
     const authStore = store.getState();
-    const {projectInfo} = authStore;
+    const {projectInfo, appStore} = authStore;
     let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     if (value) {
         return !(hasProjectPermission(value) ? true : false)
     }
-    let hasRole = (authStore.appStore && (authStore.appStore.roleId === "comment_only"
-        && (hasProjectPermission('note_viewer'))) || isSubscriber);
+    let hasRole = (appStore && (appStore.roleId === "comment_only"
+        && (hasProjectPermission('note_viewer'))) || isApproved());
     return hasRole;
 }
 /**

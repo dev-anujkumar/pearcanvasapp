@@ -5,11 +5,13 @@ import {
 /**
  * Action for border toggle hide/show
  */
-export const toggleElemBordersAction = () => {
-    return {
-        type: TOGGLE_BORDERS
-    }
+export const toggleElemBordersAction = (status) => (dispatch) =>{
+    dispatch({
+        type: TOGGLE_BORDERS,
+        payload: status
+    })
 }
+
 export const togglePageNumberAction = () => {
     return {
         type: TOGGLE_PAGE_NUMBER

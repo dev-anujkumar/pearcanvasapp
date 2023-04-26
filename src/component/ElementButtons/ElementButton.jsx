@@ -62,7 +62,8 @@ class ElementButton extends Component {
     renderButton = (type, clickHandlerFn, elementType, btnClassName = '', isButtonDisabled = false) => {
         let buttonJSX = null
         const elementTypeClassName = (elementType === ElementConstants.BLOCK_LIST) ? elementType : ''; 
-        const { labelText,elementId,isSubscribersSlate } = this.props
+        const { labelText,elementId,isSubscribersSlate, isgreyBorder } = this.props;
+        const isBorderOff = isgreyBorder ? "greyElementTag" : "";
         switch(type){
             case buttonTypes.CLOSE_CONTAINER:
                 buttonJSX = <span className="btn-element close-container"  onClick={clickHandlerFn}><img src={closeContainer} /></span>
@@ -91,7 +92,7 @@ class ElementButton extends Component {
                 </div>
                 break;
             case buttonTypes.ELEMENT_BLOCK_LABEL:
-                buttonJSX = <span className={`btn-element element-label ${btnClassName} ${elementTypeClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
+                buttonJSX = <span className={`btn-element element-label ${isBorderOff} ${btnClassName} ${elementTypeClassName}`} onContextMenu={this.props.copyContext} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.DELETE_ELEMENT:
                 buttonJSX = isButtonDisabled ? <span className={`btn-element delete-icon ${elementTypeClassName} icon-disabled`} > <img src={blureDeleteIcon} /></span>
@@ -268,7 +269,7 @@ class ElementButton extends Component {
                 </span>
                 break;
             case buttonTypes.ELEMENT_LABEL_CLICKABLE:
-                buttonJSX = <span className={`btn-element element-label-clickable-button ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
+                buttonJSX = <span className={`btn-element element-label-clickable-button ${isBorderOff} ${btnClassName}`} onClick={clickHandlerFn}>{labelText}</span>
                 break;
             case buttonTypes.COMMENT_FLAGGED:
                 buttonJSX = <div className='flag-te-btn'>

@@ -1015,6 +1015,10 @@ th ol li.listItemNumeroUnoNone:before {
   width:350px;
 }
 
+.element-container.multi-column.hideBorder{
+    border: 1.5px solid #808080;
+}
+
 /******************************* Scrollbar Design **********************************************/
 
 /* width */

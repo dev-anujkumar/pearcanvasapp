@@ -22,7 +22,7 @@ import {
     SET_SLATE_MATTER_TYPE,
     UPDATE_CARET_OFFSET
 } from '../../constants/Action_Constants';
-
+import store from '../../appstore/store';
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
@@ -1741,8 +1741,14 @@ export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
         }
     }).then(response => {
         if(response?.data?.status === "success"){
+            const elemBorderToggle = store?.getState()?.toolbarReducer?.elemBorderToggle;
+            const borderStatus = {
+                approvedStatus: false,
+                elemBorderToggle: !elemBorderToggle,
+                isWip: true
+            }
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
-            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
+            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': borderStatus });
         }
     }).catch(error => {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })

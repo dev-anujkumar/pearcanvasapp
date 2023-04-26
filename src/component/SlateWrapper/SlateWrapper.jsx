@@ -327,9 +327,6 @@ class SlateWrapper extends Component {
         }
     }
 
-    getApprovedPopup = () => {
-        this.props.approvedSlatePopupStatus(true)
-    }
 
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
@@ -337,8 +334,14 @@ class SlateWrapper extends Component {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
+                    const isPopupReadOnly = _slateData?.[config.slateManifestURN]?.type === "popup" && _slateData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && _slateData?.[config.tempSlateManifestURN]?.status === "approved";
                     if(_slateObject==undefined){
                         return false
+                    }
+                    if(isPopupReadOnly){
+                        sendDataToIframe({ 'type': 'slateVersionStatus', 'message': true });
+                    }else if(_slateData?.[config.slateManifestURN]?.type === "popup" && !this.props.elemBorderToggle){
+                        sendDataToIframe({ 'type': 'slateVersionStatus', 'message': this.props.elemBorderToggle});
                     }
                     let _slateContent = _slateObject.contents
                     let { id: _slateId, type: _slateType } = _slateObject;
@@ -1719,7 +1722,6 @@ class SlateWrapper extends Component {
                 {/* **************** Alfresco Popup ************ */}
                 {this.showAlfrescoPopup()}
                 {/* **************** Approved to WIP Warning Popup ************* */}
-                {this.showApprovedWarningPopup()}
             </React.Fragment>
         );
     }
@@ -1778,7 +1780,8 @@ const mapStateToProps = state => {
         projectSubscriptionDetails:state?.projectInfo,
         activeElement: state.appStore.activeElement,
         asideData: state.appStore.asideData,
-        approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus
+        approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
+        elemBorderToggle: state.toolbarReducer.elemBorderToggle,
     };
 };
 

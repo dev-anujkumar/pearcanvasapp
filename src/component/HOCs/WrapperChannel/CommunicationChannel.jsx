@@ -303,7 +303,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.fetchSlateAncestorData(message || {});
                     break;
                 case 'elementBorder':
-                    this.props.toggleElemBordersAction()
+                    this.props.toggleElemBordersAction(message)
                     break;
                 case 'pageNumber':
                     this.props.togglePageNumberAction()
