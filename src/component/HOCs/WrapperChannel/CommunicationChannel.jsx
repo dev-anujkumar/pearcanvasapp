@@ -70,6 +70,8 @@ function CommunicationChannel(WrappedComponent) {
                     this.setCurrentSlate(message);
                     break;
                 case 'deleteTocItem':
+                case 'deleteTocMultipleItem':
+                case 'deleteTocMultipleItemWithPendingTrack':
                     this.onDeleteTocItem(message);
                     break;
                 case 'deleteTocItemWithPendingTrack':
@@ -470,7 +472,7 @@ function CommunicationChannel(WrappedComponent) {
                 'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
                 'strApiKey': config.STRUCTURE_APIKEY,
                 'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+                'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
                 'myCloudProxySession': config.myCloudProxySession
             };
@@ -1097,7 +1099,7 @@ function CommunicationChannel(WrappedComponent) {
                     'strApiKey': config.STRUCTURE_APIKEY,
                     'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
                     'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                    'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+                    'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
                     'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
                 }
                 if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (config.slateType == "section" || config.slateType == SLATE_TYPE_PDF)) {

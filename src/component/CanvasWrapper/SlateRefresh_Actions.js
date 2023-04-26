@@ -7,7 +7,7 @@ import { sendDataToIframe } from '../../constants/utility';
 import { FETCH_DATA_ON_SLATE_REFRESH } from '../../constants/Action_Constants'
 
 export const handleSlateRefresh = (id,cb) => (dispatch, getState) => { 
-    let url = config.SLATE_REFRESH_URL + id
+    let url = `${config.STRUCTURE_READONLY_ENDPOINT}container/v2/` + id
     
      axios.get(url,{ 
         headers: {

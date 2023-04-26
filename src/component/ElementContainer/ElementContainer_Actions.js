@@ -621,7 +621,7 @@ const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
  * @param {*} index index of element
  */
 export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
-    let apiUrl = `${config.NARRATIVE_API_ENDPOINT}v2/${elementWorkId}`
+    let apiUrl = `${config.NARRATIVE_READONLY_ENDPOINT}v2/${elementWorkId}`
     const resp = await fetch(apiUrl, {
         method: 'GET',
         headers: {
