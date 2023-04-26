@@ -461,20 +461,6 @@ function CommunicationChannel(WrappedComponent) {
                         this.handleRefreshSlate();
                     }
                     break;
-                // case 'slateStatusUpdated':
-                //     let updateRCSlate = false;
-                //     // In this condition, we are setting a flag to identify whether we need to
-                //     // update slate after versioning in Resource collection, this flag is used by newversion wrapper API
-                //     // updateRCSlate = true (update slate in RC using VCS API at backend)
-                //     //updateRCSlate = false (Do not update slate in RC)
-                //     let slateDataUpdate = this.props.slateLevelData;
-                //     const newSlateData = JSON.parse(JSON.stringify(slateDataUpdate));
-                //     const popupSlate = (newSlateData[config.slateManifestURN]?.type === "popup")
-                //     if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && !popupSlate) {
-                //         updateRCSlate = true
-                //     }
-                //     this.props.slateVersioning(updateRCSlate,message)
-                //     break;
 
             }
         }
