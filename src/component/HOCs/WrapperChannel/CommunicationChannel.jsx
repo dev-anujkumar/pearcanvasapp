@@ -461,7 +461,6 @@ function CommunicationChannel(WrappedComponent) {
                         this.handleRefreshSlate();
                     }
                     break;
-
             }
         }
 
