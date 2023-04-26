@@ -1084,3 +1084,21 @@ p code {
     font-family: monospace;
     font-size: 1.05em;
 }
+
+li li.listItemNumeroUno, li li.listItemNumeroUnoNumber, li li.listItemNumeroUnoLowerAlpha, li li.listItemNumeroUnoUpperAlpha, li li.listItemNumeroUnoUpperRoman, li li.listItemNumeroUnoLowerRoman, li li.listItemNumeroUnoNone {
+    font-size: 100%;
+}
+
+.bl ol li.listItemNumeroUnoLowerAlpha:before, .bl ol li.listItemNumeroUnoNumber:before {
+    counter-increment: section;
+    font-size: 12px;
+    padding-left: 15px;
+    width: 40px;
+    word-break: break-all;
+}
+
+ol ol {
+    margin-top: 0.5em;
+    margin-left: 1.25em;
+    margin-bottom: 0.5em;
+}
