@@ -90,7 +90,7 @@ class SlateTagDropdown extends React.Component {
             'strApiKey': config.STRUCTURE_APIKEY,
             'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
             'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-            'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+            'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
             'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
             'myCloudProxySession': config.myCloudProxySession
         };
@@ -142,7 +142,7 @@ class SlateTagDropdown extends React.Component {
       'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
       'strApiKey': config.STRUCTURE_APIKEY,
       'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-      'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+      'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
       'myCloudProxySession': config.myCloudProxySession
     };

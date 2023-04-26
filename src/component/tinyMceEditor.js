@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole, withoutCursorInitailizedElements } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY, INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -736,7 +736,6 @@ export class TinyMceEditor extends Component {
      */
     editorClick = (editor) => {
         editor.on('click', (e) => {
-            let blockListData = checkBlockListElement(this.props, "TAB");
             //tinymce editor readonly when reviewer or subscriber
             if(hasReviewerRole()){
                 tinymce.activeEditor.mode.set("readonly");
@@ -868,7 +867,7 @@ export class TinyMceEditor extends Component {
                 let parent = e.target.closest("dfn");
                 uri = parent.getAttribute('data-uri');
             }
-            this.glossaryBtnInstance?.setDisabled(true)
+            this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
                     this.toggleGlossaryandFootnoteIcon(true);
@@ -880,7 +879,7 @@ export class TinyMceEditor extends Component {
                 this.toggleGlossaryandFootnotePopup(true, "Glossary", uri, () => { this.toggleGlossaryandFootnoteIcon(true); });
             }
             if (isAudioExists || isFigureImageExists) {
-                if (e.currentTarget.classList.contains('mce-edit-focus')) {
+                if (e.currentTarget.classList.contains('mce-edit-focus') || hasReviewerRole()) {
                     const parentPosition = getParentPosition(e.currentTarget);
                     const slateWrapperNode = document.getElementById('slateWrapper')
                     const scrollTop = slateWrapperNode && slateWrapperNode.scrollTop || 0;
@@ -2454,7 +2453,7 @@ export class TinyMceEditor extends Component {
             }
 
             let activeElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
-            if (activeElement?.nodeName === "CODE") {
+            if (activeElement.nodeName === "CODE") {
                 let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
                 if (syntaxEnabled && syntaxEnabled.checked) {
                     this.notFormatting = true;
@@ -3320,7 +3319,7 @@ export class TinyMceEditor extends Component {
 
 
                 if (this.editorRef.current) {
-                    if (!(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
+                    if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props.element.type) && this.props.element.figuretype !== "codelisting")) {
                         this.editorRef.current.style.caretColor = 'transparent';
                         this.editorRef.current.focus();
                     } else {
@@ -3334,7 +3333,7 @@ export class TinyMceEditor extends Component {
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
                     config.editorRefID = this.editorRef.current.id;
                     let timeoutId = setTimeout(() => {
-                        if (!(this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select")) {
+                        if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props.element.type) && this.props.element.figuretype !== "codelisting")) {
                             const elementID = this.editorRef?.current?.id ? this.editorRef.current.id : config.editorRefID;
                             document.getElementById(elementID).click();
                         }
@@ -3830,19 +3829,17 @@ export class TinyMceEditor extends Component {
             /*
                 Before entering to new element follow same  procedure
             */
+           const activeElementInnerHTML = activeEditorId && document.getElementById(activeEditorId)?.innerHTML;
+           const curretnTargetInnerHTML = currentTarget?.id && document.getElementById(currentTarget.id).innerHTML;
                 if (!isSameTargetBasedOnDataId || !isSameByElementId) {
                     let elementContainerNodes = document.querySelectorAll('.element-container[data-id="' + previousTargetId + '"] .cypress-editable')
                     if (elementContainerNodes.length)
                         elementContainerNodes[0].innerHTML = tempContainerHtml;
-                    if(document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0]?.innerHTML){
-                        document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
-                    }
+                    document.querySelectorAll('.element-container[data-id="' + currentTargetId + '"] .cypress-editable')[0].innerHTML = tempNewContainerHtml;
                 }
-                else {
-                    if (document.getElementById(activeEditorId)?.innerHTML && currentTarget?.id && document.getElementById(currentTarget.id)?.innerHTML && tempContainerHtml && tempNewContainerHtml) {
-                        document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
-                        document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
-                    }
+                else if (activeElementInnerHTML && curretnTargetInnerHTML && tempContainerHtml && tempNewContainerHtml) {
+                    document.getElementById(activeEditorId).innerHTML = tempContainerHtml;
+                    document.getElementById(currentTarget.id).innerHTML = tempNewContainerHtml;
                 }
         }
 
@@ -3874,8 +3871,9 @@ export class TinyMceEditor extends Component {
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                     let tempFirstContainerHtml = tinyMCE.$("#" + tinymce.editors[i].id).html()
                     tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                    let tinymceEditorNode = document.getElementById(tinymce.editors[i].id)
-                    if (tinymceEditorNode) {
+                    let tinymceEditorNode = document.getElementById(tinymce.editors[i].id);
+                    const tinymceEditorNodeInnerHTML = tinymceEditorNode?.innerHTML
+                    if (tinymceEditorNodeInnerHTML && tempFirstContainerHtml ) {
                         tinymceEditorNode.innerHTML = tempFirstContainerHtml;
                     }
                     removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
@@ -4317,7 +4315,7 @@ export class TinyMceEditor extends Component {
 
     render() {
         const { slateLockInfo: { isLocked, userId }, contenteditable } = this.props;
-        let lockCondition = ((isLocked && config.userId !== userId.replace(/.*\(|\)/gi, '')) || hasReviewerRole);
+        let lockCondition = (isLocked && config.userId !== userId.replace(/.*\(|\)/gi, ''));
         this.handlePlaceholder();
 
         let classes = this.props.className ? this.props.className + " cypress-editable" : '' + "cypress-editable";

@@ -546,7 +546,7 @@ class ElementContainer extends Component {
             isAltTextLongDescModified = this.props.oldFigureDataForCompare.tableasHTML !== previousElementData.figuredata.tableasHTML
         }
         if(previousElementData.figuretype === 'image') {
-            isAltTextLongDescModified = this.props.oldFigureDataForCompare !== previousElementData.figureData
+            isAltTextLongDescModified = this.props.oldFigureDataForCompare !== previousElementData.figuredata
         }
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
@@ -585,8 +585,8 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
-                || podwidth !== (previousElementData.figuredata.podwidth ?
-                    previousElementData.figuredata.podwidth : '') && podwidth !== null|| isAltTextLongDescModified
+                || (podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : '') && podwidth !== null) 
+                || isAltTextLongDescModified
             );
         }
 
@@ -725,6 +725,7 @@ class ElementContainer extends Component {
         captionHTML = this.removeClassesFromHtml(captionHTML)
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
+        subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
         
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
         let podwidth = this.props?.activeElement?.podwidth;
@@ -741,7 +742,7 @@ class ElementContainer extends Component {
             previousElementData.figuredata.interactivetype === 'table') {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
             let posterTextHTML = pdfPosterTextDOM ? pdfPosterTextDOM.innerHTML : ""
-            posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`
+            posterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g) ? posterTextHTML : `<p>${posterTextHTML}</p>`;
 
             let oldPosterText = previousElementData.html && previousElementData.html.postertext ? previousElementData.html.postertext.match(/(<p.*?>.*?<\/p>)/g) ? previousElementData.html.postertext : `<p>${previousElementData.html.postertext}</p>` : "<p></p>";
             return (subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
@@ -992,16 +993,16 @@ class ElementContainer extends Component {
                     let blankLineLabel = titleDOMNode && titleDOMNode.getElementsByClassName("answerLineContent")
                     let blankLineTitle = subtitleDOMNode && subtitleDOMNode.getElementsByClassName("answerLineContent")
                     if (parentElement.type === "poetry" || parentElement.type === "popup") {
-                        if ((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
+                        if ((titleDOMNode?.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
                             titleHTML = ""
                         }
-                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length) && !(blankLineTitle && blankLineTitle.length)) {
+                        if ((subtitleDOMNode?.textContent === '') && !(imgTaginTitle && imgTaginTitle.length) && !(blankLineTitle && blankLineTitle.length)) {
                             subtitleHTML = ""
                         }
-                        tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
+                        tempDiv.innerHTML = createTitleSubtitleModel((titleHTML || ''), subtitleHTML)
                     }
                     else if (parentElement.type === "citations") {
-                        if ((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
+                        if ((titleDOMNode?.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
                             titleHTML = ""
                         }
                         tempDiv.innerHTML = createTitleSubtitleModel("", titleHTML)
@@ -1277,6 +1278,8 @@ class ElementContainer extends Component {
      * Will be called on element blur and a saving call will be made
      */
     handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}, triggeredFrom = '') => {
+        // restrict saving call incase of read only content
+        if(hasReviewerRole()) return;
         const { elementType, primaryOption, secondaryOption, elementId } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);
@@ -2973,34 +2976,32 @@ class ElementContainer extends Component {
      * @description - This function is used to open alfresco metadata in new window.
      */
 
-    handleAlfrescoMetadataWindow = (e) => {       
-        if(this.props?.element?.figuretype === TABLE_ELEMENT){
+    handleAlfrescoMetadataWindow = (e) => {
+        if (this.props?.element?.figuretype === TABLE_ELEMENT) {
             this.showAlfrescoExpansionPopup(e, true, this.props.element)
-        }else {
+        } else {
             let imageId;
             if (this.props.element.type === 'element-pdf') {
-                imageId =this.state.pdfSlateAssetId ||  this.props?.element?.elementdata?.assetid 
+                imageId = this.state.pdfSlateAssetId || this.props?.element?.elementdata?.assetid
             } else {
-            switch(this.props?.element?.figuretype){
-             case IMAGE:
-                imageId=this.props?.element?.figuredata?.imageid
-                break;
-             case AUDIO :
-                imageId=this.props?.element?.figuredata?.audioid
-                break;
-             case VIDEO:
-                imageId=this.props?.element?.figuredata?.videoid
-                break;
-             case  INTERACTIVE:
-                imageId=this.props?.element?.figuredata?.interactiveid
-                break;
-             default: imageId=null
+                const figureData = this.props?.element?.figuredata || {};
+                if (figureData['imageid']) {
+                    imageId = this.props?.element?.figuredata?.imageid;
+                } else if (figureData['audioid']) {
+                    imageId = this.props?.element?.figuredata?.audioid;
+                } else if (figureData['videoid']) {
+                    imageId = this.props?.element?.figuredata?.videoid;
+                } else if (figureData['interactiveid']) {
+                    imageId = this.props?.element?.figuredata?.interactiveid;
+                } else {
+                    imageId = null;
+                }
+            }
+            if (imageId) {
+                imageId = imageId.replace('urn:pearson:alfresco:', '');
+                this.openInNewWindow(imageId);
             }
         }
-        imageId = imageId.replace('urn:pearson:alfresco:', '');
-        this.openInNewWindow(imageId)
-    }
-   
     }
 
     /**
