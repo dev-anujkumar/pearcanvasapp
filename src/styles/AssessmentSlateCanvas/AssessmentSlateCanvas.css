@@ -135,6 +135,11 @@
     width:100%;
     color: #424242;
   }
+  .slate_assessment_data_label{
+    float: left;
+    width: 24.2%;
+    font-size: 14px;
+  }
   .slate_assessment_data_label_tcc{
     font-family: "Open Sans","sans-serif";
     float: left;
