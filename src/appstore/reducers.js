@@ -134,7 +134,8 @@ const INITIAL_STATE = {
     caretPosition: '',
     deletedElementKeysData: {},
     getRequiredSlateData: {},
-    approvedSlatePopupstatus: false
+    approvedSlatePopupstatus: false,
+    setGrammarlyFlag: false
 };
 
 const INITIAL_ACTION = {

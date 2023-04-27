@@ -12,10 +12,9 @@ export class ElementAuthoring extends Component {
 
   render() {
     const { className, model,openGlossaryFootnotePopUp, slateLockInfo,openAssetPopoverPopUp,glossaryFootnoteValue, openMarkedIndexPopUp, markedIndexValue } = this.props
-    const grammarlyFlag = this.props.setGrammarlyFlag === "true" ? true : false;
      return (
        <KeyboardWrapper enable={this.props.element?.elementdata?.type !== "blockquote"} index={this.props.index}>
-          {grammarlyFlag ? <Grammarly clientId={config.GRAMMARLY_CLIENT_ID}>
+          {this.props?.setGrammarlyFlag ? <Grammarly clientId={config.GRAMMARLY_CLIENT_ID}>
             <GrammarlyEditorPlugin>
             <TinyMceEditor
             isBlockList={this.props.isBlockList}

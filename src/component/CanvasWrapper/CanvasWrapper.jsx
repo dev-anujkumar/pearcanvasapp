@@ -23,7 +23,7 @@ import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopu
 import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
-import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled, setGrammarlyFlag } from '../SlateWrapper/SlateWrapper_Actions'
+import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
 import { currentSlateLO,isLOExist, currentSlateLOMath, currentSlateLOType,updateLastAlignedLO, fetchDefaultLF } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { handleUserRole } from './UserRole_Actions'
 import { handleSlateRefresh } from '../CanvasWrapper/SlateRefresh_Actions'
@@ -35,7 +35,7 @@ import store from './../../appstore/store'
 import { hideBlocker } from '../../js/toggleLoader';
 import {getAllSlatesData} from '../../js/getAllSlatesData'
 import { fetchUsageTypeData, setElmPickerData } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
-import { toggleElemBordersAction, togglePageNumberAction, toggleSpellCheckAction } from '../Toolbar/Toolbar_Actions.js';
+import { toggleElemBordersAction, togglePageNumberAction, toggleSpellCheckAction, setGrammarlyFlag } from '../Toolbar/Toolbar_Actions.js';
 import { prevIcon, nextIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
 import { assetIdForSnapshot } from '../../component/AssetPopover/AssetPopover_Actions.js';
 import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';

@@ -24,6 +24,7 @@ import FigureHeader from '../FigureHeader/FigureHeader.jsx';
 import { IMAGE, TABLE, MATH_IMAGE, TABLE_AS_MARKUP, MATH_ML, BLOCK_CODE } from './ElementFigure_Constants'
 import { launchTableSPA } from './ElementFigure_Utility';
 import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx';
+import { Grammarly, GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
@@ -659,10 +660,19 @@ class FigureImage extends Component {
                                         </KeyboardWrapper>
                                     </header>
                                     <KeyboardWrapper index={`${this.props.index}-2`} enable={this.isEnableKeyboard()}>
+                                        {this.props.setGrammarlyFlag ? <Grammarly clientId={config.GRAMMARLY_CLIENT_ID}>
+                                        <GrammarlyEditorPlugin>
                                         <div className={`floating-title-group`}>
                                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType}/>
                                             <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
                                         </div>
+                                            </GrammarlyEditorPlugin>
+                                        </Grammarly> :
+                                            <div className={`floating-title-group`}>
+                                                <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                                <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                                            </div>
+                                        }
                                     </KeyboardWrapper>
                                 </>
                             }
@@ -673,18 +683,36 @@ class FigureImage extends Component {
                             </>
                             <figcaption >
                             <KeyboardWrapper enable={this.isEnableKeyboard()} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-4`:`${this.props.index}-3`}>
-                                <div className={`floating-caption-group`}>
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-4`:`${this.props.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={captionsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                                    <label className={checkHTMLdataInsideString(this.props?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
-                                </div>
+                                    {this.props.setGrammarlyFlag ? <Grammarly clientId={config.GRAMMARLY_CLIENT_ID}>
+                                        <GrammarlyEditorPlugin>
+                                            <div className={`floating-caption-group`}>
+                                                <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype) ? `${this.props.index}-4` : `${this.props.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={captionsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                                <label className={checkHTMLdataInsideString(this.props?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
+                                            </div>
+                                        </GrammarlyEditorPlugin>
+                                    </Grammarly> :
+                                        <div className={`floating-caption-group`}>
+                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype) ? `${this.props.index}-4` : `${this.props.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={captionsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                            <label className={checkHTMLdataInsideString(this.props?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
+                                        </div>
+                                    }
                                 </KeyboardWrapper>
                             </figcaption>
                             <figcredit >
                             <KeyboardWrapper enable={this.isEnableKeyboard()} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`}>      
-                                <div className={`floating-credit-group`}>
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={creditsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType}/>     
-                                    <label className={checkHTMLdataInsideString(this.props?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
-                                </div>
+                                    {this.props.setGrammarlyFlag ? <Grammarly clientId={config.GRAMMARLY_CLIENT_ID}>
+                                        <GrammarlyEditorPlugin>
+                                            <div className={`floating-credit-group`}>
+                                                <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype) ? `${this.props.index}-5` : `${this.props.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={creditsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                                <label className={checkHTMLdataInsideString(this.props?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
+                                            </div>
+                                        </GrammarlyEditorPlugin>
+                                    </Grammarly> :
+                                        <div className={`floating-credit-group`}>
+                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype) ? `${this.props.index}-5` : `${this.props.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={creditsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                            <label className={checkHTMLdataInsideString(this.props?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
+                                        </div>
+                                    }
                             </KeyboardWrapper>
                                 
                             </figcredit>
@@ -728,7 +756,8 @@ const mapStateToProps = (state) => {
         figImageList: state.autoNumberReducer.figImageList,
         slateAncestors: state.appStore.currentSlateAncestorData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
-        selectedElement: state.keyboardReducer.selectedElement
+        selectedElement: state.keyboardReducer.selectedElement,
+        setGrammarlyFlag: state.appStore.setGrammarlyFlag
     }
 }
 
