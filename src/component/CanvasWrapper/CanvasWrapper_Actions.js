@@ -682,7 +682,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         else {
             const borderStatus = {
                 approvedStatus: false,
-                elemBorderToggle: !elemBorderToggle
+                elemBorderToggle: elemBorderToggle
             }
             sendDataToIframe({ 'type': 'slateVersionStatus', 'message': borderStatus });
         }
