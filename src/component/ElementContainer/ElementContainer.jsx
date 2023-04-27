@@ -370,7 +370,10 @@ class ElementContainer extends Component {
             }
             this.props.fetchCommentByElement(this.props.element.id);
         }
-        this.handleCommunication(this.props.element.id);
+        // disabling Add comment icon for TCC Element in TOC
+        if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT) {
+            this.handleCommunication(this.props.element.id);
+        }
     }
 
     removeClassesFromHtml = (html) => {
