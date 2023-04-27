@@ -228,7 +228,7 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
  * redux store
  */
 export const getCrossReferenceValues = () => async (dispatch) => {
-    let url = `${config.ASSET_POPOVER_ENDPOINT}v1/${config.projectUrn}/indexes`;
+    let url = `${config.MANIFEST_READONLY_ENDPOINT}v1/${config.projectUrn}/indexes`;
     try{
         const result = await axios.get(url, {
             headers: {

@@ -993,16 +993,16 @@ class ElementContainer extends Component {
                     let blankLineLabel = titleDOMNode && titleDOMNode.getElementsByClassName("answerLineContent")
                     let blankLineTitle = subtitleDOMNode && subtitleDOMNode.getElementsByClassName("answerLineContent")
                     if (parentElement.type === "poetry" || parentElement.type === "popup") {
-                        if ((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
+                        if ((titleDOMNode?.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
                             titleHTML = ""
                         }
-                        if ((subtitleDOMNode.textContent === '') && !(imgTaginTitle && imgTaginTitle.length) && !(blankLineTitle && blankLineTitle.length)) {
+                        if ((subtitleDOMNode?.textContent === '') && !(imgTaginTitle && imgTaginTitle.length) && !(blankLineTitle && blankLineTitle.length)) {
                             subtitleHTML = ""
                         }
-                        tempDiv.innerHTML = createTitleSubtitleModel(titleHTML, subtitleHTML)
+                        tempDiv.innerHTML = createTitleSubtitleModel((titleHTML || ''), subtitleHTML)
                     }
                     else if (parentElement.type === "citations") {
-                        if ((titleDOMNode.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
+                        if ((titleDOMNode?.textContent === '') && !(imgTaginLabel && imgTaginLabel.length) && !(blankLineLabel && blankLineLabel.length)) {
                             titleHTML = ""
                         }
                         tempDiv.innerHTML = createTitleSubtitleModel("", titleHTML)
@@ -2976,34 +2976,32 @@ class ElementContainer extends Component {
      * @description - This function is used to open alfresco metadata in new window.
      */
 
-    handleAlfrescoMetadataWindow = (e) => {       
-        if(this.props?.element?.figuretype === TABLE_ELEMENT){
+    handleAlfrescoMetadataWindow = (e) => {
+        if (this.props?.element?.figuretype === TABLE_ELEMENT) {
             this.showAlfrescoExpansionPopup(e, true, this.props.element)
-        }else {
+        } else {
             let imageId;
             if (this.props.element.type === 'element-pdf') {
-                imageId =this.state.pdfSlateAssetId ||  this.props?.element?.elementdata?.assetid 
+                imageId = this.state.pdfSlateAssetId || this.props?.element?.elementdata?.assetid
             } else {
-            switch(this.props?.element?.figuretype){
-             case IMAGE:
-                imageId=this.props?.element?.figuredata?.imageid
-                break;
-             case AUDIO :
-                imageId=this.props?.element?.figuredata?.audioid
-                break;
-             case VIDEO:
-                imageId=this.props?.element?.figuredata?.videoid
-                break;
-             case  INTERACTIVE:
-                imageId=this.props?.element?.figuredata?.interactiveid
-                break;
-             default: imageId=null
+                const figureData = this.props?.element?.figuredata || {};
+                if (figureData['imageid']) {
+                    imageId = this.props?.element?.figuredata?.imageid;
+                } else if (figureData['audioid']) {
+                    imageId = this.props?.element?.figuredata?.audioid;
+                } else if (figureData['videoid']) {
+                    imageId = this.props?.element?.figuredata?.videoid;
+                } else if (figureData['interactiveid']) {
+                    imageId = this.props?.element?.figuredata?.interactiveid;
+                } else {
+                    imageId = null;
+                }
+            }
+            if (imageId) {
+                imageId = imageId.replace('urn:pearson:alfresco:', '');
+                this.openInNewWindow(imageId);
             }
         }
-        imageId = imageId.replace('urn:pearson:alfresco:', '');
-        this.openInNewWindow(imageId)
-    }
-   
     }
 
     /**
