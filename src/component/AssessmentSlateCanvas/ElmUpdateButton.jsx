@@ -7,6 +7,7 @@ import React from 'react'
 import { useEffect } from 'react';
 /** ----- Import - Dependencies ----- */
 import { approvedIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
+import { hasReviewerRole } from '../../constants/utility.js';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { ELM_INT } from './AssessmentSlateConstants.js';
 
@@ -14,7 +15,7 @@ const ElmUpdateButton = (props) => {
     const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status, isSubscribed, slateStatus } = props;
 
     useEffect(() => {
-        if(elmAssessment.showUpdateStatus && status && !isSubscribed && slateStatus !== "approved"){
+        if(elmAssessment.showUpdateStatus && status && !hasReviewerRole() && slateStatus !== "approved"){
             updateElmVersion()
         }
     }, [])
