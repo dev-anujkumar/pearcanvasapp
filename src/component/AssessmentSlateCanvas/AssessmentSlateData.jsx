@@ -574,12 +574,16 @@ class AssessmentSlateData extends Component {
     /*** @description This function is to show Approved/Unapproved Status on AS */
     showElmVersionStatus = () => {
         let elmAssessment = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId];
+        const isSubscribed = isSubscriberRole(this.props?.projectSubscriptionDetails?.projectSharingRole, this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)
+        const slateStatus = this.props?.slateLevelData[config.slateManifestURN]?.status
         if (elmAssessment) {
             return (<ElmUpdateButton
                 elmAssessment={elmAssessment}
                 updateElmVersion={this.updateElmAssessment}
                 buttonText={ELM_UPDATE_BUTTON}
                 status={true}
+                isSubscribed={isSubscribed}
+                slateStatus={slateStatus}
             />)
         }
     }

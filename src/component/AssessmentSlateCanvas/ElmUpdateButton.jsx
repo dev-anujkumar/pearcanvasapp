@@ -11,10 +11,10 @@ import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { ELM_INT } from './AssessmentSlateConstants.js';
 
 const ElmUpdateButton = (props) => {
-    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status } = props;
+    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status, isSubscribed, slateStatus } = props;
 
     useEffect(() => {
-        if(elmAssessment.showUpdateStatus && status){
+        if(elmAssessment.showUpdateStatus && status && !isSubscribed && slateStatus !== "approved"){
             updateElmVersion()
         }
     }, [])
@@ -33,6 +33,7 @@ const ElmUpdateButton = (props) => {
                     </div>
                 }
                 {!status && <div className={`elm-update-button ${embeddedElmClass}`} onClick={updateElmVersion}><b className='elm-update-button-text'>{buttonText}</b></div>}
+                {(status && (isSubscribed || slateStatus === "approved")) && <div className={`elm-status-div ${embeddedElmClass}`}><span className={"approved-button " + approveIconClass}>{approvedIcon}</span><p className={"approved-button-text " + approveIconClass}>{approveText}</p></div>}
             </div>       
         } else {
             updateDiv = (elementType === ELM_INT) ? 
