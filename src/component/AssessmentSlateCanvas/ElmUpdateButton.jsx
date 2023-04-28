@@ -34,7 +34,7 @@ const ElmUpdateButton = (props) => {
                     </div>
                 }
                 {!status && <div className={`elm-update-button ${embeddedElmClass}`} onClick={updateElmVersion}><b className='elm-update-button-text'>{buttonText}</b></div>}
-                {(status && (isSubscribed || slateStatus === "approved")) && <div className={`elm-status-div ${embeddedElmClass}`}><span className={"approved-button " + approveIconClass}>{approvedIcon}</span><p className={"approved-button-text " + approveIconClass}>{approveText}</p></div>}
+                {(status && (hasReviewerRole() || slateStatus === "approved")) && <div className={`elm-status-div ${embeddedElmClass}`}><span className={"approved-button " + approveIconClass}>{approvedIcon}</span><p className={"approved-button-text " + approveIconClass}>{approveText}</p></div>}
             </div>       
         } else {
             updateDiv = (elementType === ELM_INT) ? 
