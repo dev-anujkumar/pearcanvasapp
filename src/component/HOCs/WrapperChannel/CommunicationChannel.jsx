@@ -1190,6 +1190,7 @@ function CommunicationChannel(WrappedComponent) {
                 }
             });
         }
+
         onDeleteTocItem = (message, type) => {
             this.checkSlateLockAndDeleteSlate(message, type)
         }
