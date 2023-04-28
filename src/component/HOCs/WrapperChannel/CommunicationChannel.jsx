@@ -74,9 +74,6 @@ function CommunicationChannel(WrappedComponent) {
                 case 'deleteTocMultipleItemWithPendingTrack':
                     this.onDeleteTocItem(message);
                     break;
-                case 'unlinkTocContainer':
-                    this.UnlinkSubscribers(message);
-                    break;
                 case 'deleteTocItemWithPendingTrack':
                     this.onDeleteTocItem(message, 'withPendingTrack');
                     break;
@@ -1192,13 +1189,6 @@ function CommunicationChannel(WrappedComponent) {
                     }
                 }
             });
-        }
-        UnlinkSubscribers = (message) => {
-            hideBlocker();
-            showTocBlocker();
-            disableHeader(true);
-
-            sendDataToIframe({type : 'showTOCUnlinkPopup', message : message})
         }
         onDeleteTocItem = (message, type) => {
             this.checkSlateLockAndDeleteSlate(message, type)
