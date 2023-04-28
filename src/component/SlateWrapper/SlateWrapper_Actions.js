@@ -1356,7 +1356,7 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
 }
 
 const fetchContainerData = (entityURN, manifestURN, isPopup) => {
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`;
+    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content`;
     if (isPopup) {
         apiUrl = `${apiUrl}?metadata=true`
     }

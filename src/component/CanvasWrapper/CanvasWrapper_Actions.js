@@ -628,9 +628,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     }
     dispatch(resetAssessmentStore());//reset Assessment Store
     const elementCount = getState().appStore.slateLength;
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
+    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
-        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
+        apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&metadata=true&elementCount=${elementCount}`
     } 
     return axios.get(apiUrl, {
         headers: {
