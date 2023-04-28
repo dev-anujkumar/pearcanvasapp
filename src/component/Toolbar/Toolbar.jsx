@@ -114,15 +114,16 @@ const _Toolbar = props => {
         }
     }
 
-    const approveNormalSlate  = () =>{
+    const approveNormalSlate  = async () =>{
         let updateWIP = false;
         const slatePublishStatus = (slateStatus === "approved")
         if(slatePublishStatus && !popupSlate) {
             updateWIP = true
         }
-        props.slateVersioning(updateWIP)
+        await props.slateVersioning(updateWIP)
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
         showNotificationOnCanvas(MOVED_TO_WIP)
+        changeAudioNarration()
     }
 
     let searchElm = UrnSearch;
