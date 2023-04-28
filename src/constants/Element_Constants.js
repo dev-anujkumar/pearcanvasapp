@@ -335,3 +335,6 @@ export const tabTitlePlaceholder = "Enter tab name (max. 25 characters)"
 
 /* TB sidebar conversion endpoint */
 export const tbSidebarEndpoint = "tabbed-2-column"
+
+/*------------------ Approved slate moved to WIP ------------------*/
+export const MOVED_TO_WIP = "Slate has moved to WIP status";

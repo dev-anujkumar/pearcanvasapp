@@ -12,10 +12,12 @@ import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, 
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
-import { hasReviewerRole, isSubscriberRole, sendDataToIframe } from '../../constants/utility.js';
+import { hasReviewerRole, isSubscriberRole, sendDataToIframe, showNotificationOnCanvas } from '../../constants/utility.js';
 import SearchComponent from './Search/Search.jsx';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
+import { MOVED_TO_WIP } from '../../constants/Element_Constants';
+import { ShowLoader } from '../../constants/IFrameMessageTypes';
 
 const _Toolbar = props => {
     const { isToolBarBlocked } = props;
@@ -114,11 +116,13 @@ const _Toolbar = props => {
 
     const approveNormalSlate  = () =>{
         let updateWIP = false;
-        const slatePublishStatus = (props.slateLevelData[config.slateManifestURN]?.status === "approved")
+        const slatePublishStatus = (slateStatus === "approved")
         if(slatePublishStatus && !popupSlate) {
             updateWIP = true
         }
         props.slateVersioning(updateWIP)
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+        showNotificationOnCanvas(MOVED_TO_WIP)
     }
 
     let searchElm = UrnSearch;
@@ -129,7 +133,8 @@ const _Toolbar = props => {
     }
 
     const isSubscribed = isSubscriberRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed)
-    const slatePublishStatus = (props.slateLevelData[config.slateManifestURN]?.status === "approved")
+    const slatePublishStatus = (slateStatus === "approved") && !popupSlate
+    const setPopUpSlateLOstatus = props?.slateLevelData?.[config.slateManifestURN]?.type === "popup" && props?.slateLevelData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && props?.slateLevelData?.[config.tempSlateManifestURN]?.status === "approved";
     const bannerClass = isSubscribed ? 'read-only-banner' : (slatePublishStatus ? 'approved-banner' : 'banner')
     const approvedtoolbar = slatePublishStatus ? 'hideToolbar' : ''
     const toolbarClass = isSubscribed || slatePublishStatus ? 'subscribe-approved-container' : 'toolbar-container'
@@ -163,7 +168,7 @@ const _Toolbar = props => {
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
                             </div>
                             {lodropdown &&
-                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} lastAlignedExternalLO={props.lastAlignedExternalLO} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} showCanvasBlocker={props.showCanvasBlocker} projectSubscriptionDetails = {props.projectSubscriptionDetails} slatePublishStatus={slatePublishStatus}/>
+                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} lastAlignedExternalLO={props.lastAlignedExternalLO} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} showCanvasBlocker={props.showCanvasBlocker} projectSubscriptionDetails = {props.projectSubscriptionDetails} slatePublishStatus={slatePublishStatus} setPopUpSlateLOstatus={setPopUpSlateLOstatus}/>
                             }
                         </div>
                     </div>

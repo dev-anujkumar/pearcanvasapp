@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
-import { sendDataToIframe, defaultMathImagePath, isOwnerRole, isSubscriberRole} from '../../../constants/utility.js';
+import { sendDataToIframe, defaultMathImagePath, isOwnerRole, isSubscriberRole, showNotificationOnCanvas} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
@@ -59,7 +59,7 @@ function CommunicationChannel(WrappedComponent) {
             let message = e.data.message;
             switch (messageType) {
                 case 'tocContainersLabelUpdate':
-                    this.showNotificationOnCanvas(message);
+                    showNotificationOnCanvas(message);
                     break;
                 case 'getPermissions':
                     this.sendingPermissions();
@@ -553,18 +553,6 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setElmPickerData({})
             }
             hideBlocker();
-        }
-
-        showNotificationOnCanvas = (message) => {
-            let linkNotification = document.getElementById('link-notification');
-            if (linkNotification) {
-                linkNotification.innerText = message;
-                linkNotification.style.display = "block";
-                setTimeout(() => {
-                    linkNotification.style.display = "none";
-                    linkNotification.innerText = "";
-                }, 3000);
-            }
         }
 
         /**

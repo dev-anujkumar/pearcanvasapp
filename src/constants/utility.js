@@ -1013,3 +1013,15 @@ export const removedDOMAttributes = (innerHTML, className) => {
     }
     return tempDiv?.innerHTML;
 }
+
+export const showNotificationOnCanvas = (message) => {
+    let linkNotification = document.getElementById('link-notification');
+    if (linkNotification) {
+        linkNotification.innerText = message;
+        linkNotification.style.display = "block";
+        setTimeout(() => {
+            linkNotification.style.display = "none";
+            linkNotification.innerText = "";
+        }, 3000);
+    }
+}

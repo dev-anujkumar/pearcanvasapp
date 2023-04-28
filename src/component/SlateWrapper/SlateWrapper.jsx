@@ -1669,7 +1669,7 @@ class SlateWrapper extends Component {
             )
         }
         const slateType = getSlateType(this.props.slateData[config.slateManifestURN])
-        const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
+        const slatePublishStatus = this.props.slateData?.[config.slateManifestURN]?.type === "popup" && this.props.slateData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && this.props.slateData?.[config.tempSlateManifestURN]?.status === "approved";
         const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
         return (
             <React.Fragment>
