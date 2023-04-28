@@ -39,7 +39,7 @@ import {
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
-import { sendToDataLayer } from '../../constants/ga';
+import { triggerCustomEventsGTM } from '../../js/ga';
 import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES, SET_LEARNOSITY_CONTENT } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
@@ -933,7 +933,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
         const elapsedTime = performance.now() - startTime;
         
-        sendToDataLayer('slate-load', {
+        triggerCustomEventsGTM('slate-load', {
             elapsedTime,
             manifestURN,
             entityURN,
