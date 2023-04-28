@@ -12,7 +12,7 @@ import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { ELM_INT } from './AssessmentSlateConstants.js';
 
 const ElmUpdateButton = (props) => {
-    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status, isSubscribed, slateStatus } = props;
+    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status, slateStatus } = props;
 
     useEffect(() => {
         if(elmAssessment.showUpdateStatus && status && !hasReviewerRole() && slateStatus !== "approved"){
