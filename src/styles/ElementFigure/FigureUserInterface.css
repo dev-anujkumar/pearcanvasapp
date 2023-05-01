@@ -1015,7 +1015,7 @@ th ol li.listItemNumeroUnoNone:before {
   width:350px;
 }
 
-.element-container.multi-column.hideBorder{
+.element-container.multi-column.greyBorder{
     border: 1.5px solid #808080;
 }
 
