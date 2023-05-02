@@ -1947,7 +1947,7 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn, currentSlateAncestorData } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn, currentSlateAncestorData,projectInfo } = this.props;
         element = (parentUrn?.type === 'groupedcontent' && parentUrn?.subtype === 'tab') ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
