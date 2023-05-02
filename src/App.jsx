@@ -12,12 +12,13 @@ import store from './appstore/store';
 import config from './config/config';
 import cypressConfig from './config/cypressConfig';
 import { requestConfigURI } from './constants/utility';
+import { initializeGTM } from '../src/js/ga'
 const CanvasWrapper = React.lazy(() => import('./component/CanvasWrapper'));
 import { modifyObjKeys } from './js/appUtils';
 // IMPORT - Assets // 
 import './styles/style.css';
 
-console.log("!!!!! ---- canvas-1.47.9 ---- !!!!!")
+console.log("!!!!! ---- canvas-1.47.15 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
@@ -39,6 +40,7 @@ class App extends Component {
                 let uri = response.data.env;
                 cypressConfig.currentEnv = uri;
                 modifyObjKeys(config, response.data)
+                initializeGTM(response.data)
                 const search = window.location.search;
                 const params = new URLSearchParams(search);
                 const projectUrn = params.get('projectUrn');

@@ -139,7 +139,24 @@
     float: left;
     width: 24.2%;
     font-size: 14px;
-    
+  }
+  .slate_assessment_data_label_tcc{
+    font-family: "Open Sans", sans-serif;
+    float: left;
+    letter-spacing: 0.2px;
+    font-weight: 500;
+    width: 24.2%;
+    font-size: 14px;
+  }
+  .slate_assessment_data_label_subtype{
+    margin-top: 24px;
+    font-family: "Open Sans", sans-serif;
+    letter-spacing: 0.2px;
+    float: left;
+    line-height: 20px;
+    font-weight: 500;
+    width: 24.2%;
+    font-size: 14px;
   }
   .enhanced_label{
     margin-top: 5%;
@@ -155,7 +172,14 @@
     text-overflow: ellipsis;
     word-break: break-all;
     white-space: nowrap;
-    
+  }
+  .slate_assessment_detail_subtype{
+    margin-top: 24px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+    line-height: 20px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 15px;
   }
   .slate_assessment_data_title:hover{
     overflow: visible; 
@@ -165,7 +189,6 @@
   .enhanced_title {
     margin-top: 6%;
   }
-
   .slate_assessment_data_id{
     font-size: 14px;
     overflow:hidden;
@@ -181,6 +204,23 @@
   .slate_pdf_data_id {
     font-size: 14px;
     white-space: nowrap;
+  }
+  .slate_lti_data_link {
+    cursor: pointer;
+    font-family: "Open Sans",sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: 0.2px;
+    text-decoration: underline;
+    word-wrap: break-word;
+  }
+  .slate_assessment_tcc_data_note{
+    margin-top: 23em;
+    margin-left: -8em;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: "Open Sans",sans-serif;
+    letter-spacing: 0.2px;
   }
   .slate_assessment_change_button{
     font-size: 13px;

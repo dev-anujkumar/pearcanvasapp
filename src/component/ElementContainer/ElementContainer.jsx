@@ -56,7 +56,7 @@ import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementConta
 import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js';
@@ -83,6 +83,7 @@ import { checkHTMLdataInsideString, getCookieByName } from '../../constants/util
 import { prepareBqHtml } from '../../js/utils';
 import { hideToc } from '../../js/toggleLoader';
 import ElementConstants from './ElementConstants.js';
+import ElementTCC from '../LtiSlate/ElementTCC.jsx';
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -376,7 +377,10 @@ class ElementContainer extends Component {
             }
             this.props.fetchCommentByElement(this.props.element.id);
         }
-        this.handleCommunication(this.props.element.id);
+        // disabling Add comment icon for TCC Element in TOC
+        if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT) {
+            this.handleCommunication(this.props.element.id);
+        }
     }
 
     removeClassesFromHtml = (html) => {
@@ -1943,7 +1947,7 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn, projectInfo } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn, currentSlateAncestorData } = this.props;
         element = (parentUrn?.type === 'groupedcontent' && parentUrn?.subtype === 'tab') ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
@@ -1963,6 +1967,7 @@ class ElementContainer extends Component {
 
         // checking whether element is tab element or child of tab element
         const isTbElement = this.props.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.parent?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB || this.props?.asideData?.parentElementSubtype === ElementConstants.TAB || this.props?.element?.subtype === ElementConstants.TAB;
+        const isTccElement = this.props.element?.type === ElementConstants.TCC_ELEMENT;
 
         const commonProps = {
             index,
@@ -2449,6 +2454,18 @@ class ElementContainer extends Component {
                     />;
                     labelText = 'PDF'
                     break;
+                    
+                case elementTypeConstant.TCC_ELEMENT:
+                    editor = <ElementTCC
+                        permissions={permissions}
+                        index={index}
+                        element={element}
+                        currentSlateAncestorData={currentSlateAncestorData}
+                        handleFocus={this.handleFocus}
+                        handleBlur={this.handleBlur}
+                    />;
+                    labelText = 'TCC'
+                    break;
 
                 case elementTypeConstant.BLOCK_LIST:
                     editor = <Suspense fallback={<div></div>}><BlockListWrapper grandParentManifestList={this.props?.currentManifestList} asideData={this.props?.asideData} pasteElement={this.props.pasteElement} indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} isBlockList={true}/></Suspense>;
@@ -2514,7 +2531,7 @@ class ElementContainer extends Component {
         }
         /**--------------------------------------------------------------------- */
         /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
-        const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
+        const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_LTI];
         const inContainer = this.props.parentUrn ? true : false;
         let isOwner = isOwnerRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
         const isgreyBorder = isApproved() && READ_ONLY_ELEMENT_LABELS.includes(labelText);
@@ -2540,9 +2557,9 @@ class ElementContainer extends Component {
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && this.state.borderToggle !== 'hideBorder' && !hasReviewerRole() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !hasReviewerRole() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>

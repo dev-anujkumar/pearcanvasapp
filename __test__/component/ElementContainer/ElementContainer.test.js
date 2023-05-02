@@ -1280,6 +1280,16 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
+        it('Render Element Container ----->LTI_SLATE', () => {
+            let props = {
+                element: wipData.tcc,
+                permissions: []
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+        })
         it('Render Element Container ----->ELEMENT_DISCUSSION', () => {
             let props = {
                 element: wipData.ds,

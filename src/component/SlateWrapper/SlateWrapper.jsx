@@ -43,7 +43,7 @@ import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
 import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
-import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
 import store from '../../appstore/store';
 import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
@@ -540,6 +540,9 @@ class SlateWrapper extends Component {
      * @param {*} event event object
      */
     checkSlateLockStatus = (event) => {
+        if(config.slateType === SLATE_TYPE_LTI) {
+            return;
+        }
         if (this.checkLockStatus()) {
             this.prohibitPropagation(event)
             this.togglePopup(true)
@@ -1082,7 +1085,7 @@ class SlateWrapper extends Component {
                     return this.renderBlankSlate(this.props)
                 }
                 /* @hideSapratorFor@ List of slates where seprator is hidden */
-                const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(_slateType);
+                const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_LTI].includes(_slateType);
                 return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>

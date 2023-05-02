@@ -2,6 +2,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '../../constants/utility.js';
+import { triggerCustomEventsGTM } from '../../js/ga';
 import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
@@ -107,7 +108,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
     let _requestData = prepareDeleteRequestData(type)
     let indexToBeSent = index || "0"
     _requestData = { ..._requestData, index: indexToBeSent.toString().split('-')[indexToBeSent.toString().split('-').length - 1], elementParentEntityUrn }
-
+    triggerCustomEventsGTM('delete-element-type',_requestData );
     const deleteElemData = await axios.post(`${config.REACT_APP_API_URL}v1/slate/deleteElement`,
         JSON.stringify(_requestData),
         {
@@ -1042,7 +1043,7 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
  * @param {*} imagesArrayOfObj 
  */
 const getImageFromHTMLElement = async (node, imagesArrayOfObj) => {
-    if(node?.nodeName === 'IMG' && (node?.className === "imageAssetContent" || node?.className === "imageAssetContent inlineImage")){
+    if(node?.nodeName === 'IMG' && (node?.className === "imageAssetContent")){
         const attributes = node.attributes;
         const id = attributes['data-id'].nodeValue;
         const src = attributes['data-mce-src'].nodeValue;

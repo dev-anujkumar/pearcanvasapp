@@ -69,6 +69,9 @@ export default {
 /**************** PDF Slate Element ************************ */  
     PDF_SLATE : "element-pdf",
 
+/**************** LTI Slate Element ************************ */  
+    TCC_ELEMENT : "element-tcc",
+
 /**************** Block list Element ************************ */  
     BLOCK_LIST : "manifestlist"
 }
@@ -105,3 +108,7 @@ export const TE_POP_UP_HEADER_TEXT = 'Select an Image';
 export const TE_POP_UP_NORMAL_TEXT = 'Please select an image to open it in Alfresco for editing in a different tab on your browser';
 // PCAT-18694 - read only element labels for showing grey border
 export const READ_ONLY_ELEMENT_LABELS = ["3C", "2C", "C1", "C2", "C3"];
+/* TCC Element Constant */
+export const TCC_ELEMENT = "TCC Element*";
+export const TCC_ELEMENT_SUBTYPE = "Subtype";
+export const TCC_BOTTOM_NOTE = "*TCC stands for Thin Common Cartridge";

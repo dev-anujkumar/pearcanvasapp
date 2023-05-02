@@ -15,8 +15,8 @@ import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '..
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT  } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
-import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../../constants/Element_Constants.js';
-import { SLATE_TYPE_PDF, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES } from '../../../constants/Element_Constants.js';
+import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 function CommunicationChannel(WrappedComponent) {
@@ -1090,7 +1090,7 @@ function CommunicationChannel(WrappedComponent) {
                     'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
                     'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
                 }
-                if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (config.slateType == "section" || config.slateType == SLATE_TYPE_PDF)) {
+                if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (FETCH_LO_FOR_SLATES.includes(config.slateType))) {
                     let externalLFUrn = []
                     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                         this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
