@@ -580,11 +580,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
     localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
-    const elemBorderToggle = store?.getState()?.toolbarReducer?.elemBorderToggle;
-    const projectInfo = getState()?.projectInfo
-    console.log('projectInfo',projectInfo)
-    const isSubscribed = isSubscriberRole(projectInfo?.sharingContextRole
-        ,projectInfo?.projectSubscriptionDetails?.isSubscribed)
     if (config.totalPageCount <= page) {
         page = config.totalPageCount;
     }
@@ -680,18 +675,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
         const slatePublishStatus = slateData?.data[newVersionManifestId]?.status === "approved" && slateData?.data[newVersionManifestId]?.type !== "popup";
-        if(slatePublishStatus){
-            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': true });
-        }
-        else {
-            const borderStatus = {
-                approvedStatus: false,
-                elemBorderToggle: elemBorderToggle
-            }
-            // if(!isSubscribed) {
-            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': borderStatus });
-            // }
-        }
+            
+        sendDataToIframe({ 'type': 'slateVersionStatus', 'message': slatePublishStatus });
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;

@@ -267,10 +267,17 @@ class ElementContainer extends Component {
         }
         if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
             if ((newProps.elemBorderToggle) || !isApproved()) {
+                if(isApproved()) {
+                    this.setState({
+                        borderToggle: 'hideBorder',
+                        btnClassName: ''
+                    })
+                } else {
                 this.setState({
                     borderToggle: 'showBorder',
                     btnClassName: ''
                 })
+            }
             } else {
                 this.setState({
                     borderToggle: 'hideBorder',
