@@ -74,7 +74,7 @@ export const hasProjectPermission = (value) => {
     const {projectInfo} = authStore;
     let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     let permissions = authStore && authStore.appStore.permissions;
-    let hasPermissions = permissions && permissions.includes(value) && !isSubscriber;
+    let hasPermissions = permissions && permissions.includes(value) && !hasReviewerRole();
     return hasPermissions;
 }
 

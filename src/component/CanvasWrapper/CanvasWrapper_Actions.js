@@ -38,7 +38,7 @@ import {
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel, isSubscriberRole } from '../../constants/utility.js';
 import { sendToDataLayer } from '../../constants/ga';
 import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES, SET_LEARNOSITY_CONTENT } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
@@ -581,6 +581,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     localStorage.removeItem('newElement');
     config.isFetchSlateInProgress = true;
     const elemBorderToggle = store?.getState()?.toolbarReducer?.elemBorderToggle;
+    const projectInfo = getState()?.projectInfo
+    console.log('projectInfo',projectInfo)
+    const isSubscribed = isSubscriberRole(projectInfo?.sharingContextRole
+        ,projectInfo?.projectSubscriptionDetails?.isSubscribed)
     if (config.totalPageCount <= page) {
         page = config.totalPageCount;
     }
@@ -684,7 +688,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                 approvedStatus: false,
                 elemBorderToggle: elemBorderToggle
             }
+            // if(!isSubscribed) {
             sendDataToIframe({ 'type': 'slateVersionStatus', 'message': borderStatus });
+            // }
         }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });

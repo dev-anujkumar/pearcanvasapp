@@ -120,8 +120,8 @@ const _Toolbar = props => {
         if(slatePublishStatus && !popupSlate) {
             updateWIP = true
         }
-        await props.slateVersioning(updateWIP)
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+        await props.slateVersioning(updateWIP)
         showNotificationOnCanvas(MOVED_TO_WIP)
         changeAudioNarration()
     }
@@ -136,10 +136,10 @@ const _Toolbar = props => {
     const isSubscribed = isSubscriberRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed)
     const slatePublishStatus = (slateStatus === "approved") && !popupSlate
     const setPopUpSlateLOstatus = props?.slateLevelData?.[config.slateManifestURN]?.type === "popup" && props?.slateLevelData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && props?.slateLevelData?.[config.tempSlateManifestURN]?.status === "approved";
-    const bannerClass = isSubscribed ? 'read-only-banner' : (slatePublishStatus ? 'approved-banner' : 'banner')
-    const approvedtoolbar = slatePublishStatus ? 'hideToolbar' : ''
-    const toolbarClass = isSubscribed || slatePublishStatus ? 'subscribe-approved-container' : 'toolbar-container'
-    const separatorClass = isSubscribed || slatePublishStatus ? 'separatorClass' : ''
+    const bannerClass = isSubscribed ? 'read-only-banner' : ((slatePublishStatus && !config.isCypressPlusEnabled) ? 'approved-banner' : 'banner')
+    const approvedtoolbar = (slatePublishStatus && !config.isCypressPlusEnabled) ? 'hideToolbar' : ''
+    const toolbarClass = isSubscribed || (slatePublishStatus && !config.isCypressPlusEnabled) ? 'subscribe-approved-container' : 'toolbar-container'
+    const separatorClass = isSubscribed || (slatePublishStatus && !config.isCypressPlusEnabled) ? 'separatorClass' : ''
     return (
         <div className={bannerClass}>
             <div className={toolbarClass}>
@@ -150,7 +150,7 @@ const _Toolbar = props => {
                 <VisibilityIcon />
                 <div className='read-only'>Read-only | Subscribed Slate</div>
             </div> :
-            slatePublishStatus ? 
+            (slatePublishStatus && !config.isCypressPlusEnabled) ? 
             <div className='toolbar-text'>
                 <VisibilityIcon />
                 <div className='read-only'>Read-only | Approved Content </div>

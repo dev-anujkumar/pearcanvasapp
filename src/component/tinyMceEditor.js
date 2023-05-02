@@ -155,7 +155,7 @@ export class TinyMceEditor extends Component {
                 const authStore = store.getState();
                 const { projectInfo } = authStore;
                 let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
-                if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove')) && !isSubscriber)) {
+                if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove')) && !hasReviewerRole())) {
                     if (editor && editor.id) {
                         document.getElementById(editor.id).setAttribute('contenteditable', false);
                     }
