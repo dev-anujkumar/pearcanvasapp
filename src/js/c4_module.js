@@ -79,6 +79,7 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview, t
         let content_data = {};
         content_data["projectManifest"] = project;
         content_data["sectionManifest"] = section;
+        content_data["entityurn"] = config_object.projectEntityUrn;
         content_data["citeManifest"] = cite;
         content_data["requester"] = config_object.userEmail;//"requester": "james.cooney@pearson.com",
         content_data["timestamp"] = new Date().toISOString();//"timestamp": "2017-04-23T18:25:43.511Z"

@@ -167,7 +167,7 @@ export const commonDispatch = (dispatch, type, payload) => {
  * @returns 
  */
 export const getSlateLevelData = async (manifestURN, entityURN) => {
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`
+    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content`;
     try {
         const response = await axios.get(apiUrl, {
             headers: {
