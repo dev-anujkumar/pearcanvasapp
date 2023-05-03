@@ -10,7 +10,8 @@ import Toolbar from '../../../src/component/Toolbar';
 jest.mock('../../../src/constants/utility.js', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
-    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
+    isSubscriberRole: jest.fn()
 }))
 
 jest.mock('../../../src/js/slateLockUtility', () => ({
@@ -65,7 +66,13 @@ const store = mockStore({
 
 const props = {
     isToolBarBlocked : true,
-    slateLockInfo : "test"
+    slateLockInfo : "test",
+    projectSubscriptionDetails: {
+        projectSharingRole : "subscriber",
+        projectSubscriptionDetails : {
+            isSubscribed: true
+        }
+    }
 }
 
 config.isPopupSlate = true

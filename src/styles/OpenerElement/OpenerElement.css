@@ -223,3 +223,6 @@
     transition: all .2s ease-in-out;
     color: white;
 }
+.cursor-pointer:hover{
+    cursor: default;
+}

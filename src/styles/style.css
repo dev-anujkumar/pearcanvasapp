@@ -1102,3 +1102,7 @@ ol ol {
     margin-left: 1.25em;
     margin-bottom: 0.5em;
 }
+
+.hide-buttons{
+    display: none;
+}

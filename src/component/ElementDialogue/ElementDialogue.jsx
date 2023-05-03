@@ -301,7 +301,7 @@ class ElementDialogue extends React.PureComponent {
     }
 
     renderButtons = (index, buttonClass, labelText, element) => {
-        if ((this.props.elemBorderToggle !== undefined && this.props.elemBorderToggle) || this.props.borderToggle == 'active') {
+        if ((this.props.elemBorderToggle !== undefined && this.props.elemBorderToggle && this.props.borderToggle !== 'hideBorder') || this.props.borderToggle == 'active') {
             return (
                 <div>
                     <Button

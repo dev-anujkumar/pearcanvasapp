@@ -288,57 +288,20 @@ class SlateWrapper extends Component {
         return false
     }
 
-    approveNormalSlate = () => {
-        this.togglePopup(false)
-        let updateRCSlate = false;
-        // In this condition, we are setting a flag to identify whether we need to
-        // update slate after versioning in Resource collection, this flag is used by newversion wrapper API
-        // updateRCSlate = true (update slate in RC using VCS API at backend)
-        //updateRCSlate = false (Do not update slate in RC)
-        const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
-        if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && !popupSlate) {
-            updateRCSlate = true
-        }
-        this.props.slateVersioning(updateRCSlate)
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-        this.props.approvedSlatePopupStatus(false)
-    }
-
-    showApprovedWarningPopup = () => {
-        const { projectSubscriptionDetails: { projectSharingRole, projectSubscriptionDetails: { isSubscribed } } } = this.props
-        const ownerSlate = isOwnerRole(projectSharingRole, isSubscribed)
-        const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
-        const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
-        if (this.props.approvedSlatePopupstatus && slatePublishStatus && !popupSlate && !config?.isCypressPlusEnabled){
-            this.props.showBlocker(true)
-            showTocBlocker();
-            return (
-                <PopUp dialogText={ownerSlate ? APPROVE_OWNER_SLATE : APPROVE_NORMAL_SLATE}
-                    togglePopup={this.togglePopup}
-                    isApprovedSlate={true}
-                    warningHeaderText={`Warning`}
-                    approvePopupClass={`${ownerSlate ? "approved-warning-txt" : "lo-warning-txt"}`}
-                    approveNormalSlate = {this.approveNormalSlate}
-                    hideCanvasBlocker={this.props.showBlocker}
-                />
-            )
-        } else{
-            return null
-        }
-    }
-
-    getApprovedPopup = () => {
-        this.props.approvedSlatePopupStatus(true)
-    }
-
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
         try {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
+                    const isPopupReadOnly = _slateData?.[config.slateManifestURN]?.type === "popup" && _slateData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && _slateData?.[config.tempSlateManifestURN]?.status === "approved";
                     if(_slateObject==undefined){
                         return false
+                    }
+                    if(isPopupReadOnly){
+                        sendDataToIframe({ 'type': 'slateVersionStatus', 'message': true });
+                    }else if(_slateData?.[config.slateManifestURN]?.type === "popup" && !this.props.elemBorderToggle){
+                        sendDataToIframe({ 'type': 'slateVersionStatus', 'message': this.props.elemBorderToggle});
                     }
                     let _slateContent = _slateObject.contents
                     let { id: _slateId, type: _slateType } = _slateObject;
@@ -349,12 +312,7 @@ class SlateWrapper extends Component {
                     const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
                     const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
                     return (
-                        <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
-                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate && !config?.isCypressPlusEnabled ? <div
-                                className='approved-overlay'
-                                onClick={!hasReviewerRole() && this.getApprovedPopup}
-                            >
-                            </div> : null}
+                        <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
                                 <Sortable 
                                     options={{
@@ -616,16 +574,18 @@ class SlateWrapper extends Component {
                 />
             )
         } else if ((!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) || (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showSubscriberSlatePopup && isSubscribersKeyExist === null )) {
-            const subscriberPopupDailogText = <>This is a subscribed content and cannot be edited.<br /><br />If you wish to edit the content, please use <strong>Copy Content</strong> feature from TOC or go to the owner project. Kindly note that the edits in owner project will be reflected for all the subscribers</>
+            const subscriberPopupDailogText = <>This is a non-editable content as it is subscribed from another project. You may contact the owner of this content to make any changes.</>
             this.props.showBlocker(true);
             showTocBlocker();
+            const isCurrentSlate = isOwnerRole(projectSharingRole,isSubscribed) ? 'owner' : 'subscriber'
             let dailogText = isOwnerRole(projectSharingRole,isSubscribed) ? OWNER_SLATE_POPUP : subscriberPopupDailogText;
+            let headerText = isOwnerRole(projectSharingRole,isSubscribed) ? 'Warning' : 'Editing Disabled';
             return (
                 <PopUp dialogText={dailogText}
                     togglePopup={this.togglePopup}
-                    isOwnersSlate={true}
+                    isCurrentSlate={isCurrentSlate}
                     proceed={this.proceedButtonHandling}
-                    warningHeaderText={`Warning`}
+                    warningHeaderText={headerText}
                     lOPopupClass="lo-warning-txt"
                     withCheckBox={true}
                 />
@@ -1672,12 +1632,16 @@ class SlateWrapper extends Component {
             )
         }
         const slateType = getSlateType(this.props.slateData[config.slateManifestURN])
+        const slatePublishStatus = this.props.slateData?.[config.slateManifestURN]?.type === "popup" && this.props.slateData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && this.props.slateData?.[config.tempSlateManifestURN]?.status === "approved";
+        const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
                      {
                         this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'popup' ?
-                          <button className="popup-button" onClick={this.saveAndClose}>SAVE & CLOSE</button>
+                            <button className="popup-button" onClick={this.saveAndClose}>
+                                {isSubscriberRole(projectSharingRole, isSubscribed) || slatePublishStatus ? 'CLOSE' : 'SAVE & CLOSE'}
+                            </button>
                           :this.renderSlateHeader(this.props)
                     } 
                 </div>
@@ -1721,7 +1685,6 @@ class SlateWrapper extends Component {
                 {/* **************** Alfresco Popup ************ */}
                 {this.showAlfrescoPopup()}
                 {/* **************** Approved to WIP Warning Popup ************* */}
-                {this.showApprovedWarningPopup()}
             </React.Fragment>
         );
     }
@@ -1780,7 +1743,8 @@ const mapStateToProps = state => {
         projectSubscriptionDetails:state?.projectInfo,
         activeElement: state.appStore.activeElement,
         asideData: state.appStore.asideData,
-        approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus
+        approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
+        elemBorderToggle: state.toolbarReducer.elemBorderToggle,
     };
 };
 

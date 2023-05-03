@@ -175,8 +175,49 @@ describe('1. Dialogue element test cases', () => {
 			}
 		},
 		deleteScriptElement: jest.fn(),
-		elemBorderToggle: true,
+		elemBorderToggle: undefined,
 		borderToggle: "active",
+		//
+		activeElement: {
+			elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083181"
+		},
+		elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083181",
+		//
+		setBCEMetadata: jest.fn(),
+		handleFocus: jest.fn(),
+		context: {
+			getElementById: jest.fn()
+		},
+		handleCheckboxPopup: jest.fn(),
+		showCanvasBlocker: jest.fn(),
+		onClick: jest.fn(),
+	};
+	let props2 = {
+		index:0,
+		permissions: ["elements_add_remove"],
+		btnClassName: "activeTagBgColor",
+		element: {
+			id: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083180",
+			html: {
+				actTitle:"<p>dasd</p>",
+				sceneTitle:"<p></p>",
+				credits:"<p></p>",
+				dialogueContent: [
+					{ type: "stagedirection", text: "<p>2</p>" },
+					{ type: "lines", characterName: "<p>3weqwe</p>", text: "<p><span></span>421323</p>" }
+				]	
+			},
+			handleOnMouseOver: jest.fn(),
+			onMouseOut: jest.fn(),
+			onClickCapture: jest.fn(),
+			elementdata: { 
+				startNumber: 2,
+				numberedlines : false
+			}
+		},
+		deleteScriptElement: jest.fn(),
+		elemBorderToggle: undefined,
+		borderToggle: false,
 		//
 		activeElement: {
 			elementId: "urn:pearson:work:c771a9fa-ef29-497c-bb6d-8dcfbb083181"
@@ -216,6 +257,14 @@ describe('1. Dialogue element test cases', () => {
         expect(compInstance).toBeDefined();
 		const spy = jest.spyOn(compInstance, 'renderButtons')
 		compInstance.renderButtons(0, "", "SD", props.element);
+		expect(spy).toHaveBeenCalled();
+		spy.mockClear();
+    });
+	it('1.3 Test renderButtons Function -> else', () => {
+        const compInstance = dialogueInstance(props2);
+        expect(compInstance).toBeDefined();
+		const spy = jest.spyOn(compInstance, 'renderButtons')
+		compInstance.renderButtons(0, "", "SD", props2.element);
 		expect(spy).toHaveBeenCalled();
 		spy.mockClear();
     });
