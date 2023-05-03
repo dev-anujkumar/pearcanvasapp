@@ -107,8 +107,8 @@ let cypressConfig = {
     elementSlateRefresh: false,
     currentElementUrn: '',
     tcmStatusPopupGlossary: false,
-    pendingTcmStatus: false,
   	GRAMMARLY_CLIENT_ID: "client_51D8CAHFNoRRMxzmiXDpY6"
+    pendingTcmStatus: false
 }
 
 
