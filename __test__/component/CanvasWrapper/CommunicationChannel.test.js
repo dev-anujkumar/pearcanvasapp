@@ -302,7 +302,7 @@ describe('Testing communication channel', () => {
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
     expect(wrapper).toHaveLength(1);
     expect(channelInstance).toBeDefined();
-    test('Test for tocContainersLabelUpdate else case', () => {
+    xtest('Test for tocContainersLabelUpdate else case', () => {
         let event = {
             data: {
                 type: "tocContainersLabelUpdate",

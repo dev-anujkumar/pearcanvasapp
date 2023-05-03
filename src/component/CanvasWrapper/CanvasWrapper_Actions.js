@@ -628,9 +628,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     }
     dispatch(resetAssessmentStore());//reset Assessment Store
     const elementCount = getState().appStore.slateLength;
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
+    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
-        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
+        apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&metadata=true&elementCount=${elementCount}`
     } 
     return axios.get(apiUrl, {
         headers: {
@@ -674,9 +674,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             const hasMergedPdf = pdfBodymatter?.length === 2 ? true : false
             dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
-        if(slateData?.data[newVersionManifestId]?.status === "approved"){
-            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': true });
-        }
+        const slatePublishStatus = slateData?.data[newVersionManifestId]?.status === "approved" && slateData?.data[newVersionManifestId]?.type !== "popup";
+            
+        sendDataToIframe({ 'type': 'slateVersionStatus', 'message': slatePublishStatus });
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;

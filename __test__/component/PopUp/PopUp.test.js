@@ -137,14 +137,14 @@ describe('Testing PopUp component', () => {
         let props = {
             togglePopup:jest.fn(),
             proceed:jest.fn(),
-            isOwnersSlate:true
+            isCurrentSlate:'owner'
         }
         let wrapper = mount(<PopUp {...props}/>);
         wrapper.find('.lo-save-button').simulate('click');
         wrapper.find('.cancel-button').simulate('click');
         const component = mount(<PopUp {...props}/>);
         component.instance().isChecked=true
-        expect(component.instance().props.isOwnersSlate).toEqual(true);
+        expect(component.instance().props.isCurrentSlate).toEqual('owner');
     });
     it('testCase for openRemovePopUp',() => {
         let props = {
@@ -274,16 +274,27 @@ describe('Testing PopUp component', () => {
     it('testCase for isSubscribersSlate',() => {
         let props = {
             togglePopup:jest.fn(),
-            isSubscribersSlate:true
+            isCurrentSlate:"subscriber",
+            proceed:jest.fn()
         }
         let wrapper = mount(<PopUp {...props}/>);
-        wrapper.find('.lo-save-button').simulate('click');
+        wrapper.find('.subscriberSlate-ok-button').simulate('click');
         const component = mount(<PopUp {...props}/>);
-        expect(component.instance().props.isSubscribersSlate).toEqual(true);
+        expect(component.instance().props.isCurrentSlate).toEqual("subscriber");
     });
     it('testCase for withCheckBox',() => {
         let props = {
             withCheckBox:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.OwnersSlateCheckBox').simulate('change');
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.withCheckBox).toEqual(true);
+    });
+    it('testCase for withCheckBox -> when its isSubscribed',() => {
+        let props = {
+            withCheckBox:true,
+            isCurrentSlate:"subscriber"
         }
         let wrapper = mount(<PopUp {...props}/>);
         wrapper.find('.OwnersSlateCheckBox').simulate('change');

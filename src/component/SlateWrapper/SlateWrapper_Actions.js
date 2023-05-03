@@ -22,7 +22,6 @@ import {
     SET_SLATE_MATTER_TYPE,
     UPDATE_CARET_OFFSET
 } from '../../constants/Action_Constants';
-
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { HideLoader, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
@@ -1356,7 +1355,7 @@ export const pageData = (pageNumberData) => (dispatch, getState) => {
 }
 
 const fetchContainerData = (entityURN, manifestURN, isPopup) => {
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}`;
+    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content`;
     if (isPopup) {
         apiUrl = `${apiUrl}?metadata=true`
     }
@@ -1742,11 +1741,14 @@ export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
         }
     }).then(response => {
         if(response?.data?.status === "success"){
+        
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
             sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
+            return true
         }
     }).catch(error => {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } })
         console.log("error", error)
+        return false
     })
 }

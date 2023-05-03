@@ -322,7 +322,8 @@ describe('Testing FigureUserInterface component', () => {
             on: (temp, cb) => { cb(event) },
             undoManager: {
                 clear: jest.fn()
-            }
+            },
+            getContent: jest.fn()
         }
         let result = editorClick(nextEditor);
         expect(result).toBe(undefined);

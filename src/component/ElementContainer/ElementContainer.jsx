@@ -25,14 +25,14 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole, isApproved } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
 import AssessmentSlateCanvas from './../AssessmentSlateCanvas';
 import PageNumberContext from '../CanvasWrapper/PageNumberContext.js';
 import { authorAssetPopOver } from '../AssetPopover/openApoFunction.js';
-import { LABELS, TE_POP_UP_HEADER_TEXT, TE_POP_UP_NORMAL_TEXT } from './ElementConstants.js';
+import { LABELS, TE_POP_UP_HEADER_TEXT, TE_POP_UP_NORMAL_TEXT, READ_ONLY_ELEMENT_LABELS } from './ElementConstants.js';
 import { updateFigureData } from './ElementContainer_Actions.js';
 import { createUpdatedData, createOpenerElementData, handleBlankLineDom } from './UpdateElements.js';
 import ElementPopup from '../ElementPopup'
@@ -56,7 +56,7 @@ import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementConta
 import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js';
@@ -83,6 +83,7 @@ import { checkHTMLdataInsideString, getCookieByName } from '../../constants/util
 import { prepareBqHtml } from '../../js/utils';
 import { hideToc } from '../../js/toggleLoader';
 import ElementConstants from './ElementConstants.js';
+import ElementTCC from '../LtiSlate/ElementTCC.jsx';
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -266,11 +267,18 @@ class ElementContainer extends Component {
             return true
         }
         if (this.state.ElementId != newProps.activeElement.elementId || newProps.elemBorderToggle !== this.props.elemBorderToggle) {
-            if (newProps.elemBorderToggle) {
+            if ((newProps.elemBorderToggle) || !isApproved()) {
+                if(isApproved()) {
+                    this.setState({
+                        borderToggle: 'hideBorder',
+                        btnClassName: ''
+                    })
+                } else {
                 this.setState({
                     borderToggle: 'showBorder',
                     btnClassName: ''
                 })
+            }
             } else {
                 this.setState({
                     borderToggle: 'hideBorder',
@@ -369,7 +377,10 @@ class ElementContainer extends Component {
             }
             this.props.fetchCommentByElement(this.props.element.id);
         }
-        this.handleCommunication(this.props.element.id);
+        // disabling Add comment icon for TCC Element in TOC
+        if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT) {
+            this.handleCommunication(this.props.element.id);
+        }
     }
 
     removeClassesFromHtml = (html) => {
@@ -1763,7 +1774,7 @@ class ElementContainer extends Component {
      * @param {*} borderToggleFromState Element level border based on focus
      */
     setBorderToggle = (elemBorderToggleFromProp, borderToggleFromState) => {
-        if (elemBorderToggleFromProp !== 'undefined' && elemBorderToggleFromProp) {
+        if ((elemBorderToggleFromProp !== 'undefined' && elemBorderToggleFromProp && !isApproved())) {
             if (borderToggleFromState == 'active') {
                 return borderToggleFromState
             }
@@ -1936,7 +1947,7 @@ class ElementContainer extends Component {
     */
     renderElement = (element = {}) => {
         let editor = '';
-        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn } = this.props;
+        let { index, handleCommentspanel, elementSepratorProps, slateLockInfo, permissions, allComments, splithandlerfunction, tcmData, spellCheckToggle, parentUrn, currentSlateAncestorData,projectInfo } = this.props;
         element = (parentUrn?.type === 'groupedcontent' && parentUrn?.subtype === 'tab') ? {...element, parentUrn: parentUrn} : element;
         let labelText = fetchElementTag(element, index);
         config.elementToolbar = this.props.activeElement.toolbar || [];
@@ -1956,6 +1967,7 @@ class ElementContainer extends Component {
 
         // checking whether element is tab element or child of tab element
         const isTbElement = this.props.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.parent?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || this.props.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB || this.props?.asideData?.parentElementSubtype === ElementConstants.TAB || this.props?.element?.subtype === ElementConstants.TAB;
+        const isTccElement = this.props.element?.type === ElementConstants.TCC_ELEMENT;
 
         const commonProps = {
             index,
@@ -2442,6 +2454,18 @@ class ElementContainer extends Component {
                     />;
                     labelText = 'PDF'
                     break;
+                    
+                case elementTypeConstant.TCC_ELEMENT:
+                    editor = <ElementTCC
+                        permissions={permissions}
+                        index={index}
+                        element={element}
+                        currentSlateAncestorData={currentSlateAncestorData}
+                        handleFocus={this.handleFocus}
+                        handleBlur={this.handleBlur}
+                    />;
+                    labelText = 'TCC'
+                    break;
 
                 case elementTypeConstant.BLOCK_LIST:
                     editor = <Suspense fallback={<div></div>}><BlockListWrapper grandParentManifestList={this.props?.currentManifestList} asideData={this.props?.asideData} pasteElement={this.props.pasteElement} indexTemp={this.props.indexTemp || ''} element={element} onListSelect={this.props.onListSelect} onClickCapture={this.props.onClickCapture} showBlocker={this.props.showBlocker} borderToggle={this.state.borderToggle} handleCommentspanel={handleCommentspanel} parentManifestListItem={this?.props?.parentManifestListItem} {...commonProps} isBlockList={true}/></Suspense>;
@@ -2462,7 +2486,6 @@ class ElementContainer extends Component {
             normalText: TE_POP_UP_NORMAL_TEXT,
             renderImages : this.props.tableElementAssetData
         }
-        let { projectSharingRole, projectSubscriptionDetails } = this.props.projectInfo;
         let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton', this.props.permissions)));
         let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton', this.props.permissions)));
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
@@ -2508,34 +2531,35 @@ class ElementContainer extends Component {
         }
         /**--------------------------------------------------------------------- */
         /* @hideDeleteBtFor@ List of slates where DeleteElement Button is hidden */
-        const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF];
+        const hideDeleteBtFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_LTI];
         const inContainer = this.props.parentUrn ? true : false;
-        let isOwner = isOwnerRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
-        let isSubscriber = isSubscriberRole(projectSharingRole, projectSubscriptionDetails?.isSubscribed);
+        let isOwner = isOwnerRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+        const isgreyBorder = isApproved() && READ_ONLY_ELEMENT_LABELS.includes(labelText);
+        const readOnlyBorder = isgreyBorder ? 'greyBorder': '';
         return (
             <>
                 <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
                     {this.renderCopyComponent(this.props, index, inContainer, tcm)}
-                    {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        <Button type="element-label" elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
+                    {((this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle && (this.state.borderToggle !== 'hideBorder')) || (this.state.borderToggle == 'active' || isgreyBorder)) ? <div>
+                        <Button type="element-label" isgreyBorder={isgreyBorder} elementType={element?.type} btnClassName={`${btnClassName} ${isQuadInteractive} ${this.state.isOpener ? ' ignore-for-drag' : ''}`} labelText={labelText} copyContext={(e) => { OnCopyContext(e, this.toggleCopyMenu) }} onClick={(event) => this.labelClickHandler(event)} />
                         {/* Render 3 column labels when labelText is 3C OR Render 2 column labels when labelText is 2C*/}
                         {labelText === TABBED_TAB.ELEMENT_TAG_NAME && this.renderTabTitleLabel(element)}
-                        {((labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) || (labelText === MULTI_COLUMN_2C.ELEMENT_TAG_NAME) || (labelText === TABBED_TAB.ELEMENT_TAG_NAME)) && <div>{this.renderMultipleColumnLabels(element)}</div>}
+                        {((labelText === MULTI_COLUMN_3C.ELEMENT_TAG_NAME) || (labelText === MULTI_COLUMN_2C.ELEMENT_TAG_NAME) || (labelText === TABBED_TAB.ELEMENT_TAG_NAME)) && <div>{this.renderMultipleColumnLabels(element, isgreyBorder)}</div>}
                         {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && !(hideDeleteBtFor.includes(config.slateType)) ? (<Button type="delete-element" elementType={element?.type} onClick={(e) => this.showDeleteElemPopup(e, true)} isButtonDisabled={(labelText === TABBED_TAB.ELEMENT_TAG_NAME) ? this.checkTabCount() : false} />)
                             : null}
                         {this.renderColorPaletteButton(element, permissions)}
                         {this.renderColorTextButton(element, permissions)}
                     </div>
                         : ''}
-                    <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" + labelText.toLowerCase()} ${borderToggle}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick={(e) => this.handleFocus("", "", e, labelText)} spellcheck={`${spellCheckToggle}`}>
+                    <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" + labelText.toLowerCase()} ${borderToggle} ${readOnlyBorder}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick={(e) => this.handleFocus("", "", e, labelText)} spellcheck={`${spellCheckToggle}`}>
                         {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
                         {/* {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>} */}
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) =>  !isSubscriber && this.addOrViewComment(e, element.id,'addComment')} />}          
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
-                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !hasReviewerRole() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
+                        {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
                      {permissions && permissions?.includes('access-to-cypress+') && element?.type === elementTypeConstant.PDF_SLATE && config?.isCypressPlusEnabled && config?.SHOW_CYPRESS_PLUS &&  element?.elementdata?.conversionstatus
                         && <Button type="edit-button-cypressplus" btnClassName={btnClassName}  elementType={element?.type} onClick={(e)=>{this.handleEditInCypressPlus(e,element?.id)}}/>
@@ -2643,7 +2667,7 @@ class ElementContainer extends Component {
     }
 
     // function to render multiple columns for 3 column container based on bodymatter
-    renderMultipleColumnLabels = (element) => {
+    renderMultipleColumnLabels = (element, isgreyBorder) => {
         element = (this.props?.parentUrn?.type === 'groupedcontent' && this.props?.parentUrn?.subtype === 'tab') ? element.groupdata?.bodymatter[0] : element;
         let activeColumnLabel = "C1";
         for (let propsElementObject of this.props.multipleColumnData) {
@@ -2656,7 +2680,7 @@ class ElementContainer extends Component {
             element.groupeddata.bodymatter && element.groupeddata.bodymatter.length > 0) {
             return element.groupeddata.bodymatter.map((bodymatter, index) => {
                 return (
-                    <Button key={index} btnClassName={activeColumnLabel === `C${index + 1}` ? "activeTagBgColor" : ""} labelText={`C${index + 1}`} onClick={() => this.updateColumnValues(index, element)} type="label-clickable-button" />
+                    <Button key={index} btnClassName={activeColumnLabel === `C${index + 1}` ? "activeTagBgColor" : ""} labelText={`C${index + 1}`} onClick={() => this.updateColumnValues(index, element)} type="label-clickable-button" isgreyBorder={isgreyBorder}/>
                 )
             });
         }

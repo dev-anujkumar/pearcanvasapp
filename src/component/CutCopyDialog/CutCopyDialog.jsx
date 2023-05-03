@@ -21,7 +21,7 @@ const CutCopyDialog = props => {
     
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     const popupSlateNotAcceptedTypes = ['groupedcontent', 'showhide', 'citations', 'element-citation', 'poetry', 'stanza'];
-    const refreshRestrictedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup', 'discussion', 'poetry', 'element-dialogue', 'openerelement', 'element-generateLOlist', 'element-learningobjectivemapping', 'element-pdf', 'element-assessment', 'manifest'];
+    const refreshRestrictedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup', 'discussion', 'poetry', 'element-dialogue', 'openerelement', 'element-generateLOlist', 'element-learningobjectivemapping', 'element-pdf', 'element-assessment', 'manifest','element-tcc'];
     let allowToShowOptions = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.element?.type) ? false : true;
     const showRefreshOption = (refreshRestrictedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true 
     return (
@@ -46,7 +46,7 @@ export const renderCutCopyOption = (componentProps) => {
     const { userRole,permissions, asideData, element: { type,subtype } } = componentProps
     const acceptedTypes = ["element-authoredtext", "element-blockfeature", "element-learningobjectives", "element-list", "figure", "stanza", "element-citation","citations","poetry","groupedcontent","showhide","discussion","popup","element-dialogue"],
             allowedRoles = ["admin", "manager", "edit", "default_user"]
-    if ( !hasReviewerRole() && (acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) && asideData?.parent?.subtype !== elementConstant.TAB && asideData?.grandParent?.asideData?.parent?.subtype !== elementConstant.TAB) {
+    if ( !hasReviewerRole() && (acceptedTypes.includes(type) || (subtype))  && (allowedRoles.includes(userRole) ||  permissions.includes('cut/copy')) && asideData?.parent?.subtype !== elementConstant.TAB && asideData?.grandParent?.asideData?.parent?.subtype !== elementConstant.TAB && type !== elementConstant.TCC_ELEMENT_TYPE) {
         return (
             <>
                 <div className="copyUrn" onClick={(e) => performCutCopy(e, componentProps, "copy")}>

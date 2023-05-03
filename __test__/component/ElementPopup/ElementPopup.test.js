@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 import config from '../../../src/config/config';
+import * as utils from '../../../src/constants/utility';
 
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
@@ -86,6 +87,7 @@ describe('Testing Element Show Hide component', () => {
     })
 
     test('renders without crashing', () => {
+        jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
         let props2 = {
             element:{
                 popupdata:{
@@ -135,40 +137,23 @@ describe('Testing Element Show Hide component', () => {
         const spyhandleFocus = jest.spyOn(instance, 'handlepopupSlateClick')
         config.popupCreationCallInProgress = true
         config.isSavingElement = true
+        let event = {
+            target: {
+                classList: { contains:()=>{return true;}}
+            }
+        }
+        instance.handlepopupSlateClick(event);
+        expect(spyhandleFocus).toHaveBeenCalled()
+    })
+
+    it("handlepopupSlateClick method - if block -event ", () => {
+        const instance = component.find('ElementPopup').instance();
+        const spyhandleFocus = jest.spyOn(instance, 'handlepopupSlateClick')
         config.popupCreationCallInProgress = false
+        config.isSavingElement = true
         let event = {
             target: {
                 classList: { contains:()=>{return true;}}
-            }
-        }
-        instance.handlepopupSlateClick(event);
-        expect(spyhandleFocus).toHaveBeenCalled()
-    })
-
-    it("handlepopupSlateClick method - if block -event ", () => {
-        const instance = component.find('ElementPopup').instance();
-        const spyhandleFocus = jest.spyOn(instance, 'handlepopupSlateClick')
-        config.popupCreationCallInProgress = true
-        config.isSavingElement = true
-        config.popupCreationCallInProgress = true
-        let event = {
-            target: {
-                classList: { contains:()=>{return true;}}
-            }
-        }
-        instance.handlepopupSlateClick(event);
-        expect(spyhandleFocus).toHaveBeenCalled()
-    })
-
-    it("handlepopupSlateClick method - if block -event ", () => {
-        const instance = component.find('ElementPopup').instance();
-        const spyhandleFocus = jest.spyOn(instance, 'handlepopupSlateClick')
-        config.popupCreationCallInProgress = true
-        config.isSavingElement = true
-        config.popupCreationCallInProgress = true
-        let event = {
-            target: {
-                classList: { contains:()=>{return false;}}
             }
         }
         instance.handlepopupSlateClick(event);

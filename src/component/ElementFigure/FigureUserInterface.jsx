@@ -291,6 +291,7 @@ class FigureUserInterface extends Component {
         const buttonTitle = approval?"Approved":"Unapproved";
         const smallButtonClass = approval? "small_rounded_btn": "small_rounded_btn2";
         const smallButtonIcon = approval? approvedIcon: unApprovedIcon;
+        const isReviewer = hasReviewerRole() ? "remove-media-button" : "";
         return (
             <div className={`figure-wrapper-update ${interactiveformat === "mmi" || interactiveformat === "mmi-elm" ? 'figure-wrapper-update-quad' :''}`}>
                 <div className='videoIconWrapper'>
@@ -305,12 +306,12 @@ class FigureUserInterface extends Component {
                     <div className="media-button-group">
                         <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${this.props.index}-update-asset`}>
                         <div onClick={() => {if(this.isEnableKeyboard()){this.updateRef.current.focus()}}}>
-                         <div onKeyDown={this.clickNode} ref={this.updateRef} tabIndex={0} className='update-figure-button' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
+                         <div onKeyDown={this.clickNode} ref={this.updateRef} tabIndex={0} className={`update-figure-button ${isReviewer}`} onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
                         </div>
                         </KeyboardWrapper>
                     <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${this.props.index}-delete-asset`}>
                      <div onClick={() => {if(this.isEnableKeyboard) {this.deleteRef.current.focus()}}}>
-                         <div onKeyDown={this.clickNode} ref={this.deleteRef} tabIndex={0} className={`delete-figure-button ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                         <div onKeyDown={this.clickNode} ref={this.deleteRef} tabIndex={0} className={`delete-figure-button ${isReviewer} ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                      </div>
                         </KeyboardWrapper>
                      

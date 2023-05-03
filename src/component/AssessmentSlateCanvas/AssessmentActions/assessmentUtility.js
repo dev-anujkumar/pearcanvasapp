@@ -156,7 +156,7 @@ export const checkFigureMetadata = (element, buttonType = null) => {
 export const checkFigureInsideTableElement = (element, buttonType = null, permissions) => {
     let editPermission = permissions.filter(p => ["alfresco_crud_access", "add_multimedia_via_alfresco"].includes(p));
     let tableasHTMLValue = String(element?.figuredata?.tableasHTML)
-    if(element.figuretype === 'tableasmarkup' && tableasHTMLValue.includes('class="imageAssetContent inlineImage"') && editPermission.length === 2){
+    if(element.figuretype === 'tableasmarkup' && tableasHTMLValue.includes('class="imageAssetContent"') && editPermission.length === 2){
         return true;
     }
     return false;
