@@ -141,7 +141,7 @@ module.exports = {
     },
     plugins: plugin,
     // To show the console error with exact file name
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     // Webapck dev server basic configuration
     devServer: {
         // Webpack dev server will lookup for this dir
@@ -169,9 +169,11 @@ module.exports = {
         }]
     },
     optimization: {
+        runtimeChunk: 'single', // To extract the manifest and runtime
         splitChunks: {
             chunks: 'async',
-            minSize: 20000,
+            minSize: 500000,
+            maxSize: 700000,
             minRemainingSize: 0,
             minChunks: 1,
             maxAsyncRequests: 30,
@@ -181,10 +183,11 @@ module.exports = {
                 defaultVendors: {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
-                    chunks: 'all'
+                    chunks: 'all',
+                    maxInitialSize: 700000,
+                    reuseExistingChunk: true
                 }
             }
         },
     }
-
 }
