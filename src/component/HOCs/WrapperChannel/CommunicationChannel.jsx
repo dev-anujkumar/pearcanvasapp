@@ -1026,8 +1026,9 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
+                const slateManifest = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN
                 if (this.props.withinLockPeriod === true) {
-                    this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                    this.props.releaseSlateLock(config.projectUrn, slateManifest)
                 }
                 sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
