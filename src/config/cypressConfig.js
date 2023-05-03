@@ -109,7 +109,6 @@ let cypressConfig = {
     tcmStatusPopupGlossary: false,
     pendingTcmStatus: false,
     GRAMMARLY_CLIENT_ID: "client_51D8CAHFNoRRMxzmiXDpY6",
-    BROKER_PREVIEW_ARN : 'arn:aws:lambda:us-east-1:829809672214:function:c4-qa-publishTitleInterim'
 }
 
 
