@@ -117,12 +117,11 @@ const _Toolbar = props => {
 
     const approveNormalSlate  = async () =>{
         let updateRCSlate = false;
-        const slatePublishStatus = (slateStatus === "approved")
         // In this condition, we are setting a flag to identify whether we need to
         // update slate after versioning in Resource collection, this flag is used by newversion wrapper API
         // updateRCSlate = true (update slate in RC using VCS API at backend)
         //updateRCSlate = false (Do not update slate in RC)
-        if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && slatePublishStatus && !popupSlate) {
+        if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && !popupSlate) {
             updateRCSlate = true
         }
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
