@@ -18,6 +18,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
 import { MOVED_TO_WIP } from '../../constants/Element_Constants';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
+import { ALLOWED_SLATES_IN_RC, APPROVED_BANNER_MESSAGE1, APPROVED_BANNER_MESSAGE2, EDIT_CONTENT_BTN, SUBSCRIBER_BANNER_MESSAGE } from '../SlateWrapper/SlateWrapperConstants';
 
 const _Toolbar = props => {
     const { isToolBarBlocked } = props;
@@ -115,15 +116,21 @@ const _Toolbar = props => {
     }
 
     const approveNormalSlate  = async () =>{
-        let updateWIP = false;
+        let updateRCSlate = false;
         const slatePublishStatus = (slateStatus === "approved")
-        if(slatePublishStatus && !popupSlate) {
-            updateWIP = true
+        // In this condition, we are setting a flag to identify whether we need to
+        // update slate after versioning in Resource collection, this flag is used by newversion wrapper API
+        // updateRCSlate = true (update slate in RC using VCS API at backend)
+        //updateRCSlate = false (Do not update slate in RC)
+        if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && slatePublishStatus && !popupSlate) {
+            updateRCSlate = true
         }
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-        await props.slateVersioning(updateWIP)
+        const approveToWipStatus = await props.slateVersioning(updateRCSlate)
+        if(approveToWipStatus) {
         showNotificationOnCanvas(MOVED_TO_WIP)
         changeAudioNarration()
+        }
     }
 
     let searchElm = UrnSearch;
@@ -148,15 +155,15 @@ const _Toolbar = props => {
             { isSubscribed ? 
             <div className='toolbar-text'>
                 <VisibilityIcon />
-                <div className='read-only'>Read-only | Subscribed Slate</div>
+                <div className='read-only'>{SUBSCRIBER_BANNER_MESSAGE}</div>
             </div> :
             (slatePublishStatus && !config.isCypressPlusEnabled) ? 
             <div className='toolbar-text'>
                 <VisibilityIcon />
-                <div className='read-only'>Read-only | Approved Content </div>
-                <p className='toolbar-para-text'>- Editing content will create a new version of this slate</p>
+                <div className='read-only'>{APPROVED_BANNER_MESSAGE1} </div>
+                <p className='toolbar-para-text'>{APPROVED_BANNER_MESSAGE2}</p>
                 <button variant="outlined" color="primary" className="edit-content-btn" onClick={approveNormalSlate}>
-                    Edit Content
+                    {EDIT_CONTENT_BTN}
                 </button>
             </div> : ''  }
 

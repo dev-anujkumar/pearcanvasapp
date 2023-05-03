@@ -288,46 +288,6 @@ class SlateWrapper extends Component {
         return false
     }
 
-    approveNormalSlate = () => {
-        this.togglePopup(false)
-        let updateRCSlate = false;
-        // In this condition, we are setting a flag to identify whether we need to
-        // update slate after versioning in Resource collection, this flag is used by newversion wrapper API
-        // updateRCSlate = true (update slate in RC using VCS API at backend)
-        //updateRCSlate = false (Do not update slate in RC)
-        const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
-        if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && !popupSlate) {
-            updateRCSlate = true
-        }
-        this.props.slateVersioning(updateRCSlate)
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-        this.props.approvedSlatePopupStatus(false)
-    }
-
-    showApprovedWarningPopup = () => {
-        const { projectSubscriptionDetails: { projectSharingRole, projectSubscriptionDetails: { isSubscribed } } } = this.props
-        const ownerSlate = isOwnerRole(projectSharingRole, isSubscribed)
-        const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
-        const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
-        if (this.props.approvedSlatePopupstatus && slatePublishStatus && !popupSlate && !config?.isCypressPlusEnabled){
-            this.props.showBlocker(true)
-            showTocBlocker();
-            return (
-                <PopUp dialogText={ownerSlate ? APPROVE_OWNER_SLATE : APPROVE_NORMAL_SLATE}
-                    togglePopup={this.togglePopup}
-                    isApprovedSlate={true}
-                    warningHeaderText={`Warning`}
-                    approvePopupClass={`${ownerSlate ? "approved-warning-txt" : "lo-warning-txt"}`}
-                    approveNormalSlate = {this.approveNormalSlate}
-                    hideCanvasBlocker={this.props.showBlocker}
-                />
-            )
-        } else{
-            return null
-        }
-    }
-
-
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
         try {

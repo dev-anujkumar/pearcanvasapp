@@ -152,3 +152,10 @@ export const childNodeTagsArr = ['strong', 'em', 'u', 's', 'sub', 'sup', 'code']
 export const allowedClassName = ['calloutone', 'callouttwo', 'calloutthree', 'calloutfour', 'markedforindex', 'pearson-component glossaryterm']
 export const UNSUPPORTED_CONTENT_ERR_MSG = "Unsupported Content found which will not be pasted."
 export const ALLOWED_SLATES_IN_RC = ['section','appendixslate']
+
+/**** Banner messages for approved and subscriber case ****/
+export const SUBSCRIBER_BANNER_MESSAGE = "Read-only | Subscribed Slate"
+export const APPROVED_BANNER_MESSAGE1 = "Read-only | Approved Content"
+export const APPROVED_BANNER_MESSAGE2 = "- Editing content will create a new version of this slate"
+export const EDIT_CONTENT_BTN = "Edit Content"
+/************************************************************************************/
