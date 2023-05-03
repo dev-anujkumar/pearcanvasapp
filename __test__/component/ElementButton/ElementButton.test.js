@@ -5,10 +5,12 @@ import buttonTypes from '../../../src/component/ElementButtons/ButtonTypes';
 describe('Testing Button component with props', () => {
 
     const props1 = {
-        isSubscribersSlate: true
+        isSubscribersSlate: true,
+        isgreyBorder: true
     }
     const props2 = {
-        isSubscribersSlate: false
+        isSubscribersSlate: false,
+        isgreyBorder: false
     }
 
     it('render split Button component ', () => {
