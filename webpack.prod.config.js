@@ -137,6 +137,8 @@ module.exports = {
         runtimeChunk: 'single', // To extract the manifest and runtime
         splitChunks: {
             chunks: 'async',
+            minSize: 20000,
+            maxSize: 700000,
             minRemainingSize: 0,
             minChunks: 1,
             maxAsyncRequests: 30,
@@ -147,7 +149,7 @@ module.exports = {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
                     chunks: 'all',
-                    maxInitialSize: 700000,
+                    // maxInitialSize: 700000,
                     reuseExistingChunk: true
                 }
             }
