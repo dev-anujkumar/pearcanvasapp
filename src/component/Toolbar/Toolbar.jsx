@@ -171,7 +171,7 @@ const _Toolbar = props => {
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
                     <div className={props?.isLOExist ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
                         <div className="learningobjectiveicon">
-                            <div className={`learningobjectiveicon slate-tag-icon ${(slateStatus === "approved"  && !props.isLOExist && !popupSlate) ? "disable" : ""}`} title="Slate Tag" onClick={_handleLODropdown}>
+                            <div className={`learningobjectiveicon slate-tag-icon ${(hasReviewerRole()  && !props.isLOExist) ? "disable" : ""}`} title="Slate Tag" onClick={_handleLODropdown}>
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
                             </div>
                             {lodropdown &&

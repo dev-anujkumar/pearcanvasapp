@@ -164,7 +164,8 @@ class SlateTagDropdown extends React.Component {
     const currentSlateLF=this.props.currentSlateLF;
     const defaultLF=this.props.defaultLF;
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
-    const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed || this.props?.slatePublishStatus || this.props?.setPopUpSlateLOstatus
+    const slateVersioningStatus =  this.props?.slatePublishStatus || this.props?.setPopUpSlateLOstatus
+    const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
    if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
       this.props.toggleLOWarningPopup(true,e.target.innerText);
     } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
@@ -186,7 +187,8 @@ class SlateTagDropdown extends React.Component {
           'currentSlateLF': currentSlateLF,
           'projectSharingRole': projectSharingRole,
           'isSubscribed': isSubscribed,
-          'defaultLF': defaultLF
+          'defaultLF': defaultLF,
+          "isApprovedSlate":slateVersioningStatus
         }
       })
 
@@ -253,6 +255,7 @@ class SlateTagDropdown extends React.Component {
     } = this.prepareExtFrameworkData();
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
+    const slateVersioningStatus =  this.props?.slatePublishStatus || this.props?.setPopUpSlateLOstatus
     const currentSlateLF=this.props.currentSlateLF;
     const defaultLF=this.props.defaultLF;
     let assessmentuRN="";
@@ -299,7 +302,10 @@ class SlateTagDropdown extends React.Component {
             'currentSlateLF': currentSlateLF,
             'assessmentUrn':  assessmentuRN,
             'previewData': previewData,
-            'defaultLF': defaultLF
+            'defaultLF': defaultLF,
+            'projectSharingRole': projectSharingRole,
+            'isSubscribed': isSubscribed,
+            'isApprovedSlate':slateVersioningStatus
         }
       })
     }
@@ -320,7 +326,8 @@ class SlateTagDropdown extends React.Component {
             'assessmentUrn': assessmentuRN,
             'previewData': previewData,
             'projectSharingRole': projectSharingRole,
-            'isSubscribed': isSubscribed
+            'isSubscribed': isSubscribed,
+            'isApprovedSlate':slateVersioningStatus
         }
       })
     }
