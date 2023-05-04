@@ -141,7 +141,7 @@ module.exports = {
     },
     plugins: plugin,
     // To show the console error with exact file name
-    devtool: 'source-map',
+    devtool: 'inline-source-map',
     // Webapck dev server basic configuration
     devServer: {
         // Webpack dev server will lookup for this dir
@@ -172,8 +172,8 @@ module.exports = {
         runtimeChunk: 'single', // To extract the manifest and runtime
         splitChunks: {
             chunks: 'async',
-            minSize: 500000,
-            maxSize: 700000,
+            minSize: 300000,
+            // maxSize: 700000,
             minRemainingSize: 0,
             minChunks: 1,
             maxAsyncRequests: 30,
