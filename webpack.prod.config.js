@@ -134,7 +134,6 @@ module.exports = {
     // To show the console error with exact file name
     devtool: devtool,
     optimization: {
-        runtimeChunk: 'single', // To extract the manifest and runtime
         splitChunks: {
             chunks: 'async',
             minSize: 20000,
@@ -149,7 +148,7 @@ module.exports = {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
                     chunks: 'all',
-                    // maxInitialSize: 700000,
+                    maxInitialSize: 700000,
                     reuseExistingChunk: true
                 }
             }
