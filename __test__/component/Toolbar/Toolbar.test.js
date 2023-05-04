@@ -7,10 +7,11 @@ import configureMockStore from 'redux-mock-store';
 import config from '../../../src/config/config';
 import Toolbar from '../../../src/component/Toolbar';
 
-jest.mock('../../../src/constants/utility.js', () => ({
+jest.mock('../../../src/constants/utility', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
-    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' )
+    handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
+    isSubscriberRole: jest.fn().mockImplementationOnce( () => { return true })
 }))
 
 jest.mock('../../../src/js/slateLockUtility', () => ({
@@ -33,6 +34,18 @@ const store = mockStore({
             "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
         ],
         slateLevelData: {
+            "urn:pearson:work:4fa7a513-1055-4d16-aa45-aba4de226eb8": {
+                "contentUrn": "urn:pearson:entity:ccdcdaa7-f84f-438a-b062-70ba9cd3d85c",
+                "id": "urn:pearson:work:4fa7a513-1055-4d16-aa45-aba4de226eb8",
+                "numberedandlabel": true,
+                "pageCount": 1,
+                "pageLimit": 25,
+                "pageNo": 0,
+                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                "status": "approved",
+                "type": "manifest",
+                "versionUrn": "urn:pearson:work:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+            },
             "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8": {
                 "contentUrn": "urn:pearson:entity:ccdcdaa7-f84f-438a-b062-70ba9cd3d85c",
                 "id": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8",
@@ -44,6 +57,18 @@ const store = mockStore({
                 "status": "approved",
                 "type": "manifest",
                 "versionUrn": "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+            },
+            "urn:pearson:manifest:4fa7a513-0102-4d16-1994-aba4de226eb8": {
+                "contentUrn": "urn:pearson:entity:ccdcdaa7-f84f-438a-b062-70ba9cd3d85c",
+                "id": "urn:pearson:manifest:4fa7a513-0102-4d16-1994-aba4de226eb8",
+                "numberedandlabel": true,
+                "pageCount": 1,
+                "pageLimit": 25,
+                "pageNo": 0,
+                "schema": "http://schemas.pearson.com/wip-authoring/manifest/1",
+                "status": "approved",
+                "type": "popup",
+                "versionUrn": "urn:pearson:manifest:4fa7a513-0102-4d16-1994-aba4de226eb8"
             }
         }
     },
@@ -65,7 +90,13 @@ const store = mockStore({
 
 const props = {
     isToolBarBlocked : true,
-    slateLockInfo : "test"
+    slateLockInfo : "test",
+    projectSubscriptionDetails: {
+        projectSharingRole : "SUBSCRIBER",
+        projectSubscriptionDetails : {
+            isSubscribed: true
+        }
+    }
 }
 
 config.isPopupSlate = true
@@ -96,5 +127,15 @@ describe('Toolbar testing', () => {
     })
     it('search urn', () => {
         wrapper.find('.search-urn').simulate('click')
+    })
+    it('has slatestatus as approved and type is manifest', () => {
+        config.slateManifestURN = "urn:pearson:manifest:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+        config.tempSlateManifestURN = "urn:pearson:work:4fa7a513-1055-4d16-aa45-aba4de226eb8"
+        config.isCypressPlusEnabled = false
+        wrapper.find('.audio.audioicon').at(0).simulate('click')
+    })
+    it('has slatestatus as approved and type is popup slate', () => {
+        config.slateManifestURN = "urn:pearson:manifest:4fa7a513-0102-4d16-1994-aba4de226eb8"
+        wrapper.find('.audio.audioicon').at(0).simulate('click')
     })
 })

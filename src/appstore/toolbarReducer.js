@@ -19,7 +19,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
         case TOGGLE_BORDERS:
             return {
                 ...state,
-                elemBorderToggle: !state.elemBorderToggle
+                elemBorderToggle: action.payload
             }
         case TOGGLE_PAGE_NUMBER:
             return {
