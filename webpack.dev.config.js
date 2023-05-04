@@ -169,11 +169,9 @@ module.exports = {
         }]
     },
     optimization: {
-        runtimeChunk: 'single', // To extract the manifest and runtime
         splitChunks: {
             chunks: 'async',
             minSize: 20000,
-            maxInitialSize: 700000,
             minRemainingSize: 0,
             minChunks: 1,
             maxAsyncRequests: 30,
@@ -183,10 +181,10 @@ module.exports = {
                 defaultVendors: {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
-                    chunks: 'all',
-                    reuseExistingChunk: true
+                    chunks: 'all'
                 }
             }
         },
     }
+
 }
