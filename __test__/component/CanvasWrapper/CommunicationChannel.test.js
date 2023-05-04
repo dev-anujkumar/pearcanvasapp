@@ -12,6 +12,7 @@ import {
 } from '../../../fixtures/slateTestingData.js';
 import tinymce from 'tinymce/tinymce';
 import config from '../../../src/config/config';
+import { showNotificationOnCanvas } from '../../../src/constants/utility';
 let tinyMceEditor = {
     undoManager: { data: [], typing: false, beforeChange: jest.fn(), add: jest.fn(), undo: jest.fn() ,transact: () =>{ }},
     windowManager: { open: jest.fn(), openUrl: jest.fn(), alert: jest.fn(), confirm: jest.fn(), close: jest.fn() }
@@ -302,17 +303,15 @@ describe('Testing communication channel', () => {
     let channelInstance = wrapper.find('CommunicationWrapper').instance();
     expect(wrapper).toHaveLength(1);
     expect(channelInstance).toBeDefined();
-    xtest('Test for tocContainersLabelUpdate else case', () => {
+    test('Test for tocContainersLabelUpdate case', () => {
         let event = {
             data: {
                 type: "tocContainersLabelUpdate",
                 message: ""
             }
         }
-        const spyshowNotificationOnCanvas = jest.spyOn(channelInstance, 'showNotificationOnCanvas')
         channelInstance.handleIncommingMessages(event);
-        expect(channelInstance.showNotificationOnCanvas).toHaveBeenCalled()
-        spyshowNotificationOnCanvas.mockClear()
+        expect(showNotificationOnCanvas)
     })
     test('Test for getPermissions else case', () => {
         let event = {

@@ -4,7 +4,9 @@ import FigureTableAsset from '../../../src/component/ElementFigure/FigureTableAs
 import { figureTableAssetWithOutTable, figureTableAssetWithTable } from '../../../fixtures/FigureTableAssetTestingData';
 
 jest.mock('../../../src/constants/utility.js', () => ({
-    hasReviewerRole: jest.fn()
+    hasReviewerRole: jest.fn().mockImplementationOnce(() => {
+        return true
+    })
 }))
 
 describe('Testing Coponent FigureTableAsset', () => {

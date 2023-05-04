@@ -1247,7 +1247,7 @@ class ElementContainer extends Component {
         const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
         // remove/override to default means gets added to numbering system
         if ((!previousElementData?.numberedandlabel || previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue')) && dataToSend.numberedandlabel && (!dataToSend?.manualoverride?.hasOwnProperty('overridelabelvalue'))) {
-            if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride.hasOwnProperty('resumenumbervalue')) {
+            if (dataToSend.hasOwnProperty('manualoverride') && dataToSend?.manualoverride?.hasOwnProperty('resumenumbervalue')) {
                 dataToSend = {
                     ...dataToSend,
                     manualoverride: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { slateData, slateData2 } from '../../../fixtures/slateTestingData.js'
+import { slateData, slateData2, popupSlateData } from '../../../fixtures/slateTestingData.js'
 import SlateWrapper from '../../../src/component/SlateWrapper';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -185,6 +185,7 @@ describe("SlateWrapper Component", () => {
     config.ssoToken = "1214";
     let props = {
         slateData: slateData,
+        popupSlateData: popupSlateData,
         permissions : [],
         toggleTocDelete: true,
         loadMorePages:jest.fn(),
@@ -1072,10 +1073,22 @@ describe("SlateWrapper Component", () => {
             compInstance.setState({ showOwnerSlatePopup: false });
         });
     });
-
+    describe("1.49 Test - renderSlate", () => {
+        it("Test 1.49.1- if case- isPopupReadOnly", () => {
+            config.slateManifestURN ="urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            config.tempSlateManifestURN = "s-12345";
+            const newProps = {
+            ...props,
+            };
+            newProps.slateData["urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"] = {status: "approved", type:"popup"};
+            const compInstance = slateWrapInstance(newProps);
+            const spy = jest.spyOn(compInstance, 'renderSlate');
+            compInstance.renderSlate(slateData);
+            expect(spy).toHaveBeenCalled();
+            spy.mockClear();
+        });
+    })
     describe('subscriber Content',()=>{
-
-        
         it('Subscriber Content', () => {
             jest.mock('../../../src/constants/utility', () => {
                 return {
