@@ -4,6 +4,16 @@ import tinyMCE from 'tinymce/tinymce';
 import PowerPasteElement from '../../../src/component/PowerPasteElement/PowerPasteElement.jsx';
 import { pastePreProcess, pastePostProcess, setupKeydownEvent, editorFocus, editorBlur, editorClick,prepareFinalPasteContent } from '../../../src/component/PowerPasteElement/PowerPasteElement.jsx';
 import { nodePara1, nodePara2, nodeUL, nodeOLWithStyle, nodeOL, nodeIMG, nodeHEADING, elementsData, pasteElementNodeData } from '../../../fixtures/PowerPasteData.js';
+import { isPrimaryButtonFocused, isSecondaryButtonFocused } from '../../../src/component/PopUp/PopUp_helpers.js';
+
+jest.mock('../../../src/component/PopUp/PopUp_helpers.js', () => ({
+    isPrimaryButtonFocused: jest.fn(),
+    isSecondaryButtonFocused: jest.fn(),
+    focusElement: jest.fn(),
+    blurElement: jest.fn(),
+    focusPopupButtons: jest.fn(),
+    blurPopupButtons: jest.fn()
+}));
 
 describe('Testing FigureUserInterface component', () => {
     const PowerPasteComponent = mount(<PowerPasteElement />)
@@ -312,7 +322,7 @@ describe('Testing FigureUserInterface component', () => {
         expect(result).toBe(undefined);
     })
 
-    it('Test-15 editorClick conditional coverage', () => {
+    it('Test-15 editorClick conditional coverage - IF', () => {
         let event = {
             preventDefault: jest.fn(),
             stopPropagation: jest.fn(),
@@ -323,11 +333,62 @@ describe('Testing FigureUserInterface component', () => {
             undoManager: {
                 clear: jest.fn()
             },
-            getContent: jest.fn()
+            getContent: () => {
+                return {
+                    length: 0
+                }
+            }
         }
         let result = editorClick(nextEditor);
         expect(result).toBe(undefined);
     })
+
+    it('Test-15 editorClick conditional coverage - ELSE - Part1 IF', () => {
+        let event = {
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn(),
+            stopImmediatePropagation: jest.fn()
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            undoManager: {
+                clear: jest.fn()
+            },
+            getContent: () => {
+                return {
+                    length: 700
+                }
+            }
+        }
+        isPrimaryButtonFocused.mockImplementation(() => true);
+        isSecondaryButtonFocused.mockImplementation(() => false);
+        let result = editorClick(nextEditor);
+        expect(result).toBe(undefined);
+    })
+
+    it('Test-15 editorClick conditional coverage - ELSE - Part2 - ELSE', () => {
+        let event = {
+            preventDefault: jest.fn(),
+            stopPropagation: jest.fn(),
+            stopImmediatePropagation: jest.fn()
+        }
+        let nextEditor = {
+            on: (temp, cb) => { cb(event) },
+            undoManager: {
+                clear: jest.fn()
+            },
+            getContent: () => {
+                return {
+                    length: 700
+                }
+            }
+        }
+        isPrimaryButtonFocused.mockImplementation(() => false);
+        isSecondaryButtonFocused.mockImplementation(() => true);
+        let result = editorClick(nextEditor);
+        expect(result).toBe(undefined);
+    })
+
     it('Test-15 prepareFinalPasteContent function', () => {
         let props = {
             index: 1,
