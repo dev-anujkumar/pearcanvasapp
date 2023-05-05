@@ -138,7 +138,7 @@ const _Toolbar = props => {
         searchElm = false;
         searchTerm = '';
     }
-    const isReviewerRole = roleId === 'comment_only'
+    const isReviewerRole = (roleId === 'comment_only')
     const isSubscribed = isSubscriberRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed)
     const slatePublishStatus = (slateStatus === "approved") && !popupSlate && !isReviewerRole
     const setPopUpSlateLOstatus = props?.slateLevelData?.[config.slateManifestURN]?.type === "popup" && props?.slateLevelData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && props?.slateLevelData?.[config.tempSlateManifestURN]?.status === "approved";
