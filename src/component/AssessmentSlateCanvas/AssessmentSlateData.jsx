@@ -750,7 +750,7 @@ class AssessmentSlateData extends Component {
     */
     showFinalAssessmentSlate = (slatePlaceholder, assessmentType, assessmentSlateObj, assessmentUsageType) => {
         const oldReducerData = this.props.assessmentReducer[assessmentSlateObj.assessmentId]
-        const assessmentCreatedDate = oldReducerData?.createdDate ? oldReducerData?.createdDate : ''
+        const assessmentCreatedDate = oldReducerData?.modifiedDate ? oldReducerData?.modifiedDate : ''
         let assessmentSlate = <div className="slate_fetch_canvas">
             <div className="slate_assessment_data_container">
                 <div className="slate_assessment_data_content">
