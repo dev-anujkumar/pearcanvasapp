@@ -183,6 +183,22 @@
   height: 36px;
 }
 
+.subscriberSlate-ok-button{
+  background-color: #005A70;
+  color: #FFFFFF;
+  border-radius: 2px;
+  float: right;
+  margin: 0 0 0 16px;
+  font-family: inherit;
+  padding: 8px 20px;
+  font-size: 14px;
+  line-height: 1.43;
+  letter-spacing: normal;
+  text-align: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .dialog-buttons.tcm-canvas-popup{
     height: 70px;
     margin: 0px -16px -16px -16px;
@@ -443,7 +459,7 @@
 }
 .loPopupHeader {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   margin-top: 2px;
   color: #005a70;
 }
@@ -1000,6 +1016,7 @@ ol li.listItemNumeroUnoLowerRoman {
   color: #000;
   text-align: center;
   align-items: center;
+  margin-top: 10px;
 }
 
 .OwnersSlateCheckBox{

@@ -1943,6 +1943,14 @@ text: "mathml text"
         "contentUrn":"urn:pearson:entity:9eca6589-9f49-4dac-9c96-3b65540bb0dd",
         "status":"wip"
     },
+    'tcc': {
+        "id": "urn:pearson:work:e86d43e6-db98-4a79-8fef-a8ce7fc1c012",
+        "type": "element-tcc",
+        "subtype": "edynamic",
+        "schema":"http://schemas.pearson.com/wip-authoring/element/1",
+        "versionUrn": "urn:pearson:work:e86d43e6-db98-4a79-8fef-a8ce7fc1c012",
+        "contentUrn": "urn:pearson:entity:4ad7f516-7d96-4832-a6bf-3a8f60f97063"
+    },
     'bl': {
         "id":"urn:pearson:manifest:f1a32a87-213e-4b9d-9e08-a29165ac4f84",
         "type":"manifestlist",

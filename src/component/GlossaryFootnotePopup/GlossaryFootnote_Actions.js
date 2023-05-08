@@ -1624,7 +1624,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             if (res?.data?.html?.hasOwnProperty('text')) {
                 if(newBodymatter[tempIndex[0]]?.html?.dialogueContent[0]?.text.includes(glossaryfootnoteid)){
                     res.data.html.dialogueContent[0].text = res?.data?.html?.text
-                }else if(newBodymatter[tempIndex[0]]?.html?.dialogueContent[1]?.characterName.includes(glossaryfootnoteid)){
+                }else if(newBodymatter[tempIndex[0]]?.html?.dialogueContent[1]?.characterName?.includes(glossaryfootnoteid)){
                     res.data.html.dialogueContent[1].characterName = `<p>${res?.data?.html?.text}</p>`
                 }else if(newBodymatter[tempIndex[0]]?.html?.dialogueContent[1]?.text.includes(glossaryfootnoteid)){
                     res.data.html.dialogueContent[1].text = `<p>${res?.data?.html?.text}</p>`

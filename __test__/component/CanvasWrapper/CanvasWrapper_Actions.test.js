@@ -43,11 +43,6 @@ import { slateTestData } from './mockData.js';
 import { PROJECT_SHARING_ROLE } from '../../../src/constants/IFrameMessageTypes';
 /**********************Mock Helper Functions***********************/
 jest.mock('axios');
-jest.mock('../../../src/constants/ga', () => {
-    return {
-        sendToDataLayer: jest.fn()
-    }
-});
 jest.mock('../../../src/constants/IFrameMessageTypes.js', () => {
     return {
         HideLoader: jest.fn()
@@ -2177,6 +2172,40 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                 return {
                     appStore: {
                         slateLevelData: slateTestData.popupSlate,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670',
+                entityURN = 'urn:pearson:entity:f23c667b-81ca-48c5-ba58-bc19fa6b9677',
+                page = 0,
+                versioning = slateTestData.popupSlateLabelVersioning,
+                calledFrom = '',
+                versionPopupReload = false
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
+        it('Test-4.8-fetchSlateData - Popup Slate - Versioning config.cachedActiveElement', () => {
+            config.cachedActiveElement = {
+                element: {
+                    type: "manifest",
+                    id : "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2671"
+            let responseData = { data: { ...slateTestData.approvedSlate } }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.approvedSlate,
                         activeElement: {},
                     }
                 };

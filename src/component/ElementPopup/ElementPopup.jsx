@@ -27,7 +27,7 @@ class ElementPopup extends React.Component {
     }
     componentDidMount = () => {
         this.popupBorderRef.current.addEventListener('click', this.handlepopupSlateClick);
-        if(hasReviewerRole){
+        if(hasReviewerRole()){
             document.getElementById(`cypress-${this.props.index}-0`)?.setAttribute('contenteditable', false);
             document.getElementById(`cypress-${this.props.index}-1`)?.setAttribute('contenteditable', false);
             document.getElementById(`cypress-${this.props.index}-2`)?.setAttribute('contenteditable', false);
@@ -77,7 +77,7 @@ class ElementPopup extends React.Component {
      * Creates Title/Subtitle element if not present.
      */
     createPopupUnit = async (popupField, forceupdate, index, parentElement, createdFromFootnote) => {
-        if (!config.popupCreationCallInProgress) {
+        if (!config.popupCreationCallInProgress && !hasReviewerRole()) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
             config.popupCreationCallInProgress = true
             await this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN, createdFromFootnote)

@@ -674,9 +674,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             const hasMergedPdf = pdfBodymatter?.length === 2 ? true : false
             dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
-        if(slateData?.data[newVersionManifestId]?.status === "approved"){
-            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': true });
-        }
+        const slatePublishStatus = slateData?.data[newVersionManifestId]?.status === "approved" && slateData?.data[newVersionManifestId]?.type !== "popup";
+            
+        sendDataToIframe({ 'type': 'slateVersionStatus', 'message': slatePublishStatus });
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;

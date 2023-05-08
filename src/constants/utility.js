@@ -72,22 +72,53 @@ export const guid = () => {
 export const hasProjectPermission = (value) => {
     const authStore = store.getState();
     const {projectInfo} = authStore;
-    let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+    const isReadOnlyContent = isApprovedOrSubscribed(authStore)
     let permissions = authStore && authStore.appStore.permissions;
-    let hasPermissions = permissions && permissions.includes(value) && !isSubscriber;
+    let hasPermissions = permissions && permissions.includes(value);
+    //if reviewer user, then preference will be given to Reviewer
+    if(hasPermissions && value === 'note_viewer') return true
+    // if not reviewer user but contetn is subscriber/approved, then readonly conditions willl
+    // get preference
+    if(isReadOnlyContent) return false
+    //if not reviewer user or not readonly condition, then check other permissions
     return hasPermissions;
+}
+/**
+ * This function check whether the current slate is approve or subscribed
+ * and also check the conditions for popup slate
+ * @param {Object} authStore
+ * @returns
+ */
+export const isApprovedOrSubscribed = (authStore) => {
+    const {appStore, projectInfo} = authStore;
+    const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+    const slatePublishStatus = appStore.slateLevelData[config.slateManifestURN]?.type !== "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved";
+    const isPopupReadOnly = appStore.slateLevelData[config.slateManifestURN]?.type === "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && appStore.slateLevelData[config.tempSlateManifestURN]?.status === "approved";
+    return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber);
+}
+/**
+ * This function checks the conditions for Reviewer users and approved/subscribed content both
+ * at same time to show or hide elements borders. Preference is giving to reviewer user and border 
+ * will be visible for reviewer user
+ * @returns 
+ */
+export const isApproved = () =>{
+    const authStore = store.getState();
+    const {appStore} = authStore;
+    const hasRole= appStore && appStore.roleId === "comment_only" && (hasProjectPermission('note_viewer'))
+    if(hasRole)  return false
+    return isApprovedOrSubscribed(authStore)
 }
 
 
 export const hasReviewerRole = (value) => {
     const authStore = store.getState();
-    const {projectInfo} = authStore;
-    let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+    const {appStore} = authStore;
     if (value) {
-        return !(hasProjectPermission(value) ? true : false)
+        return !((hasProjectPermission(value) && !isApproved()) ? true : false)
     }
-    let hasRole = (authStore.appStore && (authStore.appStore.roleId === "comment_only"
-        && (hasProjectPermission('note_viewer'))) || isSubscriber);
+    let hasRole = (appStore && (appStore.roleId === "comment_only"
+        && (hasProjectPermission('note_viewer'))) || isApproved());
     return hasRole;
 }
 /**
@@ -1003,4 +1034,16 @@ export const removedDOMAttributes = (innerHTML, className) => {
         }
     }
     return tempDiv?.innerHTML;
+}
+
+export const showNotificationOnCanvas = (message) => {
+    let linkNotification = document.getElementById('link-notification');
+    if (linkNotification) {
+        linkNotification.innerText = message;
+        linkNotification.style.display = "block";
+        setTimeout(() => {
+            linkNotification.style.display = "none";
+            linkNotification.innerText = "";
+        }, 3000);
+    }
 }
