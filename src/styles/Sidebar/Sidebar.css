@@ -303,3 +303,7 @@ pointer-events: none;
 .asideSlider:before{
     background-color: none !important;
 }
+
+.pointer-events-none{
+    pointer-events: none;
+}

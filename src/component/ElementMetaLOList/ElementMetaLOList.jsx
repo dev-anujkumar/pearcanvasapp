@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
 import { connect } from 'react-redux';
 import config from '../../config/config';
-import { sendDataToIframe } from '../../constants/utility.js';
+import { isApproved, sendDataToIframe } from '../../constants/utility.js';
 import { OpenLOPopup, NoSlateTagIS } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementMetaLOList/ElementMetaLOList.css';
 import { setCurrentModule, reRenderLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
@@ -51,7 +51,7 @@ export class ElementMetaLOList extends Component {
     const { slateLockInfo } = this.props
     return (
 
-      <div className="learningObjectiveContainer" id="introslateLOL" onClick={(e) => this.onLOLClickHandle(this.props.currentSlateLOData, e)} >
+      <div className="learningObjectiveContainer" id="introslateLOL" onClick={!isApproved() && ((e) => this.onLOLClickHandle(this.props.currentSlateLOData, e))} >
         <div className="container">
           <div className="matadata_anchor" >
             <TinyMceEditor
