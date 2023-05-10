@@ -1040,7 +1040,7 @@ ol li {
     /* text-indent: 0em; */
 }
 ol li.listItemNumeroUno:before, ol li.listItemNumeroUnoNumber:before, ol li.listItemNumeroUnoLowerAlpha:before, ol li.listItemNumeroUnoUpperAlpha:before,
-ol li.listItemNumeroUnoUpperRoman:before, ol li.listItemNumeroUnoLowerRoman:before, ol li.listItemNumeroUnoNone:before, ol li.listItemNummerEins:before,
+ol li.listItemNumeroUnoUpperRoman:before, ol li.listItemNumeroUnoLowerRoman:before, ol li.listItemNummerEins:before,
 ol li.listItemNummerEinsNumber:before, ol li.listItemNummerEinsLowerAlpha:before, ol li.listItemNummerEinsUpperAlpha:before,
 ol li.listItemNummerEinsUpperRoman:before, ol li.listItemNummerEinsLowerRoman:before, ol li.listItemNummerEinsNone:before {
     content: counter(item) ". ";
@@ -1051,6 +1051,12 @@ ol li.listItemNummerEinsUpperRoman:before, ol li.listItemNummerEinsLowerRoman:be
     position: absolute;
     width: 4.5em;
     margin: 0 0 1em -4.9em;
+}
+td ol li.listItemNumeroUno:before, td ol li.listItemNumeroUnoNumber:before, td ol li.listItemNumeroUnoLowerAlpha:before, 
+td ol li.listItemNumeroUnoUpperAlpha:before, td ol li.listItemNumeroUnoUpperRoman:before, td ol li.listItemNumeroUnoLowerRoman:before, 
+td ol li.listItemNumeroUnoNone:before {
+    content: counter(item, upper-roman) ". ";
+    counter-increment: item;
 }
 table pre {
     font-family: monospace;
