@@ -35,7 +35,7 @@ import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlat
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
-import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import { assessmentConfirmationPopup, assessmentReloadConfirmation } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
 import { createPowerPasteElements } from './SlateWrapper_Actions.js';
@@ -1352,6 +1352,16 @@ class SlateWrapper extends Component {
     }
 
     /**
+    * @description - reloadSlateAfterAssessmentUpdate function responsible for refreshing slate after updating assessments .
+    */
+    reloadSlateAfterAssessmentUpdate = () => {
+        if (this.props.reloadAfterAssessmentUpdate) {
+            reloadSlate()
+            this.props.assessmentReloadConfirmation(false);
+        }
+    }
+
+    /**
     * @description - showAssessmentConfirmationPopup function responsible for opening confirmation popup for updating embeded assessments .
     */
     showAssessmentConfirmationPopup = () => {
@@ -1685,6 +1695,8 @@ class SlateWrapper extends Component {
                 {/* **************** Alfresco Popup ************ */}
                 {this.showAlfrescoPopup()}
                 {/* **************** Approved to WIP Warning Popup ************* */}
+                {/* **************** To reload slate after assessment update ************* */}
+                {this.reloadSlateAfterAssessmentUpdate()}
             </React.Fragment>
         );
     }
@@ -1745,6 +1757,7 @@ const mapStateToProps = state => {
         asideData: state.appStore.asideData,
         approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
+        reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate
     };
 };
 
@@ -1786,6 +1799,7 @@ export default connect(
         savePopupParentSlateData,
         slateVersioning,
         approvedSlatePopupStatus,
-        isSubscribersSubscribedSlate
+        isSubscribersSubscribedSlate,
+        assessmentReloadConfirmation
     }
 )(SlateWrapper);
