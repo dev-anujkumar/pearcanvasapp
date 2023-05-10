@@ -140,7 +140,10 @@ export class ElementMetaLOList extends Component {
     */
    e.stopPropagation();
     this.props.handleFocus();
-    if (isApproved() || config.editorRefID == e.target.id) {
+    if(isApproved()){
+      return false;
+    }
+    if (config.editorRefID == e.target.id) {
       config.editorRefID = "";
       return false;
     }
