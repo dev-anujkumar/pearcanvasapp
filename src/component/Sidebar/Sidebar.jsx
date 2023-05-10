@@ -8,7 +8,7 @@ import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateConta
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole, getSlateType, isApproved } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE } from '../SlateWrapper/SlateWrapperConstants.js';
@@ -244,7 +244,7 @@ class Sidebar extends Component {
 
     primaryOption = () => {
         const { activePrimaryOption } = this.state
-        const isApprovedSubscribed =  isApproved() ? 'pointer-events-none' : ''
+        const isReadOnly =  hasReviewerRole() ? 'pointer-events-none' : ''
         let primaryOptions = '';
         if (this.state.activeElementType) {
             let className = ""
@@ -298,7 +298,7 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                 <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                 <p>Show Module Name</p>
-                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} disabled={isApproved()} checked={this.props.showModule ? true : false} /><span className={`slider round ${isApprovedSubscribed}`}></span></label>
+                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} disabled={hasReviewerRole()} checked={this.props.showModule ? true : false} /><span className={`slider round ${isReadOnly}`}></span></label>
             </div>;
             return primaryOptions;
         }
