@@ -51,7 +51,7 @@ export class ElementMetaLOList extends Component {
     const { slateLockInfo } = this.props
     return (
 
-      <div className="learningObjectiveContainer" id="introslateLOL" onClick={!isApproved() && ((e) => this.onLOLClickHandle(this.props.currentSlateLOData, e))} >
+      <div className="learningObjectiveContainer" id="introslateLOL" onClick={(e) => this.onLOLClickHandle(this.props.currentSlateLOData, e)} >
         <div className="container">
           <div className="matadata_anchor" >
             <TinyMceEditor
@@ -140,7 +140,7 @@ export class ElementMetaLOList extends Component {
     */
    e.stopPropagation();
     this.props.handleFocus();
-    if (config.editorRefID == e.target.id) {
+    if (isApproved() || config.editorRefID == e.target.id) {
       config.editorRefID = "";
       return false;
     }
