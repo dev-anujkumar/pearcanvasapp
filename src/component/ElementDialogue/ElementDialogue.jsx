@@ -197,7 +197,7 @@ class ElementDialogue extends React.PureComponent {
                         >
                             {this.renderButtons(index, buttonClass, labelText, _props.element)}
                             <div
-                                className={`element-container play-script ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)}`}
+                                className={`element-container play-script ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)} ${hasReviewerRole() ? "pointer-events-none" : ""}`}
                                 data-id={_props.elementId+'-'+index}
                             >
                                 <DialogueContent

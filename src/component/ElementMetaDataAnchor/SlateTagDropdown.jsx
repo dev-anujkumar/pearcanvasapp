@@ -90,9 +90,10 @@ class SlateTagDropdown extends React.Component {
             'strApiKey': config.STRUCTURE_APIKEY,
             'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
             'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-            'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
+            'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
             'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-            'myCloudProxySession': config.myCloudProxySession
+            'myCloudProxySession': config.myCloudProxySession,
+            'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
         };
         this.warningActionIntiator = e.target.innerText;
         if (e.target.innerText == ViewLearningObjectiveSlateDropdown && config.slateType !== 'assessment') {
@@ -142,9 +143,10 @@ class SlateTagDropdown extends React.Component {
       'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
       'strApiKey': config.STRUCTURE_APIKEY,
       'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-      'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
+      'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-      'myCloudProxySession': config.myCloudProxySession
+      'myCloudProxySession': config.myCloudProxySession,
+      'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
     };
     const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = [];

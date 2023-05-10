@@ -1572,8 +1572,9 @@ class SlateWrapper extends Component {
             'strApiKey': config.STRUCTURE_APIKEY,
             'mathmlImagePath': config.S3MathImagePath ?? defaultMathImagePath,
             'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-            'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
-            'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+            'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+            'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
+            'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
         };
         let externalLFUrn = '';
         if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
