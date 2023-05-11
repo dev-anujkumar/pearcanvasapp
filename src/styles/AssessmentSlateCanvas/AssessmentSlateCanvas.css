@@ -215,12 +215,13 @@
     word-wrap: break-word;
   }
   .slate_assessment_tcc_data_note{
-    margin-top: 23em;
-    margin-left: -8em;
+    margin-left: -88px;
     font-size: 11px;
+    margin-top: 376px;
     font-weight: 500;
     font-family: "Open Sans",sans-serif;
     letter-spacing: 0.2px;
+    position: absolute;
   }
   .slate_assessment_change_button{
     font-size: 13px;
