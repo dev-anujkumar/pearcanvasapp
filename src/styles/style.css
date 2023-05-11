@@ -1055,8 +1055,38 @@ ol li.listItemNummerEinsUpperRoman:before, ol li.listItemNummerEinsLowerRoman:be
 td ol li.listItemNumeroUno:before, td ol li.listItemNumeroUnoNumber:before, td ol li.listItemNumeroUnoLowerAlpha:before, 
 td ol li.listItemNumeroUnoUpperAlpha:before, td ol li.listItemNumeroUnoUpperRoman:before, td ol li.listItemNumeroUnoLowerRoman:before, 
 td ol li.listItemNumeroUnoNone:before {
-    content: counter(item, upper-roman) ". ";
     counter-increment: item;
+}
+td ol li.listItemNumeroUnoUpperAlpha:before {
+    content: counter(item, upper-alpha) ". ";
+}
+
+td ol li.listItemNumeroUnoLowerAlpha:before {
+    content: counter(item, lower-alpha) ". ";
+}
+
+td ol li.listItemNumeroUnoUpperRoman:before {
+    content: counter(item, upper-roman) ". ";
+}
+
+td ol li.listItemNumeroUnoLowerRoman:before {
+    content: counter(item, lower-roman) ". ";
+}
+
+td ol li.listItemNumeroUnoNone:before {
+    content: none;
+}
+td ol li.listItemNumeroUnoNumber:before {
+    content: counter(item, decimal) ". ";
+}
+table ul {
+    list-style-position: outside;
+    margin-bottom: 1em;
+}
+table ul li {
+    margin-left: 12px;
+    color: #000;
+    text-indent: -4px;
 }
 table pre {
     font-family: monospace;
