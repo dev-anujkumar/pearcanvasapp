@@ -74,6 +74,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
     if(process.env.NODE_ENV === "development"){
         return false
     }
+    if(hasReviewerRole()) return;
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/setlock`
 
     let data = {
