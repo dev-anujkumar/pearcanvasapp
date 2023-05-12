@@ -1081,7 +1081,7 @@ td ol li.listItemNumeroUnoNumber:before {
 }
 table ul {
     list-style-position: outside;
-    margin-bottom: 1em;
+    list-style-type: disc;
 }
 table ul li {
     margin-left: 12px;
