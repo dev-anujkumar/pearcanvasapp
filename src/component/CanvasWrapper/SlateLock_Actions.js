@@ -2,6 +2,7 @@ import axios from 'axios'
 import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
 import store from './../../appstore/store';
+import { hasReviewerRole } from '../../constants/utility';
 
 /**
  * Action Creator
