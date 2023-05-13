@@ -122,6 +122,13 @@ export const hasReviewerRole = (value) => {
     return hasRole;
 }
 
+export const isAssessmentAutoUpdate = (oldAssessmentData) =>{
+const authStore = store.getState();
+const assessmentId = oldAssessmentData?.elementdata?.assessmentid
+const hasAssessmentUpdateStatus = authStore?.assessmentReducer[assessmentId]?.showUpdateStatus
+return !hasAssessmentUpdateStatus
+}
+
 export const hasReviewerSubscriberRole = () => {
     const authStore = store.getState();
     const {appStore, projectInfo} = authStore;

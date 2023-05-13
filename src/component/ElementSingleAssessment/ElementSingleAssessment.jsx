@@ -65,6 +65,12 @@ class ElementSingleAssessment extends Component {
     componentDidUpdate() {
         const { assessmentReducer } = this.props;
         const { elementType, assessmentId } = this.state;
+        console.log('CHECKING TITLE INSIDE COMPONENT DID UPDATE', assessmentReducer, 'CHECKING STATE TITLE', this.state.assessmentTitle)
+        if(assessmentReducer[assessmentId]?.assessmentTitle !== this.state.assessmentTitle){
+            this.setState({
+                assessmentTitle : assessmentReducer[assessmentId]?.assessmentTitle
+            })
+        }
         if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentReducer)){
             const { dataFromElm } = assessmentReducer;
             if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.elementUrn === this.props.model.id) {

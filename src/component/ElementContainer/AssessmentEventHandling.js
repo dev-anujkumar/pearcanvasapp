@@ -19,6 +19,7 @@ export const handleElmPortalEvents = (action,eventType) => {
         let elmAssessmentUpdate = async (event) => {
             try {
                 const { data } = event;
+                console.log('CHECKING DATA INSIDE HANDLE ELM PORTAL', data)
                 // console.log('%c Interactive edit-in-place messages>>>BEFORE>>>','background: #222; color: white',data)
                 if (eventType == 'fromUpdate') {
                     if (action == 'add' && data && data.source == 'elm') {
