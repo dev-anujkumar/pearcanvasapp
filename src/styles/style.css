@@ -1081,12 +1081,16 @@ td ol li.listItemNumeroUnoNumber:before {
 }
 table ul {
     list-style-position: outside;
-    margin-bottom: 1em;
+    list-style-type: disc;
 }
 table ul li {
     margin-left: 12px;
     color: #000;
     text-indent: -4px;
+}
+td li.listItemNumeroUno, td li.listItemNumeroUnoNumber, td li.listItemNumeroUnoLowerAlpha, td li.listItemNumeroUnoUpperAlpha, td li.listItemNumeroUnoUpperRoman, td li.listItemNumeroUnoLowerRoman, td li.listItemNumeroUnoNone {
+    font-size: .95em;
+    line-height: 1.65em;
 }
 table pre {
     font-family: monospace;
