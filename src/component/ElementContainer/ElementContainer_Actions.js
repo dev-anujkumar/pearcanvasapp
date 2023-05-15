@@ -160,7 +160,7 @@ export const contentEditableFalse = (updatedData) => {
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
     if (hasReviewerRole()) {
         // condition to work on approved slate for Auto update on Assessment slate 
-        if ((updatedData?.type !== 'element-assessment' && !hasReviewerSubscriberRole) || hasReviewerSubscriberRole) {
+        if ((updatedData?.type !== 'element-assessment' && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return;
         }
