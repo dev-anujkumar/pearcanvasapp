@@ -11,7 +11,8 @@ import {
     ELM_NEW_ITEM_DATA,
     SET_INTERACTIVE_METADATA,
     SET_ELM_PICKER_MSG,
-    UPDATE_ASSESSMENT_ID
+    UPDATE_ASSESSMENT_ID,
+    ASSESSMENT_RELOAD_CONFIRMATION
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -19,7 +20,8 @@ const INITIAL_STATE = {
     currentEditAssessment:{},
     itemUpdateEvent: false,
     dataFromElm: {},
-    assessmenId: ''
+    assessmenId: '',
+    reloadAfterAssessmentUpdate: false
 }
 
 const INITIAL_ACTION = {
@@ -107,6 +109,11 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 ...state,
                 assessmenId: action.payload
             }
+        case ASSESSMENT_RELOAD_CONFIRMATION: 
+        return {
+            ...state,
+            reloadAfterAssessmentUpdate: action.payload
+        }
         default:
             return state
     }
