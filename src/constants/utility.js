@@ -121,7 +121,11 @@ export const hasReviewerRole = (value) => {
         && (hasProjectPermission('note_viewer'))) || isApproved());
     return hasRole;
 }
-    
+
+/**
+ * This function checks the conditions for Reviewer users and subscribed content both
+ * @returns 
+ */
 export const hasReviewerSubscriberRole = () => {
     const authStore = store.getState();
     const {appStore, projectInfo} = authStore;
