@@ -369,7 +369,6 @@ const AssessmentAPIHandlers = {
     /** @description This function dispatches latest metadata for Assessment to store */
     dispatchAssessmentMetadata: (currentWorkUrn, dataForUpdate, dispatch) => {
         hideBlocker();
-        console.log('dispatchAssessmentMetadata ===>>>>', dataForUpdate)
         dispatch({
             type: SET_ASSESSMENT_METADATA,
             payload: {

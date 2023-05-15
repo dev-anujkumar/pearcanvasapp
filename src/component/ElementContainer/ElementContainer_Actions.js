@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel, isAssessmentAutoUpdate } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel, hasReviewerSubscriberRole } from '../../constants/utility.js';
 import { triggerCustomEventsGTM } from '../../js/ga';
 import {
     fetchSlateData
@@ -158,9 +158,8 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
-    console.log('CHECKING HAS REVIEWER ROLE', hasReviewerRole(), 'ASSESSMENT UPDATED CHECK', isAssessmentAutoUpdate(updatedData?.oldAssessmentData))
     if (hasReviewerRole()) {
-        if (isAssessmentAutoUpdate(updatedData?.oldAssessmentData)){
+        if (updatedData?.type !== 'element-assessment' && hasReviewerSubscriberRole) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return;
         }

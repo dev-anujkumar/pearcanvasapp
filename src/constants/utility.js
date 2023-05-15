@@ -121,22 +121,15 @@ export const hasReviewerRole = (value) => {
         && (hasProjectPermission('note_viewer'))) || isApproved());
     return hasRole;
 }
-
-export const isAssessmentAutoUpdate = (oldAssessmentData) =>{
-const authStore = store.getState();
-const assessmentId = oldAssessmentData?.elementdata?.assessmentid
-const hasAssessmentUpdateStatus = authStore?.assessmentReducer[assessmentId]?.showUpdateStatus
-return !hasAssessmentUpdateStatus
-}
-
-export const hasReviewerSubscriberRole = () => {
-    const authStore = store.getState();
-    const {appStore, projectInfo} = authStore;
-    const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
-    let hasRole = (appStore && (appStore.roleId === "comment_only"
-        && (hasProjectPermission('note_viewer'))) || isSubscriber);
-    return hasRole;
-}
+    
+    export const hasReviewerSubscriberRole = () => {
+        const authStore = store.getState();
+        const {appStore, projectInfo} = authStore;
+        const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+        let hasRole = (appStore && (appStore.roleId === "comment_only"
+            && (hasProjectPermission('note_viewer'))) || isSubscriber);
+        return hasRole;
+    }
 /**
  * [TK-1948] | Check & Fix Regular Expressions Dependency
  * Use of String.prototype.matchAll : matchAll does not raise any issue as it is not supported by NodeJS.
