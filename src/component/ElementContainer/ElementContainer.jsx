@@ -1333,6 +1333,7 @@ class ElementContainer extends Component {
         const oldAssessmentData = JSON.parse(JSON.stringify(this.props.element));
         this.props.storeOldAssetForTCM(oldAssessmentData.elementdata);
         let dataToSend = { ...this.props.element }
+        dataToSend.oldAssessmentData = oldAssessmentData
         if (assessmentData?.calledFrom == 'updateAssessmentFormat') {
             dataToSend.elementdata = {
                 schema: "http://schemas.pearson.com/wip-authoring/assessment/1#/definitions/assessment",

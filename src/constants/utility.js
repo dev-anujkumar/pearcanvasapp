@@ -122,6 +122,10 @@ export const hasReviewerRole = (value) => {
     return hasRole;
 }
 
+/**
+ * This function checks the conditions for Reviewer users and subscribed content both
+ * @returns 
+ */
 export const hasReviewerSubscriberRole = () => {
     const authStore = store.getState();
     const {appStore, projectInfo} = authStore;
