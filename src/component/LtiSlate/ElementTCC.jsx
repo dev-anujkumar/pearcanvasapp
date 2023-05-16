@@ -45,11 +45,7 @@ const ElementTCC = (props) => {
             <div className="slate_assessment_data_details">
               <div className="slate_assessment_detail_subtype">{subType}</div>
             </div>
-            <div className="slate_assessment_data_details">
-              <div className="slate_assessment_tcc_data_note">
-                <span>{TCC_BOTTOM_NOTE}</span>
-              </div>
-            </div>
+            <div className="slate_assessment_tcc_data_note">{TCC_BOTTOM_NOTE}</div>
           </div>
         </div>
       </div>

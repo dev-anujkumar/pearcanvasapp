@@ -1,7 +1,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
-import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel, hasReviewerSubscriberRole } from '../../constants/utility.js';
 import { triggerCustomEventsGTM } from '../../js/ga';
 import {
     fetchSlateData
@@ -158,10 +158,13 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} elementIndex index of the element on the slate
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
-        if(hasReviewerRole()){
+    if (hasReviewerRole()) {
+        // condition to work on approved slate for Auto update on Assessment slate 
+        if ((updatedData?.type !== 'element-assessment' && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
-            return ;
+            return;
         }
+    }
         const { showHideObj,slateLevelData } = getState().appStore
         updatedData.projectUrn = config.projectUrn;
         if (updatedData.loData) {

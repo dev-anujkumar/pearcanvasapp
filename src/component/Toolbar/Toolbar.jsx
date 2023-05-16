@@ -183,7 +183,7 @@ const _Toolbar = props => {
 
                 {/* ***********************Audio Narration in toolbar******************************************** */}
                 {   /* Add Audio if there is no audio exists in slate */
-                    (props.addAudio && (!hasReviewerRole())) &&
+                    (props.addAudio && (!isReviewerRole || !isSubscribed)) &&
                     <div className={isToolBarBlocked ? `audio-block ${accessToolbar} ${isToolBarBlocked}` : `audio-block ${accessToolbar}`}>
                         <div className="audioicon">
                             <div className={`audio audioicon ${(config.isCypressPlusEnabled || (slateStatus === 'approved' && !popupSlate)) ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {

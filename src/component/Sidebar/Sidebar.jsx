@@ -244,6 +244,7 @@ class Sidebar extends Component {
 
     primaryOption = () => {
         const { activePrimaryOption } = this.state
+        const isReadOnly =  hasReviewerRole() ? 'pointer-events-none' : ''
         let primaryOptions = '';
         if (this.state.activeElementType) {
             let className = ""
@@ -297,7 +298,7 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                 <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                 <p>Show Module Name</p>
-                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} checked={this.props.showModule ? true : false} /><span className="slider round"></span></label>
+                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} disabled={hasReviewerRole()} checked={this.props.showModule ? true : false} /><span className={`slider round ${isReadOnly}`}></span></label>
             </div>;
             return primaryOptions;
         }
