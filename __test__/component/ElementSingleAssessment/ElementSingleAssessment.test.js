@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { elementType } from 'prop-types';
 import { PUF } from '../../../src/component/AssessmentSlateCanvas/AssessmentSlateConstants';
+import config from '../../../src/config/config';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const userPermissions = [
@@ -14,6 +15,31 @@ const userPermissions = [
     "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
     "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
 ]
+
+const slateData = {
+    'urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee': {
+        "id":"urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee",
+        "type":"manifest",
+        "schema":"http://schemas.pearson.com/wip-authoring/manifest/1",
+        "versionUrn":"urn:pearson:manifest:a2438bed-1188-4f30-8ce7-b535e25598ee",
+        "contentUrn":"urn:pearson:entity:2139e052-2813-4cbe-9441-48e01e51d34a",
+        "status": "wip",
+        "contents":{
+            "bodymatter":[
+                {
+                    "id":"urn:pearson:work:e09f9098-bc7a-410b-9619-c372102cd5b9",
+                    "type":"element-authoredtext",
+                    "contentUrn":"urn:pearson:entity:2e1a0320-b129-4fb9-920c-e8ce5f4bbc3c"
+                },
+                {
+                    "id":"urn:pearson:work:7af88fe2-0f49-4b28-8f2d-87134201fd9b",
+                    "type":"element-authoredtext",
+                    "contentUrn":"urn:pearson:entity:2e1a0320-b129-4fb9-920c-e8ce5f4bbc3c"
+                },
+            ]
+        }
+    }
+};
 let assessmentRed = {
     "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464": {
         activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
@@ -86,7 +112,8 @@ let initialState = {
 
     },
     appStore: {
-        usageTypeListData: { usageTypeList: ["Quiz", "Concept Check", "Test"] }
+        usageTypeListData: { usageTypeList: ["Quiz", "Concept Check", "Test"] },
+        slateLevelData: slateData,
     },
     assessmentReducer: assessmentRed,
     projectInfo: {isBannerVisible: false}
@@ -547,7 +574,8 @@ describe('Testing Element Single Assessment - ELM ASSESSMENTS - Elm Functions', 
     
         },
         appStore: {
-            usageTypeListData: { usageTypeList: ["Quiz", "Concept Check", "Test"] }
+            usageTypeListData: { usageTypeList: ["Quiz", "Concept Check", "Test"] },
+            slateLevelData: slateData,
         },
         assessmentReducer: assessmentRed3,
         projectInfo: {isBannerVisible: false}
@@ -910,7 +938,6 @@ describe(" Test 4 render changeUsageTypePopup ", () => {
     const singleAssessmentInstance = singleAssessment.find('ElementSingleAssessment').instance();
     const component11 = mount(<Provider store={store}><ElementSingleAssessment model={singleAssessmentCITEDefault} index=""
         {...nextProps}
-        model={singleAssessmentCITEDefault}
         assessmentSlateObj={pufObj}
         assessmentData={true}
         assessmentDataPopup={false}
