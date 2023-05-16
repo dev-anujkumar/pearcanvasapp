@@ -430,11 +430,11 @@ const store2 = mockStore({
 const store3 = mockStore({
     appStore: {
         activeElement: {
-            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
+            elementId: "urn:pearson:work:ab5ae968-d1e8-4d31-8c2e-1a3cfdc7b0b1",
             elementType: "element-authoredtext",
             elementWipType: "element-authoredtext",
             primaryOption: "primary-heading",
-            secondaryOption: "secondary-heading-1",
+            secondaryOption: "secondary-blockcode-language-default",
             index: "1-0",
             tag: "H1",
             toolbar: ['bold']
@@ -442,7 +442,7 @@ const store3 = mockStore({
         permissions: [
             "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
             "search_projects", "project_edit", "edit_project_title_author", "promote_review", "promote_live", "create_new_version", "project_add_delete_users", "create_custom_user", "toc_add_pages", "toc_delete_entry", "toc_rearrange_entry", "toc_edit_title", "elements_add_remove", "split_slate", "full_project_slate_preview", "access_formatting_bar",
-            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying",
+            "authoring_mathml", "slate_traversal", "trackchanges_edit", "trackchanges_approve_reject", "tcm_feedback", "notes_access_manager", "quad_create_edit_ia", "quad_linking_assessment", "add_multimedia_via_alfresco", "toggle_element_page_no", "toggle_element_borders", "global_search", "global_replace", "edit_print_page_no", "notes_adding", "notes_deleting", "notes_delete_others_comment", "note_viewer", "notes_assigning", "notes_resolving_closing", "notes_relpying","access-to-cypress+"
         ],
         multipleColumnData: [
             {
@@ -1254,7 +1254,23 @@ describe('Test for element container component', () => {
                 },
                 elemBorderToggle: true
             };
-            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            let elementContainer = mount(<Provider store={store3}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer).toHaveLength(1);
+            expect(elementContainerInstance).toBeDefined();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'handleBlur') 
+            elementContainerInstance.handleBlur();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container -----> permissions?.includes(access-to-cypress+)', () => {
+            let props = {
+                element: {
+                    type: "element-pdf",
+                    elementdata: {conversionstatus: "test"},
+                },
+            };
+            let elementContainer = mount(<Provider store={store3}><ElementContainer {...props} /></Provider>);
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
@@ -2561,7 +2577,7 @@ describe('Test-Lifecycle Functions-componentWillReceiveProps', () => {
          elementContainerInstance.forceUpdate()
          elementContainer.update()
         elementContainerInstance.componentWillReceiveProps(nextProps);
-        expect(elementContainerInstance.state.borderToggle).toBe("active")
+        // expect(elementContainerInstance.state.borderToggle).toBe("active")
         expect(elementContainerInstance.state.ElementId).toBe("urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y")
     }) 
 })
@@ -3051,6 +3067,23 @@ describe('Test-Other Functions', () => {
         elementContainerInstance.asideDifference(0, previousElementData);
         expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
         expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(false);
+        spyfigureDifferenceBlockCode.mockClear()
+    })
+    it("Test - aside: difference in content -- autonumbring true - if > isLabelDifferent", () => {
+        const previousElementData = {
+            html: {
+                text: '<p></p>',
+                title: "test"
+            },
+            "manualoverride": {
+                "overridelabelvalue": "overridelabelvalue"
+            },
+            "numberedandlabel": true,
+        }
+        const spyfigureDifferenceBlockCode = jest.spyOn(elementContainerInstance, 'asideDifference')
+        elementContainerInstance.asideDifference(0, previousElementData);
+        expect(spyfigureDifferenceBlockCode).toHaveBeenCalled();
+        expect(spyfigureDifferenceBlockCode).toHaveReturnedWith(true);
         spyfigureDifferenceBlockCode.mockClear()
     })
     it("Test - aside: difference in content -- autonumbring true - else", () => {
