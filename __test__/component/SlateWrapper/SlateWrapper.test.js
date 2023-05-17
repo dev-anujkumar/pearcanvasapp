@@ -47,6 +47,7 @@ jest.mock('../../../src/constants/utility', () => {
     return { 
         sendDataToIframe: jest.fn(),
         hasReviewerRole: jest.fn(),
+        isApproved: jest.fn(),
         defaultMathImagePath: ()=>{
             return true
         },
@@ -164,6 +165,7 @@ describe("SlateWrapper Component", () => {
     jest.mock('../../../src/constants/utility', () => {
         return { 
             sendDataToIframe: jest.fn(),
+            isApproved: jest.fn(),
             defaultMathImagePath: ()=>{
                 return true
             },
@@ -1097,7 +1099,8 @@ describe("SlateWrapper Component", () => {
                     },
                     isSubscriberRole: () => {
                         return true
-                    }
+                    },
+                    isApproved: jest.fn()
                 }
             });
 

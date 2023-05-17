@@ -1462,7 +1462,7 @@ text: "mathml text"
         "versionUrn": "urn:pearson:work:9c29501d-374e-4400-815d-a71df4968d9f",
         "contentUrn": "urn:pearson:entity:2449a2ba-6183-4035-91b3-a6611057261a"
     },
-    "showHide":{
+    "showhide":{
         "id": "urn:pearson:manifest:80c230cd-73de-441b-80da-b93d5535fc02",
         "type": "showhide",
         "subtype": "",
@@ -1638,7 +1638,10 @@ text: "mathml text"
             "backmatter": [ ]
         },
         "contentUrn": "urn:pearson:entity:cecd4361-d86d-45a8-9754-82fedb9f6d6b",
-        "versionUrn": "urn:pearson:manifest:e420fcb8-8963-4237-823c-9e1e85c95ec0"
+        "versionUrn": "urn:pearson:manifest:e420fcb8-8963-4237-823c-9e1e85c95ec0",
+        "html": {
+            "title": "test"
+        }
     },
     "assessmentSlate":{
         "id": "urn:pearson:work:8af3b6ff-92eb-4d06-acd0-5d0ce10c8242",
