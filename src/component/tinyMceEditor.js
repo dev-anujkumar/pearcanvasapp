@@ -1246,9 +1246,21 @@ export class TinyMceEditor extends Component {
      */
     editorKeydown = (editor) => {
         editor.on('keydown', (e) => {
+            let selectedActiveElement = editor.dom.getParent(editor.selection.getStart(), '.cypress-editable');
             const currentSelection = tinymce?.activeEditor?.selection;
             const selectionNode = window.getSelection().anchorNode;
             const tinymceOffset = currentSelection.getRng().endOffset;
+            /**
+             * this below condition is to handle the page crash issue on continuos backspace on fig element 
+             * PCAT-18610
+             */
+            if (e.keyCode === 8 && e.code === "Backspace" &&
+                (selectedActiveElement.classList?.contains('figureCaption') || selectedActiveElement.classList?.contains('figureTitle') || selectedActiveElement.classList?.contains('figureCredit') || selectedActiveElement.classList?.contains('figureMathContent') || selectedActiveElement.classList?.contains('figureCodeContent'))
+                && (selectedActiveElement.innerText?.trim() == "" || e.target?.innerText?.trim() == "")) {
+                e.preventDefault()
+                e.stopPropagation()
+                return false;
+            }
             /**
              * get node vs window selection node
              * window selection is accurate and gives 
