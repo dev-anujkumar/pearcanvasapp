@@ -1,3 +1,4 @@
+import axios from 'axios';
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
 import {c4PublishObj} from '../js/c4_module.js';
@@ -39,25 +40,27 @@ let storageExist = ("sessionStorage" in window && window.sessionStorage);
 */
 export const logout = function () {
     let { projectUrn, slateManifestURN } = config_object
-    let urlToBeRedirected = getMyURL() || '';
+    //let urlToBeRedirected = getMyURL() || '';
+    // let urlToBeRedirected=window.parent.location.href
+    // console.log("urlToBeRedirected>>>>>>",urlToBeRedirected)
     if (projectUrn && slateManifestURN && slateManifestURN != "undefined") {
         releaseSlateLockWithCallback(projectUrn, slateManifestURN, (response) => {
             logoutWithModernOpenAM()
-            redirectParent(urlToBeRedirected);
+            //redirectParent(urlToBeRedirected);
         });
     }
     else {
         logoutWithModernOpenAM()
-        redirectParent(urlToBeRedirected);
+        //redirectParent(urlToBeRedirected);
     }
 }
 const getMyURL = () => {
     const host = window?.parent?.location?.hostname || "";
     const protocol = window?.parent?.location?.protocol || "";
-    const port = window?.parent?.location?.port || "";
     const path = window?.parent?.location?.pathname || "";
     const search = window?.parent?.location?.search || "";
-    return protocol + "//" + host + ":" + port + path + search;
+    //window?.parent?.location?.protocol+'//'+window?.parent?.location?.host+window?.parent?.location?.path+window?.parent?.location?.search
+    return protocol + "//" + host + path + search;
 }
 const uuidv4 = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -73,21 +76,49 @@ const redirectParent = (urlToBeRedirected) => {
         'message': { url: encodedURL }
     });
 }
-const logoutWithModernOpenAM = () => {
-    // remove owner slate popup flag from local storage
-    const isOwnerKey = localStorage.getItem('hasOwnerEdit');
-    const isSubscriberKey =  localStorage.getItem('hasSubscriberView'); 
-    if (isOwnerKey) {
-        localStorage.removeItem('hasOwnerEdit');
-    }else if(isSubscriberKey){
-        localStorage.removeItem('hasSubscriberView');
+// const logoutWithModernOpenAM = async () => {
+//     const response = await logoutDataActions()
+//     console.log("get response in api",response)
+    
+
+// };
+const logoutWithModernOpenAM = async () => {
+    try {
+        let urlToBeRedirected = window.parent.location.href;
+        await axios.post(config_object.LOGOUT_API, null, {
+            headers: {
+                "Content-Type": "application/json",
+                'myCloudProxySession': config_object.myCloudProxySession
+            }
+        })
+            .then(response => {
+                if (response && response.status === 200) {
+                    // remove owner slate popup flag from local storage
+                    const isOwnerKey = localStorage.getItem('hasOwnerEdit');
+                    const isSubscriberKey = localStorage.getItem('hasSubscriberView');
+                    if (isOwnerKey) {
+                        localStorage.removeItem('hasOwnerEdit');
+                    } else if (isSubscriberKey) {
+                        localStorage.removeItem('hasSubscriberView');
+                    }
+                    deleteCookie('PearsonSSOSession', 'pearson.com');
+                    deleteCookie('myCloudProxySession', 'pearson.com');
+                    deleteCookie('DISABLE_DELETE_WARNINGS', 'pearson.com');
+                    deleteCookie('DISABLE_LIST_ELEMENT_WARNING', 'pearson.com');
+                    removeAllLocal();
+                    redirectParent(urlToBeRedirected);
+                }
+            })
+            .catch(error => {
+                console.error("Error in logout api ", error)
+                //return err
+
+            })
+    } catch (error) {
+        console.error('logout error', error)
+        //return error
     }
-    deleteCookie('PearsonSSOSession', 'pearson.com');
-    deleteCookie('myCloudProxySession', 'pearson.com');
-    deleteCookie('DISABLE_DELETE_WARNINGS', 'pearson.com');
-    deleteCookie('DISABLE_LIST_ELEMENT_WARNING', 'pearson.com');
-    removeAllLocal();
-};
+}
 
 const removeAllLocal = () => {
     if (storageExist) {
@@ -133,3 +164,5 @@ const createCookie = (name, value, hours, domainName) => {
     document.cookie = escape(name) + "=" + escape(value) + expires + domain + "; path=/";
     console.log("document.cookie: " + document.cookie);
 }
+
+
