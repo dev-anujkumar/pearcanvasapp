@@ -5,7 +5,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-import {utility,matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom,labelValueForFiguretype,labelValue,Table, Equation , Exhibit,dropdownValueForFiguretype,dropdownList,subtype,preformattedtext,mathml,image,tableasmarkup, getCookieByName, handleTextToRetainFormatting} from '../../src/constants/utility.js';
+import {utility,matchHTMLwithRegex, encodeHTMLInWiris, checkHTMLdataInsideString, dropdownValueAtIntialize, requestConfigURI, sendDataToIframe, guid, hasProjectPermission, hasReviewerRole, getTitleSubtitleModel, createTitleSubtitleModel, createLabelNumberTitleModel, getLabelNumberTitleHTML, removeBlankTags, removeUnoClass, getSlateType, replaceWirisClassAndAttr, getShowhideChildUrns, removeClassesFromHtml, prepareDialogueDom,labelValueForFiguretype,labelValue,Table, Equation , Exhibit,dropdownValueForFiguretype,dropdownList,subtype,preformattedtext,mathml,image,tableasmarkup, getCookieByName, handleTextToRetainFormatting, showNotificationOnCanvas} from '../../src/constants/utility.js';
 import cypressConfig from '../../src/config/cypressConfig';
 import { newFigureObj, textRetainObject } from '../../fixtures/ElementFigureTestingData.js';
 import { showHide } from '../../fixtures/ElementSHowHideData';
@@ -463,6 +463,35 @@ describe('-----Testing Function  dropdownValueForFiguretype ------------', () =>
         expect(getCookieByName(document.cookie)).toBe(null);
       })
 });
+
+describe('Testing Function - showNotificationOnCanvas', () => {
+    it("Case 1", () => {
+      document.getElementById = () => {
+        return {
+          innerHTML: '<div id="link-notification"></div>',
+          innerText: "Show Notification",
+          style: {
+            display: "block",
+          },
+        };
+      };
+      let result = showNotificationOnCanvas();
+      expect(result).toBe(undefined);
+    });
+    it("Case 2", () => {
+      document.getElementById = () => {
+        return {
+          innerHTML: '<div id=""></div>',
+          innerText: "",
+          style: {
+            display: "",
+          },
+        };
+      };
+      let result = showNotificationOnCanvas();
+      expect(result).toBe(undefined);
+    });
+})
 
 describe('Testing Function - handleTextToRetainFormatting', () => {
     it('Case 1', () => {

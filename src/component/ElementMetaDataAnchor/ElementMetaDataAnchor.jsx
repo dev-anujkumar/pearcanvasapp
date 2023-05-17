@@ -134,9 +134,10 @@ export class ElementMetaDataAnchor extends Component {
       'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
       'strApiKey': config.STRUCTURE_APIKEY,
       'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-      'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
+      'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-      'myCloudProxySession': config.myCloudProxySession
+      'myCloudProxySession': config.myCloudProxySession,
+      'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
     };
     const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = [];

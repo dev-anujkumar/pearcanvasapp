@@ -574,14 +574,12 @@ class AssessmentSlateData extends Component {
     /*** @description This function is to show Approved/Unapproved Status on AS */
     showElmVersionStatus = () => {
         let elmAssessment = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId];
-        const slateStatus = this.props?.slateLevelData[config.slateManifestURN]?.status
         if (elmAssessment) {
             return (<ElmUpdateButton
                 elmAssessment={elmAssessment}
                 updateElmVersion={this.updateElmAssessment}
                 buttonText={ELM_UPDATE_BUTTON}
                 status={true}
-                slateStatus={slateStatus}
             />)
         }
     }
@@ -750,7 +748,7 @@ class AssessmentSlateData extends Component {
     */
     showFinalAssessmentSlate = (slatePlaceholder, assessmentType, assessmentSlateObj, assessmentUsageType) => {
         const oldReducerData = this.props.assessmentReducer[assessmentSlateObj.assessmentId]
-        const assessmentCreatedDate = oldReducerData?.createdDate ? oldReducerData?.createdDate : ''
+        const assessmentCreatedDate = oldReducerData?.modifiedDate ? oldReducerData?.modifiedDate : ''
         let assessmentSlate = <div className="slate_fetch_canvas">
             <div className="slate_assessment_data_container">
                 <div className="slate_assessment_data_content">

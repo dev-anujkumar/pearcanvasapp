@@ -72,31 +72,66 @@ export const guid = () => {
 export const hasProjectPermission = (value) => {
     const authStore = store.getState();
     const {projectInfo} = authStore;
-    let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+    const isReadOnlyContent = isApprovedOrSubscribed(authStore)
     let permissions = authStore && authStore.appStore.permissions;
-    let hasPermissions = permissions && permissions.includes(value) && !hasReviewerRole();
+    let hasPermissions = permissions && permissions.includes(value);
+    //if reviewer user, then preference will be given to Reviewer
+    if(hasPermissions && value === 'note_viewer') return true
+    // if not reviewer user but contetn is subscriber/approved, then readonly conditions willl
+    // get preference
+    if(isReadOnlyContent) return false
+    //if not reviewer user or not readonly condition, then check other permissions
     return hasPermissions;
 }
-
-export const isApproved = () =>{
-    const authStore = store.getState();
+/**
+ * This function check whether the current slate is approve or subscribed
+ * and also check the conditions for popup slate
+ * @param {Object} authStore
+ * @returns
+ */
+export const isApprovedOrSubscribed = (authStore) => {
     const {appStore, projectInfo} = authStore;
     const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     const slatePublishStatus = appStore.slateLevelData[config.slateManifestURN]?.type !== "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved";
     const isPopupReadOnly = appStore.slateLevelData[config.slateManifestURN]?.type === "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && appStore.slateLevelData[config.tempSlateManifestURN]?.status === "approved";
     return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber);
 }
+/**
+ * This function checks the conditions for Reviewer users and approved/subscribed content both
+ * at same time to show or hide elements borders. Preference is giving to reviewer user and border 
+ * will be visible for reviewer user
+ * @returns 
+ */
+export const isApproved = () =>{
+    const authStore = store.getState();
+    const {appStore} = authStore;
+    const hasRole= appStore && appStore.roleId === "comment_only" && (hasProjectPermission('note_viewer'))
+    if(hasRole)  return false
+    return isApprovedOrSubscribed(authStore)
+}
 
 
 export const hasReviewerRole = (value) => {
     const authStore = store.getState();
-    const {projectInfo, appStore} = authStore;
-    let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+    const {appStore} = authStore;
     if (value) {
-        return !(hasProjectPermission(value) ? true : false)
+        return !((hasProjectPermission(value) && !isApproved()) ? true : false)
     }
     let hasRole = (appStore && (appStore.roleId === "comment_only"
         && (hasProjectPermission('note_viewer'))) || isApproved());
+    return hasRole;
+}
+
+/**
+ * This function checks the conditions for Reviewer users and subscribed content both
+ * @returns 
+ */
+export const hasReviewerSubscriberRole = () => {
+    const authStore = store.getState();
+    const {appStore, projectInfo} = authStore;
+    const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
+    let hasRole = (appStore && (appStore.roleId === "comment_only"
+        && (hasProjectPermission('note_viewer'))) || isSubscriber);
     return hasRole;
 }
 /**

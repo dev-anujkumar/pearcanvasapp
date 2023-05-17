@@ -13,7 +13,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName, hasReviewerRole } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName, hasReviewerRole, isApproved } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -35,7 +35,7 @@ import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlat
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
-import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import { assessmentConfirmationPopup, assessmentReloadConfirmation } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
 import { createPowerPasteElements } from './SlateWrapper_Actions.js';
@@ -1352,6 +1352,16 @@ class SlateWrapper extends Component {
     }
 
     /**
+    * @description - reloadSlateAfterAssessmentUpdate function responsible for refreshing slate after updating assessments .
+    */
+    reloadSlateAfterAssessmentUpdate = () => {
+        if (this.props.reloadAfterAssessmentUpdate) {
+            reloadSlate()
+            this.props.assessmentReloadConfirmation(false);
+        }
+    }
+
+    /**
     * @description - showAssessmentConfirmationPopup function responsible for opening confirmation popup for updating embeded assessments .
     */
     showAssessmentConfirmationPopup = () => {
@@ -1562,8 +1572,9 @@ class SlateWrapper extends Component {
             'strApiKey': config.STRUCTURE_APIKEY,
             'mathmlImagePath': config.S3MathImagePath ?? defaultMathImagePath,
             'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-            'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
-            'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+            'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+            'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
+            'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
         };
         let externalLFUrn = '';
         if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
@@ -1640,7 +1651,7 @@ class SlateWrapper extends Component {
                      {
                         this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'popup' ?
                             <button className="popup-button" onClick={this.saveAndClose}>
-                                {isSubscriberRole(projectSharingRole, isSubscribed) || slatePublishStatus ? 'CLOSE' : 'SAVE & CLOSE'}
+                                {isApproved() ? 'CLOSE' : 'SAVE & CLOSE'}
                             </button>
                           :this.renderSlateHeader(this.props)
                     } 
@@ -1685,6 +1696,8 @@ class SlateWrapper extends Component {
                 {/* **************** Alfresco Popup ************ */}
                 {this.showAlfrescoPopup()}
                 {/* **************** Approved to WIP Warning Popup ************* */}
+                {/* **************** To reload slate after assessment update ************* */}
+                {this.reloadSlateAfterAssessmentUpdate()}
             </React.Fragment>
         );
     }
@@ -1745,6 +1758,7 @@ const mapStateToProps = state => {
         asideData: state.appStore.asideData,
         approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
+        reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate
     };
 };
 
@@ -1786,6 +1800,7 @@ export default connect(
         savePopupParentSlateData,
         slateVersioning,
         approvedSlatePopupStatus,
-        isSubscribersSubscribedSlate
+        isSubscribersSubscribedSlate,
+        assessmentReloadConfirmation
     }
 )(SlateWrapper);

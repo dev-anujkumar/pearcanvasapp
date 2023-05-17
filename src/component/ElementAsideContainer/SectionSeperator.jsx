@@ -65,10 +65,10 @@ class SectionSeperator extends Component {
         return (
             <div className = "aside-section-seperator" tabIndex="0" onClick = {this.handleSeperator} onBlur = {this.handleSeperatorBlur} 
             className={
-                (elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active'? showBorder:""} >
+                (elemBorderToggle !== 'undefined' && elemBorderToggle && (borderToggle !== 'hideBorder')) || borderToggle == 'active'? showBorder:""} >
 
                 {this.state.showCopyPopup && <CutCopyDialog inContainer={true} element={this.props.element} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} userRole={this.props.userRole} />}
-                {(elemBorderToggle !== 'undefined' && elemBorderToggle) || borderToggle == 'active' ?
+                {(elemBorderToggle !== 'undefined' && elemBorderToggle && (borderToggle !== 'hideBorder')) || borderToggle == 'active' ?
                     <div> 
                         <Button copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu,true)}} btnClassName={btnClassName} type="element-label" labelText="SB" />
                       {this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button  onClick={(e) => this.props.showDeleteElemPopup(e,true, element, true)} type="delete-element" />}

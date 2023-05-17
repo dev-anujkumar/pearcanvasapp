@@ -1892,6 +1892,25 @@ describe('Test for element container component', () => {
             expect(spyhandleFocus).toHaveBeenCalled()
             spyhandleFocus.mockClear()
         })
+        it('Test-handleFocus Function- for opener element', () => {
+            let props = {
+                element:{
+                    type:"element-tcc",
+                    id:"890"
+                }
+            }
+        let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+        const elementContainerInstance = elementContainer.find('ElementContainer').instance(); 
+            elementContainerInstance.setState({
+                sectionBreak: true
+            })
+            const spyhandleFocus  = jest.spyOn(elementContainerInstance, 'handleFocus')
+            elementContainerInstance.handleFocus("updateFromC2","",event,"");
+            elementContainerInstance.forceUpdate();
+            elementContainer.update()
+            expect(spyhandleFocus).toHaveBeenCalled()
+            spyhandleFocus.mockClear()
+        })
         it('Test-handleFocus Function- for paragraph element', () => {
             elementContainerInstance.setState({
                 sectionBreak: true
@@ -2103,7 +2122,7 @@ describe('Test for element container component', () => {
             expect(spycomponentWillUnmount).toHaveBeenCalled()
             spycomponentWillUnmount.mockClear()
         })
-        xit('Test-componentWillReceiveProps Function- for paragraph element', () => {
+        it('Test-componentWillReceiveProps Function- for paragraph element', () => {
             let newProps = {
                 element: wipData.paragraphUpdate,
                 permissions: [
@@ -2126,10 +2145,10 @@ describe('Test for element container component', () => {
                     index: "1",
                     tag: "P",
                 },
-                elemBorderToggle : "showBorder"
+                elemBorderToggle : true
             };
             elementContainerInstance.componentWillReceiveProps(newProps);
-            expect(elementContainerInstance.state.borderToggle).toBe("showBorder")
+            expect(elementContainerInstance.state.borderToggle).toBe("hideBorder")
         }) 
         it('Test-componentWillReceiveProps Function- for hideBorder', () => {
             let newProps = {

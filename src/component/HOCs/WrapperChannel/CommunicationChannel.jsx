@@ -478,9 +478,10 @@ function CommunicationChannel(WrappedComponent) {
                 'loApiUrl': config.LEARNING_OBJECTIVES_ENDPOINT,
                 'strApiKey': config.STRUCTURE_APIKEY,
                 'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
+                'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-                'myCloudProxySession': config.myCloudProxySession
+                'myCloudProxySession': config.myCloudProxySession,
+                'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
             };
             let externalLFUrn = [];
             if (projectLearningFrameworks?.externalLF?.length) {
@@ -1017,8 +1018,9 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
+                const slateManifest = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN
                 if (this.props.withinLockPeriod === true) {
-                    this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                    this.props.releaseSlateLock(config.projectUrn, slateManifest)
                 }
                 sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
