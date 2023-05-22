@@ -17,7 +17,6 @@ jest.mock('../../../../src/component/ElementContainer/AssessmentEventHandling.js
 config.AUDIO_NARRATION_URL = 'https://contentapis-staging.pearsoncms.net/structure-api/';
 config.ELM_PORTAL_URL = "https://assessmentauthoring-dev.pearson.com"
 config.ASSESSMENT_ENDPOINT = "https://contentapis-staging.pearsoncms.net/assessment-api/"
-config.SLATE_REFRESH_URL = "https://contentapis-staging.pearsoncms.net/structure-api/container/v2/"
 describe('-----------------Testing Assessment Actions-----------------', () => {
     describe('Test-1----------------- fetchUsageTypeData-----------------', () => {
         it('Test-1.1---fetchUsageTypeData-Then- with res.data', () => {
