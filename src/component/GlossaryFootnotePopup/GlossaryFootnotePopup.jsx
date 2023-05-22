@@ -8,7 +8,7 @@ import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 import { GLOSSARY } from './../../constants/Element_Constants';
 import ReactEditor from "../tinyMceGlossaryFootnoteEditor"
 import { checkforToolbarClick } from '../../js/utils'
-import { hasReviewerRole } from '../../constants/utility.js'
+import { hasReviewerRole, hasReviewerSubscriberRole } from '../../constants/utility.js'
 import { setFormattingToolbar } from './GlossaryFootnote_Actions.js';
 import AudioTinyMceGlossary from '../AudioTinyMceGlossary';
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
@@ -74,7 +74,7 @@ class GlossaryFootnotePopup extends Component {
         const { glossaryFootnoteValue, closePopup, saveContent, permissions, glossaryFootNoteCurrentValue } = this.props;
         const glossaryFootnote = glossaryFootnoteValue.type;
         let id = glossaryFootnote === GLOSSARY ? 'glossary-1' : 'footnote-0';
-        let accessToolbar = ((permissions && permissions.includes('access_formatting_bar')) && !hasReviewerRole()) ? "" : " disableToolbar"
+        let accessToolbar = ((permissions && permissions.includes('access_formatting_bar')) && !hasReviewerRole()) ? "" : "removeToolbar"
 
         let footnoteContentText = glossaryFootNoteCurrentValue.footnoteContentText;
         if (glossaryFootNoteCurrentValue.footnoteContentText && glossaryFootNoteCurrentValue.footnoteContentText.includes('imageAssetContent')) {
