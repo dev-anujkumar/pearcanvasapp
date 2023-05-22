@@ -8,7 +8,7 @@ import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css';
 import { GLOSSARY } from './../../constants/Element_Constants';
 import ReactEditor from "../tinyMceGlossaryFootnoteEditor"
 import { checkforToolbarClick } from '../../js/utils'
-import { hasReviewerRole, hasReviewerSubscriberRole } from '../../constants/utility.js'
+import { hasReviewerRole } from '../../constants/utility.js'
 import { setFormattingToolbar } from './GlossaryFootnote_Actions.js';
 import AudioTinyMceGlossary from '../AudioTinyMceGlossary';
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
