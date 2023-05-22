@@ -70,7 +70,8 @@ let config = {
     NARRATIVE_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/narrativeapi-readonly/',
     MANIFEST_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/manifestapi-readonly/',
     STRUCTURE_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/structureapi-readonly/',
-    PROJECT_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/projectapi-readonly/'
+    PROJECT_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/projectapi-readonly/',
+    LOGOUT_API:'https://mycloud.preprod.pearson.com/auth/json/pearson/sessions?_action=logout'
 };
 
 if (process.env.NODE_ENV === "development") {
