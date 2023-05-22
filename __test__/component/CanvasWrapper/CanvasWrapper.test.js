@@ -6,13 +6,6 @@ import axios from 'axios';
 import { Provider } from 'react-redux';
 import CanvasWrapper from '../../../src/component/CanvasWrapper';
 import config from '../../../src/config/config';
-jest.mock('../../../src/auth/openam.js', () => {
-    return function () {
-        this.isUserAuthenticated = function () { }
-        this.handleSessionExpire = function () { }
-        this.logout = function () { }
-    }
-})
 jest.mock('axios');
 let resp = {status :200 ,data :true};
 axios.get.mockImplementation(() => Promise.resolve(resp));
