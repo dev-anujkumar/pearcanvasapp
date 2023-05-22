@@ -239,6 +239,7 @@ export const getSameElementsInsideElement = async (bodyMatter, numberedElements 
 
 
 export const handleAutonumberingOnCreate = (type, createdElementData) => async (dispatch, getState) => {
+    type = (type === 'TABLE' || type === 'MATHIMAGE') ? 'IMAGE' : type;
     const listType = autoNumber_ElementTypeToStoreKeysMapper[type];
     const labelType = createdElementData.displayedlabel;
     let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
@@ -264,6 +265,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
             case 'AUTHOREDTEXT':
             case 'BLOCK_CODE_EDITOR':
             case 'CODELISTING':
+            case 'AUDIO':
                 slateElements = await getAutoNumberedElementsOnSlate(getState().appStore.slateLevelData[slateManifestUrn], { dispatch });
                 break;
             case 'CONTAINER':
@@ -274,6 +276,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 slateElements = [];
         }
 
+        let nearestElementObj = {};
         let elementObj = slateElements?.find(element => element.contentUrn === createdElementData.contentUrn);
         let slateEntityForAutonumber = getContainerEntityUrn(slateAncestorData);
         const activeLabelElements = slateElements?.filter(img => img.displayedlabel === createdElementData.displayedlabel);
@@ -305,7 +308,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 item.indexPos = count;
                 count++;
             });
-            let nearestElementObj = findNearestElement(slateElements, elementObj, labelType);         
+            nearestElementObj = findNearestElement(slateElements, elementObj, labelType);         
             if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                 let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
                 index = nearestElementObj?.key === 'above' ? index + 1 : index;
