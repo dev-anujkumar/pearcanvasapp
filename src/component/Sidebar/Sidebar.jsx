@@ -977,12 +977,13 @@ class Sidebar extends Component {
             if (attrNode) {
                 attrNode.setAttribute("podwidth", showPodValue)
             }
+            const hasReviewerClass = hasReviewerRole() ? 'pointer-events-none' : ''
 
             return (
                 <div className='printOnDemand'>
                     <label>POD Width Options</label>
                     <div className='element-dropdown'>
-                        <div className="element-dropdown-pod" data-element="pod" onClick={this.togglePODDropdown}>
+                        <div className={`element-dropdown-pod ${hasReviewerClass}`} data-element="pod" onClick={this.togglePODDropdown}>
                             <label className='pod-value' id='pod-value'>{printValue}</label>
                             <ul className={`element-dropdown-content pod-options ${active}`}>
                                 <li data-value="print25">25%</li>

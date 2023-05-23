@@ -1087,6 +1087,14 @@ td ol li.listItemNumeroUno:before, td ol li.listItemNumeroUnoNumber:before, td o
     width: 4.5em;
     margin: 0 0 1em -4.9em;
 }
+td ul li.listItemNumeroUnoBullet:before {
+    font-weight: bold;
+    padding-right: 0.1em;
+    text-align: right;
+    position: relative;
+    width: 4.5em;
+    margin: 0 0 1em -4.9em;
+}
 table ol li:before {
     float: left;
 }

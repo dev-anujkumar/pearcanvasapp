@@ -171,3 +171,4 @@ export const displayLabelsForContainer = ['Aside', 'Worked Example'];
 export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'CONTAINER', 'WORKED_EXAMPLE', 'TABLE_EDITOR', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR'];
 export const autoNumberFieldsPlaceholders = ['Number', 'Label', 'Label Name']
 export const autoNumberContainerTypeForDelete = ['element-aside', 'container']
+export const convertToDefaultNumberType = ['TABLE', 'MATHIMAGE']
