@@ -296,7 +296,7 @@ export class TinyMceEditor extends Component {
             tooltip: 'Highlight a prompt and click this button to query ChatGPT',
             enabled: true,
             onAction: (_) => {
-                const api_key = config.CHAT_GPT_kEY;
+                const api_key = `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`;
                 const selection = tinymce.activeEditor.selection.getContent();
                 console.log('selection selection', selection);
                 const ChatGPT = {
