@@ -613,11 +613,17 @@ class SlateWrapper extends Component {
      * Toggles popup
      */
     togglePopup = (toggleValue, event) => {
-        this.setState({
-            showLockPopup: toggleValue,
+        const stateValues = {
             showOwnerSlatePopup: toggleValue,
-            showSubscriberSlatePopup: toggleValue
-        })
+            showSubscriberSlatePopup: toggleValue,
+            showLockPopup: false
+        }
+        const { slateLockInfo } = this.props
+        let lockedUserId = slateLockInfo.userId.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
+        if (slateLockInfo.isLocked && config.userId !== lockedUserId && !isApproved()) {
+            stateValues.showLockPopup = toggleValue;
+        }
+        this.setState(stateValues);
         this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
         hideBlocker()
