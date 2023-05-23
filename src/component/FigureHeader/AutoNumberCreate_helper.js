@@ -4,7 +4,7 @@ import {
     UPDATE_POPUP_PARENT_SLATE
 } from '../../constants/Action_Constants.js';
 import { getAutoNumberSequence } from './AutoNumberActions';
-import { containerElements, autoNumber_ElementTypeToStoreKeysMapper, displayLabelsForContainer } from './AutoNumberConstants';
+import { containerElements, autoNumber_ElementTypeToStoreKeysMapper, displayLabelsForContainer, convertToDefaultNumberType } from './AutoNumberConstants';
 import { getContainerEntityUrn, getSlateEntityUrn } from './AutoNumber_helperFunctions';
 import { getImagesInsideSlates, getAutoNumberedElementsOnSlate, getAsideElementsWrtKey, getPopupDataInsideContainer, containerBodyMatter } from './slateLevelMediaMapper';
 import ElementConstants from '../ElementContainer/ElementConstants';
@@ -239,7 +239,7 @@ export const getSameElementsInsideElement = async (bodyMatter, numberedElements 
 
 
 export const handleAutonumberingOnCreate = (type, createdElementData) => async (dispatch, getState) => {
-    type = (type === 'TABLE' || type === 'MATHIMAGE') ? 'IMAGE' : type;
+    type = convertToDefaultNumberType.includes(type) ? 'IMAGE' : type;
     const listType = autoNumber_ElementTypeToStoreKeysMapper[type];
     const labelType = createdElementData.displayedlabel;
     let autoNumberedElementsObj = getState().autoNumberReducer.autoNumberedElements;
