@@ -36,8 +36,9 @@ import store from '../appstore/store';
                  }
              }
              else {
-                 editor.insertContent(imgData);
-                 setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
+                let caretPosition = editor.selection.getRng().startOffset;
+                editor.insertContent(imgData, { merge: true }, caretPosition);
+                setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
              }
          }
      }

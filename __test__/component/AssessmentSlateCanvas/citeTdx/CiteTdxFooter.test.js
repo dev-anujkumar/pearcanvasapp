@@ -12,11 +12,14 @@ let initialState = {
             "versionUrn": "dfer",
             "name": "mmoi"
         },
-        citeApiData: {},
+        citeApiData: { assessments: "" },
         tdxApiData: {},
         mmiApiData: {},
         isLoading: {},
-        currentSingleAssessmentSelected: {},
+        currentSingleAssessmentSelected: {
+            "versionUrn": "dfer",
+            "name": "mmoi"
+        },
     },
 };
 describe('Testing CITE/TDX Footer component', () => {
@@ -37,7 +40,7 @@ describe('Testing CITE/TDX Footer component', () => {
         "isInnerComponent": true,
         setCiteTdxFilterData: jest.fn(),
         assessmentType: "cite",
-        citeApiData: {assessments: ""}
+        citeApiData: { assessments: "" }
 
     }
     let store = mockStore(initialState);
@@ -119,7 +122,31 @@ describe('Testing CITE/TDX Footer component', () => {
             "isInnerComponent": true,
             setCiteTdxFilterData: jest.fn(),
             assessmentType: "tdx",
-            citeApiData: {},
+            citeApiData: { assessments: "" }
+        }
+        let store = mockStore(initialState);
+        const component = mount(<Provider store={store}><CiteTdxFooter {...props} /></Provider>);
+        component.find('CiteTdxFooter').instance();
+        expect(component).toHaveLength(1);
+    })
+
+    it('renders without crashing', () => {
+        let props = {
+            isReset: {},
+            resetPage: function () { },
+            closeWindowAssessment: function () { },
+            getCiteTdxData: function () { },
+            getCurrentPageNo: function () { },
+            currentPageNo: 1,
+            addCiteTdxFunction: function () { },
+            openedFrom: "singleSlateAssessmentInner",
+            currentSingleAssessmentSelected: {
+                "versionUrn": "dfer",
+                "name": "mmoi"
+            },
+            "isInnerComponent": true,
+            setCiteTdxFilterData: jest.fn(),
+            assessmentType: "cite"
 
         }
         let store = mockStore(initialState);
@@ -145,9 +172,18 @@ describe('Testing CITE/TDX Footer component', () => {
             "isInnerComponent": true,
             setCiteTdxFilterData: jest.fn(),
             assessmentType: "cite"
-    
+
         }
-        let store = mockStore(initialState);
+        let initialState2 = {
+            citeTdxReducer: {
+                citeApiData: { assessments: "" },
+                tdxApiData: {},
+                mmiApiData: {},
+                isLoading: {},
+                currentSingleAssessmentSelected: {},
+            },
+        };
+        let store = mockStore(initialState2);
         const component = mount(<Provider store={store}><CiteTdxFooter {...props} /></Provider>);
         component.find('CiteTdxFooter').instance();
         expect(component).toHaveLength(1);
