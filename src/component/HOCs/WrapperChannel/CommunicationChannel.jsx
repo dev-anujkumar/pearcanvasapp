@@ -461,6 +461,9 @@ function CommunicationChannel(WrappedComponent) {
                         this.handleRefreshSlate();
                     }
                     break;
+                case 'spellGrammarStatus' :
+                    this.props.setGrammarlyFlag(message)
+                    break;
             }
         }
 
