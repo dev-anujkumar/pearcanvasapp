@@ -71,7 +71,9 @@ let config = {
     MANIFEST_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/manifestapi-readonly/',
     STRUCTURE_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/structureapi-readonly/',
     PROJECT_READONLY_ENDPOINT: 'https://contentapis-staging.pearsoncms.net/projectapi-readonly/',
-    LOGOUT_API:'https://mycloud.preprod.pearson.com/auth/json/pearson/sessions?_action=logout'
+    LOGOUT_API:'https://mycloud.preprod.pearson.com/auth/json/pearson/sessions?_action=logout',
+    ENABLE_CHAT_GPT: false,
+    CHAT_GPT_kEY: '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'
 };
 
 if (process.env.NODE_ENV === "development") {
