@@ -18,7 +18,7 @@ import { modifyObjKeys } from './js/appUtils';
 // IMPORT - Assets // 
 import './styles/style.css';
 
-console.log("!!!!! ---- canvas-1.48.3 ---- !!!!!")
+console.log("!!!!! ---- canvas-1.48.4 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
