@@ -300,13 +300,18 @@ export class TinyMceEditor extends Component {
                 const selection = tinymce.activeEditor.selection.getContent();
                 console.log('selection selection', selection);
                 const ChatGPT = {
-                    model: "text-davinci-003",
-                    prompt: selection,
+                    model: "gpt-3.5-turbo",
+                    messages: [
+                        {
+                          role: 'user',
+                          content: selection,
+                        },
+                      ],
                     temperature: 0,
-                    max_tokens: 70
+                    max_tokens: 4030
                 };
 
-                fetch("https://api.openai.com/v1/completions", {
+                fetch("https://api.openai.com/v1/chat/completions", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -314,7 +319,7 @@ export class TinyMceEditor extends Component {
                     },
                     body: JSON.stringify(ChatGPT)
                 }).then(res => res.json()).then(data => {
-                    let reply = data.choices[0].text;
+                    let reply = data.choices[0]?.message?.content;
                     console.log(reply);
                     editor.selection.collapse();
                     editor.execCommand('InsertHTML', false, '<div class="answer" style="padding: 3px; margin-top: 5px; margin-bottom: 5px;"></div>');
