@@ -28,7 +28,7 @@ import PageNumberElement from './PageNumberElement.jsx';
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
-import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader, showBlocker } from '../../js/toggleLoader';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
 import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlate, isSubscribersSubscribedSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
@@ -654,14 +654,20 @@ class SlateWrapper extends Component {
         this.props.isSubscribersSubscribedSlate(false);
     }
 
-    handleCopyPastePopup = (wordPastePopup,index,parentUrn, asideData)=>{
-      this.setState({
-        isWordPastePopup: wordPastePopup,
-        pastedindex: index,
-        parentUrn:parentUrn,
-        asideData
-      })
-  }
+    handleCopyPastePopup = (wordPastePopup, index, parentUrn, asideData) => {
+        this.props.showBlocker(wordPastePopup);
+        if (wordPastePopup) {
+            showBlocker();
+        } else {
+            hideBlocker();
+        }
+        this.setState({
+            isWordPastePopup: wordPastePopup,
+            pastedindex: index,
+            parentUrn: parentUrn,
+            asideData
+        })
+    }
 
     splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex ,poetryData) => {
         if (this.checkLockStatus()) {
