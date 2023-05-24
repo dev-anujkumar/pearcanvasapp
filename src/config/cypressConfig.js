@@ -108,7 +108,8 @@ let cypressConfig = {
     currentElementUrn: '',
     tcmStatusPopupGlossary: false,
   	GRAMMARLY_CLIENT_ID: "client_51D8CAHFNoRRMxzmiXDpY6",
-    pendingTcmStatus: false
+    pendingTcmStatus: false,
+    VITE_Open_AI_Key: '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'
 }
 
 

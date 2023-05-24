@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Configuration, OpenAIApi } from "openai";
+import cypressConfig from '../config/cypressConfig';
 //IMPORT TINYMCE 
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/silver/theme.min.js';
@@ -285,6 +287,10 @@ export class TinyMceEditor extends Component {
         
         this.editorRef = React.createRef();
         this.currentCursorBookmark = {};
+        this.configuration = new Configuration({
+            apiKey: cypressConfig.VITE_Open_AI_Key,
+        });
+        this.openai = new OpenAIApi(this.configuration);
     }
 
     addChatGptButton = (editor) => {
@@ -295,37 +301,25 @@ export class TinyMceEditor extends Component {
             icon: 'highlight-bg-color',
             tooltip: 'Highlight a prompt and click this button to query ChatGPT',
             enabled: true,
-            onAction: (_) => {
-                const api_key = `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`;
+            onAction: async (_) => {
                 const selection = tinymce.activeEditor.selection.getContent();
                 console.log('selection selection', selection);
-                const ChatGPT = {
-                    model: "text-davinci-003",
+                const res = await this.openai.createImage({
                     prompt: selection,
-                    temperature: 0,
-                    max_tokens: 70
-                };
+                    n: 1,
+                    size: "512x512",
+                });
 
-                fetch("https://api.openai.com/v1/completions", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${api_key}`
-                    },
-                    body: JSON.stringify(ChatGPT)
-                }).then(res => res.json()).then(data => {
-                    let reply = data.choices[0].text;
-                    console.log(reply);
-                    editor.selection.collapse();
-                    editor.execCommand('InsertHTML', false, '<div class="answer" style="padding: 3px; margin-top: 5px; margin-bottom: 5px;"></div>');
-                    editor.insertContent(reply);
-                    editor.dom.add(tinymce.activeEditor.getBody(), 'p', { }, 'Q: ');
+                let imageUrl = res.data.data[0].url;
+                console.log('imageUrl imageUrl', imageUrl);
+                editor.selection.collapse();
+                if (imageUrl && imageUrl !== '') {
+                    let imageNode = `<img style='margin-top: 20px; width: 350px;' src=${imageUrl} alt="result" />`;
+                    editor.dom.add(tinymce.activeEditor.getBody(), 'p', {}, imageNode);
                     editor.selection.select(tinyMCE.activeEditor.getBody(), true);
                     editor.selection.collapse();
                     editor.focus();
-                }).catch(error => {
-                    console.log("something went wrong");
-                })
+                }
             },
             onSetup: (btnRef) => {
                 this.chatgptButton = btnRef;
