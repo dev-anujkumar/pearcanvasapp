@@ -100,7 +100,7 @@ const FigureImageAsset = (props) => {
 
                             <KeyboardWrapper index={`${props.index}-image-asset-1`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusUpdate}>
-                                    <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={updateFigureRef} className={`updatefigurebutton ${isReviewer ? "hide-buttons" : ""}`} onClick={(e) => props.addFigureResource(e)}>{UPDATE_FIGURE_IMAGE_BUTTON_TITLE}</div>
+                                    <div onBlur={removeFocus} onKeyDown={triggerClickOnEnter} tabIndex={0} ref={updateFigureRef} className={`updatefigurebutton ${isReviewer ? "hide-buttons" : ""}`} onClick={(e) => props.generateFigureResource(e)}>{GENERATE_IMAGE_BUTTON_TITLE}</div>
                                 </div>
                             </KeyboardWrapper>
                             <KeyboardWrapper index={`${props.index}-image-asset-2`} enable={props.isEnableKeyboard}>

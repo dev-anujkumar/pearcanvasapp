@@ -522,32 +522,34 @@ class FigureImage extends Component {
     generateFigureResource = async () => {
         let titleDOM = document.getElementById(`cypress-${this.props.index}-2`);
         let titleHtml = titleDOM ? titleDOM.innerHTML : '';
-        console.log('titleHtml titleHtml', titleHtml);
-        const res = await this.openai.createImage({
-            prompt: titleHtml,
-            n: 1,
-            size: "512x512",
-        });
+        console.log('titleHtml titleHtml', titleHtml, this.props.model.figuredata.alttext);
+        if (titleHtml !== this.props.model.figuredata.alttext) {
+            const res = await this.openai.createImage({
+                prompt: titleHtml,
+                n: 1,
+                size: "512x512",
+            });
 
-        let imageUrl = res.data.data[0].url;
-        console.log('imageUrl imageUrl', imageUrl);
-        if (imageUrl && imageUrl !== '') {
-            // store current element figuredata in store
-            this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
-            let setFigureData = {
-                path: imageUrl,
-                height: '512',
-                width: '512',
-                schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-                imageid: imageUrl.substring(imageUrl.length - 10),
-                alttext: titleHtml,
-                longdescription: '',
-                type: this.props.model.figuretype,
+            let imageUrl = res.data.data[0].url;
+            console.log('imageUrl imageUrl', imageUrl);
+            if (imageUrl && imageUrl !== '') {
+                // store current element figuredata in store
+                this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
+                let setFigureData = {
+                    path: imageUrl,
+                    height: '512',
+                    width: '512',
+                    schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                    imageid: imageUrl.substring(imageUrl.length - 10),
+                    alttext: titleHtml,
+                    longdescription: '',
+                    type: this.props.model.figuretype,
+                }
+                this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
+                    this.props.handleFocus("updateFromC2");
+                    this.props.handleBlur();
+                })
             }
-            this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
-                this.props.handleFocus("updateFromC2");
-                this.props.handleBlur();
-            })
         }
     }
 
