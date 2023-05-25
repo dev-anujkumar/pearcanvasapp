@@ -519,11 +519,12 @@ class FigureImage extends Component {
         return figureJsx;
     }
 
+    // Method responsible for generating an image from Chat-GPT according to the title given by user
     generateFigureResource = async () => {
         let titleDOM = document.getElementById(`cypress-${this.props.index}-2`);
         let titleHtml = titleDOM ? titleDOM.innerHTML : '';
         console.log('titleHtml titleHtml', titleHtml, this.props.model.figuredata.alttext);
-        if (titleHtml !== this.props.model.figuredata.alttext) {
+        if (titleHtml !== '' && titleHtml !== this.props.model.figuredata.alttext) {
             const res = await this.openai.createImage({
                 prompt: titleHtml,
                 n: 1,
