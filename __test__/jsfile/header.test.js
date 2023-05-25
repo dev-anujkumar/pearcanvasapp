@@ -1,10 +1,4 @@
 import { SET_CURRENT_SLATE, GET_CURRENT_SLATE, trackChanges, publishContent, releaseLockAndRedirect, logout } from '../../src/js/header.js';
-jest.mock("../../src/js/auth_module", () => {
-    let OPEN_AM = {
-        logout: jest.fn()
-    }
-    return OPEN_AM
-})
 import config from '../../src/config/config';
 var current_slate_urn = '';
 
