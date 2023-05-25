@@ -63,14 +63,8 @@ class ElementSingleAssessment extends Component {
     }
 
     componentDidUpdate() {
-        const { assessmentReducer, slateLevelData } = this.props;
+        const { assessmentReducer } = this.props;
         const { elementType, assessmentId } = this.state;
-        const slateStatus = slateLevelData[config.slateManifestURN]?.status
-        if(assessmentReducer[assessmentId]?.assessmentTitle !== this.state.assessmentTitle && slateStatus !== 'approved'){
-            this.setState({
-                assessmentTitle : assessmentReducer[assessmentId]?.assessmentTitle
-            })
-        }
         if (!config.savingInProgress && !config.isSavingElement && (elementType == PUF || elementType == LEARNOSITY) && (assessmentReducer)){
             const { dataFromElm } = assessmentReducer;
             if (assessmentReducer.dataFromElm && dataFromElm.resourceType == Resource_Type.ASSESSMENT_ITEM && dataFromElm.elementUrn === this.props.model.id) {
@@ -658,7 +652,6 @@ const mapStateToProps = state => {
     return {
         usageTypeList: state.appStore.usageTypeListData.usageTypeList,
         assessmentReducer: state.assessmentReducer,
-        slateLevelData: state.appStore.slateLevelData,
     };
 };
 
