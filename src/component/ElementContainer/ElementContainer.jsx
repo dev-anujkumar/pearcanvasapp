@@ -2788,7 +2788,7 @@ class ElementContainer extends Component {
             let elmUrn = []
             let elmComment
 
-            if (element && element.elementdata?.bodymatter?.length || element.groupeddata?.bodymatter?.length || element.contents?.bodymatter?.length || element.interactivedata || element.popupdata) {
+            if (element && element.elementdata?.bodymatter?.length || element.groupeddata?.bodymatter?.length || element.contents?.bodymatter?.length || element.interactivedata || element.popupdata || element.listdata?.bodymatter?.length) {
              (this.props.allComments).filter(({ commentOnEntity }) => {
                   if (commentOnEntity === detailsToSet.element.id) { elmUrn.push(detailsToSet.element.id) }
             });

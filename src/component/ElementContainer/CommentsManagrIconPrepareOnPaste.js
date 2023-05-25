@@ -23,12 +23,33 @@ function showCommentsManagerAsideIcon(element, elmUrn) {
                     } 
                     else { elmUrn.push(ele.id) } /* Ex. -  WE:Body/SectionBreak:P*/
                 })
-            } else {
+            }
+            else if(item?.type === "manifestlist") { /* Show Icon in 2C:Aside:Element */
+                showCommentsManagerBlockListIcon(item, elmUrn);
+            }
+             else {
                 elmUrn.push(item.id) /* Ex. -  Aside/(WE:Head):P*/
             }
         })
     }
  return elmUrn
+}
+
+/**
+* @function showCommentsManagerBlockListIcon
+* @description Show comment's manager icon in right side of element inside containers; Ex. -  BL:P
+*/
+function showCommentsManagerBlockListIcon(element, elmUrn) {
+    function getBlockListIds(item) {
+      if (item && typeof item === 'object') {
+        if (item?.id) {
+            elmUrn.push(item.id);
+        }
+        Object.values(item).forEach(getBlockListIds);
+      }
+    }
+    getBlockListIds(element);
+    return elmUrn;
 }
 
 /**
@@ -45,6 +66,9 @@ function showCommentsManagerMultiColIcon(element, elmUrn) {
                 else if(item?.type === SHOW_HIDE) { /* Show Icon in 2C:Aside:Element */
                     elmUrn.push(item.id)
                     showCommentsManagerIconInSH(item, elmUrn);
+                }
+                else if(item?.type === "manifestlist") { /* Show Icon in 2C:Aside:Element */
+                    showCommentsManagerBlockListIcon(item, elmUrn);
                 }
                  else {
                     elmUrn.push(item.id); /* Show Icon in 2C:Element */
@@ -109,6 +133,9 @@ export function prepareCommentsManagerIcon(type, createdElementData, elmUrn, all
         case slateWrapperConstants.POP_UP:
                 elmUrn.push(createdElementData.popupdata.postertextobject[0].id)
                 createdElementData.popupdata.bodymatter.length > 0 && elmUrn.push(createdElementData.popupdata.bodymatter[0].id)
+            break;
+        case slateWrapperConstants.BLOCKLIST:
+            elmUrn = showCommentsManagerBlockListIcon(createdElementData, elmUrn)
             break;
     }
     return (allComments).filter(({ commentOnEntity }) => {
