@@ -697,7 +697,7 @@ margin-left:6px;
 .read-only{
   margin-left: 10px;
   margin-right: auto;
-  font-family: 'Open Sans';
+  font-family: 'Open Sans',sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 12px;

@@ -3543,7 +3543,7 @@ export class TinyMceEditor extends Component {
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
          if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup && isInlineEditor) {
-            dataFromAlfresco(alfrescoAssetData, alfrescoEditor, imageArgs)
+            dataFromAlfresco(alfrescoAssetData, alfrescoEditor, imageArgs, () => {this.handleBlur(null, true)});
         }
     }
 
