@@ -9,7 +9,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 //const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 //const WebpackMd5Hash = require('webpack-md5-hash');
 const BrotliPlugin = require('brotli-webpack-plugin');
-const { ENV_NAME } = require('./src/config/cypressConfig');
 const USEHASH = '[fullhash]'; // Use [hash] in case of HMR is enabled and [contenthash] otherwise
 const COMPRESSION = process.env.COMPRESSION && process.env.COMPRESSION == 'true' || false;
 const DOTENV = require('dotenv').config({ path: __dirname + '/.env' });
@@ -162,7 +161,7 @@ module.exports = {
         //hot: true,
         proxy: [{
             context: ['**/configurationjs**', '/pluginwiris_engine/**'],
-            target: `https://${ENV_NAME}-structuredauthoring.pearson.com/`,
+            target: `https://dev-structuredauthoring.pearson.com/`,
             secure: false,
             pathRewrite: {
                 '^/static/js': '/tinywiris/tinymce4/js/tinymce'
