@@ -161,7 +161,7 @@ module.exports = {
         //hot: true,
         proxy: [{
             context: ['**/configurationjs**', '/pluginwiris_engine/**'],
-            target: `https://dev-structuredauthoring.pearson.com/`,
+            target: 'https://dev-structuredauthoring.pearson.com/',
             secure: false,
             pathRewrite: {
                 '^/static/js': '/tinywiris/tinymce4/js/tinymce'
