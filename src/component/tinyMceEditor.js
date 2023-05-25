@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Configuration, OpenAIApi } from "openai";
-import cypressConfig from '../config/cypressConfig';
 //IMPORT TINYMCE 
 import tinymce from 'tinymce/tinymce';
 import 'tinymce/themes/silver/theme.min.js';
@@ -135,7 +133,6 @@ export class TinyMceEditor extends Component {
                 this.changeTextElements(editor);
                 /* change the default icons of tinymce with new svg */
                 this.setDefaultIcons(editor)
-                config.ENABLE_CHAT_GPT && this.addChatGptButton(editor);
                 editor.on('init', function (e) {
                     if (document.querySelector('.audio')) {
                         document.querySelector('.audio').style.display = "block";
@@ -287,44 +284,6 @@ export class TinyMceEditor extends Component {
         
         this.editorRef = React.createRef();
         this.currentCursorBookmark = {};
-        this.configuration = new Configuration({
-            apiKey: cypressConfig.VITE_Open_AI_Key,
-        });
-        this.openai = new OpenAIApi(this.configuration);
-    }
-
-    addChatGptButton = (editor) => {
-        editor.ui.registry.addButton('AskChatGPT', {
-            id: 'buttonId',
-            classes: 'buttonClas',
-            text: "Ask ChatGPT",
-            icon: 'highlight-bg-color',
-            tooltip: 'Highlight a prompt and click this button to query ChatGPT',
-            enabled: true,
-            onAction: async (_) => {
-                const selection = tinymce.activeEditor.selection.getContent();
-                console.log('selection selection', selection);
-                const res = await this.openai.createImage({
-                    prompt: selection,
-                    n: 1,
-                    size: "512x512",
-                });
-
-                let imageUrl = res.data.data[0].url;
-                console.log('imageUrl imageUrl', imageUrl);
-                editor.selection.collapse();
-                if (imageUrl && imageUrl !== '') {
-                    let imageNode = `<img style='margin-top: 20px; width: 350px;' src=${imageUrl} alt="result" />`;
-                    editor.dom.add(tinymce.activeEditor.getBody(), 'p', {}, imageNode);
-                    editor.selection.select(tinyMCE.activeEditor.getBody(), true);
-                    editor.selection.collapse();
-                    editor.focus();
-                }
-            },
-            onSetup: (btnRef) => {
-                this.chatgptButton = btnRef;
-            }
-        });
     }
 
     /**
