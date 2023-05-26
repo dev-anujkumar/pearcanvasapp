@@ -238,6 +238,20 @@ class ElementContainer extends Component {
                 this.handleUndoOptionTimer();
             }
         }
+        if (this.props.element !== prevProps.element) {
+            let { element } = this.props
+            let embeddedAssessment = checkEmbeddedElmAssessment(element);
+            if (this.props.element && embeddedAssessment === true) {
+                const assessmentID = element.figuredata.elementdata.assessmentid;
+                const assessmentItemID = element.figuredata.elementdata.assessmentitemid;
+                const itemData = {
+                    itemId: assessmentItemID,
+                    parentId: assessmentID,
+                    targetItemid: assessmentItemID
+                }
+                this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
+            }
+        }
     }
 
     handleClickOutside = (event) => {
