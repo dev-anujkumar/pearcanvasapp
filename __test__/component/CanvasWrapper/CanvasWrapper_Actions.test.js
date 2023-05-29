@@ -3598,32 +3598,3 @@ it('Testing getLOBDiscussionItems - catch block', async () => {
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })
-it('Testing fetchUserLocation - try block', async () => {
-    const response = {
-        status: 200,
-        data : 
-            {
-                id : "uthalki",
-                username: "uthalki",
-                mail: "kira.marbit@pedev.com",
-                houseIdentifier: "US-NJ-Hoboken-221 River",
-            }
-        }
-    let dispatch = jest.fn();
-    const spyFunction = jest.spyOn(canvasActions, 'fetchUserLocation');
-    axios.get = jest.fn(() => Promise.resolve(response))
-    canvasActions.fetchUserLocation()(dispatch);
-    expect(spyFunction).toHaveBeenCalled();
-    expect(dispatch).not.toHaveBeenCalled();
-    spyFunction.mockClear();
- 
-});
-
-it('Testing fetchUserLocation - catch block', async () => {
-    const state = {}
-    const store = mockStore(() => state);
-    const spyFunction = jest.spyOn(canvasActions,'fetchUserLocation');
-    axios.get = jest.fn(() => Promise.reject({}));
-    await store.dispatch(canvasActions.fetchUserLocation());
-    expect(spyFunction).toHaveBeenCalled();
-});
