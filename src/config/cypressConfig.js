@@ -105,12 +105,4 @@ let cypressConfig = {
     pendingTcmStatus: false
 }
 
-
-if (process.env.NODE_ENV === "development") {
-    cypressConfig.userName = 'c5test01';
-    cypressConfig.userId= 'c5test01';
-    cypressConfig.userEmail = 'c5test01@mctest.local';
-    cypressConfig.assignee='c5test01';
-}
-
 export default cypressConfig;
