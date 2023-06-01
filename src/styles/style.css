@@ -458,8 +458,7 @@ span[title="calloutFour"] sup::after {
  span.markedForIndex {
     color: #007FA3;
     font-family: inherit;
-    font-weight: Bold;
-    font-style: normal;
+    font-style: inherit;
     border-bottom: 1px dotted #000;
     
   }
@@ -1110,8 +1109,7 @@ table .Wirisformula {
 dfn.GlossaryTerm {
     color: #007FA3;
     font-family: inherit;
-    font-weight: Bold;
-    font-style: normal;
+    font-style: inherit;
     border-bottom: 1px dotted #000;
 }
 dfn.GlossaryTerm:hover {
