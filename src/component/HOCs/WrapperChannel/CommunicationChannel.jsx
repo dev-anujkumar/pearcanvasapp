@@ -153,7 +153,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
-                    this.props.fetchUserLocation() 
                     this.props.fetchDefaultLF(message.defaultLearningFramework)
                     break;
                 case 'permissionsDetails':

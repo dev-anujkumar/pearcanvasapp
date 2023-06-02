@@ -19,6 +19,7 @@ export const SHOW_HIDE = "SHOW_HIDE";
 export const POP_UP = "POP_UP";
 export const SMARTLINK = "SMART_LINK";
 export const BLOCKCODE = "BLOCK_CODE_EDITOR";
+export const BLOCKLIST = "BLOCK_LIST";
 export const TABLE_EDITOR = "TABLE_EDITOR";
 export const FIGURE_MML = "MATH_ML_CHEM_EDITOR";
 export const MULTI_COLUMN_GROUP = "GROUPED_CONTENT";
@@ -96,6 +97,7 @@ export const checkTCM = element => {
         case "popup" : return POP_UP;
         case "discussion" : return ELEMENT_DISCUSSION;
         case "element-dialogue" : return ELEMENT_DIALOGUE;
+        case "manifestlist": return BLOCKLIST;
         default: return TEXT;
     }
 }

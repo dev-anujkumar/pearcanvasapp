@@ -1078,6 +1078,25 @@ td ol li.listItemNumeroUnoNone:before {
 td ol li.listItemNumeroUnoNumber:before {
     content: counter(item, decimal) ". ";
 }
+td ol li.listItemNumeroUno:before, td ol li.listItemNumeroUnoNumber:before, td ol li.listItemNumeroUnoLowerAlpha:before, td ol li.listItemNumeroUnoUpperAlpha:before, td ol li.listItemNumeroUnoUpperRoman:before, td ol li.listItemNumeroUnoLowerRoman:before, td ol li.listItemNumeroUnoNone:before {
+    font-weight: bold;
+    padding-right: 0.1em;
+    text-align: right;
+    position: relative;
+    width: 4.5em;
+    margin: 0 0 1em -4.9em;
+}
+td ul li.listItemNumeroUnoBullet:before {
+    font-weight: bold;
+    padding-right: 0.1em;
+    text-align: right;
+    position: relative;
+    width: 4.5em;
+    margin: 0 0 1em -4.9em;
+}
+table ol li:before {
+    float: left;
+}
 table ul {
     list-style-position: outside;
     list-style-type: disc;

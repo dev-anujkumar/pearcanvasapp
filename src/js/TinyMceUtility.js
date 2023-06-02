@@ -12,7 +12,7 @@ import store from '../appstore/store';
   * @param {*} data selected asset data
   * @param {*} editor tinymce editor
   */
- export const dataFromAlfresco = (data, editor, imageArgs) => {
+ export const dataFromAlfresco = (data, editor, imageArgs, cb) => {
     let imageData = data;
     let epsURL = imageData?.epsUrl ? imageData?.epsUrl : imageData.hasOwnProperty('institution-urls') ? (imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "") :"" ;
     let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
@@ -36,8 +36,11 @@ import store from '../appstore/store';
                  }
              }
              else {
-                 editor.insertContent(imgData);
-                 setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
+                // Inserts a DOM node at current selection/caret location
+                editor.selection.setContent(imgData);
+                // Calling handleBlur in callback function to save element
+                cb();
+                setTimeout(() => editor.targetElm?.classList.remove?.("place-holder"), 100)
              }
          }
      }
