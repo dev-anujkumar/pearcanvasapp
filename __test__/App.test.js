@@ -56,13 +56,6 @@ let getState = () => {
     };
 }
 
-jest.mock('../src/auth/openam.js', () => {
-    return function () {
-        this.isUserAuthenticated = function () { }
-        this.handleSessionExpire = function () { }
-        this.logout = function () { }
-    }
-});
 
 global.window = Object.create(window);
 Object.defineProperty(window, 'location', {

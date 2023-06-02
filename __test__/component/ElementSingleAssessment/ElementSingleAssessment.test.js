@@ -111,7 +111,6 @@ let initialState = {
     },
     appStore: {
         usageTypeListData: { usageTypeList: ["Quiz", "Concept Check", "Test"] },
-        slateLevelData: slateData,
     },
     assessmentReducer: assessmentRed,
     projectInfo: {isBannerVisible: false}
@@ -573,7 +572,6 @@ describe('Testing Element Single Assessment - ELM ASSESSMENTS - Elm Functions', 
         },
         appStore: {
             usageTypeListData: { usageTypeList: ["Quiz", "Concept Check", "Test"] },
-            slateLevelData: slateData,
         },
         assessmentReducer: assessmentRed3,
         projectInfo: {isBannerVisible: false}

@@ -3543,7 +3543,7 @@ export class TinyMceEditor extends Component {
         this.removeMultiTinyInstance();
         this.handlePlaceholder()
          if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup && isInlineEditor) {
-            dataFromAlfresco(alfrescoAssetData, alfrescoEditor, imageArgs)
+            dataFromAlfresco(alfrescoAssetData, alfrescoEditor, imageArgs, () => {this.handleBlur(null, true)});
         }
     }
 
@@ -3658,9 +3658,6 @@ export class TinyMceEditor extends Component {
         // else if (this.props.placeholder === "Code Block Content") {
         //     toolbar = this.setCodeBlockContentToolbar()
         // }
-        // else if (this.props.placeholder === "Enter Show text" || (this.props.placeholder === "Enter Hide text")) {
-        //     toolbar = config.showHideToolbar
-        // } 
         else if (this.props?.showHideType &&( this.props.showHideType == 'revel' || this.props.showHideType == "postertextobject")) {
             toolbar = config.revelToolbar
         } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {

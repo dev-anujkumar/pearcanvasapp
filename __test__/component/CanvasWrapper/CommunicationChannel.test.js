@@ -82,17 +82,6 @@ const initialState = {
 
 };
 
-jest.mock('../../../src/auth/openam.js', () => {
-    return function () {
-        this.isUserAuthenticated = function () { }
-        this.handleSessionExpire = function () { }
-        this.logout = function () { }
-    }
-})
-jest.mock('../../../src/js/auth_module.js', () => {
-    return function () {
-    }
-})
 jest.mock('../../../src/js/header.js', () => {
     return function () {
     }

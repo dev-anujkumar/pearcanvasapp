@@ -20,7 +20,7 @@ import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 const GlossaryFootnoteMenu = React.lazy(() => import('../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx'));
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate } from './CanvasWrapper_Actions';
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -352,7 +352,6 @@ export default connect(
         updateFigureDropdownValues,
         savePopupParentSlateData,
         fetchLOBList,
-        fetchUserLocation,
         fetchDefaultLF,
         setCautionBannerStatus,
         approvedSlatePopupStatus,
