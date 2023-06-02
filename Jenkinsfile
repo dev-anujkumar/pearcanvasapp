@@ -3,7 +3,7 @@ import com.pearson.paf.AwsAccountCredentialsId
 import com.pearson.paf.DockerImages
 import com.pearson.paf.SnykOrgs
 
-tempReactBuildPush(artifactPath: "cypress-canvas/cypress-canvas",
+reactBuildPush(artifactPath: "cypress-canvas/cypress-canvas",
         accountBucketName: "paf-static-content-artifact-nonprd-us-east-1-928847",
         buildDir: "dist",
         projectName: "cypress-canvas",
