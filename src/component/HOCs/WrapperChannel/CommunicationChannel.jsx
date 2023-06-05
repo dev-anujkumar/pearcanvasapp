@@ -187,7 +187,6 @@ function CommunicationChannel(WrappedComponent) {
                     let newMessage = { assessmentResponseMsg: message.assessmentResponseMsg };
                     this.props.isLOExist(newMessage);
                     this.props.currentSlateLO(newMessage);
-                    this.props.currentSlateLOType(CYPRESS_LF);
                     break;
                 case 'refreshSlate':
                     this.handleRefreshSlate();
@@ -729,10 +728,6 @@ function CommunicationChannel(WrappedComponent) {
                 if (message.currentSlateLF == EXTERNAL_LF && message?.statusForExtLOSave === true) {
                     this.handleExtLOData(message);
                 } 
-                /** Save button Click - Add new Cypress LOs */
-                else if (message.currentSlateLF == CYPRESS_LF && message?.statusForSave === true) {
-                    this.handleUnlinkedLODataCypress(message); 
-                }
                 /** Cancel button Click Unlink All LOs from MA Elements */ 
                 else { 
                     this.handleUnlinkedLOData(message); 
@@ -763,7 +758,6 @@ function CommunicationChannel(WrappedComponent) {
                 }
                 this.props.updateElement(requestPayload);
                 this.props.isLOExist(message);
-                this.props.currentSlateLOType(CYPRESS_LF);
                 this.props.currentSlateLO([message.loObj ?? {}]);
                 this.props.currentSlateLOMath([message.loObj ?? {}]);
             }

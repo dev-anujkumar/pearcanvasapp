@@ -168,9 +168,7 @@ class SlateTagDropdown extends React.Component {
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
     const slateVersioningStatus =  this.props?.slatePublishStatus || this.props?.setPopUpSlateLOstatus
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
-   if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
-      this.props.toggleLOWarningPopup(true,e.target.innerText);
-    } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
+    if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
       sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
       sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
       sendDataToIframe({
