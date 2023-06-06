@@ -141,9 +141,10 @@ const MetaDataPopUpForTE = (props) => {
           let imgId = img.getAttribute('data-id');
           if(Object.keys(editedImageList).length > 0 && editedImageList[imgId]){
             let {altText, longdescription} = editedImageList[imgId];
-            img.setAttribute('data-alttext', altText);
+            img.setAttribute('alt', altText);
             img.setAttribute('data-longdescription', longdescription);
-          }     
+            img.removeAttribute('data-alttext')
+        }   
         });
         figureData.tableasHTML = dummyDiv.innerHTML;
 		    /*-- Updata the image metadata in wip */

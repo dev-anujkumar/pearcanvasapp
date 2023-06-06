@@ -60,10 +60,7 @@ let config = {
 };
 
 if (process.env.NODE_ENV === "development") {
-    config.userName = 'c5test01';
-    config.userId= 'c5test01';
-    config.userEmail = 'c5test01@mctest.local';
-    config.assignee='c5test01';
+    config.userId = 'c5test01';
 }
 
 export default config;
