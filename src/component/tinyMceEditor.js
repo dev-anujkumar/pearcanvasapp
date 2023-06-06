@@ -1870,8 +1870,12 @@ export class TinyMceEditor extends Component {
                     onAction: function () {
                         if (editor?.selection?.getNode()?.className?.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS?.some(el => editor?.selection?.getContent()?.match(el)) && editor?.selection?.getContent()?.includes('class="non-breaking-space"'))) {
                             let selectedSpace = window?.getSelection()?.toString();
+                            let selectedData = window?.getSelection().toString();
+                            if (selectedSpace?.length === 1) {
+                                selectedData = editor?.selection?.getContent({ format: 'html' })?.replace(/<\/?span[^>]*>/g, "")?.replace("&nbsp;", " ");
+                            }
                             if (selectedSpace?.length) {
-                                editor.insertContent(selectedSpace);
+                                editor.insertContent(selectedData);
                             }
                         } else {
                             let selectedContent = editor?.selection?.getContent();
