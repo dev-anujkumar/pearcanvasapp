@@ -5,10 +5,10 @@ import CommentsPanel from '../CommentsPanel'
 // IMPORT - Components //
 import CommunicationChannelWrapper from '../HOCs/WrapperChannel';
 import SlateWrapper from '../SlateWrapper';
-const Sidebar = React.lazy(() => import('../Sidebar'));
-const AssetPopoverSearch = React.lazy(() => import('../AssetPopover/AssetPopoverSearch.jsx'));
-const Toolbar = React.lazy(() => import('../Toolbar'));
-const MarkIndexPopup = React.lazy(() => import('../MarkIndexPopup/MarkIndexPopup'));
+import Sidebar from '../Sidebar';
+import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
+import Toolbar from '../Toolbar';
+import MarkIndexPopup from '../MarkIndexPopup/MarkIndexPopup';
 import PopUp from '../PopUp';
 import config from './../../config/config';
 // IMPORT - Assets //
@@ -17,7 +17,7 @@ import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
 import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
-const GlossaryFootnoteMenu = React.lazy(() => import('../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx'));
+import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
 import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate } from './CanvasWrapper_Actions';
