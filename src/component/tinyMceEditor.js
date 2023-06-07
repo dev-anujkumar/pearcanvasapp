@@ -572,10 +572,20 @@ export class TinyMceEditor extends Component {
                         }
                     }
 
-                    if(editor.selection.getNode().className.includes('callout') || editor.selection.getNode().className.includes('markedForIndex') || (editor.selection.getNode().className.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS?.some(el => editor?.selection?.getContent()?.match(el)) && editor?.selection?.getContent()?.includes('class="non-breaking-space"')))){
+                    if(editor.selection.getNode().className.includes('callout') || editor.selection.getNode().className.includes('markedForIndex')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
                             editor.insertContent(textSelected);
+                        }
+                    }
+                    if(editor.selection.getNode().className.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS?.some(el => editor?.selection?.getContent()?.match(el)) && editor?.selection?.getContent()?.includes('class="non-breaking-space"'))) {
+                        let textSelected = window.getSelection().toString();
+                        let selectedData = window?.getSelection().toString();
+                        if (textSelected?.length === 1) {
+                            selectedData = editor?.selection?.getContent({ format: 'html' })?.replace(/<\/?span[^>]*>/g, "")?.replace("&nbsp;", " ");
+                        }
+                        if (textSelected.length) {
+                            editor.insertContent(selectedData);
                         }
                     }
                     
