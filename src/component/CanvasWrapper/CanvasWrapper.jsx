@@ -8,8 +8,8 @@ import SlateWrapper from '../SlateWrapper';
 const Sidebar = React.lazy(() => import('../Sidebar'));
 const AssetPopoverSearch = React.lazy(() => import('../AssetPopover/AssetPopoverSearch.jsx'));
 const Toolbar = React.lazy(() => import('../Toolbar'));
-const PopUp = React.lazy(() => import('../PopUp'));
 const MarkIndexPopup = React.lazy(() => import('../MarkIndexPopup/MarkIndexPopup'));
+import PopUp from '../PopUp';
 import config from './../../config/config';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
