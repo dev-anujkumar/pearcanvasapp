@@ -33,7 +33,7 @@ import { deleteElement, approvedSlatePopupStatus } from './ElementContainer/Elem
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, checkActiveElement }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, checkActiveElement, restoreSelectionAtNode }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import ElementConstants from './ElementContainer/ElementConstants';
 import { moveCursor } from './Keyboard/KeyboardWrapper.jsx';
@@ -466,6 +466,9 @@ export class TinyMceEditor extends Component {
                         stylingOrderList.forEach((styleTag) => {
                             this.handleFormatting(activeElement, dataUriAttributesList[index], termType, styleTag);
                         })
+                        // Restore the selection
+                        const updatedDataURINode = activeElement.querySelector(`${tag}[data-uri="${dataUriAttributesList[index]}"]`);
+                        restoreSelectionAtNode(editor, updatedDataURINode);
                     }
                 }
             }
