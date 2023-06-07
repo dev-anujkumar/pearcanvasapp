@@ -165,6 +165,11 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             return;
         }
     }
+    // As part of PCAT-18995, whenever user adding img and footnote in list element
+    // we are removing <br> tag just next to img tag an footnote and before </li>
+    if(updatedData.type === "element-list") {
+        removeBRForMathmlAndFootnote(updatedData)
+    }
         const { showHideObj,slateLevelData } = getState().appStore
         updatedData.projectUrn = config.projectUrn;
         if (updatedData.loData) {
@@ -1184,4 +1189,54 @@ export const approvedSlatePopupStatus = (popupStatus) => (dispatch) => {
         type: APPROVED_SLATE_POPUP_STATUS,
         payload: popupStatus
     })
+}
+/**
+ * This function removes the <br> tag from element-list content,
+ * if list item only contains footnote or any image if regex condition matches
+ * @param {Object} updatedData
+ */
+export const removeBRForMathmlAndFootnote = (updatedData) => {
+    //find image in element html
+    const isContainImageContent = updatedData?.html?.text?.match(/<img ([\w\W]+?)>/g)
+    // find footnore in element html
+    const isContainFootnoteContent = updatedData?.html?.text?.match(/<sup>([\w\W]+?)<\/sup>/g)
+
+    //when image content found
+    if(isContainImageContent) {
+         //finds <br> tag before img tag to handle existing data
+        const prefixBR =/<br\b[^>]*><img ([\w\W]+?)>/g
+         //finds <br> tag just after img tag and just before </li> to handle new data
+        const suffixBR = /<img\b[^>]*><br\b[^>]*>(<\/li>)/g
+        findAndReplaceBR(updatedData,prefixBR,suffixBR)
+    }
+    //when footnote content found
+    if(isContainFootnoteContent) {
+         //finds <br> tag before footnote to handle existing data
+        const prefixBR = /<br\b[^>]*><sup>([\w\W]+?)<\/sup>/g
+        //finds <br> tag just after footnote and just before </li> to handle new data
+        const suffixBR = /<sup>([\w\W]+?)<\/sup><br([\w\W]*?)>(<\/li>)/g
+        findAndReplaceBR(updatedData,prefixBR,suffixBR)
+    }
+}
+
+/**
+ * This fuction finds the exact condition where we need to remove <br> tag
+ * @param {Object} updatedData
+ * @param {RegExp} prefixRegex
+ * @param {RegExp} suffixRegex
+ */
+const findAndReplaceBR = (updatedData,prefixRegex,suffixRegex) => {
+    const matchedStringPrefix = updatedData?.html?.text?.match(prefixRegex)
+    const matchedStringSuffix = updatedData?.html?.text?.match(suffixRegex)
+    if(matchedStringPrefix) replaceBRTag(updatedData,matchedStringPrefix)
+    if(matchedStringSuffix) replaceBRTag(updatedData,matchedStringSuffix)
+}
+
+/**
+ * Replace <br> tag with empty string
+ * @param {Object} updatedData
+ * @param {Array} matchedContent
+ */
+const replaceBRTag = (updatedData,matchedContent) => {
+    updatedData.html.text = updatedData?.html?.text.replace(matchedContent[0], matchedContent[0]?.replace(/<br([\w\W]*?)>/, ''))
 }
