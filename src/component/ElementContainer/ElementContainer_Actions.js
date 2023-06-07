@@ -1204,17 +1204,17 @@ export const removeBRForMathmlAndFootnote = (updatedData) => {
     //when image content found
     if(isContainImageContent) {
          //finds <br> tag before img tag to handle existing data
-        const prefixBR =/<br([\w\W]*?)><img ([\w\W]+?)>/g
+        const prefixBR =/<br\b[^>]*><img ([\w\W]+?)>/g
          //finds <br> tag just after img tag and just before </li> to handle new data
-        const suffixBR = /<img\b[^>]*><br\b[^>]*>(?=<\/li>)/g
+        const suffixBR = /<img\b[^>]*><br\b[^>]*>(<\/li>)/g
         findAndReplaceBR(updatedData,prefixBR,suffixBR)
     }
     //when footnote content found
     if(isContainFootnoteContent) {
          //finds <br> tag before footnote to handle existing data
-        const prefixBR = /<br([\w\W]*?)><sup>([\w\W]+?)<\/sup>/g
+        const prefixBR = /<br\b[^>]*><sup>([\w\W]+?)<\/sup>/g
         //finds <br> tag just after footnote and just before </li> to handle new data
-        const suffixBR = /<sup>([\w\W]+?)<\/sup><br([\w\W]*?)>(?=<\/li>)/g
+        const suffixBR = /<sup>([\w\W]+?)<\/sup><br([\w\W]*?)>(<\/li>)/g
         findAndReplaceBR(updatedData,prefixBR,suffixBR)
     }
 }
