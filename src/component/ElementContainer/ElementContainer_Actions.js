@@ -1203,19 +1203,15 @@ export const removeBRForMathmlAndFootnote = (updatedData) => {
 
     //when image content found
     if(isContainImageContent) {
-         //finds <br> tag before img tag to handle existing data
-        const prefixBR =/<br\b[^>]*><img ([\w\W]+?)>/g
          //finds <br> tag just after img tag and just before </li> to handle new data
-        const suffixBR = /<img\b[^>]*><br\b[^>]*>(<\/li>)/g
-        findAndReplaceBR(updatedData,prefixBR,suffixBR)
+        const suffixBRForImg = /<img\b[^>]*><br\b[^>]*>(<\/li>)/g
+        findAndReplaceBR(updatedData,suffixBRForImg)
     }
     //when footnote content found
     if(isContainFootnoteContent) {
-         //finds <br> tag before footnote to handle existing data
-        const prefixBR = /<br\b[^>]*><sup>([\w\W]+?)<\/sup>/g
         //finds <br> tag just after footnote and just before </li> to handle new data
-        const suffixBR = /<sup>([\w\W]+?)<\/sup><br([\w\W]*?)>(<\/li>)/g
-        findAndReplaceBR(updatedData,prefixBR,suffixBR)
+        const suffixBRForFootnote = /<\/sup><br\b[^>]*>(<\/li>)/g
+        findAndReplaceBR(updatedData,suffixBRForFootnote)
     }
 }
 
@@ -1225,18 +1221,9 @@ export const removeBRForMathmlAndFootnote = (updatedData) => {
  * @param {RegExp} prefixRegex
  * @param {RegExp} suffixRegex
  */
-const findAndReplaceBR = (updatedData,prefixRegex,suffixRegex) => {
-    const matchedStringPrefix = updatedData?.html?.text?.match(prefixRegex)
-    const matchedStringSuffix = updatedData?.html?.text?.match(suffixRegex)
-    if(matchedStringPrefix) replaceBRTag(updatedData,matchedStringPrefix)
-    if(matchedStringSuffix) replaceBRTag(updatedData,matchedStringSuffix)
-}
-
-/**
- * Replace <br> tag with empty string
- * @param {Object} updatedData
- * @param {Array} matchedContent
- */
-const replaceBRTag = (updatedData,matchedContent) => {
-    updatedData.html.text = updatedData?.html?.text.replace(matchedContent[0], matchedContent[0]?.replace(/<br([\w\W]*?)>/, ''))
+const findAndReplaceBR = (updatedData,suffixRegex) => {
+    const matchedContent = updatedData?.html?.text?.match(suffixRegex)
+    if(matchedContent) {
+        updatedData.html.text = updatedData?.html?.text.replace(matchedContent[0], matchedContent[0]?.replace(/<br([\w\W]*?)>/, ''))
+    }
 }

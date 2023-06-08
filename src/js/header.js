@@ -69,8 +69,8 @@ const uuidv4 = () => {
     });
 }
 const redirectParent = (urlToBeRedirected) => {
-    urlToBeRedirected = urlToBeRedirected + `&_Instance=${uuidv4()}`
-    let encodedURL = encodeURI(urlToBeRedirected);
+    //urlToBeRedirected = urlToBeRedirected + `&_Instance=${uuidv4()}`
+    let encodedURL = encodeURIComponent(urlToBeRedirected);
     sendDataToIframe({
         'type': 'autoLogOut',
         'message': { url: encodedURL }
