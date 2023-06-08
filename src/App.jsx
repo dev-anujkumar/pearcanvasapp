@@ -4,7 +4,7 @@
 * to Application level state and give it to all its predecesors.
 */
 // IMPORT - Plugins //
-import React, { Component, Suspense } from 'react';
+import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 // IMPORT - Components //
