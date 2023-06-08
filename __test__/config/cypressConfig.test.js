@@ -21,12 +21,13 @@ describe('Testing config----->', () => {
         it('will receive  process.env.NODE_ENV = development variables', () => {
             process.env.NODE_ENV = 'development';
             const testedModule = require('../../src/config/cypressConfig').default
-          expect(testedModule.userName).toBe('c5test01')
-          expect(testedModule.userId).toBe('c5test01')
-          expect(testedModule.userEmail).toBe('c5test01@mctest.local')
-          expect(testedModule.assignee).toBe('c5test01')
+          expect(testedModule.userName).toBe(undefined)
+          expect(testedModule.userId).toBe(undefined)
+          expect(testedModule.userEmail).toBe(undefined)
+          expect(testedModule.assignee).toBe(undefined)
           expect(testedModule.WRAPPER_URL).toBe('https://local-dev.pearson.com:4000')
           expect(testedModule.TCM_DASHBOARD_UI_URL).toBe("http://local-dev.pearson.com:7000/")
+          expect(testedModule.LOCK_API_BASE_URL).toBe('http://localhost:5000')
         //   expect(testedModule.LOCK_API_BASE_URL).toBe('https://dev-structuredauthoring.pearson.com/cypress/dashboard-srvr')
 
         });
