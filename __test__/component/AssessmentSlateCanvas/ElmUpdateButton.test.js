@@ -33,7 +33,7 @@ describe('Testing ElmUpdateButton component', () => {
         expect(component1).toHaveLength(1);
         expect(component1.find('div.elm-update-button')).toHaveLength(1);
     })
-    it('Test 2- Update Button', () => {
+    it('Test 2- Update Button -- conditional coverage', () => {
         props = {
             updateElmVersion: jest.fn(),
             elmAssessment: {
