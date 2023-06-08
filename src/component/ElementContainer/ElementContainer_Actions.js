@@ -1210,7 +1210,7 @@ export const removeBRForMathmlAndFootnote = (updatedData) => {
     //when footnote content found
     if(isContainFootnoteContent) {
         //finds <br> tag just after footnote and just before </li> to handle new data
-        const suffixBRForFootnote = /<sup><a>([\w\W]+?)<\/a><\/sup><br([\w\W]*?)>(<\/li>)/g
+        const suffixBRForFootnote = /<\/sup><br\b[^>]*>(<\/li>)/g
         findAndReplaceBR(updatedData,suffixBRForFootnote)
     }
 }
