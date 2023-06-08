@@ -1449,7 +1449,7 @@ describe('Test for element container component', () => {
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
         })
-        it('Render Element Container ----->PlayScript', () => {
+        it('Render Element Container ----->PlayScript and Block List', () => {
             let props = {
                 element: wipData.ps,
                 permissions: []
@@ -1458,16 +1458,15 @@ describe('Test for element container component', () => {
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             expect(elementContainer).toHaveLength(1);
             expect(elementContainerInstance).toBeDefined();
-        })
-        it('Render Element Container ----->Block List', () => {
-            let props = {
+
+            let props2 = {
                 element: wipData.bl,
                 permissions: []
             };
-            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
-            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
-            expect(elementContainer).toHaveLength(1);
-            expect(elementContainerInstance).toBeDefined();
+            let elementContainer2 = mount(<Provider store={store}><ElementContainer {...props2} /></Provider>);
+            const elementContainerInstance2 = elementContainer.find('ElementContainer').instance();
+            expect(elementContainer2).toHaveLength(1);
+            expect(elementContainerInstance2).toBeDefined();
         })
         it('Render Element Container ----->LTI_SLATE', () => {
             let props = {

@@ -128,7 +128,8 @@ jest.mock('../../../src/js/TinyMceUtility.js', () => {
         },
         checkForDataIdAttribute: ()=>{
             return "<p>test</p>"
-        }
+        },
+        restoreSelectionAtNode: () => {}
     }
 })
 jest.mock('../../../src/component/ListElement/eventBinding', () => {
