@@ -33,7 +33,7 @@ import { deleteElement, approvedSlatePopupStatus } from './ElementContainer/Elem
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, checkActiveElement }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, checkActiveElement, restoreSelectionAtNode }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import ElementConstants from './ElementContainer/ElementConstants';
 import { moveCursor } from './Keyboard/KeyboardWrapper.jsx';
@@ -518,6 +518,9 @@ export class TinyMceEditor extends Component {
                         stylingOrderList.forEach((styleTag) => {
                             this.handleFormatting(activeElement, dataUriAttributesList[index], termType, styleTag);
                         })
+                        // Restore the selection
+                        const updatedDataURINode = activeElement.querySelector(`${tag}[data-uri="${dataUriAttributesList[index]}"]`);
+                        restoreSelectionAtNode(editor, updatedDataURINode);
                     }
                 }
             }
@@ -621,10 +624,20 @@ export class TinyMceEditor extends Component {
                         }
                     }
 
-                    if(editor.selection.getNode().className.includes('callout') || editor.selection.getNode().className.includes('markedForIndex') || (editor.selection.getNode().className.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS?.some(el => editor?.selection?.getContent()?.match(el)) && editor?.selection?.getContent()?.includes('class="non-breaking-space"')))){
+                    if(editor.selection.getNode().className.includes('callout') || editor.selection.getNode().className.includes('markedForIndex')){
                         let textSelected = window.getSelection().toString();
                         if (textSelected.length) {
                             editor.insertContent(textSelected);
+                        }
+                    }
+                    if(editor.selection.getNode().className.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS?.some(el => editor?.selection?.getContent()?.match(el)) && editor?.selection?.getContent()?.includes('class="non-breaking-space"'))) {
+                        let textSelected = window.getSelection().toString();
+                        let selectedData = window?.getSelection().toString();
+                        if (textSelected?.length === 1) {
+                            selectedData = editor?.selection?.getContent({ format: 'html' })?.replace(/<\/?span[^>]*>/g, "")?.replace("&nbsp;", " ");
+                        }
+                        if (textSelected.length) {
+                            editor.insertContent(selectedData);
                         }
                     }
                     
@@ -1922,8 +1935,12 @@ export class TinyMceEditor extends Component {
                     onAction: function () {
                         if (editor?.selection?.getNode()?.className?.includes('non-breaking-space') || (ALLOWED_FORMATTING_TOOLBAR_TAGS?.some(el => editor?.selection?.getContent()?.match(el)) && editor?.selection?.getContent()?.includes('class="non-breaking-space"'))) {
                             let selectedSpace = window?.getSelection()?.toString();
+                            let selectedData = window?.getSelection().toString();
+                            if (selectedSpace?.length === 1) {
+                                selectedData = editor?.selection?.getContent({ format: 'html' })?.replace(/<\/?span[^>]*>/g, "")?.replace("&nbsp;", " ");
+                            }
                             if (selectedSpace?.length) {
-                                editor.insertContent(selectedSpace);
+                                editor.insertContent(selectedData);
                             }
                         } else {
                             let selectedContent = editor?.selection?.getContent();
