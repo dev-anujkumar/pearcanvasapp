@@ -58,7 +58,7 @@ describe('Test-CutCopySnapshots_helper', () => {
         }
         expect(spyFunction).toHaveReturnedWith(expectedResult)
     })
-    it('Test-1.2-Function--1--preparePayloadData - default -cut and paste on 3c-we-body', () => {
+    it('Test-1.2-Function--1--preparePayloadData - default -cut and paste on 3c-we-body - else', () => {
         oldElementId = "urn:pearson:manifest:60c0f346-75f7-43e7-ada4-22be752ffcb1"
         asideData = {
             type: 'element-aside',
@@ -88,7 +88,7 @@ describe('Test-CutCopySnapshots_helper', () => {
         CutCopySnapshots.preparePayloadData({...pasteParams, asideData, parentUrn, oldElementId })
         expect(spyFunction).toHaveBeenCalledWith({...pasteParams, asideData, parentUrn, oldElementId })
     })
-    it('Test-1.3-Function--1--preparePayloadData - default -cut and paste on aside', () => {
+    it('Test-1.2.1-Function--1--preparePayloadData - default -cut and paste on 3c-we-body', () => {
         oldElementId = "urn:pearson:manifest:60c0f346-75f7-43e7-ada4-22be752ffcb1"
         asideData = {
             type: 'element-aside',
@@ -96,6 +96,109 @@ describe('Test-CutCopySnapshots_helper', () => {
             contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894",
             element: {
                 type: 'element-aside',
+                subtype: "sidebar",
+                id: "urn:pearson:manifest:8385f444-ad58-477e-9e47-8e8e76ac8265",
+                contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894"
+            },
+            parent: {
+                id: "urn:pearson:manifest:64386611-d4bf-4c80-bfb4-d53891e035fd",
+                columnId: "urn:pearson:manifest:fb428196-af64-45b3-b168-2138e00f9e4a",
+                type: "3C",
+                columnName: "C2",
+                parentContentUrn: "urn:pearson:entity:bde6a376-538f-49ec-838d-236e79795c6c",
+                columnContentUrn: "urn:pearson:entity:3a3b7644-e1ed-4cbc-b8df-18785a505fce"
+            }
+        }
+        parentUrn = {
+            manifestUrn: "urn:pearson:manifest:8ae90b8d-6b06-49c0-bda9-cce7608653bf",
+            contentUrn: "urn:pearson:entity:3e6b1f8c-2250-455c-a7ca-b1c71d30e9d8",
+            elementType: "element-aside"
+        }
+        const spyFunction = jest.spyOn(CutCopySnapshots, 'preparePayloadData');
+        CutCopySnapshots.preparePayloadData({...pasteParams, asideData, parentUrn, oldElementId })
+        expect(spyFunction).toHaveBeenCalledWith({...pasteParams, asideData, parentUrn, oldElementId })
+    })
+    it('Test-1.2.3-Function--1--preparePayloadData - childtag - group', () => {
+        oldElementId = "urn:pearson:manifest:60c0f346-75f7-43e7-ada4-22be752ffcb1"
+        asideData = {
+            type: 'element-aside',
+            id: "urn:pearson:manifest:8385f444-ad58-477e-9e47-8e8e76ac8265",
+            contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894",
+            element: {
+                type: 'element-aside',
+                subtype: "sidebar",
+                id: "urn:pearson:manifest:8385f444-ad58-477e-9e47-8e8e76ac8265",
+                contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894"
+            },
+            parent: {
+                id: "urn:pearson:manifest:64386611-d4bf-4c80-bfb4-d53891e035fd",
+                columnId: "urn:pearson:manifest:fb428196-af64-45b3-b168-2138e00f9e4a",
+                type: "3C",
+                columnName: "C2",
+                parentContentUrn: "urn:pearson:entity:bde6a376-538f-49ec-838d-236e79795c6c",
+                columnContentUrn: "urn:pearson:entity:3a3b7644-e1ed-4cbc-b8df-18785a505fce"
+            }
+        }
+        parentUrn = {
+            manifestUrn: "urn:pearson:manifest:8ae90b8d-6b06-49c0-bda9-cce7608653bf",
+            contentUrn: "urn:pearson:entity:3e6b1f8c-2250-455c-a7ca-b1c71d30e9d8",
+            elementType: "group"
+        }
+        const spyFunction = jest.spyOn(CutCopySnapshots, 'preparePayloadData');
+        CutCopySnapshots.preparePayloadData({...pasteParams, asideData, parentUrn, oldElementId })
+        expect(spyFunction).toHaveBeenCalledWith({...pasteParams, asideData, parentUrn, oldElementId })
+    })
+    it('Test-1.3-Function--1--preparePayloadData - default -MULTI_COLUMN', () => {
+        oldElementId = "urn:pearson:manifest:60c0f346-75f7-43e7-ada4-22be752ffcb1"
+        asideData = {
+            type: 'groupedcontent',
+            id: "urn:pearson:manifest:8385f444-ad58-477e-9e47-8e8e76ac8265",
+            contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894",
+            element: {
+                type: 'groupedcontent',
+                subtype: "sidebar",
+                id: "urn:pearson:manifest:8385f444-ad58-477e-9e47-8e8e76ac8265",
+                contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894"
+            }
+        }
+        parentUrn = {
+            manifestUrn: "urn:pearson:manifest:8385f444-ad58-477e-9e47-8e8e76ac8265",
+            contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894",
+            elementType: "manifest"
+        }
+        const spyFunction = jest.spyOn(CutCopySnapshots, 'preparePayloadData');
+        CutCopySnapshots.preparePayloadData({ ...pasteParams, asideData, parentUrn, oldElementId })
+        expect(spyFunction).toHaveBeenCalledWith({ ...pasteParams, asideData, parentUrn, oldElementId })
+    })
+    it('Test-1.3-Function--1--preparePayloadData - default -MULTI_COLUMN - else', () => {
+        oldElementId = "urn:pearson:manifest:60c0f346-75f7-43e7-ada4-22be752ffcb1"
+        asideData = {
+            type: 'groupedcontent',
+            id: "urn:pearson:manifest:8385f444-ad58-477e-9e47-8e8e76ac8265",
+            contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894",
+            element: {
+                type: 'groupedcontent',
+                subtype: "sidebar",
+                groupproportions: '33-33-33'
+            }
+        }
+        parentUrn = {
+            manifestUrn: "urn:pearson:manifest:8385f444-ad58-477e-9e47-8e8e76ac8265",
+            contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894",
+            elementType: "manifest"
+        }
+        const spyFunction = jest.spyOn(CutCopySnapshots, 'preparePayloadData');
+        CutCopySnapshots.preparePayloadData({ ...pasteParams, asideData, parentUrn, oldElementId })
+        expect(spyFunction).toHaveBeenCalledWith({ ...pasteParams, asideData, parentUrn, oldElementId })
+    })
+    it('Test-1.4-Function--1--preparePayloadData - default -POPUP_ELEMENT', () => {
+        oldElementId = "urn:pearson:manifest:60c0f346-75f7-43e7-ada4-22be752ffcb1"
+        asideData = {
+            type: 'popup',
+            id: "urn:pearson:manifest:8385f444-ad58-477e-9e47-8e8e76ac8265",
+            contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894",
+            element: {
+                type: 'popup',
                 subtype: "sidebar",
                 id: "urn:pearson:manifest:8385f444-ad58-477e-9e47-8e8e76ac8265",
                 contentUrn: "urn:pearson:entity:7bbfbd7c-8497-464a-9f28-974e1da55894"
