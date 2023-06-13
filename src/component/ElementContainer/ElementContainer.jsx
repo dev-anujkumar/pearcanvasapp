@@ -2501,8 +2501,8 @@ class ElementContainer extends Component {
             normalText: TE_POP_UP_NORMAL_TEXT,
             renderImages : this.props.tableElementAssetData
         }
-        let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element, 'editButton', this.props.permissions)));
-        let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element, 'alfrescoExpandButton', this.props.permissions)));
+        let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element)));
+        let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element)));
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
