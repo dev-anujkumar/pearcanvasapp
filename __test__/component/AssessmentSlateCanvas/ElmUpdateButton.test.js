@@ -26,10 +26,26 @@ describe('Testing ElmUpdateButton component', () => {
                 latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
                 showUpdateStatus: true
             },
-            buttonText: 'Update Available'
+            buttonText: 'Update Available',
+            elementType: 'mmi-elm'
         }
         const component1 = mount(<ElmUpdateButton {...props} />)
         expect(component1).toHaveLength(1);
         expect(component1.find('div.elm-update-button')).toHaveLength(1);
+    })
+    it('Test 2- Update Button -- conditional coverage', () => {
+        props = {
+            updateElmVersion: jest.fn(),
+            elmAssessment: {
+                activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
+                assessmentStatus: "final",
+                latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565"
+            },
+            buttonText: 'Update Available',
+            elementType: 'mmi-elm'
+        }
+        const component1 = mount(<ElmUpdateButton {...props} />)
+        expect(component1).toHaveLength(1);
+        expect(component1.find('div.elm-update-button')).toHaveLength(0);
     })
 });

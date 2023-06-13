@@ -250,6 +250,83 @@ export const initialState2 = {
     }
 };
 
+export const initialState3 = {
+    config: {
+        figureFieldsPlaceholders: ['Number', 'Label', 'Label Name', 'Title', 'Caption', 'Credit', 'Math Block Content', 'Code Block Content']
+    },
+    toolbarReducer:{
+        elemBorderToggle: true,
+        pageNumberToggle: false,
+        spellCheckToggle: true,
+    },
+    alfrescoReducer: {
+        alfrescoAssetData: {},
+        elementId: "urn",
+        alfrescoListOption: [],
+        launchAlfrescoPopup: true,
+        editor: true,
+        Permission: false
+    },
+    autoNumberReducer:{ 
+        autoNumberOption: {
+            "entityUrn": "urn:pearson:entity:2d0bdd35-c2df-4671-84de-21d1bcb5c0ec",
+            "option": "Resume numbering with"
+        },
+        autoNumberElementsIndex: undefined,
+        autoNumberingDetails: {
+            "chapterOrderList": {
+                "urn:pearson:entity:eedc9f81-c954-44ec-93f4-16119a610b56": 1,
+                "urn:pearson:entity:36841092-3d83-4a48-85e0-2355d5a79bc8": 2,
+                "urn:pearson:entity:1697e883-d08d-4a96-8696-720f24d5353f": 3
+            },
+            "partOrderList": {
+                "urn:pearson:entity:823fe472-6164-4cc8-8499-4cfc07382778": 1,
+                "urn:pearson:entity:7370ced9-5c84-4eae-96a0-362f42b1b331": 2
+            }
+        }
+    },
+    appStore: {
+        currentSlateAncestorData: undefined,
+        activeElement: {
+            "elementType": "element-aside",
+            "primaryOption": "primary-aside-aside",
+            "secondaryOption": "secondary-aside-sb1",
+            "asideNumber": true,
+            "elementId": "urn:pearson:manifest:ab62afe8-945b-426f-bbab-c50e85ede064",
+            "index": 3,
+            "elementWipType": "element-aside",
+            "toolbar": [
+                "insertMedia",
+                "bold",
+                "italic",
+                "underline",
+                "strikethrough",
+                "clearformatting",
+                "increaseindent",
+                "decreaseindent",
+                "footnote",
+                "glossary",
+                "orderedlist",
+                "unorderedlist",
+                "mathml",
+                "chemml",
+                "inlinecode",
+                "superscript",
+                "subscript",
+                "specialcharactor",
+                "undo",
+                "redo",
+                "crossLinkingIcon",
+                "assetpopover",
+                "slatetag",
+                "alignment",
+                "calloutIcon",
+                "IndexEntry"
+            ],
+            "tag": "As"
+        },
+    }
+};
 
 export const props = {
     "permissions": [
@@ -599,4 +676,9 @@ export const props8 = {
             "3"
         ]
     }
+}
+
+export const props9 = {
+    ...props,
+    model: undefined
 }
