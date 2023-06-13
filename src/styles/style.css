@@ -458,8 +458,7 @@ span[title="calloutFour"] sup::after {
  span.markedForIndex {
     color: #007FA3;
     font-family: inherit;
-    font-weight: Bold;
-    font-style: normal;
+    font-style: inherit;
     border-bottom: 1px dotted #000;
     
   }
@@ -527,7 +526,6 @@ div[title='Ignore all']{
 }
 
 /* classes replacing Book.css */
-
 div.divWidgetMDI, div.divWidget3PI, div.divWidget3PISE, div.divWidget3PI.SocialExplorer, div.divWidget3PI.GeoGebra,
 div.divWidget3PI.CloserLook, div.divWidget3PI.Default, div.divWidgetAccountingTable, div.divWidgetFlashcards, div.divWidgetImgSlideshow,
 div.divWidgetVidSlideshow, div.divWidgetUCA, div.divWidgetSurvey, div.divWidgetTimeline, div.divWidgetMCQ, div.divWidgetImageId,
@@ -1129,8 +1127,7 @@ table .Wirisformula {
 dfn.GlossaryTerm {
     color: #007FA3;
     font-family: inherit;
-    font-weight: Bold;
-    font-style: normal;
+    font-style: inherit;
     border-bottom: 1px dotted #000;
 }
 dfn.GlossaryTerm:hover {

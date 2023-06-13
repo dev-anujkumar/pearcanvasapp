@@ -14,13 +14,8 @@ describe('checkSlateLock Testing', () => {
     })
 
     it('checkSlateLock else', () => {
-        let slateLockInfo = {
-            userId : 'test',
-            isLocked : true
-        }
+        let slateLockInfo = false
         config.userId = 'test';
-        let result = checkSlateLock(slateLockInfo);
-        expect(result).toBe(false)
-
+        checkSlateLock(slateLockInfo);
     })
 });

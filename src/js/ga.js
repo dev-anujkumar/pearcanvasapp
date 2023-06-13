@@ -12,7 +12,6 @@ export const initializeGTM = (env) => {
   //const preview = ""
   // env.GTM_ID ='GTM-NFMDD8B' // old
   const GTM_ID = env.GTM_ID || 'GTM-N6W3WRM'
-  console.log(GTM_ID, "inside GTM",env)
   if (auth) {
     const tagManagerArgs = {
       gtmId: GTM_ID,
@@ -28,9 +27,7 @@ export const initializeGTM = (env) => {
 
 
 export const triggerCustomEventsGTM = (event, data) => {
-    console.log(isGtmInitialized,"isGtmInitialized",window.dataLayer)
     if (isGtmInitialized && window && window.dataLayer) {
-        console.log(event,"Push data event",data)
         window.dataLayer.push({
             event,
         ...data

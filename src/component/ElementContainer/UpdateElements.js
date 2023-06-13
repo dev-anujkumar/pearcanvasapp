@@ -919,7 +919,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
             dataToReturn = generateAssessmentSlateData(index, previousElementData, elementType, primaryOption, secondaryOption)
             break;
         case elementTypeConstant.CITATION_ELEMENT:
-            dataToReturn = generateCitationElementData(index, previousElementData, elementType, primaryOption, secondaryOption, node, parentElement)
+            const citationElementData = findElementType(previousElementData, index);
+            const citationElementType = citationElementData?.elementType;
+            const citationPrimaryOption = citationElementData?.primaryOption;
+            const citationSecondaryOption = citationElementData?.secondaryOption;
+            dataToReturn = generateCitationElementData(index, previousElementData, citationElementType, citationPrimaryOption, citationSecondaryOption, node, parentElement)
             break;
     }
     dataToReturn.slateVersionUrn = config.slateManifestURN;
