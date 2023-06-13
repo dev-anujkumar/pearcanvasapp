@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import ElementAudioVideo from '../../../src/component/ElementAudioVideo/ElementAudioVideo';
 import config from '../../../src/config/config';
-import { figureImage50TextElementWithData,audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault, audioData, audioData1, newAlfrescoData, videoSmartLinksData, newVideoData, smartLinkAudio, permissions } from '../../../fixtures/ElementAudioVideoTestingData.js'
+import { figureImage50TextElementWithData,audioElementTypeSLDefault, audioElementTypeSLWithData, audioElementTypeAlfrescoDefault, audioElementTypeAlfrescoWithData, videoElementTypeSLDefault, videoElementTypeSLWithData, videoElementTypeAlfrescoWithData, videoElementTypeAlfrescoDefault, audioData, audioData1, newAlfrescoData, videoSmartLinksData, newVideoData, smartLinkAudio, permissions, videoSmartLinksData1, smartLinkAudio1 } from '../../../fixtures/ElementAudioVideoTestingData.js'
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 const middlewares = [thunk];
@@ -101,75 +101,8 @@ describe('Testing Element Audio-Video component', () => {
         const elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
         expect(elementAudioVideoInstance).toBeDefined();
     })
-    // describe('With Audio element', () => {
-    //     let props = {
-    //         model: audioElementTypeSLDefault,
-    //         index: 1,
-    //         slateLockInfo: {
-    //             isLocked: false,
-    //             userId: 'c5Test01'
-    //         },
-    //         handleFocus: function () { },
-    //         permissions: permissions,
-    //         updateFigureData: jest.fn(),
-    //         handleBlur: jest.fn(),
-    //         handleFocus: jest.fn(),
-    //         accessDenied: jest.fn(),
-    //     };
-    //     let component = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>);
-    //     it('renders properly with default audio SL-type element', () => {
-    //         expect(component.find('.divAudio .figureAudio .pearson-component.audio')).toHaveLength(1)
-
-    //     })
-    //     it('renders  properly with given audio SL-type  element', () => {
-    //         component.setProps({ model: audioElementTypeSLWithData, index: 2 });
-    //         expect(component.find('.divAudio .figureAudio .pearson-component.audio')).toHaveLength(1)
-    //     })
-    //     it('renders  properly with default audio Alfresco-type element', () => {
-    //         component.setProps({ model: audioElementTypeAlfrescoDefault, index: 3 });
-    //         expect(component.find('.divAudio .figureAudio .pearson-component.audio')).toHaveLength(1)
-    //     })
-    //     it('renders  properly with given audio Alfresco-type element', () => {
-    //         component.setProps({ model: audioElementTypeAlfrescoWithData, index: 4 });
-    //         expect(component.find('.divAudio .figureAudio .pearson-component.audio')).toHaveLength(1)
-    //     })
-    // });
-    // describe('With Video element', () => {
-    //     let props = {
-    //         model: videoElementTypeSLDefault,
-    //         index: 5,
-    //         slateLockInfo: {
-    //             isLocked: false,
-    //             userId: 'c5Test01'
-    //         },
-
-    //         handleFocus: function () { },
-    //         permissions: permissions,
-    //         updateFigureData: jest.fn(),
-    //         handleBlur: jest.fn(),
-    //         handleFocus: jest.fn(),
-    //         accessDenied: jest.fn(),
-    //     };
-    //     let component = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>);
-    //     it('renders properly with default video SL-type element', () => {
-    //         expect(component.find('.divVideo .figureVideo .pearson-component.video')).toHaveLength(1)
-    //     })
-    //     it('renders  properly with given video SL-type element', () => {
-    //         component.setProps({ model: videoElementTypeSLWithData, index: 6 });
-    //         expect(component.find('.divVideo .figureVideo .pearson-component.video')).toHaveLength(1)
-    //     })
-    //     it('renders  properly with default video Alfresco-type element', () => {
-    //         component.setProps({ model: videoElementTypeAlfrescoDefault, index: 7 });
-    //         expect(component.find('.divVideo .figureVideo .pearson-component.video')).toHaveLength(1)
-    //     })
-    //     it('renders  properly with given video Alfresco-type element', () => {
-    //         component.setProps({ model: videoElementTypeAlfrescoWithData, index: 8 });
-    //         expect(component.find('.divVideo .figureVideo .pearson-component.video')).toHaveLength(1)
-    //     })
-
-    // });
+    
     describe('Testing handleC2MediaClick function', () => {
-
         let props = {
             slateLockInfo: {
                 isLocked: false,
@@ -198,7 +131,6 @@ describe('Testing Element Audio-Video component', () => {
                     }
                  }
             }
-            
         };
         const event = {
             target: {
@@ -239,7 +171,7 @@ describe('Testing Element Audio-Video component', () => {
         }
         const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>);
         let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
-        it('handleC2MediaClick-default case', () => {
+        it('Test - handleC2MediaClick-default case', () => {
             const event = {
                 target:{
                     tagName: "p"
@@ -253,7 +185,7 @@ describe('Testing Element Audio-Video component', () => {
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
             spyhandleC2MediaClick.mockClear()
         })
-        it('handleC2MediaClick-if->if->if case', () => {
+        it('Test - handleC2MediaClick when permission is true', () => {
             let props = {
                 slateLockInfo: {
                     isLocked: false,
@@ -300,7 +232,100 @@ describe('Testing Element Audio-Video component', () => {
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
             spyhandleC2MediaClick.mockClear()
         })
-        it('handleC2MediaClick-if->if->else case', () => {
+        it('Testing locationSiteDataNodeRef, nodeRefs, locationSiteDataTitle and alfrescoPaths conditions in handleC2mediaclick', () => {
+            let props = {
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions:permissions,
+                model: videoElementTypeSLDefault,
+                updateFigureData: jest.fn(),
+                handleBlur: jest.fn(),
+                handleFocus: jest.fn(),
+                accessDenied: jest.fn(),
+            }
+            let alfrescoPath2 = {
+                alfresco: {
+                    nodeRef: "",
+                    repositoryFolder: "001_C5 Media POC - AWS US ",
+                    repositoryName: "AWS US",
+                    repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
+                    visibility: "MODERATED",
+                    name: "c5test09",
+                    title: "Audio Book",
+                    guid: "urn:pearson:manifestation:191e7b6c-53a3-420f-badd-a90786613ae5"
+                },
+            }
+            const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
+            let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+            const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick')
+            let event = {
+                target: { tagName: 'b' },
+
+            }
+            elementAudioVideoInstance.setState({
+                alfrescoSiteData: {
+                    siteId: "c5test09",
+                    nodeRef:"ebaaf975-a68b-4ca6-9604-3d37111b847a",
+                    repositoryFolder: "001_C5 Media POC - AWS US ",
+                }
+            });
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+
+            config.alfrescoMetaData = alfrescoPath2
+            elementAudioVideoInstance.handleC2MediaClick(event)
+            expect(elementAudioVideoInstance.state.alfrescoSite)
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
+            spyhandleC2MediaClick.mockClear()
+        })
+
+        it('Testing handleC2MediaClick-if condition where guid and noderef is false ', () => {
+            let props = {
+                slateLockInfo: {
+                    isLocked: false,
+                    userId: 'c5Test01'
+                },
+                onClick: () => { },
+                handleFocus: function () { },
+                permissions:permissions,
+                model: videoElementTypeSLDefault,
+                updateFigureData: jest.fn(),
+                handleBlur: jest.fn(),
+                handleFocus: jest.fn(),
+                accessDenied: jest.fn(),
+            }
+            let alfrescoPath2 = {
+                alfresco: {
+                    nodeRef: "",
+                    repositoryFolder: "001_C5 Media POC - AWS US ",
+                    repositoryName: "AWS US",
+                    repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
+                    visibility: "MODERATED",
+                    name: "c5test09",
+                    title: "Audio Book",
+                    guid: ""
+                },
+            }
+            const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
+            let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
+            const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick')
+            let event = {
+                target: { tagName: 'b' },
+
+            }
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+
+            config.alfrescoMetaData = alfrescoPath2
+            elementAudioVideoInstance.handleC2MediaClick(event)
+            expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
+            spyhandleC2MediaClick.mockClear()
+        })
+        it('handleC2MediaClick-else->if case', () => {
             let props = {
                 slateLockInfo: {
                     isLocked: false,
@@ -326,7 +351,6 @@ describe('Testing Element Audio-Video component', () => {
                      }
                 }
             };
-
             const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
             let elementAudioVideoInstance = elementAudioVideo.find('ElementAudioVideo').instance();
             const spyhandleC2MediaClick = jest.spyOn(elementAudioVideoInstance, 'handleC2MediaClick')
@@ -336,7 +360,6 @@ describe('Testing Element Audio-Video component', () => {
             }
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideo.update();
-
             config.alfrescoMetaData = alfrescoPath
             elementAudioVideoInstance.handleC2MediaClick(event)
             expect(spyhandleC2MediaClick).toHaveBeenCalledWith(event)
@@ -417,12 +440,12 @@ describe('Testing Element Audio-Video component', () => {
     describe('Testing dataFromAlfresco function', () => {
         let alfrescoPath = {
             alfresco: {
+                nodeRef:"",
                 repositoryFolder: "001_C5 Media POC - AWS US ",
                 repositoryName: "AWS US",
                 repositoryUrl: "https://staging.api.pearson.com/content/cmis/uswip-aws",
                 visibility: "MODERATED",
                 title:'',
-                name:''
             },
             associatedArt: "https://cite-media-stg.pearson.com/legacy_paths/634a3489-083f-4539-8d47-0a8827246857/cover_thumbnail.jpg",
             authorName: "Krajewski",
@@ -494,15 +517,39 @@ describe('Testing Element Audio-Video component', () => {
             expect(spydataFromAlfresco).toHaveBeenCalled()
             spydataFromAlfresco.mockClear()
         })
-        it('Test- if case workflow-  no publicationUrl ', () => {
+        it('Test-1 if case workflow-  width and height for image data', () => {
             elementAudioVideoInstance.forceUpdate();
-            elementAudioVideoInstance.dataFromAlfresco(audioData)
+            elementAudioVideoInstance.dataFromAlfresco(audioData1)
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideo.update();
             expect(spydataFromAlfresco).toHaveBeenCalled()
             spydataFromAlfresco.mockClear()
         })
-        it('Test- if case workflow-  with viedo smartLinks ', () => {
+        it('Test- if case workflow-  no publicationUrl ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(videoSmartLinksData1)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow-  with publicationUrl ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(audioData1)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow - with video avs:jsonString filed else case ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(videoSmartLinksData1)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- else case workflow-  with video smartLinks ', () => {
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideoInstance.dataFromAlfresco(videoSmartLinksData)
             elementAudioVideoInstance.forceUpdate();
@@ -510,13 +557,20 @@ describe('Testing Element Audio-Video component', () => {
             expect(spydataFromAlfresco).toHaveBeenCalled()
             spydataFromAlfresco.mockClear()
         })
-        it('Test- if case workflow-  with viedo avs:jsonString filed else case ', () => {
+        it('Test- if case workflow-  with smartlink audio ', () => {
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideoInstance.dataFromAlfresco(newVideoData)
             elementAudioVideoInstance.forceUpdate();
             elementAudioVideo.update();
             expect(spydataFromAlfresco).toHaveBeenCalled()
-            expect(elementAudioVideoInstance.state.imgSrc).toBe(newVideoData.epsUrl)
+            spydataFromAlfresco.mockClear()
+        })
+        it('Test- if case workflow -  with smartlink url ', () => {
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideoInstance.dataFromAlfresco(smartLinkAudio1)
+            elementAudioVideoInstance.forceUpdate();
+            elementAudioVideo.update();
+            expect(spydataFromAlfresco).toHaveBeenCalled()
             spydataFromAlfresco.mockClear()
         })
         xit('Test- if case workflow-  with smartlink audio ', () => {
