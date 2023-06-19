@@ -677,6 +677,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         const slatePublishStatus = slateData?.data[newVersionManifestId]?.status === "approved" && slateData?.data[newVersionManifestId]?.type !== "popup";
             
         sendDataToIframe({ 'type': 'slateVersionStatus', 'message': slatePublishStatus });
+        if(slateData?.data[newVersionManifestId]?.type !== "popup") {
+        sendDataToIframe({ 'type': 'slateVersionStatusWithManifest', 'message': {
+            slateManifestURN:newVersionManifestId,
+            status: slateData?.data[newVersionManifestId]?.status} });
+        }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
