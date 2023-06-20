@@ -33,12 +33,13 @@ import {
     UPDATE_AUTONUMBER_MAPPER_KEYS,
     PROJECT_LOB_LIST,
     NO_DISCUSSION_ITEMS,
-    BANNER_IS_VISIBLE
+    BANNER_IS_VISIBLE,
+    SUBSCRIBERS_SUBSCRIBED_SLATE
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
 import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
-import { sendToDataLayer } from '../../constants/ga';
+import { triggerCustomEventsGTM } from '../../js/ga';
 import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES, SET_LEARNOSITY_CONTENT } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
 import figureData from '../ElementFigure/figureTypes.js';
@@ -471,7 +472,7 @@ export const resetLOBDiscussionItems = ()  => async (dispatch) => {
 }
 
 export const getProjectDetails = () => (dispatch, getState) => {
-    let lobURL = `${config.PROJECTAPI_ENDPOINT}/${config.projectUrn}`;
+    let lobURL = `${config.PROJECT_READONLY_ENDPOINT}distributable/v2/${config.projectUrn}`;
     // console.log("the lob url is " + lobURL)
     return axios.get(lobURL, {
         headers: {
@@ -627,9 +628,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     }
     dispatch(resetAssessmentStore());//reset Assessment Store
     const elementCount = getState().appStore.slateLength;
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
+    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
-        apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&metadata=true&elementCount=${elementCount}`
+        apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&metadata=true&elementCount=${elementCount}`
     } 
     return axios.get(apiUrl, {
         headers: {
@@ -673,9 +674,9 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             const hasMergedPdf = pdfBodymatter?.length === 2 ? true : false
             dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
-        if(slateData?.data[newVersionManifestId]?.status === "approved"){
-            sendDataToIframe({ 'type': 'slateVersionStatus', 'message': true });
-        }
+        const slatePublishStatus = slateData?.data[newVersionManifestId]?.status === "approved" && slateData?.data[newVersionManifestId]?.type !== "popup";
+            
+        sendDataToIframe({ 'type': 'slateVersionStatus', 'message': slatePublishStatus });
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
@@ -932,7 +933,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
         const elapsedTime = performance.now() - startTime;
         
-        sendToDataLayer('slate-load', {
+        triggerCustomEventsGTM('slate-load', {
             elapsedTime,
             manifestURN,
             entityURN,
@@ -1753,7 +1754,7 @@ export const fetchLearnosityContent = () => dispatch => {
  * This API fetches the Learning Framework(s) linked to the project
  */
 export const fetchProjectLFs = () => dispatch => {
-    axios.get(`${config.ASSET_POPOVER_ENDPOINT}v2/${config.projectUrn}/learningframeworks`, {
+    axios.get(`${config.MANIFEST_READONLY_ENDPOINT}v2/${config.projectUrn}/learningframeworks`, {
         headers: {
             "ApiKey": config.STRUCTURE_APIKEY,
             "Content-Type": "application/json",
@@ -1819,6 +1820,17 @@ export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch)
     })
 }
 
+/**
+ * Action Creator
+ * Retrieves the Subscriber's Slate status
+ */
+export const isSubscribersSubscribedSlate = (showPopup) => (dispatch, getState) => {
+    return dispatch({
+        type: SUBSCRIBERS_SUBSCRIBED_SLATE,
+        payload: showPopup
+    })
+}
+
 const getLOBList = () => {
     // "https://10.11.7.24:8081/cypress-api/v1/project-taxonomy/lob_details"
 	return axios.get(`${config.REACT_APP_API_URL}v1/project-taxonomy/lob_details`, {
@@ -1841,26 +1853,6 @@ export const fetchLOBList = () => async (dispatch) => {
 				}
 	} catch (error) {
 		console.error("Error in fetching the list of Line of Business from the project", error);
-	}
-}
-export const getUserLocation = () => {
-    let url = `${config.MYCLOUD_END_POINT}/users/${config.userId}?_fields=houseIdentifier`
-    return axios.get(url, {
-        headers: {
-            "Content-Type": "application/json",
-            'myCloudProxySession': config.myCloudProxySession
-        }
-    })
-}
-export const fetchUserLocation = () => async () => {
-	try {
-		const response = await getUserLocation();
-		if (response.status === 200){
-            let Info = response.data;
-            document.cookie = (Info.houseIdentifier)?`HOUSE_IDENTIFIER=${Info.houseIdentifier};path=/;`:`HOUSE_IDENTIFIER=;path=/;`;
-         }
-	} catch (error) {
-		console.error("Error", error);
 	}
 }
 

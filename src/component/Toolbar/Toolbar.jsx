@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import config from '../../config/config';
 
 import '../../styles/Toolbar/Toolbar.css';
+import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css'
 import SlateTagDropdown from '../ElementMetaDataAnchor/SlateTagDropdown.jsx';
 
 import { toggleElemBordersAction } from './Toolbar_Actions.js';
@@ -11,11 +12,16 @@ import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, 
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import AddAudioBook from '../AudioNarration/AddAudioBook.jsx';
 import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
-import { hasReviewerRole, sendDataToIframe } from '../../constants/utility.js';
+import { hasReviewerRole, isSubscriberRole, sendDataToIframe, showNotificationOnCanvas } from '../../constants/utility.js';
 import SearchComponent from './Search/Search.jsx';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
+import { MOVED_TO_WIP } from '../../constants/Element_Constants';
+import { ShowLoader } from '../../constants/IFrameMessageTypes';
+import { ALLOWED_SLATES_IN_RC, APPROVED_BANNER_MESSAGE1, APPROVED_BANNER_MESSAGE2, EDIT_CONTENT_BTN, SUBSCRIBER_BANNER_MESSAGE } from '../SlateWrapper/SlateWrapperConstants';
 
 const _Toolbar = props => {
-    const { isToolBarBlocked } = props;
+    const { isToolBarBlocked,roleId } = props;
     const [lodropdown, setLODropdown] = useState(false);
     const [addDropDown, setValueAdd] = useState(false);
     const [openDropDown, setValueOpen] = useState(false);
@@ -109,26 +115,67 @@ const _Toolbar = props => {
         }
     }
 
+    const approveNormalSlate  = async () =>{
+        let updateRCSlate = false;
+        // In this condition, we are setting a flag to identify whether we need to
+        // update slate after versioning in Resource collection, this flag is used by newversion wrapper API
+        // updateRCSlate = true (update slate in RC using VCS API at backend)
+        //updateRCSlate = false (Do not update slate in RC)
+        if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && !popupSlate) {
+            updateRCSlate = true
+        }
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
+        const approveToWipStatus = await props.slateVersioning(updateRCSlate)
+        if(approveToWipStatus) {
+        showNotificationOnCanvas(MOVED_TO_WIP)
+        changeAudioNarration()
+        }
+    }
+
     let searchElm = UrnSearch;
     let searchTerm = props.searchUrn || '';
     if(config.isPopupSlate) {
         searchElm = false;
         searchTerm = '';
     }
-
+    const isReviewerRole = (roleId === 'comment_only')
+    const isSubscribed = isSubscriberRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed)
+    const slatePublishStatus = (slateStatus === "approved") && !popupSlate && !isReviewerRole
+    const setPopUpSlateLOstatus = props?.slateLevelData?.[config.slateManifestURN]?.type === "popup" && props?.slateLevelData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && props?.slateLevelData?.[config.tempSlateManifestURN]?.status === "approved";
+    const bannerClass = isSubscribed ? 'read-only-banner' : ((slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) ? 'approved-banner' : 'banner')
+    const approvedtoolbar = (slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) ? 'hideToolbar' : ''
+    const toolbarClass = isSubscribed || (slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) ? 'subscribe-approved-container' : 'toolbar-container'
+    const separatorClass = isSubscribed || (slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) ? 'separatorClass' : ''
     return (
-        <>
-            <div className='toolbar-container'>
-                <div className={`header ${isToolBarBlocked} ${accessToolbar}`} id="tinymceToolbar"></div>
+        <div className={bannerClass}>
+            <div className={toolbarClass}>
+
+            {/* ************** isSubscriber ************** */}
+            { isSubscribed ? 
+            <div className='toolbar-text'>
+                <VisibilityIcon />
+                <div className='read-only'>{SUBSCRIBER_BANNER_MESSAGE}</div>
+            </div> :
+            (slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) ? 
+            <div className='toolbar-text'>
+                <VisibilityIcon />
+                <div className='read-only'>{APPROVED_BANNER_MESSAGE1} </div>
+                <p className='toolbar-para-text'>{APPROVED_BANNER_MESSAGE2}</p>
+                <button variant="outlined" color="primary" className="edit-content-btn" onClick={approveNormalSlate}>
+                    {EDIT_CONTENT_BTN}
+                </button>
+            </div> : ''  }
+
+                <div className={`header ${isToolBarBlocked} ${accessToolbar} ${approvedtoolbar}`} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" && !config.parentOfParentItem && 
                     <div className={props?.isLOExist ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
                         <div className="learningobjectiveicon">
-                            <div className={`learningobjectiveicon slate-tag-icon ${(slateStatus === "approved" && !popupSlate) ? "disable" : ""}`} title="Slate Tag" onClick={_handleLODropdown}>
+                            <div className={`learningobjectiveicon slate-tag-icon ${(hasReviewerRole()  && !props.isLOExist) ? "disable" : ""}`} title="Slate Tag" onClick={_handleLODropdown}>
                                 {props.isLOExist ? slateTagEnable : slateTagDisable}
                             </div>
                             {lodropdown &&
-                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} lastAlignedExternalLO={props.lastAlignedExternalLO} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} showCanvasBlocker={props.showCanvasBlocker} projectSubscriptionDetails = {props.projectSubscriptionDetails} />
+                                <SlateTagDropdown permissions={props.permissions} currentSlateLOData={props.currentSlateLOData} lastAlignedExternalLO={props.lastAlignedExternalLO} handleLODropdown={_handleLODropdown} closeLODropdown={closeLODropdown} showCanvasBlocker={props.showCanvasBlocker} projectSubscriptionDetails = {props.projectSubscriptionDetails} slatePublishStatus={slatePublishStatus} setPopUpSlateLOstatus={setPopUpSlateLOstatus}/>
                             }
                         </div>
                     </div>
@@ -136,7 +183,7 @@ const _Toolbar = props => {
 
                 {/* ***********************Audio Narration in toolbar******************************************** */}
                 {   /* Add Audio if there is no audio exists in slate */
-                    (props.addAudio && (!hasReviewerRole())) &&
+                    (props.addAudio && (!isReviewerRole || !isSubscribed)) &&
                     <div className={isToolBarBlocked ? `audio-block ${accessToolbar} ${isToolBarBlocked}` : `audio-block ${accessToolbar}`}>
                         <div className="audioicon">
                             <div className={`audio audioicon ${(config.isCypressPlusEnabled || (slateStatus === 'approved' && !popupSlate)) ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
@@ -160,7 +207,7 @@ const _Toolbar = props => {
                     (props.openAudio) &&
                     <div className="audio-block">
                         <div className="audioicon">
-                            <div className={`audio audioicon ${(config.isCypressPlusEnabled || (slateStatus === 'approved' && !popupSlate)) ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
+                            <div className={`audio audioicon ${(config.isCypressPlusEnabled || (slateStatus === 'approved' && !props.openAudio && !popupSlate)) ? 'disable-audio' : ''}`} title="Audio Tag" onClick={() => {
                                 if (checkSlateLock(props.slateLockInfo)) {
                                     return false
                                 }
@@ -170,7 +217,7 @@ const _Toolbar = props => {
                             }}>
                                 {audioNarrationEnable}
                             </div>
-                            {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} projectSubscriptionDetails = {props.projectSubscriptionDetails} />}
+                            {openDropDown && <OpenAudioBook closeAudioBookDialog={closeAudioBookDialog} projectSubscriptionDetails = {props.projectSubscriptionDetails} slatePublishStatus = {slatePublishStatus} />}
                         </div>
                     </div>
                 }
@@ -178,7 +225,7 @@ const _Toolbar = props => {
             </div>
             {/* ***********************Collapse Header******************************************** */}
             <div className="side-icons">
-                {<div className="icon search-urn" onClick={e => { handleSearchToggle(e, true) }}>
+                {<div className={`icon search-urn ${separatorClass}`} onClick={e => { handleSearchToggle(e, true) }}>
                     {searchIcon}
                     <SearchComponent
                         search={searchElm}
@@ -192,7 +239,7 @@ const _Toolbar = props => {
                     {showHeader ? collapseHeader : expandHeader}
                 </div>
             </div>
-        </>   
+        </div>   
     )
 }
 
@@ -210,13 +257,15 @@ const mapStateToProps = (state) => {
         setSlateParent: state.appStore.setSlateParent,
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         searchUrn: state.searchReducer.searchTerm,
-        slateLevelData: state.appStore.slateLevelData
+        slateLevelData: state.appStore.slateLevelData,
+        roleId:state.appStore.roleId
     }
 }
 
 const mapActionToProps = {
     toggleElemBorders: toggleElemBordersAction,
-    checkSlateLock
+    checkSlateLock,
+    slateVersioning
 }
 
 const Toolbar = connect(mapStateToProps, mapActionToProps)(_Toolbar)

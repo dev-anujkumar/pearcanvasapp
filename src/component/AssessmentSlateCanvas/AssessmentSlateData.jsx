@@ -19,6 +19,7 @@ import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } f
 import { fetchAssessmentMetadata, updateAssessmentVersion, fetchAssessmentVersions, setElmPickerData } from './AssessmentActions/assessmentActions.js';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes.js';
 import { handlePostMsgOnAddAssess, handleElmPortalEvents } from '../ElementContainer/AssessmentEventHandling';
+import moment from 'moment';
 /**
 * Module | AssessmentSlateData
 * description | This is the child Component of Assessment Slate
@@ -127,7 +128,7 @@ class AssessmentSlateData extends Component {
                 'strApiKey': config.STRUCTURE_APIKEY,
                 'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
                 'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+                'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
             };
             let assessmentUrn = nextProps && nextProps.model && nextProps.model.elementdata.assessmentid.length > 0 ? nextProps.model.elementdata.assessmentid : '';
@@ -242,30 +243,8 @@ class AssessmentSlateData extends Component {
         this.toggleUpdatePopup(true, event);
     }
 
-    /*** @description This function is used to render Version update Popup */
-    showCustomPopup = () => {
-        if (this.state.showUpdatePopup) {
-            this.showCanvasBlocker(true);
-            return (
-                <PopUp
-                    dialogText={ELM_UPDATE_MSG}
-                    active={true}
-                    togglePopup={this.toggleUpdatePopup}
-                    isElmUpdatePopup={true}
-                    updateElmAssessment={this.updateElmAssessment}
-                    isInputDisabled={true}
-                    isElmUpdateClass="elm-update"
-                    elmHeaderText={ELM_UPDATE_POPUP_HEAD}
-                />
-            )
-        }
-        else {
-            return null
-        }
-    }
 
     updateElmAssessment = async (event) => {
-        this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
         let oldWorkUrn = this.props.assessmentSlateObj.assessmentId
         let oldReducerData = this.props.assessmentReducer[this.props.assessmentSlateObj.assessmentId]
@@ -291,21 +270,6 @@ class AssessmentSlateData extends Component {
         });
         this.props.handleCanvasBlocker.disableHeader(false);
         this.props.handleCanvasBlocker.hideTocBlocker(false);
-    }
-
-    /**
-     * @description This function is used to toggle update elm popup
-     * @param {*} toggleValue Boolean value
-     * @param {*} event event object
-     */
-    toggleUpdatePopup = (toggleValue, event) => {
-        if (event) {
-            event.preventDefault();
-        }
-        this.setState({
-            showUpdatePopup: toggleValue
-        })
-        this.showCanvasBlocker(toggleValue);
     }
 
     updateElmOnSaveEvent = (props) => {
@@ -613,8 +577,9 @@ class AssessmentSlateData extends Component {
         if (elmAssessment) {
             return (<ElmUpdateButton
                 elmAssessment={elmAssessment}
-                updateElmVersion={this.updateElm}
+                updateElmVersion={this.updateElmAssessment}
                 buttonText={ELM_UPDATE_BUTTON}
+                status={true}
             />)
         }
     }
@@ -782,6 +747,8 @@ class AssessmentSlateData extends Component {
     * @param assessmentUsageType Usage type
     */
     showFinalAssessmentSlate = (slatePlaceholder, assessmentType, assessmentSlateObj, assessmentUsageType) => {
+        const oldReducerData = this.props.assessmentReducer[assessmentSlateObj.assessmentId]
+        const assessmentCreatedDate = oldReducerData?.modifiedDate ? oldReducerData?.modifiedDate : ''
         let assessmentSlate = <div className="slate_fetch_canvas">
             <div className="slate_assessment_data_container">
                 <div className="slate_assessment_data_content">
@@ -790,6 +757,10 @@ class AssessmentSlateData extends Component {
                         <div className="slate_assessment_data_title">{slatePlaceholder.title}</div>
                         <div className="slate_assessment_data_id">{slatePlaceholder.showID}</div>
                         <div className="slate_assessment_data_id_lo">{assessmentSlateObj.assessmentId}</div>
+                        {oldReducerData && <div className="assessment-dateModified">
+                            <div className="last-updated-time">Last Updated:</div>
+                            <div className="last-updated-time-format">{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</div>
+                        </div>}
                         <div className="slate_assessment_data_format_lo">{assessmentType}</div>
                         <div className="slate_assessment_change_button" onClick={(e) => this.mainAddAssessment(e, assessmentType)}>{slatePlaceholder.changeTypeValue}</div>
                     </div>

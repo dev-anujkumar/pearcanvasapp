@@ -247,7 +247,7 @@ P.paragraphNumeroUnoIndentLevel1, P.paragraphNumeroUnoIndentLevel2, P.paragraphN
     margin-top: 0.5em !important;
     margin-bottom: 0.5em !important;
     padding: 0px;
-    font-family: Georgia, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
+    font-family: Georgia Pro, serif, Palatino, Palatino Linotype, Palatino LT STD !important;
 }
 
 .paragraphNumeroUnoIndentLevel1 {
@@ -458,8 +458,7 @@ span[title="calloutFour"] sup::after {
  span.markedForIndex {
     color: #007FA3;
     font-family: inherit;
-    font-weight: Bold;
-    font-style: normal;
+    font-style: inherit;
     border-bottom: 1px dotted #000;
     
   }
@@ -521,3 +520,646 @@ div[title='Ignore all']{
     left: 0;
     background-color: rgba(0,0,0,0.2);
 }
+
+.pointer-events-none {
+    pointer-events: none;
+}
+
+/* classes replacing Book.css */
+/*  commenting Now for future reference */ 
+/* div.divWidgetMDI, div.divWidget3PI, div.divWidget3PISE, div.divWidget3PI.SocialExplorer, div.divWidget3PI.GeoGebra,
+div.divWidget3PI.CloserLook, div.divWidget3PI.Default, div.divWidgetAccountingTable, div.divWidgetFlashcards, div.divWidgetImgSlideshow,
+div.divWidgetVidSlideshow, div.divWidgetUCA, div.divWidgetSurvey, div.divWidgetTimeline, div.divWidgetMCQ, div.divWidgetImageId,
+div.divWidgetHotspot, div.divWidgetFIB, div.divWidgetGraph, div.divWidgetVideoMcq, div.divWidgetVideo, div.divWidgetFPO,
+div.divWidgetFPOAV, div.divWidgetFPOIN, div.divWidgetFPOAS, div.divWidgetFPOAC, div.divWidgetGuidedExample, div.divWidgetTableSL,
+div.divTextFigure {
+    background-color: transparent;
+    padding-top: 0;
+    margin: 3em auto;
+    border-style: none;
+}
+div.divImage25Text, div.divImage25TextTableImage, div.divImage25TextMathImage, div.divImage50Text, div.divImage50TextTableImage,
+div.divImage50TextMathImage, div.divImageTextWidth, div.divImageTextWidthTableImage, div.divImageTextWidthMathImage,
+div.divImageWiderThanText, div.divImageWiderThanTextTableImage, div.divImageWiderThanTextMathImage, div.divImageFullscreen,
+div.divImageFullscreenTableImage, div.divImageFullscreenMathImage {
+    background-color: transparent;
+    padding-top: 0;
+    margin: 2.5em auto;
+    border-style: none;
+}
+div.divAssessment, div.divAssessmentItem, div.divTdxAssessment, div.divTdxAssessmentItem {
+    background-color: transparent;
+    padding: 0;
+    margin: 0 auto;
+    margin-bottom: 3em;
+    border-style: none;
+    border-color: #FFFFFF;
+    border-width: 0px;
+    max-width: 680px;
+}
+div.divWidgetPDF, div.divWidgetPU, div.divWidgetPUSL, div.divWidgetEWL {
+    background-color: transparent;
+    max-width: 680px;
+    padding: 0 0 0 0;
+    margin: 2.5em auto;
+    margin-bottom: 3em;
+    border-style: none;
+}
+div.divCodeSnippetFigure ,div.divAudio, div.divVideo {
+    background-color: transparent;
+    max-width: 680px;
+    padding: 0;
+    margin: 3em auto;
+    border-style: none;
+}
+div.asideSidebar01BorderTop, div.asideSidebar02BorderTop, div.asideSidebar03BorderTop {
+    border-top: 6px solid #FFB81C;
+    padding-bottom: 0.85em;
+}
+div.asideSidebar01BorderBottom, div.asideSidebar02BorderBottom, div.asideSidebar03BorderBottom, div.asideActivityBorderBottom {
+    border-bottom: 1px solid #FFB81C;
+    padding-top: 0em;
+    margin-top: -0.15em;
+}
+
+
+h4.heading4VideoNumberLabel, h4.heading4Image25TextNumberLabel, h4.heading4Image25TextTableImageNumberLabel, h4.heading4Image25TextMathImageNumberLabel,
+h4.heading4Image50TextNumberLabel, h4.heading4Image50TextTableImageNumberLabel, h4.heading4Image50TextMathImageNumberLabel,
+h4.heading4ImageTextWidthNumberLabel, h4.heading4ImageTextWidthTableImageNumberLabel, h4.heading4ImageTextWidthMathImageNumberLabel,
+h4.heading4ImageWiderThanTextNumberLabel, h4.heading4ImageWiderThanTextTableImageNumberLabel, h4.heading4ImageWiderThanTextMathImageNumberLabel,
+h4.heading4ImageFullscreenNumberLabel, h4.heading4ImageFullscreenTableImageNumberLabel, h4.heading4ImageFullscreenMathImageNumberLabel  {
+    color: #007FA3;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 0.15em auto;
+    padding: 0;
+    font-size: 1.150em;
+    font-weight: 600;
+    line-height: 1.3em;
+    letter-spacing: 0.02em;
+}
+h4.heading4VideoTitle {
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 0.65em auto;
+    padding: 0;
+    font-size: 1.06em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+}
+h4.heading4Image25TextTitle, h4.heading4Image25TextTableImageTitle, h4.heading4Image25TextMathImageTitle,
+h4.heading4Image50TextTitle, h4.heading4Image50TextTableImageTitle, h4.heading4Image50TextMathImageTitle,
+h4.heading4ImageTextWidthTitle, h4.heading4ImageTextWidthTableImageTitle, h4.heading4ImageTextWidthMathImageTitle,
+h4.heading4ImageWiderThanTextTitle, h4.heading4ImageWiderThanTextTableImageTitle, h4.heading4ImageWiderThanTextMathImageTitle,
+h4.heading4ImageFullscreenTitle, h4.heading4ImageFullscreenTableImageTitle, h4.heading4ImageFullscreenMathImageTitle {
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0em auto 0em auto;
+    padding: 0;
+    font-size: 1.06em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+}
+h4.heading4WidgetPDFNumberLabel, h4.heading4WidgetPUNumberLabel, h4.heading4WidgetPUSLNumberLabel, h4.heading4WidgetEWLNumberLabel {
+    color: #007FA3;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 0.15em auto;
+    padding: 0;
+    font-size: 1.150em;
+    font-weight: 600;
+    line-height: 1.3em;
+    letter-spacing: 0.02em;
+}
+h4.heading4WidgetPDFTitle, h4.heading4WidgetPUTitle, h4.heading4WidgetPUSLTitle, h4.heading4WidgetEWLTitle {
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 0 0.55em 0;
+    padding: 0;
+    font-size: 1.06em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+}
+h4.heading4TextTitle {
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 2em auto;
+    padding: 0;
+    font-size: 1.06em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+}
+h4.heading4TextNumberLabel, h4.heading4CodeSnippetNumberLabel {
+    color: #007FA3;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 0.15em auto;
+    padding: 0;
+    font-size: 1.150em;
+    font-weight: 800;
+    line-height: 1.3em;
+    letter-spacing: 0.02em;
+}
+h4.heading4CodeSnippetTitle {
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    margin: 0 auto 0.65em auto;
+    padding: 0;
+    font-size: 1.06em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+}
+h4.heading4AudioNumberLabel, h4.heading4AudioNumberLabel {
+    color: #007FA3;
+    font-family: Helvetica, sans-serif;
+    margin: 0 auto 0.45em auto;
+    max-width: 680px;
+    font-size: 1.05em;
+    font-weight: 400;
+    line-height: 1.3em;
+    letter-spacing: 0.03em;
+}
+h4.heading4AudioTitle {
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    margin: 0 0 0.65em 0;
+    font-size: 0.9150em;
+    font-weight: 400;
+    line-height: 1.5em;
+    letter-spacing: 0.01em;
+}
+h4.heading4VideoNumberLabel {
+    color: #007FA3;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 0.15em auto;
+    padding: 0;
+    font-size: 1.150em;
+    font-weight: 600;
+    line-height: 1.3em;
+    letter-spacing: 0.02em;
+}
+h4.heading4VideoTitle {
+    color: #000;
+    font-family: Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0 auto 0.65em auto;
+    padding: 0;
+    font-size: 1.06em;
+    font-weight: 400;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+}
+
+
+
+figure.figureImage25Text, figure.figureImage25TextTableImage, figure.figureImage25TextMathImage, figure.figureImage50Text,
+figure.figureImage50TextTableImage, figure.figureImage50TextMathImage, figure.figureImageTextWidth, figure.figureImageTextWidthTableImage,
+figure.figureImageTextWidthMathImage, figure.figureImageWiderThanText, figure.figureImageWiderThanTextTableImage, figure.figureImageWiderThanTextMathImage,
+figure.figureImageFullscreen, figure.figureImageFullscreenTableImage, figure.figureImageFullscreenMathImage {
+    background-color: transparent;
+    padding: 0;
+    margin: 0 auto;
+}
+figure.figureWidgetPDF, figure.figureWidgetPU, figure.figureWidgetPUSL, figure.figureWidgetEWL, 
+figure.figureAssessment, figure.figureAssessmentItem, figure.figureTdxAssessment, figure.figureTdxAssessmentItem, figure.figureCodeSnippet,
+figure.figureAudio, figure.figureVideo {
+    background-color: transparent;
+    padding: 0;
+    margin: 0 auto;
+    margin-bottom: 0;
+}
+figure.figureText {
+    background-color: transparent;
+    padding: 0;
+    margin: 0 auto;
+    margin-bottom: 0;
+    width: auto;
+}
+figcaption.figcaptionAudio {
+    color: #505759;
+    font-family: Open Sans, Helvetica, sans-serif;
+    margin: 0.75em 0 0.45em 0;
+    font-size: 0.90em;
+    font-weight: 400;
+    line-height: 1.5em;
+    letter-spacing: 0.02em;
+    word-wrap: break-word;
+}
+figcaption.figcaptionVideo {
+    color: #505759;
+    font-family: Open Sans, Helvetica, sans-serif;
+    max-width: 680px;
+    width: auto;
+    margin: 0.75em auto 0.45em auto;
+    padding: 0;
+    font-size: 0.90em;
+    font-weight: 400;
+    line-height: 1.5em;
+    letter-spacing: 0.02em;
+    word-wrap: break-word;
+}
+
+
+img.image50Text, img.image50TextTableImage, img.image50TextMathImage {
+    display: block;
+    max-width: 340px;
+    width: 100%;
+    margin: 0.6em auto 0.65em auto;
+}
+img.imageFullscreen, img.imageFullscreenTableImage, img.imageFullscreenMathImage {
+    display: block;
+    max-width: 100%;
+    width: auto;
+    margin: 0.6em auto 0.65em auto;
+}
+img.imageTextWidth, img.imageTextWidthTableImage, img.imageTextWidthMathImage {
+    display: block;
+    max-width: 680px;
+    width: 100%;
+    margin: 0.6em auto 0.65em auto;
+}
+img.imageWiderThanText, img.imageWiderThanTextTableImage, img.imageWiderThanTextMathImage {
+    display: block;
+    max-width: 1080px;
+    width: 100%;
+    margin: 0.6em auto 0.65em auto;
+}
+img.image25Text, img.image25TextTableImage, img.image25TextMathImage {
+    display: block;
+    max-width: 170px;
+    width: 100%;
+    margin: 0.6em auto 0.65em auto;
+}
+
+
+H1.heading1NummerEins {
+    color: #000;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 2.520em;
+    font-weight: 400;
+    line-height: 1.28em;
+    margin-top: 0em;
+    margin-right: 0em;
+    margin-bottom: 0.4em;
+    margin-left: 0em;
+}
+H2.heading2NummerEins {
+    color: #000;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 1.70em;
+    font-weight: normal;
+    line-height: 1.40em;
+    letter-spacing: 0.01em;
+    margin-top: 0em;
+    margin-right: 0em;
+    margin-bottom: 0.55em;
+    margin-left: 0em;
+}
+H3.heading3NummerEins {
+    color: #000;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 1.4em;
+    line-height: 1.45em;
+    letter-spacing: 0.01em;
+    margin-top: 0em;
+    margin-right: 0em;
+    margin-bottom: 0.65em;
+    margin-left: 0em;
+}
+H4.heading4NummerEins {
+    color: #525252;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 1.40em;
+    font-weight: 300;
+    line-height: 1.5em;
+    letter-spacing: 0.02em;
+    margin: 0em 0em 0.7em 0em;
+}
+H5.heading5NummerEins {
+    color: #525252;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 1.105em;
+    font-weight: 800;
+    line-height: 1.5em;
+    letter-spacing: 0.01em;
+    margin-top: 0em;
+    margin-right: 0em;
+    margin-bottom: 0.75em;
+    margin-left: 0em;
+}
+H6.heading6NummerEins {
+    color: #525252;
+    font-family: Helvetica, sans-serif;
+    font-size: 1.105em;
+    font-weight: 500;
+    line-height: 1.5em;
+    letter-spacing: 0.01em;
+    margin-top: 0em;
+    margin-right: 0em;
+    margin-bottom: 0.75em;
+    margin-left: 0em;
+}
+
+
+a.buttonWidgetPU {
+    background-color: #007FA3;
+    color: #fff;
+    padding: 12px 20px;
+    text-decoration: none;
+    display: inline-block;
+    font-family: 'Open Sans', Calibri, Tahoma, sans-serif;
+    font-size: 1.040em;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-radius: 2px;
+}
+
+blockquote.blockquoteMarginalia {
+    background-color: transparent;
+    border-left: 1px solid #047a9c;
+    margin-left: 0;
+    margin-top: 3em;
+    margin-bottom: 3em;
+    padding: 1em 0 1.05em 1.5em;
+}
+blockquote.blockquoteMarginalia .paragraphNummerEins {
+    color: #000;
+    margin: 0 0 0 0;
+    font-family: sans-serif;
+    font-size: 1.120em;
+    font-weight: 400;
+    line-height: 1.65em;
+    letter-spacing: 0.01em;
+}
+p.paragraphNummerEins {
+    color: #000;
+    margin: 0em 0em 1.45em 0em;
+    font-family: sans-serif;
+    font-size: 1.070em;
+    font-weight: 400;
+    line-height: 1.80em;
+    letter-spacing: 0.01em;
+}
+p.blockquoteTextCredit {
+    color: #505759;
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+    font-style: italic;
+    margin-top: 0.7em;
+    font-size: 1.115em;
+    font-weight: 400;
+    line-height: 1.35em;
+    letter-spacing: 0.03em;
+}
+
+
+p.paragraphNumeroUno {
+    color: #000;
+    margin: 0em 0em 1.7em 0em;
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+    font-size: 1.180em;
+    font-weight: normal;
+    line-height: 1.70em;
+    letter-spacing: 0.01em;
+}
+a.paragraphNumeroUnoFootnote {
+    color: #007FA3;
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+    font-weight: normal;
+    text-decoration: none;
+}
+
+
+aside.asideSidebar01 {
+    background-color: transparent;
+    margin-top: 3em;
+    margin-bottom: 3em;
+}
+
+.dialogueLine, .poetryLine {
+    color: #000;
+    display: block;
+    min-height: 22px;
+}
+
+sup, sub {
+    vertical-align: baseline;
+    position: relative;
+    top: -0.4em;
+}
+
+sub {
+    top: 0.4em;
+}
+
+
+H2.heading2learningObjectiveItem {
+    color: #727272;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 1.5em;
+    font-weight: 300;
+    font-style: normal;
+    line-height: 1.45em;
+    letter-spacing: 0.02em;
+    margin: -0.15em 0 1.5em 0;
+}
+H3.pullQuoteNumeroUno {
+    color: #000;
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+    font-weight: 400;
+    font-size: 1.5em;
+    line-height: 1.65em;
+    letter-spacing: 0.002em;
+    margin: 2em 2.75em 2em 2.5em;
+}
+
+
+td ol, ul {
+    counter-reset: item;
+}
+table ol, ul {
+    margin-left: 2em;
+    margin-top: 0em;
+    margin-bottom: 1em;
+    padding-left: 0.85em;
+}
+ul {
+    list-style-type: none;
+    margin-left: 2.65em;
+}
+li.listItemNumeroUno, li.listItemNumeroUnoNumber, li.listItemNumeroUnoLowerAlpha, li.listItemNumeroUnoUpperAlpha, li.listItemNumeroUnoUpperRoman,
+li.listItemNumeroUnoLowerRoman, li.listItemNumeroUnoNone {
+    color: #000;
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia, serif;
+    font-size: 1.180em;
+    font-weight: normal;
+    line-height: 1.70em;
+    letter-spacing: 0.01em;
+    margin-top: 0em;
+    margin-bottom: 0.5em;
+}
+li p.paragraphNumeroUno {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    font-size: 100%;
+}
+ol, ul {
+    margin-left: 2em;
+    margin-top: 0em;
+    margin-bottom: 1.7em;
+    padding-left: 0.85em;
+    counter-reset: item;
+}
+ol li {
+    display: block;
+    padding: 0 0 0 0.5em;
+    /* text-indent: 0em;
+}
+ol li.listItemNumeroUno:before, ol li.listItemNumeroUnoNumber:before, ol li.listItemNumeroUnoLowerAlpha:before, ol li.listItemNumeroUnoUpperAlpha:before,
+ol li.listItemNumeroUnoUpperRoman:before, ol li.listItemNumeroUnoLowerRoman:before, ol li.listItemNummerEins:before,
+ol li.listItemNummerEinsNumber:before, ol li.listItemNummerEinsLowerAlpha:before, ol li.listItemNummerEinsUpperAlpha:before,
+ol li.listItemNummerEinsUpperRoman:before, ol li.listItemNummerEinsLowerRoman:before, ol li.listItemNummerEinsNone:before {
+    content: counter(item) ". ";
+    counter-increment: item;
+    font-weight: bold;
+    padding-right: 0.1em;
+    text-align: right;
+    position: absolute;
+    width: 4.5em;
+    margin: 0 0 1em -4.9em;
+}
+td ol li.listItemNumeroUno:before, td ol li.listItemNumeroUnoNumber:before, td ol li.listItemNumeroUnoLowerAlpha:before, 
+td ol li.listItemNumeroUnoUpperAlpha:before, td ol li.listItemNumeroUnoUpperRoman:before, td ol li.listItemNumeroUnoLowerRoman:before, 
+td ol li.listItemNumeroUnoNone:before {
+    counter-increment: item;
+}
+td ol li.listItemNumeroUnoUpperAlpha:before {
+    content: counter(item, upper-alpha) ". ";
+}
+
+td ol li.listItemNumeroUnoLowerAlpha:before {
+    content: counter(item, lower-alpha) ". ";
+}
+
+td ol li.listItemNumeroUnoUpperRoman:before {
+    content: counter(item, upper-roman) ". ";
+}
+
+td ol li.listItemNumeroUnoLowerRoman:before {
+    content: counter(item, lower-roman) ". ";
+}
+
+td ol li.listItemNumeroUnoNone:before {
+    content: none;
+}
+td ol li.listItemNumeroUnoNumber:before {
+    content: counter(item, decimal) ". ";
+}
+td ol li.listItemNumeroUno:before, td ol li.listItemNumeroUnoNumber:before, td ol li.listItemNumeroUnoLowerAlpha:before, td ol li.listItemNumeroUnoUpperAlpha:before, td ol li.listItemNumeroUnoUpperRoman:before, td ol li.listItemNumeroUnoLowerRoman:before, td ol li.listItemNumeroUnoNone:before {
+    font-weight: bold;
+    padding-right: 0.1em;
+    text-align: right;
+    position: relative;
+    width: 4.5em;
+    margin: 0 0 1em -4.9em;
+}
+td ul li.listItemNumeroUnoBullet:before {
+    font-weight: bold;
+    padding-right: 0.1em;
+    text-align: right;
+    position: relative;
+    width: 4.5em;
+    margin: 0 0 1em -4.9em;
+}
+table ol li:before {
+    float: left;
+}
+table ul {
+    list-style-position: outside;
+    list-style-type: disc;
+}
+table ul li {
+    margin-left: 12px;
+    color: #000;
+    text-indent: -4px;
+}
+td li.listItemNumeroUno, td li.listItemNumeroUnoNumber, td li.listItemNumeroUnoLowerAlpha, td li.listItemNumeroUnoUpperAlpha, td li.listItemNumeroUnoUpperRoman, td li.listItemNumeroUnoLowerRoman, td li.listItemNumeroUnoNone {
+    font-size: .95em;
+    line-height: 1.65em;
+}
+table pre {
+    font-family: monospace;
+    font-size: .95em;
+}
+em {
+    font-style: italic;
+}
+table code {
+    color: #000;
+    font-family: monospace;
+    font-size: .95em;
+}
+table .Wirisformula {
+    margin-top: -5px;
+}
+dfn.GlossaryTerm {
+    color: #007FA3;
+    font-family: inherit;
+    font-style: inherit;
+    border-bottom: 1px dotted #000;
+}
+dfn.GlossaryTerm:hover {
+    color: #9E007E;
+    cursor: pointer;
+    border-bottom: none;
+}
+p code {
+    color: #000;
+    font-family: monospace;
+    font-size: 1.05em;
+}
+
+li li.listItemNumeroUno, li li.listItemNumeroUnoNumber, li li.listItemNumeroUnoLowerAlpha, li li.listItemNumeroUnoUpperAlpha, li li.listItemNumeroUnoUpperRoman, li li.listItemNumeroUnoLowerRoman, li li.listItemNumeroUnoNone {
+    font-size: 100%;
+}
+
+.bl ol li.listItemNumeroUnoLowerAlpha:before, .bl ol li.listItemNumeroUnoNumber:before {
+    counter-increment: section;
+    font-size: 12px;
+    padding-left: 15px;
+    width: 40px;
+    word-break: break-all;
+}
+
+ol ol {
+    margin-top: 0.5em;
+    margin-left: 1.25em;
+    margin-bottom: 0.5em;
+}
+
+.hide-buttons{
+    display: none;
+} */

@@ -12,11 +12,14 @@ let initialState = {
             "versionUrn": "dfer",
             "name": "mmoi"
         },
-        citeApiData: {},
+        citeApiData: { assessments: "" },
         tdxApiData: {},
         mmiApiData: {},
         isLoading: {},
-        currentSingleAssessmentSelected: {},
+        currentSingleAssessmentSelected: {
+            "versionUrn": "dfer",
+            "name": "mmoi"
+        },
     },
 };
 describe('Testing CITE/TDX Footer component', () => {
@@ -37,7 +40,7 @@ describe('Testing CITE/TDX Footer component', () => {
         "isInnerComponent": true,
         setCiteTdxFilterData: jest.fn(),
         assessmentType: "cite",
-        citeApiData: {assessments: ""}
+        citeApiData: { assessments: "" }
 
     }
     let store = mockStore(initialState);
@@ -94,6 +97,27 @@ describe('Testing CITE/TDX Footer component', () => {
         spySendCiteTdxAssessment.mockClear()
     })
 
+    it('select button - conditional coverage', () => {
+        let initialState2 = {
+            citeTdxReducer: {
+                currentAssessmentSelected: {
+                    "versionUrn": "dfer"
+                },
+                citeApiData: { assessments: [] },
+                tdxApiData: {},
+                mmiApiData: {},
+                isLoading: {}
+            },
+        };
+        let store2 = mockStore(initialState2);
+        const component = mount(<Provider store={store2}><CiteTdxFooter {...props} /></Provider>);
+        let componentInstance = component.find('CiteTdxFooter').instance();
+        const spySendCiteTdxAssessment = jest.spyOn(componentInstance, 'sendCiteTdxAssessment')
+        componentInstance.sendCiteTdxAssessment();
+        expect(spySendCiteTdxAssessment).toHaveBeenCalled()
+        spySendCiteTdxAssessment.mockClear()
+    })
+
     it('Test onClick', () => {
         component.find('.noSelect.hideNavigation.disableClick').at(0).simulate('click');
         component.find('.noSelect.disableClick').at(0).simulate('click');
@@ -119,7 +143,31 @@ describe('Testing CITE/TDX Footer component', () => {
             "isInnerComponent": true,
             setCiteTdxFilterData: jest.fn(),
             assessmentType: "tdx",
-            citeApiData: {},
+            citeApiData: { assessments: "" }
+        }
+        let store = mockStore(initialState);
+        const component = mount(<Provider store={store}><CiteTdxFooter {...props} /></Provider>);
+        component.find('CiteTdxFooter').instance();
+        expect(component).toHaveLength(1);
+    })
+
+    it('renders without crashing', () => {
+        let props = {
+            isReset: {},
+            resetPage: function () { },
+            closeWindowAssessment: function () { },
+            getCiteTdxData: function () { },
+            getCurrentPageNo: function () { },
+            currentPageNo: 1,
+            addCiteTdxFunction: function () { },
+            openedFrom: "singleSlateAssessmentInner",
+            currentSingleAssessmentSelected: {
+                "versionUrn": "dfer",
+                "name": "mmoi"
+            },
+            "isInnerComponent": true,
+            setCiteTdxFilterData: jest.fn(),
+            assessmentType: "cite"
 
         }
         let store = mockStore(initialState);
@@ -145,9 +193,18 @@ describe('Testing CITE/TDX Footer component', () => {
             "isInnerComponent": true,
             setCiteTdxFilterData: jest.fn(),
             assessmentType: "cite"
-    
+
         }
-        let store = mockStore(initialState);
+        let initialState2 = {
+            citeTdxReducer: {
+                citeApiData: { assessments: "" },
+                tdxApiData: {},
+                mmiApiData: {},
+                isLoading: {},
+                currentSingleAssessmentSelected: {},
+            },
+        };
+        let store = mockStore(initialState2);
         const component = mount(<Provider store={store}><CiteTdxFooter {...props} /></Provider>);
         component.find('CiteTdxFooter').instance();
         expect(component).toHaveLength(1);

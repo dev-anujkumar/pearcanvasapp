@@ -437,7 +437,7 @@ class OpenerElement extends Component {
     }   
     renderExistingCOImage = () => {
         let COImg = <div className="exisiting-opener-element-image-view">
-            <div className="update-image-label" onClick={()=>{this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
+            <div className="update-image-label" onClick={()=>{ !hasReviewerRole() && this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
             <span className="color_Dropdown_arrow">{dropdownArrow}</span>
             </div>
           {this.state.updateImageOptions? <ul className="image-global-button">
@@ -451,8 +451,8 @@ class OpenerElement extends Component {
         let COImg = <div className="empty-opener-element-view">
             <div className="select-image-label">Select an Image</div>
             <div className="select-image-co-buttons">
-                <div className="select-image-global-button" onClick={this.handleC2GlobalCO}>Global Opener Element Site</div>
-                <div className="select-image-alresco-button" onClick={this.handleC2MediaClick}>Choose from project's Alfresco site</div>
+                <div className={`${hasReviewerRole() ? "cursor-pointer" : ""} select-image-global-button`} onClick={this.handleC2GlobalCO}>Global Opener Element Site</div>
+                <div className={`${hasReviewerRole() ? "cursor-pointer" : ""} select-image-alresco-button`} onClick={this.handleC2MediaClick}>Choose from project's Alfresco site</div>
             </div>
         </div>
         return COImg

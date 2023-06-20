@@ -103,25 +103,34 @@ export const commentWithReply = {
   
   export const users = [{
     "userId": "alf-cms-1",
-    "email": "kashif.khan@pearson.com",
+    "email": "abc.test09@pearson.com",
     "isMember": false,
     "isAdmin": false,
     "roleId": "default_user",
-    "eTag": null
+    "eTag": null,
+    "firstName":"abc",
+    "lastName":"test09",
+    "label":"test09,abc",
   }, {
     "userId": "alf04",
     "email": "alf04.mail@pearson.com",
     "isMember": false,
     "isAdmin": false,
     "roleId": "default_user",
-    "eTag": null
+    "eTag": null,
+    "firstName":"abc",
+    "lastName":"test09",
+    "label":"test09,abc",
   }, {
     "userId": "blueprint-editor",
     "email": "blueprint-editor@pearson.com",
     "isMember": false,
     "isAdmin": false,
     "roleId": "default_user",
-    "eTag": null
+    "eTag": null,
+    "firstName":"abc",
+    "lastName":"test09",
+    "label":"test09,abc",
   }]
 
   export const permissions = [

@@ -235,7 +235,7 @@ export const ContainerHeader = (props) => {
     const removeLabelCondition = labelNumberSetting !== AUTO_NUMBER_SETTING_REMOVE_NUMBER ? true : false;
     return (
         <>
-        <div className="asideHeader">
+        <div className={`asideHeader ${hasReviewerRole() ? "pointer-events-none" : ""}`}>
             <header className="figure-header new-figure-image-header">
                 <div className='figure-label-number-field'>
                     <span className={`label ${labelNumberSettingDropDown ? 'active' : ''}`}>Label & Number Settings</span>

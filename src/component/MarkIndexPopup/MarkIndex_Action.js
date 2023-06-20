@@ -40,10 +40,10 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
         let newParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = newParentData[slateId];
         const showHideElement = store.getState().appStore?.showHideObj;
-
-        if (currentSlateData?.type === "popup" && currentSlateData?.status === "approved") {
-            return false;
-        }
+        // commenting this code to allow opening of markindex popup in readonly mode
+        // if (currentSlateData?.type === "popup" && currentSlateData?.status === "approved") {
+        //     return false;
+        // }
         let newBodymatter = currentSlateData?.contents?.bodymatter;
         var markedIndexTextFirstLvl, markedIndexTextSecondLvl, markedIndexElem = {}, tempMarkedIndexContentText, crossReferences;
         let tempIndex = index && typeof (index) !== 'number' && index.split('-');
@@ -228,7 +228,7 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
  * redux store
  */
 export const getCrossReferenceValues = () => async (dispatch) => {
-    let url = `${config.ASSET_POPOVER_ENDPOINT}v1/${config.projectUrn}/indexes`;
+    let url = `${config.MANIFEST_READONLY_ENDPOINT}v1/${config.projectUrn}/indexes`;
     try{
         const result = await axios.get(url, {
             headers: {

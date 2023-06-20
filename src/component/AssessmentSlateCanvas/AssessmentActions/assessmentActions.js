@@ -11,7 +11,8 @@ import {
     ASSESSMENT_CONFIRMATION_POPUP,
     ELM_NEW_ITEM_DATA,
     SET_ELM_PICKER_MSG,
-    UPDATE_ASSESSMENT_ID
+    UPDATE_ASSESSMENT_ID,
+    ASSESSMENT_RELOAD_CONFIRMATION
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
@@ -40,7 +41,7 @@ const {
  * This action creator is used to fetch usage-type based on entityType
  */
 export const fetchUsageTypeData = (entityType) => (dispatch) => {
-    let url = `${config.AUDIO_NARRATION_URL}/usagetypes/v3/${entityType}?locale=en`;
+    let url = `${config.STRUCTURE_READONLY_ENDPOINT}/usagetypes/v3/${entityType}?locale=en`;
     return axios.get(url, {
         headers: {
             myCloudProxySession: config.myCloudProxySession
@@ -204,7 +205,11 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
         }
     }).then((res) => {
         if (res.status == 202) {
-            dispatch(assessmentConfirmationPopup(true));
+            if (config.slateType !== "assessment") {
+                dispatch(assessmentConfirmationPopup(true));
+            } else {
+                dispatch(assessmentReloadConfirmation(true))
+            }
         }
     }).catch(() => {
         dispatch({
@@ -309,5 +314,12 @@ export const updateAssessmentId = (assessmentId) => {
     return {
         type: UPDATE_ASSESSMENT_ID,
         payload: assessmentId
+    }
+}
+
+export const assessmentReloadConfirmation = (data) => {
+    return {
+        type: ASSESSMENT_RELOAD_CONFIRMATION,
+        payload: data
     }
 }

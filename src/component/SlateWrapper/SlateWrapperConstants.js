@@ -19,6 +19,7 @@ export const SHOW_HIDE = "SHOW_HIDE";
 export const POP_UP = "POP_UP";
 export const SMARTLINK = "SMART_LINK";
 export const BLOCKCODE = "BLOCK_CODE_EDITOR";
+export const BLOCKLIST = "BLOCK_LIST";
 export const TABLE_EDITOR = "TABLE_EDITOR";
 export const FIGURE_MML = "MATH_ML_CHEM_EDITOR";
 export const MULTI_COLUMN_GROUP = "GROUPED_CONTENT";
@@ -51,6 +52,7 @@ export const ERROR_CREATING_ASSETPOPOVER = "You can not apply Asset PopOver over
 export const CHANGE_ASSESSMENT_TYPE="Changing the Assessment type will lead to a change in the Assessment picker options for this embedded assessment.";
 export const OWNER_SLATE_POPUP ="If you make a change to this content, it will apply to all its children. Do you still want to proceed?";
 export const DO_NOT_SHOW_TXT="Do not show this message again";
+export const DONT_ASK_TEXT = "Don't ask me again";
 export const ERROR_DELETING_MANIFEST_LIST_ITEM="The list item can not be deleted if it contains a child Block List. Please delete the child Block List to complete the delete action.";
 export const APPROVE_NORMAL_SLATE="The slate is currently in approved status (published title). Do you want to move it to Work in Progress status in order to make a change?"
 export const APPROVE_OWNER_SLATE="The slate is currently in approved status (published title). Any change to this content will apply to all its children (subscribed titles). Do you want to move it to Work in Progress status in order to make a change?"
@@ -95,6 +97,7 @@ export const checkTCM = element => {
         case "popup" : return POP_UP;
         case "discussion" : return ELEMENT_DISCUSSION;
         case "element-dialogue" : return ELEMENT_DIALOGUE;
+        case "manifestlist": return BLOCKLIST;
         default: return TEXT;
     }
 }
@@ -151,3 +154,10 @@ export const childNodeTagsArr = ['strong', 'em', 'u', 's', 'sub', 'sup', 'code']
 export const allowedClassName = ['calloutone', 'callouttwo', 'calloutthree', 'calloutfour', 'markedforindex', 'pearson-component glossaryterm']
 export const UNSUPPORTED_CONTENT_ERR_MSG = "Unsupported Content found which will not be pasted."
 export const ALLOWED_SLATES_IN_RC = ['section','appendixslate']
+
+/**** Banner messages for approved and subscriber case ****/
+export const SUBSCRIBER_BANNER_MESSAGE = "Read-only | Subscribed Slate"
+export const APPROVED_BANNER_MESSAGE1 = "Read-only | Approved Content"
+export const APPROVED_BANNER_MESSAGE2 = "- Editing content will create a new version of this slate"
+export const EDIT_CONTENT_BTN = "Edit Content"
+/************************************************************************************/

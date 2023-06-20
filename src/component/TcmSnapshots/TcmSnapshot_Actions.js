@@ -91,7 +91,7 @@ const callSnapshotAPI = async (snapshotData) => {
 */
 export const getLatestVersion = async (containerUrn) => {
     try {
-        const response = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
+        const response = await axios.get(`${config.STRUCTURE_READONLY_ENDPOINT}context/v2/${config.projectUrn}/container/${containerUrn}/versions`, {
             headers: {
                 "Content-Type": "application/json",
                 'myCloudProxySession': config.myCloudProxySession
@@ -110,7 +110,7 @@ export const getLatestVersion = async (containerUrn) => {
 */
 export const slateLinkDetails = async (containerUrn) => {
     try {
-        const response = await axios.get(`${config.AUDIO_NARRATION_URL}context/v2/${config.projectUrn}/container/${containerUrn}`, {
+        const response = await axios.get(`${config.STRUCTURE_READONLY_ENDPOINT}context/v2/${config.projectUrn}/container/${containerUrn}`, {
             headers: {
                 "Content-Type": "application/json",
                 'myCloudProxySession': config.myCloudProxySession
@@ -124,7 +124,7 @@ export const slateLinkDetails = async (containerUrn) => {
 
 export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , index) => (dispatch, getState) => {
     const elementCount = getState().appStore.slateLength
-    let apiUrl = `${config.REACT_APP_API_URL}v1/slate/content/${config.projectUrn}/${entityURN}/${manifestURN}?page=${page}&elementCount=${elementCount}`
+    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}`
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",

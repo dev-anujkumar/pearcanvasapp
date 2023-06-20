@@ -8,9 +8,9 @@ import SlateWrapper from '../SlateWrapper';
 import Sidebar from '../Sidebar';
 import AssetPopoverSearch from '../AssetPopover/AssetPopoverSearch.jsx';
 import Toolbar from '../Toolbar';
+import MarkIndexPopup from '../MarkIndexPopup/MarkIndexPopup';
 import PopUp from '../PopUp';
 import config from './../../config/config';
-import MarkIndexPopup from '../MarkIndexPopup/MarkIndexPopup';
 // IMPORT - Assets //
 import '../../styles/CanvasWrapper/style.css';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
@@ -20,7 +20,7 @@ import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, fetchUserLocation, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus } from './CanvasWrapper_Actions';
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -352,9 +352,9 @@ export default connect(
         updateFigureDropdownValues,
         savePopupParentSlateData,
         fetchLOBList,
-        fetchUserLocation,
         fetchDefaultLF,
         setCautionBannerStatus,
-        approvedSlatePopupStatus
+        approvedSlatePopupStatus,
+        isSubscribersSubscribedSlate
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

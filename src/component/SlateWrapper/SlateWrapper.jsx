@@ -13,7 +13,7 @@ import { SlateFooter } from './SlateFooter.jsx';
 
 /** pasteElement function location to be changed */
 import { createElement, swapElement, setSplittedElementIndex, updatePageNumber, accessDenied, pasteElement, wirisAltTextPopup, slateVersioning } from './SlateWrapper_Actions';
-import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName } from '../../constants/utility.js';
+import { sendDataToIframe, getSlateType, defaultMathImagePath, isOwnerRole, isSubscriberRole, guid, releaseOwnerPopup, getCookieByName, hasReviewerRole, isApproved } from '../../constants/utility.js';
 import { ShowLoader, SplitCurrentSlate, OpenLOPopup, WarningPopupAction, AddEditLearningObjectiveDropdown } from '../../constants/IFrameMessageTypes.js';
 import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
@@ -28,14 +28,14 @@ import PageNumberElement from './PageNumberElement.jsx';
 import '../../styles/SlateWrapper/style.css';
 import PopUp from '../PopUp';
 import Toast from '../Toast';
-import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader } from '../../js/toggleLoader';
+import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader, showBlocker } from '../../js/toggleLoader';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
 import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus } from '../CanvasWrapper/SlateLock_Actions'
-import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlate, isSubscribersSubscribedSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
-import { assessmentConfirmationPopup } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import { assessmentConfirmationPopup, assessmentReloadConfirmation } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
 import { createPowerPasteElements } from './SlateWrapper_Actions.js';
@@ -43,7 +43,7 @@ import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
 import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
 import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
-import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
 import store from '../../appstore/store';
 import { showWrongImagePopup, showRemoveImageGlossaryPopup } from '../../component/GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
@@ -75,7 +75,8 @@ class SlateWrapper extends Component {
             updatedindex:'',
             showOwnerSlatePopup: false,
             parentUrn:null,
-            updateAssessment: false
+            updateAssessment: false,
+            showSubscriberSlatePopup: false
         }
         this.isDefaultElementInProgress = false;
     }
@@ -223,10 +224,15 @@ class SlateWrapper extends Component {
             }
             return _state;
         }
-        else if(isOwnerRole(projectSharingRole,isSubscribed) || isSubscriberRole(projectSharingRole,isSubscribed)){
+        else if(isOwnerRole(projectSharingRole,isSubscribed)){
             _state={
                 ..._state,
                 showOwnerSlatePopup: true
+            }
+        }else if(isSubscriberRole(projectSharingRole,isSubscribed)){
+            _state={
+                ..._state,
+                showSubscriberSlatePopup: true
             }
         }
         else {
@@ -282,57 +288,20 @@ class SlateWrapper extends Component {
         return false
     }
 
-    approveNormalSlate = () => {
-        this.togglePopup(false)
-        let updateRCSlate = false;
-        // In this condition, we are setting a flag to identify whether we need to
-        // update slate after versioning in Resource collection, this flag is used by newversion wrapper API
-        // updateRCSlate = true (update slate in RC using VCS API at backend)
-        //updateRCSlate = false (Do not update slate in RC)
-        const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
-        if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && !popupSlate) {
-            updateRCSlate = true
-        }
-        this.props.slateVersioning(updateRCSlate)
-        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
-        this.props.approvedSlatePopupStatus(false)
-    }
-
-    showApprovedWarningPopup = () => {
-        const { projectSubscriptionDetails: { projectSharingRole, projectSubscriptionDetails: { isSubscribed } } } = this.props
-        const ownerSlate = isOwnerRole(projectSharingRole, isSubscribed)
-        const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
-        const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
-        if (this.props.approvedSlatePopupstatus && slatePublishStatus && !popupSlate && !config?.isCypressPlusEnabled){
-            this.props.showBlocker(true)
-            showTocBlocker();
-            return (
-                <PopUp dialogText={ownerSlate ? APPROVE_OWNER_SLATE : APPROVE_NORMAL_SLATE}
-                    togglePopup={this.togglePopup}
-                    isApprovedSlate={true}
-                    warningHeaderText={`Warning`}
-                    approvePopupClass={`${ownerSlate ? "approved-warning-txt" : "lo-warning-txt"}`}
-                    approveNormalSlate = {this.approveNormalSlate}
-                    hideCanvasBlocker={this.props.showBlocker}
-                />
-            )
-        } else{
-            return null
-        }
-    }
-
-    getApprovedPopup = () => {
-        this.props.approvedSlatePopupStatus(true)
-    }
-
     /*** renderSlate | renders slate editor area with all elements it contain*/
     renderSlate({ slateData: _slateData }) {
         try {
             if (_slateData !== null && _slateData !== undefined) {
                 if (Object.values(_slateData).length > 0) {
                     let _slateObject = _slateData[config.slateManifestURN];
+                    const isPopupReadOnly = _slateData?.[config.slateManifestURN]?.type === "popup" && _slateData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && _slateData?.[config.tempSlateManifestURN]?.status === "approved";
                     if(_slateObject==undefined){
                         return false
+                    }
+                    if(isPopupReadOnly){
+                        sendDataToIframe({ 'type': 'slateVersionStatus', 'message': true });
+                    }else if(_slateData?.[config.slateManifestURN]?.type === "popup" && !this.props.elemBorderToggle){
+                        sendDataToIframe({ 'type': 'slateVersionStatus', 'message': this.props.elemBorderToggle});
                     }
                     let _slateContent = _slateObject.contents
                     let { id: _slateId, type: _slateType } = _slateObject;
@@ -343,16 +312,12 @@ class SlateWrapper extends Component {
                     const slatePublishStatus = (this.props.slateData[config.slateManifestURN]?.status === "approved")
                     const popupSlate = (this.props.slateData[config.slateManifestURN]?.type === "popup")
                     return (
-                        <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' :  isSubscriberRole(projectSharingRole, isSubscribed) ? 'subscribedSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
-                            {(slatePublishStatus && !isSubscriberRole(projectSharingRole, isSubscribed)) && !popupSlate && !config?.isCypressPlusEnabled ? <div
-                                className='approved-overlay'
-                                onClick={this.getApprovedPopup}
-                            >
-                            </div> : null}
+                        <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' : ''} ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
-                                <Sortable
+                                <Sortable 
                                     options={{
                                         sort: true,  // sorting inside list
+                                        disabled: hasReviewerRole(),
                                         //preventOnFilter: true, // Call event.preventDefault() when triggered filter
                                         animation: 150,  // ms, animation speed moving items when sorting, 0 — without animation
                                         dragoverBubble: false,
@@ -399,7 +364,7 @@ class SlateWrapper extends Component {
                                     onChange={function (items, sortable, evt) { }}
                                 >
                                     {this['cloneCOSlateControlledSource_' + random]}
-                                </Sortable>
+                                </Sortable> 
                             </div>
                             <SlateFooter elements={_slateBodyMatter} projectSharingRole={projectSharingRole} isSubscribed={isSubscribed}/>
                         </div>
@@ -514,13 +479,13 @@ class SlateWrapper extends Component {
                 lockOwnerName: `${slateLockInfo.userFirstName} ${slateLockInfo.userLastName}`
             })
             return true
-        }else if(isOwnerRole(projectSharingRole,isSubscribed)){
+        }else if(!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed)){
             const slateId = Object.keys(this.props.slateData)[0],
                 lockDuration = 5400
             this.setSlateLock(slateId, lockDuration)
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
-        }else if(isSubscriberRole(projectSharingRole,isSubscribed)){
-            return true
+        }else if(isSubscriberRole(projectSharingRole, isSubscribed)){
+            return this.props.projectSubscriptionDetails.isSubscribersSubscribedSlateChecked
         }
         else {
             const slateId = Object.keys(this.props.slateData)[0],
@@ -535,6 +500,9 @@ class SlateWrapper extends Component {
      * @param {*} event event object
      */
     checkSlateLockStatus = (event) => {
+        if(config.slateType === SLATE_TYPE_LTI) {
+            return;
+        }
         if (this.checkLockStatus()) {
             this.prohibitPropagation(event)
             this.togglePopup(true)
@@ -585,6 +553,7 @@ class SlateWrapper extends Component {
     showLockPopup = () => {
         const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
         var isOwnerKeyExist= localStorage.getItem('hasOwnerEdit');
+        let isSubscribersKeyExist = localStorage.getItem('hasSubscriberView');
         if (this.state.showLockPopup) {
             const { lockOwner } = this.state
             this.props.showBlocker(true)
@@ -604,28 +573,21 @@ class SlateWrapper extends Component {
                     lockForTOC={false}
                 />
             )
-        } else if (isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) {
-            this.props.showBlocker(true)
+        } else if ((!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup && isOwnerKeyExist === null) || (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showSubscriberSlatePopup && isSubscribersKeyExist === null )) {
+            const subscriberPopupDailogText = <>This is a non-editable content as it is subscribed from another project. You may contact the owner of this content to make any changes.</>
+            this.props.showBlocker(true);
             showTocBlocker();
+            const isCurrentSlate = isOwnerRole(projectSharingRole,isSubscribed) ? 'owner' : 'subscriber'
+            let dailogText = isOwnerRole(projectSharingRole,isSubscribed) ? OWNER_SLATE_POPUP : subscriberPopupDailogText;
+            let headerText = isOwnerRole(projectSharingRole,isSubscribed) ? 'Warning' : 'Editing Disabled';
             return (
-                <PopUp dialogText={OWNER_SLATE_POPUP}
+                <PopUp dialogText={dailogText}
                     togglePopup={this.togglePopup}
-                    isOwnersSlate={true}
+                    isCurrentSlate={isCurrentSlate}
                     proceed={this.proceedButtonHandling}
-                    warningHeaderText={`Warning`}
+                    warningHeaderText={headerText}
                     lOPopupClass="lo-warning-txt"
                     withCheckBox={true}
-                />
-            )
-        }
-        else if (isSubscriberRole(projectSharingRole,isSubscribed) && this.state.showOwnerSlatePopup ) {
-            this.props.showBlocker(true)
-            showTocBlocker();
-            return (
-                <PopUp
-                    togglePopup={this.togglePopup}
-                    isSubscribersSlate={true}
-                    lOPopupClass="lo-warning-txt"
                 />
             )
         }
@@ -651,10 +613,17 @@ class SlateWrapper extends Component {
      * Toggles popup
      */
     togglePopup = (toggleValue, event) => {
-        this.setState({
-            showLockPopup: toggleValue,
-            showOwnerSlatePopup: toggleValue
-        })
+        const stateValues = {
+            showOwnerSlatePopup: toggleValue,
+            showSubscriberSlatePopup: toggleValue,
+            showLockPopup: false
+        }
+        const { slateLockInfo } = this.props
+        let lockedUserId = slateLockInfo.userId.replace(/.*\(|\)/gi, ''); // Retrieve only PROOT id
+        if (slateLockInfo.isLocked && config.userId !== lockedUserId && !isApproved()) {
+            stateValues.showLockPopup = toggleValue;
+        }
+        this.setState(stateValues);
         this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
         hideBlocker()
@@ -663,27 +632,42 @@ class SlateWrapper extends Component {
     }
 
     proceedButtonHandling = (isChecked, toggleValue, e) => {
-        this.setState({
-            showOwnerSlatePopup: toggleValue
-        })
+        const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props;
+        if(isSubscriberRole(projectSharingRole, isSubscribed)){
+            this.setState({
+                showSubscriberSlatePopup: toggleValue
+            })
+        }
+        if(isOwnerRole(projectSharingRole, isSubscribed)){
+            this.setState({
+                showOwnerSlatePopup: toggleValue
+            })
+        }
         this.props.showBlocker(toggleValue);
         this.props.showSlateLockPopup(false);
         hideBlocker()
         this.prohibitPropagation(e);
         if (isChecked) {
-            releaseOwnerPopup(isChecked);
+            releaseOwnerPopup(isChecked, projectSharingRole, isSubscribed);
         }
         this.props.isOwnersSubscribedSlate(false);
+        this.props.isSubscribersSubscribedSlate(false);
     }
 
-    handleCopyPastePopup = (wordPastePopup,index,parentUrn, asideData)=>{
-      this.setState({
-        isWordPastePopup: wordPastePopup,
-        pastedindex: index,
-        parentUrn:parentUrn,
-        asideData
-      })
-  }
+    handleCopyPastePopup = (wordPastePopup, index, parentUrn, asideData) => {
+        this.props.showBlocker(wordPastePopup);
+        if (wordPastePopup) {
+            showBlocker();
+        } else {
+            hideBlocker();
+        }
+        this.setState({
+            isWordPastePopup: wordPastePopup,
+            pastedindex: index,
+            parentUrn: parentUrn,
+            asideData
+        })
+    }
 
     splithandlerfunction = (type, index, firstOne, parentUrn, asideData, outerAsideIndex ,poetryData) => {
         if (this.checkLockStatus()) {
@@ -1073,7 +1057,7 @@ class SlateWrapper extends Component {
                     return this.renderBlankSlate(this.props)
                 }
                 /* @hideSapratorFor@ List of slates where seprator is hidden */
-                const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(_slateType);
+                const hideSapratorFor = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_LTI].includes(_slateType);
                 return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>
@@ -1380,6 +1364,16 @@ class SlateWrapper extends Component {
     }
 
     /**
+    * @description - reloadSlateAfterAssessmentUpdate function responsible for refreshing slate after updating assessments .
+    */
+    reloadSlateAfterAssessmentUpdate = () => {
+        if (this.props.reloadAfterAssessmentUpdate) {
+            reloadSlate()
+            this.props.assessmentReloadConfirmation(false);
+        }
+    }
+
+    /**
     * @description - showAssessmentConfirmationPopup function responsible for opening confirmation popup for updating embeded assessments .
     */
     showAssessmentConfirmationPopup = () => {
@@ -1387,24 +1381,38 @@ class SlateWrapper extends Component {
             this.props.showBlocker(true)
             showTocBlocker();
             const dialogText = ` All other Assessment Items in this project will now be updated to the new version of this Assessment`
-            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-            setTimeout(() => {
-                this.setState({
-                    updateAssessment: true
-                })
-                sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-            }, 4000);
-            return (
-                <PopUp dialogText={dialogText}
-                    active={true}
-                    saveButtonText='OK'
-                    showConfirmation={true}
-                    assessmentConfirmation={`${this.state.updateAssessment ? "updateAssessment-enable" : "updateAssessment-disable"}`}
-                    assessmentClass="lock-message"
-                    togglePopup={this.toggleAssessmentPopup}
-                    hideCanvasBlocker={this.props.showBlocker}
-                />
-            )
+            // It opens different popup for assessment-slate when we update the assessment from the elm and different for assessment-item update
+            if (this.props?.slateData[config.slateManifestURN]?.contents?.bodymatter[0]?.type !== 'element-assessment') {      // this condition is to check whether the current slate is assessmentslate or not
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+                setTimeout(() => {
+                    this.setState({
+                        updateAssessment: true
+                    })
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+                }, 4000);
+                return (
+                    <PopUp dialogText={dialogText}
+                        active={true}
+                        saveButtonText='OK'
+                        showConfirmation={true}
+                        assessmentConfirmation={`${this.state.updateAssessment ? "updateAssessment-enable" : "updateAssessment-disable"}`}
+                        assessmentClass="lock-message"
+                        togglePopup={this.toggleAssessmentPopup}
+                        hideCanvasBlocker={this.props.showBlocker}
+                    />
+                )
+            } else {
+                return (
+                    <PopUp dialogText={dialogText}
+                        active={true}
+                        saveButtonText='OK'
+                        showAssessmentConfirmation={true}
+                        assessmentClass="lock-message"
+                        togglePopup={this.toggleAssessmentPopup}
+                        hideCanvasBlocker={this.props.showBlocker}
+                    />
+                )
+            }
         }
         else {
             return null
@@ -1577,7 +1585,8 @@ class SlateWrapper extends Component {
             'mathmlImagePath': config.S3MathImagePath ?? defaultMathImagePath,
             'productApiUrl': config.PRODUCTAPI_ENDPOINT,
             'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
-            'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+            'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
+            'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
         };
         let externalLFUrn = '';
         if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
@@ -1646,12 +1655,16 @@ class SlateWrapper extends Component {
             )
         }
         const slateType = getSlateType(this.props.slateData[config.slateManifestURN])
+        const slatePublishStatus = this.props.slateData?.[config.slateManifestURN]?.type === "popup" && this.props.slateData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && this.props.slateData?.[config.tempSlateManifestURN]?.status === "approved";
+        const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
         return (
             <React.Fragment>
                 <div className='title-head-wrapper'>
                      {
                         this.props.slateData[config.slateManifestURN] && this.props.slateData[config.slateManifestURN].type === 'popup' ?
-                          <button className="popup-button" onClick={this.saveAndClose}>SAVE & CLOSE</button>
+                            <button className="popup-button" onClick={this.saveAndClose}>
+                                {isApproved() ? 'CLOSE' : 'SAVE & CLOSE'}
+                            </button>
                           :this.renderSlateHeader(this.props)
                     } 
                 </div>
@@ -1695,7 +1708,8 @@ class SlateWrapper extends Component {
                 {/* **************** Alfresco Popup ************ */}
                 {this.showAlfrescoPopup()}
                 {/* **************** Approved to WIP Warning Popup ************* */}
-                {this.showApprovedWarningPopup()}
+                {/* **************** To reload slate after assessment update ************* */}
+                {this.reloadSlateAfterAssessmentUpdate()}
             </React.Fragment>
         );
     }
@@ -1754,7 +1768,9 @@ const mapStateToProps = state => {
         projectSubscriptionDetails:state?.projectInfo,
         activeElement: state.appStore.activeElement,
         asideData: state.appStore.asideData,
-        approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus
+        approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
+        elemBorderToggle: state.toolbarReducer.elemBorderToggle,
+        reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate
     };
 };
 
@@ -1795,6 +1811,8 @@ export default connect(
         isOwnersSubscribedSlate,
         savePopupParentSlateData,
         slateVersioning,
-        approvedSlatePopupStatus
+        approvedSlatePopupStatus,
+        isSubscribersSubscribedSlate,
+        assessmentReloadConfirmation
     }
 )(SlateWrapper);

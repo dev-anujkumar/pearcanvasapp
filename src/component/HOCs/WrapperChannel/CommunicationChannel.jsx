@@ -8,15 +8,15 @@ import React, { Component } from 'react';
 // IMPORT - Components/Dependencies //
 import config from '../../../config/config.js';
 import PopUp from '../../PopUp';
-import { sendDataToIframe, defaultMathImagePath, isOwnerRole} from '../../../constants/utility.js';
+import { sendDataToIframe, defaultMathImagePath, isOwnerRole, isSubscriberRole, showNotificationOnCanvas} from '../../../constants/utility.js';
 import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '../../../js/toggleLoader';
 import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT  } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
-import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX } from '../../../constants/Element_Constants.js';
-import { SLATE_TYPE_PDF, LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES } from '../../../constants/Element_Constants.js';
+import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
 function CommunicationChannel(WrappedComponent) {
@@ -59,7 +59,7 @@ function CommunicationChannel(WrappedComponent) {
             let message = e.data.message;
             switch (messageType) {
                 case 'tocContainersLabelUpdate':
-                    this.showNotificationOnCanvas(message);
+                    showNotificationOnCanvas(message);
                     break;
                 case 'getPermissions':
                     this.sendingPermissions();
@@ -70,7 +70,12 @@ function CommunicationChannel(WrappedComponent) {
                     this.setCurrentSlate(message);
                     break;
                 case 'deleteTocItem':
+                case 'deleteTocMultipleItem':
+                case 'deleteTocMultipleItemWithPendingTrack':
                     this.onDeleteTocItem(message);
+                    break;
+                case 'unlinkTocContainer':
+                    this.UnlinkSubscribers(message);
                     break;
                 case 'deleteTocItemWithPendingTrack':
                     this.onDeleteTocItem(message, 'withPendingTrack');
@@ -148,7 +153,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
                     this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
-                    this.props.fetchUserLocation() 
                     this.props.fetchDefaultLF(message.defaultLearningFramework)
                     break;
                 case 'permissionsDetails':
@@ -301,7 +305,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.fetchSlateAncestorData(message || {});
                     break;
                 case 'elementBorder':
-                    this.props.toggleElemBordersAction()
+                    this.props.toggleElemBordersAction(message)
                     break;
                 case 'pageNumber':
                     this.props.togglePageNumberAction()
@@ -449,6 +453,13 @@ function CommunicationChannel(WrappedComponent) {
                         this.props.setCautionBannerStatus(message.status)
                     }
                     break;
+                case 'refreshSlateOnAssessmentUpdate':
+                    const assessmentSlateData = this.props?.slateLevelData[config.slateManifestURN]?.contents?.bodymatter[0];
+                    const assessmentSlateCheck = assessmentSlateData?.type === 'element-assessment' && assessmentSlateData?.elementdata?.assessmentid === message?.assessmentUrn
+                    if (message && message.action === "approve" && message.source === "elm" && message.type === "assessment" && assessmentSlateCheck) {
+                        this.handleRefreshSlate();
+                    }
+                    break;
             }
         }
 
@@ -465,7 +476,8 @@ function CommunicationChannel(WrappedComponent) {
                 'productApiUrl': config.PRODUCTAPI_ENDPOINT,
                 'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-                'myCloudProxySession': config.myCloudProxySession
+                'myCloudProxySession': config.myCloudProxySession,
+                'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
             };
             let externalLFUrn = [];
             if (projectLearningFrameworks?.externalLF?.length) {
@@ -544,18 +556,6 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setElmPickerData({})
             }
             hideBlocker();
-        }
-
-        showNotificationOnCanvas = (message) => {
-            let linkNotification = document.getElementById('link-notification');
-            if (linkNotification) {
-                linkNotification.innerText = message;
-                linkNotification.style.display = "block";
-                setTimeout(() => {
-                    linkNotification.style.display = "none";
-                    linkNotification.innerText = "";
-                }, 3000);
-            }
         }
 
         /**
@@ -925,8 +925,11 @@ function CommunicationChannel(WrappedComponent) {
         resetOwnerSlatePopupFlag = () => {
             const { projectSubscriptionDetails } = this.props;
             const isOwnerKeyExist = localStorage.getItem('hasOwnerEdit');
+            const isSubscribersKeyExist = localStorage.getItem('hasSubscriberView');
             if (isOwnerRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isOwnerKeyExist) {
                 this.props.isOwnersSubscribedSlate(true);
+            }else if(isSubscriberRole(projectSubscriptionDetails?.sharingContextRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) && !isSubscribersKeyExist){
+                this.props.isSubscribersSubscribedSlate(true);
             }
         }
 
@@ -1011,8 +1014,9 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
+                const slateManifest = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN
                 if (this.props.withinLockPeriod === true) {
-                    this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
+                    this.props.releaseSlateLock(config.projectUrn, slateManifest)
                 }
                 sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });
@@ -1087,10 +1091,10 @@ function CommunicationChannel(WrappedComponent) {
                     'strApiKey': config.STRUCTURE_APIKEY,
                     'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
                     'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                    'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
+                    'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
                     'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
                 }
-                if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (config.slateType == "section" || config.slateType == SLATE_TYPE_PDF)) {
+                if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (FETCH_LO_FOR_SLATES.includes(config.slateType))) {
                     let externalLFUrn = []
                     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                         this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
@@ -1178,7 +1182,13 @@ function CommunicationChannel(WrappedComponent) {
                 }
             });
         }
+        UnlinkSubscribers = (message) => {
+            hideBlocker();
+            showTocBlocker();
+            disableHeader(true);
 
+            sendDataToIframe({type : 'showTOCUnlinkPopup', message : message})
+        }
         onDeleteTocItem = (message, type) => {
             this.checkSlateLockAndDeleteSlate(message, type)
         }

@@ -4,14 +4,22 @@
 */
 /** ----- Import - Plugins ----- */
 import React from 'react'
+import { useEffect } from 'react';
 /** ----- Import - Dependencies ----- */
 import { approvedIcon } from '../../../src/images/ElementButtons/ElementButtons.jsx';
+import { hasReviewerSubscriberRole } from '../../constants/utility.js';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { ELM_INT } from './AssessmentSlateConstants.js';
 
 const ElmUpdateButton = (props) => {
+    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status } = props;
 
-    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType } = props;
+    useEffect(() => {
+        if(elmAssessment.showUpdateStatus && status && !hasReviewerSubscriberRole()){
+            updateElmVersion()
+        }
+    }, [])
+
     const setUpdateDiv = (assessment) => {
         let updateDiv;
         const { assessmentStatus, showUpdateStatus } = assessment
@@ -25,7 +33,7 @@ const ElmUpdateButton = (props) => {
                         <span className={"approved-button " + approveIconClass}>{approvedIcon}</span>
                     </div>
                 }
-                <div className={`elm-update-button ${embeddedElmClass}`} onClick={updateElmVersion}><b className='elm-update-button-text'>{buttonText}</b></div>
+                {!status && <div className={`elm-update-button ${embeddedElmClass}`} onClick={updateElmVersion}><b className='elm-update-button-text'>{buttonText}</b></div>}
             </div>       
         } else {
             updateDiv = (elementType === ELM_INT) ? 

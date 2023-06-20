@@ -53,7 +53,7 @@
     }
 }
 
-.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl):not(.tb):not(.tab) * {
+.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl):not(.tb):not(.tab):not(.tcc) * {
     cursor: default !important;
 }
 
@@ -332,6 +332,10 @@ div.stageDirectionItalicFont dfn {
 
 p.blockquoteTextCredit.mce-edit-focus.place-holder:focus::before {
     content: attr(data-placeholder);
+}
+
+p.blockquoteTextCredit {
+    font-family: Palatino, Palatino Linotype, Palatino LT STD, Georgia Pro, serif !important;
 }
 
 .hideElement {

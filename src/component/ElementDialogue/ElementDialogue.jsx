@@ -8,7 +8,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { connect } from 'react-redux';
 import { updateElement } from '../ElementContainer/ElementContainer_Actions.js';
 import config from "../../config/config.js";
-import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex, getCookieByName } from '../../constants/utility.js';
+import { sendDataToIframe, removeClassesFromHtml, matchHTMLwithRegex, getCookieByName, hasReviewerRole } from '../../constants/utility.js';
 import { createPSDataForUpdateAPI, handleCommonEvents } from './DialogueElementUtils';
 import { setBCEMetadata } from '../Sidebar/Sidebar_Action';
 import PopUp from '../PopUp';
@@ -197,7 +197,7 @@ class ElementDialogue extends React.PureComponent {
                         >
                             {this.renderButtons(index, buttonClass, labelText, _props.element)}
                             <div
-                                className={`element-container play-script ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)}`}
+                                className={`element-container play-script ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)} ${hasReviewerRole() ? "pointer-events-none" : ""}`}
                                 data-id={_props.elementId+'-'+index}
                             >
                                 <DialogueContent
@@ -301,7 +301,7 @@ class ElementDialogue extends React.PureComponent {
     }
 
     renderButtons = (index, buttonClass, labelText, element) => {
-        if ((this.props.elemBorderToggle !== undefined && this.props.elemBorderToggle) || this.props.borderToggle == 'active') {
+        if ((this.props.elemBorderToggle !== undefined && this.props.elemBorderToggle && this.props.borderToggle !== 'hideBorder') || this.props.borderToggle == 'active') {
             return (
                 <div>
                     <Button
@@ -310,7 +310,7 @@ class ElementDialogue extends React.PureComponent {
                         labelText={labelText}
                     />
                     {
-                        this.props.permissions && this.props.permissions.includes('elements_add_remove') ?
+                        this.props.permissions && this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() ?
                             (<Button
                                 type="delete-element"
                                 onClick={(e) => this.handleDialogueInnerElementsDelete(e, index, element, labelText)}

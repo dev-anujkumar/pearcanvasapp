@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import TinyMceEditor from "../tinyMceEditor"
-import { sendDataToIframe, defaultMathImagePath } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import config from '../../config/config';
 import { connect } from 'react-redux';
 import './../../styles/ElementMetaDataAnchor/ElementMetaDataAnchor.css';
@@ -19,7 +19,7 @@ export class ElementMetaDataAnchor extends Component {
 
     const { slateLockInfo } = this.props
     return (
-      <div className="learningObjectiveContainer" id="slateLO" onClick={(e) => { this.onLOClickHandle(this.props.currentSlateLOData, e) }} >
+      <div className="learningObjectiveContainer" id="slateLO" onClick={(e) => { !hasReviewerRole() && this.onLOClickHandle(this.props.currentSlateLOData, e) }} >
         <div className="container" >
           <div className="matadata_anchor" >
             <TinyMceEditor
@@ -136,7 +136,8 @@ export class ElementMetaDataAnchor extends Component {
       'productApiUrl': config.PRODUCTAPI_ENDPOINT,
       'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
       'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
-      'myCloudProxySession': config.myCloudProxySession
+      'myCloudProxySession': config.myCloudProxySession,
+      'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
     };
     const selectedLOs = this.props.currentSlateLOData;
     let externalLFUrn = [];

@@ -33,7 +33,8 @@ import {
     SET_PROJECT_SHARING_ROLE,
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
-    GET_TCM_RESOURCES
+    GET_TCM_RESOURCES,
+    SUBSCRIBERS_SUBSCRIBED_SLATE
 } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
@@ -42,11 +43,6 @@ import { slateTestData } from './mockData.js';
 import { PROJECT_SHARING_ROLE } from '../../../src/constants/IFrameMessageTypes';
 /**********************Mock Helper Functions***********************/
 jest.mock('axios');
-jest.mock('../../../src/constants/ga', () => {
-    return {
-        sendToDataLayer: jest.fn()
-    }
-});
 jest.mock('../../../src/constants/IFrameMessageTypes.js', () => {
     return {
         HideLoader: jest.fn()
@@ -2192,6 +2188,40 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         })
+        it('Test-4.8-fetchSlateData - Popup Slate - Versioning config.cachedActiveElement', () => {
+            config.cachedActiveElement = {
+                element: {
+                    type: "manifest",
+                    id : "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670"
+                }
+            }
+            config.slateManifestURN = "urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2671"
+            let responseData = { data: { ...slateTestData.approvedSlate } }
+            let dispatch = (obj) => {
+                if (obj && obj.type === GET_PAGE_NUMBER) {
+                    expect(obj.payload).toEqual({ pageNumberData: [], allElemPageData: [] });
+                }
+            }
+            let getState = () => {
+                return {
+                    appStore: {
+                        slateLevelData: slateTestData.approvedSlate,
+                        activeElement: {},
+                    }
+                };
+            }
+            let manifestURN = 'urn:pearson:manifest:0749775b-cf8e-4165-ae6d-3e37600b2670',
+                entityURN = 'urn:pearson:entity:f23c667b-81ca-48c5-ba58-bc19fa6b9677',
+                page = 0,
+                versioning = slateTestData.popupSlateLabelVersioning,
+                calledFrom = '',
+                versionPopupReload = false
+            const spyFunction = jest.spyOn(canvasActions, 'fetchSlateData');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            canvasActions.fetchSlateData(manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        })
         it('Test-4.4-fetchSlateData - Popup Slate', () => {
             let responseData = { data: { ...slateTestData.popupSlate } }
             let dispatch = (obj) => {
@@ -3440,6 +3470,21 @@ it('Test: isOwnersSubscribedSlate function', () => {
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })
+it('Test: isSubscribersSubscribedSlate function', () => {
+    const expectedActions = {
+        type: SUBSCRIBERS_SUBSCRIBED_SLATE,
+        payload: true
+    };
+    const showPopup = true
+    let dispatch = (obj) => {
+        expect(obj).toEqual(expectedActions);
+    }
+
+    const spyFunction = jest.spyOn(canvasActions, 'isSubscribersSubscribedSlate')
+    canvasActions.isSubscribersSubscribedSlate(showPopup)(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    spyFunction.mockClear()
+})
 
 it('Testing fetchLOBList - try block', async () => {
     const response = {
@@ -3553,32 +3598,3 @@ it('Testing getLOBDiscussionItems - catch block', async () => {
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })
-it('Testing fetchUserLocation - try block', async () => {
-    const response = {
-        status: 200,
-        data : 
-            {
-                id : "uthalki",
-                username: "uthalki",
-                mail: "kira.marbit@pedev.com",
-                houseIdentifier: "US-NJ-Hoboken-221 River",
-            }
-        }
-    let dispatch = jest.fn();
-    const spyFunction = jest.spyOn(canvasActions, 'fetchUserLocation');
-    axios.get = jest.fn(() => Promise.resolve(response))
-    canvasActions.fetchUserLocation()(dispatch);
-    expect(spyFunction).toHaveBeenCalled();
-    expect(dispatch).not.toHaveBeenCalled();
-    spyFunction.mockClear();
- 
-});
-
-it('Testing fetchUserLocation - catch block', async () => {
-    const state = {}
-    const store = mockStore(() => state);
-    const spyFunction = jest.spyOn(canvasActions,'fetchUserLocation');
-    axios.get = jest.fn(() => Promise.reject({}));
-    await store.dispatch(canvasActions.fetchUserLocation());
-    expect(spyFunction).toHaveBeenCalled();
-});

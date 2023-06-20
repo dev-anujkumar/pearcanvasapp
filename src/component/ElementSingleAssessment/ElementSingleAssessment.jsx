@@ -433,6 +433,7 @@ class ElementSingleAssessment extends Component {
                 updateElmVersion={this.openUpdateElmPopup}
                 buttonText={ELM_UPDATE_BUTTON}
                 embeddedElmClass={'embedded-assessment'}
+                status={false}
             />)
         }
     }
@@ -650,7 +651,7 @@ ElementSingleAssessment.propTypes = {
 const mapStateToProps = state => {
     return {
         usageTypeList: state.appStore.usageTypeListData.usageTypeList,
-        assessmentReducer: state.assessmentReducer
+        assessmentReducer: state.assessmentReducer,
     };
 };
 

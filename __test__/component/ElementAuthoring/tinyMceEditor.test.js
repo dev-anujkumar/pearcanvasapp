@@ -58,6 +58,25 @@ jest.mock('../../../src/js/utils', () => {
 })
 jest.mock('../../../src/appstore/store.js', () => {
     return {
+        getState: () => {
+            return {
+                alfrescoReducer: {
+                    alfrescoAssetData: {},
+                    elementId: "urn",
+                    alfrescoListOption: [],
+                    launchAlfrescoPopup: true,
+                    editor: true,
+                    Permission: false
+                },
+                appStore:{
+                    slateLevelData:{}
+                },
+                autoNumberReducer: mockAutoNumberReducerEmpty,
+                toolbarReducer : {
+                    spellCheckToggle : false
+                }
+            }
+        },
         dispatch: jest.fn()
     }
 })
@@ -80,7 +99,9 @@ jest.mock('../../../src/constants/utility.js', () => {
         validFirstNodeTags: ['span','dfn'],
         findStylingOrder: () => {
             return ['em']
-        }
+        },
+        isSubscriberRole: jest.fn(),
+        withoutCursorInitailizedElements: ['figure', 'element-aside']
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {
@@ -107,7 +128,8 @@ jest.mock('../../../src/js/TinyMceUtility.js', () => {
         },
         checkForDataIdAttribute: ()=>{
             return "<p>test</p>"
-        }
+        },
+        restoreSelectionAtNode: () => {}
     }
 })
 jest.mock('../../../src/component/ListElement/eventBinding', () => {
@@ -143,9 +165,7 @@ let permissions = [
 config.figureFieldsPlaceholders = ['Number', 'Label Name', 'Title', 'Caption', 'Credit']
 config.elementToolbar = []
 config.toolBarList = ['bold', 'italic', 'underline', 'strikethrough', 'clearformatting', 'increaseindent', 'decreaseindent', 'footnote', 'glossary', 'orderedlist', 'unorderedlist', 'mathml', 'chemml', 'inlinecode', 'superscript', 'subscript', 'specialcharactor', 'undo', 'redo', 'assetpopover', 'slatetag']
-config.showHideToolbar = ['footnote', 'glossary', 'assetpopover']
 config.revelToolbar = ['formatSelector', 'footnote','glossary','assetpopover','orderedlist','unorderedlist']
-config.headingToolbar = ['italic', 'clearformatting', 'increaseindent', 'footnote', 'mathml', 'chemml', 'superscript', 'subscript', 'specialcharactor', 'undo', 'redo', 'assetpopover', 'slatetag']
 config.codeListingToolbarEnabled = ['strikethrough', 'increaseindent', 'decreaseindent', 'footnote', 'glossary', 'orderedlist', 'unorderedlist', 'mathml', 'chemml', 'inlinecode', 'superscript', 'subscript', 'specialcharactor', 'undo', 'redo', 'assetpopover', 'slatetag']
 config.codeListingToolbarDisabled = ['bold', 'italic', 'underline', 'strikethrough', 'clearformatting', 'increaseindent', 'decreaseindent', 'footnote', 'glossary', 'orderedlist', 'unorderedlist', 'mathml', 'chemml', 'inlinecode', 'superscript', 'subscript', 'specialcharactor', 'undo', 'redo', 'assetpopover', 'slatetag']
 config.asideToolbar = ['bold', 'italic', 'underline', 'strikethrough', 'clearformatting', 'increaseindent', 'decreaseindent', 'footnote', 'glossary', 'orderedlist', 'unorderedlist', 'mathml', 'chemml', 'inlinecode', 'superscript', 'subscript', 'specialcharactor', 'undo', 'redo', 'assetpopover', 'slatetag']

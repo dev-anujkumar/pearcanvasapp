@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import TinyMceEditor from "../tinyMceEditor";
 // IMPORT - Assets //
 import { getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js';
-import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, removeUnoClass } from '../../constants/utility';
+import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, removeUnoClass, hasReviewerRole } from '../../constants/utility';
 import './../../styles/ElementFigure/FigureUserInterface.css';
 import { updateSmartLinkDataForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
@@ -289,6 +289,7 @@ class FigureUserInterface extends Component {
         const buttonTitle = approval?"Approved":"Unapproved";
         const smallButtonClass = approval? "small_rounded_btn": "small_rounded_btn2";
         const smallButtonIcon = approval? approvedIcon: unApprovedIcon;
+        const isReviewer = hasReviewerRole() ? "remove-media-button" : "";
         return (
             <div className={`figure-wrapper-update ${interactiveformat === "mmi" || interactiveformat === "mmi-elm" ? 'figure-wrapper-update-quad' :''}`}>
                 <div className='videoIconWrapper'>
@@ -303,12 +304,12 @@ class FigureUserInterface extends Component {
                     <div className="media-button-group">
                         <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${this.props.index}-update-asset`}>
                         <div onClick={() => {if(this.isEnableKeyboard()){this.updateRef.current.focus()}}}>
-                         <div onKeyDown={this.clickNode} ref={this.updateRef} tabIndex={0} className='update-figure-button' onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
+                         <div onKeyDown={this.clickNode} ref={this.updateRef} tabIndex={0} className={`update-figure-button ${isReviewer}`} onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
                         </div>
                         </KeyboardWrapper>
                     <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${this.props.index}-delete-asset`}>
                      <div onClick={() => {if(this.isEnableKeyboard) {this.deleteRef.current.focus()}}}>
-                         <div onKeyDown={this.clickNode} ref={this.deleteRef} tabIndex={0} className={`delete-figure-button ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                         <div onKeyDown={this.clickNode} ref={this.deleteRef} tabIndex={0} className={`delete-figure-button ${isReviewer} ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                      </div>
                         </KeyboardWrapper>
                      
@@ -548,7 +549,7 @@ class FigureUserInterface extends Component {
 
         let captionsHtml = removeUnoClass(element.html?.captions);
         let creditsHtml = removeUnoClass(element.html?.credits);
-
+        const isReviewer = hasReviewerRole() ? "pointer-events-none" : "";
         captionsHtml = captionsHtml?.replace("<p>", '')?.replace("</p>", '');
         creditsHtml = creditsHtml?.replace("<p>", '')?.replace("</p>", '');
         return (
@@ -564,7 +565,7 @@ class FigureUserInterface extends Component {
                                     previewClass={""}
                                     figLabelClass={figLabelClass}
                                     figTitleClass={figTitleClass}
-                                /> : <><header className="figure-header new-figure-image-header">
+                                /> : <><header className={`figure-header new-figure-image-header ${isReviewer}`}>
 
                                 <div className='figure-label-field'>
                                     <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
@@ -609,7 +610,7 @@ class FigureUserInterface extends Component {
                                 }
                                 <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${index}-1`}>
                                     <div className="floating-number-group">
-                                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-1`} placeholder="Number" tagName={'h4'} className={figNumberClass} model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-1`} placeholder="Number" tagName={'h4'} className={figNumberClass} model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}  contenteditable={ !hasReviewerRole()} />
                                         <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
                                     </div>
                                 </KeyboardWrapper>
@@ -626,7 +627,7 @@ class FigureUserInterface extends Component {
                             {
                                 element.figuretype === INTERACTIVE && imageDimension === '' ?
                                     <div>
-                                        <div className={`Rectangle-button ${index}`} onClick={() => this.toggleHyperlinkEditable('show', index)} >
+                                        <div className={`Rectangle-button ${index} ${isReviewer}`} onClick={() => this.toggleHyperlinkEditable('show', index)} >
                                             <span className="Enter-Button-Label">{posterText ? posterText : "Enter Button Label"}</span>
                                         </div>
                                         <div className={`hide-field actionPUdiv ${index}`} >
@@ -636,7 +637,7 @@ class FigureUserInterface extends Component {
                                     :
                                     null
                             }
-                            <div className="figure-element-container interface-container">
+                            <div className={`figure-element-container interface-container ${isReviewer}`}>
                                 <div id="figure_add_div" className={`pearson-component image figureData ${element.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                                     {this.renderAssetSection(element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite, imageDimension)}
                                 </div>

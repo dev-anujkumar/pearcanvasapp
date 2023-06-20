@@ -15,6 +15,7 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions', 
 import config from '../../../src/config/config.js';
 config["elementStatus"] = {}
 describe('Test for Sidebar component', () => {
+    jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
     const mockStore = configureMockStore(middlewares);
     let activeElement = {
         elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
@@ -1026,6 +1027,7 @@ describe('Test for Sidebar component', () => {
         });
     });
     describe("Testing podOption", () => {
+        jest.spyOn(utils, 'hasReviewerRole').mockReturnValueOnce(true);
         const storeData = {
             appStore: {
                 activeElement: {

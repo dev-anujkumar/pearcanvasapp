@@ -3,6 +3,12 @@ import { mount } from 'enzyme';
 import FigureTableAsset from '../../../src/component/ElementFigure/FigureTableAsset';
 import { figureTableAssetWithOutTable, figureTableAssetWithTable } from '../../../fixtures/FigureTableAssetTestingData';
 
+jest.mock('../../../src/constants/utility.js', () => ({
+    hasReviewerRole: jest.fn().mockImplementationOnce(() => {
+        return true
+    })
+}))
+
 describe('Testing Coponent FigureTableAsset', () => {
     describe('FigureTableAsset when Table is not added', () => {
         let props = {

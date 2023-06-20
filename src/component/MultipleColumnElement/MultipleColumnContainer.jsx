@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 /** Contants and utitlity functions */
 import constants from "./constants.js";
-import { guid, sendDataToIframe } from '../../constants/utility.js';
+import { guid, sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext';
 import { MULTICOLUMN_SOURCE } from '../../constants/Element_Constants.js';
 import { checkSlateLock } from '../../js/slateLockUtility.js';
@@ -197,6 +197,7 @@ class MultipleColumnContainer extends PureComponent {
                     <Sortable
                         options={{
                             ...constants.sortableOptions,
+                            disabled: hasReviewerRole(),
                             onStart: (evt) => {
                                 this.context.onClickCapture(evt)
                             },
