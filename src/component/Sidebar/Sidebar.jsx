@@ -1002,6 +1002,8 @@ class Sidebar extends Component {
     }  
 
     render = () => {
+        // const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
+        const isDecorativeImage = this.props.activeElement.tag === 'EQ';
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
@@ -1010,7 +1012,7 @@ class Sidebar extends Component {
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.secondaryOption()}
-                    {this.attributions()}
+                    {!isDecorativeImage && this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
                     {this.state.activeElementType ==="manifestlist" && <div>

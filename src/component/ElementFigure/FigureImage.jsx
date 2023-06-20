@@ -586,12 +586,16 @@ class FigureImage extends Component {
         const captionsHtml = this.props?.model?.html?.captions?.replace("<p>", '')?.replace("</p>", '');
         const creditsHtml = this.props?.model?.html?.credits?.replace("<p>", '')?.replace("</p>", '');
         const isReviewer = hasReviewerRole();
+        // const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
+        const isDecorativeImage = this.props.model?.figuretype === MATH_IMAGE
         return (
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                 <div className='figure-image-wrapper'>
                     <div className={`${divClass} ${model?.figuretype === 'codelisting' ? 'blockCodeFigure' : '' }`} resource="">
                         <figure className={figureClass} resource="">
+                            {isDecorativeImage ? '' :
+                            <>
                             {this.props.isAutoNumberingEnabled && autoNumberedElement ?
                                 <FigureHeader
                                     {...this.props}
@@ -666,19 +670,21 @@ class FigureImage extends Component {
                                     </KeyboardWrapper>
                                 </>
                             }
+                            </>
+                            }
                             <>
                                 {
                                     this.renderAssetSection(figureTypeData)
                                 }
                             </>
-                            <figcaption >
+                            {isDecorativeImage ? '' : <figcaption >
                             <KeyboardWrapper enable={this.isEnableKeyboard()} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-4`:`${this.props.index}-3`}>
                                 <div className={`floating-caption-group`}>
                                     <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-4`:`${this.props.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={captionsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                                     <label className={checkHTMLdataInsideString(this.props?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
                                 </div>
                                 </KeyboardWrapper>
-                            </figcaption>
+                            </figcaption>}
                             <figcredit >
                             <KeyboardWrapper enable={this.isEnableKeyboard()} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`}>      
                                 <div className={`floating-credit-group`}>

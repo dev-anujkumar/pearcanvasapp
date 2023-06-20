@@ -2552,6 +2552,8 @@ class ElementContainer extends Component {
         const isgreyBorder = isApproved() && READ_ONLY_ELEMENT_LABELS.includes(labelText);
         const readOnlyBorder = isgreyBorder ? 'greyBorder': '';
         const showElementLabel =  !isApproved() || this.state.borderToggle == 'active'
+        // const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
+        const isDecorativeImage = element?.figuretype === elementTypeConstant.FIGURE_MATH_IMAGE
         return (
             <>
                 <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>
@@ -2583,7 +2585,7 @@ class ElementContainer extends Component {
                          {/*Displaying Expand in Alfresco option for PDF Slates when a PDF is added  */}
                         {permissions && permissions?.includes('alfresco_crud_access') && !hasReviewerRole() && element?.type === elementTypeConstant.PDF_SLATE &&
                         (element?.elementdata?.assetid !== "" || this.state.pdfSlateAssetId !== "") && <Button type={`alfresco-TE-metadata`} btnClassName={` metadata-pdfElement ${btnClassName}`} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
-                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole()  && showEditButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
+                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole()  && showEditButton && !isDecorativeImage && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole()  && showAlfrescoExpandButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'alfresco-TE-metadata': 'alfresco-metadata'}`} btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />} 
                         {(feedback && ! isTbElement) ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : ((tcm && !isTbElement) && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} btnClassName={element.type === elementTypeConstant.PDF_SLATE && 'pdf-tcm-icon'}/>)}
                     </div> : ''}
