@@ -143,3 +143,9 @@ export const returnAllSlateData = {
         }
     ],
 }
+
+export const returnAllSlateDataEmpty = {}
+
+export const returnFrontmatter = {
+    "frontmatter": []
+}

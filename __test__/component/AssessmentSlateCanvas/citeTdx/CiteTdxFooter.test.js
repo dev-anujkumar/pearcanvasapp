@@ -97,6 +97,27 @@ describe('Testing CITE/TDX Footer component', () => {
         spySendCiteTdxAssessment.mockClear()
     })
 
+    it('select button - conditional coverage', () => {
+        let initialState2 = {
+            citeTdxReducer: {
+                currentAssessmentSelected: {
+                    "versionUrn": "dfer"
+                },
+                citeApiData: { assessments: [] },
+                tdxApiData: {},
+                mmiApiData: {},
+                isLoading: {}
+            },
+        };
+        let store2 = mockStore(initialState2);
+        const component = mount(<Provider store={store2}><CiteTdxFooter {...props} /></Provider>);
+        let componentInstance = component.find('CiteTdxFooter').instance();
+        const spySendCiteTdxAssessment = jest.spyOn(componentInstance, 'sendCiteTdxAssessment')
+        componentInstance.sendCiteTdxAssessment();
+        expect(spySendCiteTdxAssessment).toHaveBeenCalled()
+        spySendCiteTdxAssessment.mockClear()
+    })
+
     it('Test onClick', () => {
         component.find('.noSelect.hideNavigation.disableClick').at(0).simulate('click');
         component.find('.noSelect.disableClick').at(0).simulate('click');
