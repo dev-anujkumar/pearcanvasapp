@@ -36,7 +36,7 @@
     background: transparent;
     padding: 5px 0;
     font-size: 12px;
-    margin: 24px 0;
+    margin: 6px 0 24px 0;
     outline: none;
     position: relative;
     /* cursor: pointer; */
@@ -302,4 +302,53 @@ pointer-events: none;
 
 .asideSlider:before{
     background-color: none !important;
+}
+
+.categories{
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 24px 0 0 0;
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+}
+
+.modalBanner{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 8px;
+    width: 209px;
+    height: 40px;
+    background: #DDE1E6;
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.modalIcon{
+    left: 20.83%;
+    right: 25%;
+    top: 4.17%;
+    bottom: 4.17%;
+    padding: 0 8px;
+}
+
+.modalText{
+    width: 165px;
+    height: 24px;
+    font-family: 'Open Sans' !important;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 9px !important;
+    line-height: 12px !important;
+    color: #737373;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
 }

@@ -11,7 +11,7 @@ import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_Constants.js';
@@ -20,6 +20,7 @@ import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
 import { Autocomplete, TextField } from '@mui/material';
+import modalIcon from '../../images/Sidebar/modalIcon.svg'
 
 class Sidebar extends Component {
     constructor(props) {
@@ -273,6 +274,7 @@ class Sidebar extends Component {
                 const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
+                    <div className='categories'>{CATEGORY}</div>
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ? null : dropdownArrow}
@@ -506,6 +508,7 @@ class Sidebar extends Component {
                 const disableClass = hasReviewerRole() ? "pointer-events-none" : ''
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
+                    <div className='categories'>{SUB_CATEGORY}</div>
                     {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
@@ -583,6 +586,135 @@ class Sidebar extends Component {
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
         config.isSavingElement = true
         this.props.updateElement(dataToSend, index, parentUrn, asideData, null, parentElement, null);
+    }
+
+    handleplaybackModeLanguageChange = (e,value) =>{
+        const selectedValue = value?.item;
+        const labelText = value?.labelText;
+        this.setPlayback(selectedValue, labelText);
+    }
+
+    /**@description sets the values form the selected dropdown
+     * @param-value is AssessmentType selected from the dropdown
+     * @param-labelText is the label of the Element
+     */
+    setPlayback=(value,labelText)=>{
+        this.setState({
+            elementDropdown: '',
+            activeSecondaryOption: value,
+            activeLabelText: labelText,
+            podOption: false,
+            podValue: POD_DEFAULT_VALUE,
+        });
+
+        if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
+            this.props.conversionElement({
+                elementId: this.props.activeElement.elementId,
+                elementType: this.state.activeElementType,
+                primaryOption: this.state.activePrimaryOption,
+                secondaryOption: value,
+                labelText,
+                toolbar: elementList[this.state.activeElementType][this.state.activePrimaryOption].toolbar
+            });
+        }
+    }
+
+    playbackMode = () => {
+        let playbackMode = '';
+        let languageDropdownOptions = [];
+        let enableColumn4playbackOption = false;
+        if(this.state.activeElementType){
+            let primaryOptionObject = elementList[this.state.activeElementType];
+            let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
+            let secondaryOptionList = Object.keys(secondaryOptionObject);
+            let isLearnosityProject = this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? true : false;
+            let showLearnosityDropdown = false;
+            if (this.state.activePrimaryOption === "primary-blockcode-equation" && this.state.activeSecondaryOption !== "secondary-blockcode-language-default") {
+                secondaryOptionList.splice(0, 1)
+            }
+            // checking active element and primary option to allow column 3 secondary option
+            if (this.state.activeElementType === "groupedcontent" && this.state.activePrimaryOption === MULTI_COLUMN_3C.ELEMENT_NAME) {
+                enableColumn4playbackOption = true;
+            }
+            if(secondaryOptionList.length > 1 || enableColumn4playbackOption) {
+                playbackMode = secondaryOptionList.map(item => {
+                    let addClass = '';
+                    if (item === SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY) {
+                        addClass = 'learnosity-disabled';
+                        showLearnosityDropdown = true;
+                    }
+                    languageDropdownOptions.push({...secondaryOptionObject[item], item});
+                    return <li key={item} data-value={item} className={`${addClass}`} onClick={this.handleSecondaryOptionChange}>
+                        {secondaryOptionObject[item].text}
+                    </li>;
+                });
+
+                let display = '';
+                if (secondaryOptionList.length <= 1) {
+                    display = 'hidden';
+                }
+
+                let active = '';
+                if (this.state.elementDropdown === 'secondary') {
+                    active = 'active';
+                }
+                if (isLearnosityProject && showLearnosityDropdown) {
+                    active = ''
+                }
+                let disabled = '';
+                if (this.state.usageType === "") {
+                    disabled = "disabled";
+                }
+                //Removing Select option from dropdown values
+                if (languageDropdownOptions.length )  languageDropdownOptions = languageDropdownOptions.filter(option => option.text !== 'Select')
+                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+                const disableClass = hasReviewerRole() ? "pointer-events-none" : ''
+                playbackMode = <div
+                    className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
+                    <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
+                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn4playbackOption ? null : this.toggleElementDropdown}>
+                        {secondaryOptionObject[this.state.activeSecondaryOption].text}
+                        {((isLearnosityProject && showLearnosityDropdown) || enableColumn4playbackOption) ? "" : <span> {dropdownArrow} </span>}
+                    </div>) : (<div className={`element-dropdown-title bce ${disabled} ${disableClass}`} data-element="secondary" onClick={enableColumn4playbackOption ? null : this.toggleElementDropdown}>
+                        <Autocomplete
+                            disablePortal
+                            disableClearable
+                            id="language-select-demo"
+                            noOptionsText={'No result found'}
+                            style={{ width: 210 }}
+                            ListboxProps={{ style: { maxHeight: "270px" } }}
+                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? {"text": "","labelText": "BCE","enum": ""} : secondaryOptionObject[this.state.activeSecondaryOption]}
+                            options={languageDropdownOptions}
+                            onChange={(e,value)=>{this.handleplaybackModeLanguageChange(e,value)}}
+                            getOptionLabel={(option) => option.text}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    fullWidth
+                                    placeholder="Select & Search"
+                                    variant="outlined"
+                                    inputProps={{
+                                        ...params.inputProps,
+                                    }}
+                                />
+                            )}
+                        /> 
+                    </div>)}
+                    {this.modalBanner()}
+                    <ul className={`element-dropdown-content secondary-options ${active}`}>
+                        {playbackMode}
+                    </ul>
+                </div>;
+            }
+        return playbackMode;
+    }}
+
+    modalBanner = () => {
+        let modalBanner = ''
+        modalBanner = <div className='modalBanner'>
+                    <img className='modalIcon' src={modalIcon} />
+                    <p className='modalText'>{MODAL_MESSAGE}</p></div>
+        return modalBanner
     }
 
     attributions = () => {
@@ -1010,6 +1142,7 @@ class Sidebar extends Component {
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.secondaryOption()}
+                    {this.playbackMode()}
                     {this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
