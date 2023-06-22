@@ -55,6 +55,7 @@ class Sidebar extends Component {
             podOption: false,
             podValue: podwidth,
             usageType: this.props.activeElement.usageType,
+            setDecorativeImagePopup: false
         };
     }
 
@@ -151,6 +152,12 @@ class Sidebar extends Component {
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
+            if(value === "primary-image-equation"){
+                this.setState({
+                    setDecorativeImagePopup: true,
+                });
+                this.showSetDecorativeImagePopup();
+            }
           this.props.conversionElement({
             elementId: this.props.activeElement.elementId,
             elementType: this.state.activeElementType,
@@ -350,7 +357,42 @@ class Sidebar extends Component {
         
         return fontBulletOptions;
     }
-    
+
+    showSetDecorativeImagePopup = () => {
+        this.props.showCanvasBlocker(true);
+        hideToc();
+        showBlocker(true);
+        return (
+            <PopUp
+                togglePopup={this.handleSetDecorativeImagePopup}
+                dialogText={CHANGE_ASSESSMENT_TYPE}
+                lOPopupClass="lo-warning-txt"
+                warningHeaderText={`Warning`}
+                setDecorativePopup={true}
+                agree={this.setDecorativeImage}
+            />
+        )
+    }
+
+    handleSetDecorativeImagePopup = () => {
+        showBlocker(false);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
+        this.setState({
+            setDecorativeImagePopup: false,
+        })
+    }
+
+    setDecorativeImage = () => {
+        showBlocker(false);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
+        this.setState({
+            setDecorativeImagePopup: false,
+        })
+        // this.setSecondary(this.state.secondaryValue,this.state.secondaryLabel);
+    }
+
     showUpdateAssessmentTypePopup=()=>{
         this.props.showCanvasBlocker(true);
         hideToc();

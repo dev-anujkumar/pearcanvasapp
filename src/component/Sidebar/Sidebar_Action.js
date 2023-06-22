@@ -65,7 +65,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
 
             /* On conversion of primary option type, change the POD value to default value */
-            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage") &&
+            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage" || oldElementData.figuredata?.decorative) &&
             inputPrimaryOptionType !== outputPrimaryOptionType ){
                 oldElementData.figuredata.podwidth = POD_DEFAULT_VALUE
             }
@@ -92,7 +92,33 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             if (figureElementsType.includes(oldElementData.figuretype)) {
                 oldElementData.hasOwnProperty('subtitle') ? delete oldElementData.subtitle : oldElementData;  // conversion of old figure to new type at the time of conversion
             }
-        
+
+            const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled
+
+            // Removing fields on conversion from other figure types to decorative image
+            // if(newElementData?.figuredata?.decorative){
+            if (newElementData?.labelText === "EQ") {
+                if(isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')){
+                    oldElementData.numberedandlabel = false
+                }
+                delete oldElementData?.displayedlabel
+                delete oldElementData?.title
+                delete oldElementData?.captions
+                delete oldElementData.html?.captions
+                delete oldElementData.html?.text
+                delete oldElementData.html?.title
+            }
+
+            // Resetting fields on conversion from decorative image to other figure types
+            // if (oldElementData?.figuredata?.decorative) {
+            if (newElementData?.labelText !== "EQ") {
+                if (isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')) {
+                    oldElementData.numberedandlabel = true
+                }
+                oldElementData.displayedlabel = "Figure"
+                // oldElementData.title = ""
+                // oldElementData.captions = ""
+            }
     }
 
     let outputSubTypeEnum = outputSubType['enum'],
@@ -245,6 +271,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             if (elementType.indexOf(oldElementData.type) !== -1) {
                 if (oldElementData && (oldElementData.figuretype == "codelisting" || oldElementData.figuretype == "interactive")) {
                     oldElementData.figuredata = oldElementFigureData
+                }
+                // to be removed
+                if(newElementData.labelText === "EQ"){
+                    res.data.numberedandlabel = false
                 }
                 let elementConversionData = {
                     currentSlateData: {

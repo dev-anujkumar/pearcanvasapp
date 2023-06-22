@@ -368,6 +368,15 @@ class PopUp extends React.Component {
             }
         }
         if (props.AssessmentPopup) {
+            console.log("checkkk");
+            return (
+                <div className={`dialog-buttons`}>
+                    <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.agree(false, e)}>{props.yesButton}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
+        if (props.setDecorativePopup) {
             return (
                 <div className={`dialog-buttons`}>
                     <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.agree(false, e)}>{props.yesButton}</span>
@@ -418,7 +427,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.showAssessmentConfirmation) {
+        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.showAssessmentConfirmation) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -463,7 +472,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.showAssessmentConfirmation) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.showAssessmentConfirmation) {
             return null
         }
         else {
@@ -613,6 +622,14 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if (props.setDecorativePopup) {
+            return (
+                <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{'Do you want to proceed??'}</div>
+                </>
+            )
+        }
         else if (props.UsagePopup) {
             return (
                 <>
@@ -661,7 +678,7 @@ class PopUp extends React.Component {
 
 
     renderTcmPopupIcons = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.showAssessmentConfirmation) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.showAssessmentConfirmation) {
             return null
         }
         else {
@@ -674,7 +691,7 @@ class PopUp extends React.Component {
     }
 
     renderCommentPanelInput = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isTCMCanvasPopup || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.showAssessmentConfirmation) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isTCMCanvasPopup || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.showAssessmentConfirmation) {
             return null
         }
         else {
