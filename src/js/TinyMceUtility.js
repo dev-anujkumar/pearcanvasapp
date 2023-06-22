@@ -396,3 +396,24 @@ export const setCodeBlockContentToolbar = () => {
     }
     return toolbar;
 }
+/**
+ * This method is used to check current editor has any selection
+ */
+export const isSelectionEmpty = (editor) => {
+    const selection = editor.selection;
+    const range = selection.getRng();
+    return range.collapsed;
+}
+
+/**
+ * This method is used to restore selection on a specific node
+ */
+export const restoreSelectionAtNode = (editor, node) => {
+    const emptySelection = isSelectionEmpty(editor);
+    if (emptySelection && node) {
+        const selection = editor.selection;
+        const newRange = editor.dom.createRng();
+        newRange.selectNodeContents(node);
+        selection.setRng(newRange);
+    }
+}

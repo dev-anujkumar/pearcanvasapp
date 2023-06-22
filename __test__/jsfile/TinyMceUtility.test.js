@@ -792,4 +792,47 @@ describe('Testing TinyMceUtility', () => {
         expect(spyFunc).toHaveBeenCalled();
         spyFunc.mockClear();
     })
+
+    describe('Test - restoreSelectionNode', () => {
+        const editor = {
+            dom: {
+                createRng: () => {
+                    return {
+                        selectNodeContents: jest.fn()
+                    }
+                }
+            },
+            selection: {
+                getRng: jest.fn(),
+                setRng: jest.fn()
+            }
+        }
+
+        const mockNode = document.createElement('span');
+        mockNode.textContent = 'Mock Node';
+        mockNode.setAttribute('id', 'mockId');
+        mockNode.classList.add('mockClass');
+
+        it('Test - restoreSelectionAtNode - selection empty', () => {
+            const spyFunc = jest.spyOn(tinyMceFn, 'restoreSelectionAtNode');
+            const { getRng } = editor.selection;
+            getRng.mockReturnValue({
+                collapsed: true
+            });
+            tinyMceFn.restoreSelectionAtNode(editor, mockNode);
+            expect(spyFunc).toHaveBeenCalled();
+            spyFunc.mockClear();
+        })
+
+        it('Test - restoreSelectionAtNode - selection not empty', () => {
+            const spyFunc = jest.spyOn(tinyMceFn, 'restoreSelectionAtNode');
+            const { getRng } = editor.selection;
+            getRng.mockReturnValue({
+                collapsed: false
+            });
+            tinyMceFn.restoreSelectionAtNode(editor, mockNode);
+            expect(spyFunc).toHaveBeenCalled();
+            spyFunc.mockClear();
+        })
+    })
 })

@@ -47,3 +47,16 @@ describe('Testing PopUp component', () => {
         component.find('span.expand').simulate('click');
     })
 })
+
+describe('Testing PopUp component - conditional coverage', () => {
+    const store2 = mockStore({
+        tcmReducer: {
+            tcmSnapshotData: {},
+            spinnerStatus: false
+        },
+    });
+    const wrapper2 = mount( <Provider store={store2}><TcmButtonsRender {...props} /></Provider> )
+    it('render PopUp component - conditional coverage', () => {
+        expect(wrapper2.find('.expand').exists()).toBe(true);
+    })
+})

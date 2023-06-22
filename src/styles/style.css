@@ -458,8 +458,7 @@ span[title="calloutFour"] sup::after {
  span.markedForIndex {
     color: #007FA3;
     font-family: inherit;
-    font-weight: Bold;
-    font-style: normal;
+    font-style: inherit;
     border-bottom: 1px dotted #000;
     
   }
@@ -527,8 +526,8 @@ div[title='Ignore all']{
 }
 
 /* classes replacing Book.css */
-
-div.divWidgetMDI, div.divWidget3PI, div.divWidget3PISE, div.divWidget3PI.SocialExplorer, div.divWidget3PI.GeoGebra,
+/*  commenting Now for future reference */ 
+/* div.divWidgetMDI, div.divWidget3PI, div.divWidget3PISE, div.divWidget3PI.SocialExplorer, div.divWidget3PI.GeoGebra,
 div.divWidget3PI.CloserLook, div.divWidget3PI.Default, div.divWidgetAccountingTable, div.divWidgetFlashcards, div.divWidgetImgSlideshow,
 div.divWidgetVidSlideshow, div.divWidgetUCA, div.divWidgetSurvey, div.divWidgetTimeline, div.divWidgetMCQ, div.divWidgetImageId,
 div.divWidgetHotspot, div.divWidgetFIB, div.divWidgetGraph, div.divWidgetVideoMcq, div.divWidgetVideo, div.divWidgetFPO,
@@ -1037,7 +1036,7 @@ ol, ul {
 ol li {
     display: block;
     padding: 0 0 0 0.5em;
-    /* text-indent: 0em; */
+    /* text-indent: 0em;
 }
 ol li.listItemNumeroUno:before, ol li.listItemNumeroUnoNumber:before, ol li.listItemNumeroUnoLowerAlpha:before, ol li.listItemNumeroUnoUpperAlpha:before,
 ol li.listItemNumeroUnoUpperRoman:before, ol li.listItemNumeroUnoLowerRoman:before, ol li.listItemNummerEins:before,
@@ -1129,8 +1128,7 @@ table .Wirisformula {
 dfn.GlossaryTerm {
     color: #007FA3;
     font-family: inherit;
-    font-weight: Bold;
-    font-style: normal;
+    font-style: inherit;
     border-bottom: 1px dotted #000;
 }
 dfn.GlossaryTerm:hover {
@@ -1164,4 +1162,4 @@ ol ol {
 
 .hide-buttons{
     display: none;
-}
+} */

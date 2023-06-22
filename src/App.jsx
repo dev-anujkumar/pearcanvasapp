@@ -4,7 +4,7 @@
 * to Application level state and give it to all its predecesors.
 */
 // IMPORT - Plugins //
-import React, { Component, Suspense } from 'react';
+import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 // IMPORT - Components //
@@ -13,12 +13,12 @@ import config from './config/config';
 import cypressConfig from './config/cypressConfig';
 import { requestConfigURI } from './constants/utility';
 import { initializeGTM } from '../src/js/ga'
-const CanvasWrapper = React.lazy(() => import('./component/CanvasWrapper'));
+import CanvasWrapper from './component/CanvasWrapper';
 import { modifyObjKeys } from './js/appUtils';
 // IMPORT - Assets // 
 import './styles/style.css';
 
-console.log("!!!!! ---- canvas-1.48.13 ---- !!!!!")
+console.log("!!!!! ---- canvas-1.48.29 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
@@ -71,9 +71,7 @@ class App extends Component {
         return (
             <Provider store={store}>
                 <div id='app_container' className='app'>
-                    <Suspense fallback={<div></div>}>
-                        <CanvasWrapper isConfigLoaded={this.state.isConfigLoaded} />
-                    </Suspense>
+                    <CanvasWrapper isConfigLoaded={this.state.isConfigLoaded} />
                 </div>
             </Provider>
         );
