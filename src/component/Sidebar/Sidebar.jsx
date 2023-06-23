@@ -55,7 +55,7 @@ class Sidebar extends Component {
             podOption: false,
             podValue: podwidth,
             usageType: this.props.activeElement.usageType,
-            setDecorativeImagePopup: false
+            decorativePopupWarning: false
         };
     }
 
@@ -153,10 +153,7 @@ class Sidebar extends Component {
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
             if(value === "primary-image-equation"){
-                this.setState({
-                    setDecorativeImagePopup: true,
-                });
-                this.showSetDecorativeImagePopup();
+                this.handleDecorativePopup(true)
             }
           this.props.conversionElement({
             elementId: this.props.activeElement.elementId,
@@ -358,28 +355,12 @@ class Sidebar extends Component {
         return fontBulletOptions;
     }
 
-    showSetDecorativeImagePopup = () => {
-        this.props.showCanvasBlocker(true);
-        hideToc();
-        showBlocker(true);
-        return (
-            <PopUp
-                togglePopup={this.handleSetDecorativeImagePopup}
-                dialogText={CHANGE_ASSESSMENT_TYPE}
-                lOPopupClass="lo-warning-txt"
-                warningHeaderText={`Warning`}
-                setDecorativePopup={true}
-                agree={this.setDecorativeImage}
-            />
-        )
-    }
-
     handleSetDecorativeImagePopup = () => {
         showBlocker(false);
         this.props.showCanvasBlocker(false);
         hideBlocker();
         this.setState({
-            setDecorativeImagePopup: false,
+            decorativePopupWarning: false,
         })
     }
 
@@ -388,9 +369,9 @@ class Sidebar extends Component {
         this.props.showCanvasBlocker(false);
         hideBlocker();
         this.setState({
-            setDecorativeImagePopup: false,
+            decorativePopupWarning: false,
         })
-        // this.setSecondary(this.state.secondaryValue,this.state.secondaryLabel);
+        this.setSecondary(this.state.secondaryValue,this.state.secondaryLabel);
     }
 
     showUpdateAssessmentTypePopup=()=>{
@@ -886,6 +867,19 @@ class Sidebar extends Component {
         })
     }
 
+    handleDecorativePopup = (value) => {
+        if (value) {
+            showBlocker();
+        }
+        else {
+            hideBlocker()
+        }
+        this.props.showCanvasBlocker(value);
+        this.setState({
+            decorativePopupWarning: value
+        })
+    }
+
     handleSyntaxHighlightingToggle = () => {
         let currentToggleValue = !((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue == false) ? this.state.syntaxHighlightingToggleValue : true);
         if (currentToggleValue) {
@@ -1078,6 +1072,16 @@ class Sidebar extends Component {
                         permissions = {this.props.permissions}
                     />}
                 {this.state.updateAssessmentTypePopup && this.props?.activeElement?.primaryOption === 'primary-single-assessment'  && this.showUpdateAssessmentTypePopup()}
+                {this.state.decorativePopupWarning &&
+                    <PopUp
+                        togglePopup={this.handleSetDecorativeImagePopup}
+                        dialogText={CHANGE_ASSESSMENT_TYPE}
+                        lOPopupClass="lo-warning-txt"
+                        warningHeaderText={`Warning`}
+                        setDecorativePopup={true}
+                        agree={this.setDecorativeImage}
+                    />
+                }
             </>
         );
     }
