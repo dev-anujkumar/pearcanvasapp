@@ -100,19 +100,30 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 if(isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')){
                     oldElementData.numberedandlabel = false
                 }
-                delete oldElementData?.displayedlabel
                 delete oldElementData?.title
                 delete oldElementData?.captions
                 delete oldElementData.html?.captions
                 delete oldElementData.html?.text
                 delete oldElementData.html?.title
             }
-
             // Resetting fields on conversion from decorative image to other figure types
-            else {
-                // if (isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')) {
-                //     oldElementData.numberedandlabel = true
-                // }
+            else if (oldElementData.figuredata?.decorative) {
+                if (isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')) {
+                    oldElementData.numberedandlabel = true
+                }
+                oldElementData.title = {
+                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    text: ""
+                }
+                oldElementData.captions = {
+                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    text: ""
+                }
+                oldElementData.html = {
+                    captions: "<p><br></p>",
+                    text: "",
+                    title: "<p><br></p>"
+                }
                 delete oldElementData?.figuredata?.decorative
             }
     }
