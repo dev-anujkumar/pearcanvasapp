@@ -317,6 +317,14 @@ pointer-events: none;
     color: #737373;
 }
 
+.playback-dropdown{
+    top: 75px;
+}
+
+.intented-dropdown-banner{
+    margin-bottom: 4px !important;
+}
+
 .modalBanner{
     display: flex;
     flex-direction: row;

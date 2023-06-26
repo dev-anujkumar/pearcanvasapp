@@ -67,7 +67,7 @@ class Sidebar extends Component {
             let fontBulletElementDropdown = prevState?.fontBulletElementDropdown;
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption;
-            let selectedIntendedPlaybackModeValue = prevState?.selectedIntendedPlaybackModeValue;
+            let selectedIntendedPlaybackModeValue = prevState?.selectedIntendedPlaybackModeValue !== "" ? prevState?.selectedIntendedPlaybackModeValue : intendedPlaybackModeDropdown[0]?.value;
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 fontBulletElementDropdown = "";
@@ -662,12 +662,12 @@ class Sidebar extends Component {
             playbackMode = <div
                 className={`element-dropdown`}>
                 <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
-                <div className={`element-dropdown-title ${disableClass}`} data-element="secondary" onClick={this.toggleIntendedPlaybackDropdown}>
+                <div className={`element-dropdown-title intented-dropdown-banner ${disableClass}`} data-element="secondary" onClick={this.toggleIntendedPlaybackDropdown}>
                     {this.renderIntendedPlaybackDropdownLabel(this.state.selectedIntendedPlaybackModeValue)}
                     <span> {dropdownArrow} </span>
                 </div>
                 {this.modalBanner()}
-                <ul className={`element-dropdown-content secondary-options ${active}`}>
+                <ul className={`element-dropdown-content secondary-options playback-dropdown ${active}`}>
                     {playbackMode}
                 </ul>
             </div>;
