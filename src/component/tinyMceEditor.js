@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole, withoutCursorInitailizedElements } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole, withoutCursorInitailizedElements, isStanzaIndent } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY, INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -809,7 +809,7 @@ export class TinyMceEditor extends Component {
             }
             if (this.props?.element?.type === 'stanza') {
                 const stanzaClassList = e?.target?.classList
-                if (!(stanzaClassList.contains('poetryLineLevel1') || stanzaClassList.contains('poetryLineLevel2') || stanzaClassList.contains('poetryLineLevel3'))) {
+                if (!isStanzaIndent(stanzaClassList)) {
                     document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                 } else {
                     document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
@@ -2772,7 +2772,7 @@ export class TinyMceEditor extends Component {
         if (type && type === 'stanza' && selectedNode) {
             className = selectedNode.className;
             const stanzaClassList = selectedNode?.classList
-            if (!(stanzaClassList.contains('poetryLineLevel1') || stanzaClassList.contains('poetryLineLevel2') || stanzaClassList.contains('poetryLineLevel3'))) {
+            if (!isStanzaIndent(stanzaClassList)) {
                 document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
             }
         }
@@ -4001,7 +4001,7 @@ export class TinyMceEditor extends Component {
                 if (this.props?.element?.type === 'stanza') {
                     const data = tinymce.activeEditor?.selection?.getNode()
                     const stanzaClassList = data?.classList
-                    if (!(stanzaClassList.contains('poetryLineLevel1') || stanzaClassList.contains('poetryLineLevel2') || stanzaClassList.contains('poetryLineLevel3'))) {
+                    if (!isStanzaIndent(stanzaClassList)) {
                         document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                     }
                 }
