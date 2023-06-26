@@ -57,7 +57,7 @@ class Sidebar extends Component {
             podValue: podwidth,
             usageType: this.props.activeElement.usageType,
             isPlayBackDropdownOpen: false,
-            selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue ?? intendedPlaybackModeDropdown[0]?.value
+            selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue
         };
     }
 
@@ -67,7 +67,7 @@ class Sidebar extends Component {
             let fontBulletElementDropdown = prevState?.fontBulletElementDropdown;
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption;
-            let selectedIntendedPlaybackModeValue = prevState?.selectedIntendedPlaybackModeValue !== "" ? prevState?.selectedIntendedPlaybackModeValue : intendedPlaybackModeDropdown[0]?.value;
+            let selectedIntendedPlaybackModeValue = prevState?.selectedIntendedPlaybackModeValue;
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 fontBulletElementDropdown = "";
@@ -595,11 +595,6 @@ class Sidebar extends Component {
         this.props.updateElement(dataToSend, index, parentUrn, asideData, null, parentElement, null);
     }
 
-    handleplaybackModeLanguageChange = (e,value) =>{
-        const selectedValue = value?.item;
-        const labelText = value?.labelText;
-        this.setPlayback(selectedValue, labelText);
-    }
 
     handleIntendedPlaybackDropdown = (e) =>{
         let value = e.target.getAttribute("data-value");
@@ -608,31 +603,6 @@ class Sidebar extends Component {
             isPlayBackDropdownOpen : false,
             selectedIntendedPlaybackModeValue: value
         },() => this.handleBceBlur());
-    }
-
-    /**@description sets the values form the selected dropdown
-     * @param-value is AssessmentType selected from the dropdown
-     * @param-labelText is the label of the Element
-     */
-    setPlayback=(value,labelText)=>{
-        this.setState({
-            elementDropdown: '',
-            activeSecondaryOption: value,
-            activeLabelText: labelText,
-            podOption: false,
-            podValue: POD_DEFAULT_VALUE,
-        });
-
-        if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
-            this.props.conversionElement({
-                elementId: this.props.activeElement.elementId,
-                elementType: this.state.activeElementType,
-                primaryOption: this.state.activePrimaryOption,
-                secondaryOption: value,
-                labelText,
-                toolbar: elementList[this.state.activeElementType][this.state.activePrimaryOption].toolbar
-            });
-        }
     }
 
     /**@description render playbackMode for 3PI smartlink for added alfresco assets*/
