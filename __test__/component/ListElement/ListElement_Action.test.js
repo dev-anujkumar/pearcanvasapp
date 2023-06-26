@@ -21,22 +21,64 @@ const initialState = {
             labelText: "UL",
             primaryOption: "primary-list",
             secondaryOption: "secondary-list-1",
-            index: 1
+            index: "index-1"
         },
         asideData: {
+            type: 'manifestlist',
             element: {
-                type: 'manifestlist',
                 index: '0-0-0-1',
                 contentUrn: 'urn:pearson:work:8a49e877-144a-4750-92d2-f1u5c8kd8e1a'
             }
         }
     }
 }
+
+const initialState1 = {
+    appStore: {
+        slateLevelData: slateData.SlateData1,
+        activeElement: {
+            elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1a",
+            elementType: "element-authoredtext",
+            labelText: "UL",
+            primaryOption: "primary-list",
+            secondaryOption: "secondary-list-1",
+            index: "index-1"
+        },
+        asideData: {
+            type: 'test',
+            element: {
+                index: '0-0-0-1',
+                contentUrn: 'urn:pearson:work:8a49e877-144a-4750-92d2-f1u5c8kd8e1a'
+            }
+        }
+    }
+}
+jest.mock('axios');
 describe('Test convertElement- PARAGRAPH to LIST', () => {
     it('Test convertElement  -PARAGRAPH to LIST', () => {
         let store = mockStore(() => initialState);
+        let responseData = {}
+        axios.put = jest.fn(() => Promise.resolve(responseData));
         const spyconvertToListElement = jest.spyOn(listAction, 'convertToListElement')
         store.dispatch(listAction.convertToListElement('disc',1));
+        expect(spyconvertToListElement).toHaveBeenCalled()
+        spyconvertToListElement.mockClear()
+    });
+    it('Test convertElement  -PARAGRAPH to LIST type=none', () => {
+        let store = mockStore(() => initialState);
+        let responseData = {}
+        axios.put = jest.fn(() => Promise.resolve(responseData));
+        const spyconvertToListElement = jest.spyOn(listAction, 'convertToListElement')
+        store.dispatch(listAction.convertToListElement('none',1));
+        expect(spyconvertToListElement).toHaveBeenCalled()
+        spyconvertToListElement.mockClear()
+    });
+    it('Test convertElement  -PARAGRAPH to LIST', () => {
+        let store = mockStore(() => initialState1);
+        let responseData = {}
+        axios.put = jest.fn(() => Promise.resolve(responseData));
+        const spyconvertToListElement = jest.spyOn(listAction, 'convertToListElement')
+        store.dispatch(listAction.convertToListElement('none',1));
         expect(spyconvertToListElement).toHaveBeenCalled()
         spyconvertToListElement.mockClear()
     });
