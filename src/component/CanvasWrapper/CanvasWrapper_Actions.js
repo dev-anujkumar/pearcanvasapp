@@ -34,7 +34,8 @@ import {
     PROJECT_LOB_LIST,
     NO_DISCUSSION_ITEMS,
     BANNER_IS_VISIBLE,
-    SUBSCRIBERS_SUBSCRIBED_SLATE
+    SUBSCRIBERS_SUBSCRIBED_SLATE,
+    SET_TOC_SLATE_LABEL
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -1865,5 +1866,12 @@ export const setCautionBannerStatus = (status) => (dispatch, getState) => {
     return dispatch({
         type: BANNER_IS_VISIBLE,
         payload: status
+    })
+}
+
+export const setTocSlateLabel = (label) => (dispatch) => {
+    return dispatch({
+        type: SET_TOC_SLATE_LABEL,
+        payload: label
     })
 }

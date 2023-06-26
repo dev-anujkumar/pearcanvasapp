@@ -460,6 +460,10 @@ function CommunicationChannel(WrappedComponent) {
                         this.handleRefreshSlate();
                     }
                     break;
+                case 'sendSlatesLabel':
+                    if(message?.labels)
+                    this.props.setTocSlateLabel(message.labels)
+                    break;
             }
         }
 

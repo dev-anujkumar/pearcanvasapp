@@ -127,7 +127,7 @@ const _Toolbar = props => {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
         const approveToWipStatus = await props.slateVersioning(updateRCSlate)
         if(approveToWipStatus) {
-        showNotificationOnCanvas(MOVED_TO_WIP)
+        showNotificationOnCanvas(`${props.slateTocLabel[config.slateType]} and its parent items has moved to WIP status`)
         changeAudioNarration()
         }
     }
@@ -258,7 +258,8 @@ const mapStateToProps = (state) => {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         searchUrn: state.searchReducer.searchTerm,
         slateLevelData: state.appStore.slateLevelData,
-        roleId:state.appStore.roleId
+        roleId:state.appStore.roleId,
+        slateTocLabel:state.projectInfo.slateTocLabel
     }
 }
 
