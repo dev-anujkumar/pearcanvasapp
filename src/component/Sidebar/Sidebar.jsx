@@ -8,10 +8,10 @@ import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateConta
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType, checkHTMLdataInsideString } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, SET_AS_DECORATIVE_IMAGE_1 } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_Constants.js';
@@ -55,7 +55,8 @@ class Sidebar extends Component {
             podOption: false,
             podValue: podwidth,
             usageType: this.props.activeElement.usageType,
-            decorativePopupWarning: false
+            decorativePopupWarning: false,
+            sidebarValue: ""
         };
     }
 
@@ -111,6 +112,7 @@ class Sidebar extends Component {
 
     handlePrimaryOptionChange = (e) => {
       let value = e.target.getAttribute("data-value");
+      this.setState({ sidebarValue: value });
       let secondaryelementList =
         elementList[this.state.activeElementType][value].subtype;
       let secondaryFirstOption = Object.keys(secondaryelementList)[0];
@@ -152,18 +154,46 @@ class Sidebar extends Component {
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
-            if(value === "primary-image-equation"){
-                this.handleDecorativePopup(true)
+            if (value === "primary-image-decorative") {
+                const obj = this.props.slateLevelData[config.slateManifestURN]?.contents?.bodymatter
+                for (let id of obj) {
+                    if (id.id == this.props.activeElement.elementId) {
+                        console.log("trueeeee", id);
+                        console.log("captions2", id?.captions?.text, id?.captions?.text?.length);
+                        console.log("displayedlabel", id?.displayedlabel, id?.displayedlabel !== "Figure");
+                        console.log("html", id?.html);
+                        console.log("html.captions", checkHTMLdataInsideString(id?.html?.captions)?.length);
+                        console.log("html.title", checkHTMLdataInsideString(id?.html?.title)?.length);
+                        console.log("manualoverride", id?.manualoverride, id.hasOwnProperty('manualoverride'));
+                        console.log("title2", id?.title?.text, id?.title?.text?.length);
+                        if (id?.captions?.text?.length || id?.title?.text?.length || checkHTMLdataInsideString(id?.html?.captions)?.length || checkHTMLdataInsideString(id?.html?.title)?.length || (id.hasOwnProperty('displayedlabel') && id?.displayedlabel !== "Figure") || id.hasOwnProperty('manualoverride')) {
+                            console.log("SHOW POPUP");
+                            this.handleDecorativePopup(true)
+                        }
+                        else {
+                            this.props.conversionElement({
+                                elementId: this.props.activeElement.elementId,
+                                elementType: this.state.activeElementType,
+                                primaryOption: value,
+                                fontBulletOption: value,
+                                secondaryOption: secondaryFirstOption,
+                                labelText,
+                                toolbar: elementList[this.state.activeElementType][value].toolbar,
+                            });
+                        }
+                    }
+                }
+            } else {
+                this.props.conversionElement({
+                    elementId: this.props.activeElement.elementId,
+                    elementType: this.state.activeElementType,
+                    primaryOption: value,
+                    fontBulletOption: value,
+                    secondaryOption: secondaryFirstOption,
+                    labelText,
+                    toolbar: elementList[this.state.activeElementType][value].toolbar,
+                });    
             }
-          this.props.conversionElement({
-            elementId: this.props.activeElement.elementId,
-            elementType: this.state.activeElementType,
-            primaryOption: value,
-            fontBulletOption: value,
-            secondaryOption: secondaryFirstOption,
-            labelText,
-            toolbar: elementList[this.state.activeElementType][value].toolbar,
-          });
         }
       }
     };
@@ -372,6 +402,19 @@ class Sidebar extends Component {
             decorativePopupWarning: false,
         })
         this.setSecondary(this.state.secondaryValue,this.state.secondaryLabel);
+        let secondaryelementList =
+        elementList[this.state.activeElementType][this.state.sidebarValue].subtype;
+        let secondaryFirstOption = Object.keys(secondaryelementList)[0];
+        let labelText = secondaryelementList[secondaryFirstOption].labelText;
+        this.props.conversionElement({
+            elementId: this.props.activeElement.elementId,
+            elementType: this.state.activeElementType,
+            primaryOption: this.state.sidebarValue,
+            fontBulletOption: this.state.sidebarValue,
+            secondaryOption: secondaryFirstOption,
+            labelText,
+            toolbar: elementList[this.state.activeElementType][this.state.sidebarValue].toolbar,
+        });
     }
 
     showUpdateAssessmentTypePopup=()=>{
@@ -995,7 +1038,7 @@ class Sidebar extends Component {
 
     podOption = () => {
         if (this.state.activePrimaryOption === 'primary-image-table' || this.state.activePrimaryOption === 'primary-image-figure' ||
-            this.state.activePrimaryOption === 'primary-image-equation' || 
+            this.state.activePrimaryOption === 'primary-image-equation' || this.state.activePrimaryOption === 'primary-image-decorative' || 
             (this.state.activePrimaryOption === 'primary-smartlink' && 
             (this.state.activeSecondaryOption === "secondary-interactive-smartlink-third" || this.state.activeSecondaryOption === 'secondary-interactive-smartlink-tab'))) {
             let active = '';
@@ -1038,8 +1081,7 @@ class Sidebar extends Component {
     }  
 
     render = () => {
-        // const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
-        const isDecorativeImage = this.props.activeElement.tag === 'EQ';
+        const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
@@ -1075,9 +1117,9 @@ class Sidebar extends Component {
                 {this.state.decorativePopupWarning &&
                     <PopUp
                         togglePopup={this.handleSetDecorativeImagePopup}
-                        dialogText={CHANGE_ASSESSMENT_TYPE}
+                        dialogText={SET_AS_DECORATIVE_IMAGE_1}
                         lOPopupClass="lo-warning-txt"
-                        warningHeaderText={`Warning`}
+                        warningHeaderText={`Set Image as Decorative`}
                         setDecorativePopup={true}
                         agree={this.setDecorativeImage}
                     />

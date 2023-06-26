@@ -2552,8 +2552,7 @@ class ElementContainer extends Component {
         const isgreyBorder = isApproved() && READ_ONLY_ELEMENT_LABELS.includes(labelText);
         const readOnlyBorder = isgreyBorder ? 'greyBorder': '';
         const showElementLabel =  !isApproved() || this.state.borderToggle == 'active'
-        // const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
-        const isDecorativeImage = element?.figuretype === elementTypeConstant.FIGURE_MATH_IMAGE
+        const isDecorativeImage = element?.figuredata?.decorative ? true : false
         return (
             <>
                 <div className={`editor ${searched} ${selection} ${isJoinedPdf ? "container-pdf" : ""}`} data-id={element.id} onMouseOver={this.handleOnMouseOver} onMouseOut={this.handleOnMouseOut} onClickCapture={(e) => this.props.onClickCapture(e)}>

@@ -11,7 +11,7 @@ import PowerPasteElement from '../PowerPasteElement/PowerPasteElement.jsx';
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
-import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG } from '../SlateWrapper/SlateWrapperConstants';
+import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG, SET_AS_DECORATIVE_IMAGE_2 } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
@@ -379,7 +379,7 @@ class PopUp extends React.Component {
         if (props.setDecorativePopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.agree(false, e)}>{props.yesButton}</span>
+                    <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.agree(false, e)}>{props.setAsDecorative}</span>
                     <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
@@ -626,7 +626,7 @@ class PopUp extends React.Component {
             return (
                 <>
                     <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
-                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{'Do you want to proceed??'}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{SET_AS_DECORATIVE_IMAGE_2}</div>
                 </>
             )
         }
@@ -769,7 +769,8 @@ PopUp.defaultProps = {
     yesButton: "Yes",
     cancelBtnText: "Cancel",
     deleteInstruction: "Are you sure you want to delete, this action cannot be undone?",
-    proceedButton: "Proceed"
+    proceedButton: "Proceed",
+    setAsDecorative: "Set as Decorative Image"
 
 }
 

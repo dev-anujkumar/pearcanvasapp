@@ -586,8 +586,7 @@ class FigureImage extends Component {
         const captionsHtml = this.props?.model?.html?.captions?.replace("<p>", '')?.replace("</p>", '');
         const creditsHtml = this.props?.model?.html?.credits?.replace("<p>", '')?.replace("</p>", '');
         const isReviewer = hasReviewerRole();
-        // const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
-        const isDecorativeImage = this.props.model?.figuretype === MATH_IMAGE
+        const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
         return (
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
