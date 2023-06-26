@@ -379,7 +379,7 @@ class PopUp extends React.Component {
         if (props.setDecorativePopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.agree(false, e)}>{props.setAsDecorative}</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button`} onClick={(e) => props.agree(false, e)}>{props.setAsDecorative}</span>
                     <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )

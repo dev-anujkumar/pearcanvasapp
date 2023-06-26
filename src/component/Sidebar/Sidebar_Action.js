@@ -120,9 +120,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     text: ""
                 }
                 oldElementData.html = {
-                    captions: "<p><br></p>",
+                    title: "<p><br></p>",
                     text: "",
-                    title: "<p><br></p>"
+                    captions: "<p><br></p>",
+                    credits: oldElementData?.html?.credits
                 }
                 delete oldElementData?.figuredata?.decorative
             }
