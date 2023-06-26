@@ -60,7 +60,7 @@ import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunction
 import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
-import { fetchAudioNarrationForContainer} from '../AudioNarration/AudioNarration_Actions';
+import TcmConstants from '../TcmSnapshots/TcmConstants';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -182,13 +182,18 @@ export const findElementType = (element, index) => {
                         let interactiveFormat = element.figuredata.interactiveformat;
                         let podwidth = element?.figuredata?.posterimage?.podwidth;
                         let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
+                        const { interactiveSubtypeConstants: { THIRD_PARTY } } = TcmConstants;
+                        let assetIdFor3PISmartlink = element?.figuredata?.interactivetype === THIRD_PARTY && element?.figuredata?.interactiveid;
+                        let selectedIntendedPlaybackModeValue = element?.figuredata?.intendedPlaybackMode ?? ''
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
                             altText,
                             longDesc,
                             podwidth,
-                            ...elementDataBank[element.type][element.figuretype][interactiveData]
+                            ...elementDataBank[element.type][element.figuretype][interactiveData],
+                            assetIdFor3PISmartlink,
+                            selectedIntendedPlaybackModeValue
                         }
                         break;
                     case "assessment":

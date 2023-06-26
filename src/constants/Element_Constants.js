@@ -340,3 +340,10 @@ export const tbSidebarEndpoint = "tabbed-2-column"
 export const MOVED_TO_WIP = "Slate has moved to WIP status";
 /* Fetch Learning objectives for these slates*/
 export const FETCH_LO_FOR_SLATES = ['section','pdfslate','ltislate']
+
+export const intendedPlaybackModeDropdown = [
+    { label: 'Inline', value: 'inline' },
+    { label: 'Modal', value: 'modal' },
+    { label: 'New Tab', value: 'tab' },
+    { label: 'New Window', value: 'window' },
+];

@@ -14,8 +14,8 @@ import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
-import { disabledPrimaryOption, MULTI_COLUMN_3C } from '../../constants/Element_Constants.js';
-import { POD_DEFAULT_VALUE, TABBED_2_COLUMN } from '../../constants/Element_Constants';
+import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown } from '../../constants/Element_Constants.js';
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
@@ -56,6 +56,8 @@ class Sidebar extends Component {
             podOption: false,
             podValue: podwidth,
             usageType: this.props.activeElement.usageType,
+            isPlayBackDropdownOpen: false,
+            selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue ?? intendedPlaybackModeDropdown[0]?.value
         };
     }
 
@@ -64,14 +66,15 @@ class Sidebar extends Component {
             let elementDropdown = prevState.elementDropdown;
             let fontBulletElementDropdown = prevState?.fontBulletElementDropdown;
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
-            let podOption = prevState.podOption
+            let podOption = prevState.podOption;
+            let selectedIntendedPlaybackModeValue = prevState?.selectedIntendedPlaybackModeValue;
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 fontBulletElementDropdown = "";
                 podValue = nextProps.activeElement.podwidth;
-                podOption = false
-            }
-            
+                podOption = false;
+                selectedIntendedPlaybackModeValue = nextProps?.activeElement?.selectedIntendedPlaybackModeValue
+            }           
             return {
                 elementDropdown: elementDropdown,
                 fontBulletElementDropdown,
@@ -88,6 +91,7 @@ class Sidebar extends Component {
                 podValue: podValue,
                 podOption: podOption,
                 usageType: nextProps.activeElement.usageType,
+                selectedIntendedPlaybackModeValue: selectedIntendedPlaybackModeValue
             };
         }
 
@@ -240,7 +244,10 @@ class Sidebar extends Component {
             if(this.state.elementDropdown === elementDropdown) elementDropdown = '';
             this.setState({elementDropdown, fontBulletElementDropdown: ""});
         }
-        this.setState({ podOption: false });
+        this.setState({
+            podOption: false,
+            isPlayBackDropdownOpen: false
+        });
     }
 
     primaryOption = () => {
@@ -594,6 +601,25 @@ class Sidebar extends Component {
         this.setPlayback(selectedValue, labelText);
     }
 
+    handleIntendedPlaybackDropdown = (e) =>{
+        let value = e.target.getAttribute("data-value");
+        let SlateData = this.props?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
+        let currentSlateData = SlateData.filter(item => item.id === this.props?.activeElement?.elementId);
+        let smartlinkfigureData = currentSlateData[0]?.figuredata;
+        currentSlateData[0] = {
+            ...currentSlateData[0],
+             figuredata:{
+                ...smartlinkfigureData,
+                intendedPlaybackMode: value,
+             },
+             slateVersionUrn : config.slateManifestURN
+        }
+        this.setState({
+            isPlayBackDropdownOpen : false,
+            selectedIntendedPlaybackModeValue: value
+        },()=> this.props.updateElement(currentSlateData[0]));
+    }
+
     /**@description sets the values form the selected dropdown
      * @param-value is AssessmentType selected from the dropdown
      * @param-labelText is the label of the Element
@@ -619,95 +645,35 @@ class Sidebar extends Component {
         }
     }
 
+    /**@description render playbackMode for 3PI smartlink for added alfresco assets*/
     playbackMode = () => {
         let playbackMode = '';
-        let languageDropdownOptions = [];
-        let enableColumn4playbackOption = false;
-        if(this.state.activeElementType){
-            let primaryOptionObject = elementList[this.state.activeElementType];
-            let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
-            let secondaryOptionList = Object.keys(secondaryOptionObject);
-            let isLearnosityProject = this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? true : false;
-            let showLearnosityDropdown = false;
-            if (this.state.activePrimaryOption === "primary-blockcode-equation" && this.state.activeSecondaryOption !== "secondary-blockcode-language-default") {
-                secondaryOptionList.splice(0, 1)
+        if (this.state.activeElementType) {
+            playbackMode = intendedPlaybackModeDropdown.map(item => {
+                return <li key={item?.value} data-value={item?.value} onClick={this.handleIntendedPlaybackDropdown}>
+                    {item.label}
+                </li>;
+            });
+            let active = '';
+            if (this.state.isPlayBackDropdownOpen) {
+                active = 'active';
             }
-            // checking active element and primary option to allow column 3 secondary option
-            if (this.state.activeElementType === "groupedcontent" && this.state.activePrimaryOption === MULTI_COLUMN_3C.ELEMENT_NAME) {
-                enableColumn4playbackOption = true;
-            }
-            if(secondaryOptionList.length > 1 || enableColumn4playbackOption) {
-                playbackMode = secondaryOptionList.map(item => {
-                    let addClass = '';
-                    if (item === SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY) {
-                        addClass = 'learnosity-disabled';
-                        showLearnosityDropdown = true;
-                    }
-                    languageDropdownOptions.push({...secondaryOptionObject[item], item});
-                    return <li key={item} data-value={item} className={`${addClass}`} onClick={this.handleSecondaryOptionChange}>
-                        {secondaryOptionObject[item].text}
-                    </li>;
-                });
-
-                let display = '';
-                if (secondaryOptionList.length <= 1) {
-                    display = 'hidden';
-                }
-
-                let active = '';
-                if (this.state.elementDropdown === 'secondary') {
-                    active = 'active';
-                }
-                if (isLearnosityProject && showLearnosityDropdown) {
-                    active = ''
-                }
-                let disabled = '';
-                if (this.state.usageType === "") {
-                    disabled = "disabled";
-                }
-                //Removing Select option from dropdown values
-                if (languageDropdownOptions.length )  languageDropdownOptions = languageDropdownOptions.filter(option => option.text !== 'Select')
-                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
-                const disableClass = hasReviewerRole() ? "pointer-events-none" : ''
-                playbackMode = <div
-                    className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
-                    <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
-                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn4playbackOption ? null : this.toggleElementDropdown}>
-                        {secondaryOptionObject[this.state.activeSecondaryOption].text}
-                        {((isLearnosityProject && showLearnosityDropdown) || enableColumn4playbackOption) ? "" : <span> {dropdownArrow} </span>}
-                    </div>) : (<div className={`element-dropdown-title bce ${disabled} ${disableClass}`} data-element="secondary" onClick={enableColumn4playbackOption ? null : this.toggleElementDropdown}>
-                        <Autocomplete
-                            disablePortal
-                            disableClearable
-                            id="language-select-demo"
-                            noOptionsText={'No result found'}
-                            style={{ width: 210 }}
-                            ListboxProps={{ style: { maxHeight: "270px" } }}
-                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? {"text": "","labelText": "BCE","enum": ""} : secondaryOptionObject[this.state.activeSecondaryOption]}
-                            options={languageDropdownOptions}
-                            onChange={(e,value)=>{this.handleplaybackModeLanguageChange(e,value)}}
-                            getOptionLabel={(option) => option.text}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    fullWidth
-                                    placeholder="Select & Search"
-                                    variant="outlined"
-                                    inputProps={{
-                                        ...params.inputProps,
-                                    }}
-                                />
-                            )}
-                        /> 
-                    </div>)}
-                    {this.modalBanner()}
-                    <ul className={`element-dropdown-content secondary-options ${active}`}>
-                        {playbackMode}
-                    </ul>
-                </div>;
-            }
-        return playbackMode;
-    }}
+            const disableClass = hasReviewerRole() ? "pointer-events-none" : '';
+            playbackMode = <div
+                className={`element-dropdown`}>
+                <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
+                <div className={`element-dropdown-title ${disableClass}`} data-element="secondary" onClick={this.toggleIntendedPlaybackDropdown}>
+                    {this.renderIntendedPlaybackDropdownLabel(this.state.selectedIntendedPlaybackModeValue)}
+                    <span> {dropdownArrow} </span>
+                </div>
+                {this.modalBanner()}
+                <ul className={`element-dropdown-content secondary-options ${active}`}>
+                    {playbackMode}
+                </ul>
+            </div>;
+            return playbackMode;
+        }
+    }
 
     modalBanner = () => {
         let modalBanner = ''
@@ -715,6 +681,19 @@ class Sidebar extends Component {
                     <img className='modalIcon' src={modalIcon} />
                     <p className='modalText'>{MODAL_MESSAGE}</p></div>
         return modalBanner
+    }
+
+    toggleIntendedPlaybackDropdown = () => {
+        this.setState({
+            isPlayBackDropdownOpen : !this.state.isPlayBackDropdownOpen,
+            podOption : false,
+            elementDropdown: ''
+        })
+    }
+
+    renderIntendedPlaybackDropdownLabel = (value) => {
+        const finalValue = intendedPlaybackModeDropdown.find(obj => obj.value === value);
+        if (finalValue) return finalValue.label;
     }
 
     attributions = () => {
@@ -1080,7 +1059,8 @@ class Sidebar extends Component {
         this.setState({
             podOption: !this.state.podOption,
             podValue: selValue ? selValue : this.state.podValue,
-            elementDropdown: ''
+            elementDropdown: '',
+            isPlayBackDropdownOpen: false
         }, () => this.handleBceBlur())
     }
 
@@ -1134,6 +1114,7 @@ class Sidebar extends Component {
     }  
 
     render = () => {
+        const {activeElement} = this.props;
         return (
             <>
                 {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
@@ -1142,7 +1123,7 @@ class Sidebar extends Component {
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.secondaryOption()}
-                    {this.playbackMode()}
+                    {activeElement?.assetIdFor3PISmartlink && this.playbackMode()}
                     {this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
