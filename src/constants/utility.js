@@ -1061,6 +1061,7 @@ export const showNotificationOnCanvas = (message) => {
     }
 }
 
+// This function is use to handle Indentation for Poerty Element
 export const isStanzaIndent = (stanzaClassList) => {
     return (stanzaClassList.contains('poetryLineLevel1') || stanzaClassList.contains('poetryLineLevel2') || stanzaClassList.contains('poetryLineLevel3'))
 }
