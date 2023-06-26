@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole, withoutCursorInitailizedElements } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole, withoutCursorInitailizedElements, isStanzaIndent } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY, INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -805,6 +805,14 @@ export class TinyMceEditor extends Component {
             if (this.props.element && this.props.element.type === 'element-blockfeature') {
                 if ( e && e.target && e.target.classList.contains('blockquoteTextCredit')) {
                     setFormattingToolbar('disableTinymceToolbar')
+                }
+            }
+            if (this.props?.element?.type === 'stanza') {
+                const stanzaClassList = e?.target?.classList
+                if (!isStanzaIndent(stanzaClassList)) {
+                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                } else {
+                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
                 }
             }
         });
@@ -2697,7 +2705,7 @@ export class TinyMceEditor extends Component {
        
         // Disable Indent For Poetry-Stanza
 
-        /*else if (className && className.trim() === 'poetryLine') {
+        else if (className && className.trim() === 'poetryLine') {
             selectedNode.className = 'poetryLine poetryLineLevel1';
             this.indentRun = true;
         }
@@ -2708,7 +2716,7 @@ export class TinyMceEditor extends Component {
         else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
             selectedNode.className = 'poetryLine poetryLineLevel3';
             this.indentRun = true;
-        }*/
+        }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -2737,7 +2745,7 @@ export class TinyMceEditor extends Component {
 
         // Disable Outdent For Poetry-Stanza
 
-        /*else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
+        else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
             selectedNode.className = 'poetryLine';
             this.outdentRun = true;
         }
@@ -2748,7 +2756,7 @@ export class TinyMceEditor extends Component {
         else if (className && className.trim() === 'poetryLine poetryLineLevel3') {
             selectedNode.className = 'poetryLine poetryLineLevel2';
             this.outdentRun = true;
-        }*/
+        }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -2763,6 +2771,10 @@ export class TinyMceEditor extends Component {
         let className = null;
         if (type && type === 'stanza' && selectedNode) {
             className = selectedNode.className;
+            const stanzaClassList = selectedNode?.classList
+            if (!isStanzaIndent(stanzaClassList)) {
+                document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
+            }
         }
         if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
             e.preventDefault()
@@ -2781,6 +2793,14 @@ export class TinyMceEditor extends Component {
         let className = null;
         if (type && type === 'stanza' && selectedNode) {
             className = selectedNode.className;
+            const stanzaClassList = selectedNode?.classList
+            if (stanzaClassList.contains('poetryLineLevel1')) {
+                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+            } else if (stanzaClassList.contains('poetryLineLevel2') && (stanzaClassList.contains('poetryLineLevel1') || stanzaClassList.contains('poetryLineLevel3'))) {
+                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+            } else if (stanzaClassList.contains('poetryLineLevel3') && (stanzaClassList.contains('poetryLineLevel1') || stanzaClassList.contains('poetryLineLevel2'))) {
+                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+            }
         }
         if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
             e.preventDefault()
@@ -3977,6 +3997,13 @@ export class TinyMceEditor extends Component {
                     tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
                     tinymce.activeEditor.selection.collapse(false);
                     this.handleCodeClick(tinymce.activeEditor, true);
+                }
+                if (this.props?.element?.type === 'stanza') {
+                    const data = tinymce.activeEditor?.selection?.getNode()
+                    const stanzaClassList = data?.classList
+                    if (!isStanzaIndent(stanzaClassList)) {
+                        document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                    }
                 }
                 //tinymce.$('.blockquote-editor').attr('contenteditable', false)
                 this.editorOnClick(event);
