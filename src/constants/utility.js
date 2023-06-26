@@ -1060,3 +1060,7 @@ export const showNotificationOnCanvas = (message) => {
         }, 3000);
     }
 }
+
+export const isStanzaIndent = (stanzaClassList) => {
+    return (stanzaClassList.contains('poetryLineLevel1') || stanzaClassList.contains('poetryLineLevel2') || stanzaClassList.contains('poetryLineLevel3'))
+}
