@@ -281,7 +281,7 @@ class Sidebar extends Component {
                 const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
-                    <div className='categories'>{CATEGORY}</div>
+                    {this.state.activePrimaryOption === 'primary-smartlink' && <div className='categories'>{CATEGORY}</div>}
                     <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ? null : dropdownArrow}
@@ -515,7 +515,7 @@ class Sidebar extends Component {
                 const disableClass = hasReviewerRole() ? "pointer-events-none" : ''
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
-                    <div className='categories'>{SUB_CATEGORY}</div>
+                    {this.state.activePrimaryOption === 'primary-smartlink' && <div className='categories'>{SUB_CATEGORY}</div>}
                     {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
@@ -603,21 +603,11 @@ class Sidebar extends Component {
 
     handleIntendedPlaybackDropdown = (e) =>{
         let value = e.target.getAttribute("data-value");
-        let SlateData = this.props?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
-        let currentSlateData = SlateData.filter(item => item.id === this.props?.activeElement?.elementId);
-        let smartlinkfigureData = currentSlateData[0]?.figuredata;
-        currentSlateData[0] = {
-            ...currentSlateData[0],
-             figuredata:{
-                ...smartlinkfigureData,
-                intendedPlaybackMode: value,
-             },
-             slateVersionUrn : config.slateManifestURN
-        }
+        this.props.setBCEMetadata('selectedIntendedPlaybackModeValue', value);
         this.setState({
             isPlayBackDropdownOpen : false,
             selectedIntendedPlaybackModeValue: value
-        },()=> this.props.updateElement(currentSlateData[0]));
+        },() => this.handleBceBlur());
     }
 
     /**@description sets the values form the selected dropdown
