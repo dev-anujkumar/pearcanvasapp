@@ -525,6 +525,11 @@ div[title='Ignore all']{
     pointer-events: none;
 }
 
+.disabled-toolbar-button {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
 /* classes replacing Book.css */
 /*  commenting Now for future reference */ 
 /* div.divWidgetMDI, div.divWidget3PI, div.divWidget3PISE, div.divWidget3PI.SocialExplorer, div.divWidget3PI.GeoGebra,
