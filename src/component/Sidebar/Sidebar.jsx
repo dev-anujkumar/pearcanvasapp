@@ -596,6 +596,9 @@ class Sidebar extends Component {
     }
 
 
+    /* handles IntendedPlaybackMode Dropdown for 3PI smartlink  with asset
+    This function triggers sets activeElement attribute and triggers save call
+    */
     handleIntendedPlaybackDropdown = (e) =>{
         let value = e.target.getAttribute("data-value");
         this.props.setBCEMetadata('selectedIntendedPlaybackModeValue', value);

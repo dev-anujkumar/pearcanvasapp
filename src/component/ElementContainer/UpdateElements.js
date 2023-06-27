@@ -321,7 +321,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
 
     // updating the intendedPlayBackMode for 3PI smartlink
     const {assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue} = containerContext.props.activeElement
-    if (previousElementData.figuredata.interactivetype === '3rd-party' && assetIdFor3PISmartlink) {
+    if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink) {
         data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : intendedPlaybackModeDropdown[0].value
     }
 

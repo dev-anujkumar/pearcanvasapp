@@ -309,7 +309,7 @@ pointer-events: none;
     order: 0;
     flex-grow: 0;
     margin: 24px 0 0 0;
-    font-family: 'Open Sans';
+    font-family: 'Open Sans', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 13px;
@@ -350,7 +350,7 @@ pointer-events: none;
 .modalText{
     width: 165px;
     height: 24px;
-    font-family: 'Open Sans' !important;
+    font-family: 'Open Sans', sans-serif !important;
     font-style: normal;
     font-weight: 400;
     font-size: 9px !important;
