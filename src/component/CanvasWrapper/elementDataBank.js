@@ -133,6 +133,34 @@ const elementDataBank = {
                 "secondaryOption" : "secondary-image-figure-actual"
             }
         },
+        "decorativeImage" : {
+            "elementType" : "figure",
+            "primaryOption" : "primary-image-decorative",
+            "informalfigure" : {
+                "secondaryOption" : "secondary-image-figure-half"
+            },
+            "image50Text" : {
+                "secondaryOption" : "secondary-image-figure-half"
+            },
+            "imageTextWidth" : {
+                "secondaryOption" : "secondary-image-figure-width"
+            },
+            "imageWiderThanText" : {
+                "secondaryOption" : "secondary-image-figure-wider"
+            },
+            "imageFullscreen" : {
+                "secondaryOption" : "secondary-image-figure-full"
+            },
+            "image25Text" : {
+                "secondaryOption" : "secondary-image-figure-quarter"
+            },
+            "image75Text" : {
+                "secondaryOption" : "secondary-image-figure-three-quarter"
+            },
+            "imageactualsize" : {
+                "secondaryOption" : "secondary-image-figure-actual"
+            }
+        },
         "mathImage" : {
             "elementType" : "figure",
             "primaryOption" : "primary-image-equation",

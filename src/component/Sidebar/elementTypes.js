@@ -324,6 +324,16 @@ export default {
                     labelText: 'DI',
                     enum: 'IMAGE_FULL'
                 }
+            },
+            attributes: {
+                alt_text: {
+                    text: 'Alt Text',
+                    isEditable: false
+                },
+                long_description: {
+                    text: 'Long Description',
+                    isEditable: false
+                }
             }
         },
         'primary-mathml-equation': {
