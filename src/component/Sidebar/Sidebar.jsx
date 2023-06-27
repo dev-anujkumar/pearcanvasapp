@@ -67,13 +67,15 @@ class Sidebar extends Component {
             let fontBulletElementDropdown = prevState?.fontBulletElementDropdown;
             let podValue = prevState.podValue === undefined ? POD_DEFAULT_VALUE : prevState.podValue;
             let podOption = prevState.podOption;
+            let isPlayBackDropdownOpen = prevState.isPlayBackDropdownOpen;
             let selectedIntendedPlaybackModeValue = prevState?.selectedIntendedPlaybackModeValue;
             if (nextProps.activeElement.elementId !== prevState.activeElementId) {
                 elementDropdown = '';
                 fontBulletElementDropdown = "";
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false;
-                selectedIntendedPlaybackModeValue = nextProps?.activeElement?.selectedIntendedPlaybackModeValue
+                selectedIntendedPlaybackModeValue = nextProps?.activeElement?.selectedIntendedPlaybackModeValue,
+                isPlayBackDropdownOpen = false;
             }           
             return {
                 elementDropdown: elementDropdown,
@@ -91,7 +93,8 @@ class Sidebar extends Component {
                 podValue: podValue,
                 podOption: podOption,
                 usageType: nextProps.activeElement.usageType,
-                selectedIntendedPlaybackModeValue: selectedIntendedPlaybackModeValue
+                selectedIntendedPlaybackModeValue: selectedIntendedPlaybackModeValue,
+                isPlayBackDropdownOpen: isPlayBackDropdownOpen
             };
         }
 
@@ -431,7 +434,8 @@ class Sidebar extends Component {
                 elementDropdown:'',
                 activeSecondaryOption: value,
                 activeLabelText: labelText,
-                podOption: false
+                podOption: false,
+                isPlayBackDropdownOpen: false
             });
         }
         else {
@@ -450,6 +454,7 @@ class Sidebar extends Component {
             activeLabelText: labelText,
             podOption: false,
             podValue: POD_DEFAULT_VALUE,
+            isPlayBackDropdownOpen: false
         });
 
         if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== "element-assessment") {
