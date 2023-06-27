@@ -756,11 +756,12 @@ class ElementContainer extends Component {
         let podwidth = this.props?.activeElement?.podwidth;
         const oldIntendedPlaybackModeValue = previousElementData?.figuredata?.intendedPlaybackMode;
         const currentIntendedPlaybackModeValue =  this.props?.activeElement?.selectedIntendedPlaybackModeValue;
+        const is3PIIntendedPlaybackDropdownUpdate = oldIntendedPlaybackModeValue !== currentIntendedPlaybackModeValue;
         let oldImage = this.props.oldImage;
              oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel') && (previousElementData.figuretype !== 'tableasmarkup')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
-            let isValid = (validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth) || oldIntendedPlaybackModeValue !== currentIntendedPlaybackModeValue);
+            let isValid = (is3PIIntendedPlaybackDropdownUpdate || validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth));
             return isValid;
         }
       
@@ -778,7 +779,7 @@ class ElementContainer extends Component {
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
                 oldImage !== newInteractiveid ||
                 this.changeInPodwidth(podwidth, previousElementData?.figuredata?.posterimage?.podwidth) || 
-                oldIntendedPlaybackModeValue !== currentIntendedPlaybackModeValue);
+                is3PIIntendedPlaybackDropdownUpdate);
         }
         else {
             return (subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
