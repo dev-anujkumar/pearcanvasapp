@@ -183,7 +183,7 @@ export const findElementType = (element, index) => {
                         let podwidth = element?.figuredata?.posterimage?.podwidth;
                         let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         const { interactiveSubtypeConstants: { THIRD_PARTY } } = TcmConstants;
-                        let assetIdFor3PISmartlink = element?.figuredata?.interactivetype === THIRD_PARTY && element?.figuredata?.interactiveid;
+                        let assetIdFor3PISmartlink = element?.figuredata?.interactivetype === THIRD_PARTY && element?.figuredata?.interactiveid ? element?.figuredata?.interactiveid : '';
                         let selectedIntendedPlaybackModeValue = element?.figuredata?.intendedPlaybackMode ? element?.figuredata?.intendedPlaybackMode : intendedPlaybackModeDropdown[0].value;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
