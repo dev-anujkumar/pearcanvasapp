@@ -482,7 +482,9 @@ class SlateWrapper extends Component {
         }else if(!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed)){
             const slateId = Object.keys(this.props.slateData)[0],
                 lockDuration = 5400
-            this.setSlateLock(slateId, lockDuration)
+                if(config.slateType !== SLATE_TYPE_LTI) {
+                    this.setSlateLock(slateId, lockDuration)
+                }
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
         }else if(isSubscriberRole(projectSharingRole, isSubscribed)){
             return this.props.projectSubscriptionDetails.isSubscribersSubscribedSlateChecked
@@ -490,7 +492,9 @@ class SlateWrapper extends Component {
         else {
             const slateId = Object.keys(this.props.slateData)[0],
                 lockDuration = 5400
-            this.setSlateLock(slateId, lockDuration)
+                if(config.slateType !== SLATE_TYPE_LTI) {
+                    this.setSlateLock(slateId, lockDuration)
+                }
             return false
         }
     }
@@ -500,9 +504,6 @@ class SlateWrapper extends Component {
      * @param {*} event event object
      */
     checkSlateLockStatus = (event) => {
-        if(config.slateType === SLATE_TYPE_LTI) {
-            return;
-        }
         if (this.checkLockStatus()) {
             this.prohibitPropagation(event)
             this.togglePopup(true)

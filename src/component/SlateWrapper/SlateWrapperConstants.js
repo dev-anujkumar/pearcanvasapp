@@ -161,3 +161,10 @@ export const APPROVED_BANNER_MESSAGE1 = "Read-only | Approved Content"
 export const APPROVED_BANNER_MESSAGE2 = "- Editing content will create a new version of this slate"
 export const EDIT_CONTENT_BTN = "Edit Content"
 /************************************************************************************/
+
+/*** Sidebar constants ***/
+
+export const CATEGORY = 'Category'
+export const SUB_CATEGORY = 'Subcategory'
+export const INTENDED_PLAYBACK_CATEGORY = 'Intended Playback Mode (web)'
+export const MODAL_MESSAGE = 'Playback mode will always be Modal in a mobile app.'
