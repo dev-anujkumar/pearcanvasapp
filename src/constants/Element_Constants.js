@@ -285,7 +285,6 @@ const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, va
 }
 
 /** Metadata Anchor Element constants */
-export const cypressLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to cypress framework.`
 export const externalLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to external framework.`
 export const CYPRESS_LF = "cypressLF";
 export const EXTERNAL_LF =  "externalLF";
