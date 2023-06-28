@@ -11,7 +11,7 @@ import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE,  } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown } from '../../constants/Element_Constants.js';
@@ -261,6 +261,7 @@ class Sidebar extends Component {
             let className = ""
             let primaryOptionObject = elementList[this.state.activeElementType];
             let primaryOptionList = Object.keys(primaryOptionObject);
+            const isSmartlinkElement = this.state.activePrimaryOption === PRIMARY_SMARTLINK ? SMARTLINK_ELEMENT_DROPDOWN_TITLE: '';
             if (primaryOptionList.length > 0) {
                 if (this.state.activeElementType === 'element-assessment') {
                     delete primaryOptionList[1];
@@ -284,8 +285,8 @@ class Sidebar extends Component {
                 const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
-                    {this.state.activePrimaryOption === 'primary-smartlink' && <div className='categories'>{CATEGORY}</div>}
-                    <div className={`element-dropdown-title ${className}`} data-element="primary" onClick={this.toggleElementDropdown}>
+                    {isSmartlinkElement && <div className='categories'>{CATEGORY}</div>}
+                    <div className={`element-dropdown-title ${className} ${isSmartlinkElement}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ? null : dropdownArrow}
                     </div>
@@ -472,6 +473,7 @@ class Sidebar extends Component {
         let secondaryOptions = '';
         let languageDropdownOptions = [];
         let enableColumn3SecondaryOption = false;
+        const isSmartlinkElement = this.state.activePrimaryOption === PRIMARY_SMARTLINK ? SMARTLINK_ELEMENT_DROPDOWN_TITLE : '';
         if(this.state.activeElementType){
             let primaryOptionObject = elementList[this.state.activeElementType];
             let secondaryOptionObject = primaryOptionObject[this.state.activePrimaryOption].subtype;
@@ -520,8 +522,8 @@ class Sidebar extends Component {
                 const disableClass = hasReviewerRole() ? "pointer-events-none" : ''
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
-                    {this.state.activePrimaryOption === 'primary-smartlink' && <div className='categories'>{SUB_CATEGORY}</div>}
-                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                    {isSmartlinkElement && <div className='sub-categories'>{SUB_CATEGORY}</div>}
+                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled} ${isSmartlinkElement}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
                     </div>) : (<div className={`element-dropdown-title bce ${disabled} ${disableClass}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
