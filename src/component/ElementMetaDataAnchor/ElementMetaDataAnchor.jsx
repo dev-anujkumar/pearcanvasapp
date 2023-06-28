@@ -68,14 +68,6 @@ export class ElementMetaDataAnchor extends Component {
     } else if (this.props?.currentSlateLOData) {
       loData = this.props.currentSlateLOData
     }
-    if (document.getElementsByClassName('learningObjectiveinnerText').length > 0) {
-      let element = document.getElementsByClassName('learningObjectiveinnerText');
-      element = Array.from(element);
-      element.forEach((item) => {
-        /* Handling placeholder flicker in case of cypressLF */
-        // item.classList.add("place-holder");
-      })
-    }
     let jsx;
     if (loData && loData != "" && loData.label && loData.label.en) {
       jsx = this.props.currentSlateLF == EXTERNAL_LF ?  `<div>${loData.label.en}</div>` : loData.label.en;

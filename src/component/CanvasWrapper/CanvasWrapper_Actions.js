@@ -46,7 +46,7 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, fetchAnySlateData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB, intendedPlaybackModeDropdown } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
@@ -60,7 +60,7 @@ import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunction
 import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
-import { fetchAudioNarrationForContainer} from '../AudioNarration/AudioNarration_Actions';
+import TcmConstants from '../TcmSnapshots/TcmConstants';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -182,13 +182,18 @@ export const findElementType = (element, index) => {
                         let interactiveFormat = element.figuredata.interactiveformat;
                         let podwidth = element?.figuredata?.posterimage?.podwidth;
                         let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
+                        const { interactiveSubtypeConstants: { THIRD_PARTY } } = TcmConstants;
+                        const assetIdFor3PISmartlink = element?.figuredata?.interactivetype === THIRD_PARTY && element?.figuredata?.interactiveid ? element?.figuredata?.interactiveid : '';
+                        const selectedIntendedPlaybackModeValue = element?.figuredata?.intendedPlaybackMode ? element?.figuredata?.intendedPlaybackMode : intendedPlaybackModeDropdown[0].value;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
                             altText,
                             longDesc,
                             podwidth,
-                            ...elementDataBank[element.type][element.figuretype][interactiveData]
+                            ...elementDataBank[element.type][element.figuretype][interactiveData],
+                            assetIdFor3PISmartlink,
+                            selectedIntendedPlaybackModeValue
                         }
                         break;
                     case "assessment":
