@@ -289,6 +289,12 @@ class FigureImage extends Component {
             longdescription: longDesc,
             type: figureType,
         }
+        if (this.props.model?.figuredata?.decorative) {
+            setFigureData = {
+                ...setFigureData,
+                decorative: true
+            }
+        }
 
         Object.assign(setFigureData, (Object.keys(scaleMarkerAsset).length > 0) ? { scaleimage: scaleMarkerAsset } : null);
 

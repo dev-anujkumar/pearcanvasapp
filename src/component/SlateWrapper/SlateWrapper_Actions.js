@@ -1567,6 +1567,16 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
+        if(selection?.element?.figuredata?.decorative) {
+            delete _requestData.content[0]?.html?.captions
+            delete _requestData.content[0]?.html?.text
+            delete _requestData.content[0]?.html?.title
+            _requestData.content[0].numberedandlabel = false
+            _requestData.content[0].figuretype = selection?.element?.figuretype
+            _requestData.content[0].subtype = selection?.element?.subtype
+            _requestData.content[0].figuredata.type = selection?.element?.figuredata?.type
+            _requestData.content[0].alignment = selection?.element?.alignment
+        }
         /** Cut-Copy TCM snapshots API Payload Params*/
         let tcmSnapshotParams = {
             selection,

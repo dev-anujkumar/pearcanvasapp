@@ -157,16 +157,8 @@ class Sidebar extends Component {
             if (value === "primary-image-decorative") {
                 const obj = this.props.slateLevelData[config.slateManifestURN]?.contents?.bodymatter
                 for (let id of obj) {
-                    if (id.id == this.props.activeElement.elementId) {
-                        console.log("trueeeee", id);
-                        console.log("captions2", id?.captions?.text, id?.captions?.text?.length);
-                        console.log("displayedlabel", id?.displayedlabel, id?.displayedlabel !== "Figure");
-                        console.log("html", id?.html);
-                        console.log("html.captions", checkHTMLdataInsideString(id?.html?.captions)?.length);
-                        console.log("html.title", checkHTMLdataInsideString(id?.html?.title)?.length);
-                        console.log("manualoverride", id?.manualoverride, id.hasOwnProperty('manualoverride'));
-                        console.log("title2", id?.title?.text, id?.title?.text?.length);
-                        if (id?.captions?.text?.length || id?.title?.text?.length || checkHTMLdataInsideString(id?.html?.captions)?.length || checkHTMLdataInsideString(id?.html?.title)?.length || (id.hasOwnProperty('displayedlabel') && id?.displayedlabel !== "Figure") || id.hasOwnProperty('manualoverride')) {
+                    // if (id.id == this.props.activeElement.elementId) {
+                        if (id?.captions?.text?.length || id?.title?.text?.length || (id.hasOwnProperty('displayedlabel') && id?.displayedlabel !== "Figure") || id.hasOwnProperty('manualoverride')) {
                             console.log("SHOW POPUP");
                             this.handleDecorativePopup(true)
                         }
@@ -181,7 +173,7 @@ class Sidebar extends Component {
                                 toolbar: elementList[this.state.activeElementType][value].toolbar,
                             });
                         }
-                    }
+                    // }
                 }
             } else {
                 this.props.conversionElement({

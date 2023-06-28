@@ -1134,6 +1134,13 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
+                            if(primaryOption === "primary-image-decorative") {
+                                delete dataToSend.captions
+                                delete dataToSend.title
+                                delete dataToSend.html.title
+                                delete dataToSend.html.captions
+                                delete dataToSend.html.text
+                            }
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true
                             this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, undefined, parentElement);
