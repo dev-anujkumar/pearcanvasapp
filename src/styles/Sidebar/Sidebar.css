@@ -330,7 +330,7 @@ pointer-events: none;
 }
 
 .canvas-sidebar .element-dropdown .element-dropdown-title.intented-dropdown-banner {
-    margin: 0 0 4px 0!important;
+    margin: 0 0 4px 0 !important;
 }
 
 .modalBanner{
