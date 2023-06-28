@@ -3,7 +3,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
 import { matchHTMLwithRegex, removeBlankTags, getDesignType } from '../../constants/utility.js'
 import store from '../../appstore/store'
-import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, intendedPlaybackModeDropdown } from '../../constants/Element_Constants'
 import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel } from '../../constants/utility';
@@ -207,7 +207,7 @@ export const podHtmlmatchWithRegex = (html) => {
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption,isAutoNumberingEnabled, autoNumberOption ) => {
+export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption,isAutoNumberingEnabled, autoNumberOption, containerContext ) => {
     const oldFigureData = Object.assign({},previousElementData.figuredata);
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),
@@ -317,6 +317,12 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         },
         inputType : elementTypes[elementType][primaryOption]['enum'],
         inputSubType : elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum']    
+    }
+
+    // updating the intendedPlayBackMode for 3PI smartlink
+    const {assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue} = containerContext.props.activeElement
+    if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink) {
+        data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : intendedPlaybackModeDropdown[0].value
     }
 
     if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
@@ -895,7 +901,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                         break;
                     case elementTypeConstant.INTERACTIVE:
 
-                        dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption, containerContext)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:
                         dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
