@@ -282,6 +282,7 @@ const mapStateToProps = state => {
         isSlateTagEnable: state.metadataReducer.slateTagEnable,
         getRequiredSlateData: state.appStore.getRequiredSlateData,
         assessmentReducer: state.assessmentReducer,
+        roleId:state.appStore.roleId,
     };
 };
 

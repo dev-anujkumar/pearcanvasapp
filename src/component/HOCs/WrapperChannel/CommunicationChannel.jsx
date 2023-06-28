@@ -987,7 +987,7 @@ function CommunicationChannel(WrappedComponent) {
                     let tocAdd = this.props.permissions.includes('toc_add_pages') ? 'toc_add_pages' : ""
                     permissionObj.permissions = [tocEditTitle, tocDelete, tocRearrage, tocAdd]
                 }
-                permissionObj.roleId = 'admin';
+                permissionObj.roleId = this.props.roleId;
             }
 
 
