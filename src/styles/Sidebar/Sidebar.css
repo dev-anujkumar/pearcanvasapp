@@ -325,8 +325,9 @@ pointer-events: none;
     margin-top: 24px;
 }
 
-.playback-dropdown{
-    top: 75px;
+.element-dropdown-content.secondary-options.playback-dropdown{
+    top: 70px;
+    padding: 0px;
 }
 
 .canvas-sidebar .element-dropdown .element-dropdown-title.intented-dropdown-banner {
