@@ -355,7 +355,7 @@ pointer-events: none;
     padding: 0 8px;
 }
 
-.modalText{
+.modalBanner .modalText{
     width: 165px;
     height: 24px;
     font-family: 'Open Sans', sans-serif !important;
