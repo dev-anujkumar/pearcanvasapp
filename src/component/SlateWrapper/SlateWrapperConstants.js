@@ -171,3 +171,10 @@ export const INTENDED_PLAYBACK_CATEGORY = 'Intended Playback Mode (web)'
 export const MODAL_MESSAGE = 'Playback mode will always be Modal in a mobile app.'
 export const  PRIMARY_SMARTLINK = 'primary-smartlink'
 export const  SMARTLINK_ELEMENT_DROPDOWN_TITLE = 'smartlink-element-dropdown-title'
+/**** Action messages for slate level save ****/
+export const PROJECT_PREVIEW_ACTION = "click_on_project_preview_button"
+export const CHANGE_SLATE_ACTION = "change_slate_focus"
+export const REFRESH_BROWSER_ACTION = "refresh_browser"
+export const SLATE_REFRESH_ACTION = "click_on_slate_refresh_button"
+export const RELEASE_SLATE_LOCK_ACTION = "release_slate_lock"
+/************************************************************************************/

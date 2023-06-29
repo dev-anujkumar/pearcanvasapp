@@ -3,6 +3,8 @@ import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
 import store from './../../appstore/store';
 import { hasReviewerRole } from '../../constants/utility';
+import { triggerSlateLevelSave } from '../../js/slateLevelSave.js';
+import { RELEASE_SLATE_LOCK_ACTION } from '../SlateWrapper/SlateWrapperConstants';
 
 /**
  * Action Creator
@@ -138,11 +140,13 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
                type: SET_LOCK_FLAG,
                payload: false
            })
+           triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
             if(callback){
                 callback(res.data)
             }
         })
         .catch((err) => {
+            triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
             if(callback){
                 callback(err)
             }
