@@ -563,13 +563,11 @@ class FigureImage extends Component {
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1 ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
-        // console.log("nish this.props.decoToOtherTypes", this.props.decoToOtherTypes)
-        // console.log("nish figureLabelFromApi", figureLabelFromApi)
-        if(!(isAutoNumberingEnabled)){
-            // console.log("nish figureLabelValue", figureLabelValue)
-            // if(this.props.decoToOtherTypes) {
-            //     figureLabelValue = 'No Label';
-            // }
+        if (!(isAutoNumberingEnabled)) {
+            if (this.props.decoToOtherTypes) {
+                this.state.figureLabelValue = 'No Label';
+                this.props.decoToOtherTypeConversion(false);
+            }
             if (dropdownData.indexOf(figureLabelFromApi?.toLowerCase()) > -1) {
                 figureLabelFromApi = figureLabelFromApi?.toLowerCase();
                 figureLabelValue = figureLabelFromApi.charAt(0)?.toUpperCase() + figureLabelFromApi?.slice(1);

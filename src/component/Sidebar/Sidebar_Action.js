@@ -113,6 +113,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 if (isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')) {
                     oldElementData.numberedandlabel = true
                     oldElementData.displayedlabel = "Figure"
+                    if(oldElementData?.hasOwnProperty('manualoverride')){
+                        delete oldElementData.manualoverride
+                    }
                 }
                 oldElementData.title = {
                     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
