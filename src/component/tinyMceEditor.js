@@ -26,7 +26,7 @@ import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessage
 import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole, withoutCursorInitailizedElements, isStanzaIndent } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY, INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
-import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName, stanzaIndentClassList } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement, saveCaretPosition } from './SlateWrapper/SlateWrapper_Actions';
 import { deleteElement, approvedSlatePopupStatus } from './ElementContainer/ElementContainer_Actions';
@@ -523,6 +523,13 @@ export class TinyMceEditor extends Component {
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
+                    if (this.props?.element?.type === 'stanza') {
+                        const check = editor.selection.getNode().className
+                        if (stanzaIndentClassList?.includes(check?.trim())) {
+                            editor.selection.getNode().className = 'poetryLine';
+                            document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                        }
+                    }
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -809,9 +816,13 @@ export class TinyMceEditor extends Component {
             }
             if (this.props?.element?.type === 'stanza') {
                 const stanzaClassList = e?.target?.classList
+                const stanzaClassListWithFormatting = e?.target?.closest('span')?.classList
                 if (!isStanzaIndent(stanzaClassList)) {
                     document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                 } else {
+                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
+                }
+                if(isStanzaIndent(stanzaClassListWithFormatting)) {
                     document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
                 }
             }
@@ -3882,8 +3893,12 @@ export class TinyMceEditor extends Component {
                 if (this.props?.element?.type === 'stanza') {
                     const data = tinymce.activeEditor?.selection?.getNode()
                     const stanzaClassList = data?.classList
+                    const stanzaClassListWithFormatting = data?.closest('span')?.classList
                     if (!isStanzaIndent(stanzaClassList)) {
                         document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                    }
+                    if(isStanzaIndent(stanzaClassListWithFormatting)) {
+                        document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
                     }
                 }
                 //tinymce.$('.blockquote-editor').attr('contenteditable', false)
