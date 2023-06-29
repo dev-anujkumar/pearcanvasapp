@@ -25,6 +25,7 @@ const elementType = ['element-authoredtext', 'element-list', 'element-blockfeatu
 import { updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
 import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
 import ElementConstants from '../ElementContainer/ElementConstants';
+import { decoToOtherTypeConversion } from '../ElementContainer/ElementContainer_Actions';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -107,9 +108,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 delete oldElementData.html?.title
             }
             // Resetting fields on conversion from decorative image to other figure types
-            else if (oldElementData.figuredata?.decorative) {
+            else if (oldElementData.figuredata?.decorative) {    
+                dispatch(decoToOtherTypeConversion(true));            
                 if (isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')) {
                     oldElementData.numberedandlabel = true
+                    oldElementData.displayedlabel = "Figure"
                 }
                 oldElementData.title = {
                     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
@@ -627,7 +630,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let indexes = activeElement.index;
-        indexes = indexes.toString().split("-");
+        indexes = indexes?.toString().split("-");
         //Separate case for element conversion in showhide
         if(showHideObj || (appStore?.asideData?.type === 'showhide')) {
             const innerElementType = activeElement.elementType

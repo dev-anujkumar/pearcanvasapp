@@ -10,7 +10,7 @@ import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype, getCookieByName } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
-import { updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
+import { decoToOtherTypeConversion, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
@@ -173,6 +173,12 @@ class FigureImage extends Component {
             path: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
             height: "422",
             width: "680"
+        }
+        if (this.props.model?.figuredata?.decorative) {
+            setFigureData = {
+                ...setFigureData,
+                decorative: true
+            }
         }
         this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
             this.props.handleFocus("updateFromC2");
@@ -557,7 +563,13 @@ class FigureImage extends Component {
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1 ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
+        // console.log("nish this.props.decoToOtherTypes", this.props.decoToOtherTypes)
+        // console.log("nish figureLabelFromApi", figureLabelFromApi)
         if(!(isAutoNumberingEnabled)){
+            // console.log("nish figureLabelValue", figureLabelValue)
+            // if(this.props.decoToOtherTypes) {
+            //     figureLabelValue = 'No Label';
+            // }
             if (dropdownData.indexOf(figureLabelFromApi?.toLowerCase()) > -1) {
                 figureLabelFromApi = figureLabelFromApi?.toLowerCase();
                 figureLabelValue = figureLabelFromApi.charAt(0)?.toUpperCase() + figureLabelFromApi?.slice(1);
@@ -723,7 +735,10 @@ const mapActionToProps = (dispatch) => {
         },
         updateAutoNumberingDropdownForCompare: (value) => {
             dispatch(updateAutoNumberingDropdownForCompare(value))
-        }
+        },
+        decoToOtherTypeConversion : (value) => {
+            dispatch(decoToOtherTypeConversion(value));
+        },
     }
 }
 
@@ -739,7 +754,8 @@ const mapStateToProps = (state) => {
         figImageList: state.autoNumberReducer.figImageList,
         slateAncestors: state.appStore.currentSlateAncestorData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
-        selectedElement: state.keyboardReducer.selectedElement
+        selectedElement: state.keyboardReducer.selectedElement,
+        decoToOtherTypes: state.appStore.decoToOtherTypes,
     }
 }
 
