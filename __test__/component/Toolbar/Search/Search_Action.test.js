@@ -15,7 +15,12 @@ let initialState = {
     index: 0,
 };
 // jest.mock('axios');
-const axiosMock = axios.create()
+const axiosMock = axios.create({
+    headers: {
+        'Content-Type': 'application/json',
+        'myCloudProxySession': config.myCloudProxySession
+    }
+})
 jest.mock('../../../../src/appstore/store', () => {
     return {
         getState: () => {
@@ -33,9 +38,6 @@ jest.mock('../../../../src/component/CanvasWrapper/CanvasWrapper_Actions', () =>
     fetchSlateData: jest.fn()
 }))
 
-config.slateEntityURN = "urn:pearson:entity:d68e34b0-0bd9-4e8b-9935-e9f0ff83d1fb"
-config.slateManifestURN = "urn:pearson:manifest:d91706aa-0e9b-4015-aaef-fb3a9cf46ec0"
-config.projectUrn = "urn:pearson:distributable:977c95a8-e16a-413c-bfd0-788fd2a3698d"
 
 const DefaultAssessmentSlateData = {
     "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e": {
@@ -58,6 +60,24 @@ const DefaultAssessmentSlateData = {
                     "id":"urn:pearson:work:7af88fe2-0f49-4b28-8f2d-87134201fd9b",
                     "type":"element-authoredtext",
                     "contentUrn":"urn:pearson:entity:2e1a0320-b129-4fb9-920c-e8ce5f4bbc3c"
+                },
+                {
+                    "id":"urn:pearson:work:7af88fe2-0f49-4b28-8f2d-87134201fd9b",
+                    "type":"groupedcontent",
+                    "contentUrn":"urn:pearson:entity:2e1a0320-b129-4fb9-920c-e8ce5f4bbc3c",
+                    "groupeddata": {
+                        "bodymatter": [{
+                            "id":"urn:pearson:work:e09f9098-bc7a-410b-9619-c372102cd5b9",
+                            "type":"element-authoredtext",
+                            "contentUrn":"urn:pearson:entity:2e1a0320-b129-4fb9-920c-e8ce5f4bbc3c"
+                        },
+                        {
+                            "id":"urn:pearson:work:7af88fe2-0f49-4b28-8f2d-87134201fd9b",
+                            "type":"element-authoredtext",
+                            "contentUrn":"urn:pearson:entity:2e1a0320-b129-4fb9-920c-e8ce5f4bbc3c"
+                        },
+                    ]
+                    }
                 },
             ]
         }
@@ -249,10 +269,73 @@ describe('-----------------Testing Search Actions-----------------', () => {
                     },
                 };
             }
-            let searchTerm = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
-            let res = {
-                data: DefaultAssessmentSlateData
+            let searchTerm = "urn:pearson:work:e09f9098-bc7a-410b-9619-c372102cd5b9";
+            let res = DefaultAssessmentSlateData
+            let mock = new MockAdapter(axios);
+            mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'myCloudProxySession': config.myCloudProxySession
+                }
+            }).reply(200, res);
+            const spygetContainerData = jest.spyOn(actions, 'getContainerData');
+            axios.get = jest.fn(() => Promise.resolve(res));
+            actions.getContainerData(searchTerm)(dispatch, getState)
+            expect(spygetContainerData).toHaveBeenCalled();
+            spygetContainerData.mockClear();
+        });
+        it('testing 4------- getContainerData ', () => {
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(SET_SEARCH_URN);
             }
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            let getState = () => {
+                return {
+                    appStore: {
+                        pageNumberData: {},
+                        slateLevelData: DefaultAssessmentSlateData,
+                        isLearnosityProjectInfo: [],
+                    },
+                };
+            }
+            let searchTerm = "urn:pearson:work:7af88fe2-0f49-4b28-8f2d-87134201fd9b";
+            let res = DefaultAssessmentSlateData
+            let mock = new MockAdapter(axios);
+            mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'myCloudProxySession': config.myCloudProxySession
+                }
+            }).reply(200, res);
+            const spygetContainerData = jest.spyOn(actions, 'getContainerData');
+            axios.get = jest.fn(() => Promise.resolve(res));
+            actions.getContainerData(searchTerm)(dispatch, getState)
+            expect(spygetContainerData).toHaveBeenCalled();
+            spygetContainerData.mockClear();
+        });
+        it('testing 5------- getContainerData ', () => {
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(SET_SEARCH_URN);
+            }
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            let getState = () => {
+                return {
+                    appStore: {
+                        pageNumberData: {},
+                        slateLevelData: DefaultAssessmentSlateData,
+                        isLearnosityProjectInfo: [],
+                    },
+                };
+            }
+            let searchTerm = "urn:pearson:manifest:c565f350-b712-41ef-823a-a66baffa0b89";
+            let res = DefaultAssessmentSlateData
+            let mock = new MockAdapter(axios);
+            mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'myCloudProxySession': config.myCloudProxySession
+                }
+            }).reply(200, res);
             const spygetContainerData = jest.spyOn(actions, 'getContainerData');
             axios.get = jest.fn(() => Promise.resolve(res));
             actions.getContainerData(searchTerm)(dispatch, getState)
@@ -294,6 +377,62 @@ describe('-----------------Testing Search Actions-----------------', () => {
             const spygetContainerData = jest.spyOn(actions, 'getCommentElements');
             axiosObject.get = jest.fn(() => Promise.resolve(res));
             actions.getCommentElements()(dispatch, getState)
+            expect(spygetContainerData).toHaveBeenCalled();
+            spygetContainerData.mockClear();
+        });
+        it('testing 3------- getCommentElements ', () => {
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(SET_COMMENT_SEARCH_URN);
+            }
+            let res = DefaultAssessmentSlateData
+            let mock = new MockAdapter(axios);
+            mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'myCloudProxySession': config.myCloudProxySession
+                }
+            }).reply(200, res);
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            let getState = () => {
+                return {
+                    appStore: {
+                        pageNumberData: {},
+                        slateLevelData: DefaultAssessmentSlateData,
+                        isLearnosityProjectInfo: [],
+                    },
+                };
+            }
+            let q = "urn:pearson:work:e09f9098-bc7a-410b-9619-c372102cd5b9";
+            const spygetContainerData = jest.spyOn(actions, 'getCommentElements');
+            actions.getCommentElements(q)(dispatch, getState)
+            expect(spygetContainerData).toHaveBeenCalled();
+            spygetContainerData.mockClear();
+        });
+        it('testing 3------- getCommentElements ', () => {
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(SET_COMMENT_SEARCH_URN);
+            }
+            let res = DefaultAssessmentSlateData
+            let mock = new MockAdapter(axios);
+            mock.onGet(`${config.REACT_APP_API_URL}v1/slate/${config.projectUrn}/contentHierarchy/${config.slateEntityURN}/elementids`,{
+                headers: {
+                    'Content-Type': 'application/json',
+                    'myCloudProxySession': config.myCloudProxySession
+                }
+            }).reply(200, res);
+            config.slateManifestURN = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e";
+            let getState = () => {
+                return {
+                    appStore: {
+                        pageNumberData: {},
+                        slateLevelData: DefaultAssessmentSlateData,
+                        isLearnosityProjectInfo: [],
+                    },
+                };
+            }
+            let q = "urn:pearson:manifest:c565f350-b712-41ef-823a-a66baffa0b89";
+            const spygetContainerData = jest.spyOn(actions, 'getCommentElements');
+            actions.getCommentElements(q)(dispatch, getState)
             expect(spygetContainerData).toHaveBeenCalled();
             spygetContainerData.mockClear();
         });

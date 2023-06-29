@@ -525,8 +525,14 @@ div[title='Ignore all']{
     pointer-events: none;
 }
 
+.disabled-toolbar-button {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
 /* classes replacing Book.css */
-div.divWidgetMDI, div.divWidget3PI, div.divWidget3PISE, div.divWidget3PI.SocialExplorer, div.divWidget3PI.GeoGebra,
+/*  commenting Now for future reference */ 
+/* div.divWidgetMDI, div.divWidget3PI, div.divWidget3PISE, div.divWidget3PI.SocialExplorer, div.divWidget3PI.GeoGebra,
 div.divWidget3PI.CloserLook, div.divWidget3PI.Default, div.divWidgetAccountingTable, div.divWidgetFlashcards, div.divWidgetImgSlideshow,
 div.divWidgetVidSlideshow, div.divWidgetUCA, div.divWidgetSurvey, div.divWidgetTimeline, div.divWidgetMCQ, div.divWidgetImageId,
 div.divWidgetHotspot, div.divWidgetFIB, div.divWidgetGraph, div.divWidgetVideoMcq, div.divWidgetVideo, div.divWidgetFPO,
@@ -1035,7 +1041,7 @@ ol, ul {
 ol li {
     display: block;
     padding: 0 0 0 0.5em;
-    /* text-indent: 0em; */
+    /* text-indent: 0em;
 }
 ol li.listItemNumeroUno:before, ol li.listItemNumeroUnoNumber:before, ol li.listItemNumeroUnoLowerAlpha:before, ol li.listItemNumeroUnoUpperAlpha:before,
 ol li.listItemNumeroUnoUpperRoman:before, ol li.listItemNumeroUnoLowerRoman:before, ol li.listItemNummerEins:before,
@@ -1161,4 +1167,4 @@ ol ol {
 
 .hide-buttons{
     display: none;
-}
+} */

@@ -23,17 +23,17 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole, withoutCursorInitailizedElements } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole, withoutCursorInitailizedElements, isStanzaIndent } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY, INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
-import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName } from '../component/SlateWrapper/SlateWrapperConstants.js';
+import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName, stanzaIndentClassList } from '../component/SlateWrapper/SlateWrapperConstants.js';
 import { conversionElement } from './Sidebar/Sidebar_Action';
 import { wirisAltTextPopup, createElement, saveCaretPosition } from './SlateWrapper/SlateWrapper_Actions';
 import { deleteElement, approvedSlatePopupStatus } from './ElementContainer/ElementContainer_Actions';
 import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
-import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, checkActiveElement, restoreSelectionAtNode }  from '../js/TinyMceUtility.js';
+import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached, isElementInsideBlocklist, checkActiveElement, setInstanceToolbar, restoreSelectionAtNode }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import ElementConstants from './ElementContainer/ElementConstants';
 import { moveCursor } from './Keyboard/KeyboardWrapper.jsx';
@@ -575,6 +575,13 @@ export class TinyMceEditor extends Component {
                     break;
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
+                    if (this.props?.element?.type === 'stanza') {
+                        const check = editor.selection.getNode().className
+                        if (stanzaIndentClassList?.includes(check?.trim())) {
+                            editor.selection.getNode().className = 'poetryLine';
+                            document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                        }
+                    }
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -857,6 +864,18 @@ export class TinyMceEditor extends Component {
             if (this.props.element && this.props.element.type === 'element-blockfeature') {
                 if ( e && e.target && e.target.classList.contains('blockquoteTextCredit')) {
                     setFormattingToolbar('disableTinymceToolbar')
+                }
+            }
+            if (this.props?.element?.type === 'stanza') {
+                const stanzaClassList = e?.target?.classList
+                const stanzaClassListWithFormatting = e?.target?.closest('span')?.classList
+                if (!isStanzaIndent(stanzaClassList)) {
+                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                } else {
+                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
+                }
+                if(isStanzaIndent(stanzaClassListWithFormatting)) {
+                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
                 }
             }
         });
@@ -2749,7 +2768,7 @@ export class TinyMceEditor extends Component {
        
         // Disable Indent For Poetry-Stanza
 
-        /*else if (className && className.trim() === 'poetryLine') {
+        else if (className && className.trim() === 'poetryLine') {
             selectedNode.className = 'poetryLine poetryLineLevel1';
             this.indentRun = true;
         }
@@ -2760,7 +2779,7 @@ export class TinyMceEditor extends Component {
         else if (className && className.trim() === 'poetryLine poetryLineLevel2') {
             selectedNode.className = 'poetryLine poetryLineLevel3';
             this.indentRun = true;
-        }*/
+        }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -2789,7 +2808,7 @@ export class TinyMceEditor extends Component {
 
         // Disable Outdent For Poetry-Stanza
 
-        /*else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
+        else if (className && className.trim() === 'poetryLine poetryLineLevel1') {
             selectedNode.className = 'poetryLine';
             this.outdentRun = true;
         }
@@ -2800,7 +2819,7 @@ export class TinyMceEditor extends Component {
         else if (className && className.trim() === 'poetryLine poetryLineLevel3') {
             selectedNode.className = 'poetryLine poetryLineLevel2';
             this.outdentRun = true;
-        }*/
+        }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -2815,6 +2834,10 @@ export class TinyMceEditor extends Component {
         let className = null;
         if (type && type === 'stanza' && selectedNode) {
             className = selectedNode.className;
+            const stanzaClassList = selectedNode?.classList
+            if (!isStanzaIndent(stanzaClassList)) {
+                document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
+            }
         }
         if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
             e.preventDefault()
@@ -2833,6 +2856,14 @@ export class TinyMceEditor extends Component {
         let className = null;
         if (type && type === 'stanza' && selectedNode) {
             className = selectedNode.className;
+            const stanzaClassList = selectedNode?.classList
+            if (stanzaClassList.contains('poetryLineLevel1')) {
+                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+            } else if (stanzaClassList.contains('poetryLineLevel2') && (stanzaClassList.contains('poetryLineLevel1') || stanzaClassList.contains('poetryLineLevel3'))) {
+                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+            } else if (stanzaClassList.contains('poetryLineLevel3') && (stanzaClassList.contains('poetryLineLevel1') || stanzaClassList.contains('poetryLineLevel2'))) {
+                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+            }
         }
         if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
             e.preventDefault()
@@ -3645,128 +3676,9 @@ export class TinyMceEditor extends Component {
         }
     }
 
-    setFigureToolbar = (placeholder) => {
-        let toolbar;
-        switch (placeholder) {
-            case "Number":
-                if (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) {
-                    toolbar =  (this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER || this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ) ? config.labelToolbarAutonumberMode : config.numberToolbarAutonumberMode;
-                } else {
-                    toolbar = config.figureNumberToolbar;
-                }
-                break;
-            case "Label":
-            case "Label Name":
-                toolbar = (this.props.isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype)) ? config.labelToolbarAutonumberMode : config.figureImageLabelToolbar;
-                break;
-            case "Title":
-            case "Caption":
-            case "Credit":
-            case "Math Block Content":
-                toolbar = config.figurImageCommonToolbar;
-                break;
-            case "Code Block Content":
-                toolbar = this.setCodeBlockContentToolbar();
-                break;
-            case "Enter Button Label":
-                toolbar = config.smartlinkActionButtonToolbar;
-        }
-        return toolbar;
-    }
 
-    setAsideNumberingToolbar = (placeholder) => {
-        let toolbar;
-        let isAutoNumberingEnabled = this.props.isAutoNumberingEnabled;
-        switch (placeholder) {
-            case "Number":
-                toolbar = isAutoNumberingEnabled ? config.numberToolbarAutonumberMode : config.AsideNumber;
-                break;
-            case "Label":
-            case "Label Name":
-                toolbar = isAutoNumberingEnabled ? config.labelToolbarAutonumberMode : config.AsideLabel;
-                break;
-            case "Title":
-                toolbar = config.AsideTitle;
-        }
-        return toolbar;
-    }
 
-    setCodeBlockContentToolbar = () => {
-        let toolbar;
-        let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
-        if (syntaxEnabled && syntaxEnabled.checked) {
-            toolbar = config.codeListingToolbarDisabled;
-        }
-        else {
-            toolbar = config.codeListingToolbarEnabled;
-        }
-        return toolbar;
-    }
-
-    setInstanceToolbar = () => {
-        let toolbar = [];
-        let figureTypes = ['image', 'table', 'mathImage', 'audio', 'video', 'tableasmarkup', 'authoredtext', 'codelisting'];
-        let blockListData = checkBlockListElement(this.props, "TAB");
-        if (this.props?.element?.type === 'popup' && this.props.placeholder === 'Enter call to action...') {
-            toolbar = config.popupCallToActionToolbar
-        } else if ((this.props?.element?.type === 'figure' && figureTypes.includes(this.props?.element?.figuretype)) || (this.props?.element?.figuretype === 'interactive' && config.smartlinkContexts.includes(this.props.element?.figuredata?.interactivetype))) {
-            toolbar = this.setFigureToolbar(this.props.placeholder);
-        }else if(this.props?.element?.type === 'element-aside'){
-            toolbar = this.setAsideNumberingToolbar(this.props.placeholder);
-        } else if (this.props?.element?.type === 'figure' && this.props.placeholder === "Enter Number...") {
-            toolbar = config.figureNumberToolbar;
-        }
-        else if (["Enter Label...", "Enter call to action..."].includes(this.props.placeholder) || (this.props.element && this.props.element.subtype == 'mathml' && this.props.placeholder === "Type something...")) {
-            toolbar = (this.props.element && (this.props.element.type === 'poetry' || this.props.element.type === 'popup' || this.props.placeholder === 'Enter call to action...' )) ? config.poetryLabelToolbar : config.labelToolbar;
-        }
-        else if (this.props.placeholder === "Enter Caption..." || this.props.placeholder === "Enter Credit...") {
-                toolbar = (this.props.element && this.props.element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
-        } else if(this.props?.element?.type === 'openerelement'){
-            toolbar = config.openerElementToolbar
-        }
-        // else if (this.props.placeholder === "Code Block Content") {
-        //     toolbar = this.setCodeBlockContentToolbar()
-        // }
-        else if (this.props?.showHideType &&( this.props.showHideType == 'revel' || this.props.showHideType == "postertextobject")) {
-            toolbar = config.revelToolbar
-        } else if (this.props.placeholder == "Type Something..." && this.props.element && this.props.element.type == 'stanza') {
-            toolbar = config.poetryStanzaToolbar;
-        }
-        else if (this.props?.asideData?.type === "manifestlist") {
-            toolbar = config.blockListToolbar
-        }
-        else {
-            toolbar = config.elementToolbar;
-        }
-        if (this.props?.element?.type === "element-dialogue") {
-            switch(this.props.placeholder){
-                case "Enter Act Title...": 
-                case "Enter Scene Title...": 
-                case "Enter Credit...": { 
-                    toolbar = [...config.playScriptToolbar, 'glossary'];
-                    break;
-                }
-                case "Enter Dialogue...": {
-                    toolbar = [...config.playScriptToolbar, 'mathml', 'chemml', 'inlinecode'];
-                    break;
-                }
-                case "Enter Stage Directions...": {
-                    toolbar = [...config.playScriptToolbar, 'italic', 'mathml', 'chemml', 'inlinecode'];
-                    break;
-                }
-                case "Enter Character Name...": {
-                        toolbar = [...config.playScriptToolbar, 'bold', 'mathml', 'chemml', 'inlinecode'];
-                    break;
-                }
-                default: break;
-            }
-        }
-        if(this.props?.element?.parentUrn?.subtype === ElementConstants.TAB){
-            toolbar = config.tabTitleToolbar;
-        }
-        return toolbar;
-    }
-
+    
     removeBogusTagsFromDom = () => {
         let bogusTag = document.querySelector(`#cypress-${this.props.index} [data-mce-bogus="all"]`);
         bogusTag && bogusTag.remove();
@@ -3782,7 +3694,7 @@ export class TinyMceEditor extends Component {
      * Set dynamic toolbar by element type
      */
     setToolbarByElementType = () => {
-        let toolbar = this.setInstanceToolbar();
+        let toolbar = setInstanceToolbar(this.props?.element,this.props.placeholder,this.props.showHideType, this.props?.labelNumberSetting);
         let tinyMceToolbarNode = tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn')
         tinyMceToolbarNode.removeClass('toolbar-disabled')
         if (toolbar && toolbar.length) {
@@ -4029,6 +3941,17 @@ export class TinyMceEditor extends Component {
                     tinymce.activeEditor.selection.select(tinymce.activeEditor.getBody(), true);
                     tinymce.activeEditor.selection.collapse(false);
                     this.handleCodeClick(tinymce.activeEditor, true);
+                }
+                if (this.props?.element?.type === 'stanza') {
+                    const data = tinymce.activeEditor?.selection?.getNode()
+                    const stanzaClassList = data?.classList
+                    const stanzaClassListWithFormatting = data?.closest('span')?.classList
+                    if (!isStanzaIndent(stanzaClassList)) {
+                        document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                    }
+                    if(isStanzaIndent(stanzaClassListWithFormatting)) {
+                        document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
+                    }
                 }
                 //tinymce.$('.blockquote-editor').attr('contenteditable', false)
                 this.editorOnClick(event);

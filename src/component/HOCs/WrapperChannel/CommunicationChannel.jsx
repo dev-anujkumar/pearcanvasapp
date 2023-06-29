@@ -13,12 +13,13 @@ import { showHeaderBlocker, hideBlocker, showTocBlocker, disableHeader } from '.
 import { TocToggle, TOGGLE_ELM_SPA, ELM_CREATE_IN_PLACE, SAVE_ELM_DATA, CLOSE_ELM_PICKER, PROJECT_SHARING_ROLE, IS_SLATE_SUBSCRIBED, CHECK_SUBSCRIBED_SLATE_STATUS, OpenLOPopup, AddToExternalFrameworkAS } from '../../../constants/IFrameMessageTypes';
 import { releaseSlateLockWithCallback, getSlateLockStatusWithCallback } from '../../CanvasWrapper/SlateLock_Actions';
 import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
-import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT  } from '../../SlateWrapper/SlateWrapperConstants'
+import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT, PROJECT_PREVIEW_ACTION, SLATE_REFRESH_ACTION, RELEASE_SLATE_LOCK_ACTION, CHANGE_SLATE_ACTION } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES } from '../../../constants/Element_Constants.js';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
+import { triggerSlateLevelSave } from '../../../js/slateLevelSave.js';
 function CommunicationChannel(WrappedComponent) {
     class CommunicationWrapper extends Component {
         constructor(props) {
@@ -187,10 +188,10 @@ function CommunicationChannel(WrappedComponent) {
                     let newMessage = { assessmentResponseMsg: message.assessmentResponseMsg };
                     this.props.isLOExist(newMessage);
                     this.props.currentSlateLO(newMessage);
-                    this.props.currentSlateLOType(CYPRESS_LF);
                     break;
                 case 'refreshSlate':
                     this.handleRefreshSlate();
+                    triggerSlateLevelSave(config.slateEntityURN, SLATE_REFRESH_ACTION);
                     break;
                 case 'closeUndoTimer' : 
                     this.setState({
@@ -257,6 +258,9 @@ function CommunicationChannel(WrappedComponent) {
                 case 'projectPreview':
                     if (!config.savingInProgress) {
                         this.props.publishContent(messageType);
+                    }
+                    if (messageType === 'projectPreview') {
+                        triggerSlateLevelSave(config.slateEntityURN, PROJECT_PREVIEW_ACTION)
                     }
                     break;
                 case 'getSlateLockStatus':
@@ -732,10 +736,6 @@ function CommunicationChannel(WrappedComponent) {
                 if (message.currentSlateLF == EXTERNAL_LF && message?.statusForExtLOSave === true) {
                     this.handleExtLOData(message);
                 } 
-                /** Save button Click - Add new Cypress LOs */
-                else if (message.currentSlateLF == CYPRESS_LF && message?.statusForSave === true) {
-                    this.handleUnlinkedLODataCypress(message); 
-                }
                 /** Cancel button Click Unlink All LOs from MA Elements */ 
                 else { 
                     this.handleUnlinkedLOData(message); 
@@ -766,7 +766,6 @@ function CommunicationChannel(WrappedComponent) {
                 }
                 this.props.updateElement(requestPayload);
                 this.props.isLOExist(message);
-                this.props.currentSlateLOType(CYPRESS_LF);
                 this.props.currentSlateLO([message.loObj ?? {}]);
                 this.props.currentSlateLOMath([message.loObj ?? {}]);
             }
@@ -1017,9 +1016,11 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
+                triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
                 const slateManifest = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN
                 if (this.props.withinLockPeriod === true) {
                     this.props.releaseSlateLock(config.projectUrn, slateManifest)
+                    triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
                 }
                 sendDataToIframe({ 'type': 'hideWrapperLoader', 'message': { status: true } })
                 sendDataToIframe({ 'type': "ShowLoader", 'message': { status: true } });

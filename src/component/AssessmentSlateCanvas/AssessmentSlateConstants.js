@@ -74,9 +74,6 @@ export const SLATE_TYPE_PDF = "pdfslate";
 export const ELEMENT_TYPE_TCC = "element-tcc";
 export const SLATE_TYPE_LTI = "ltislate";
 
-/*--------------- Normal Slate - Section ----------------*/
-export const SLATE_TYPE_SECTION = "section";
-
 export const ASSESSMENT_PICKER_OPENERS = Object.freeze({
     FULL_ASSESSMENT:'slateAssessment',
     SINGLE_ASSESSMENT: 'singleAssessment',

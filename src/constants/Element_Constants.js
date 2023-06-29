@@ -285,7 +285,6 @@ const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, va
 }
 
 /** Metadata Anchor Element constants */
-export const cypressLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to cypress framework.`
 export const externalLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to external framework.`
 export const CYPRESS_LF = "cypressLF";
 export const EXTERNAL_LF =  "externalLF";
@@ -340,3 +339,10 @@ export const tbSidebarEndpoint = "tabbed-2-column"
 export const MOVED_TO_WIP = "Slate has moved to WIP status";
 /* Fetch Learning objectives for these slates*/
 export const FETCH_LO_FOR_SLATES = ['section','pdfslate','ltislate']
+
+export const intendedPlaybackModeDropdown = [
+    { label: 'Inline', value: 'inline' },
+    { label: 'Modal', value: 'modal' },
+    { label: 'New Tab', value: 'tab' },
+    { label: 'New Window', value: 'window' },
+];
