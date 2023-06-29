@@ -13,7 +13,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM, tbSidebarEndpoint } from '../../constants/Element_Constants'
+import { DECORATIVE, POD_DEFAULT_VALUE, allowedFigureTypesForTCM, tbSidebarEndpoint } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
@@ -22,10 +22,11 @@ import { checkContainerElementVersion, fetchManifestStatus, prepareSnapshots_Sho
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
-import { updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getContainerEntityUrn, updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
 import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
 import ElementConstants from '../ElementContainer/ElementConstants';
 import { decoToOtherTypeConversion } from '../ElementContainer/ElementContainer_Actions';
+import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -43,6 +44,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
 
     // Output Element
+    console.log("nish newElementData", newElementData)
     const outputPrimaryOptionsList = elementTypes[newElementData['elementType']],
         outputPrimaryOptionType = outputPrimaryOptionsList[newElementData['primaryOption']]
 
@@ -135,6 +137,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
     }
 
+    console.log("nish outputSubType", outputSubType)
+    console.log("nish outputPrimaryOptionType", outputPrimaryOptionType)
     let outputSubTypeEnum = outputSubType['enum'],
     outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
 
@@ -447,6 +451,11 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
             const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
             dispatch(updateAutonumberingOnElementTypeUpdate(res.data, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
+        } else if(isAutoNumberingEnabled && outputPrimaryOptionEnum === DECORATIVE && !isBCE_Element) {
+            const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
+            const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
+            const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
+            dispatch(updateAutoNumberSequenceOnDelete(parentIndex, res.data.contentUrn, autoNumberedElements))
         }
         /**
          * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
