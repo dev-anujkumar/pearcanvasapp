@@ -162,7 +162,7 @@ class Sidebar extends Component {
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
-            if (value === "primary-image-decorative") {
+            if (value != this.props.activeElement.primaryOption && value === "primary-image-decorative") {
                 const obj = this.props.slateLevelData[config.slateManifestURN]?.contents?.bodymatter
                 for (let id of obj) {
                     // if (id.id == this.props.activeElement.elementId) {
