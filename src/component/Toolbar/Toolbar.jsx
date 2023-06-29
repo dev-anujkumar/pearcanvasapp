@@ -128,7 +128,7 @@ const _Toolbar = props => {
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
         const approveToWipStatus = await props.slateVersioning(updateRCSlate)
         if(approveToWipStatus) {
-        showNotificationOnCanvas(`${slateLabel} and its parent items has moved to WIP status`)
+        showNotificationOnCanvas(`${slateLabel} ${MOVED_TO_WIP}`)
         changeAudioNarration()
         }
     }
