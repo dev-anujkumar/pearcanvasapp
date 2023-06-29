@@ -8,7 +8,7 @@ import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateConta
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole, getSlateType, checkHTMLdataInsideString } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType, getCookieByName, checkHTMLdataInsideString } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SET_AS_DECORATIVE_IMAGE_1 } from '../SlateWrapper/SlateWrapperConstants.js';
@@ -162,27 +162,47 @@ class Sidebar extends Component {
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
+            const disableDIConversionWarning = getCookieByName("DISABLE_DI_CONVERSION_WARNING");
             if (value != this.props.activeElement.primaryOption && value === "primary-image-decorative") {
-                const obj = this.props.slateLevelData[config.slateManifestURN]?.contents?.bodymatter
-                for (let id of obj) {
-                    // if (id.id == this.props.activeElement.elementId) {
-                        if (id?.captions?.text?.length || id?.title?.text?.length || (id.hasOwnProperty('displayedlabel') && id?.displayedlabel !== "Figure") || id.hasOwnProperty('manualoverride')) {
-                            console.log("SHOW POPUP");
-                            this.handleDecorativePopup(true)
-                        }
-                        else {
-                            this.props.conversionElement({
-                                elementId: this.props.activeElement.elementId,
-                                elementType: this.state.activeElementType,
-                                primaryOption: value,
-                                fontBulletOption: value,
-                                secondaryOption: secondaryFirstOption,
-                                labelText,
-                                toolbar: elementList[this.state.activeElementType][value].toolbar,
-                            });
-                        }
-                    // }
-                }
+                disableDIConversionWarning ?
+                    this.props.conversionElement({
+                        elementId: this.props.activeElement.elementId,
+                        elementType: this.state.activeElementType,
+                        primaryOption: value,
+                        fontBulletOption: value,
+                        secondaryOption: secondaryFirstOption,
+                        labelText,
+                        toolbar: elementList[this.state.activeElementType][value].toolbar,
+                    })
+                    :
+                    this.handleDecorativePopup(true);
+                // const obj = this.props.slateLevelData[config.slateManifestURN]?.contents?.bodymatter
+                // for (let id of obj) {
+                //     if (id.id == this.props.activeElement.elementId) {
+                //         console.log("trueeeee", id);
+                //         console.log("captions2",id?.captions?.text, id?.captions?.text, id?.captions?.text, id?.captions?.text?.length);
+                //         console.log("displayedlabel", id?.displayedlabel, id?.displayedlabel !== "Figure");
+                //         console.log("html", id?.html);
+                //         console.log("html.captions", checkHTMLdataInsideString(id?.html?.captions), checkHTMLdataInsideString(id?.html?.captions)?.length);
+                //         console.log("html.title",checkHTMLdataInsideString(id?.html?.title), checkHTMLdataInsideString(id?.html?.title)?.length);
+                //         console.log("manualoverride", id?.manualoverride, id.hasOwnProperty('manualoverride'));
+                //         console.log("title2", id?.title?.text, id?.title?.text?.length);
+                //         if (id?.captions?.text?.length || id?.title?.text?.length || checkHTMLdataInsideString(id?.html?.captions)?.length || checkHTMLdataInsideString(id?.html?.title)?.length || (id.hasOwnProperty('displayedlabel') && id?.displayedlabel !== "Figure") || id.hasOwnProperty('manualoverride')) {
+                //             this.handleDecorativePopup(true)
+                //         }
+                //         else {
+                // this.props.conversionElement({
+                //     elementId: this.props.activeElement.elementId,
+                //     elementType: this.state.activeElementType,
+                //     primaryOption: value,
+                //     fontBulletOption: value,
+                //     secondaryOption: secondaryFirstOption,
+                //     labelText,
+                //     toolbar: elementList[this.state.activeElementType][value].toolbar,
+                // });
+                //         }
+                //     }
+                // }
             } else {
                 this.props.conversionElement({
                     elementId: this.props.activeElement.elementId,
@@ -192,7 +212,7 @@ class Sidebar extends Component {
                     secondaryOption: secondaryFirstOption,
                     labelText,
                     toolbar: elementList[this.state.activeElementType][value].toolbar,
-                });    
+                });
             }
         }
       }

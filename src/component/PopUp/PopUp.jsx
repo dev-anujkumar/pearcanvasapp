@@ -16,7 +16,7 @@ import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
 import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
-import { DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes';
+import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING } from '../../constants/IFrameMessageTypes';
 
 /**
 * @description - PopUp is a class based component. It is defined simply
@@ -31,6 +31,7 @@ class PopUp extends React.Component {
             focusedButton: this.setFocus(props),
             deleteWarningPopupCheckbox: false,
             isPowerPasteInvalidContent: false,
+            setAsDecorativePopUpCheckbox: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
@@ -247,6 +248,16 @@ class PopUp extends React.Component {
         });
     }
 
+    handleClickOnSetButton = () => {
+        if (this.state.setAsDecorativePopUpCheckbox) sendDataToIframe({ 'type': DISABLE_DI_CONVERSION_WARNING, 'message': { disableDIConversionWarning: true } });
+    }
+
+    handleSetAsDecorativeWarningPopupCheckbox = (event) => {
+        this.setState({
+            setAsDecorativePopUpCheckbox: event?.target?.checked
+        });
+    }
+
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
     * @param {event} 
@@ -379,7 +390,7 @@ class PopUp extends React.Component {
         if (props.setDecorativePopup) {
             return (
                 <div className={`dialog-buttons`}>
-                    <span option={PRIMARY_BUTTON} className={`save-button`} onClick={(e) => props.agree(false, e)}>{props.setAsDecorative}</span>
+                    <span option={PRIMARY_BUTTON} className={`save-button`} onClick={(e) => {props.agree(false, e);this.handleClickOnSetButton();}}>{props.setAsDecorative}</span>
                     <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
@@ -726,7 +737,15 @@ class PopUp extends React.Component {
                     <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
                 </div>
             )
-        } else {
+        } else if (props.setDecorativePopup) {
+            return (
+                <div className='popup-checkbox-message'>
+                    <input className='popup-checkbox' type="checkbox" value={this.state.setAsDecorativePopUpCheckbox} checked={this.state.setAsDecorativePopUpCheckbox} onChange={(event) => this.handleSetAsDecorativeWarningPopupCheckbox(event)} />
+                    <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
+                </div>
+            )
+        }
+        else {
             return null
         }
     }
