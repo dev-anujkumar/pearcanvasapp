@@ -472,6 +472,25 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear()
         })
+        it('Test-1.30-fetchElementTag - elementType - figure and figuretype - interactive else case', () => {
+            const elementData = {
+                ...activeElement, 
+                type: 'figure', 
+                figuretype: 'interactive',
+                figuredata: {
+                    alttext: 'alttext',
+                    longdescription: 'longdescription ',
+                    interactivetype:'3rd-party',
+                    interactiveid: "123",
+                    intendedPlaybackMode:"test"
+                }
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({ ...elementData, index: '0-0-0' });
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
         it('Test-1.31-fetchElementTag - elementType - figure and figuretype - video', () => {
             const elementData = {
                 ...activeElement, 
