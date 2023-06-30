@@ -11,7 +11,7 @@ import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE,  } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK,  } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown } from '../../constants/Element_Constants.js';
@@ -74,9 +74,11 @@ class Sidebar extends Component {
                 fontBulletElementDropdown = "";
                 podValue = nextProps.activeElement.podwidth;
                 podOption = false;
-                selectedIntendedPlaybackModeValue = nextProps?.activeElement?.selectedIntendedPlaybackModeValue,
                 isPlayBackDropdownOpen = false;
-            }           
+            }
+            if(nextProps?.activeElement?.secondaryOption === SECONDARY_3PI_SMARTLINK && nextProps?.activeElement?.assetIdFor3PISmartlink){
+                selectedIntendedPlaybackModeValue = nextProps?.activeElement?.selectedIntendedPlaybackModeValue;
+            }          
             return {
                 elementDropdown: elementDropdown,
                 fontBulletElementDropdown,
