@@ -132,7 +132,8 @@ export class TinyMceEditor extends Component {
                 /* Dropdown for showing text type elements */
                 this.changeTextElements(editor);
                 /* change the default icons of tinymce with new svg */
-                this.setDefaultIcons(editor)
+                this.setDefaultIcons(editor);
+                config.ENABLE_CHAT_GPT && this.addChatGptButton(editor);
                 editor.on('init', function (e) {
                     if (document.querySelector('.audio')) {
                         document.querySelector('.audio').style.display = "block";
@@ -284,6 +285,57 @@ export class TinyMceEditor extends Component {
         
         this.editorRef = React.createRef();
         this.currentCursorBookmark = {};
+    }
+
+    addChatGptButton = (editor) => {
+        editor.ui.registry.addButton('AskChatGPT', {
+            id: 'buttonId',
+            classes: 'buttonClas',
+            text: "Ask ChatGPT",
+            icon: 'highlight-bg-color',
+            tooltip: 'Highlight a prompt and click this button to query ChatGPT',
+            enabled: true,
+            onAction: (_) => {
+                const api_key = `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`;
+                const selection = tinymce.activeEditor.selection.getContent();
+                console.log('selection selection', selection);
+                const ChatGPT = {
+                    model: "gpt-3.5-turbo",
+                    messages: [
+                        {
+                          role: 'user',
+                          content: selection,
+                        },
+                      ],
+                    temperature: 0,
+                    max_tokens: 4030
+                };
+
+                fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${api_key}`
+                    },
+                    body: JSON.stringify(ChatGPT)
+                }).then(res => res.json()).then(data => {
+                    let reply = data.choices[0]?.message?.content;
+                    console.log(reply);
+                    editor.selection.collapse();
+                    editor.execCommand('InsertHTML', false, '<div class="answer" style="padding: 3px; margin-top: 5px; margin-bottom: 5px;"></div>');
+                    editor.insertContent(reply);
+                    editor.dom.add(tinymce.activeEditor.getBody(), 'p', { }, 'Q: ');
+                    editor.selection.select(tinyMCE.activeEditor.getBody(), true);
+                    editor.selection.collapse();
+                    editor.focus();
+                }).catch(error => {
+                    console.log("something went wrong");
+                })
+            },
+            onSetup: (btnRef) => {
+                this.chatgptButton = btnRef;
+            }
+        });
     }
 
     /**

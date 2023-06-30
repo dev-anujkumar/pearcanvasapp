@@ -103,7 +103,9 @@ let cypressConfig = {
     glossaryCreated: false,
     elementSlateRefresh: false,
     tcmStatusPopupGlossary: false,
-    pendingTcmStatus: false
+  	GRAMMARLY_CLIENT_ID: "client_51D8CAHFNoRRMxzmiXDpY6",
+    pendingTcmStatus: false,
+    VITE_Open_AI_Key: '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'
 }
 
 export default cypressConfig;

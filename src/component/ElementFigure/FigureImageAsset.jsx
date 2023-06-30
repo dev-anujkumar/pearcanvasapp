@@ -5,7 +5,7 @@ import { hasReviewerRole } from '../../constants/utility';
 import figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 /**Import Constants */
-import { FIGURE_IMAGE_BUTTON_TITLE, IMAGE_ID, IMAGE_PATH, ALFRESCO_SITE_PATH, UPDATE_FIGURE_IMAGE_BUTTON_TITLE } from './ElementFigure_Constants'
+import { FIGURE_IMAGE_BUTTON_TITLE, IMAGE_ID, IMAGE_PATH, ALFRESCO_SITE_PATH, UPDATE_FIGURE_IMAGE_BUTTON_TITLE, GENERATE_IMAGE_BUTTON_TITLE } from './ElementFigure_Constants'
 
 /**
  * This is Pure Component to render Image Asset of FigureImage Component
@@ -14,6 +14,7 @@ const FigureImageAsset = (props) => {
     const { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, onFocusTop, onFocusBottom } = props.figureTypeData;
 
     const addFigureRef = useRef(null);
+    const generateFigureRef = useRef(null);
     const updateFigureRef = useRef(null);
     const deleteFigureRef = useRef(null);
     const [focusBackground, serFocusBackgrond] = useState(false);
@@ -28,6 +29,10 @@ const FigureImageAsset = (props) => {
 
     const focusSelectAnImage = () => {
         addFigureRef.current.focus();
+    }
+
+    const focusGenerateAnImage = () => {
+        generateFigureRef.current.focus();
     }
 
     const focusUpdate = () => {
@@ -69,11 +74,18 @@ const FigureImageAsset = (props) => {
                                 width={imgWidth}
                                 height={imgHeight}
                             /> : 
+                            <div style={{'display': 'flex', 'justify-content': 'center'}}>
                             <KeyboardWrapper index={`${props.index}-image-asset-1`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusSelectAnImage}>
                                     <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={addFigureRef} className='figurebutton' onClick={(e) => props.addFigureResource(e)}>{FIGURE_IMAGE_BUTTON_TITLE}</div>
                                 </div>
                             </KeyboardWrapper>
+                            <KeyboardWrapper index={`${props.index}-image-asset-2`} enable={props.isEnableKeyboard}>
+                            <div onClick={focusGenerateAnImage}>
+                                <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={generateFigureRef} style={{margin: '24px 10px', width: '170px'}} className='figurebutton' onClick={(e) => props.generateFigureResource(e)}>{GENERATE_IMAGE_BUTTON_TITLE}</div>
+                            </div>
+                        </KeyboardWrapper>
+                        </div>
                     }
                 </div>
                 <div>
@@ -88,7 +100,7 @@ const FigureImageAsset = (props) => {
 
                             <KeyboardWrapper index={`${props.index}-image-asset-1`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusUpdate}>
-                                    <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={updateFigureRef} className={`updatefigurebutton ${isReviewer ? "hide-buttons" : ""}`} onClick={(e) => props.addFigureResource(e)}>{UPDATE_FIGURE_IMAGE_BUTTON_TITLE}</div>
+                                    <div onBlur={removeFocus} onKeyDown={triggerClickOnEnter} tabIndex={0} ref={updateFigureRef} className={`updatefigurebutton ${isReviewer ? "hide-buttons" : ""}`} onClick={(e) => props.generateFigureResource(e)}>{GENERATE_IMAGE_BUTTON_TITLE}</div>
                                 </div>
                             </KeyboardWrapper>
                             <KeyboardWrapper index={`${props.index}-image-asset-2`} enable={props.isEnableKeyboard}>
