@@ -373,7 +373,7 @@ export const FigureHeader = (props) => {
                             }
                         }
                     }}>
-                    <div className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-labelautonumber-1` ? "figure-label-number-highlight" : "figure-label-number"} onClick={!hasReviewerRole() && handleSettingsDropdown}>
+                    <div id={'autonumberSetting'} className={props.selectedElement === `${QUERY_SELECTOR}-${props.index}-labelautonumber-1` ? "figure-label-number-highlight" : "figure-label-number"} onClick={!hasReviewerRole() && handleSettingsDropdown}>
                         <span>{labelNumberSetting}</span>
                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                     </div>

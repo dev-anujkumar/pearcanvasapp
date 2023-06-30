@@ -21,6 +21,7 @@ import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtil
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
 import { Autocomplete, TextField } from '@mui/material';
 import modalIcon from '../../images/Sidebar/modalIcon.svg'
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants.js';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -127,6 +128,24 @@ class Sidebar extends Component {
       let labelText = secondaryelementList[secondaryFirstOption].labelText;
       const {activefontStyle, activebulletIcon} = this.state
 
+      let titleDOM = document.getElementById(`cypress-${this.props.activeElement.index}-0`),
+      numberDOM = document.getElementById(`cypress-${this.props.activeElement.index}-1`),
+      subtitleDOM = document.getElementById(`cypress-${this.props.activeElement.index}-2`),
+      captionDOM = document.getElementById(`cypress-${this.props.activeElement.index}-3`),
+      settingDOM = document.getElementById(`autonumberSetting`)
+
+      let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+      numberHTML = numberDOM ? numberDOM.innerHTML : "",
+      subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+      captionHTML = captionDOM ? captionDOM.innerHTML : "",
+      settingHTML = settingDOM ? settingDOM.innerText : ""
+
+      titleHTML = titleHTML.replace(/class="paragraphNumeroUno"/g, "").replace("<p >", '').replace(/<br>/g, '').replace("</p>", '')
+      numberHTML = numberHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
+      subtitleHTML = subtitleHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
+      captionHTML = captionHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
+
+      let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === 'No Label' && numberHTML === '') || (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT)) && subtitleHTML === '' && captionHTML === '')
       this.setState({
         elementDropdown: "",
         fontBulletElementDropdown: "",
@@ -175,34 +194,18 @@ class Sidebar extends Component {
                         toolbar: elementList[this.state.activeElementType][value].toolbar,
                     })
                     :
-                    this.handleDecorativePopup(true);
-                // const obj = this.props.slateLevelData[config.slateManifestURN]?.contents?.bodymatter
-                // for (let id of obj) {
-                //     if (id.id == this.props.activeElement.elementId) {
-                //         console.log("trueeeee", id);
-                //         console.log("captions2",id?.captions?.text, id?.captions?.text, id?.captions?.text, id?.captions?.text?.length);
-                //         console.log("displayedlabel", id?.displayedlabel, id?.displayedlabel !== "Figure");
-                //         console.log("html", id?.html);
-                //         console.log("html.captions", checkHTMLdataInsideString(id?.html?.captions), checkHTMLdataInsideString(id?.html?.captions)?.length);
-                //         console.log("html.title",checkHTMLdataInsideString(id?.html?.title), checkHTMLdataInsideString(id?.html?.title)?.length);
-                //         console.log("manualoverride", id?.manualoverride, id.hasOwnProperty('manualoverride'));
-                //         console.log("title2", id?.title?.text, id?.title?.text?.length);
-                //         if (id?.captions?.text?.length || id?.title?.text?.length || checkHTMLdataInsideString(id?.html?.captions)?.length || checkHTMLdataInsideString(id?.html?.title)?.length || (id.hasOwnProperty('displayedlabel') && id?.displayedlabel !== "Figure") || id.hasOwnProperty('manualoverride')) {
-                //             this.handleDecorativePopup(true)
-                //         }
-                //         else {
-                // this.props.conversionElement({
-                //     elementId: this.props.activeElement.elementId,
-                //     elementType: this.state.activeElementType,
-                //     primaryOption: value,
-                //     fontBulletOption: value,
-                //     secondaryOption: secondaryFirstOption,
-                //     labelText,
-                //     toolbar: elementList[this.state.activeElementType][value].toolbar,
-                // });
-                //         }
-                //     }
-                // }
+                    (popupEnableCheckForDecoConversion) ?
+                        this.props.conversionElement({
+                            elementId: this.props.activeElement.elementId,
+                            elementType: this.state.activeElementType,
+                            primaryOption: value,
+                            fontBulletOption: value,
+                            secondaryOption: secondaryFirstOption,
+                            labelText,
+                            toolbar: elementList[this.state.activeElementType][value].toolbar,
+                        }) 
+                        :
+                        this.handleDecorativePopup(true);
             } else {
                 this.props.conversionElement({
                     elementId: this.props.activeElement.elementId,
@@ -1187,7 +1190,6 @@ class Sidebar extends Component {
                     {this.secondaryOption()}
                     {!isDecorativeImage && this.attributions()}
                     {activeElement?.assetIdFor3PISmartlink && this.playbackMode()}
-                    {this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
                     {this.state.activeElementType ==="manifestlist" && <div>

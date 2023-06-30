@@ -43,8 +43,15 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
 
+    if(newElementData?.secondaryOption === '' && newElementData?.primaryOption === 'primary-image-figure') {
+        newElementData.secondaryOption = 'secondary-image-figure-width'
+    } else if(newElementData?.primaryOption === 'primary-image-equation') {
+        newElementData.secondaryOption = 'secondary-image-equation-half'
+    } else if(newElementData?.primaryOption === 'primary-image-table' && newElementData?.secondaryOption === '') {
+        newElementData.secondaryOption = 'secondary-image-table-half'
+    }
+
     // Output Element
-    console.log("nish newElementData", newElementData)
     const outputPrimaryOptionsList = elementTypes[newElementData['elementType']],
         outputPrimaryOptionType = outputPrimaryOptionsList[newElementData['primaryOption']]
 
@@ -137,8 +144,6 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
     }
 
-    console.log("nish outputSubType", outputSubType)
-    console.log("nish outputPrimaryOptionType", outputPrimaryOptionType)
     let outputSubTypeEnum = outputSubType['enum'],
     outputPrimaryOptionEnum = outputPrimaryOptionType['enum']
 
