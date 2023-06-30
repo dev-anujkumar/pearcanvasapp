@@ -256,11 +256,11 @@ function CommunicationChannel(WrappedComponent) {
                 case 'brokerPreview':
                 case 'slatePreview':
                 case 'projectPreview':
-                    if (!config.savingInProgress) {
-                        this.props.publishContent(messageType);
-                    }
                     if (messageType === 'projectPreview') {
                         triggerSlateLevelSave(config.slateEntityURN, PROJECT_PREVIEW_ACTION)
+                    }
+                    if (!config.savingInProgress) {
+                        this.props.publishContent(messageType);
                     }
                     break;
                 case 'getSlateLockStatus':
