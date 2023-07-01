@@ -36,6 +36,13 @@ export default {
             type: "figure",
             figuretype: "image"
         },
+        'decorative': {
+            type: "figure",
+            figuretype: "image",
+            figuredata: {
+                decorative: true
+            }
+        },
         'interactive': {
             type: "figure",
             figuretype: "interactive",
@@ -1717,6 +1724,7 @@ export default {
                 "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
                 "height": "422",
                 "width": "680",
+                "decorative": true
             },
             "html": {
                 "title": "<p>test label</p>",

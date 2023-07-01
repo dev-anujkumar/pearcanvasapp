@@ -235,6 +235,19 @@ describe('Testing PopUp component', () => {
         component.instance().isChecked=true
         expect(component.instance().props.AssessmentPopup).toEqual(true);
     });
+    it('testCase for setDecorativePopup',() => {
+        let props = {
+            togglePopup:jest.fn(),
+            agree:jest.fn(),
+            setDecorativePopup:true
+        }
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.save-button').simulate('click');
+        wrapper.find('.cancel-button').simulate('click');
+        const component = mount(<PopUp {...props}/>);
+        component.instance().isChecked=true
+        expect(component.instance().props.setDecorativePopup).toEqual(true);
+    });
     it('testCase for UsagePopup',() => {
         let props = {
             togglePopup:jest.fn(),
@@ -320,7 +333,7 @@ describe('Testing PopUp component', () => {
         expect(component.instance().props.alfrescoExpansionPopup).toEqual(true);
     });
 
-    it('testCase for renderDeleteWarningPopupCheckbox',() => {
+    it('testCase for handleCheckboxPopup',() => {
         let props = {
             warningPopupCheckbox:true,
             showDeleteElemPopup: true,
@@ -335,7 +348,7 @@ describe('Testing PopUp component', () => {
         expect(component.instance().props.warningPopupCheckbox).toEqual(true);
     });
 
-    it('testCase for renderDeleteWarningPopupCheckbox',() => {
+    it('testCase for handleListElementWarningPopupCheckbox',() => {
         let props = {
             listElementWarningPopupCheckbox:true,
             listConfirmation:true,
@@ -348,6 +361,36 @@ describe('Testing PopUp component', () => {
         wrapper.find('.popup-checkbox').simulate('change', event);
         const component = mount(<PopUp {...props}/>);
         expect(component.instance().props.listElementWarningPopupCheckbox).toEqual(true);
+    });
+
+    it('testCase for handleDeleteWarningPopupCheckbox',() => {
+        let props = {
+            deleteWarningPopupCheckbox:true,
+            isDeleteAssetPopup:true,
+            handleDeleteWarningPopupCheckbox:jest.fn()
+        }
+        const event = {
+            target: { value: 'the-value' }
+        };
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.popup-checkbox').simulate('change', event);
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.deleteWarningPopupCheckbox).toEqual(true);
+    });
+
+    it('testCase for handleSetAsDecorativeWarningPopupCheckbox',() => {
+        let props = {
+            setAsDecorativePopUpCheckbox:true,
+            setDecorativePopup:true,
+            handleSetAsDecorativeWarningPopupCheckbox:jest.fn()
+        }
+        const event = {
+            target: { value: 'the-value' }
+        };
+        let wrapper = mount(<PopUp {...props}/>);
+        wrapper.find('.popup-checkbox').simulate('change', event);
+        const component = mount(<PopUp {...props}/>);
+        expect(component.instance().props.setAsDecorativePopUpCheckbox).toEqual(true);
     });
     
     describe("Testing method handleKeyDown()", () => {

@@ -1140,9 +1140,9 @@ class ElementContainer extends Component {
                             if(primaryOption === "primary-image-decorative") {
                                 delete dataToSend.captions
                                 delete dataToSend.title
-                                delete dataToSend.html.title
-                                delete dataToSend.html.captions
-                                delete dataToSend.html.text
+                                delete dataToSend.html?.title
+                                delete dataToSend.html?.captions
+                                delete dataToSend.html?.text
                             }
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true

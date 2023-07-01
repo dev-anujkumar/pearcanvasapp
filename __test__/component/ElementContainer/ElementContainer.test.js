@@ -4427,6 +4427,24 @@ describe('Test-Other Functions', () => {
         spyhandleContentChange.mockClear()
     })
 
+    it("handleContentChange for figuretype - image > decorative", () => {
+        const previousElementData = {
+            type: "figure",
+            html: {
+                text: "<p>stanza text</p>"
+            },
+            figuretype:  "image",
+            figuredata: {
+                figuretype: "authoredtext"
+            }
+        }
+        config.savingInProgress = false
+        const spyhandleContentChange = jest.spyOn(elementContainerInstance, 'handleContentChange')
+        elementContainerInstance.handleContentChange(null, previousElementData, null, "primary-image-decorative", null, null, true, null, null);
+        expect(spyhandleContentChange).toHaveBeenCalled();
+        spyhandleContentChange.mockClear()
+    })
+
     it("handleContentChange for figuretype - video - with DOM elements", () => {
         const previousElementData = {
             type: "figure",

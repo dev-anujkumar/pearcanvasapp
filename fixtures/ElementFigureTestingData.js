@@ -37,7 +37,8 @@ export const figureImage50TextElementDefault = {
         "height": "1225",
         "width": "1440",
         "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c"
+        "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+        "decorative": true
     },
     "html": {
         "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
