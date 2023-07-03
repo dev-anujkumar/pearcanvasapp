@@ -86,9 +86,9 @@ class FigureImage extends Component {
         }
         if(!prevState.figureDropDown && this.state.figureDropDown) {
             this.setState({showingListIndex: 0});
-            this.labelListRef.current.childNodes[0].focus();
-            this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown)
-            this.labelListRef.current.addEventListener('click', this.handleLabelKeyDown)
+            this.labelListRef.current?.childNodes[0].focus();
+            this.labelListRef.current?.addEventListener('keydown', this.handleLabelKeyDown)
+            this.labelListRef.current?.addEventListener('click', this.handleLabelKeyDown)
         }
     }
 
