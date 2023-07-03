@@ -7,7 +7,7 @@ import {
     fetchSlateData
 } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS,
-         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA, DELETE_ELEMENT_KEYS, APPROVED_SLATE_POPUP_STATUS, DECO_TO_OTHER_IMG_TYPES, DECORATIVE_POPUP } from "./../../constants/Action_Constants";
+         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA, DELETE_ELEMENT_KEYS, APPROVED_SLATE_POPUP_STATUS, DECO_TO_OTHER_IMG_TYPES } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
@@ -1229,13 +1229,6 @@ const findAndReplaceBR = (updatedData,suffixRegex) => {
 }
 
 export const decoToOtherTypeConversion = (value) => (dispatch) => {
-    dispatch({
-        type: DECO_TO_OTHER_IMG_TYPES,
-        payload: value
-    })
-}
-
-export const decorativeConversionPopup = (value) => (dispatch) => {
     dispatch({
         type: DECO_TO_OTHER_IMG_TYPES,
         payload: value
