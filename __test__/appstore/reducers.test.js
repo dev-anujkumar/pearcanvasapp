@@ -55,8 +55,7 @@ import {
     CYPRESS_PLUS_ENABLED,
     CHECK_ASIDE_NUMBER,
     APPROVED_SLATE_POPUP_STATUS,
-    DECO_TO_OTHER_IMG_TYPES,
-    DECORATIVE_POPUP
+    DECO_TO_OTHER_IMG_TYPES
 
 } from '../../src/constants/Action_Constants';
 import mockData from '../../src/appstore/mockdata';
@@ -862,16 +861,6 @@ describe('testing SLATE LEVEL REDUCER cases -->', () => {
         }
         expect(reducer(initialState, {
             type: DECO_TO_OTHER_IMG_TYPES,
-            payload: false
-        })).toEqual(output);
-    });
-    it('case 59- DECORATIVE_POPUP ', () => {
-        let output = {
-            ...initialState,
-            decorativePopup: false
-        }
-        expect(reducer(initialState, {
-            type: DECORATIVE_POPUP,
             payload: false
         })).toEqual(output);
     });

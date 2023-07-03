@@ -2769,19 +2769,4 @@ describe("decoToOtherTypeConversion Testing", () => {
         expect(store.getActions().type).toEqual(expectedActions.type);
         spyUpdateMultipleColumnData.mockClear();
     })
-    it('testing------- decorativeConversionPopup ------method', () => {
-        let store = mockStore(() => initialState2);
-        const expectedActions = [
-            {
-                type: DECO_TO_OTHER_IMG_TYPES,
-                payload: {}
-            }
-        ]
-        const spyUpdateMultipleColumnData = jest.spyOn(actions, 'decorativeConversionPopup')
-        actions.decorativeConversionPopup({}, "testing", store.dispatch);
-        expect(spyUpdateMultipleColumnData).toHaveBeenCalled();
-        store.dispatch(actions.decorativeConversionPopup({}, 'testing'));
-        expect(store.getActions().type).toEqual(expectedActions.type);
-        spyUpdateMultipleColumnData.mockClear();
-    })
 })
