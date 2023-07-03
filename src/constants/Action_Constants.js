@@ -249,4 +249,3 @@ export const BANNER_IS_VISIBLE = "BANNER_IS_VISIBLE"
 
 // Figure to convert into decorative image
 export const DECO_TO_OTHER_IMG_TYPES = "DECO_TO_OTHER_IMG_TYPES"
-export const DECORATIVE_POPUP = "DECORATIVE_POPUP"

@@ -147,7 +147,7 @@ class Sidebar extends Component {
       subtitleHTML = subtitleHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
       captionHTML = captionHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
 
-      let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === 'No Label' && numberHTML === '') || (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT)) && subtitleHTML === '' && captionHTML === '')
+      let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === '' && numberHTML === '') || (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT)) && subtitleHTML === '' && captionHTML === '')
       this.setState({
         elementDropdown: "",
         fontBulletElementDropdown: "",
