@@ -239,7 +239,8 @@ describe('Testing PopUp component', () => {
         let props = {
             togglePopup:jest.fn(),
             agree:jest.fn(),
-            setDecorativePopup:true
+            setDecorativePopup:true,
+            isAutoNumberingEnabled: true
         }
         let wrapper = mount(<PopUp {...props}/>);
         wrapper.find('.save-button').simulate('click');

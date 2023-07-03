@@ -56,8 +56,10 @@ export const DONT_ASK_TEXT = "Don't ask me again";
 export const ERROR_DELETING_MANIFEST_LIST_ITEM="The list item can not be deleted if it contains a child Block List. Please delete the child Block List to complete the delete action.";
 export const APPROVE_NORMAL_SLATE="The slate is currently in approved status (published title). Do you want to move it to Work in Progress status in order to make a change?"
 export const APPROVE_OWNER_SLATE="The slate is currently in approved status (published title). Any change to this content will apply to all its children (subscribed titles). Do you want to move it to Work in Progress status in order to make a change?"
-export const SET_AS_DECORATIVE_IMAGE_1 = "Decorative images are images that are not meant to convey meaning or important information."
-export const SET_AS_DECORATIVE_IMAGE_2 = "Changing the image type will delete the following image data: label, index number, title, caption, alt text, and long description."
+export const SET_AS_DECORATIVE_IMAGE = "Decorative images are images that are not meant to convey meaning or important information."
+export const SET_AS_DECORATIVE_IMAGE_AUTONUM = "Changing the image type will reset the following image data: label & number settings, label value, number, preview, title, caption, alt text and long description."
+export const SET_AS_DECORATIVE_IMAGE_NON_AUTONUM = "Changing the image type will reset the following image data: label value, number, title, caption, alt text and long description."
+export const SET_AS_DECORATIVE_IMAGE_NOTE = "Please note that it will also remove the title from figure linking search results."
 /*****************************TOC Delete Popup Dialog text***************************/
 export const SINGLE_CONTAINER_DELETE = 'A project must have at least one Part/Chapter. Please add another Part/Chapter before deleting this one'
 export const WITH_PENDING_TRACK = ' Are you sure you want to delete this slate/container with pending changes?'

@@ -11,7 +11,7 @@ import PowerPasteElement from '../PowerPasteElement/PowerPasteElement.jsx';
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
-import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG, SET_AS_DECORATIVE_IMAGE_2 } from '../SlateWrapper/SlateWrapperConstants';
+import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG, SET_AS_DECORATIVE_IMAGE_AUTONUM, SET_AS_DECORATIVE_IMAGE_NON_AUTONUM, SET_AS_DECORATIVE_IMAGE_NOTE } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
@@ -637,7 +637,7 @@ class PopUp extends React.Component {
             return (
                 <>
                     <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
-                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{SET_AS_DECORATIVE_IMAGE_2}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{this.props.isAutoNumberingEnabled ? SET_AS_DECORATIVE_IMAGE_AUTONUM : SET_AS_DECORATIVE_IMAGE_NON_AUTONUM}<br /><br />{SET_AS_DECORATIVE_IMAGE_NOTE}</div>
                 </>
             )
         }

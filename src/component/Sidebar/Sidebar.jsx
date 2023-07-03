@@ -8,10 +8,10 @@ import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateConta
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole, getSlateType, getCookieByName, checkHTMLdataInsideString } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType, getCookieByName } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SET_AS_DECORATIVE_IMAGE_1 } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SET_AS_DECORATIVE_IMAGE } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown } from '../../constants/Element_Constants.js';
@@ -183,7 +183,7 @@ class Sidebar extends Component {
         } else {
             const disableDIConversionWarning = getCookieByName("DISABLE_DI_CONVERSION_WARNING");
             if (value != this.props.activeElement.primaryOption && value === "primary-image-decorative") {
-                disableDIConversionWarning ?
+                if (disableDIConversionWarning) {
                     this.props.conversionElement({
                         elementId: this.props.activeElement.elementId,
                         elementType: this.state.activeElementType,
@@ -193,8 +193,9 @@ class Sidebar extends Component {
                         labelText,
                         toolbar: elementList[this.state.activeElementType][value].toolbar,
                     })
-                    :
-                    (popupEnableCheckForDecoConversion) ?
+                }
+                else {
+                    popupEnableCheckForDecoConversion ?
                         this.props.conversionElement({
                             elementId: this.props.activeElement.elementId,
                             elementType: this.state.activeElementType,
@@ -203,9 +204,10 @@ class Sidebar extends Component {
                             secondaryOption: secondaryFirstOption,
                             labelText,
                             toolbar: elementList[this.state.activeElementType][value].toolbar,
-                        }) 
+                        })
                         :
                         this.handleDecorativePopup(true);
+                }
             } else {
                 this.props.conversionElement({
                     elementId: this.props.activeElement.elementId,
@@ -1216,11 +1218,12 @@ class Sidebar extends Component {
                 {this.state.decorativePopupWarning &&
                     <PopUp
                         togglePopup={this.handleSetDecorativeImagePopup}
-                        dialogText={SET_AS_DECORATIVE_IMAGE_1}
+                        dialogText={SET_AS_DECORATIVE_IMAGE}
                         lOPopupClass="lo-warning-txt"
                         warningHeaderText={`Set Image as Decorative`}
                         setDecorativePopup={true}
                         agree={this.setDecorativeImage}
+                        isAutoNumberingEnabled={this.props.isAutoNumberingEnabled}
                     />
                 }
             </>
