@@ -165,7 +165,7 @@ export const SLATES_DEFAULT_LABEL = {
     'section':'Slate',
     'pdfslate':'PDF Slate',
     'container-introduction':'Introduction',
-    'assessment-slate':'Assessment',
+    'assessment':'Assessment',
     'cover':'Cover',
     'titlepage':'Title Page',
     'copyright':'Copyright',

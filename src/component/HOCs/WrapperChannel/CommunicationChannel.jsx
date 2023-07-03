@@ -481,7 +481,8 @@ function CommunicationChannel(WrappedComponent) {
                 'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
                 'myCloudProxySession': config.myCloudProxySession,
-                'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
+                'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT,
+                'structureApiEndpoint':config.AUDIO_NARRATION_URL
             };
             let externalLFUrn = [];
             if (projectLearningFrameworks?.externalLF?.length) {
@@ -532,7 +533,8 @@ function CommunicationChannel(WrappedComponent) {
                     'previewData': previewData,
                     'defaultLF': defaultLF,
                     'loSpa_Source': message.loSpa_Source,
-                    'isSubscribed':message.isSubscribed ? message.isSubscribed : false
+                    'isSubscribed':message.isSubscribed ? message.isSubscribed : false,
+                    'isApprovedSlate':message.isApprovedSlate
                 }
             })
         }
