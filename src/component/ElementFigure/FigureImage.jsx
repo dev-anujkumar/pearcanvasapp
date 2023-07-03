@@ -564,7 +564,7 @@ class FigureImage extends Component {
         let figureLabelFromApi = isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1 ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
         if (!(isAutoNumberingEnabled)) {
-            if (this.props.decoToOtherTypes) {
+            if (this.props.decoToOtherTypes) { // if the image conversion is from decorative to any other figure type
                 this.state.figureLabelValue = 'No Label';
                 this.props.decoToOtherTypeConversion(false);
             }

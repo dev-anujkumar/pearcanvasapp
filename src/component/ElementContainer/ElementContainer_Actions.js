@@ -1228,6 +1228,11 @@ const findAndReplaceBR = (updatedData,suffixRegex) => {
     }
 }
 
+/**
+ * This fuction determines whether the image conversion has happened from decorative to any other figure types
+ * @param {Boolean} value
+ */
+
 export const decoToOtherTypeConversion = (value) => (dispatch) => {
     dispatch({
         type: DECO_TO_OTHER_IMG_TYPES,

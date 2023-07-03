@@ -130,6 +130,7 @@ class Sidebar extends Component {
       let labelText = secondaryelementList[secondaryFirstOption].labelText;
       const {activefontStyle, activebulletIcon} = this.state
 
+    // Retrieving values of image element fields
       let titleDOM = document.getElementById(`cypress-${this.props.activeElement.index}-0`),
       numberDOM = document.getElementById(`cypress-${this.props.activeElement.index}-1`),
       subtitleDOM = document.getElementById(`cypress-${this.props.activeElement.index}-2`),
@@ -147,6 +148,7 @@ class Sidebar extends Component {
       subtitleHTML = subtitleHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
       captionHTML = captionHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
 
+    // showing set to decorative iamge popup only if image element fields have any values in them
       let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === '' && numberHTML === '') || (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT)) && subtitleHTML === '' && captionHTML === '')
       this.setState({
         elementDropdown: "",
@@ -417,6 +419,7 @@ class Sidebar extends Component {
         return fontBulletOptions;
     }
 
+    // function to toggle decorative popup
     handleSetDecorativeImagePopup = () => {
         showBlocker(false);
         this.props.showCanvasBlocker(false);
@@ -426,6 +429,7 @@ class Sidebar extends Component {
         })
     }
 
+    // function called when set as decorative image button is clicked
     setDecorativeImage = () => {
         showBlocker(false);
         this.props.showCanvasBlocker(false);
@@ -1010,6 +1014,7 @@ class Sidebar extends Component {
         })
     }
 
+    // function to show decorative popup
     handleDecorativePopup = (value) => {
         if (value) {
             showBlocker();

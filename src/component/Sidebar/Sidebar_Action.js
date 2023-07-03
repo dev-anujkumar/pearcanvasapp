@@ -43,9 +43,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
 
+    // setting secondaryOption as default when newElementData does not have secondaryOption after conversion from any other figure type to decorative image
     if(newElementData?.secondaryOption === '' && newElementData?.primaryOption === 'primary-image-figure') {
         newElementData.secondaryOption = 'secondary-image-figure-width'
-    } else if(newElementData?.primaryOption === 'primary-image-equation') {
+    } else if(newElementData?.primaryOption === 'primary-image-equation' && newElementData?.secondaryOption === '') {
         newElementData.secondaryOption = 'secondary-image-equation-half'
     } else if(newElementData?.primaryOption === 'primary-image-table' && newElementData?.secondaryOption === '') {
         newElementData.secondaryOption = 'secondary-image-table-half'

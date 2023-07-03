@@ -248,10 +248,12 @@ class PopUp extends React.Component {
         });
     }
 
+    // When "Set as Decorative Image" button is clicked
     handleClickOnSetButton = () => {
         if (this.state.setAsDecorativePopUpCheckbox) sendDataToIframe({ 'type': DISABLE_DI_CONVERSION_WARNING, 'message': { disableDIConversionWarning: true } });
     }
 
+    // When "Don't ask me again" checkbox of decorative popup is checked
     handleSetAsDecorativeWarningPopupCheckbox = (event) => {
         this.setState({
             setAsDecorativePopUpCheckbox: event?.target?.checked
