@@ -26,7 +26,8 @@ describe('Test for Sidebar component', () => {
         index: "1-0",
         tag: "Fg",
         toolbar: [],
-        type:"figure"
+        type:"figure",
+        assetIdFor3PISmartlink:"3rd-party"
     };
     let initialStore = {
         appStore: {
@@ -138,9 +139,9 @@ describe('Test for Sidebar component', () => {
        
         const spySetSecondary = jest.spyOn(sidebarInstance, 'setSecondary');
         sidebarInstance.setSecondary(secondaryValue, secondaryLabel);
-        expect(sidebar.find('.element-dropdown').length).toBe(3)
+        expect(sidebar.find('.element-dropdown').length).toBe(4)
         expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(1)
-        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(1)
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(2)
         expect(spySetSecondary).toHaveBeenCalled();
     });
 
@@ -2015,6 +2016,46 @@ describe('Test for Sidebar component', () => {
             })
             sidebarInstance.handleBceToggle();
             expect(sidebarInstance.state.bceToggleValue).toBe(true);
+        })
+        it("handleIntendedPlaybackDropdown method ", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            
+            let event = {
+                target: {
+                    getAttribute: () => {
+                        return "inline";
+                    }
+                }
+            }
+            sidebarInstance.handleIntendedPlaybackDropdown(event);
+            expect(sidebarInstance.state.attrInput).toEqual('');
+        })
+        it("playbackMode method ", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.setState({
+                activeElementType: 'element-interactive',
+                isPlayBackDropdownOpen: true
+            });
+            sidebarInstance.playbackMode();
+            expect(sidebarInstance.state.attrInput).toEqual('');
+        })
+        it("toggleIntendedPlaybackDropdown method ", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.toggleIntendedPlaybackDropdown();
+            expect(sidebarInstance.state.attrInput).toEqual('');
+        })
+        it("playbackMode  method else case", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.setState({
+                activeElementType: false,
+                isPlayBackDropdownOpen: false
+            });
+            sidebarInstance.playbackMode();
+            expect(sidebarInstance.state.attrInput).toEqual('');
         })
     })
 });

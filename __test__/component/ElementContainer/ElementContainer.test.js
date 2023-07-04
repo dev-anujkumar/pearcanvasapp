@@ -154,7 +154,8 @@ const store = mockStore({
             secondaryOption: "secondary-heading-1",
             index: "1-0",
             tag: "H1",
-            toolbar: ['bold']
+            toolbar: ['bold'],
+            selectedIntendedPlaybackModeValue: "inline"
         },
         permissions: [
             "login", "logout", "bookshelf_access", "generate_epub_output", "demand_on_print", "toggle_tcm", "content_preview", "add_instructor_resource_url", "grid_crud_access", "alfresco_crud_access", "set_favorite_project", "sort_projects",
@@ -3120,7 +3121,8 @@ describe('Test-Other Functions', () => {
                 postertext: "<p>test</p>"
             },
             figuredata: {
-                interactivetype: "pdf"
+                interactivetype: "pdf",
+                intendedPlaybackMode:"test"
             },
             figuretype: "image",
             numberedandlabel: true

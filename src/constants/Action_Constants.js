@@ -247,5 +247,7 @@ export const SET_POPUP_PARENT_CUT_COPY = "SET_POPUP_PARENT_CUT_COPY";
 
 export const BANNER_IS_VISIBLE = "BANNER_IS_VISIBLE"
 
+export const SET_TOC_SLATE_LABEL = "SET_TOC_SLATE_LABEL"
+
 // Figure to convert into decorative image
 export const DECO_TO_OTHER_IMG_TYPES = "DECO_TO_OTHER_IMG_TYPES"
