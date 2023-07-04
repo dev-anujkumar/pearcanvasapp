@@ -1055,7 +1055,10 @@ export class TinyMceEditor extends Component {
     toggleMarkedIndexIcon = (flag) => {
         this.markedIndexBtnInstance && this.markedIndexBtnInstance.setDisabled(flag)
     }
-
+   /**
+     * This method is called on keyUp for handle the indent option.
+     * @param {*} editor  editor instance
+     */
     handleStanzaIndent = (classListData, classListWithFormatting) => {
         if (!isStanzaIndent(classListData)) {
             document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
@@ -1221,15 +1224,10 @@ export class TinyMceEditor extends Component {
                     }
                 }
                 if (this.props?.element?.type === 'stanza') {
-                    const cursorKeys = [37, 38, 39, 40]
                     let currentElement = editor?.selection?.getNode();
                     const classListData = currentElement?.classList
                     const classListWithFormatting = currentElement?.closest('span')?.classList
-                    if (cursorKeys.includes(keyPressed)) {
-                        this.handleStanzaIndent(classListData, classListWithFormatting)
-                    } else {
-                        this.handleStanzaIndent(classListData, classListWithFormatting)
-                    }
+                    this.handleStanzaIndent(classListData, classListWithFormatting)
                 }
             }
         });
