@@ -381,7 +381,6 @@ class PopUp extends React.Component {
             }
         }
         if (props.AssessmentPopup) {
-            console.log("checkkk");
             return (
                 <div className={`dialog-buttons`}>
                     <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) => props.agree(false, e)}>{props.yesButton}</span>
