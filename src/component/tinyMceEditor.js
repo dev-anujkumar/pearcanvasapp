@@ -531,7 +531,9 @@ export class TinyMceEditor extends Component {
                             document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                         }
                         if(isStanzaIndent(classListWithFormatting)) {
-                            classListWithFormatting?.remove('poetryLineLevel1') || classListWithFormatting?.remove('poetryLineLevel2') || classListWithFormatting?.remove('poetryLineLevel3')
+                            classListWithFormatting?.remove('poetryLineLevel1')
+                            classListWithFormatting?.remove('poetryLineLevel2')
+                            classListWithFormatting?.remove('poetryLineLevel3')
                             document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                         }
                     }
