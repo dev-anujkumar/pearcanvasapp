@@ -1092,14 +1092,15 @@ function CommunicationChannel(WrappedComponent) {
                     'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
                     'productApiUrl': config.PRODUCTAPI_ENDPOINT,
                     'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
-                    'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+                    'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
+                    'structureApiEndpoint':config.AUDIO_NARRATION_URL
                 }
                 if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (FETCH_LO_FOR_SLATES.includes(config.slateType))) {
                     let externalLFUrn = []
                     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                         this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
                     }
-                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO,externalLFUrn:externalLFUrn } })
+                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO,externalLFUrn:externalLFUrn ,entityURN:config.slateEntityURN} })
                 }
                 else if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "container-introduction") {
                     sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys_LO } })
