@@ -162,6 +162,18 @@ export const APPROVED_BANNER_MESSAGE1 = "Read-only | Approved Content"
 export const APPROVED_BANNER_MESSAGE2 = "- Editing content will create a new version of this slate"
 export const EDIT_CONTENT_BTN = "Edit Content"
 /************************************************************************************/
+export const SLATES_DEFAULT_LABEL = {
+    'section':'Slate',
+    'pdfslate':'PDF Slate',
+    'container-introduction':'Introduction',
+    'assessment':'Assessment',
+    'cover':'Cover',
+    'titlepage':'Title Page',
+    'copyright':'Copyright',
+    'listofcontents':'Contents',
+    'appendixslate':'Appendix Slate',
+    'ltislate':'LTI Slate'
+}
 
 /*** Sidebar constants ***/
 

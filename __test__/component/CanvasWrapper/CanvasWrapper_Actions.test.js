@@ -34,7 +34,8 @@ import {
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
     GET_TCM_RESOURCES,
-    SUBSCRIBERS_SUBSCRIBED_SLATE
+    SUBSCRIBERS_SUBSCRIBED_SLATE,
+    SET_TOC_SLATE_LABEL
 } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
@@ -3501,6 +3502,22 @@ it('Test: isSubscribersSubscribedSlate function', () => {
 
     const spyFunction = jest.spyOn(canvasActions, 'isSubscribersSubscribedSlate')
     canvasActions.isSubscribersSubscribedSlate(showPopup)(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    spyFunction.mockClear()
+})
+
+it('Test: setTocSlateLabel function', () => {
+    const expectedActions = {
+        type: SET_TOC_SLATE_LABEL,
+        payload: "slate"
+    };
+    const label = "slate"
+    let dispatch = (obj) => {
+        expect(obj).toEqual(expectedActions);
+    }
+
+    const spyFunction = jest.spyOn(canvasActions, 'setTocSlateLabel')
+    canvasActions.setTocSlateLabel(label)(dispatch);
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })
