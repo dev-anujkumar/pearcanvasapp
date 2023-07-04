@@ -5,6 +5,8 @@ import ElementContainer from '../../ElementContainer/ElementContainer.jsx';
 import { ElementSaprator } from '../../ElementSaprator/ElementSaprator.jsx';
 import { addElementInShowHide, showHideConstants } from '../ShowHide_Helper';
 import SortElement from './SortElement.jsx';
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../../SlateWrapper/ContentLoader.jsx'
 
 const ShowHideUiBlock = (props) => {
 	const { index, parentUrn, asideData, element, addNestedElements,
@@ -96,7 +98,10 @@ const ShowHideUiBlock = (props) => {
 			elementType: "showhide",
 			manifestUrn: element.id
 		}
-		return <ElementContainer
+		return <LazyLoad
+			once={true}
+			placeholder={<div data-id={element.id}><LargeLoader /></div>}> 
+		<ElementContainer
 			element = {item}
 			index = {eleIndex}
 			parentUrn = {shParentUrn}
@@ -117,6 +122,7 @@ const ShowHideUiBlock = (props) => {
 			handleUndoOption = {props.handleUndoOption}
 			closeUndoTimer = {props.closeUndoTimer}
 		/>
+		</LazyLoad>
 	}
 
 	return (
