@@ -18,7 +18,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
 import { MOVED_TO_WIP } from '../../constants/Element_Constants';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
-import { ALLOWED_SLATES_IN_RC, APPROVED_BANNER_MESSAGE1, APPROVED_BANNER_MESSAGE2, EDIT_CONTENT_BTN, SUBSCRIBER_BANNER_MESSAGE } from '../SlateWrapper/SlateWrapperConstants';
+import { ALLOWED_SLATES_IN_RC, APPROVED_BANNER_MESSAGE1, APPROVED_BANNER_MESSAGE2, EDIT_CONTENT_BTN, SLATES_DEFAULT_LABEL, SUBSCRIBER_BANNER_MESSAGE } from '../SlateWrapper/SlateWrapperConstants';
 
 const _Toolbar = props => {
     const { isToolBarBlocked,roleId } = props;
@@ -124,10 +124,11 @@ const _Toolbar = props => {
         if(ALLOWED_SLATES_IN_RC.includes(config.slateType) && !popupSlate) {
             updateRCSlate = true
         }
+        const slateLabel = props.slateTocLabel[config.slateType] ?? SLATES_DEFAULT_LABEL[config.slateType]
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
         const approveToWipStatus = await props.slateVersioning(updateRCSlate)
         if(approveToWipStatus) {
-        showNotificationOnCanvas(MOVED_TO_WIP)
+        showNotificationOnCanvas(`${slateLabel} ${MOVED_TO_WIP}`)
         changeAudioNarration()
         }
     }
@@ -258,7 +259,8 @@ const mapStateToProps = (state) => {
         slateLockInfo: state.slateLockReducer.slateLockInfo,
         searchUrn: state.searchReducer.searchTerm,
         slateLevelData: state.appStore.slateLevelData,
-        roleId:state.appStore.roleId
+        roleId:state.appStore.roleId,
+        slateTocLabel:state.projectInfo.slateTocLabel
     }
 }
 
