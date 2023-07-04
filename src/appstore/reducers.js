@@ -62,7 +62,8 @@ import {
     DELETE_ELEMENT_KEYS,
     SET_REQUIRED_SLATE_DATA,
     APPROVED_SLATE_POPUP_STATUS,
-    DECO_TO_OTHER_IMG_TYPES
+    DECO_TO_OTHER_IMG_TYPES,
+    FETCH_CONVERSION_DATA
 } from '../constants/Action_Constants';
 
 /**
@@ -135,7 +136,8 @@ const INITIAL_STATE = {
     deletedElementKeysData: {},
     getRequiredSlateData: {},
     approvedSlatePopupstatus: false,
-    decoToOtherTypes: false
+    decoToOtherTypes: false,
+    conversionData: {}
 };
 
 const INITIAL_ACTION = {
@@ -449,6 +451,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 decoToOtherTypes: action.payload
+            }
+        case FETCH_CONVERSION_DATA: 
+            return {
+                ...state,
+                conversionData: action.payload
             }
         default:
             return state;

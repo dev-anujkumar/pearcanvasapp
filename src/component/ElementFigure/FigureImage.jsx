@@ -10,7 +10,7 @@ import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype, getCookieByName } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
-import { decoToOtherTypeConversion, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
+import { decoToOtherTypeConversion, fetchOldDataAfterConversion, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
@@ -564,7 +564,7 @@ class FigureImage extends Component {
         let figureLabelFromApi = isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1 ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
         if (!(isAutoNumberingEnabled)) {
-            if (this.props.decoToOtherTypes) { // if the image conversion is from decorative to any other figure type
+            if (this.props.decoToOtherTypes && model.id == this.props.conversionData.id) { // if the image conversion is from decorative to any other figure type
                 this.state.figureLabelValue = 'No Label';
                 this.props.decoToOtherTypeConversion(false);
             }
@@ -603,6 +603,8 @@ class FigureImage extends Component {
         const creditsHtml = this.props?.model?.html?.credits?.replace("<p>", '')?.replace("</p>", '');
         const isReviewer = hasReviewerRole();
         const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
+        console.log("this.props.decoToOtherTypes",this.props.decoToOtherTypes);
+        console.log("this.state.figureLabelValue",this.state.figureLabelValue);
         return (
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
@@ -737,6 +739,9 @@ const mapActionToProps = (dispatch) => {
         decoToOtherTypeConversion : (value) => {
             dispatch(decoToOtherTypeConversion(value));
         },
+        fetchOldDataAfterConversion : (conversionData) => {
+            dispatch(fetchOldDataAfterConversion(conversionData));
+        }
     }
 }
 
@@ -754,6 +759,7 @@ const mapStateToProps = (state) => {
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         selectedElement: state.keyboardReducer.selectedElement,
         decoToOtherTypes: state.appStore.decoToOtherTypes,
+        conversionData: state.appStore.conversionData
     }
 }
 

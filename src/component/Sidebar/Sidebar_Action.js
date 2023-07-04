@@ -25,7 +25,7 @@ const elementType = ['element-authoredtext', 'element-list', 'element-blockfeatu
 import { getContainerEntityUrn, updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
 import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
 import ElementConstants from '../ElementContainer/ElementConstants';
-import { decoToOtherTypeConversion } from '../ElementContainer/ElementContainer_Actions';
+import { decoToOtherTypeConversion, fetchOldDataAfterConversion } from '../ElementContainer/ElementContainer_Actions';
 import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
@@ -119,7 +119,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
             // Resetting fields on conversion from decorative image to other figure types
             else if (oldElementData.figuredata?.decorative) {    
-                dispatch(decoToOtherTypeConversion(true));            
+                dispatch(decoToOtherTypeConversion(true));   
+                dispatch(fetchOldDataAfterConversion(oldElementData));
                 if (isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')) {
                     oldElementData.numberedandlabel = true
                     oldElementData.displayedlabel = "Figure"

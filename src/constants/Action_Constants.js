@@ -251,3 +251,4 @@ export const SET_TOC_SLATE_LABEL = "SET_TOC_SLATE_LABEL"
 
 // Figure to convert into decorative image
 export const DECO_TO_OTHER_IMG_TYPES = "DECO_TO_OTHER_IMG_TYPES"
+export const FETCH_CONVERSION_DATA = "FETCH_CONVERSION_DATA"
