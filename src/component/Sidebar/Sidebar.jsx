@@ -148,7 +148,7 @@ class Sidebar extends Component {
       subtitleHTML = subtitleHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
       captionHTML = captionHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
 
-    // showing set to decorative iamge popup only if image element fields have any values in them
+    // showing set to decorative image popup only if image element fields have any values in them
       let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === '' && numberHTML === '') || (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT)) && subtitleHTML === '' && captionHTML === '')
       this.setState({
         elementDropdown: "",
@@ -185,6 +185,7 @@ class Sidebar extends Component {
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
+            // checking if dont ask me again checkbox is checked
             const disableDIConversionWarning = getCookieByName("DISABLE_DI_CONVERSION_WARNING");
             if (value != this.props.activeElement.primaryOption && value === DECORATIVE_IMAGE) {
                 if (disableDIConversionWarning) {

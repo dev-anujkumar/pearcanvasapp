@@ -457,7 +457,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
             const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
             dispatch(updateAutonumberingOnElementTypeUpdate(res.data, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
-        } else if(isAutoNumberingEnabled && outputPrimaryOptionEnum === DECORATIVE && !isBCE_Element) {
+        }
+        // Handling autonumbering when figure type is changed to decorative
+        else if(isAutoNumberingEnabled && outputPrimaryOptionEnum === DECORATIVE && !isBCE_Element) {
             const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
             const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
             const parentIndex = getContainerEntityUrn(currentSlateAncestorData);

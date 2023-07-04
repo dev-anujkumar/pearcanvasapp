@@ -1567,6 +1567,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
+
+        // Handling the cut/copy/paste of decorative images
         if(selection?.element?.figuredata?.decorative) {
             delete _requestData.content[0]?.html?.captions
             delete _requestData.content[0]?.html?.text
