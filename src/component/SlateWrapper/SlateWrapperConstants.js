@@ -154,6 +154,7 @@ export const childNodeTagsArr = ['strong', 'em', 'u', 's', 'sub', 'sup', 'code']
 export const allowedClassName = ['calloutone', 'callouttwo', 'calloutthree', 'calloutfour', 'markedforindex', 'pearson-component glossaryterm']
 export const UNSUPPORTED_CONTENT_ERR_MSG = "Unsupported Content found which will not be pasted."
 export const ALLOWED_SLATES_IN_RC = ['section','appendixslate']
+export const stanzaIndentClassList = ['poetryLine poetryLineLevel1', 'poetryLine poetryLineLevel2', 'poetryLine poetryLineLevel3' ]
 
 /**** Banner messages for approved and subscriber case ****/
 export const SUBSCRIBER_BANNER_MESSAGE = "Read-only | Subscribed Slate"
@@ -173,3 +174,13 @@ export const SLATES_DEFAULT_LABEL = {
     'appendixslate':'Appendix Slate',
     'ltislate':'LTI Slate'
 }
+
+/*** Sidebar constants ***/
+
+export const CATEGORY = 'Category'
+export const SUB_CATEGORY = 'Subcategory'
+export const INTENDED_PLAYBACK_CATEGORY = 'Intended Playback Mode (web)'
+export const MODAL_MESSAGE = 'Playback mode will always be Modal in a mobile app.'
+export const  PRIMARY_SMARTLINK = 'primary-smartlink'
+export const  SMARTLINK_ELEMENT_DROPDOWN_TITLE = 'smartlink-element-dropdown-title'
+export const SECONDARY_3PI_SMARTLINK = 'secondary-interactive-smartlink-third'

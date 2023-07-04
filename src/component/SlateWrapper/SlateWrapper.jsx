@@ -41,7 +41,7 @@ import LazyLoad, {forceCheck} from "react-lazyload";
 import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
-import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
+import { TEXT_SOURCE, externalLOWarningtxt } from '../../constants/Element_Constants.js';
 import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
@@ -482,7 +482,9 @@ class SlateWrapper extends Component {
         }else if(!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed)){
             const slateId = Object.keys(this.props.slateData)[0],
                 lockDuration = 5400
-            this.setSlateLock(slateId, lockDuration)
+                if(config.slateType !== SLATE_TYPE_LTI) {
+                    this.setSlateLock(slateId, lockDuration)
+                }
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
         }else if(isSubscriberRole(projectSharingRole, isSubscribed)){
             return this.props.projectSubscriptionDetails.isSubscribersSubscribedSlateChecked
@@ -490,7 +492,9 @@ class SlateWrapper extends Component {
         else {
             const slateId = Object.keys(this.props.slateData)[0],
                 lockDuration = 5400
-            this.setSlateLock(slateId, lockDuration)
+                if(config.slateType !== SLATE_TYPE_LTI) {
+                    this.setSlateLock(slateId, lockDuration)
+                }
             return false
         }
     }
@@ -500,9 +504,6 @@ class SlateWrapper extends Component {
      * @param {*} event event object
      */
     checkSlateLockStatus = (event) => {
-        if(config.slateType === SLATE_TYPE_LTI) {
-            return;
-        }
         if (this.checkLockStatus()) {
             this.prohibitPropagation(event)
             this.togglePopup(true)
@@ -1539,8 +1540,7 @@ class SlateWrapper extends Component {
      * This method renders LO Warning Popup based on Selection 
      */
     showLOWarningPopup = () => {
-        const currentSlateLF = this.props.currentSlateLF;
-        const loWarningDialogTxt = (currentSlateLF === CYPRESS_LF) ? cypressLOWarningtxt : externalLOWarningtxt;
+        const loWarningDialogTxt = externalLOWarningtxt ?? ''
         if (this.props?.loWarningPopupData?.toggleValue) {
             this.props.showBlocker(true);
             showTocBlocker();
