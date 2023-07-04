@@ -13,7 +13,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { DECORATIVE, POD_DEFAULT_VALUE, allowedFigureTypesForTCM, tbSidebarEndpoint } from '../../constants/Element_Constants'
+import { DECORATIVE, DECORATIVE_IMAGE, POD_DEFAULT_VALUE, allowedFigureTypesForTCM, tbSidebarEndpoint } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
@@ -60,7 +60,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
         if (oldElementData.type === "figure") {
-            if (!(imageSource.includes(oldElementData.figuretype) && (imageDestination.includes(newElementData['primaryOption']) || newElementData.primaryOption === "primary-image-decorative")) && oldElementData.figuretype !== 'codelisting' && !oldElementData.figuredata.interactivetype){
+            if (!(imageSource.includes(oldElementData.figuretype) && (imageDestination.includes(newElementData['primaryOption']) || newElementData.primaryOption === DECORATIVE_IMAGE)) && oldElementData.figuretype !== 'codelisting' && !oldElementData.figuredata.interactivetype){
                 oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
             }
             if(oldElementData.figuredata.srctype){
@@ -107,7 +107,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled
 
             // Removing fields on conversion from other figure types to decorative image
-            if (newElementData?.primaryOption === "primary-image-decorative") {
+            if (newElementData?.primaryOption === DECORATIVE_IMAGE) {
                 if(isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')){
                     oldElementData.numberedandlabel = false
                 }

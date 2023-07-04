@@ -14,7 +14,7 @@ import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
-import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown } from '../../constants/Element_Constants.js';
+import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
@@ -186,7 +186,7 @@ class Sidebar extends Component {
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
             const disableDIConversionWarning = getCookieByName("DISABLE_DI_CONVERSION_WARNING");
-            if (value != this.props.activeElement.primaryOption && value === "primary-image-decorative") {
+            if (value != this.props.activeElement.primaryOption && value === DECORATIVE_IMAGE) {
                 if (disableDIConversionWarning) {
                     this.props.conversionElement({
                         elementId: this.props.activeElement.elementId,
@@ -896,9 +896,13 @@ class Sidebar extends Component {
 
     handleBceBlur = () => {
         let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-2`)
+        let activeBCEElementNode_Decorative = document.getElementById(`cypress-${this.props.activeElement.index}-4`)
         if (activeBCEElementNode) {
             activeBCEElementNode.focus()
             activeBCEElementNode.blur()
+        } else if(this.state.activePrimaryOption === DECORATIVE_IMAGE && activeBCEElementNode_Decorative) {
+            activeBCEElementNode_Decorative.focus()
+            activeBCEElementNode_Decorative.blur()
         }
     }
 
@@ -1144,7 +1148,7 @@ class Sidebar extends Component {
 
     podOption = () => {
         if (this.state.activePrimaryOption === 'primary-image-table' || this.state.activePrimaryOption === 'primary-image-figure' ||
-            this.state.activePrimaryOption === 'primary-image-equation' || this.state.activePrimaryOption === 'primary-image-decorative' || 
+            this.state.activePrimaryOption === 'primary-image-equation' || this.state.activePrimaryOption === DECORATIVE_IMAGE || 
             (this.state.activePrimaryOption === 'primary-smartlink' && 
             (this.state.activeSecondaryOption === "secondary-interactive-smartlink-third" || this.state.activeSecondaryOption === 'secondary-interactive-smartlink-tab'))) {
             let active = '';

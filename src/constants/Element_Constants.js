@@ -8,7 +8,6 @@ export const TABLE_AS_MARKUP = "tableasmarkup"
 export const FIGURE = "figure"
 export const IMAGE = "image"
 export const TABLE = "table"
-export const DECORATIVE = "DECORATIVE"
 export const TABLE_ELEMENT = "tableasmarkup"
 export const MATH_IMAGE = "mathImage"
 export const AUTHORED_TEXT = "authoredtext"
@@ -347,3 +346,7 @@ export const intendedPlaybackModeDropdown = [
     { label: 'New Tab', value: 'tab' },
     { label: 'New Window', value: 'window' },
 ];
+
+/* Decorative Image */
+export const DECORATIVE = "DECORATIVE"
+export const DECORATIVE_IMAGE = "primary-image-decorative"
