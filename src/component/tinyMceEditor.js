@@ -524,9 +524,14 @@ export class TinyMceEditor extends Component {
                 case "RemoveFormat":
                     let selectedText = window.getSelection().toString();
                     if (this.props?.element?.type === 'stanza') {
-                        const check = editor.selection.getNode().className
-                        if (stanzaIndentClassList?.includes(check?.trim())) {
+                        const stanzaClassName = editor.selection?.getNode()?.className 
+                        let classListWithFormatting = editor?.selection?.getNode()?.closest('span')?.classList
+                        if (stanzaIndentClassList?.includes(stanzaClassName?.trim())) {
                             editor.selection.getNode().className = 'poetryLine';
+                            document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                        }
+                        if(isStanzaIndent(classListWithFormatting)) {
+                            classListWithFormatting?.remove('poetryLineLevel1') || classListWithFormatting?.remove('poetryLineLevel2') || classListWithFormatting?.remove('poetryLineLevel3')
                             document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                         }
                     }
@@ -1050,7 +1055,20 @@ export class TinyMceEditor extends Component {
     toggleMarkedIndexIcon = (flag) => {
         this.markedIndexBtnInstance && this.markedIndexBtnInstance.setDisabled(flag)
     }
-
+   /**
+     * This method is called on keyUp for handle the indent option.
+     * @param {*} editor  editor instance
+     */
+    handleStanzaIndent = (classListData, classListWithFormatting) => {
+        if (!isStanzaIndent(classListData)) {
+            document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+        } else {
+            document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
+        }
+        if (isStanzaIndent(classListWithFormatting)) {
+            document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
+        }
+    }
 
     /**
      * This method is called on keyUp.
@@ -1204,6 +1222,12 @@ export class TinyMceEditor extends Component {
                     if (editor.selection.getNode().tagName.toLowerCase() === 'span' && editor.selection.getNode().className.toLowerCase() === 'answerLineContent') {
                         this.handleBlankLineArrowKeys(keyPressed, editor)
                     }
+                }
+                if (this.props?.element?.type === 'stanza') {
+                    let currentElement = editor?.selection?.getNode();
+                    const classListData = currentElement?.classList
+                    const classListWithFormatting = currentElement?.closest('span')?.classList
+                    this.handleStanzaIndent(classListData, classListWithFormatting)
                 }
             }
         });
