@@ -1019,6 +1019,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
+                // To prevent the change slate focus action on browser refresh 
                 let isRefreshBrowser = localStorage.getItem('browser_refresh');
                 if (isRefreshBrowser == '1') {
                     localStorage.setItem('browser_refresh', '0');

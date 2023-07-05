@@ -9,10 +9,9 @@ const {
 } = config
 
 /**
- * Generates Glossary/Footnote ID 
- * @param {*} elementId Element work URN 
- * @param {*} enumType enum (glossray or footnote)
- * @param {*} callback callback method
+ * Triggers Slate level save api on different events 
+ * @param {*} entityURN Slate URN 
+ * @param {*} triggerAction event name
  */
 export const triggerSlateLevelSave = (entityURN, triggerAction) => {
 	let url = `${config.STRUCTURE_API_URL}structure-api/context/v1/${config.projectUrn}/container/${entityURN}/notifySlateStateChange`;

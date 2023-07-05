@@ -88,6 +88,7 @@ export class CanvasWrapper extends Component {
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             this.props.releaseSlateLock(config.projectUrn, slateId);
         }
+        // Trigger slate level save api on browser refresh
         window.onload = () => {
             setTimeout(() => {
                 let slateEntityURN = localStorage.getItem('slateEntityURN');
