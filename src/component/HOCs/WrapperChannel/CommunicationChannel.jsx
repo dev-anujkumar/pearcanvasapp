@@ -1091,7 +1091,7 @@ function CommunicationChannel(WrappedComponent) {
                     'strApiKey': config.STRUCTURE_APIKEY,
                     'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
                     'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                    'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
+                    'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT,
                     'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
                     'structureApiEndpoint':config.AUDIO_NARRATION_URL
                 }
