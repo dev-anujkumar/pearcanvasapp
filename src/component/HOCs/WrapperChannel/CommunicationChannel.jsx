@@ -256,11 +256,11 @@ function CommunicationChannel(WrappedComponent) {
                 case 'brokerPreview':
                 case 'slatePreview':
                 case 'projectPreview':
-                    if (!config.savingInProgress) {
-                        this.props.publishContent(messageType);
-                    }
                     if (messageType === 'projectPreview') {
                         triggerSlateLevelSave(config.slateEntityURN, PROJECT_PREVIEW_ACTION)
+                    }
+                    if (!config.savingInProgress) {
+                        this.props.publishContent(messageType);
                     }
                     break;
                 case 'getSlateLockStatus':
@@ -1013,7 +1013,12 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
-                triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
+                let isRefreshBrowser = localStorage.getItem('browser_refresh');
+                if (isRefreshBrowser == '1') {
+                    localStorage.setItem('browser_refresh', '0');
+                } else {
+                    triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
+                }
                 const slateManifest = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN
                 if (this.props.withinLockPeriod === true) {
                     this.props.releaseSlateLock(config.projectUrn, slateManifest)
