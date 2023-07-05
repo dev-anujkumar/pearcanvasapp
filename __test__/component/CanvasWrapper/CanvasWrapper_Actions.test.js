@@ -34,7 +34,8 @@ import {
     SET_PROJECT_SUBSCRIPTION_DETAILS,
     OWNERS_SUBSCRIBED_SLATE,
     GET_TCM_RESOURCES,
-    SUBSCRIBERS_SUBSCRIBED_SLATE
+    SUBSCRIBERS_SUBSCRIBED_SLATE,
+    SET_TOC_SLATE_LABEL
 } from '../../../src/constants/Action_Constants';
 import config from '../../../src/config/config.js';
 import * as canvasActions from '../../../src/component/CanvasWrapper/CanvasWrapper_Actions';
@@ -464,6 +465,25 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
                 figuredata: {
                     alttext: 'alttext',
                     longdescription: 'longdescription '
+                }
+            }
+            let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
+            const spyFunction = jest.spyOn(canvasActions, 'fetchElementTag')
+            canvasActions.fetchElementTag({ ...elementData, index: '0-0-0' });
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear()
+        })
+        it('Test-1.30-fetchElementTag - elementType - figure and figuretype - interactive else case', () => {
+            const elementData = {
+                ...activeElement, 
+                type: 'figure', 
+                figuretype: 'interactive',
+                figuredata: {
+                    alttext: 'alttext',
+                    longdescription: 'longdescription ',
+                    interactivetype:'3rd-party',
+                    interactiveid: "123",
+                    intendedPlaybackMode:"test"
                 }
             }
             let activeElement = slateTestData.slateData1["urn:pearson:manifest:8bc3c41e-14db-45e3-9e55-0f708b42e1c9"].contents.bodymatter[10];
@@ -3482,6 +3502,22 @@ it('Test: isSubscribersSubscribedSlate function', () => {
 
     const spyFunction = jest.spyOn(canvasActions, 'isSubscribersSubscribedSlate')
     canvasActions.isSubscribersSubscribedSlate(showPopup)(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    spyFunction.mockClear()
+})
+
+it('Test: setTocSlateLabel function', () => {
+    const expectedActions = {
+        type: SET_TOC_SLATE_LABEL,
+        payload: "slate"
+    };
+    const label = "slate"
+    let dispatch = (obj) => {
+        expect(obj).toEqual(expectedActions);
+    }
+
+    const spyFunction = jest.spyOn(canvasActions, 'setTocSlateLabel')
+    canvasActions.setTocSlateLabel(label)(dispatch);
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })

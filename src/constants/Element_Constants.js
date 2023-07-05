@@ -336,7 +336,7 @@ export const tabTitlePlaceholder = "Enter tab name (max. 25 characters)"
 export const tbSidebarEndpoint = "tabbed-2-column"
 
 /*------------------ Approved slate moved to WIP ------------------*/
-export const MOVED_TO_WIP = "Slate has moved to WIP status";
+export const MOVED_TO_WIP = "and parent container(s) has moved to WIP status";
 /* Fetch Learning objectives for these slates*/
 export const FETCH_LO_FOR_SLATES = ['section','pdfslate','ltislate']
 
@@ -346,3 +346,7 @@ export const intendedPlaybackModeDropdown = [
     { label: 'New Tab', value: 'tab' },
     { label: 'New Window', value: 'window' },
 ];
+
+/* Decorative Image */
+export const DECORATIVE = "DECORATIVE"
+export const DECORATIVE_IMAGE = "primary-image-decorative"

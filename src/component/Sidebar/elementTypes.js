@@ -284,6 +284,48 @@ export default {
                 }
             }
         },
+        'primary-image-decorative': {
+            text: 'Decorative Image',
+            toolbar: ['insertMedia', 'formatSelector', 'crossLinkingIcon', 'assetpopover', 'glossary', 'decreaseindent', 'alignment', 'calloutIcon', 'IndexEntry'],
+            enum: 'DECORATIVE',
+            subtype: {
+                'secondary-image-figure-width': {
+                    text: 'Text Width',
+                    labelText: 'DI',
+                    enum: 'IMAGE_TEXT_WIDTH'
+                },
+                'secondary-image-figure-actual': {
+                    text: 'Actual Size',
+                    labelText: 'DI',
+                    enum: 'IMAGE_ACTUAL_SIZE'
+                },
+                'secondary-image-figure-quarter': {
+                    text: '25% Text Width',
+                    labelText: 'DI',
+                    enum: 'IMAGE_25_TEXT'
+                },
+                'secondary-image-figure-half': {
+                    text: '50% Text Width',
+                    labelText: 'DI',
+                    enum: 'IMAGE_50_TEXT'
+                },
+                'secondary-image-figure-three-quarter': {
+                    text: '75% Text Width',
+                    labelText: 'DI',
+                    enum: 'IMAGE_75_TEXT'
+                },
+                'secondary-image-figure-wider': {
+                    text: 'Wider Than Text',
+                    labelText: 'DI',
+                    enum: 'IMAGE_WIDER'
+                },
+                'secondary-image-figure-full': {
+                    text: 'Full Screen',
+                    labelText: 'DI',
+                    enum: 'IMAGE_FULL'
+                }
+            }
+        },
         'primary-mathml-equation': {
             text: 'Block Math',
             toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary','decreaseindent','alignment', 'calloutIcon','IndexEntry'],

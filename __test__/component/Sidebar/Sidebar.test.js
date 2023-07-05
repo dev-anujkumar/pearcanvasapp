@@ -26,7 +26,8 @@ describe('Test for Sidebar component', () => {
         index: "1-0",
         tag: "Fg",
         toolbar: [],
-        type:"figure"
+        type:"figure",
+        assetIdFor3PISmartlink:"3rd-party"
     };
     let initialStore = {
         appStore: {
@@ -138,157 +139,12 @@ describe('Test for Sidebar component', () => {
        
         const spySetSecondary = jest.spyOn(sidebarInstance, 'setSecondary');
         sidebarInstance.setSecondary(secondaryValue, secondaryLabel);
-        expect(sidebar.find('.element-dropdown').length).toBe(3)
+        expect(sidebar.find('.element-dropdown').length).toBe(4)
         expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(1)
-        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(1)
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(2)
         expect(spySetSecondary).toHaveBeenCalled();
     });
-    // xdescribe('Test case for Update Embeded AssessmentType Popup',()=>{
-    //      activeElement={
-    //         elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
-    //         elementType: "element-assessment",
-    //         elementWipType: "undefined",
-    //         primaryOption: "primary-single-assessment",
-    //         secondaryOption: "secondary-single-assessment-puf",
-    //         index: "1-0",
-    //         tag: "Qu",
-    //         toolbar: [],
-    //         type:"figure" 
-    //     }
 
-    //     const sidebarWithData = mockStore({
-    //         appStore: {
-    //             activeElement,
-    //             updateElement,
-    //             conversionElement,
-    //             slateLevelData,
-    //         },
-    //         metadataReducer: {
-    //             showModule: true
-    //         },
-    //         elementStatusReducer: {
-    //             'urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b': "wip",
-    //             "urn:pearson:work:32e659c2-e0bb-46e8-9605-b8433aa3836c": "wip",
-    //             "urn:pearson:work:44d43f1b-3bdf-4386-a06c-bfa779f27635": "wip",
-    //             "urn:pearson:work:ee2b0c11-75eb-4a21-87aa-578750b5301d": "wip",
-                
-    //         },
-    //         selectionReducer:{
-    //             selection:""
-    //         },
-    //         tcmReducer: {
-    //             tisTCMCanvasPopupLaunched:false,
-    //             tcmSnapshotData: {},
-    //             elementData: {},
-    //             tcmStatus: false
-    //         },
-    //         autoNumberReducer: {
-    //             isAutoNumberingEnabled: false
-    //         }
-    //     });
-
-    //     let nextprops={
-    //         activeElement: { elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
-    //         primaryOption: 'primary-single-assessment',
-    //         secondaryOption:'secondary-single-assessment-puf'
-    //          },
-    //         showCanvasBlocker:jest.fn(),
-    //         showBlocker:jest.fn(),
-    //         hideBlocker:jest.fn(),
-    //         ...props
-    //     }
-    //     let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...nextprops}/></Provider>);
-    //     const sidebarInstance = sidebar.find('Sidebar').instance();
-    //     it('initiating update AssessmentPopup via render',()=>{
-    //         sidebarInstance.setState({
-    //             updateAssessmentTypePopup:true
-    //         })
-    //         expect(sidebarInstance.state.updateAssessmentTypePopup).toBe(true);
-    //     });
-    //     it('handling showUpdateAssessmentTypePopup',()=>{
-    //         sidebarInstance.showUpdateAssessmentTypePopup();
-    //         sidebarInstance.handleUpdateAssessmentTypePopup(false);
-    //         sidebarInstance.setState({
-    //             updateAssessmentTypePopup: false,
-    //             secondaryValue: "",
-    //             secondaryLabel: ""
-    //         })
-    //         expect(sidebarInstance.state.secondaryValue).toBe("");
-    //         expect(sidebarInstance.state.secondaryLabel).toBe("");
-    //         expect(sidebarInstance.state.updateAssessmentTypePopup).toBe(false);
-    //     });
-    //     it('Test Case for setUpdatedAssessment',()=>{
-    //         let secondaryValue='secondary-single-assessment-puf';
-    //         let secondaryLabel='Qu';
-    //         let nextprops={
-    //             activeElement:{
-    //                 elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
-    //                 elementWipType: "undenied",
-    //                 secondaryOption:'secondary-single-assessment-puf'
-    //             },
-    //             showCanvasBlocker: jest.fn(),
-    //             showBlocker: jest.fn(),
-    //             hideBlocker: jest.fn(),
-    //             conversionElement:jest.fn(),
-    //             ...props
-    //         }
-    //         let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...nextprops}/></Provider>);
-    //         const sidebarInstance = sidebar.find('Sidebar').instance();
-    //         sidebarInstance.setUpdatedAssessmentType(false);
-    //         sidebarInstance.setState({
-    //             updateAssessmentTypePopup: false
-    //         })
-    //         sidebarInstance.setSecondary(secondaryValue,secondaryLabel);
-    //         sidebarInstance.setState({
-    //             elementDropdown: '',
-    //             activeSecondaryOption: secondaryValue,
-    //             activeLabelText: secondaryValue,
-    //             podOption: false
-    //         })
-    //         expect(sidebarInstance.state.updateAssessmentTypePopup).toBe(false);
-    //         expect(sidebarInstance.state.elementDropdown).toBe('');
-    //         expect(sidebarInstance.state.activeSecondaryOption).toBe(secondaryValue);
-    //         expect(sidebarInstance.state.activeLabelText).toBe(secondaryLabel);
-    //         expect(sidebarInstance.state.podOption).toBe(false);
-    //     });
-    //     it('Test for handle Secondary Option Change',()=>{
-    //         let value='secondary-single-assessment-puf';
-    //         let labelText='Qu';
-    //        let target = {
-    //             target: {
-    //                 getAttribute: function(dataValue) {
-    //                     return 'secondary-single-assessment-puf';
-    //                 }
-    //             }
-    //         }     
-    //             sidebarInstance.handleSecondaryOptionChange(target);
-    //             document.querySelector= ()=>{
-    //                 return {
-    //                     querySelector: ()=>{
-    //                         return {
-    //                             getAttribute: () =>{
-    //                                 return "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b"
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //             sidebarInstance.setState({
-    //                 activeSecondaryOption: value,
-    //                 activeLabelText: labelText,
-    //                 podOption: false,
-    //                 updateAssessmentTypePopup: true,
-    //                 secondaryValue: value,
-    //                 secondaryLabel: labelText,
-    //             })
-    //             expect(sidebarInstance.state.activeSecondaryOption).toBe(value);
-    //             expect(sidebarInstance.state.activeLabelText).toBe(labelText);
-    //             expect(sidebarInstance.state.podOption).toBe(false);
-    //             expect(sidebarInstance.state.updateAssessmentTypePopup).toBe(true);
-    //             expect(sidebarInstance.state.secondaryLabel).toBe(labelText);
-    //             expect(sidebarInstance.state.secondaryValue).toBe(value);
-    //         });     
-    // })
     it('Test Case for Metadata Anchor LO', () => {
         const activeElement = {
             elementId: "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e1b",
@@ -2160,6 +2016,46 @@ describe('Test for Sidebar component', () => {
             })
             sidebarInstance.handleBceToggle();
             expect(sidebarInstance.state.bceToggleValue).toBe(true);
+        })
+        it("handleIntendedPlaybackDropdown method ", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            
+            let event = {
+                target: {
+                    getAttribute: () => {
+                        return "inline";
+                    }
+                }
+            }
+            sidebarInstance.handleIntendedPlaybackDropdown(event);
+            expect(sidebarInstance.state.attrInput).toEqual('');
+        })
+        it("playbackMode method ", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.setState({
+                activeElementType: 'element-interactive',
+                isPlayBackDropdownOpen: true
+            });
+            sidebarInstance.playbackMode();
+            expect(sidebarInstance.state.attrInput).toEqual('');
+        })
+        it("toggleIntendedPlaybackDropdown method ", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.toggleIntendedPlaybackDropdown();
+            expect(sidebarInstance.state.attrInput).toEqual('');
+        })
+        it("playbackMode  method else case", () => {
+            let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            sidebarInstance.setState({
+                activeElementType: false,
+                isPlayBackDropdownOpen: false
+            });
+            sidebarInstance.playbackMode();
+            expect(sidebarInstance.state.attrInput).toEqual('');
         })
     })
 });

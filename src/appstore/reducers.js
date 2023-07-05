@@ -61,7 +61,9 @@ import {
     UPDATE_CARET_OFFSET,
     DELETE_ELEMENT_KEYS,
     SET_REQUIRED_SLATE_DATA,
-    APPROVED_SLATE_POPUP_STATUS
+    APPROVED_SLATE_POPUP_STATUS,
+    DECO_TO_OTHER_IMG_TYPES,
+    FETCH_CONVERSION_DATA
 } from '../constants/Action_Constants';
 
 /**
@@ -133,7 +135,9 @@ const INITIAL_STATE = {
     caretPosition: '',
     deletedElementKeysData: {},
     getRequiredSlateData: {},
-    approvedSlatePopupstatus: false
+    approvedSlatePopupstatus: false,
+    decoToOtherTypes: false,
+    conversionData: {}
 };
 
 const INITIAL_ACTION = {
@@ -442,6 +446,16 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 approvedSlatePopupstatus: action.payload
+            }
+        case DECO_TO_OTHER_IMG_TYPES: 
+            return {
+                ...state,
+                decoToOtherTypes: action.payload
+            }
+        case FETCH_CONVERSION_DATA: 
+            return {
+                ...state,
+                conversionData: action.payload
             }
         default:
             return state;

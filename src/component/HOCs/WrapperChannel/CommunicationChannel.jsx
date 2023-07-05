@@ -464,6 +464,10 @@ function CommunicationChannel(WrappedComponent) {
                         this.handleRefreshSlate();
                     }
                     break;
+                case 'sendSlatesLabel':
+                    if(message?.labels)
+                    this.props.setTocSlateLabel(message.labels)
+                    break;
             }
         }
 
@@ -481,7 +485,8 @@ function CommunicationChannel(WrappedComponent) {
                 'manifestApiUrl': config.ASSET_POPOVER_ENDPOINT,
                 'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
                 'myCloudProxySession': config.myCloudProxySession,
-                'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT
+                'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT,
+                'structureApiEndpoint':config.AUDIO_NARRATION_URL
             };
             let externalLFUrn = [];
             if (projectLearningFrameworks?.externalLF?.length) {
@@ -532,7 +537,8 @@ function CommunicationChannel(WrappedComponent) {
                     'previewData': previewData,
                     'defaultLF': defaultLF,
                     'loSpa_Source': message.loSpa_Source,
-                    'isSubscribed':message.isSubscribed ? message.isSubscribed : false
+                    'isSubscribed':message.isSubscribed ? message.isSubscribed : false,
+                    'isApprovedSlate':message.isApprovedSlate
                 }
             })
         }
@@ -982,7 +988,7 @@ function CommunicationChannel(WrappedComponent) {
                     let tocAdd = this.props.permissions.includes('toc_add_pages') ? 'toc_add_pages' : ""
                     permissionObj.permissions = [tocEditTitle, tocDelete, tocRearrage, tocAdd]
                 }
-                permissionObj.roleId = 'admin';
+                permissionObj.roleId = this.props.roleId;
             }
 
 
@@ -1097,15 +1103,16 @@ function CommunicationChannel(WrappedComponent) {
                     'strApiKey': config.STRUCTURE_APIKEY,
                     'mathmlImagePath': config.S3MathImagePath ? config.S3MathImagePath : defaultMathImagePath,
                     'productApiUrl': config.PRODUCTAPI_ENDPOINT,
-                    'manifestApiUrl': config.MANIFEST_READONLY_ENDPOINT,
-                    'assessmentApiUrl': config.ASSESSMENT_ENDPOINT
+                    'manifestReadonlyApi': config.MANIFEST_READONLY_ENDPOINT,
+                    'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
+                    'structureApiEndpoint':config.AUDIO_NARRATION_URL
                 }
                 if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (FETCH_LO_FOR_SLATES.includes(config.slateType))) {
                     let externalLFUrn = []
                     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                         this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
                     }
-                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO,externalLFUrn:externalLFUrn } })
+                    sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN, apiKeys_LO,externalLFUrn:externalLFUrn ,entityURN:config.slateEntityURN} })
                 }
                 else if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "container-introduction") {
                     sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys_LO } })

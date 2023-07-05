@@ -10,6 +10,7 @@ export default {
     "primary-image-figure": figureCommonData,
     "primary-image-table" : figureCommonData,
     "primary-image-equation": figureCommonData,
+    "pprimary-image-decorative": figureCommonData,
     "primary-mathml-equation": {
         "type": "element-authoredtext",
         "schema": "http://schemas.pearson.com/wip-authoring/element/1",
