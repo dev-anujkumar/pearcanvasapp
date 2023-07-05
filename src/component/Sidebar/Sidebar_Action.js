@@ -137,6 +137,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     text: ""
                 }
                 oldElementData.html = {
+                    ...oldElementData.html,
                     title: "<p><br></p>",
                     text: "",
                     captions: "<p><br></p>",
