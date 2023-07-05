@@ -526,15 +526,18 @@ export class TinyMceEditor extends Component {
                     if (this.props?.element?.type === 'stanza') {
                         const stanzaClassName = editor.selection?.getNode()?.className 
                         let classListWithFormatting = editor?.selection?.getNode()?.closest('span')?.classList
+                        const selectedTextWithFormatting = editor?.selection?.getNode()?.closest('span')?.innerText
                         if (stanzaIndentClassList?.includes(stanzaClassName?.trim())) {
                             editor.selection.getNode().className = 'poetryLine';
                             document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                         }
                         if(isStanzaIndent(classListWithFormatting)) {
-                            classListWithFormatting?.remove('poetryLineLevel1')
-                            classListWithFormatting?.remove('poetryLineLevel2')
-                            classListWithFormatting?.remove('poetryLineLevel3')
-                            document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                            if (selectedTextWithFormatting === selectedText) {
+                                classListWithFormatting?.remove('poetryLineLevel1')
+                                classListWithFormatting?.remove('poetryLineLevel2')
+                                classListWithFormatting?.remove('poetryLineLevel3')
+                                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                            }
                         }
                     }
                     if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
