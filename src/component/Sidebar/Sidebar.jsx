@@ -1202,8 +1202,8 @@ class Sidebar extends Component {
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.secondaryOption()}
-                    {!isDecorativeImage && this.attributions()}
                     {activeElement?.assetIdFor3PISmartlink && this.playbackMode()}
+                    {!isDecorativeImage && this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
                     {this.state.activeElementType ==="manifestlist" && <div>
