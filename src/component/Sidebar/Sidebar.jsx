@@ -8,19 +8,20 @@ import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateConta
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole, getSlateType } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType, getCookieByName } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK,  } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
-import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown } from '../../constants/Element_Constants.js';
+import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
 import { tcmButtonHandler } from '../CanvasWrapper/TCM_Canvas_Popup_Integrations';
 import { Autocomplete, TextField } from '@mui/material';
 import modalIcon from '../../images/Sidebar/modalIcon.svg'
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants.js';
 
 class Sidebar extends Component {
     constructor(props) {
@@ -56,6 +57,8 @@ class Sidebar extends Component {
             podOption: false,
             podValue: podwidth,
             usageType: this.props.activeElement.usageType,
+            decorativePopupWarning: false,
+            sidebarValue: "",
             isPlayBackDropdownOpen: false,
             selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue
         };
@@ -120,12 +123,33 @@ class Sidebar extends Component {
 
     handlePrimaryOptionChange = (e) => {
       let value = e.target.getAttribute("data-value");
+      this.setState({ sidebarValue: value });
       let secondaryelementList =
         elementList[this.state.activeElementType][value].subtype;
       let secondaryFirstOption = Object.keys(secondaryelementList)[0];
       let labelText = secondaryelementList[secondaryFirstOption].labelText;
       const {activefontStyle, activebulletIcon} = this.state
 
+    // Retrieving values of image element fields
+      let titleDOM = document.getElementById(`cypress-${this.props.activeElement.index}-0`),
+      numberDOM = document.getElementById(`cypress-${this.props.activeElement.index}-1`),
+      subtitleDOM = document.getElementById(`cypress-${this.props.activeElement.index}-2`),
+      captionDOM = document.getElementById(`cypress-${this.props.activeElement.index}-3`),
+      settingDOM = document.getElementById(`autonumberSetting`)
+
+      let titleHTML = titleDOM ? titleDOM.innerHTML : "",
+      numberHTML = numberDOM ? numberDOM.innerHTML : "",
+      subtitleHTML = subtitleDOM ? subtitleDOM.innerHTML : "",
+      captionHTML = captionDOM ? captionDOM.innerHTML : "",
+      settingHTML = settingDOM ? settingDOM.innerText : ""
+
+      titleHTML = titleHTML.replace(/class="paragraphNumeroUno"/g, "").replace("<p >", '').replace(/<br>/g, '').replace("</p>", '')
+      numberHTML = numberHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
+      subtitleHTML = subtitleHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
+      captionHTML = captionHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
+
+    // showing set to decorative image popup only if image element fields have any values in them
+      let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === '' && numberHTML === '') || (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT)) && subtitleHTML === '' && captionHTML === '')
       this.setState({
         elementDropdown: "",
         fontBulletElementDropdown: "",
@@ -161,15 +185,45 @@ class Sidebar extends Component {
           }
           this.props.updateBlockListMetadata(blockListMetaDataPayload);
         } else {
-          this.props.conversionElement({
-            elementId: this.props.activeElement.elementId,
-            elementType: this.state.activeElementType,
-            primaryOption: value,
-            fontBulletOption: value,
-            secondaryOption: secondaryFirstOption,
-            labelText,
-            toolbar: elementList[this.state.activeElementType][value].toolbar,
-          });
+            // checking if dont ask me again checkbox is checked
+            const disableDIConversionWarning = getCookieByName("DISABLE_DI_CONVERSION_WARNING");
+            if (value != this.props.activeElement.primaryOption && value === DECORATIVE_IMAGE) {
+                if (disableDIConversionWarning) {
+                    this.props.conversionElement({
+                        elementId: this.props.activeElement.elementId,
+                        elementType: this.state.activeElementType,
+                        primaryOption: value,
+                        fontBulletOption: value,
+                        secondaryOption: secondaryFirstOption,
+                        labelText,
+                        toolbar: elementList[this.state.activeElementType][value].toolbar,
+                    })
+                }
+                else {
+                    popupEnableCheckForDecoConversion ?
+                        this.props.conversionElement({
+                            elementId: this.props.activeElement.elementId,
+                            elementType: this.state.activeElementType,
+                            primaryOption: value,
+                            fontBulletOption: value,
+                            secondaryOption: secondaryFirstOption,
+                            labelText,
+                            toolbar: elementList[this.state.activeElementType][value].toolbar,
+                        })
+                        :
+                        this.handleDecorativePopup(true);
+                }
+            } else {
+                this.props.conversionElement({
+                    elementId: this.props.activeElement.elementId,
+                    elementType: this.state.activeElementType,
+                    primaryOption: value,
+                    fontBulletOption: value,
+                    secondaryOption: secondaryFirstOption,
+                    labelText,
+                    toolbar: elementList[this.state.activeElementType][value].toolbar,
+                });
+            }
         }
       }
     };
@@ -365,7 +419,41 @@ class Sidebar extends Component {
         
         return fontBulletOptions;
     }
-    
+
+    // function to toggle decorative popup
+    handleSetDecorativeImagePopup = () => {
+        showBlocker(false);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
+        this.setState({
+            decorativePopupWarning: false,
+        })
+    }
+
+    // function called when set as decorative image button is clicked
+    setDecorativeImage = () => {
+        showBlocker(false);
+        this.props.showCanvasBlocker(false);
+        hideBlocker();
+        this.setState({
+            decorativePopupWarning: false,
+        })
+        this.setSecondary(this.state.secondaryValue,this.state.secondaryLabel);
+        let secondaryelementList =
+        elementList[this.state.activeElementType][this.state.sidebarValue].subtype;
+        let secondaryFirstOption = Object.keys(secondaryelementList)[0];
+        let labelText = secondaryelementList[secondaryFirstOption].labelText;
+        this.props.conversionElement({
+            elementId: this.props.activeElement.elementId,
+            elementType: this.state.activeElementType,
+            primaryOption: this.state.sidebarValue,
+            fontBulletOption: this.state.sidebarValue,
+            secondaryOption: secondaryFirstOption,
+            labelText,
+            toolbar: elementList[this.state.activeElementType][this.state.sidebarValue].toolbar,
+        });
+    }
+
     showUpdateAssessmentTypePopup=()=>{
         this.props.showCanvasBlocker(true);
         hideToc();
@@ -809,9 +897,13 @@ class Sidebar extends Component {
 
     handleBceBlur = () => {
         let activeBCEElementNode = document.getElementById(`cypress-${this.props.activeElement.index}-2`)
+        let activeBCEElementNode_Decorative = document.getElementById(`cypress-${this.props.activeElement.index}-4`)
         if (activeBCEElementNode) {
             activeBCEElementNode.focus()
             activeBCEElementNode.blur()
+        } else if(this.state.activePrimaryOption === DECORATIVE_IMAGE && activeBCEElementNode_Decorative) {
+            activeBCEElementNode_Decorative.focus()
+            activeBCEElementNode_Decorative.blur()
         }
     }
 
@@ -924,6 +1016,20 @@ class Sidebar extends Component {
         this.props.showCanvasBlocker(value);
         this.setState({
             showSyntaxHighlightingPopup: value
+        })
+    }
+
+    // function to show decorative popup
+    handleDecorativePopup = (value) => {
+        if (value) {
+            showBlocker();
+        }
+        else {
+            hideBlocker()
+        }
+        this.props.showCanvasBlocker(value);
+        this.setState({
+            decorativePopupWarning: value
         })
     }
 
@@ -1043,7 +1149,7 @@ class Sidebar extends Component {
 
     podOption = () => {
         if (this.state.activePrimaryOption === 'primary-image-table' || this.state.activePrimaryOption === 'primary-image-figure' ||
-            this.state.activePrimaryOption === 'primary-image-equation' || 
+            this.state.activePrimaryOption === 'primary-image-equation' || this.state.activePrimaryOption === DECORATIVE_IMAGE || 
             (this.state.activePrimaryOption === 'primary-smartlink' && 
             (this.state.activeSecondaryOption === "secondary-interactive-smartlink-third" || this.state.activeSecondaryOption === 'secondary-interactive-smartlink-tab'))) {
             let active = '';
@@ -1086,6 +1192,7 @@ class Sidebar extends Component {
     }  
 
     render = () => {
+        const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
         const {activeElement} = this.props;
         return (
             <>
@@ -1095,8 +1202,8 @@ class Sidebar extends Component {
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.secondaryOption()}
+                    {!isDecorativeImage && this.attributions()}
                     {activeElement?.assetIdFor3PISmartlink && this.playbackMode()}
-                    {this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
                     {this.state.activeElementType ==="manifestlist" && <div>
@@ -1120,6 +1227,17 @@ class Sidebar extends Component {
                         permissions = {this.props.permissions}
                     />}
                 {this.state.updateAssessmentTypePopup && this.props?.activeElement?.primaryOption === 'primary-single-assessment'  && this.showUpdateAssessmentTypePopup()}
+                {this.state.decorativePopupWarning &&
+                    <PopUp
+                        togglePopup={this.handleSetDecorativeImagePopup}
+                        dialogText={SET_AS_DECORATIVE_IMAGE}
+                        lOPopupClass="lo-warning-txt"
+                        warningHeaderText={`Set Image as Decorative`}
+                        setDecorativePopup={true}
+                        agree={this.setDecorativeImage}
+                        isAutoNumberingEnabled={this.props.isAutoNumberingEnabled}
+                    />
+                }
             </>
         );
     }

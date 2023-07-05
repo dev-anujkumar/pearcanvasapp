@@ -11,12 +11,12 @@ import PowerPasteElement from '../PowerPasteElement/PowerPasteElement.jsx';
 import RenderTCMIcons from '../TcmButtonsRender/index.jsx'
 import config from '../../config/config'
 import { loadTrackChanges } from '../CanvasWrapper/TCM_Integration_Actions';
-import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG } from '../SlateWrapper/SlateWrapperConstants';
+import { DELETE_INSTRUCTION_FOR_TCM, DONT_ASK_TEXT, DO_NOT_SHOW_TXT,UNSUPPORTED_CONTENT_ERR_MSG, SET_AS_DECORATIVE_IMAGE_AUTONUM, SET_AS_DECORATIVE_IMAGE_NON_AUTONUM, SET_AS_DECORATIVE_IMAGE_NOTE } from '../SlateWrapper/SlateWrapperConstants';
 import CommentMention from '../CommentMention/CommentMention.jsx'
 import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON, CHECKBOX_MESSAGE, sendDataToIframe } from '../../../src/constants/utility.js';
 import { isPrimaryButtonFocused, isSecondaryButtonFocused, focusElement, blurElement, focusPopupButtons } from './PopUp_helpers.js';
-import { DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes';
+import { DISABLE_DELETE_WARNINGS, DISABLE_DI_CONVERSION_WARNING } from '../../constants/IFrameMessageTypes';
 
 /**
 * @description - PopUp is a class based component. It is defined simply
@@ -31,6 +31,7 @@ class PopUp extends React.Component {
             focusedButton: this.setFocus(props),
             deleteWarningPopupCheckbox: false,
             isPowerPasteInvalidContent: false,
+            setAsDecorativePopUpCheckbox: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.modelRef = React.createRef();
@@ -150,7 +151,7 @@ class PopUp extends React.Component {
                 return PRIMARY_BUTTON
             }
         } else {
-            if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.showAssessmentConfirmation) {
+            if(props.showDeleteElemPopup || props.isDeleteAssetPopup || props.isLockPopup || props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.isSubscribersSlate || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.showAssessmentConfirmation || props.setDecorativePopup) {
                 return PRIMARY_BUTTON;
             } else {
                 return SECONDARY_BUTTON;
@@ -244,6 +245,18 @@ class PopUp extends React.Component {
     handleDeleteWarningPopupCheckbox = (event) => {
         this.setState({
             deleteWarningPopupCheckbox: event?.target?.checked
+        });
+    }
+
+    // When "Set as Decorative Image" button is clicked
+    handleClickOnSetButton = () => {
+        if (this.state.setAsDecorativePopUpCheckbox) sendDataToIframe({ 'type': DISABLE_DI_CONVERSION_WARNING, 'message': { disableDIConversionWarning: true } });
+    }
+
+    // When "Don't ask me again" checkbox of decorative popup is checked
+    handleSetAsDecorativeWarningPopupCheckbox = (event) => {
+        this.setState({
+            setAsDecorativePopUpCheckbox: event?.target?.checked
         });
     }
 
@@ -375,6 +388,14 @@ class PopUp extends React.Component {
                 </div>
             )
         }
+        if (props.setDecorativePopup) {
+            return (
+                <div className={`dialog-buttons`}>
+                    <span option={PRIMARY_BUTTON} className={`save-button`} onClick={(e) => {props.agree(false, e);this.handleClickOnSetButton();}}>{props.setAsDecorative}</span>
+                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
+                </div>
+            )
+        }
         if (props.UsagePopup) {
             return (
                 <div className={`dialog-buttons`}>
@@ -418,7 +439,7 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderInputBox = (props) => {
-        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.showAssessmentConfirmation) {
+        if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation || props.wrongAudio || props.lockForTOC || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.LOPopup || props.imageGlossary || props.wrongImage || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isSubscribersSlate || props.isAddComment || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.showAssessmentConfirmation) {
             return null
         }
         else if (props.isLockPopup && props.withInputBox && !props.lockForTOC) {
@@ -463,7 +484,7 @@ class PopUp extends React.Component {
     }
 
     renderCloseSymbol = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.showAssessmentConfirmation) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.imageGlossary || props.isTCMCanvasPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.isApprovedSlate || props.showAssessmentConfirmation) {
             return null
         }
         else {
@@ -613,6 +634,14 @@ class PopUp extends React.Component {
                 </>
             )
         }
+        else if (props.setDecorativePopup) {
+            return (
+                <>
+                    <div className='loPopupHeader'>{`${props.warningHeaderText}`}</div>
+                    <div className={`${props.lOPopupClass}`}>{props.dialogText}<br /><br />{this.props.isAutoNumberingEnabled ? SET_AS_DECORATIVE_IMAGE_AUTONUM : SET_AS_DECORATIVE_IMAGE_NON_AUTONUM}<br /><br />{SET_AS_DECORATIVE_IMAGE_NOTE}</div>
+                </>
+            )
+        }
         else if (props.UsagePopup) {
             return (
                 <>
@@ -661,7 +690,7 @@ class PopUp extends React.Component {
 
 
     renderTcmPopupIcons = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.showAssessmentConfirmation) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isOwnersSlate || props.isSubscribersSlate || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.removeMarkedIndex || props.showAssessmentConfirmation) {
             return null
         }
         else {
@@ -674,7 +703,7 @@ class PopUp extends React.Component {
     }
 
     renderCommentPanelInput = (props) => {
-        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.isTCMCanvasPopup || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.showAssessmentConfirmation) {
+        if (props.showDeleteElemPopup || props.isLockPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.assessmentAndInteractive || props.removeConfirmation || props.sytaxHighlight || props.listConfirmation || props.isElmUpdatePopup || props.showConfirmation || props.altText || props.WordPastePopup || props.LOPopup || props.AssessmentPopup || props.setDecorativePopup || props.isTCMCanvasPopup || props.isDeleteAssetPopup || props.UsagePopup || props.showBlockCodeElemPopup || props.showAssessmentConfirmation) {
             return null
         }
         else {
@@ -709,7 +738,15 @@ class PopUp extends React.Component {
                     <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
                 </div>
             )
-        } else {
+        } else if (props.setDecorativePopup) {
+            return (
+                <div className='popup-checkbox-message'>
+                    <input className='popup-checkbox' type="checkbox" value={this.state.setAsDecorativePopUpCheckbox} checked={this.state.setAsDecorativePopUpCheckbox} onChange={(event) => this.handleSetAsDecorativeWarningPopupCheckbox(event)} />
+                    <p className='popup-checkbox-text'>{CHECKBOX_MESSAGE}</p>
+                </div>
+            )
+        }
+        else {
             return null
         }
     }
@@ -752,7 +789,8 @@ PopUp.defaultProps = {
     yesButton: "Yes",
     cancelBtnText: "Cancel",
     deleteInstruction: "Are you sure you want to delete, this action cannot be undone?",
-    proceedButton: "Proceed"
+    proceedButton: "Proceed",
+    setAsDecorative: "Set as Decorative Image"
 
 }
 

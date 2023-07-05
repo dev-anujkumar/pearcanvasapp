@@ -105,6 +105,7 @@ const logoutWithModernOpenAM = async () => {
                     deleteCookie('myCloudProxySession', 'pearson.com');
                     deleteCookie('DISABLE_DELETE_WARNINGS', 'pearson.com');
                     deleteCookie('DISABLE_LIST_ELEMENT_WARNING', 'pearson.com');
+                    deleteCookie('DISABLE_DI_CONVERSION_WARNING', 'pearson.com');
                     removeAllLocal();
                     redirectParent(urlToBeRedirected);
                 }
