@@ -438,7 +438,6 @@ class Sidebar extends Component {
         this.setState({
             decorativePopupWarning: false,
         })
-        this.setSecondary(this.state.secondaryValue,this.state.secondaryLabel);
         let secondaryelementList =
         elementList[this.state.activeElementType][this.state.sidebarValue].subtype;
         let secondaryFirstOption = Object.keys(secondaryelementList)[0];
