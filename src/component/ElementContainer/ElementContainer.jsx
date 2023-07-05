@@ -3109,9 +3109,7 @@ class ElementContainer extends Component {
 
     render = () => {
         const { element } = this.props;
-        console.log('INSIDE RENDER METHOD')
         try {
-            console.log('TESTING DATA HERE')
             if (this.state.hasError) {
                 return (
                     <p className="incorrect-data">Failed to load element {this.props.element.figuretype}, URN {this.props.element.id}</p>
