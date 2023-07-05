@@ -18,6 +18,8 @@ import ElementContainer from '../ElementContainer';
 
 /** Action Creators */
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
 
 let random = guid();
 
@@ -85,8 +87,11 @@ class MultipleColumnContainer extends PureComponent {
                 return _elements.map((element, index) => {
                     return (
                         <React.Fragment key={element.id}>
-                            {
-                            index == 0 && <ElementSaprator
+                            <LazyLoad
+                                once={true}
+                                placeholder={<div data-id={element.id}><LargeLoader /></div>}
+                            >
+                            { index == 0 && <ElementSaprator
                                     index={index}
                                     firstOne={index === 0}
                                     esProps={this.context.elementSepratorProps(index, true, parentUrn, asideData, parentIndex)}
@@ -140,6 +145,7 @@ class MultipleColumnContainer extends PureComponent {
                                 handleCopyPastePopup={this.props.handleCopyPastePopup}
                                 dataId = {element.id}
                             />  
+                            </LazyLoad>
                         </React.Fragment>
                     )
                 })

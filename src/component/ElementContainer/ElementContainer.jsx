@@ -256,7 +256,7 @@ class ElementContainer extends Component {
 
     handleClickOutside = (event) => {
         if (this.state.showUndoButton) {
-            if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
+            if (this.wrapperRef && !this.wrapperRef.current?.contains(event.target)) {
                 this.handleUndoOptionTimer();
             }
         }
@@ -3109,7 +3109,6 @@ class ElementContainer extends Component {
 
     render = () => {
         const { element } = this.props;
-        console.log('INSIDE RENDER METHOD')
         try {
             if (this.state.hasError) {
                 return (
