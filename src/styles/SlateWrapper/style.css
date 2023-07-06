@@ -10,7 +10,6 @@
 }
 .slate-wrapper.hide-scrollbar{
     overflow-x: hidden;
-    /* overflow-y: auto;  */
 }
 
 .slate-wrapper.popup-slate {
