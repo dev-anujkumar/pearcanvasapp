@@ -445,6 +445,21 @@ describe('Test - Sidebar_Actions',()=>{
             expect(spyconversionElement).toHaveBeenCalled()
             spyconversionElement.mockClear()
         });
+        it('Test convertElement  -figure-decorative', () => {
+            let elementData = {
+                elementId: "urn:pearson:work:e732173b-45a9-4859-a643-77d02abd8c7b",
+                elementType: "figure",
+                labelText: "BCE",
+                primaryOption: "primary-image-decorative",
+                secondaryOption: "secondary-blockcode-language-Java",
+                toolbar: ["assetpopover", "decreaseindent", "glossary"]
+            }
+            let store = mockStore(() => initialState6);
+            const spyconversionElement = jest.spyOn(sidebarAction, 'conversionElement')
+            store.dispatch(sidebarAction.conversionElement(elementData));
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear()
+        });
     });
     describe('Test convertElement- PARAGRAPH to LIST', () => {
         let store = mockStore(() => initialState);
@@ -1274,6 +1289,68 @@ describe('1 Test convertElement ', () => {
         const storeMock = mockStore(() => initialState);
         axios.post.mockImplementation(() => Promise.resolve(expectedRes));
         const spyconversionElement = jest.spyOn(sidebarAction, 'convertElement');
+
+        it('Test >  if(newElementData?.secondaryOption === empty string && newElementData?.primaryOption === primary-image-figure)', async () => {
+            const oldElementData = {
+                ...testData.testcase8.oldElementData,
+                "figuretype":"test",
+            }
+            const newElementData = {
+                ...testData.testcase8.newElementData,
+                "secondaryOption":"",
+            }
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, testData.testcase8.oldElementInfo, storeMock, ["0", "0", "0", "0"], "", {}));
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear();
+        });
+
+        it('Test >  if(newElementData?.secondaryOption === empty string && newElementData?.primaryOption === primary-image-equation)', async () => {
+            const oldElementData = {
+                ...testData.testcase8.oldElementData,
+                "figuretype":"test",
+            }
+            const newElementData = {
+                ...testData.testcase8.newElementData,
+                "primaryOption":"primary-image-equation",
+                "secondaryOption":"",
+            }
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, testData.testcase8.oldElementInfo, storeMock, ["0", "0", "0", "0"], "", {}));
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear();
+        });
+
+        it('Test >  if(newElementData?.secondaryOption === empty string && newElementData?.primaryOption === primary-image-table)', async () => {
+            const oldElementData = {
+                ...testData.testcase8.oldElementData,
+                "figuretype":"test",
+            }
+            const newElementData = {
+                ...testData.testcase8.newElementData,
+                "primaryOption":"primary-image-table",
+                "secondaryOption":"",
+            }
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, testData.testcase8.oldElementInfo, storeMock, ["0", "0", "0", "0"], "", {}));
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear();
+        });
+        
+        it('Test > if (newElementData?.primaryOption === "primary-image-decorative") > if', async () => {
+            const oldElementData = {
+                ...testData.testcase8.oldElementData,
+                "type":"test"
+            }
+            const newElementData = {
+                // ...testData.testcase8.newElementData,
+                primaryOption: "primary-image-decorative"
+            }
+            config.slateManifestURN = "urn:pearson:manifest:0897e38f-801b-4fbb-8423-7d16fd167d4d";
+            await storeMock.dispatch(sidebarAction.convertElement(oldElementData, newElementData, testData.testcase8.oldElementInfo, storeMock, ["0", "0", "0", "0"], "", {}));
+            expect(spyconversionElement).toHaveBeenCalled()
+            spyconversionElement.mockClear();
+        });
 
         it('Test > if (newElementData?.primaryOption === "primary-image-decorative") > if', async () => {
             const oldElementData = {
