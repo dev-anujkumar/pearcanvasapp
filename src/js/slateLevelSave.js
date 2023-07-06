@@ -13,17 +13,30 @@ const {
  * @param {*} entityURN Slate URN 
  * @param {*} triggerAction event name
  */
-export const triggerSlateLevelSave = (entityURN, triggerAction) => {
-	let url = `${config.STRUCTURE_API_URL}structure-api/context/v1/${config.projectUrn}/container/${entityURN}/notifySlateStateChange`;
+export const triggerSlateLevelSave = (entityURN, triggerAction, paramDetails = {}) => {
+    let projectEntity, slateEntity, userId, myCloudProxySession;
+    if (Object.keys(paramDetails)?.length > 0) {
+        projectEntity = paramDetails && paramDetails.projectUrn
+        slateEntity = paramDetails && paramDetails.slateEntityURN;
+        userId = paramDetails && paramDetails.userId;
+        myCloudProxySession = paramDetails && paramDetails.myCloudProxySession;
+        localStorage.removeItem('paramDetails');
+    } else {
+        projectEntity = config.projectUrn;
+        slateEntity = entityURN;
+        userId = config.userId;
+        myCloudProxySession = config.myCloudProxySession;
+    }
+	let url = `${config.STRUCTURE_API_URL}structure-api/context/v1/${projectEntity}/container/${slateEntity}/notifySlateStateChange`;
 	let requestBody = {
         "triggerAction": triggerAction,
         "sourceApp": "cypress", 
-        "initiatorUserId": config.userId 
+        "initiatorUserId": userId 
     }
     return axios.post(url, requestBody, { 
         headers: {
             "Content-Type": "application/json",
-            'myCloudProxySession': config.myCloudProxySession
+            'myCloudProxySession': myCloudProxySession
         }
     })
     .then(res => {

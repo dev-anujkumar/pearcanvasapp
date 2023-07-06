@@ -82,8 +82,14 @@ export class CanvasWrapper extends Component {
         })
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
         localStorage.removeItem('newElement');
-        window.onbeforeunload = () => {
-            localStorage.setItem('slateEntityURN', config.slateEntityURN);
+        window.onbeforeunload = () => { 
+            let paramDetails = {
+                'slateEntityURN': config.slateEntityURN,
+                'projectUrn': config.projectUrn,
+                'myCloudProxySession': config.myCloudProxySession,
+                'userId': config.userId
+            }
+            localStorage.setItem('paramDetails', JSON.stringify(paramDetails));
             localStorage.setItem('browser_refresh', '1');
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
             this.props.releaseSlateLock(config.projectUrn, slateId);
@@ -91,9 +97,8 @@ export class CanvasWrapper extends Component {
         // Trigger slate level save api on browser refresh
         window.onload = () => {
             setTimeout(() => {
-                let slateEntityURN = localStorage.getItem('slateEntityURN');
-                if (slateEntityURN) triggerSlateLevelSave(slateEntityURN, REFRESH_BROWSER_ACTION);
-                localStorage.removeItem('slateEntityURN');
+                let paramDetails = JSON.parse(localStorage.getItem('paramDetails'));
+                if (paramDetails) triggerSlateLevelSave(paramDetails?.slateEntityURN, REFRESH_BROWSER_ACTION, paramDetails);
             }, 5000);
         }
     }
