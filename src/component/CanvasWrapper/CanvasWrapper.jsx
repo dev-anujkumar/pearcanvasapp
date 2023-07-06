@@ -42,6 +42,8 @@ import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../Alfr
 import {markedIndexPopup} from '../MarkIndexPopup/MarkIndex_Action';
 import { fetchProjectFigures, setTocContainersAutoNumberList } from '../FigureHeader/AutoNumberActions';
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
+import { REFRESH_BROWSER_ACTION } from '../SlateWrapper/SlateWrapperConstants';
+import { triggerSlateLevelSave } from '../../js/slateLevelSave';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -81,8 +83,18 @@ export class CanvasWrapper extends Component {
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
         localStorage.removeItem('newElement');
         window.onbeforeunload = () => {
+            localStorage.setItem('slateEntityURN', config.slateEntityURN);
+            localStorage.setItem('browser_refresh', '1');
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-            this.props.releaseSlateLock(config.projectUrn, slateId)
+            this.props.releaseSlateLock(config.projectUrn, slateId);
+        }
+        // Trigger slate level save api on browser refresh
+        window.onload = () => {
+            setTimeout(() => {
+                let slateEntityURN = localStorage.getItem('slateEntityURN');
+                if (slateEntityURN) triggerSlateLevelSave(slateEntityURN, REFRESH_BROWSER_ACTION);
+                localStorage.removeItem('slateEntityURN');
+            }, 5000);
         }
     }
 
@@ -134,16 +146,15 @@ export class CanvasWrapper extends Component {
         return true;
     }
     handleNavClick=(nav)=> {
-        if(config.savingInProgress || config.popupCreationCallInProgress || config.isSavingElement){
+        if (config.savingInProgress || config.popupCreationCallInProgress || config.isSavingElement) {
             return false
         }
-        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-        if(nav === "back"){
-            sendDataToIframe({'type': PreviousSlate,'message': {}})
-        }else{
-            sendDataToIframe({'type': NextSlate,'message': {}})
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        if (nav === "back") {
+            sendDataToIframe({ 'type': PreviousSlate, 'message': {} })
+        } else {
+            sendDataToIframe({ 'type': NextSlate, 'message': {} })
         }
-        
     }
 
     render() {

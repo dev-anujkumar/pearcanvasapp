@@ -21,7 +21,7 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, APPROVE_NORMAL_SLATE, APPROVE_OWNER_SLATE, ALLOWED_SLATES_IN_RC
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, APPROVE_NORMAL_SLATE, APPROVE_OWNER_SLATE, ALLOWED_SLATES_IN_RC, RELEASE_SLATE_LOCK_ACTION
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -51,6 +51,7 @@ import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import KeyboardUpDown from '../Keyboard/KeyboardUpDown.jsx';
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 import { approvedSlatePopupStatus } from '../ElementContainer/ElementContainer_Actions';
+import { triggerSlateLevelSave } from '../../js/slateLevelSave';
 
 let random = guid();
 
@@ -398,6 +399,7 @@ class SlateWrapper extends Component {
         showTocBlocker();
         sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true } })
         this.props.releaseSlateLock(projectUrn, slateId)
+        triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
     }
 
     /**
