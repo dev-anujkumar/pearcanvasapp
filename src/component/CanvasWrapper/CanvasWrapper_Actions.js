@@ -34,7 +34,8 @@ import {
     PROJECT_LOB_LIST,
     NO_DISCUSSION_ITEMS,
     BANNER_IS_VISIBLE,
-    SUBSCRIBERS_SUBSCRIBED_SLATE
+    SUBSCRIBERS_SUBSCRIBED_SLATE,
+    SET_TOC_SLATE_LABEL
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -131,8 +132,8 @@ export const findElementType = (element, index) => {
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         podwidth = element.figuredata.podwidth
                         elementType = {
-                            elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
+                            elementType: element?.figuredata?.decorative ? elementDataBank[element.type]["decorativeImage"]["elementType"] : elementDataBank[element.type][element.figuretype]["elementType"],
+                            primaryOption: element?.figuredata?.decorative ? elementDataBank[element.type]["decorativeImage"]["primaryOption"] : elementDataBank[element.type][element.figuretype]["primaryOption"],
                             altText,
                             longDesc,
                             podwidth,
@@ -682,6 +683,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         const slatePublishStatus = slateData?.data[newVersionManifestId]?.status === "approved" && slateData?.data[newVersionManifestId]?.type !== "popup";
             
         sendDataToIframe({ 'type': 'slateVersionStatus', 'message': slatePublishStatus });
+        if(slateData?.data[newVersionManifestId]?.type !== "popup") {
+        sendDataToIframe({ 'type': 'slateVersionStatusWithManifest', 'message': {
+            slateManifestURN:newVersionManifestId,
+            status: slateData?.data[newVersionManifestId]?.status} });
+        }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
@@ -1865,5 +1871,12 @@ export const setCautionBannerStatus = (status) => (dispatch, getState) => {
     return dispatch({
         type: BANNER_IS_VISIBLE,
         payload: status
+    })
+}
+
+export const setTocSlateLabel = (label) => (dispatch) => {
+    return dispatch({
+        type: SET_TOC_SLATE_LABEL,
+        payload: label
     })
 }

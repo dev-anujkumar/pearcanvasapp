@@ -13,6 +13,8 @@ import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { checkSlateLock } from '../../js/slateLockUtility.js'
 import { CITATION_SOURCE } from '../../constants/Element_Constants.js';
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
 
 let random = guid();
 export class CitationGroup extends Component {
@@ -70,6 +72,10 @@ export class CitationGroup extends Component {
                 return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>
+                                <LazyLoad
+                                    once={true}
+                                    placeholder={<div data-id={element.id}><LargeLoader /></div>}
+                                >
                                { index==0 && <ElementSaprator
                                         index={index}
                                         firstOne={index === 0}
@@ -116,7 +122,7 @@ export class CitationGroup extends Component {
                                         dataId = {element.id}
                                     />
                                 }
-                              
+                              </LazyLoad>
                             </React.Fragment>
                           
                         )

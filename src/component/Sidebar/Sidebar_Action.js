@@ -13,7 +13,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
-import { POD_DEFAULT_VALUE, allowedFigureTypesForTCM, tbSidebarEndpoint } from '../../constants/Element_Constants'
+import { DECORATIVE, DECORATIVE_IMAGE, POD_DEFAULT_VALUE, allowedFigureTypesForTCM, tbSidebarEndpoint } from '../../constants/Element_Constants'
 import { prepareTcmSnapshots } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 import {  handleElementsInShowHide, onUpdateSuccessInShowHide, findSectionType } from '../ShowHide/ShowHide_Helper.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
@@ -22,9 +22,11 @@ import { checkContainerElementVersion, fetchManifestStatus, prepareSnapshots_Sho
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 let imageSource = ['image','table','mathImage'],imageDestination = ['primary-image-figure','primary-image-table','primary-image-equation']
 const elementType = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure', "interactive"];
-import { updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getContainerEntityUrn, updateAutonumberingOnElementTypeUpdate } from '../FigureHeader/AutoNumber_helperFunctions';
 import { autoNumberFigureTypesForConverion } from '../FigureHeader/AutoNumberConstants';
 import ElementConstants from '../ElementContainer/ElementConstants';
+import { decoToOtherTypeConversion, fetchOldDataAfterConversion } from '../ElementContainer/ElementContainer_Actions';
+import { updateAutoNumberSequenceOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 export const convertElement = (oldElementData, newElementData, oldElementInfo, store, indexes, fromToolbar,showHideObj) => (dispatch,getState) => {
     let { appStore } =  getState();
     try {
@@ -41,6 +43,15 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     let inputSubTypeEnum = inputSubType['enum'],
     inputPrimaryOptionEnum = inputPrimaryOptionType['enum']
 
+    // setting secondaryOption as default when newElementData does not have secondaryOption after conversion from any other figure type to decorative image
+    if(newElementData?.secondaryOption === '' && newElementData?.primaryOption === 'primary-image-figure') {
+        newElementData.secondaryOption = 'secondary-image-figure-width'
+    } else if(newElementData?.primaryOption === 'primary-image-equation' && newElementData?.secondaryOption === '') {
+        newElementData.secondaryOption = 'secondary-image-equation-half'
+    } else if(newElementData?.primaryOption === 'primary-image-table' && newElementData?.secondaryOption === '') {
+        newElementData.secondaryOption = 'secondary-image-table-half'
+    }
+
     // Output Element
     const outputPrimaryOptionsList = elementTypes[newElementData['elementType']],
         outputPrimaryOptionType = outputPrimaryOptionsList[newElementData['primaryOption']]
@@ -49,7 +60,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
         if (oldElementData.type === "figure") {
-            if (!(imageSource.includes(oldElementData.figuretype) && imageDestination.includes(newElementData['primaryOption'])) && oldElementData.figuretype !== 'codelisting' && !oldElementData.figuredata.interactivetype){
+            if (!(imageSource.includes(oldElementData.figuretype) && (imageDestination.includes(newElementData['primaryOption']) || newElementData.primaryOption === DECORATIVE_IMAGE)) && oldElementData.figuretype !== 'codelisting' && !oldElementData.figuredata.interactivetype){
                 oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
             }
             if(oldElementData.figuredata.srctype){
@@ -65,7 +76,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
 
             /* On conversion of primary option type, change the POD value to default value */
-            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage") &&
+            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage" || oldElementData.figuredata?.decorative) &&
             inputPrimaryOptionType !== outputPrimaryOptionType ){
                 oldElementData.figuredata.podwidth = POD_DEFAULT_VALUE
             }
@@ -92,7 +103,48 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             if (figureElementsType.includes(oldElementData.figuretype)) {
                 oldElementData.hasOwnProperty('subtitle') ? delete oldElementData.subtitle : oldElementData;  // conversion of old figure to new type at the time of conversion
             }
-        
+
+            const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled
+
+            // Removing fields on conversion from other figure types to decorative image
+            if (newElementData?.primaryOption === DECORATIVE_IMAGE) {
+                if(isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')){
+                    oldElementData.numberedandlabel = false
+                }
+                delete oldElementData?.title
+                delete oldElementData?.captions
+                delete oldElementData.html?.captions
+                delete oldElementData.html?.text
+                delete oldElementData.html?.title
+            }
+            // Resetting fields on conversion from decorative image to other figure types
+            else if (oldElementData.figuredata?.decorative) {    
+                dispatch(decoToOtherTypeConversion(true));   
+                dispatch(fetchOldDataAfterConversion(oldElementData));
+                if (isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')) {
+                    oldElementData.numberedandlabel = true
+                    oldElementData.displayedlabel = "Figure"
+                    if(oldElementData?.hasOwnProperty('manualoverride')){
+                        delete oldElementData.manualoverride
+                    }
+                }
+                oldElementData.title = {
+                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    text: ""
+                }
+                oldElementData.captions = {
+                    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                    text: ""
+                }
+                oldElementData.html = {
+                    ...oldElementData.html,
+                    title: "<p><br></p>",
+                    text: "",
+                    captions: "<p><br></p>",
+                    credits: oldElementData?.html?.credits
+                }
+                delete oldElementData?.figuredata?.decorative
+            }
     }
 
     let outputSubTypeEnum = outputSubType['enum'],
@@ -408,6 +460,13 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
             dispatch(updateAutonumberingOnElementTypeUpdate(res.data, oldElementData, autoNumberedElements, currentSlateAncestorData, store));
         }
+        // Handling autonumbering when figure type is changed to decorative
+        else if(isAutoNumberingEnabled && outputPrimaryOptionEnum === DECORATIVE && !isBCE_Element) {
+            const autoNumberedElements = getState()?.autoNumberReducer?.autoNumberedElements;
+            const currentSlateAncestorData = getState()?.appStore?.currentSlateAncestorData;
+            const parentIndex = getContainerEntityUrn(currentSlateAncestorData);
+            dispatch(updateAutoNumberSequenceOnDelete(parentIndex, res.data.contentUrn, autoNumberedElements))
+        }
         /**
          * PCAT-7902 || ShowHide - Content is removed completely when clicking the unordered list button twice.
          * Setting the correct active element to solve this issue.
@@ -593,7 +652,7 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
         let indexes = activeElement.index;
-        indexes = indexes.toString().split("-");
+        indexes = indexes?.toString().split("-");
         //Separate case for element conversion in showhide
         if(showHideObj || (appStore?.asideData?.type === 'showhide')) {
             const innerElementType = activeElement.elementType

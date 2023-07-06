@@ -12,7 +12,7 @@ import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype, getCookieByName } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
-import { updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
+import { decoToOtherTypeConversion, fetchOldDataAfterConversion, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import figureData from './figureTypes';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
@@ -93,9 +93,9 @@ class FigureImage extends Component {
         }
         if(!prevState.figureDropDown && this.state.figureDropDown) {
             this.setState({showingListIndex: 0});
-            this.labelListRef.current.childNodes[0].focus();
-            this.labelListRef.current.addEventListener('keydown', this.handleLabelKeyDown)
-            this.labelListRef.current.addEventListener('click', this.handleLabelKeyDown)
+            this.labelListRef.current?.childNodes[0].focus();
+            this.labelListRef.current?.addEventListener('keydown', this.handleLabelKeyDown)
+            this.labelListRef.current?.addEventListener('click', this.handleLabelKeyDown)
         }
     }
 
@@ -180,6 +180,12 @@ class FigureImage extends Component {
             path: "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
             height: "422",
             width: "680"
+        }
+        if (this.props.model?.figuredata?.decorative) {
+            setFigureData = {
+                ...setFigureData,
+                decorative: true
+            }
         }
         this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
             this.props.handleFocus("updateFromC2");
@@ -295,6 +301,12 @@ class FigureImage extends Component {
             alttext: altText,
             longdescription: longDesc,
             type: figureType,
+        }
+        if (this.props.model?.figuredata?.decorative) {
+            setFigureData = {
+                ...setFigureData,
+                decorative: true
+            }
         }
 
         Object.assign(setFigureData, (Object.keys(scaleMarkerAsset).length > 0) ? { scaleimage: scaleMarkerAsset } : null);
@@ -593,7 +605,11 @@ class FigureImage extends Component {
         let { figureLabelValue } = this.state;
         let figureLabelFromApi = isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1 ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
-        if(!(isAutoNumberingEnabled)){
+        if (!(isAutoNumberingEnabled)) {
+            if (this.props.decoToOtherTypes && model?.id === this.props.conversionData?.id) { // if the image conversion is from decorative to any other figure type
+                this.state.figureLabelValue = 'No Label';
+                this.props.decoToOtherTypeConversion(false);
+            }
             if (dropdownData.indexOf(figureLabelFromApi?.toLowerCase()) > -1) {
                 figureLabelFromApi = figureLabelFromApi?.toLowerCase();
                 figureLabelValue = figureLabelFromApi.charAt(0)?.toUpperCase() + figureLabelFromApi?.slice(1);
@@ -628,12 +644,15 @@ class FigureImage extends Component {
         const captionsHtml = this.props?.model?.html?.captions?.replace("<p>", '')?.replace("</p>", '');
         const creditsHtml = this.props?.model?.html?.credits?.replace("<p>", '')?.replace("</p>", '');
         const isReviewer = hasReviewerRole();
+        const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
         return (
             <div className="figureElement">
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                 <div className='figure-image-wrapper'>
                     <div className={`${divClass} ${model?.figuretype === 'codelisting' ? 'blockCodeFigure' : '' }`} resource="">
                         <figure className={figureClass} resource="">
+                            {isDecorativeImage ? '' :
+                            <>
                             {this.props.isAutoNumberingEnabled && autoNumberedElement ?
                                 <FigureHeader
                                     {...this.props}
@@ -717,12 +736,14 @@ class FigureImage extends Component {
                                     </KeyboardWrapper>
                                 </>
                             }
+                            </>
+                            }
                             <>
                                 {
                                     this.renderAssetSection(figureTypeData)
                                 }
                             </>
-                            <figcaption >
+                            {isDecorativeImage ? '' : <figcaption >
                             <KeyboardWrapper enable={this.isEnableKeyboard()} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-4`:`${this.props.index}-3`}>
                                     {this.props.setGrammarlyFlag ? <Grammarly clientId={config.GRAMMARLY_CLIENT_ID}>
                                         <GrammarlyEditorPlugin>
@@ -738,7 +759,7 @@ class FigureImage extends Component {
                                         </div>
                                     }
                                 </KeyboardWrapper>
-                            </figcaption>
+                            </figcaption>}
                             <figcredit >
                             <KeyboardWrapper enable={this.isEnableKeyboard()} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`}>      
                                     {this.props.setGrammarlyFlag ? <Grammarly clientId={config.GRAMMARLY_CLIENT_ID}>
@@ -781,6 +802,12 @@ const mapActionToProps = (dispatch) => {
         },
         updateAutoNumberingDropdownForCompare: (value) => {
             dispatch(updateAutoNumberingDropdownForCompare(value))
+        },
+        decoToOtherTypeConversion : (value) => {
+            dispatch(decoToOtherTypeConversion(value));
+        },
+        fetchOldDataAfterConversion : (conversionData) => {
+            dispatch(fetchOldDataAfterConversion(conversionData));
         }
     }
 }
@@ -798,7 +825,9 @@ const mapStateToProps = (state) => {
         slateAncestors: state.appStore.currentSlateAncestorData,
         isAutoNumberingEnabled: state.autoNumberReducer.isAutoNumberingEnabled,
         selectedElement: state.keyboardReducer.selectedElement,
-        setGrammarlyFlag: state.appStore.setGrammarlyFlag
+        setGrammarlyFlag: state.appStore.setGrammarlyFlag,
+        decoToOtherTypes: state.appStore.decoToOtherTypes,
+        conversionData: state.appStore.conversionData
     }
 }
 
