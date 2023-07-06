@@ -1670,7 +1670,7 @@ class SlateWrapper extends Component {
                           :this.renderSlateHeader(this.props)
                     } 
                 </div>
-                <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""}`} onScroll={this.handleScroll}>
+                <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""} ${isApproved() ? 'hide-scrollbar' : ""}`} onScroll={this.handleScroll}>
                 <KeyboardUpDown>
                     {
                         this.renderSlate(this.props)
