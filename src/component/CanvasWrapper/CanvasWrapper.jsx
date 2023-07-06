@@ -95,12 +95,10 @@ export class CanvasWrapper extends Component {
             this.props.releaseSlateLock(config.projectUrn, slateId);
         }
         // Trigger slate level save api on browser refresh
-        window.onload = () => {
-            setTimeout(() => {
-                let paramDetails = JSON.parse(localStorage.getItem('paramDetails'));
-                if (paramDetails) triggerSlateLevelSave(paramDetails?.slateEntityURN, REFRESH_BROWSER_ACTION, paramDetails);
-            }, 5000);
-        }
+        setTimeout(() => {
+            let paramDetails = JSON.parse(localStorage.getItem('paramDetails'));
+            if (paramDetails) triggerSlateLevelSave(paramDetails?.slateEntityURN, REFRESH_BROWSER_ACTION, paramDetails);
+        }, 5000);
     }
 
     showingToastMessage = (status, toastMsgText) => {
