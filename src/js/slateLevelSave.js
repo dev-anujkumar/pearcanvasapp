@@ -16,10 +16,10 @@ const {
 export const triggerSlateLevelSave = (entityURN, triggerAction, paramDetails = {}) => {
     let projectEntity, slateEntity, userId, myCloudProxySession;
     if (Object.keys(paramDetails)?.length > 0) {
-        projectEntity = paramDetails && paramDetails.projectUrn
-        slateEntity = paramDetails && paramDetails.slateEntityURN;
-        userId = paramDetails && paramDetails.userId;
-        myCloudProxySession = paramDetails && paramDetails.myCloudProxySession;
+        projectEntity = paramDetails?.projectUrn
+        slateEntity = paramDetails?.slateEntityURN;
+        userId = paramDetails?.userId;
+        myCloudProxySession = paramDetails?.myCloudProxySession;
         localStorage.removeItem('paramDetails');
     } else {
         projectEntity = config.projectUrn;
