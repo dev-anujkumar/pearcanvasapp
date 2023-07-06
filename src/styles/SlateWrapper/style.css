@@ -8,6 +8,10 @@
     padding: 10px 8px;
     overflow: auto;
 }
+.slate-wrapper.hide-scrollbar{
+    overflow-x: hidden;
+    overflow-y: auto; 
+}
 
 .slate-wrapper.popup-slate {
     height: calc(100% - 115px);
