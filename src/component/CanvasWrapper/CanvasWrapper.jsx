@@ -83,7 +83,7 @@ export class CanvasWrapper extends Component {
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
         localStorage.removeItem('newElement');
         window.onbeforeunload = () => { 
-            let paramDetails = {
+            const paramDetails = {
                 'slateEntityURN': config.slateEntityURN,
                 'projectUrn': config.projectUrn,
                 'myCloudProxySession': config.myCloudProxySession,
