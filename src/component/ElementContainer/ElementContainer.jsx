@@ -1144,6 +1144,9 @@ class ElementContainer extends Component {
                                 delete dataToSend.html?.title
                                 delete dataToSend.html?.captions
                                 delete dataToSend.html?.text
+                                if(this.props.isAutoNumberingEnabled) {
+                                    dataToSend.numberedandlabel = false
+                                }
                             }
                             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                             config.isSavingElement = true

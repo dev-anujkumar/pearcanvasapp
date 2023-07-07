@@ -6,7 +6,7 @@ import { communicationAssessmentSlateData, slateWithCitationElement} from "../..
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
 import { slateLevelData, addNewComment, slateLevelDataWithApproved, slateLevelDataWithoutApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData, popupSlateLevelDataWithApproved } from "../../../fixtures/containerActionsTestingData"
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, UPDATE_TABLE_ELEMENT_EDITED_DATA,SET_ELEMENT_STATUS, APPROVED_SLATE_POPUP_STATUS, DECO_TO_OTHER_IMG_TYPES } from '../../../src/constants/Action_Constants';
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, UPDATE_TABLE_ELEMENT_EDITED_DATA,SET_ELEMENT_STATUS, APPROVED_SLATE_POPUP_STATUS, DECO_TO_OTHER_IMG_TYPES, FETCH_CONVERSION_DATA } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
 import axios from "axios"
@@ -2753,7 +2753,7 @@ describe("approvedSlatePopupStatus Testing", ()=>{
     })
 })
 
-describe("decoToOtherTypeConversion Testing", () => {
+describe("Decorative image conversion Testing", () => {
     it('testing------- decoToOtherTypeConversion ------method', () => {
         let store = mockStore(() => initialState2);
         const expectedActions = [
@@ -2766,6 +2766,21 @@ describe("decoToOtherTypeConversion Testing", () => {
         actions.decoToOtherTypeConversion({}, "testing", store.dispatch);
         expect(spyUpdateMultipleColumnData).toHaveBeenCalled();
         store.dispatch(actions.decoToOtherTypeConversion({}, 'testing'));
+        expect(store.getActions().type).toEqual(expectedActions.type);
+        spyUpdateMultipleColumnData.mockClear();
+    })
+    it('testing------- fetchOldDataAfterConversion ------method', () => {
+        let store = mockStore(() => initialState2);
+        const expectedActions = [
+            {
+                type: FETCH_CONVERSION_DATA,
+                payload: {}
+            }
+        ]
+        const spyUpdateMultipleColumnData = jest.spyOn(actions, 'fetchOldDataAfterConversion')
+        actions.fetchOldDataAfterConversion({}, "testing", store.dispatch);
+        expect(spyUpdateMultipleColumnData).toHaveBeenCalled();
+        store.dispatch(actions.fetchOldDataAfterConversion({}, 'testing'));
         expect(store.getActions().type).toEqual(expectedActions.type);
         spyUpdateMultipleColumnData.mockClear();
     })
