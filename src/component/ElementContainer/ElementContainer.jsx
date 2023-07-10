@@ -614,7 +614,7 @@ class ElementContainer extends Component {
                 || isAltTextLongDescModified
             );
         }
-        if (previousElementData.figuredata?.decorative) {
+        if (previousElementData.figuredata?.decorative) { // Not comparing title and captions fields in the case of decorative images
             return (creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
                 || podwidth !== (previousElementData.figuredata.podwidth ?
