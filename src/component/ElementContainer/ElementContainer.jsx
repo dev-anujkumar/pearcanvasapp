@@ -614,14 +614,22 @@ class ElementContainer extends Component {
                 || isAltTextLongDescModified
             );
         }
-
-        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
-            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
-            || podwidth !== (previousElementData.figuredata.podwidth ?
-                previousElementData.figuredata.podwidth : '') && podwidth !== null|| isAltTextLongDescModified
-        );
+        if (previousElementData.figuredata?.decorative) {
+            return (creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+                (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+                || podwidth !== (previousElementData.figuredata.podwidth ?
+                    previousElementData.figuredata.podwidth : '') && podwidth !== null || isAltTextLongDescModified
+            );
+        }
+        else {
+            return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+                captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+                (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+                || podwidth !== (previousElementData.figuredata.podwidth ?
+                    previousElementData.figuredata.podwidth : '') && podwidth !== null || isAltTextLongDescModified
+            );
+        }
     }
 
     figureDifferenceBlockCode = (index, previousElementData) => {
@@ -1135,6 +1143,7 @@ class ElementContainer extends Component {
                     case elementTypeConstant.FIGURE_TABLE:
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
+                        console.log("this.figureDifference(this.props.index, previousElementData)",this.figureDifference(this.props.index, previousElementData));
                         if (this.figureDifference(this.props.index, previousElementData) || forceupdate && !config.savingInProgress) {
                             dataToSend = createUpdatedData(previousElementData.type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, undefined, asideData, this.props.isAutoNumberingEnabled, this.props?.autoNumberOption?.option);
                             // Updating saving call payload for decorative images
