@@ -1158,9 +1158,6 @@ class ElementContainer extends Component {
                                 delete dataToSend.html?.title
                                 delete dataToSend.html?.captions
                                 delete dataToSend.html?.text
-                                if(dataToSend.credits.text === ""){
-                                    delete dataToSend.credits
-                                }
                                 if(this.props.isAutoNumberingEnabled) {
                                     dataToSend.numberedandlabel = false
                                 }
