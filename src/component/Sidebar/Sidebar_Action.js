@@ -116,6 +116,9 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 delete oldElementData.html?.captions
                 delete oldElementData.html?.text
                 delete oldElementData.html?.title
+                if(oldElementData.credits.text === ""){
+                    delete oldElementData.credits
+                }
             }
             // Resetting fields on conversion from decorative image to other figure types
             else if (oldElementData.figuredata?.decorative) {    
@@ -144,6 +147,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     credits: oldElementData?.html?.credits
                 }
                 delete oldElementData?.figuredata?.decorative
+                if(!oldElementData.hasOwnProperty('credits')){
+                    oldElementData.credits = {
+                        schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                        text: ""
+                    }
+                }
             }
     }
 
