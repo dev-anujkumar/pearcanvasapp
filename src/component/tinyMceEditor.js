@@ -166,6 +166,10 @@ export class TinyMceEditor extends Component {
                         e.preventDefault();/** Prevent IMG resize for MathML images */
                     }
                 });
+                //tinymce editor readonly when reviewer or subscriber
+                if (hasReviewerRole()) {
+                    tinymce.activeEditor.mode.set("readonly");
+                }
 
                 editor.on('Change', (e) => {
                     /*
@@ -818,10 +822,7 @@ export class TinyMceEditor extends Component {
      */
     editorClick = (editor) => {
         editor.on('click', (e) => {
-            //tinymce editor readonly when reviewer or subscriber
-            if(hasReviewerRole()){
-                tinymce.activeEditor.mode.set("readonly");
-            }
+            
             if (e && e.target && e.target.classList.contains('Wirisformula')) {
                 this.wirisClick++;
                 if (!this.wirisClickTimeout) {

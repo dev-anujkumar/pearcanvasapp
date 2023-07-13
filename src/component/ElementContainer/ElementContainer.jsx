@@ -605,23 +605,37 @@ class ElementContainer extends Component {
                 titleHTML = previousElementData.displayedlabel;
             }
             const isLabelDifferent = previousElementData?.manualoverride?.hasOwnProperty('overridelabelvalue') ? titleHTML !== previousElementData?.manualoverride?.overridelabelvalue : titleHTML !== previousElementData.displayedlabel;
-            return (isLabelDifferent || this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title)
+            if (previousElementData.figuredata?.decorative) { // Not comparing title and captions fields in the case of decorative images for AUTONUM projects
+                return (creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+                    (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+                    || (podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : '') && podwidth !== null));
+            }
+            else {
+                return (isLabelDifferent || this.removeClassesFromHtml(subtitleHTML) !== this.removeClassesFromHtml(previousElementData.html.title)
                 || isNumberDifferent || isOverridedLabelDifferent ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
                 || (podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : '') && podwidth !== null) 
                 || isAltTextLongDescModified
+                );
+            }
+        }
+        if (previousElementData.figuredata?.decorative) { // Not comparing title and captions fields in the case of decorative images for NON-AUTONUM projects
+            return (creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+                (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+                || podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : '') && podwidth !== null
             );
         }
-
-        return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
-            captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
-            creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
-            (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
-            || podwidth !== (previousElementData.figuredata.podwidth ?
-                previousElementData.figuredata.podwidth : '') && podwidth !== null|| isAltTextLongDescModified
-        );
+        else {
+            return (titleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
+                captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
+                creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
+                (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
+                || podwidth !== (previousElementData.figuredata.podwidth ?
+                    previousElementData.figuredata.podwidth : '') && podwidth !== null || isAltTextLongDescModified
+            );
+        }
     }
 
     figureDifferenceBlockCode = (index, previousElementData) => {
