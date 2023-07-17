@@ -12,7 +12,7 @@ let cypressConfig = {
     CYPRESS_API_ENDPOINT : `https://${ENV_NAME}-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/`,
     CYPRESS_TOC_JAVA_ENDPOINT : `https://${ENV_NAME}-structuredauthoring.pearson.com/cypress/toc-srvr/app/toc-javaapp/`,
     prodUrl : 'https://structuredauthoring.pearson.com',
-    toolBarList : ['undo', 'redo','insertMedia','formatSelector','casechange', 'bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent'],
+    toolBarList : ['undo', 'redo','insertMedia','formatSelector','casechange', 'bold', 'italic', 'underline','strikethrough', 'removeformat', 'subscript', 'superscript', 'specialcharactor','alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote','mathml','chemml','inlinecode', 'IndexEntry', 'languageTranslator','orderedlist','unorderedlist','increaseindent','decreaseindent'],
     elementToolbar: [],
     revelToolbar : ['insertMedia','formatSelector', 'footnote','glossary','assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
     codeListingToolbarEnabled: ['insertMedia','formatSelector','strikethrough','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','alignment','calloutIcon','undo','redo','crossLinkingIcon','assetpopover','slatetag', 'IndexEntry'],

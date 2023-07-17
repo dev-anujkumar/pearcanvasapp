@@ -17,7 +17,7 @@ import config from '../config/config';
 import { insertListButton, bindKeyDownEvent, insertUoListButton, preventRemoveAllFormatting, removeTinyDefaultAttribute, removeListHighliting, highlightListIcon } from './ListElement/eventBinding.js';
 import { authorAssetPopOver } from './AssetPopover/openApoFunction.js';
 import {
-    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon, markedIndex
+    tinymceFormulaIcon, tinymceFormulaChemistryIcon, assetPopoverIcon, crossLinkIcon, code, Footnote, bold, Glossary, undo, redo, italic, underline, strikethrough, removeformat, subscript, superscript, charmap, downArrow, orderedList, unorderedList, indent, outdent, alignleft, alignright, aligncenter, alignment, calloutMenuIcon, markedIndex, languageSelector
 } from '../images/TinyMce/TinyMce.jsx';
 import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
@@ -112,6 +112,7 @@ export class TinyMceEditor extends Component {
                 this.setAssetPopoverIcon(editor);
                 this.addAssetPopoverIcon(editor);
                 this.handleSpecialCharIcon(editor);
+                this.handleLanguageConversionIcon(editor)
                 this.addInsertMediaButton(editor);
                 this.setFootnoteIcon(editor);
                 this.addFootnoteIcon(editor);
@@ -328,7 +329,7 @@ export class TinyMceEditor extends Component {
                     editor.selection.collapse();
                     editor.execCommand('InsertHTML', false, '<div class="answer" style="padding: 3px; margin-top: 5px; margin-bottom: 5px;"></div>');
                     editor.insertContent(reply);
-                    editor.dom.add(tinymce.activeEditor.getBody(), 'p', { }, 'Q: ');
+                    editor.dom.add(tinymce.activeEditor.getBody(), 'p', { }, '');
                     editor.selection.select(tinyMCE.activeEditor.getBody(), true);
                     editor.selection.collapse();
                     editor.focus();
@@ -1911,7 +1912,123 @@ export class TinyMceEditor extends Component {
             }
         });
     }
+    handleTextToTranslate = (language) => {
+        const api_key = `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`;
+        let selectedContent = tinymce.activeEditor.selection.getContent()
+        selectedContent = selectedContent.replace('&nbsp;','')
+        if(!selectedContent?.trim().length) {
+            return false
+        }
+        let textToTranslate = `Translate this text to ${language} - ${selectedContent}`
+        const editor = tinymce.activeEditor
+        const ChatGPT = {
+        "model": "gpt-3.5-turbo-16k-0613",
+        messages: [
+            {
+            role: 'user',
+            content: textToTranslate,
+            },
+        ],
+        temperature: 0,
+        max_tokens: 4030
+        };
+        fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${api_key}`
+        },
+        body: JSON.stringify(ChatGPT)
+        }).then(res => res.json()).then(data => {
+        let reply = data.choices[0]?.message?.content;
+        console.log(reply);
+        editor.selection.collapse();
+        editor.execCommand('InsertHTML', false, '<div class="answer" style="padding: 3px; margin-top: 5px; margin-bottom: 5px;"></div>');
+        editor.insertContent(reply);
+        editor.dom.add(tinymce.activeEditor.getBody(), 'p', { }, '');
+        editor.selection.select(tinyMCE.activeEditor.getBody(), true);
+        editor.selection.collapse();
+        editor.focus();
+        }).catch(error => {
+        console.log("something went wrong",error);
+        })
+    }
+    /**
+     * Show langauge change option
+     * @param {} editor
+     */
+    handleLanguageConversionIcon = editor => {
+        this.setLanguageConversionIcon(editor)
+        this.addLanguageConversionIcon(editor)
+    }
+    /**
+     * set language change icon to the toolbar.
+     * @param {Object} editor  editor instance
+     */
+    setLanguageConversionIcon  = editor => {
+        editor.ui.registry.addIcon(
+            "languageTranslator",
+            languageSelector
+        );        
+    }
+        /**
+     * add language change icon to the toolbar.
+     * @param {Object} editor  editor instance
+     */
+    addLanguageConversionIcon = editor => {
+        const self = this;
+        editor.ui.registry.addMenuButton("languageTranslator", {
+            text: "",
+            icon: "languageTranslator",
+            tooltip: "Change Language",
+            fetch: function (callback) {
+                let items = [
+                    {
+                    type: 'menuitem',
+                    text: "English",
+                    value:'english',
+                    onAction: function () {
+                        self.handleTextToTranslate('english')
+                    },
+                },
+                {
+                    type: 'menuitem',
+                    text: "French",
+                    value:'french',
+                    onAction: function () {
+                        self. handleTextToTranslate('french')
 
+                    },
+                },
+                {
+                    type: 'menuitem',
+                    text: "German",
+                    value:'german',
+                    onAction: function () {
+                        self.handleTextToTranslate('german')
+                    },
+                },
+                {
+                    type: 'menuitem',
+                    text: "Spanish",
+                    value:'spanish',
+                    onAction: function () {
+                        self.handleTextToTranslate('spanish')
+                    },
+                },
+                {
+                    type: 'menuitem',
+                    text: "Japanese",
+                    value:'japanese',
+                    onAction: function () {
+                        self.handleTextToTranslate('japanese')
+                    },
+                }
+                ];
+                callback(items);
+            }
+        })
+    }
     /**
      * Handles Special char icon to the toolbar.
      * @param {*} editor  editor instance
