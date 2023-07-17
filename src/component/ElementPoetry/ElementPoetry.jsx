@@ -62,7 +62,7 @@ class ElementPoetry extends Component {
                                     scroll: true, // or HTMLElement
                                     filter: ".ignore-for-drag",
                                     preventOnFilter: false,
-                                    draggable: ".editor",
+                                    draggable: ".lazyload-wrapper",
                                     forceFallback: true,
                                     onStart: function (/**Event*/) {
                                         // same properties as onEnd

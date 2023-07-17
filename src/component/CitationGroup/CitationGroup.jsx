@@ -198,7 +198,7 @@ export class CitationGroup extends Component {
                                     scroll: true, // or HTMLElement
                                     filter: ".ignore-for-drag",
                                     preventOnFilter: false,
-                                    draggable: ".editor",
+                                    draggable: ".lazyload-wrapper",
                                     forceFallback: true,
                                     onStart: function (/**Event*/evt) {
                                         // same properties as onEnd

@@ -116,6 +116,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 delete oldElementData.html?.captions
                 delete oldElementData.html?.text
                 delete oldElementData.html?.title
+                delete oldElementData.figuredata?.type
             }
             // Resetting fields on conversion from decorative image to other figure types
             else if (oldElementData.figuredata?.decorative) {    
@@ -144,6 +145,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     credits: oldElementData?.html?.credits
                 }
                 delete oldElementData?.figuredata?.decorative
+                oldElementData.figuredata.type = "image"
             }
     }
 
