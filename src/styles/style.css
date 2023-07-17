@@ -1165,6 +1165,7 @@ ol ol {
     margin-bottom: 0.5em;
 }*/
 
+/* hide-buttons for read only figure elements */
 .hide-buttons{
     display: none;
 }
