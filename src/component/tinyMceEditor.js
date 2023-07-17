@@ -315,6 +315,7 @@ export class TinyMceEditor extends Component {
                     temperature: 0,
                     max_tokens: 4030
                 };
+                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
 
                 fetch("https://api.openai.com/v1/chat/completions", {
                     method: "POST",
@@ -324,6 +325,7 @@ export class TinyMceEditor extends Component {
                     },
                     body: JSON.stringify(ChatGPT)
                 }).then(res => res.json()).then(data => {
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
                     let reply = data.choices[0]?.message?.content;
                     console.log(reply);
                     editor.selection.collapse();
@@ -334,7 +336,8 @@ export class TinyMceEditor extends Component {
                     editor.selection.collapse();
                     editor.focus();
                 }).catch(error => {
-                    console.log("something went wrong");
+                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+                    console.log("something went wrong", error);
                 })
             },
             onSetup: (btnRef) => {
@@ -1915,42 +1918,45 @@ export class TinyMceEditor extends Component {
     handleTextToTranslate = (language) => {
         const api_key = `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`;
         let selectedContent = tinymce.activeEditor.selection.getContent()
-        selectedContent = selectedContent.replace('&nbsp;','')
-        if(!selectedContent?.trim().length) {
+        selectedContent = selectedContent.replace('&nbsp;', '')
+        if (!selectedContent?.trim().length) {
             return false
         }
         let textToTranslate = `Translate this text to ${language} - ${selectedContent}`
         const editor = tinymce.activeEditor
         const ChatGPT = {
-        "model": "gpt-3.5-turbo-16k-0613",
-        messages: [
-            {
-            role: 'user',
-            content: textToTranslate,
-            },
-        ],
-        temperature: 0,
-        max_tokens: 4030
+            "model": "gpt-3.5-turbo-16k-0613",
+            messages: [
+                {
+                    role: 'user',
+                    content: textToTranslate,
+                },
+            ],
+            temperature: 0,
+            max_tokens: 4030
         };
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${api_key}`
-        },
-        body: JSON.stringify(ChatGPT)
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${api_key}`
+            },
+            body: JSON.stringify(ChatGPT)
         }).then(res => res.json()).then(data => {
-        let reply = data.choices[0]?.message?.content;
-        console.log(reply);
-        editor.selection.collapse();
-        editor.execCommand('InsertHTML', false, '<div class="answer" style="padding: 3px; margin-top: 5px; margin-bottom: 5px;"></div>');
-        editor.insertContent(reply);
-        editor.dom.add(tinymce.activeEditor.getBody(), 'p', { }, '');
-        editor.selection.select(tinyMCE.activeEditor.getBody(), true);
-        editor.selection.collapse();
-        editor.focus();
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+            let reply = data.choices[0]?.message?.content;
+            console.log(reply);
+            editor.selection.collapse();
+            editor.execCommand('InsertHTML', false, '<div class="answer" style="padding: 3px; margin-top: 5px; margin-bottom: 5px;"></div>');
+            editor.insertContent(reply);
+            editor.dom.add(tinymce.activeEditor.getBody(), 'p', {}, '');
+            editor.selection.select(tinyMCE.activeEditor.getBody(), true);
+            editor.selection.collapse();
+            editor.focus();
         }).catch(error => {
-        console.log("something went wrong",error);
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
+            console.log("something went wrong", error);
         })
     }
     /**

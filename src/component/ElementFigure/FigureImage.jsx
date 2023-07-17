@@ -27,6 +27,7 @@ import { IMAGE, TABLE, MATH_IMAGE, TABLE_AS_MARKUP, MATH_ML, BLOCK_CODE } from '
 import { launchTableSPA } from './ElementFigure_Utility';
 import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx';
 import { Grammarly, GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
+import { ShowLoader } from '../../constants/IFrameMessageTypes';
 /*** @description - ElementFigure is a class based component. It is defined simply
 * to make a skeleton of the figure-type element .*/
 const BLANK_LABEL_OPTIONS = ['No Label', 'Custom'];
@@ -535,16 +536,16 @@ class FigureImage extends Component {
     generateFigureResource = async () => {
         let titleDOM = document.getElementById(`cypress-${this.props.index}-2`);
         let titleHtml = titleDOM ? titleDOM.innerHTML : '';
-        console.log('titleHtml titleHtml', titleHtml, this.props.model.figuredata.alttext);
         if (titleHtml !== '' && titleHtml !== this.props.model.figuredata.alttext) {
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             const res = await this.openai.createImage({
                 prompt: titleHtml,
                 n: 1,
                 size: "512x512",
             });
+            sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
 
             let imageUrl = res.data.data[0].url;
-            console.log('imageUrl imageUrl', imageUrl);
             if (imageUrl && imageUrl !== '') {
                 // store current element figuredata in store
                 this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
