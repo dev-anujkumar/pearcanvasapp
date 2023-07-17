@@ -305,7 +305,7 @@ export class TinyMceEditor extends Component {
                 const selection = tinymce.activeEditor.selection.getContent();
                 console.log('selection selection', selection);
                 const ChatGPT = {
-                    model: "gpt-3.5-turbo",
+                    "model": "gpt-3.5-turbo-16k-0613",
                     messages: [
                         {
                           role: 'user',
