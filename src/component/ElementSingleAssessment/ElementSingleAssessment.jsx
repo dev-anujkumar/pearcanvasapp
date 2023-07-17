@@ -21,6 +21,7 @@ import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveA
 import config from '../../config/config';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
+import moment from 'moment';
 /*** @description - ElementSingleAssessment is a class based component. It is defined simply to make a skeleton of the assessment-type element .*/
 
 class ElementSingleAssessment extends Component {
@@ -430,10 +431,11 @@ class ElementSingleAssessment extends Component {
         if (elmAssessment) {
             return (<ElmUpdateButton
                 elmAssessment={elmAssessment}
-                updateElmVersion={this.openUpdateElmPopup}
+                updateElmVersion={this.updateElmAssessment}
                 buttonText={ELM_UPDATE_BUTTON}
                 embeddedElmClass={'embedded-assessment'}
-                status={false}
+                status={true}
+                assessmentItem={true}
             />)
         }
     }
@@ -462,27 +464,6 @@ class ElementSingleAssessment extends Component {
         this.showCanvasBlocker(toggleValue);
     }
 
-    /*** @description This function is used to render Version update Popup */
-    showCustomPopup = () => {
-        if (this.state.showElmUpdatePopup) {
-            this.showCanvasBlocker(true)
-            return (
-                <PopUp
-                    dialogText={ELM_UPDATE_MSG}
-                    active={true}
-                    togglePopup={this.toggleUpdatePopup}
-                    isElmUpdatePopup={true}
-                    updateElmAssessment={this.updateElmAssessment}
-                    isInputDisabled={true}
-                    isElmUpdateClass="elm-update"
-                    elmHeaderText={ELM_UPDATE_POPUP_HEAD}
-                />
-            )
-        }
-        else {
-            return null
-        }
-    }
 
     /*** @description This function is used to handle Canvas Blocker on Update */
     showCanvasBlocker = (value) => {
@@ -498,7 +479,6 @@ class ElementSingleAssessment extends Component {
 
     /*** @description This function is used to update elm assessment after click on update from Version update Popup */
     updateElmAssessment = async (event) => {
-        this.toggleUpdatePopup(false, event);
         this.showCanvasBlocker(false);
         let oldWorkUrn = this.state.assessmentId
         let itemData = {
@@ -571,7 +551,10 @@ class ElementSingleAssessment extends Component {
         var assessmentJSX;
         let assessmentKeys = setAssessmentProperties(this.state.elementType)
         let isElmStatus = checkElmAssessmentStatus(this.state.assessmentId, this.props);
+        const { assessmentid } = model.figuredata.elementdata;
         const {assessmentItemId, assessmentId, activeAsseessmentUsageType, elementType } = this.state
+        const oldReducerData = this.props.assessmentReducer[assessmentid]
+        const assessmentCreatedDate = oldReducerData?.modifiedDate ? oldReducerData?.modifiedDate : ''
         /*JSX for the Single Assessment Element */
         assessmentJSX = <div className={`divAssessment ${assessmentKeys && assessmentKeys.divMainClass ? assessmentKeys.divMainClass : ""}`} >
             <figure className={`figureAssessment ${elementType !== TDX ? "figureAssessmentItem" : "figureTdxAssessmentItem"}`}>
@@ -591,10 +574,17 @@ class ElementSingleAssessment extends Component {
                             }
                         </div>
                     </div >
-                    <div className={`single-assessment-elm-update-container ${isElmStatus == true ? "has-update" : ""}`}>{(elementType == PUF || elementType == LEARNOSITY) && this.showElmVersionStatus()}</div>
-
                 </div>
-
+                {oldReducerData && <div className="embedded-assessment-status">
+                    <div className={`${isElmStatus == true ? "has-update" : ""}`}>{(elementType == PUF || elementType == LEARNOSITY) && this.showElmVersionStatus()}</div>
+                    <div className="assessment-dateModified assessmentItem_Timestamp">
+                        <span className="time-separation">|</span>
+                        <div className="embedded-assessment-time">
+                            <p className="last-updated-time time-updated">Last Updated:</p>
+                            <p className="last-updated-time-format time-updated">{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</p>
+                        </div>
+                    </div>
+                </div>}
                 <div className={`pearson-component ${assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}`}
                     data-type={assessmentKeys && assessmentKeys.assessmentItemType ? assessmentKeys.assessmentItemType : ""}
                     data-assessment={assessmentId ? assessmentId : (model.figuredata.elementdata ? model.figuredata.elementdata.assessmentid : "")}
@@ -616,7 +606,6 @@ class ElementSingleAssessment extends Component {
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
                 {this.state.changeUsageTypePopup && this.showChangeUsageTypePopup()}
-                {this.state.showElmUpdatePopup && this.showCustomPopup()}
                 {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType== CITE ? CITE : TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
                 {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}     
             </div>

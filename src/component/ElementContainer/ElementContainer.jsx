@@ -25,7 +25,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole, isApproved } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole, isApproved, hasReviewerSubscriberRole } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -1332,7 +1332,12 @@ class ElementContainer extends Component {
      */
     handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}, triggeredFrom = '') => {
         // restrict saving call incase of read only content
-        if(hasReviewerRole()) return;
+        if(hasReviewerRole()) {
+            if ((this.props.element?.figuredata?.type !== 'element-assessment' && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
+                sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
+                return;
+            }
+        }
         const { elementType, primaryOption, secondaryOption, elementId } = this.props.activeElement;
         let activeEditorId = elemIndex ? `cypress-${elemIndex}` : (tinyMCE.activeEditor ? tinyMCE.activeEditor.id : '')
         let node = document.getElementById(activeEditorId);

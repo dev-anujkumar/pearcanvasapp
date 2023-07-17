@@ -234,14 +234,6 @@ class AssessmentSlateData extends Component {
         handlePostMsgOnAddAssess("", "", "", "remove","");
     }
 
-    /*** @description This function is used to open Version update Popup */
-    updateElm = (event) => {
-        this.prohibitPropagation(event);
-        if (hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('elements_add_remove'))) {
-            return true;
-        }
-        this.toggleUpdatePopup(true, event);
-    }
 
 
     updateElmAssessment = async (event) => {
@@ -779,7 +771,6 @@ class AssessmentSlateData extends Component {
             return (
                 <div className="AssessmentSlateCanvas">
                     {this.renderAssessmentSlate()}
-                    {this.state.showUpdatePopup && this.showCustomPopup()}
                     {this.state.updateAssessmentTypePopup && this.showUpdateAssessmentTypePopup()}
                     {this.state.changeUsageTypePopup && this.showChangeUsageTypePopup()}
                 </div>

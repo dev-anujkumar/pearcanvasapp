@@ -205,11 +205,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
         }
     }).then((res) => {
         if (res.status == 202) {
-            if (config.slateType !== "assessment") {
-                dispatch(assessmentConfirmationPopup(true));
-            } else {
-                dispatch(assessmentReloadConfirmation(true))
-            }
+            dispatch(assessmentReloadConfirmation(true))
         }
     }).catch(() => {
         dispatch({

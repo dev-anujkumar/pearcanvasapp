@@ -226,7 +226,7 @@ function CommunicationChannel(WrappedComponent) {
                         let isFromRC = message.assessmentSlateData ? true : false;
                         this.props.isLOExist(messageData);
                         const { assessmenId } = this.props.assessmentReducer
-                        const slateVersionStatus = this.props.slateLevelData[config.slateManifestURN].status
+                        const slateVersionStatus = this.props.slateLevelData[config.slateManifestURN]?.status
                         const approvedAssessmentCheck = slateVersionStatus === "approved" && dataToSend.type === "element-assessment"
                         if (config.parentEntityUrn !== ("Front Matter" || "Back Matter")) {
                             let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;

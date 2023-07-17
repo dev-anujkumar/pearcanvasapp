@@ -12,7 +12,7 @@ import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { ELM_INT } from './AssessmentSlateConstants.js';
 
 const ElmUpdateButton = (props) => {
-    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status } = props;
+    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status, assessmentItem } = props;
 
     useEffect(() => {
         if(elmAssessment.showUpdateStatus && status && !hasReviewerSubscriberRole()){
@@ -41,7 +41,7 @@ const ElmUpdateButton = (props) => {
                     <p className="eml-int-status-text-tm">{approveText}</p>
                     <span className={"approved-button " + approveIconClass}>{approvedIcon}</span>
                 </div> :
-                <div className={`elm-status-div ${embeddedElmClass}`}><span className={"approved-button " + approveIconClass}>{approvedIcon}</span><p className={"approved-button-text " + approveIconClass}>{approveText}</p></div>
+                <div className={`elm-status-div ${embeddedElmClass}`}>{(approveText === "Unapproved" && assessmentItem) ? "" : <span className={`${assessmentItem ? "approved-button-embedded" : "approved-button"} ` + approveIconClass}>{approvedIcon}</span>}<p className={`${assessmentItem ? "approved-button-text-embedded" : "approved-button-text"} ` + approveIconClass}>{approveText}</p></div>
         
         }
         return updateDiv
