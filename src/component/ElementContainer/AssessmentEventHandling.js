@@ -14,9 +14,11 @@ import { Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants
 */
 export const handleElmPortalEvents = (action,eventType) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
+    console.log("HANDLE ELM PORTAL EVENTS", "action:", action, "eventType:", eventType)
     if (!checkSlateLock(slateLockInfo)) {
 
         let elmAssessmentUpdate = async (event) => {
+            console.log('CHECKING DATA INSIDE elmAssessmentUpdate', event.data)
             try {
                 const { data } = event;
                 console.log('CHECKING DATA INSIDE HANDLE ELM PORTAL', data)
