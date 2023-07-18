@@ -258,6 +258,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             config.assessmentId = newAssessmentId;
             store.dispatch(updateAssessmentId(response?.data?.id));
         }    
+        if (updateArgs?.responseData?.figuredata?.decorative) { // updating figure data after sending saving call for decorative images
+            store.dispatch(updateFigureImageDataForCompare(updateArgs?.responseData?.figuredata));  
+        }
     }
     catch(error) {
         dispatch({type: ERROR_POPUP, payload:{show: true}})
