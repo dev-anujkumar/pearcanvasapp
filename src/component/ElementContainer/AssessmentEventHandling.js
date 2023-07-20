@@ -17,7 +17,7 @@ export const handleElmPortalEvents = (action,eventType) => {
     if (!checkSlateLock(slateLockInfo)) {
         let elmAssessmentUpdate = async (event) => {
             if (event.data.source !== 'elm') {
-              window.addEventListener('message', elmAssessmentUpdate, false)
+                return false
             } else {
               try {
                 const { data } = event
