@@ -3082,7 +3082,6 @@ class ElementContainer extends Component {
         const { element } = this.props;
         const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup"]
         if (element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) {
-            console.log("HANDLE EDIT BUTTON IF")
             if(element?.figuretype === 'tableasmarkup'){
                 this.props.prepareImageDataFromTable(element);
                 this.handleFigurePopup(true, 'TE');
@@ -3091,7 +3090,6 @@ class ElementContainer extends Component {
             }
             
         } else {
-            console.log("HANDLE EDIT BUTTON ELSE")
             let fullAssessment = checkFullElmAssessment(element);
             let embeddedAssessment = checkEmbeddedElmAssessment(element);
             const isInteractive = checkInteractive(element);

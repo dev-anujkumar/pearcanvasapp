@@ -320,10 +320,11 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     }
 
     // updating the intendedPlayBackMode for 3PI smartlink
-    const {assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue} = containerContext.props.activeElement
-    if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink) {
-        data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : intendedPlaybackModeDropdown[0].value
-    }
+    //commenting this code for future reference
+    // const {assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue} = containerContext.props.activeElement
+    // if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink) {
+    //     data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : intendedPlaybackModeDropdown[0].value
+    // }
 
     if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
         previousElementData.figuredata.interactivetype === "web-link") {

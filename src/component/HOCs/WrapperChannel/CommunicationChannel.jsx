@@ -541,7 +541,8 @@ function CommunicationChannel(WrappedComponent) {
                     'defaultLF': defaultLF,
                     'loSpa_Source': message.loSpa_Source,
                     'isSubscribed':message.isSubscribed ? message.isSubscribed : false,
-                    'isApprovedSlate':message.isApprovedSlate
+                    'isApprovedSlate':message.isApprovedSlate,
+                    'entityURN':message.entityURN
                 }
             })
         }
