@@ -1020,13 +1020,11 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
-                const searchString = window.location.search;
-                const queryParams = new URLSearchParams(searchString);
                 // To prevent the change slate focus action on browser refresh 
                 let isRefreshBrowser = localStorage.getItem('browser_refresh');
                 if (isRefreshBrowser == '1') {
                     localStorage.setItem('browser_refresh', '0');
-                } else if (queryParams.get('slateUrn')) {
+                } else {
                     triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
                 }
                 const slateManifest = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN
