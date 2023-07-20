@@ -384,10 +384,7 @@ span.approved-button.enable svg path#path2, span.approved-button-embedded.enable
   padding-top: 8px;
   font-size: 12px;
   font-weight: 700;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
+  font-family: Open Sans, sans-serif;
 }
 
 .elm-status-div p.approved-button-text.enable, .elm-status-div p.approved-button-text-embedded.enable {
@@ -397,6 +394,12 @@ span.approved-button.enable svg path#path2, span.approved-button-embedded.enable
 .elm-status-div p.approved-button-text.disable, .elm-status-div p.approved-button-text-embedded.disable {
   opacity: 0.7;
   color: rgba(0, 0, 0, 0.8);
+}
+
+.elm-status-div p.approved-button-text-embedded.disable, p.last-updated-time-wip, span.last-updated-time-wip {
+  color: #252525;
+  font-weight: 700;
+  font-family: Open Sans, sans-serif;
 }
 
 .elm-status-div {
@@ -522,8 +525,20 @@ font-weight: bold;
 }
 .time-separation {
   color: #15850c;
+  font-weight: 700;
+  padding-top: 2px;
+  font-family: Open Sans, sans-serif;
 }
 .time-updated {
   padding-top: 3px;
   font-weight: 700 !important;
+  font-family: Open Sans, sans-serif;
+}
+.time-updated-embedded {
+  padding-top: 3px;
+  font-weight: 400 !important;
+  font-family: Open Sans, sans-serif;
+}
+span.last-updated-time-wip {
+  padding-top: 2px;
 }

@@ -500,6 +500,17 @@ class ElementSingleAssessment extends Component {
             itemtitle: updatedItem && updatedItem.latestItemTitle,
             usagetype: this.state.activeAsseessmentUsageType
         }
+        // if (newVersion) {
+        //     updatedElmObj = {
+        //         id: newVersion.id,
+        //         title: latestVersion.title,
+        //         usagetype: this.state.activeAssessmentUsageType
+        //     }
+        // }
+        // console.log("nish updateAssessmentVersion==>>>>")
+        // this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType, 'insert', () => {
+        //     this.props.updateAssessmentVersion(oldWorkUrn, updatedElmObj.id);
+        // });
         this.updatePufAssessment(updatedElmObj, oldWorkUrn);
         disableHeader(false);
         hideTocBlocker(false);
@@ -578,10 +589,10 @@ class ElementSingleAssessment extends Component {
                 {oldReducerData && <div className="embedded-assessment-status">
                     <div className={`${isElmStatus == true ? "has-update" : ""}`}>{(elementType == PUF || elementType == LEARNOSITY) && this.showElmVersionStatus()}</div>
                     <div className="assessment-dateModified assessmentItem_Timestamp">
-                        <span className="time-separation">|</span>
+                        <span className={`${oldReducerData.assessmentStatus === "wip" ? 'last-updated-time-wip' : 'time-separation'}`}>|</span>
                         <div className="embedded-assessment-time">
-                            <p className="last-updated-time time-updated">Last Updated:</p>
-                            <p className="last-updated-time-format time-updated">{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</p>
+                            <p className={`${oldReducerData.assessmentStatus === "wip" ? 'last-updated-time-wip' : 'last-updated-time'} time-updated`}>Last Updated:</p>
+                            <p className={`${oldReducerData.assessmentStatus === "wip" ? 'last-updated-time-wip' : 'last-updated-time-format'} time-updated-embedded`}>{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</p>
                         </div>
                     </div>
                 </div>}
