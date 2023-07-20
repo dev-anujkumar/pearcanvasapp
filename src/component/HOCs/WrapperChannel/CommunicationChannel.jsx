@@ -1030,8 +1030,7 @@ function CommunicationChannel(WrappedComponent) {
                 if (isRefreshBrowser == '1') {
                     localStorage.setItem('browser_refresh', '0');
                 } else if (queryParams.get('slateUrn')) {
-                    let slateEntity = message?.node?.entityUrn || config.slateEntityURN;
-                    triggerSlateLevelSave(slateEntity, CHANGE_SLATE_ACTION);
+                    triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
                 }
                 const slateManifest = config.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN
                 if (this.props.withinLockPeriod === true) {
