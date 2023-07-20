@@ -14,45 +14,44 @@ import { Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants
 */
 export const handleElmPortalEvents = (action,eventType) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
+    console.log("HANDLE ELM PORTAL EVENTS", "action:", action, "eventType:", eventType)
     if (!checkSlateLock(slateLockInfo)) {
+
         let elmAssessmentUpdate = async (event) => {
-            if (event?.data?.source !== 'elm') {
-                return false
-            } else {
-              try {
-                const { data } = event
+            try {
+                const { data } = event;
+                console.log('CHECKING DATA INSIDE HANDLE ELM PORTAL', data)
                 // console.log('%c Interactive edit-in-place messages>>>BEFORE>>>','background: #222; color: white',data)
                 if (eventType == 'fromUpdate') {
-                  if (action == 'add' && data && data.source == 'elm') {
-                    //console.log('Event From ELM Portal>>>', data)
-                    if (data.type.includes('item|')) {
-                      const itemMetadata = prepareItemMetadata(data.type)
-                      store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
-                      store.dispatch(setItemUpdateEvent(true))
+                    if (action == 'add' && data && data.source == 'elm') {
+                        //console.log('Event From ELM Portal>>>', data)
+                        if (data.type.includes('item|')) {
+                            const itemMetadata = prepareItemMetadata(data.type)
+                            store.dispatch(updateElmItemData(store.getState().assessmentReducer.currentEditAssessment, itemMetadata))
+                            store.dispatch(setItemUpdateEvent(true))
+                        }
+                        if (data.action == 'approve') {
+                            window.removeEventListener('message', elmAssessmentUpdate, false);
+                        }
+                        if (data.type == 'assessment') {
+                            handleRefreshSlate(store.dispatch);
+                        }
+                    } else {
+                        // console.log('%c Interactive edit-in-place messages>>>','background: #222; color: #bada55',data)
+                        /* To edit interactive using edit button */
+                        const intObj = getInteractivePostMsg(data)
+                        window.removeEventListener('message', elmAssessmentUpdate, false);
+                        if (intObj?.id && intObj.title && intObj.interactiveType) {
+                            /* save item data into store */
+                            handleRefreshSlate(store.dispatch);
+                        }
                     }
-                    if (data.action == 'approve') {
-                      window.removeEventListener('message', elmAssessmentUpdate, false);
-                    }
-                    if (data.type == 'assessment') {
-                      handleRefreshSlate(store.dispatch);
-                    }
-                  } else {
-                    // console.log('%c Interactive edit-in-place messages>>>','background: #222; color: #bada55',data)
-                    /* To edit interactive using edit button */
-                    const intObj = getInteractivePostMsg(data)
-                    window.removeEventListener('message', elmAssessmentUpdate, false);
-                    if (intObj?.id && intObj.title && intObj.interactiveType) {
-                      /* save item data into store */
-                      handleRefreshSlate(store.dispatch);
-                    }
-                  }
                 }
                 if (action == 'remove') {
-                  window.removeEventListener('message', elmAssessmentUpdate, false)
+                    window.removeEventListener('message', elmAssessmentUpdate, false);
                 }
-              } catch (err) {
-                console.error('catch with err', err)
-              }
+            } catch (err) {
+                console.error('catch with err', err);
             }
         }
         window.addEventListener('message', elmAssessmentUpdate, false);
