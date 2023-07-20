@@ -16,7 +16,7 @@ export const handleElmPortalEvents = (action,eventType) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
         let elmAssessmentUpdate = async (event) => {
-            if (event.data.source !== 'elm') {
+            if (event?.data?.source !== 'elm') {
                 return false
             } else {
               try {
