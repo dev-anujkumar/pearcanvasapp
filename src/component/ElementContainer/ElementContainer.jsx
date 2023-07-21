@@ -798,7 +798,6 @@ class ElementContainer extends Component {
                 is3PIIntendedPlaybackDropdownUpdate);
         }
         else {
-            console.log("heree");
             return (subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
