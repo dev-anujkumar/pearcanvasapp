@@ -32,7 +32,7 @@ let cypressConfig = {
     poetryLabelToolbar: ['insertMedia','formatSelector','footnote','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','mathml','chemml','alignment','calloutIcon', 'IndexEntry'],
     popupCallToActionToolbar: ['insertMedia','formatSelector','strikethrough','footnote','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','increaseindent','decreaseindent','mathml','chemml','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment','calloutIcon', 'IndexEntry'],
     poetryCaptionToolbar:['insertMedia','formatSelector','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
-    poetryStanzaToolbar:['insertMedia','formatSelector','increaseindent','decreaseindent','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
+    poetryStanzaToolbar:['insertMedia','formatSelector','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
     playScriptToolbar:['insertMedia','formatSelector','decreaseindent','increaseindent','crossLinkingIcon', 'footnote', 'assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
     blockListToolbar:['formatSelector','alignment', 'IndexEntry','glossary','footnote','crossLinkingIcon', 'decreaseindent','increaseindent'],
     openerElementToolbar: ['undo', 'redo', 'insertMedia','formatSelector','casechange', 'alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote', 'assetpopover', 'mathml','chemml', 'strikethrough', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent', 'slatetag', 'calloutIcon',],

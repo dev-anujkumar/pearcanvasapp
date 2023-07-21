@@ -17,6 +17,8 @@ import { replaceUnwantedtags } from '../ElementContainer/UpdateElements';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
 import OpenGlossaryAssets from '../ElementFigure/OpenGlossaryAssets.jsx'
 import { DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
 
 class ElementDialogue extends React.PureComponent {
     constructor(props) {
@@ -188,6 +190,10 @@ class ElementDialogue extends React.PureComponent {
                 let labelText = (element.type === 'lines') ? 'DE' : 'SD';
                 return (
                     <Fragment key={element.id}>
+                        <LazyLoad
+                            once={true}
+                            placeholder={<div data-id={element.id}><LargeLoader /></div>}
+                        >
                         <div className={"editor"}
                             data-id={element.id}
                             innerElementID={_props.elementId+'-'+index}
@@ -197,7 +203,7 @@ class ElementDialogue extends React.PureComponent {
                         >
                             {this.renderButtons(index, buttonClass, labelText, _props.element)}
                             <div
-                                className={`element-container play-script ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)} ${hasReviewerRole() ? "pointer-events-none" : ""}`}
+                                className={`element-container play-script ${this.setBorderToggle(_props.borderToggle, index, this.state.selectedInnerElementIndex)}`}
                                 data-id={_props.elementId+'-'+index}
                             >
                                 <DialogueContent
@@ -239,6 +245,7 @@ class ElementDialogue extends React.PureComponent {
                             userRole={_props.userRole}
                             sepratorID={_props.elementId+'-'+index}
                         />
+                        </LazyLoad>
                     </Fragment>
                 )
             })

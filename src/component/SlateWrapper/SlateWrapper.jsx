@@ -21,7 +21,7 @@ import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
     ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, IN_USE_BY, LOCK_DURATION, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, APPROVE_NORMAL_SLATE, APPROVE_OWNER_SLATE, ALLOWED_SLATES_IN_RC
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, APPROVE_NORMAL_SLATE, APPROVE_OWNER_SLATE, ALLOWED_SLATES_IN_RC, RELEASE_SLATE_LOCK_ACTION
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -41,7 +41,7 @@ import LazyLoad, {forceCheck} from "react-lazyload";
 import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
-import { TEXT_SOURCE, CYPRESS_LF, cypressLOWarningtxt, externalLOWarningtxt } from '../../constants/Element_Constants.js';
+import { TEXT_SOURCE, externalLOWarningtxt } from '../../constants/Element_Constants.js';
 import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
@@ -51,6 +51,7 @@ import {alfrescoPopup} from '../AlfrescoPopup/Alfresco_Action.js';
 import KeyboardUpDown from '../Keyboard/KeyboardUpDown.jsx';
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 import { approvedSlatePopupStatus } from '../ElementContainer/ElementContainer_Actions';
+import { triggerSlateLevelSave } from '../../js/slateLevelSave';
 
 let random = guid();
 
@@ -398,6 +399,7 @@ class SlateWrapper extends Component {
         showTocBlocker();
         sendDataToIframe({ 'type': 'showReleasePopup', 'message': { status: true } })
         this.props.releaseSlateLock(projectUrn, slateId)
+        triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
     }
 
     /**
@@ -482,7 +484,9 @@ class SlateWrapper extends Component {
         }else if(!hasReviewerRole() && isOwnerRole(projectSharingRole,isSubscribed)){
             const slateId = Object.keys(this.props.slateData)[0],
                 lockDuration = 5400
-            this.setSlateLock(slateId, lockDuration)
+                if(config.slateType !== SLATE_TYPE_LTI) {
+                    this.setSlateLock(slateId, lockDuration)
+                }
             return this.props.projectSubscriptionDetails.isOwnersSubscribedSlateChecked
         }else if(isSubscriberRole(projectSharingRole, isSubscribed)){
             return this.props.projectSubscriptionDetails.isSubscribersSubscribedSlateChecked
@@ -490,7 +494,9 @@ class SlateWrapper extends Component {
         else {
             const slateId = Object.keys(this.props.slateData)[0],
                 lockDuration = 5400
-            this.setSlateLock(slateId, lockDuration)
+                if(config.slateType !== SLATE_TYPE_LTI) {
+                    this.setSlateLock(slateId, lockDuration)
+                }
             return false
         }
     }
@@ -500,9 +506,6 @@ class SlateWrapper extends Component {
      * @param {*} event event object
      */
     checkSlateLockStatus = (event) => {
-        if(config.slateType === SLATE_TYPE_LTI) {
-            return;
-        }
         if (this.checkLockStatus()) {
             this.prohibitPropagation(event)
             this.togglePopup(true)
@@ -1539,8 +1542,7 @@ class SlateWrapper extends Component {
      * This method renders LO Warning Popup based on Selection 
      */
     showLOWarningPopup = () => {
-        const currentSlateLF = this.props.currentSlateLF;
-        const loWarningDialogTxt = (currentSlateLF === CYPRESS_LF) ? cypressLOWarningtxt : externalLOWarningtxt;
+        const loWarningDialogTxt = externalLOWarningtxt ?? ''
         if (this.props?.loWarningPopupData?.toggleValue) {
             this.props.showBlocker(true);
             showTocBlocker();
@@ -1668,7 +1670,7 @@ class SlateWrapper extends Component {
                           :this.renderSlateHeader(this.props)
                     } 
                 </div>
-                <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""}`} onScroll={this.handleScroll}>
+                <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""} ${isApproved() ? 'hide-scrollbar' : ""}`} onScroll={this.handleScroll}>
                 <KeyboardUpDown>
                     {
                         this.renderSlate(this.props)

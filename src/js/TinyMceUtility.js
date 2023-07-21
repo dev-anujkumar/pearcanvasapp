@@ -7,6 +7,14 @@ import config from '../config/config';
 import { sendDataToIframe } from '../constants/utility';
 import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING, MULTI_COLUMN, TAB } from '../constants/Element_Constants';
 import store from '../appstore/store';
+import ElementConstants from '../component/ElementContainer/ElementConstants';
+
+import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
+const {
+    AUTO_NUMBER_SETTING_RESUME_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
+    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
+} = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
 /**
   * @description data after selecting an asset from alfresco c2 module
   * @param {*} data selected asset data
@@ -270,6 +278,124 @@ export const checkActiveElement = (elements) => {
     return (elements.includes(currentActiveElement?.elementType))
 }
 
+export const setInstanceToolbar = (element,placeholder,showHideType, labelNumberSetting) => {
+    const asideData= store.getState().appStore.asideData
+    let toolbar = [];
+    let figureTypes = ['image', 'table', 'mathImage', 'audio', 'video', 'tableasmarkup', 'authoredtext', 'codelisting'];
+    if (element?.type === 'popup' && placeholder === 'Enter call to action...') {
+        toolbar = config.popupCallToActionToolbar
+    } else if ((element?.type === 'figure' && figureTypes.includes(element?.figuretype)) || (element?.figuretype === 'interactive' && config.smartlinkContexts.includes(element?.figuredata?.interactivetype))) {
+        toolbar = setFigureToolbar(placeholder,labelNumberSetting, element);
+    }else if(element?.type === 'element-aside'){
+        toolbar = setAsideNumberingToolbar(placeholder);
+    } else if (element?.type === 'figure' && placeholder === "Enter Number...") {
+        toolbar = config.figureNumberToolbar;
+    }
+    else if (["Enter Label...", "Enter call to action..."].includes(placeholder) || (element && element.subtype == 'mathml' && placeholder === "Type something...")) {
+        toolbar = (element && (element.type === 'poetry' || element.type === 'popup' || placeholder === 'Enter call to action...' )) ? config.poetryLabelToolbar : config.labelToolbar;
+    }
+    else if (placeholder === "Enter Caption..." || placeholder === "Enter Credit...") {
+            toolbar = (element && element.type === 'poetry') ? config.poetryCaptionToolbar : config.captionToolbar;
+    } else if(element?.type === 'openerelement'){
+        toolbar = config.openerElementToolbar
+    }
+    else if (showHideType &&( showHideType == 'revel' || showHideType == "postertextobject")) {
+        toolbar = config.revelToolbar
+    } else if (placeholder == "Type Something..." && element && element.type == 'stanza') {
+        toolbar = config.poetryStanzaToolbar;
+    }
+    else if (asideData?.type === "manifestlist") {
+        toolbar = config.blockListToolbar
+    }
+    else {
+        toolbar = config.elementToolbar;
+    }
+    if (element?.type === "element-dialogue") {
+        switch(placeholder){
+            case "Enter Act Title...": 
+            case "Enter Scene Title...": 
+            case "Enter Credit...": { 
+                toolbar = [...config.playScriptToolbar, 'glossary'];
+                break;
+            }
+            case "Enter Dialogue...": {
+                toolbar = [...config.playScriptToolbar, 'mathml', 'chemml', 'inlinecode'];
+                break;
+            }
+            case "Enter Stage Directions...": {
+                toolbar = [...config.playScriptToolbar, 'italic', 'mathml', 'chemml', 'inlinecode'];
+                break;
+            }
+            case "Enter Character Name...": {
+                    toolbar = [...config.playScriptToolbar, 'bold', 'mathml', 'chemml', 'inlinecode'];
+                break;
+            }
+            default: break;
+        }
+    }
+    if(element?.parentUrn?.subtype === ElementConstants.TAB){
+        toolbar = config.tabTitleToolbar;
+    }
+    return toolbar;
+}
+export const setFigureToolbar = (placeholder,labelNumberSetting, element) => {
+    let isAutoNumberingEnabled = store.getState()?.autoNumberReducer.isAutoNumberingEnabled;
+    let toolbar;
+    switch (placeholder) {
+        case "Number":
+            if (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(element?.figuretype)) {
+                toolbar =  (labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_NUMBER || labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ) ? config.labelToolbarAutonumberMode : config.numberToolbarAutonumberMode;
+            } else {
+                toolbar = config.figureNumberToolbar;
+            }
+            break;
+        case "Label":
+        case "Label Name":
+            toolbar = (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(element?.figuretype)) ? config.labelToolbarAutonumberMode : config.figureImageLabelToolbar;
+            break;
+        case "Title":
+        case "Caption":
+        case "Credit":
+        case "Math Block Content":
+            toolbar = config.figurImageCommonToolbar;
+            break;
+        case "Code Block Content":
+            toolbar = setCodeBlockContentToolbar();
+            break;
+        case "Enter Button Label":
+            toolbar = config.smartlinkActionButtonToolbar;
+    }
+    return toolbar;
+}
+
+export const setAsideNumberingToolbar = (placeholder) => {
+    let toolbar;
+    let isAutoNumberingEnabled = store.getState()?.autoNumberReducer.isAutoNumberingEnabled;
+    switch (placeholder) {
+        case "Number":
+            toolbar = isAutoNumberingEnabled ? config.numberToolbarAutonumberMode : config.AsideNumber;
+            break;
+        case "Label":
+        case "Label Name":
+            toolbar = isAutoNumberingEnabled ? config.labelToolbarAutonumberMode : config.AsideLabel;
+            break;
+        case "Title":
+            toolbar = config.AsideTitle;
+    }
+    return toolbar;
+}
+
+export const setCodeBlockContentToolbar = () => {
+    let toolbar;
+    let syntaxEnabled = document.querySelector('.panel_syntax_highlighting .switch input');
+    if (syntaxEnabled?.checked) {
+        toolbar = config.codeListingToolbarDisabled;
+    }
+    else {
+        toolbar = config.codeListingToolbarEnabled;
+    }
+    return toolbar;
+}
 /**
  * This method is used to check current editor has any selection
  */

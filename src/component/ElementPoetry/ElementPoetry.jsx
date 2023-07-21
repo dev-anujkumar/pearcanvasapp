@@ -9,6 +9,8 @@ import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import { swapElement } from '../SlateWrapper/SlateWrapper_Actions'
 import Sortable from 'react-sortablejs';
 import { POETRY_SOURCE } from '../../constants/Element_Constants.js';
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
 
 let random = guid();
 
@@ -60,7 +62,7 @@ class ElementPoetry extends Component {
                                     scroll: true, // or HTMLElement
                                     filter: ".ignore-for-drag",
                                     preventOnFilter: false,
-                                    draggable: ".editor",
+                                    draggable: ".lazyload-wrapper",
                                     forceFallback: true,
                                     onStart: function (/**Event*/) {
                                         // same properties as onEnd
@@ -199,7 +201,11 @@ class ElementPoetry extends Component {
                        showHideType: this.props?.showHideType
                    }
                     return (
-                        <React.Fragment key={element.id}>                                   
+                        <React.Fragment key={element.id}>
+                            <LazyLoad
+                                once={true}
+                                placeholder={<div data-id={element.id}><LargeLoader /></div>}
+                            >                                  
                             {index === 0 && <ElementSaprator
                                 index={index}
                                 firstOne={index === 0}
@@ -248,6 +254,7 @@ class ElementPoetry extends Component {
                                 source={POETRY_SOURCE}
                                 dataId = {element.id}
                             />
+                            </LazyLoad> 
                         </React.Fragment>
                     )
 

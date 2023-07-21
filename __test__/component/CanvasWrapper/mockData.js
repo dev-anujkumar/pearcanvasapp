@@ -2283,15 +2283,18 @@ export const slateTestData = {
         },
         interactiveElement: {
             altText: "",
+            assetIdFor3PISmartlink: "",
             elementId: "urn:pearson:work:ee1603e6-fd90-4338-b8b5-6f199728b89c",
             elementType: "element-interactive",
             elementWipType: "figure",
             index: 6,
             primaryOption: "primary-mmi",
             secondaryOption: "secondary-interactive-mmi",
+            selectedIntendedPlaybackModeValue: "inline",
             tag: "QUAD",
             toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment','calloutIcon','IndexEntry'],
-            longDesc: ""
+            longDesc: "",
+            podwidth: undefined,
         },
         figureInMultiColumn: {
             elementType: 'figure',
@@ -2337,7 +2340,10 @@ export const slateTestData = {
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
             toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment','calloutIcon','IndexEntry'],
-            longDesc:""
+            longDesc:"",
+            assetIdFor3PISmartlink: "",
+            podwidth: undefined,
+            selectedIntendedPlaybackModeValue: "inline"
         },
         figureInAside: {
             elementType: 'figure',
@@ -2383,7 +2389,10 @@ export const slateTestData = {
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
             toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment','calloutIcon','IndexEntry'],
-            longDesc:"int longdesc"
+            longDesc:"int longdesc",
+            assetIdFor3PISmartlink: "",
+            podwidth: undefined,
+            selectedIntendedPlaybackModeValue: "inline"
         },
         figureInWE: {
             elementType: 'figure',
@@ -2429,7 +2438,10 @@ export const slateTestData = {
             secondaryOption: "secondary-interactive-mmi",
             tag: "QUAD",
             toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment','calloutIcon','IndexEntry'],
-            longDesc:""
+            longDesc:"",
+            assetIdFor3PISmartlink: "",
+            podwidth: undefined,
+            selectedIntendedPlaybackModeValue: "inline"
         },
     },
     ImageFigureData: {

@@ -34,7 +34,8 @@ import {
     PROJECT_LOB_LIST,
     NO_DISCUSSION_ITEMS,
     BANNER_IS_VISIBLE,
-    SUBSCRIBERS_SUBSCRIBED_SLATE
+    SUBSCRIBERS_SUBSCRIBED_SLATE,
+    SET_TOC_SLATE_LABEL
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
@@ -46,7 +47,7 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, fetchAnySlateData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB, intendedPlaybackModeDropdown } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
@@ -60,7 +61,7 @@ import { getContainerEntityUrn } from '../FigureHeader/AutoNumber_helperFunction
 import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
-import { fetchAudioNarrationForContainer} from '../AudioNarration/AudioNarration_Actions';
+import TcmConstants from '../TcmSnapshots/TcmConstants';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -131,8 +132,8 @@ export const findElementType = (element, index) => {
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         podwidth = element.figuredata.podwidth
                         elementType = {
-                            elementType: elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
+                            elementType: element?.figuredata?.decorative ? elementDataBank[element.type]["decorativeImage"]["elementType"] : elementDataBank[element.type][element.figuretype]["elementType"],
+                            primaryOption: element?.figuredata?.decorative ? elementDataBank[element.type]["decorativeImage"]["primaryOption"] : elementDataBank[element.type][element.figuretype]["primaryOption"],
                             altText,
                             longDesc,
                             podwidth,
@@ -182,13 +183,18 @@ export const findElementType = (element, index) => {
                         let interactiveFormat = element.figuredata.interactiveformat;
                         let podwidth = element?.figuredata?.posterimage?.podwidth;
                         let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
+                        const { interactiveSubtypeConstants: { THIRD_PARTY } } = TcmConstants;
+                        const assetIdFor3PISmartlink = element?.figuredata?.interactivetype === THIRD_PARTY && element?.figuredata?.interactiveid ? element?.figuredata?.interactiveid : '';
+                        const selectedIntendedPlaybackModeValue = element?.figuredata?.intendedPlaybackMode ? element?.figuredata?.intendedPlaybackMode : intendedPlaybackModeDropdown[0].value;
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
                             altText,
                             longDesc,
                             podwidth,
-                            ...elementDataBank[element.type][element.figuretype][interactiveData]
+                            ...elementDataBank[element.type][element.figuretype][interactiveData],
+                            assetIdFor3PISmartlink,
+                            selectedIntendedPlaybackModeValue
                         }
                         break;
                     case "assessment":
@@ -677,6 +683,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         const slatePublishStatus = slateData?.data[newVersionManifestId]?.status === "approved" && slateData?.data[newVersionManifestId]?.type !== "popup";
             
         sendDataToIframe({ 'type': 'slateVersionStatus', 'message': slatePublishStatus });
+        if(slateData?.data[newVersionManifestId]?.type !== "popup") {
+        sendDataToIframe({ 'type': 'slateVersionStatusWithManifest', 'message': {
+            slateManifestURN:newVersionManifestId,
+            status: slateData?.data[newVersionManifestId]?.status} });
+        }
 		if(slateData.data && slateData.data[newVersionManifestId] && slateData.data[newVersionManifestId].type === "popup"){
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             config.isPopupSlate = true;
@@ -1860,5 +1871,12 @@ export const setCautionBannerStatus = (status) => (dispatch, getState) => {
     return dispatch({
         type: BANNER_IS_VISIBLE,
         payload: status
+    })
+}
+
+export const setTocSlateLabel = (label) => (dispatch) => {
+    return dispatch({
+        type: SET_TOC_SLATE_LABEL,
+        payload: label
     })
 }

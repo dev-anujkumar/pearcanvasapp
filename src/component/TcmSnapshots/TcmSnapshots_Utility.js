@@ -750,7 +750,11 @@ export const prepareFigureElementSnapshots = async (element, actionStatus, index
             footnoteSnapshot:  JSON.stringify(isEmpty(semanticSnapshots) === false ? semanticSnapshots.footnoteSnapshot : []),
             assetPopOverSnapshot: JSON.stringify([])
         }
-        
+        if(element?.figuredata?.decorative) {
+            elementSnapshot.captions = "<p></p>"
+            elementSnapshot.subtitle = "<p></p>"
+            elementSnapshot.title = "<p></p>"
+        }
         return elementSnapshot;
     } catch(error){
         console.error(error)

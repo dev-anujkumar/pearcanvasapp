@@ -87,6 +87,9 @@ const store = mockStore({
     },
     searchReducer: {
         searchTerm: ""
+    },
+    projectInfo: {
+        slateTocLabel: "Slate"
     }
 });
 
@@ -215,6 +218,9 @@ describe('Toolbar testing - coverage', () => {
         },
         searchReducer: {
             searchTerm: ""
+        },
+        projectInfo: {
+            slateTocLabel: "Slate"
         }
     });
     const props2 = {

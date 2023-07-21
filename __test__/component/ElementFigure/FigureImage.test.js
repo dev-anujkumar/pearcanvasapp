@@ -84,7 +84,8 @@ describe('Testing Figure image component', () => {
                 model:{
                     figuretype:['image','table','mathImage','authoredtext']
                 }
-            }
+            },
+            decoToOtherTypes: true
         }
         const component = mount(<Provider store={store}><FigureImage {...props} /></Provider>)
         expect(component).toHaveLength(1);

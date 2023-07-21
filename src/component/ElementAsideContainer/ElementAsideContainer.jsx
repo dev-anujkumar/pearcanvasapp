@@ -19,6 +19,8 @@ import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import ElementConstants from '../ElementContainer/ElementConstants';
+import LazyLoad from "react-lazyload";
+import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
 // IMPORT - Assets //
 
 let random = guid();
@@ -54,7 +56,7 @@ class ElementAsideContainer extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.asideRef && !this.asideRef?.current?.contains(event.target) && !this.props.isAutoNumberingEnabled) {
+        if (this.asideRef && !this.asideRef.current?.contains(event.target) && !this.props.isAutoNumberingEnabled) {
             this.handleAsideBlur(event);
         }
     }
@@ -132,7 +134,7 @@ class ElementAsideContainer extends Component {
                                     scroll: true, // or HTMLElement
                                     filter: ".ignore-for-drag",
                                     preventOnFilter: false,
-                                    draggable: ".editor",
+                                    draggable: ".lazyload-wrapper",
                                     forceFallback: true,
                                     onStart: function (/**Event*/) {
                                         // same properties as onEnd
@@ -274,7 +276,7 @@ class ElementAsideContainer extends Component {
                         scroll: true, // or HTMLElement
                         filter: ".ignore-for-drag",
                         preventOnFilter: false,
-                        draggable: ".editor",
+                        draggable: ".lazyload-wrapper",
                         forceFallback: true,
                         onStart: function (/**Event*/) {
                             // same properties as onEnd
@@ -354,7 +356,7 @@ class ElementAsideContainer extends Component {
                         dataIdAttr: 'data-id',
                         scroll: true, // or HTMLElement
                         filter: ".ignore-for-drag",
-                        draggable: ".editor",
+                        draggable: ".lazyload-wrapper",
                         preventOnFilter: false,
                         forceFallback: true,
                         onStart: function (/**Event*/) {
@@ -482,6 +484,10 @@ class ElementAsideContainer extends Component {
                             showSectionBreak = (elementLength == index + 1) ? true : false
                             return (
                                 <React.Fragment key={element.id}>
+                                    <LazyLoad
+                                        once={true}
+                                        placeholder={<div data-id={element.id}><LargeLoader /></div>}
+                                    >
                                     {index === 0 && (!this.props.element.hasOwnProperty("subtype") || this.props.element.subtype == "sidebar") && <ElementSaprator
                                         upperOne={true}
                                         firstOne={index === 0}
@@ -537,6 +543,7 @@ class ElementAsideContainer extends Component {
                                         handleCopyPastePopup={this.props.handleCopyPastePopup}
                                         dataId = {element.id}
                                     />
+                                </LazyLoad>
                                 </React.Fragment>
                             )
                         }

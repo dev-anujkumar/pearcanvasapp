@@ -20,7 +20,7 @@ import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate } from './CanvasWrapper_Actions';
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate,setTocSlateLabel } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -42,6 +42,8 @@ import {saveSelectedAssetData, saveInlineImageData, alfrescoPopup} from '../Alfr
 import {markedIndexPopup} from '../MarkIndexPopup/MarkIndex_Action';
 import { fetchProjectFigures, setTocContainersAutoNumberList } from '../FigureHeader/AutoNumberActions';
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
+import { REFRESH_BROWSER_ACTION } from '../SlateWrapper/SlateWrapperConstants';
+import { triggerSlateLevelSave } from '../../js/slateLevelSave';
 export class CanvasWrapper extends Component {
     constructor(props) {
         super(props);
@@ -80,10 +82,23 @@ export class CanvasWrapper extends Component {
         })
         this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
         localStorage.removeItem('newElement');
-        window.onbeforeunload = () => {
+        window.onbeforeunload = () => { 
+            const paramDetails = {
+                'slateEntityURN': config.slateEntityURN,
+                'projectUrn': config.projectUrn,
+                'myCloudProxySession': config.myCloudProxySession,
+                'userId': config.userId
+            }
+            localStorage.setItem('paramDetails', JSON.stringify(paramDetails));
+            localStorage.setItem('browser_refresh', '1');
             let slateId = config.tempSlateManifestURN ? config.tempSlateManifestURN : config.slateManifestURN
-            this.props.releaseSlateLock(config.projectUrn, slateId)
+            this.props.releaseSlateLock(config.projectUrn, slateId);
         }
+        // Trigger slate level save api on browser refresh
+        setTimeout(() => {
+            let paramDetails = JSON.parse(localStorage.getItem('paramDetails'));
+            if (paramDetails) triggerSlateLevelSave(paramDetails?.slateEntityURN, REFRESH_BROWSER_ACTION, paramDetails);
+        }, 5000);
     }
 
     showingToastMessage = (status, toastMsgText) => {
@@ -134,16 +149,15 @@ export class CanvasWrapper extends Component {
         return true;
     }
     handleNavClick=(nav)=> {
-        if(config.savingInProgress || config.popupCreationCallInProgress || config.isSavingElement){
+        if (config.savingInProgress || config.popupCreationCallInProgress || config.isSavingElement) {
             return false
         }
-        sendDataToIframe({'type': ShowLoader,'message': { status: true }});
-        if(nav === "back"){
-            sendDataToIframe({'type': PreviousSlate,'message': {}})
-        }else{
-            sendDataToIframe({'type': NextSlate,'message': {}})
+        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
+        if (nav === "back") {
+            sendDataToIframe({ 'type': PreviousSlate, 'message': {} })
+        } else {
+            sendDataToIframe({ 'type': NextSlate, 'message': {} })
         }
-        
     }
 
     render() {
@@ -282,6 +296,7 @@ const mapStateToProps = state => {
         isSlateTagEnable: state.metadataReducer.slateTagEnable,
         getRequiredSlateData: state.appStore.getRequiredSlateData,
         assessmentReducer: state.assessmentReducer,
+        roleId:state.appStore.roleId,
     };
 };
 
@@ -355,6 +370,7 @@ export default connect(
         fetchDefaultLF,
         setCautionBannerStatus,
         approvedSlatePopupStatus,
-        isSubscribersSubscribedSlate
+        isSubscribersSubscribedSlate,
+        setTocSlateLabel
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

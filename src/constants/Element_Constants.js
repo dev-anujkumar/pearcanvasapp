@@ -138,7 +138,7 @@ export const SOURCE_MAP = {
     [POETRY_SOURCE]: { 'support': ['STANZA'], 'notSupport': [] },
     [MULTICOLUMN_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'CITATION', 'ELEMENT_CITATION', 'MULTI_COLUMN','POP_UP','TAB_ELEMENT', 'TABBED_2_COLUMN'] }, //'LEARNING_OBJECTIVE_LIST', 'FEATURE', 'TACTIC_BOX', 'ACTIVITY','ASIDE', 'WORKED_EXAMPLE'
     [TEXT_SOURCE]: { 'support': [], 'notSupport': ['STANZA', 'ELEMENT_CITATION','TAB_ELEMENT'] },
-    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST', 'COLUMN_VIEW_1', 'COLUMN_VIEW_2', 'COLUMN_VIEW_3','COLUMN_VIEW_4'], 'notSupport': [] },
+    [SHOW_HIDE]: { 'support': ['AUTHORED_TEXT', 'HS', 'HEADERS', 'LEARNING_OBJECTIVE', 'LIST', 'BLOCKFEATURE', 'BLOCKQUOTE', 'MARGINALIA', 'PULLQUOTE', 'AUDIO', 'VIDEO', 'MATH', 'TABLE', 'IMAGE', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR', 'TABLE_EDITOR','EXTERNAL_LINK','ELEMENT_DIALOGUE','ASIDE', 'WORKED_EXAMPLE', 'CITATION', 'POETRY','FEATURE', 'ACTIVITY', 'TACTIC_BOX', 'LEARNING_OBJECTIVE_LIST', 'COLUMN_VIEW_1', 'COLUMN_VIEW_2', 'COLUMN_VIEW_3','COLUMN_VIEW_4', 'DECORATIVE'], 'notSupport': [] },
     [TABBED_SOURCE]: { 'support': ['TAB_ELEMENT'], 'notSupport': [] },
 };
 const SHOWHIDE = "SHOW_HIDE";
@@ -285,7 +285,6 @@ const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, va
 }
 
 /** Metadata Anchor Element constants */
-export const cypressLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to cypress framework.`
 export const externalLOWarningtxt = `Performing this action will remove the current alignment of projects LOs to external framework.`
 export const CYPRESS_LF = "cypressLF";
 export const EXTERNAL_LF =  "externalLF";
@@ -337,6 +336,17 @@ export const tabTitlePlaceholder = "Enter tab name (max. 25 characters)"
 export const tbSidebarEndpoint = "tabbed-2-column"
 
 /*------------------ Approved slate moved to WIP ------------------*/
-export const MOVED_TO_WIP = "Slate has moved to WIP status";
+export const MOVED_TO_WIP = "and parent container(s) has moved to WIP status";
 /* Fetch Learning objectives for these slates*/
 export const FETCH_LO_FOR_SLATES = ['section','pdfslate','ltislate']
+
+export const intendedPlaybackModeDropdown = [
+    { label: 'Inline', value: 'inline' },
+    { label: 'Modal', value: 'modal' },
+    { label: 'New Tab', value: 'tab' },
+    { label: 'New Window', value: 'window' },
+];
+
+/* Decorative Image */
+export const DECORATIVE = "DECORATIVE"
+export const DECORATIVE_IMAGE = "primary-image-decorative"

@@ -21,7 +21,7 @@ function SortElement(props) {
 					scroll: true, // or HTMLElement
 					filter: ".ignore-for-drag",
 					preventOnFilter: false,
-					draggable: ".editor",
+					draggable: ".lazyload-wrapper",
 					forceFallback: true,
 					onStart: function (/**Event*/) {},
 					// Element dragging ended
