@@ -768,14 +768,16 @@ class ElementContainer extends Component {
         
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
         let podwidth = this.props?.activeElement?.podwidth;
-        const oldIntendedPlaybackModeValue = previousElementData?.figuredata?.intendedPlaybackMode;
-        const currentIntendedPlaybackModeValue =  this.props?.activeElement?.selectedIntendedPlaybackModeValue;
-        const is3PIIntendedPlaybackDropdownUpdate = oldIntendedPlaybackModeValue !== currentIntendedPlaybackModeValue;
+        // Commented for future reference > for intended playback mode
+        // const oldIntendedPlaybackModeValue = previousElementData?.figuredata?.intendedPlaybackMode;
+        // const currentIntendedPlaybackModeValue =  this.props?.activeElement?.selectedIntendedPlaybackModeValue;
+        // const is3PIIntendedPlaybackDropdownUpdate = oldIntendedPlaybackModeValue !== currentIntendedPlaybackModeValue;
         let oldImage = this.props.oldImage;
              oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel') && (previousElementData.figuretype !== 'tableasmarkup')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
-            let isValid = (is3PIIntendedPlaybackDropdownUpdate || validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth));
+            // add is3PIIntendedPlaybackDropdownUpdate  in the below check for intended playback mode
+            let isValid = validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth);
             return isValid;
         }
       
@@ -796,6 +798,7 @@ class ElementContainer extends Component {
                 is3PIIntendedPlaybackDropdownUpdate);
         }
         else {
+            console.log("heree");
             return (subtitleHTML !== this.removeClassesFromHtml(previousElementData.html.title) ||
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
