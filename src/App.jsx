@@ -11,7 +11,7 @@ import axios from 'axios';
 import store from './appstore/store';
 import config from './config/config';
 import cypressConfig from './config/cypressConfig';
-import { requestConfigURI } from './constants/utility';
+import { requestConfigURI, getCookieByName } from './constants/utility';
 import { initializeGTM } from '../src/js/ga'
 import CanvasWrapper from './component/CanvasWrapper';
 import { modifyObjKeys } from './js/appUtils';
@@ -34,6 +34,7 @@ class App extends Component {
         return axios.get(`${cypressConfig.getENVConfig}v1/getEnvConfig/${requestURI}`, {
             headers: {
                 "Content-Type": "application/json",
+                "myCloudProxySession": getCookieByName("myCloudProxySession")
             }
         }).then((response) => {
             if(response){
