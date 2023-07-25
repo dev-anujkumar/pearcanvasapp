@@ -8,7 +8,6 @@ import { createLabelNumberTitleModel, getLabelNumberTitleHTML, hasReviewerRole, 
 import noImage from '../../images/OpenerElement/no-image.png'
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import config from '../../config/config';
-import { checkSlateLock } from "../../js/slateLockUtility.js"
 import axios from 'axios';
 import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement, saveSelectedAltTextLongDescData } from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
@@ -124,8 +123,6 @@ class OpenerElement extends Component {
             return true
         }
         const { slateLockInfo } = this.props
-        if(checkSlateLock(slateLockInfo))
-            return false
 
         if (e.target.tagName.toLowerCase() === "p") {
             e.stopPropagation();
@@ -177,9 +174,6 @@ class OpenerElement extends Component {
         if(hasReviewerRole()){
             return true
         }
-        const { slateLockInfo } = this.props
-        if(checkSlateLock(slateLockInfo))
-            return false
 
         if (e.target.tagName.toLowerCase() === "p") {
             e.stopPropagation();
@@ -323,10 +317,6 @@ class OpenerElement extends Component {
      * @param {slateLockInfo} Slate lock data
      */
     handleOpenerClick = (slateLockInfo, e) => {
-        if(checkSlateLock(slateLockInfo)){
-            e.preventDefault()
-            return false
-        }
         this.props.handleFocus()
 
     }
@@ -363,7 +353,7 @@ class OpenerElement extends Component {
      * @param {*} event blur event object
      */
     handleBlur = (event) => {
-        if(checkSlateLock(this.props.slateLockInfo) || config.savingInProgress){
+        if(config.savingInProgress){
             event.preventDefault()
             return false
         }

@@ -8,7 +8,6 @@ import {
 } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { sendDataToIframe, getTitleSubtitleModel, hasReviewerRole } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
-import { checkSlateLock } from '../../js/slateLockUtility.js'
 import { findKey } from "lodash";
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 
@@ -42,7 +41,7 @@ class ElementPopup extends React.Component {
             return false
         }
         if(event.target.classList.contains("buttonWidgetPU")){
-            if(!(checkSlateLock(this.props.slateLockInfo) || this.props.activeElement.elementId !== this.props.element.id  || config.savingInProgress)){
+            if(!(this.props.activeElement.elementId !== this.props.element.id  || config.savingInProgress)){
                 this.renderSlate();
                 let popupParentSlateData = {
                     isPopupSlate: true,

@@ -1224,6 +1224,7 @@ class Sidebar extends Component {
                         elementData={this.props.elementData}
                         tcmStatus = {this.props.tcmStatus}
                         permissions = {this.props.permissions}
+                        isSlateLocked = {hasReviewerRole()}
                     />}
                 {this.state.updateAssessmentTypePopup && this.props?.activeElement?.primaryOption === 'primary-single-assessment'  && this.showUpdateAssessmentTypePopup()}
                 {this.state.decorativePopupWarning &&
