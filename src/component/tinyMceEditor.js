@@ -1965,7 +1965,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
-                if (NON_BREAKING_SPACE_SUPPORTED_ARRAY.includes(self.props?.element?.type) && self.props?.asideData?.type !== "manifestlist") {
+                if (NON_BREAKING_SPACE_SUPPORTED_ARRAY.includes(self.props?.element?.type)) {
                     items.push(nonBreakingOption)
                 }
                 callback(items);
