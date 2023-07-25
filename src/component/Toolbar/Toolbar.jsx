@@ -15,10 +15,11 @@ import OpenAudioBook from '../AudioNarration/OpenAudioBook.jsx';
 import { hasReviewerRole, isSubscriberRole, sendDataToIframe, showNotificationOnCanvas } from '../../constants/utility.js';
 import SearchComponent from './Search/Search.jsx';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import LockIcon from '@mui/icons-material/Lock';
 import { slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
 import { MOVED_TO_WIP } from '../../constants/Element_Constants';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
-import { ALLOWED_SLATES_IN_RC, APPROVED_BANNER_MESSAGE1, APPROVED_BANNER_MESSAGE2, EDIT_CONTENT_BTN, SLATES_DEFAULT_LABEL, SUBSCRIBER_BANNER_MESSAGE } from '../SlateWrapper/SlateWrapperConstants';
+import { ALLOWED_SLATES_IN_RC, APPROVED_BANNER_MESSAGE1, APPROVED_BANNER_MESSAGE2, EDIT_CONTENT_BTN, LOCKED_BANNER_MESSAGE, SLATES_DEFAULT_LABEL, SUBSCRIBER_BANNER_MESSAGE } from '../SlateWrapper/SlateWrapperConstants';
 
 const _Toolbar = props => {
     const { isToolBarBlocked,roleId } = props;
@@ -143,10 +144,11 @@ const _Toolbar = props => {
     const isSubscribed = isSubscriberRole(props.projectSubscriptionDetails.projectSharingRole, props.projectSubscriptionDetails.projectSubscriptionDetails.isSubscribed)
     const slatePublishStatus = (slateStatus === "approved") && !popupSlate && !isReviewerRole
     const setPopUpSlateLOstatus = props?.slateLevelData?.[config.slateManifestURN]?.type === "popup" && props?.slateLevelData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && props?.slateLevelData?.[config.tempSlateManifestURN]?.status === "approved";
-    const bannerClass = isSubscribed ? 'read-only-banner' : ((slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) ? 'approved-banner' : 'banner')
+    const bannerClass = isSubscribed ? 'read-only-banner' : ((slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) || (checkSlateLock(props.slateLockInfo)) ? 'approved-banner' : 'banner')
     const approvedtoolbar = (slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) ? 'hideToolbar' : ''
-    const toolbarClass = isSubscribed || (slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) ? 'subscribe-approved-container' : 'toolbar-container'
+    const toolbarClass = isSubscribed || (slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) || (checkSlateLock(props.slateLockInfo)) ? 'subscribe-approved-container' : 'toolbar-container'
     const separatorClass = isSubscribed || (slatePublishStatus && !config.isCypressPlusEnabled && !isReviewerRole) ? 'separatorClass' : ''
+    const lockedByUser = props.slateLockInfo ? props.slateLockInfo.firstName !== "" ? `${props.slateLockInfo.lastName}, ${props.slateLockInfo.firstName}` : `${props.slateLockInfo.userId}` : ""
     return (
         <div className={bannerClass}>
             <div className={toolbarClass}>
@@ -165,7 +167,12 @@ const _Toolbar = props => {
                 <button variant="outlined" color="primary" className="edit-content-btn" onClick={approveNormalSlate}>
                     {EDIT_CONTENT_BTN}
                 </button>
-            </div> : ''  }
+            </div> : 
+            (checkSlateLock(props.slateLockInfo)) ? 
+            <div className='toolbar-text'>
+                <LockIcon />
+                <div><span className='read-only'>{LOCKED_BANNER_MESSAGE} </span>by {lockedByUser} </div>
+            </div> : '' }
 
                 <div className={`header ${isToolBarBlocked} ${accessToolbar} ${approvedtoolbar}`} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}

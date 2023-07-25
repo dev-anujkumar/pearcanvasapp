@@ -162,6 +162,7 @@ export const stanzaIndentClassList = ['poetryLine poetryLineLevel1', 'poetryLine
 export const SUBSCRIBER_BANNER_MESSAGE = "Read-only | Subscribed Slate"
 export const APPROVED_BANNER_MESSAGE1 = "Read-only | Approved Content"
 export const APPROVED_BANNER_MESSAGE2 = "- Editing content will create a new version of this slate"
+export const LOCKED_BANNER_MESSAGE = "Read-only | Locked"
 export const EDIT_CONTENT_BTN = "Edit Content"
 /************************************************************************************/
 export const SLATES_DEFAULT_LABEL = {
