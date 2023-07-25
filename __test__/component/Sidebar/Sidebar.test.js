@@ -139,9 +139,9 @@ describe('Test for Sidebar component', () => {
        
         const spySetSecondary = jest.spyOn(sidebarInstance, 'setSecondary');
         sidebarInstance.setSecondary(secondaryValue, secondaryLabel);
-        expect(sidebar.find('.element-dropdown').length).toBe(4)
+        expect(sidebar.find('.element-dropdown').length).toBe(3)
         expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(1)
-        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(2)
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(1)
         expect(spySetSecondary).toHaveBeenCalled();
     });
 
