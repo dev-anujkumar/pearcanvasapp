@@ -237,7 +237,7 @@ class SlateTagDropdown extends React.Component {
             'previewData': previewData,
             'projectSharingRole': projectSharingRole,
             'isSubscribed': isSubscribed,
-            'isApprovedSlate':slateVersioningStatus
+            'isApprovedSlate':isReadOnly
         }
       })
     }
