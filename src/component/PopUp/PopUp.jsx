@@ -265,9 +265,8 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderButtons = (props) => {
-        if(props.isSlateLocked){
-            return '';
-        }
+        if(props.isSlateLocked) return null;
+
         if (props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.showAssessmentConfirmation) { //Slate lock popup
             showBlocker(true); showTocBlocker();
             return (

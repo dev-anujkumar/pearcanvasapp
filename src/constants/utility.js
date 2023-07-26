@@ -92,12 +92,10 @@ export const hasProjectPermission = (value) => {
  */
 export const isApprovedOrSubscribed = (authStore) => {
     const {appStore, projectInfo} = authStore;
-    const slateLockInfo = authStore?.slateLockReducer?.slateLockInfo;
     const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     const slatePublishStatus = appStore.slateLevelData[config.slateManifestURN]?.type !== "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved";
     const isPopupReadOnly = appStore.slateLevelData[config.slateManifestURN]?.type === "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && appStore.slateLevelData[config.tempSlateManifestURN]?.status === "approved";
-    const isSlateLocked = checkSlateLock(slateLockInfo);
-    return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber || isSlateLocked);
+    return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber || isSlateLocked());
 }
 /**
  * This function checks the conditions for Reviewer users and approved/subscribed content both
