@@ -113,16 +113,22 @@ export const isApproved = () =>{
     return isApprovedOrSubscribed(authStore)
 }
 
+export const isSlateLocked = () =>{
+    const authStore = store.getState();
+    const slateLockInfo = authStore?.slateLockReducer?.slateLockInfo;
+    return checkSlateLock(slateLockInfo);
+}
+
+
 
 export const hasReviewerRole = (value) => {
     const authStore = store.getState();
-    const slateLockInfo = authStore?.slateLockReducer?.slateLockInfo;
     const {appStore} = authStore;
     if (value) {
-        return !((hasProjectPermission(value) && !isApproved() && !checkSlateLock(slateLockInfo)) ? true : false)
+        return !((hasProjectPermission(value) && !isApproved() && !isSlateLocked()) ? true : false)
     }
     let hasRole = (appStore && (appStore.roleId === "comment_only"
-        && (hasProjectPermission('note_viewer'))) || isApproved() || checkSlateLock(slateLockInfo));
+        && (hasProjectPermission('note_viewer'))) || isApproved() || isSlateLocked());
     return hasRole;
 }
 

@@ -265,6 +265,9 @@ class PopUp extends React.Component {
     * @param {event} 
     */
     renderButtons = (props) => {
+        if(props.isSlateLocked){
+            return '';
+        }
         if (props.isLockReleasePopup || props.wrongAudio || props.showConfirmation || props.altText || props.wrongImage || props.showAssessmentConfirmation) { //Slate lock popup
             showBlocker(true); showTocBlocker();
             return (
@@ -363,7 +366,7 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-        if (props.isTCMCanvasPopup && !props.isSlateLocked) {
+        if (props.isTCMCanvasPopup) {
             if(props.tcmStatus === false || !this.props.permissions?.includes('trackchanges_approve_reject')) {
                 return (
                     <div className={`dialog-buttons ${props.assessmentClass}`}>
@@ -425,7 +428,8 @@ class PopUp extends React.Component {
                 </div>
             )
         }
-        else if(!props.isSlateLocked){
+
+        else {
             return (
                 <div className={`dialog-buttons ${props.assessmentClass}`}>
                     <span option={PRIMARY_BUTTON} className="save-button" onClick={props.saveContent}>{props.saveButtonText}</span>
