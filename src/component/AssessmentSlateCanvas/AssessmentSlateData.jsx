@@ -750,8 +750,8 @@ class AssessmentSlateData extends Component {
                         <div className="slate_assessment_data_id">{slatePlaceholder.showID}</div>
                         <div className="slate_assessment_data_id_lo">{assessmentSlateObj.assessmentId}</div>
                         {oldReducerData && <div className="assessment-dateModified">
-                            <div className={`${oldReducerData.assessmentStatus === "wip" ? 'last-updated-time-wip' : 'last-updated-time'}`}>Last Updated:</div>
-                            <div className={`${oldReducerData.assessmentStatus === "wip" ? 'last-updated-time-wip' : 'last-updated-time-format'}`}>{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</div>
+                            <div className='last-updated-time'>Last Updated:</div>
+                            <div className='last-updated-time-format'>{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</div>
                         </div>}
                         <div className="slate_assessment_data_format_lo">{assessmentType}</div>
                         <div className="slate_assessment_change_button" onClick={(e) => this.mainAddAssessment(e, assessmentType)}>{slatePlaceholder.changeTypeValue}</div>

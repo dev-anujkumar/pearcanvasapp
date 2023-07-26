@@ -589,10 +589,10 @@ class ElementSingleAssessment extends Component {
                 {oldReducerData && <div className="embedded-assessment-status">
                     <div className={`${isElmStatus == true ? "has-update" : ""}`}>{(elementType == PUF || elementType == LEARNOSITY) && this.showElmVersionStatus()}</div>
                     <div className="assessment-dateModified assessmentItem_Timestamp">
-                        <span className={`${oldReducerData.assessmentStatus === "wip" ? 'last-updated-time-wip' : 'time-separation'}`}>|</span>
+                        <span className='last-updated-time'>|</span>
                         <div className="embedded-assessment-time">
-                            <p className={`${oldReducerData.assessmentStatus === "wip" ? 'last-updated-time-wip' : 'last-updated-time'} time-updated`}>Last Updated:</p>
-                            <p className={`${oldReducerData.assessmentStatus === "wip" ? 'last-updated-time-wip' : 'last-updated-time-format'} time-updated-embedded`}>{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</p>
+                            <p className='last-updated-time time-updated'>Last Updated:</p>
+                            <p className='last-updated-time-format time-updated-embedded'>{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</p>
                         </div>
                     </div>
                 </div>}
