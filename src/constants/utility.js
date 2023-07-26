@@ -107,7 +107,7 @@ export const isApproved = () =>{
     const authStore = store.getState();
     const {appStore} = authStore;
     const hasRole= appStore && appStore.roleId === "comment_only" && (hasProjectPermission('note_viewer'))
-    if(hasRole)  return false
+    if(hasRole && !isSlateLocked())  return false
     return isApprovedOrSubscribed(authStore)
 }
 
