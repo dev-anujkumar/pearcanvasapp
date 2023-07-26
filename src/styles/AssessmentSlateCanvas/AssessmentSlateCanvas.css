@@ -509,9 +509,6 @@ font-weight: bold;
 .embedded-assessment-time {
   display: flex;
 }
-.time-updated {
-  padding-top: 1px;
-}
 .time-updated-embedded {
-  padding-top: 3px;
+  padding-top: 1px;
 }

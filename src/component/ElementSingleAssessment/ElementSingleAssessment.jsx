@@ -591,8 +591,8 @@ class ElementSingleAssessment extends Component {
                     <div className="assessment-dateModified assessmentItem_Timestamp">
                         <span className='last-updated-time'>|</span>
                         <div className="embedded-assessment-time">
-                            <p className='last-updated-time time-updated'>Last Updated:</p>
-                            <p className='last-updated-time-format time-updated-embedded'>{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</p>
+                            <div className='last-updated-time time-updated-embedded'>Last Updated:</div>
+                            <div className='last-updated-time-format time-updated-embedded'>{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</div>
                         </div>
                     </div>
                 </div>}
