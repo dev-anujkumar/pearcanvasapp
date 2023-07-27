@@ -3002,10 +3002,10 @@ class ElementContainer extends Component {
 
     handleFigurePopup = (togglePopup, elementType = null) => {
         let imageId;
-        if(this.props?.element?.figuretype === "image"){
-        imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
+        if(this.props?.element?.figuretype === "interactive"){
+            imageId = this.props?.element?.figuredata?.interactiveid;
         }else{
-        imageId = this.props?.element?.figuredata?.interactiveid;
+            imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
         }
         imageId = imageId.replace('urn:pearson:alfresco:', '');
         this.props.showBlocker(togglePopup);
