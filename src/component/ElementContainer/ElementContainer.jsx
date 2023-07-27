@@ -3004,6 +3004,9 @@ class ElementContainer extends Component {
         let imageId;
         if(this.props?.element?.figuretype === "interactive"){
             imageId = this.props?.element?.figuredata?.interactiveid;
+        }
+        else if(this.props?.element?.type === "openerelement"){
+            imageId = this.props?.element?.backgroundimage?.imageid
         }else{
             imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
         }
@@ -3095,7 +3098,11 @@ class ElementContainer extends Component {
                 this.handleFigurePopup(true);
             }
             
-        } else {
+        }
+        if(element?.type === 'openerelement') {
+            this.handleFigurePopup(true);
+        }
+        else {
             let fullAssessment = checkFullElmAssessment(element);
             let embeddedAssessment = checkEmbeddedElmAssessment(element);
             const isInteractive = checkInteractive(element);

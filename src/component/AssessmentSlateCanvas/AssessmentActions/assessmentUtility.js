@@ -133,6 +133,9 @@ export const checkInteractive = (element) => {
         (element.figuredata?.interactiveformat === ELM_INT || interactivetype.includes(element.figuredata?.interactivetype)) && element.figuredata?.interactiveid) {
         return true;
     }
+    if(element?.type === "openerelement"){
+        return true;
+    }
     return false;
 }
 
