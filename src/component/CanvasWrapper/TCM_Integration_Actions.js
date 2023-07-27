@@ -1,13 +1,10 @@
 // // IMPORT - Plugins //
 import config from '../../config/config';
 import store from '../../appstore/store'
-import { checkSlateLock } from '../../js/slateLockUtility'
 import {LAUNCH_TCM_CANVAS_POPUP} from '../../constants/Action_Constants'
 import { triggerCustomEventsGTM } from '../../js/ga';
 
 export const loadTrackChanges = (elementId) => {
-  let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
-  if (!checkSlateLock(slateLockInfo)) {
     const title = store.getState().appStore && store.getState().appStore.slateTitleUpdated ? store.getState().appStore.slateTitleUpdated : "";
     const currentSlateTitle = title;
     const currentProjectUrn = config.projectUrn;
@@ -23,7 +20,6 @@ export const loadTrackChanges = (elementId) => {
     }
     triggerCustomEventsGTM('lanch_tcm',_requestData );
     window.open(config.TCM_DASHBOARD_UI_URL + QUERY_URL + CURRENT_ELEMENT_QUERY, 'tcmwin');
-  }
 }
 
 export const launchTCMPopup = (data) =>{

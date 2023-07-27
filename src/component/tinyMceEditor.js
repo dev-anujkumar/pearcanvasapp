@@ -910,7 +910,7 @@ export class TinyMceEditor extends Component {
                 let parent = e.target.closest("dfn");
                 uri = parent.getAttribute('data-uri');
             }
-            this.glossaryBtnInstance.setDisabled(true)
+            this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
                     this.toggleGlossaryandFootnoteIcon(true);
@@ -963,7 +963,7 @@ export class TinyMceEditor extends Component {
             } else {
                 uri = span.getAttribute('data-uri');
             }
-            this.markedIndexBtnInstance.setDisabled(true)
+            this.markedIndexBtnInstance && this.markedIndexBtnInstance.setDisabled(true)
             if (isMarkedIndexExist) {
                 cbFunc = () => {
                     this.toggleMarkedIndexIcon(true);
