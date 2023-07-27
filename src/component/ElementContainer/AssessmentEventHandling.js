@@ -15,8 +15,9 @@ import { Resource_Type } from '../AssessmentSlateCanvas/AssessmentSlateConstants
 export const handleElmPortalEvents = (action,eventType) => {
     let slateLockInfo = store.getState().slateLockReducer.slateLockInfo;
     if (!checkSlateLock(slateLockInfo)) {
+
         let elmAssessmentUpdate = async (event) => {
-            if (event?.data?.source !== 'elm') {
+            if (event?.data?.type === 'bannerIsVisible' || event?.data?.type === 'disablePrev') {
                 return false
             } else {
               try {

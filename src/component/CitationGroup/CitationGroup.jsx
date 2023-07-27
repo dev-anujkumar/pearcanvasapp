@@ -11,7 +11,6 @@ import { guid, hasReviewerRole, sendDataToIframe } from '../../constants/utility
 import ElementSaprator from '../ElementSaprator';
 import { createPopupUnit } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
-import { checkSlateLock } from '../../js/slateLockUtility.js'
 import { CITATION_SOURCE } from '../../constants/Element_Constants.js';
 import LazyLoad from "react-lazyload";
 import { LargeLoader } from '../SlateWrapper/ContentLoader.jsx'
@@ -255,9 +254,6 @@ export class CitationGroup extends Component {
         )
     }
     handleFocus = (event) => {
-        if(checkSlateLock(this.context.slateLockInfo)){
-            return false
-        }
         if(event && event.target && !(event.target.classList.contains('citationTitle'))){
             return false
         }
