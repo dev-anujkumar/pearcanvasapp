@@ -52,7 +52,10 @@ class FigureImage extends Component {
             figureNumberLabelData: [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER],
             figureDropDown: false,
             figureNumberDropDown: false,
-            deleteassetPopup: false
+            deleteassetPopup: false,
+            selectImageToSave: false,
+            imageUrlsData: [],
+            imageAltText: ''
         }
         this.wrapperRef = React.createRef();
         this.configuration = new Configuration({
@@ -540,32 +543,63 @@ class FigureImage extends Component {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             const res = await this.openai.createImage({
                 prompt: titleHtml,
-                n: 1,
+                n: 4,
                 size: "512x512",
             });
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
 
-            let imageUrl = res.data.data[0].url;
-            if (imageUrl && imageUrl !== '') {
-                // store current element figuredata in store
-                this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
-                let setFigureData = {
-                    path: imageUrl,
-                    height: '512',
-                    width: '512',
-                    schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-                    imageid: imageUrl.substring(imageUrl.length - 10),
-                    alttext: titleHtml,
-                    longdescription: '',
-                    type: this.props.model.figuretype,
-                }
-                this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
-                    this.props.handleFocus("updateFromC2");
-                    this.props.handleBlur();
-                })
+            let imageUrls = res.data;
+            if (imageUrls?.data?.length === 4) {
+                this.setState({ selectImageToSave: true, imageUrlsData: imageUrls, imageAltText: titleHtml })
             }
         }
     }
+
+    /*** @description This function is used to render select image Popup */
+    showSelectImagePopup = () => {
+        if (this.state.selectImageToSave) {
+            this.showCanvasBlocker(true);
+            return (
+                <PopUp
+                    active = {true}
+                    togglePopup = {this.toggleSelectImagePopup}
+                    isSelectImagePopup = {true}
+                    selectImageHandler = {this.selectImageAndSave}
+                    isInputDisabled = {true}
+                    imagesData = {this.state.imageUrlsData}
+                    imageOptionsClass = 'image-options-container'
+                />
+            )
+        } else {
+            return null
+        }
+    }
+
+    selectImageAndSave = (imageUrl) => {
+        // store current element figuredata in store
+        this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
+        let setFigureData = {
+            path: imageUrl,
+            height: '512',
+            width: '512',
+            schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            imageid: imageUrl.substring(imageUrl.length - 10),
+            alttext: this.state.imageAltText,
+            longdescription: '',
+            type: this.props.model.figuretype,
+        }
+        this.toggleSelectImagePopup(false);
+        this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
+            this.props.handleFocus("updateFromC2");
+            this.props.handleBlur();
+        })
+    }
+
+    toggleSelectImagePopup = (toggleValue) => {
+        this.setState({ selectImageToSave: toggleValue });
+        this.showCanvasBlocker(toggleValue);
+    }
+
 
     render() {
         const { model, isAutoNumberingEnabled } = this.props;
@@ -648,6 +682,7 @@ class FigureImage extends Component {
         const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
         return (
             <div className="figureElement">
+                {this.state.selectImageToSave && this.showSelectImagePopup()}
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                 <div className='figure-image-wrapper'>
                     <div className={`${divClass} ${model?.figuretype === 'codelisting' ? 'blockCodeFigure' : '' }`} resource="">
