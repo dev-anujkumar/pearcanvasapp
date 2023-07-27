@@ -3001,8 +3001,12 @@ class ElementContainer extends Component {
     }
 
     handleFigurePopup = (togglePopup, elementType = null) => {
-
-        let imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
+        let imageId;
+        if(this.props?.element?.figuretype === "image"){
+        imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
+        }else{
+        imageId = this.props?.element?.figuredata?.interactiveid;
+        }
         imageId = imageId.replace('urn:pearson:alfresco:', '');
         this.props.showBlocker(togglePopup);
         if(elementType === 'TE'){
@@ -3082,7 +3086,7 @@ class ElementContainer extends Component {
     handleEditButton = (event) => {
         event.stopPropagation();
         const { element } = this.props;
-        const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup"]
+        const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup","interactive"]
         if (element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) {
             if(element?.figuretype === 'tableasmarkup'){
                 this.props.prepareImageDataFromTable(element);

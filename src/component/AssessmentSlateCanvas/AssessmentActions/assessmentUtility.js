@@ -128,8 +128,9 @@ export const checkEmbeddedElmAssessment = (element, assessReducer) => {
 * @param element - element's details
 */
 export const checkInteractive = (element) => {
+    const interactivetype = ['3rd-party', 'web-link'];
     if (element?.type === ELEMENT_FIGURE && element.figuretype === FIGURE_INTERACTIVE &&
-         element.figuredata?.interactiveformat === ELM_INT && element.figuredata?.interactiveid) {
+        (element.figuredata?.interactiveformat === ELM_INT || interactivetype.includes(element.figuredata?.interactivetype)) && element.figuredata?.interactiveid) {
         return true;
     }
     return false;
