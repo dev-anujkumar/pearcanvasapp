@@ -20,6 +20,7 @@ import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement } fro
 import { updateFigureImageDataForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { connect } from 'react-redux';
 import PopUp from '../PopUp';
+import SelectImagePopup from './SelectImagePopup.jsx'
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 import { setAutoNumberSettingValue, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions.js';
 import FigureHeader from '../FigureHeader/FigureHeader.jsx';
@@ -539,7 +540,7 @@ class FigureImage extends Component {
     generateFigureResource = async () => {
         let titleDOM = document.getElementById(`cypress-${this.props.index}-2`);
         let titleHtml = titleDOM ? titleDOM.innerHTML : '';
-        if (titleHtml !== '' && titleHtml !== this.props.model.figuredata.alttext) {
+        if (titleHtml !== '' && titleHtml !== '<br>' && titleHtml !== '<br/>') {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
             const res = await this.openai.createImage({
                 prompt: titleHtml,
@@ -560,14 +561,15 @@ class FigureImage extends Component {
         if (this.state.selectImageToSave) {
             this.showCanvasBlocker(true);
             return (
-                <PopUp
-                    active = {true}
+                <SelectImagePopup
                     togglePopup = {this.toggleSelectImagePopup}
                     isSelectImagePopup = {true}
                     selectImageHandler = {this.selectImageAndSave}
                     isInputDisabled = {true}
-                    imagesData = {this.state.imageUrlsData}
+                    imageList = {this.state.imageUrlsData?.data}
                     imageOptionsClass = 'image-options-container'
+                    imageAltText = {this.state.imageAltText}
+                    imageLongDes = {this.state.imageAltText}
                 />
             )
         } else {
@@ -585,7 +587,7 @@ class FigureImage extends Component {
             schema: "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
             imageid: imageUrl.substring(imageUrl.length - 10),
             alttext: this.state.imageAltText,
-            longdescription: '',
+            longdescription: this.state.imageAltText,
             type: this.props.model.figuretype,
         }
         this.toggleSelectImagePopup(false);

@@ -1207,29 +1207,3 @@ ol li.listItemNumeroUnoLowerRoman {
 .updateAssessment-disable{
   display: none;
 }
-
-.image-options-container {
-  width: 474px !important;
-}
-
-.option-image-container {
-  display: inline-block;
-  width: 200px;
-  height: 200px;
-  margin: 8px 12px 0 0px;
-  background-color: #eee;
-}
-.opt-img-container {
-  margin: 0;
-  padding: 0;
-  overflow-y: hidden;
-  max-height: 600px;
-  overflow-x: hidden;
-}
-.option-image-container .img-inside-container{
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
-  cursor: pointer;
-  padding: 5px;
-}
