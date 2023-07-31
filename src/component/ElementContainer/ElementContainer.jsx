@@ -2921,9 +2921,10 @@ class ElementContainer extends Component {
 
     addOrViewComment = (e, elementId, type) => {
         this.props.setActiveElement(this.props.element);
+        const currentLockedSlateUrn = this.props?.popupParentSlateData?.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
             sendDataToIframe({
                 'type': AddOrViewComment,
-                'message': { "id": elementId, "mode": type, "viewInCypress": false, "slateManifestUrn": config.slateManifestURN }
+                'message': { "id": elementId, "mode": type, "viewInCypress": false, "slateManifestUrn": currentLockedSlateUrn }
             });
         e.stopPropagation();
     }
