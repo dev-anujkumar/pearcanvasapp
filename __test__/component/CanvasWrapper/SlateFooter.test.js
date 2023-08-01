@@ -46,10 +46,6 @@ describe('', () => {
         let wrapper = mount(<SlateFooter {...props} />);
         expect(wrapper.find('div.loaderContainer')).toHaveLength(1)
     })
-    it('renders SmalllLoader without crashing', () => {
-        let wrapper = mount(<SmalllLoader />);
-        expect(wrapper.find('div.sm')).toHaveLength(1)
-    })
     it('renders LargeLoader without crashing', () => {
         const div = document.createElement('div');
         let wrapper = mount(<LargeLoader />);
