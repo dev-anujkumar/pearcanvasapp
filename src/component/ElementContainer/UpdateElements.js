@@ -939,6 +939,15 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     }
     let slateEntityUrn = dataToReturn.elementParentEntityUrn || appStore.parentUrn && appStore.parentUrn.contentUrn || config.slateEntityURN
     dataToReturn = { ...dataToReturn, index: index.toString().split('-')[index.toString().split('-').length - 1], elementParentEntityUrn: slateEntityUrn }
+    // WE is approved and user focuses on another sub-element immediately updating a sub-element
+    if (config.elementStatus[dataToReturn.id] && config.elementStatus[dataToReturn.id] === "approved" && asideData?.element?.subtype === 'workedexample' && index) {
+        const iList = index?.toString()?.split("-") || [];
+        if (iList?.length === 2) {
+            dataToReturn = { ...dataToReturn, elementParentEntityUrn: asideData?.element?.contentUrn }
+        } else {
+            dataToReturn = { ...dataToReturn, elementParentEntityUrn: asideData?.element?.elementdata?.bodymatter[iList[1]]?.contentUrn }
+        }
+    }
     if (config.elementStatus[dataToReturn.id] && config.elementStatus[dataToReturn.id] === "approved") {
         config.savingInProgress = true
     }

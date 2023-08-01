@@ -8,7 +8,6 @@ import constants from "./constants.js";
 import { guid, sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import MultiColumnContainerContext from '../ElementContainer/MultiColumnContext';
 import { MULTICOLUMN_SOURCE } from '../../constants/Element_Constants.js';
-import { checkSlateLock } from '../../js/slateLockUtility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import config from "../../config/config.js";
 
@@ -260,9 +259,6 @@ class MultipleColumnContainer extends PureComponent {
      * @param {Object} event 
      */
       handleFocus = (event) => {
-        if(checkSlateLock(this.context.slateLockInfo)){
-            return false
-        }
         if(event && event.target && !(event.target.classList.contains('container-multi-column-group-3c'))){
             return false
         }
