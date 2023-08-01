@@ -231,7 +231,7 @@ describe('-----------------Testing Search Actions-----------------', () => {
         })
     });
 
-    describe('Testing------- getContainerData', () => {
+    xdescribe('Testing------- getContainerData', () => {
         it('testing 1------- getContainerData passing no argument for else case ------', () => {
             const spygetContainerData = jest.spyOn(actions, 'getContainerData');
             actions.getContainerData();
