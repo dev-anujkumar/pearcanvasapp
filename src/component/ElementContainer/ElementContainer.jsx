@@ -24,7 +24,7 @@ import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/Comment
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from './../../constants/Element_Constants';
-import { showTocBlocker, hideBlocker, disableHeader, ShowCanvasLoader, hideTocBlocker } from '../../js/toggleLoader'
+import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole, isApproved, isSlateLocked, hasReviewerSubscriberRole } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
@@ -1925,90 +1925,6 @@ class ElementContainer extends Component {
         });
     }
 
-    
-    /*** @description - This function is to update state variables based on the parameters
-       * @param id - assessment-id of the assessment
-       * @param itemID - assessment-item-id of the assessment
-       * @param title - assessment-title of the assessment
-       * @param format - assessment Format of the assessment
-       * @param usageType - usageType of the assessment
-       * @param change - type of change - insert/update
-    */
-    updateAssessment = (id, itemID, title, format, usageType, change, learningsystem, templateid, templatetype) => {
-        let dataToSend = {
-            id: id,
-            title: title,
-            itemID: itemID,
-            format: format,
-            usageType: usageType,
-            templatelabel: title,
-            templateid: templateid,
-            templatetype: templatetype,
-            learningsystem: learningsystem
-        }
-        this.setState({
-            assessmentSlateObj: {
-                assessmentId: id,
-                itemId: itemID,
-                title: title,
-            },
-            getAssessmentData: true,
-        }, () => {
-            this.handleAssessmentBlur(dataToSend);
-        })
-        if (change === 'insert') {
-            this.setState({
-                getAssessmentDataPopup: true
-            }, () => {
-                setTimeout(() => {
-                    this.setState({
-                        getAssessmentDataPopup: false
-                    })
-                }, 3000)
-                ShowCanvasLoader(false);
-            })
-        }
-        else {
-            this.setState({
-                getAssessmentData: false
-            })
-        }
-        disableHeader(false);
-        hideTocBlocker(false);
-    }
-
-    /*** @description - This function is to handle Focus on the Assessment element on click*/
-    handleAssessmentFocus = () => {
-        this.props.handleFocus();
-    }
-
-    /*** @description - This function is to handle Blur on the Assessment element on blur*/
-    handleAssessmentBlur = (assessmentData, cb) => {
-        this.handleBlur(assessmentData);
-        if (assessmentData.calledFrom == 'updateAssessmentFormat') {
-            this.setState({
-                getAssessmentData: false,
-                getAssessmentDataPopup: false
-            })
-            if (cb) {
-                cb();
-            }
-        }
-    }
-
-    /*** 
-    * @description - This is the function to add Elm/Learnosity Assessments to Assessment Slate 
-    * @param pufObj - The object contains data about Elm/Learnosity Assessment 
-    */
-    addPufAssessment = (pufObj, activeAssessmentType, updateType, cb) => {
-        showTocBlocker();
-        disableHeader(true);
-        this.updateAssessment(pufObj.id, "", pufObj.title, activeAssessmentType, pufObj.usagetype, updateType);
-        if (cb) {
-            cb();
-        }
-    }
-
     /**
     * @description - checkTCMStatus is responsible for setting the tcm status for the element
     * @param {*} tcmData tcm data for elements on the slate
@@ -2163,7 +2079,7 @@ class ElementContainer extends Component {
                             editor = <ElementAudioVideo model={element} showBlocker={this.props.showBlocker} accessDenied={this.props.accessDenied} asideData={this.props.asideData} updateFigureData={this.updateFigureData} parentEntityUrn={this.props.parentUrn} {...commonProps} />;
                             break;
                         case elementTypeConstant.FIGURE_ASSESSMENT:
-                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} parentElement={this.props?.parentElement} addPufAssessment={this.addPufAssessment}/>;
+                            editor = <ElementSingleAssessment openCustomPopup={this.props.openCustomPopup} accessDenied={this.props.accessDenied} updateFigureData={this.updateFigureData} showBlocker={this.props.showBlocker} permissions={permissions} handleFocus={this.handleFocus} handleBlur={this.handleBlur} model={element} index={index} elementId={element.id} slateLockInfo={slateLockInfo} parentElement={this.props?.parentElement} />;
                             labelText = 'Qu';
                             break;
                         case elementTypeConstant.INTERACTIVE:

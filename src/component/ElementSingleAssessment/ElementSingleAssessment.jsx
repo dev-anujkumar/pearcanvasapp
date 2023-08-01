@@ -500,17 +500,6 @@ class ElementSingleAssessment extends Component {
             itemtitle: updatedItem && updatedItem.latestItemTitle,
             usagetype: this.state.activeAsseessmentUsageType
         }
-        // if (newVersion) {
-        //     updatedElmObj = {
-        //         id: newVersion.id,
-        //         title: latestVersion.title,
-        //         usagetype: this.state.activeAssessmentUsageType
-        //     }
-        // }
-        // console.log("nish updateAssessmentVersion==>>>>")
-        // this.props.addPufAssessment(updatedElmObj, this.state.activeAssessmentType, 'insert', () => {
-        //     this.props.updateAssessmentVersion(oldWorkUrn, updatedElmObj.id);
-        // });
         this.updatePufAssessment(updatedElmObj, oldWorkUrn);
         disableHeader(false);
         hideTocBlocker(false);
