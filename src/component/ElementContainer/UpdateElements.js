@@ -942,6 +942,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
     // WE is approved and user focuses on another sub-element immediately updating a sub-element
     if (config.elementStatus[dataToReturn.id] && config.elementStatus[dataToReturn.id] === "approved" && asideData?.element?.subtype === 'workedexample' && index) {
         const iList = index?.toString()?.split("-") || [];
+        // index length is 2 then it will be direct child of WE otherwise child of SB
         if (iList?.length === 2) {
             dataToReturn = { ...dataToReturn, elementParentEntityUrn: asideData?.element?.contentUrn }
         } else {
