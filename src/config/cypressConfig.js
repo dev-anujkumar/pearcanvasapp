@@ -34,7 +34,7 @@ let cypressConfig = {
     poetryCaptionToolbar:['insertMedia','formatSelector','decreaseindent','glossary','crossLinkingIcon','assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
     poetryStanzaToolbar:['insertMedia','formatSelector','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
     playScriptToolbar:['insertMedia','formatSelector','decreaseindent','increaseindent','crossLinkingIcon', 'footnote', 'assetpopover','orderedlist','unorderedlist','alignment','calloutIcon', 'IndexEntry'],
-    blockListToolbar:['formatSelector','alignment', 'IndexEntry','glossary','footnote','crossLinkingIcon', 'decreaseindent','increaseindent'],
+    blockListToolbar:['formatSelector','alignment', 'IndexEntry','crossLinkingIcon', 'decreaseindent','increaseindent'],
     openerElementToolbar: ['undo', 'redo', 'insertMedia','formatSelector','casechange', 'alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote', 'assetpopover', 'mathml','chemml', 'strikethrough', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent', 'slatetag', 'calloutIcon',],
     tabTitleToolbar: ['undo', 'redo', 'insertMedia','formatSelector','casechange', 'alignment','calloutIcon', 'crossLinkingIcon', 'glossary','footnote', 'assetpopover', 'mathml','chemml', 'specialcharactor', 'IndexEntry', 'orderedlist','unorderedlist','increaseindent','decreaseindent', 'slatetag', 'calloutIcon',],
     figureFieldsPlaceholders: ['Number', 'Label', 'Label Name', 'Title', 'Caption', 'Credit', 'Math Block Content','Code Block Content'],
