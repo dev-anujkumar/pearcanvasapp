@@ -47,7 +47,7 @@ export const saveSelectedAltTextLongDescData = (data) => {
  * @returns 
  */
 export const fetchAlfrescoSiteDropdownList = (calledFrom) => {
-    let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=2500`;
+    let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=2500`;
     let SSOToken = config.ssoToken;
     return axios.get(url,
         {
