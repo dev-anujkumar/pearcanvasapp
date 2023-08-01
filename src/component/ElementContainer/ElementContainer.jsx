@@ -25,7 +25,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole, isApproved, isSlateLocked } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole, isApproved } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -392,7 +392,7 @@ class ElementContainer extends Component {
             this.props.fetchCommentByElement(this.props.element.id);
         }
         // disabling Add comment icon for TCC Element in TOC
-        if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT && !isSlateLocked()) {
+        if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT) {
             this.handleCommunication(this.props.element.id);
         }
     }
@@ -2913,18 +2913,19 @@ class ElementContainer extends Component {
     }
 
     handleCommunication = ( elementId ) => {
+        const isSlateLocked = this.props?.slateLockInfo?.isLocked;
         sendDataToIframe({
             'type': CanvasActiveElement,
-            'message': {"id":elementId, "active":true}
+            'message': {"id":elementId, "active":true, "isSlateLocked": isSlateLocked }
         });   
     }
 
     addOrViewComment = (e, elementId, type) => {
         this.props.setActiveElement(this.props.element);
-        const currentLockedSlateUrn = this.props?.popupParentSlateData?.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
-            sendDataToIframe({
+        const isSlateLocked = this.props?.slateLockInfo?.isLocked;
+        sendDataToIframe({
                 'type': AddOrViewComment,
-                'message': { "id": elementId, "mode": type, "viewInCypress": false, "slateManifestUrn": currentLockedSlateUrn }
+                'message': { "id": elementId, "mode": type, "viewInCypress": false, "isSlateLocked": isSlateLocked }
             });
         e.stopPropagation();
     }
