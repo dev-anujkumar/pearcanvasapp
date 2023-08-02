@@ -5,7 +5,6 @@ import {
     ELM_ASSESSMENT_EDIT_ID,
     SET_ASSESSMENT_METADATA,
     RESET_ASSESSMENT_STORE,
-    ASSESSMENT_CONFIRMATION_POPUP,
     UPDATE_ELM_ITEM_ID,
     SAVE_AUTO_UPDATE_ID,
     ELM_NEW_ITEM_DATA,
@@ -45,12 +44,6 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                     ...action.payload.dataForUpdate
                 }
             }
-        case ASSESSMENT_CONFIRMATION_POPUP: {
-            return {
-                ...state,
-                showConfirmationPopup: action.payload
-            }
-        }
         case UPDATE_ELM_ITEM_ID:
             let itemsArray = state[action.payload.currentWorkUrn] && state[action.payload.currentWorkUrn].items ? state[action.payload.currentWorkUrn].items : []
             const itemIndex = itemsArray ? itemsArray.findIndex(item => item.oldItemId == action.payload.updatedItem.oldItemId) : -1;

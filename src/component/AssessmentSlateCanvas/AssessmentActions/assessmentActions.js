@@ -8,7 +8,6 @@ import {
     SET_ITEM_UPDATE_EVENT,
     RESET_ASSESSMENT_STORE,
     ELM_ASSESSMENT_EDIT_ID,
-    ASSESSMENT_CONFIRMATION_POPUP,
     ELM_NEW_ITEM_DATA,
     SET_ELM_PICKER_MSG,
     UPDATE_ASSESSMENT_ID,
@@ -242,13 +241,6 @@ export const checkEntityUrn = (assessmentID) => async (dispatch) => {
     }))
     if (workIds.length > 0 && workIds[0] === workIds[1]) {
         dispatch(updateAssessmentVersion(assessmentID[0], assessmentID[1]))
-    }
-}
-
-export const assessmentConfirmationPopup = (data) => {
-    return {
-        type: ASSESSMENT_CONFIRMATION_POPUP,
-        payload: data
     }
 }
 
