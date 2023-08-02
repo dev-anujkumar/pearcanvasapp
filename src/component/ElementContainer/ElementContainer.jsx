@@ -53,7 +53,7 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement, checkOpenerElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
@@ -2531,7 +2531,7 @@ class ElementContainer extends Component {
             normalText: TE_POP_UP_NORMAL_TEXT,
             renderImages : this.props.tableElementAssetData
         }
-        let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element)));
+        let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkOpenerElement(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element)));
         let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element)));
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
@@ -3090,7 +3090,7 @@ class ElementContainer extends Component {
         event.stopPropagation();
         const { element } = this.props;
         const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup","interactive"]
-        if (element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) {
+        if ((element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) || (element?.type === 'openerelement')) {
             if(element?.figuretype === 'tableasmarkup'){
                 this.props.prepareImageDataFromTable(element);
                 this.handleFigurePopup(true, 'TE');
@@ -3098,9 +3098,6 @@ class ElementContainer extends Component {
                 this.handleFigurePopup(true);
             }
             
-        }
-        if(element?.type === 'openerelement') {
-            this.handleFigurePopup(true);
         }
         else {
             let fullAssessment = checkFullElmAssessment(element);
