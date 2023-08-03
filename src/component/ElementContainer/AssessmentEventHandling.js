@@ -17,7 +17,7 @@ export const handleElmPortalEvents = (action,eventType) => {
     if (!checkSlateLock(slateLockInfo)) {
 
         let elmAssessmentUpdate = async (event) => {
-            if (event?.data?.type === 'bannerIsVisible' || event?.data?.type === 'disablePrev') {
+            if (event?.data?.type === 'bannerIsVisible' || event?.data?.type === 'disablePrev' || event?.data?.type === 'enableNext' || event?.data?.type === "enablePrev") {
                 return false
             } else {
               try {
