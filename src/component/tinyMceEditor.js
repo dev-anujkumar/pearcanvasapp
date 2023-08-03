@@ -98,6 +98,8 @@ export class TinyMceEditor extends Component {
             skin: false,
             content_css: false,
             setup: (editor) => {
+                if (hasReviewerRole()) editor.mode.set("readonly")
+                
                 if (this.props.permissions && this.props.permissions.includes('authoring_mathml')) {
                     this.setChemistryFormulaIcon(editor);
                     this.setMathmlFormulaIcon(editor);
