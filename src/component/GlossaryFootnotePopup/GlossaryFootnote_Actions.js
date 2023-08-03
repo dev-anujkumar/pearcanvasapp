@@ -16,8 +16,6 @@ import { getShowHideIndex, onGlossaryFnUpdateSuccessInShowHide, getShowHideEleme
 import { updateMarkedIndexStore } from '../MarkIndexPopup/MarkIndex_Action';
 import { fetchParentData } from '../TcmSnapshots/TcmSnapshotsOnDefaultSlate';
 import { prepareBqHtml } from '../../js/utils';
-import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
-import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 const elementTypeData = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives', 'element-citation', 'stanza', 'figure'];
 
 export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootnoteid, elementWorkId, elementType, index,blockfeatureType, elementSubType, glossaryTermText, typeWithPopup, poetryField) => async (dispatch) => {
@@ -447,16 +445,16 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     if(asideParent.type === ElementConstants.BLOCK_LIST) {
                         switch(indexesLen) {
                             case 5: // Blocklist(level1) inside showhide element
-                                glossaryFootElem = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]
                                 break;
                             case 7: // Blocklist(level2) inside showhide element
-                                glossaryFootElem = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]
                             break;
                             case 9: // Blocklist(level3) inside showhide element
-                                glossaryFootElem = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]
                                 break;
                             case 11: // Blocklist(level4) inside showhide element
-                                glossaryFootElem = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]?.listdata?.bodymatter[indexes[9]]?.listitemdata?.bodymatter[indexes[10]]
                                 break;
                         }
                         
@@ -480,22 +478,22 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                             if (elementInTab?.type === ElementConstants.ELEMENT_ASIDE && elementInTab?.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) {
                                 glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
                             } else if(elementInTab.type === ElementConstants.BLOCK_LIST) { // Blocklist(level1) inside TB element
-                                glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]
                             } else { // PE element stanza inside Tab element in TB
                                 glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].contents.bodymatter[indexes[5]];
                             }
                             break;
                         case 8:
                              // Blocklist(level2) inside TB element
-                            glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]]
+                            glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]
                             break;
                         case 10:
                              // Blocklist(level3) inside TB element
-                            glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]]
+                            glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]?.listdata?.bodymatter[indexes[8]]?.listitemdata?.bodymatter[indexes[9]]
                             break;
                         case 12:
                              // Blocklist(level4) inside TB element
-                            glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter[indexes[10]].listitemdata.bodymatter[indexes[11]]
+                            glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]?.listdata?.bodymatter[indexes[8]]?.listitemdata?.bodymatter[indexes[9]]?.listdata?.bodymatter[indexes[10]]?.listitemdata?.bodymatter[indexes[11]]
                             break;       
                     }
                 } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {  // to support glossary in text elements inside WE/AS of MultiColumn
@@ -521,7 +519,7 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     if (elementType && elementType === 'stanza') {
                         glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[3]]
                     } else if(asideParent.type === ElementConstants.BLOCK_LIST) { // Blocklist(level1) inside WE/Aside
-                        glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]]
+                        glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata?.bodymatter[indexes[3]]
                     } else{
                         // to support glossary in text elements inside WE/AS of MultiColumn
                         glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
@@ -537,9 +535,9 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         }
                     } else if(asideParent.type === ElementConstants.BLOCK_LIST) { // Blocklist(level1) inside WE-SB/2C/3C
                                 if(newBodymatter[indexes[0]]?.type == ElementConstants.MULTI_COLUMN) {
-                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]
                                 } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) {
-                                    glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]]
+                                    glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]
                                 }
                     } else {
                     // to support glossary in section break inside WE of MultiColumn
@@ -549,36 +547,36 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                     switch(indexesLen) {
                         case 7: // Blocklist(level2) inside WE-SB/2C/3C
                             if(newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN) {
-                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]
                             } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) {
-                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]
                             }
                             break;
                         case 9:  // Blocklist(level3) inside WE-SB/2C/3C
                             if(newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN) {
-                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]
                             } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) {
-                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]
                             }
                             break;
                         case 11:  // Blocklist(level4) inside WE-SB/2C/3C
                             if(newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN) {
-                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]]   
+                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]?.listdata?.bodymatter[indexes[9]]?.listitemdata?.bodymatter[indexes[10]]   
                             } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) {
-                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]?.listdata?.bodymatter[indexes[9]]?.listitemdata?.bodymatter[indexes[10]]
                             }
                             break;
                     }
                 } else if((indexesLen == 6 || indexesLen == 8 || indexesLen == 10) && asideParent.type === ElementConstants.BLOCK_LIST) {
                     switch(indexesLen) {
                         case 6: // Blocklist(level2) inside WE/Aside
-                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]
                             break;
                         case 8:  // Blocklist(level3) inside WE/Aside
-                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]
                             break;
                         case 10:  // Blocklist(level4) inside WE/Aside
-                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]]
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]?.listdata?.bodymatter[indexes[8]]?.listitemdata?.bodymatter[indexes[9]]
                             break;
                     }
                 }
@@ -760,17 +758,13 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let workEditor, workContainer;
     let currentElement = store.getState().appStore.activeElement;
     const showHideElement = store.getState().appStore?.showHideObj;
-    console.log('newBodymatter',newBodymatter)
-    console.log('currentElement',currentElement)
-    console.log('showHideElement',showHideElement)
+
     /** Feedback status from elementData */
     let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
     let tcmFeedback =  elementNodeData;
     let asideParent = store.getState().appStore?.asideData
-    console.log('asideParent',asideParent)
     const shParentUrn = store.getState().appStore?.parentUrn
     let innerSH_Index = index &&  typeof (index) !== 'number' && index.split('-');
-    console.log('index',innerSH_Index)
     //Get updated innerHtml of element for API request 
     if (elementType == 'figure') {
         let label, number, title, captions, credits, elementIndex, text, postertext;
@@ -1207,12 +1201,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             }
         }
         /**-------------------------------------------------------------------------------------------------------------*/
-        const blockListElement = isElementInsideBlocklist({index:index,data: {asideData:asideParent}},newParentData)
-        if(res.data.id !== data.id && blockListElement){
-            let indexes = index &&  typeof (index) !== 'number' && index.split('-');
-            const parentBlockListId = newBodymatter[indexes[0]].id
-            const parentBlockListContentUrn = newBodymatter[indexes[0]].contentUrn
-            store.dispatch(fetchSlateData(parentBlockListId,parentBlockListContentUrn, 0, {type:'manifestlist' ,indexes:indexes}, "containerVersioning", false))
+        if(res.data.id !== data.id && currentSlateData.status === 'approved'){
+            sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
         }
         let tempIndex = index &&  typeof (index) !== 'number' && index.split('-');
 
