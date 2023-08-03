@@ -23,6 +23,7 @@ class MetaDataPopUp extends React.Component {
 
     componentDidMount() {
 		/* -- Get metadata from alfresco - */
+		console.log('helloooo',this.props)
 		this.getAlfrescoMetadata();
     }
 
@@ -59,11 +60,24 @@ class MetaDataPopUp extends React.Component {
 	/*- Retrive the changed data from state and Updata alfresco metadata in alfresco -*/
 	sendAlfrescoMetadata = () => {
 		let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
-		const { altText, longDescription } = this.state;
-		const body = {
-			properties: { 
-				"cplg:altText": altText,
-				"cplg:longDescription": longDescription
+		const { metaData,altText, longDescription } = this.state;
+		let body;
+		if(this.props.element.figuretype === "interactive"){
+			const avsJsonStringData = metaData["avs:jsonString"] 
+        	let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
+			avsStringData.linkLongDesc=longDescription
+			avsStringData.imageAltText=altText
+			body = {
+				properties: { 
+					"avs:jsonString": JSON.stringify(avsStringData),
+				}
+			}}
+		else{
+			body={
+				properties:{
+					"cplg:altText": altText,
+					"cplg:longDescription": longDescription
+				}
 			}
 		}
 		axios.put(url, body, {
