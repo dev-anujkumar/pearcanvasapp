@@ -52,7 +52,9 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
             }
             else {
                 itemsArray.push(action.payload.updatedItem)
-                state[action.payload.currentWorkUrn].items = itemsArray;
+                if(state[action.payload.currentWorkUrn]) {
+                    state[action.payload.currentWorkUrn].items = itemsArray;
+                }
             }
             return {
                 ...state,
