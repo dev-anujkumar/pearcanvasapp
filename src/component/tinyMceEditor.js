@@ -98,6 +98,7 @@ export class TinyMceEditor extends Component {
             skin: false,
             content_css: false,
             setup: (editor) => {
+                //tinymce editor readonly when reviewer or subscriber
                 if (hasReviewerRole()) editor.mode.set("readonly")
 
                 if (this.props.permissions && this.props.permissions.includes('authoring_mathml')) {
@@ -167,10 +168,6 @@ export class TinyMceEditor extends Component {
                         e.preventDefault();/** Prevent IMG resize for MathML images */
                     }
                 });
-                //tinymce editor readonly when reviewer or subscriber
-                // if (hasReviewerRole()) {
-                //     tinymce.activeEditor.mode.set("readonly");
-                // }
 
                 editor.on('Change', (e) => {
                     /*
