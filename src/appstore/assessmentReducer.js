@@ -11,7 +11,8 @@ import {
     SET_INTERACTIVE_METADATA,
     SET_ELM_PICKER_MSG,
     UPDATE_ASSESSMENT_ID,
-    ASSESSMENT_RELOAD_CONFIRMATION
+    ASSESSMENT_RELOAD_CONFIRMATION,
+    ASESSMENT_UPDATE_DATA
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -108,6 +109,14 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
         return {
             ...state,
             reloadAfterAssessmentUpdate: action.payload
+        }
+        case ASESSMENT_UPDATE_DATA: 
+        return {
+            ...state,
+            [action.payload.currentWorkUrn]: {
+                oldWorkUrn: action.payload.oldWorkUrn,
+                currentWorkUrn: action.payload.currentWorkUrn
+            }
         }
         default:
             return state

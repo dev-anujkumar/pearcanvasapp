@@ -10,14 +10,27 @@ import { approvedIcon } from '../../../src/images/ElementButtons/ElementButtons.
 import { hasReviewerSubscriberRole } from '../../constants/utility.js';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { ELM_INT } from './AssessmentSlateConstants.js';
+import config from '../../config/config.js';
 
 const ElmUpdateButton = (props) => {
-    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status, assessmentItem } = props;
+    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status, assessmentItem, assessmentReducer, updateAssessmentVersion } = props;
 
     useEffect(() => {
-        if(elmAssessment.showUpdateStatus && status && !hasReviewerSubscriberRole()){
+        if(elmAssessment.showUpdateStatus && status && !hasReviewerSubscriberRole() && !assessmentItem){
             updateElmVersion()
         }
+    }, [])
+
+    useEffect(() => {
+        const updateAssessmentItems = async () => {
+            if (elmAssessment.showUpdateStatus && status && !hasReviewerSubscriberRole() && assessmentItem) {
+                if (assessmentReducer.hasOwnProperty(elmAssessment.targetId) && assessmentReducer[elmAssessment.targetId]?.oldWorkUrn && !config.updatedAssessments.includes(elmAssessment.targetId)) {
+                    const assessmentData = assessmentReducer[elmAssessment.targetId]
+                    await updateAssessmentVersion(assessmentData.oldWorkUrn, assessmentData.currentWorkUrn)
+                }
+            }
+        }
+        updateAssessmentItems()
     }, [])
 
     const setUpdateDiv = (assessment) => {
