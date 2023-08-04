@@ -31,7 +31,7 @@ class App extends Component {
     
     getEnvConfig = () => {
         let requestURI = requestConfigURI();
-        return axios.get(`${cypressConfig.getENVConfig}v1/getEnvConfig/${requestURI}`, {
+        return axios.get(`${cypressConfig.getENVConfig}v1/taskdef/cypress/environment/${requestURI}`, {
             headers: {
                 "Content-Type": "application/json",
                 "myCloudProxySession": getCookieByName("myCloudProxySession")
