@@ -1000,9 +1000,9 @@ span.calloutFour > ins.diffmod{
 } */
 
 /* added css for list elements */
-/* li ol, li ul{
-  counter-reset: section !important; // commented to fix PCAT-12542
-} */
+ol:not(.te ol), ul:not(.te ul) {
+  counter-reset: section !important;
+}
 ol li.listItemNumeroUnoNumber, 
 ol li.listItemNumeroUnoUpperAlpha, 
 ol li.listItemNumeroUnoLowerAlpha, 
