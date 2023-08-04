@@ -1021,9 +1021,6 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
-                const searchString = window.location.search;
-                const qParam = new URLSearchParams(searchString);
-                console.log('query params on load from dashboard', qParam, qParam.get('slateUrn'), qParam.get('entityUrn'));
                 // To prevent the change slate focus action on browser refresh 
                 let isRefreshBrowser = localStorage.getItem('browser_refresh');
                 if (isRefreshBrowser == '1') {
