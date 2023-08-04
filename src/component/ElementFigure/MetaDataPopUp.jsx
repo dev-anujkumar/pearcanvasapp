@@ -23,7 +23,6 @@ class MetaDataPopUp extends React.Component {
 
     componentDidMount() {
 		/* -- Get metadata from alfresco - */
-		console.log('helloooo',this.props)
 		this.getAlfrescoMetadata();
     }
 
@@ -47,12 +46,23 @@ class MetaDataPopUp extends React.Component {
 			}
 		}).then(response => {
 			const { properties } = response?.data?.entry || {};	
+			if(this.props.element.figuretype === "interactive"){
+				const avsJsonStringData = properties["avs:jsonString"] 
+				let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
+				this.setState({
+					metaData: properties,
+					altText: avsStringData.imageAltText,
+					longDescription: avsStringData.linkLongDesc,
+					disabledButton:true
+				})}
+			else{
 				this.setState({
 					metaData: properties,
 					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
 					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
 					disabledButton:true
 				})
+			}
 			}).catch(error => {
 				console.error("error--", error);
 			})
