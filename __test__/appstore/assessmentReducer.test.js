@@ -9,11 +9,9 @@ import {
     ELM_ITEM_EVENT_DATA,
     SET_ITEM_UPDATE_EVENT,
     ELM_ASSESSMENT_EDIT_ID,
-    ASSESSMENT_CONFIRMATION_POPUP,
     ELM_NEW_ITEM_DATA,
-    SET_ELM_PICKER_MSG,
-    UPDATE_ASSESSMENT_ID,
-    SET_USAGE_TYPE
+    ASSESSMENT_RELOAD_CONFIRMATION,
+    ASESSMENT_UPDATE_DATA
 } from '../../src/constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -211,12 +209,6 @@ describe('Test AssessmentReducer', () => {
             "usageTypeListData": {}
         })
     })
-    it('ASSESSMENT_CONFIRMATION_POPUP', () => {
-        expect(reducer({ usageTypeListData: {} }, {
-            type: ASSESSMENT_CONFIRMATION_POPUP,
-            payload: true
-        })).toEqual({ usageTypeListData: {}, showConfirmationPopup: true })
-    })
     it('SET_USAGE_TYPE', () => {
         reducer({ usageTypeListData: {} }, {
             type: 'SET_USAGE_TYPE',
@@ -335,6 +327,44 @@ describe('Test AssessmentReducer', () => {
                 timeStamp:"3847238923"
             }
         })
+    })
+
+    it('ASSESSMENT_RELOAD_CONFIRMATION', () => {
+        let payload = {
+            reloadAfterAssessmentUpdate: true
+        }
+        let expectedState = {
+            usageTypeListData: {},
+            currentEditAssessment: {},
+            itemUpdateEvent: false,
+            reloadAfterAssessmentUpdate: {
+                reloadAfterAssessmentUpdate: true
+            }
+        }
+        expect(reducer(INITIAL_STATE, {
+            type: ASSESSMENT_RELOAD_CONFIRMATION,
+            payload: payload
+        })).toEqual({ usageTypeListData: {}, ...expectedState })
+    })
+
+    it('ASESSMENT_UPDATE_DATA', () => {
+        let payload = {
+            currentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+            oldWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323486r4"
+        }
+        let expectedState = {
+            usageTypeListData: {},
+            currentEditAssessment: {},
+            itemUpdateEvent: false,
+            "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af": {
+                currentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                oldWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323486r4"
+            }
+        }
+        expect(reducer(INITIAL_STATE, {
+            type: ASESSMENT_UPDATE_DATA,
+            payload: payload
+        })).toEqual({ usageTypeListData: {}, ...expectedState })
     })
 
 });

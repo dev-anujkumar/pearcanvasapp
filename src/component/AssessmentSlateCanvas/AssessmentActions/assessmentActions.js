@@ -197,7 +197,7 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
 export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
     let url = `${config.VCS_API_ENDPOINT}${config.projectUrn}/updateAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
     dispatch(saveAutoUpdateData("",""));
-    config.updatedAssessments.push(updatedWorkUrn)
+    config.updatedAssessments?.push(updatedWorkUrn)
     return axios.post(url, {}, {
         headers: {
             "Cache-Control": "no-cache",

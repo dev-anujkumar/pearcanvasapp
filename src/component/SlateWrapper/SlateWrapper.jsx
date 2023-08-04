@@ -1291,6 +1291,7 @@ class SlateWrapper extends Component {
     reloadSlateAfterAssessmentUpdate = () => {
         if (this.props.reloadAfterAssessmentUpdate) {
             reloadSlate()
+            config.updatedAssessments = []
             this.props.assessmentReloadConfirmation(false);
         }
     }

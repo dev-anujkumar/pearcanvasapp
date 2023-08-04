@@ -24,7 +24,7 @@ const ElmUpdateButton = (props) => {
     useEffect(() => {
         const updateAssessmentItems = async () => {
             if (elmAssessment.showUpdateStatus && status && !hasReviewerSubscriberRole() && assessmentItem) {
-                if (assessmentReducer.hasOwnProperty(elmAssessment.targetId) && assessmentReducer[elmAssessment.targetId]?.oldWorkUrn && !config.updatedAssessments.includes(elmAssessment.targetId)) {
+                if (assessmentReducer?.hasOwnProperty(elmAssessment.targetId) && assessmentReducer[elmAssessment.targetId]?.oldWorkUrn && !config.updatedAssessments.includes(elmAssessment.targetId)) {
                     const assessmentData = assessmentReducer[elmAssessment.targetId]
                     await updateAssessmentVersion(assessmentData.oldWorkUrn, assessmentData.currentWorkUrn)
                 }

@@ -1015,14 +1015,6 @@ describe('-----------------Testing Assessment Actions-----------------', () => {
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         }); 
-        it('Test-7.2---assessmentConfirmationPopup', () => {
-            const spyFunction = jest.spyOn(assessment_Actions, 'assessmentConfirmationPopup');
-            let result = assessment_Actions.assessmentConfirmationPopup(true);
-            expect(result.type).toEqual('ASSESSMENT_CONFIRMATION_POPUP');
-            expect(result.payload).toEqual(true);
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
-        });
         it('Test-7.3---editElmAssessmentId', () => {
             let result = assessment_Actions.editElmAssessmentId(elmAssessmentId, elmAssessmentItemId);
             expect(result.type).toEqual('ELM_ASSESSMENT_EDIT_ID');
