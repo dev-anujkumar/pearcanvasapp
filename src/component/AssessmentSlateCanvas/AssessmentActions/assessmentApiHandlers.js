@@ -10,7 +10,7 @@ import {
     SET_ASSESSMENT_METADATA,
     SET_USAGE_TYPE,
     SET_INTERACTIVE_METADATA,
-    ASESSMENT_UPDATE_DATA
+    ASESSMENT_UPDATE_DATA_ARRAY
 } from "../../../constants/Action_Constants";
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent, fetchAssessmentItems } from './assessmentActions.js';
@@ -86,7 +86,7 @@ const AssessmentAPIHandlers = {
         // || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)
         if ((nextData.status.includes('final')) || (checkVersionIsClean == false) || (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10)) || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)) {
             dispatch({
-                type: ASESSMENT_UPDATE_DATA,
+                type: ASESSMENT_UPDATE_DATA_ARRAY,
                 payload: {
                     oldWorkUrn: nextData?.isVersionOf[0],
                     currentWorkUrn: previousWorkUrn
