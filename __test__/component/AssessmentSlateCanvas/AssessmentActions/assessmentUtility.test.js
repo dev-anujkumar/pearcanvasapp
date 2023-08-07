@@ -4,7 +4,7 @@ import React from 'react';
 import * as assessment_UtiltyFn from '../../../../src/component/AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { newFigureObj } from '../../../../fixtures/ElementFigureTestingData';
 import { audioElementTypeAlfrescoWithData } from '../../../../fixtures/ElementAudioVideoTestingData';
-import { Interactive3party, interactiveElm } from '../../../../fixtures/ElementInteractiveTesting';
+import { Interactive3party, interactiveElm3PI, interactiveWeblink, OpenerElement } from '../../../../fixtures/ElementInteractiveTesting';
 
 describe('Test---Assessment Utility Functions', () => {
     describe('Test 1---setAssessmentTitle Function', () => {
@@ -412,7 +412,14 @@ describe('Test---Assessment Utility Functions', () => {
         spyFunction.mockClear();
     });
     it('Test 17---checkInteractive', () => {
-        let element = interactiveElm;
+        let element = interactiveWeblink;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
+        assessment_UtiltyFn.checkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+    it('Test 17---checkInteractive', () => {
+        let element = interactiveElm3PI;
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
         assessment_UtiltyFn.checkInteractive(element);
         expect(spyFunction).toHaveReturnedWith(true);
@@ -422,6 +429,20 @@ describe('Test---Assessment Utility Functions', () => {
         let element = {};
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
         assessment_UtiltyFn.checkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(false);
+        spyFunction.mockClear();
+    });
+    it('Test 18---checkOpenerElement', () => {
+        let element = OpenerElement;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkOpenerElement');
+        assessment_UtiltyFn.checkOpenerElement(element);
+        expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+    it('Test 18---checkOpenerElement', () => {
+        let element = {};
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkOpenerElement');
+        assessment_UtiltyFn.checkOpenerElement(element);
         expect(spyFunction).toHaveReturnedWith(false);
         spyFunction.mockClear();
     });
