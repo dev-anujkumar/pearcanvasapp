@@ -17,7 +17,7 @@ import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
 import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, CITE, TDX, Resource_Type,CHANGE_USAGE_TYPE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions, setElmPickerData, setNewItemFromElm } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions, setElmPickerData, setNewItemFromElm, saveUpdatedAssessmentArray } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
@@ -512,7 +512,14 @@ class ElementSingleAssessment extends Component {
     updatePufAssessment = (pufObj, oldElmAssessmentId) => {
         showTocBlocker();
         disableHeader(true);
+        const { assessmentItemAutoUpdateData } = this.props.assessmentReducer
+        const filteredAssessmentData = assessmentItemAutoUpdateData?.some((item) =>
+        item.oldAssessmentId === oldElmAssessmentId &&
+        item.newAssessmentId === pufObj.id);
         this.props.saveAutoUpdateData(oldElmAssessmentId, pufObj.id);
+        if(!filteredAssessmentData){
+            this.props.saveUpdatedAssessmentArray(oldElmAssessmentId, pufObj.id)
+        }
         this.setState({ assessmentId: pufObj.id, assessmentItemId: pufObj.itemid, assessmentTitle: pufObj.title, assessmentItemTitle: pufObj.itemtitle },
             () => {
                 this.saveAssessment();
@@ -654,7 +661,8 @@ const mapActionToProps = {
     saveAutoUpdateData: saveAutoUpdateData,
     fetchAssessmentVersions: fetchAssessmentVersions,
     setElmPickerData: setElmPickerData,
-    setNewItemFromElm: setNewItemFromElm
+    setNewItemFromElm: setNewItemFromElm,
+    saveUpdatedAssessmentArray: saveUpdatedAssessmentArray
 }
 
 export default connect(

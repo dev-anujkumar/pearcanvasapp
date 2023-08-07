@@ -102,8 +102,7 @@ let cypressConfig = {
     glossaryCreated: false,
     elementSlateRefresh: false,
     tcmStatusPopupGlossary: false,
-    pendingTcmStatus: false,
-    updatedAssessments: []
+    pendingTcmStatus: false
 }
 
 export default cypressConfig;

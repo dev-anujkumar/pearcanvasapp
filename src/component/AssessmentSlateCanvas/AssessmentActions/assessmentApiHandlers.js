@@ -80,18 +80,11 @@ const AssessmentAPIHandlers = {
         return latestIndex
     },
     /** @description This function is to set "showUpdateStatus" to handle update button status */
-    checkAssessmentNextVersion: (nextData, previousWorkUrn, dispatch) => {
+    checkAssessmentNextVersion: (nextData, previousWorkUrn) => {
         let createDate = new Date(nextData.dateCreated);
         const checkVersionIsClean = AssessmentAPIHandlers.checkElmVersionIsClean(nextData);
         // || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)
         if ((nextData.status.includes('final')) || (checkVersionIsClean == false) || (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10)) || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)) {
-            dispatch({
-                type: ASESSMENT_UPDATE_DATA_ARRAY,
-                payload: {
-                    oldWorkUrn: nextData?.isVersionOf[0],
-                    currentWorkUrn: previousWorkUrn
-                }
-            })
             return true /*Update*/
         }
         return false    /*Approved*/
@@ -141,10 +134,10 @@ const AssessmentAPIHandlers = {
         }
     },
     /** @description This function returns assessment-metadata for assessment with status-final */
-    prepareApprovedData: (assessmentData, responseData, assessmentTitle, dispatch) => {
+    prepareApprovedData: (assessmentData, responseData, assessmentTitle) => {
         return {
             ...assessmentData,
-            showUpdateStatus: AssessmentAPIHandlers.checkAssessmentNextVersion(responseData, assessmentData.targetId, dispatch),
+            showUpdateStatus: AssessmentAPIHandlers.checkAssessmentNextVersion(responseData, assessmentData.targetId),
             latestVersion: {
                 id: responseData.versionUrn,
                 title: assessmentTitle
@@ -157,7 +150,7 @@ const AssessmentAPIHandlers = {
         const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : 'Elm assessment';
         let dataForUpdate = AssessmentAPIHandlers.prepareUnapprovedData(responseData, assessmentTitle, assessmentStatus, assessmentData);
         if (calledFrom == 'fromNextVersion') {  /* APPROVED | UPDATE */
-            dataForUpdate = AssessmentAPIHandlers.prepareApprovedData(assessmentData, responseData, assessmentTitle, dispatch);
+            dataForUpdate = AssessmentAPIHandlers.prepareApprovedData(assessmentData, responseData, assessmentTitle);
             AssessmentAPIHandlers.dispatchAssessmentMetadata(assessmentData.activeWorkUrn, dataForUpdate, dispatch);
         }
         else if (calledFrom == 'fromUpdate') {  /** Save on Update */

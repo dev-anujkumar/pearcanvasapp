@@ -12,7 +12,8 @@ import {
     SET_ELM_PICKER_MSG,
     UPDATE_ASSESSMENT_ID,
     ASSESSMENT_RELOAD_CONFIRMATION,
-    ASESSMENT_UPDATE_DATA_ARRAY
+    ASESSMENT_UPDATE_DATA_ARRAY,
+    UPDATED_ASSESSMENTS_ARRAY
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -112,10 +113,16 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 reloadAfterAssessmentUpdate: action.payload
             }
         case ASESSMENT_UPDATE_DATA_ARRAY: 
-            const stateData = state.assessmentItemAutoUpdateData ? state.assessmentItemAutoUpdateData : []
+            const assesssmentArray = state.assessmentItemAutoUpdateData ? state.assessmentItemAutoUpdateData : []
             return {
                 ...state,
-                assessmentItemAutoUpdateData: [...stateData, action.payload]
+                assessmentItemAutoUpdateData: [...assesssmentArray, action.payload]
+            }
+        case UPDATED_ASSESSMENTS_ARRAY: 
+            const updatedAssessmentArray = state.updatedAssessmentArray ? state.updatedAssessmentArray : []
+            return {
+                ...state,
+                updatedAssessmentArray: [...updatedAssessmentArray, action.payload]
             }
         default:
             return state

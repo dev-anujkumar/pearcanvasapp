@@ -11,7 +11,9 @@ import {
     ELM_NEW_ITEM_DATA,
     SET_ELM_PICKER_MSG,
     UPDATE_ASSESSMENT_ID,
-    ASSESSMENT_RELOAD_CONFIRMATION
+    ASSESSMENT_RELOAD_CONFIRMATION,
+    UPDATED_ASSESSMENTS_ARRAY,
+    ASESSMENT_UPDATE_DATA_ARRAY
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
@@ -197,7 +199,10 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
 export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
     let url = `${config.VCS_API_ENDPOINT}${config.projectUrn}/updateAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
     dispatch(saveAutoUpdateData("",""));
-    config.updatedAssessments?.push(updatedWorkUrn)
+    dispatch({
+        type: UPDATED_ASSESSMENTS_ARRAY,
+        payload: updatedWorkUrn
+    })
     return axios.post(url, {}, {
         headers: {
             "Cache-Control": "no-cache",
@@ -310,5 +315,15 @@ export const assessmentReloadConfirmation = (data) => {
     return {
         type: ASSESSMENT_RELOAD_CONFIRMATION,
         payload: data
+    }
+}
+
+export const saveUpdatedAssessmentArray = (oldAssessmentId, newAssessmentId) => {
+    return {
+        type: ASESSMENT_UPDATE_DATA_ARRAY,
+        payload: {
+            oldAssessmentId: oldAssessmentId,
+            newAssessmentId: newAssessmentId
+        }
     }
 }

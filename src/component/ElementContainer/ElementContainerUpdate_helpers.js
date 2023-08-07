@@ -1021,7 +1021,7 @@ export const processAndStoreUpdatedResponse = async (params) => {
     const currentSlateData = currentParentData[config.slateManifestURN];
     let { glossaryFootnoteValue, glossaryFootNoteCurrentValue, elementIndex: elementIndexFootnote } = getState().glossaryFootnoteReducer
     let { markedIndexValue, markedIndexCurrentValue, elementIndex: elementMarkedIndex } = getState().markedIndexReducer
-    const { saveAutoUpdateData, assessmentItemAutoUpdateData } = getState().assessmentReducer;
+    const { saveAutoUpdateData, assessmentItemAutoUpdateData, updatedAssessmentArray } = getState().assessmentReducer;
     // update Element in store based on AutoNumber Settings
     const autoNumberSettingsOption = getState().autoNumberReducer?.autoNumberOption
     const isAutoNumberingEnabled= getState().autoNumberReducer?.isAutoNumberingEnabled
@@ -1031,8 +1031,8 @@ export const processAndStoreUpdatedResponse = async (params) => {
     // }
     if(assessmentItemAutoUpdateData?.length) {
         assessmentItemAutoUpdateData.forEach(item => {
-            if(item && item.oldWorkUrn && item.currentWorkUrn && !config.updatedAssessments.includes(item?.currentWorkUrn)) {
-                dispatch(updateAssessmentVersion(item.oldWorkUrn, item.currentWorkUrn));
+            if(item && item.oldAssessmentId && item.oldAssessmentId && !updatedAssessmentArray?.includes(item.newAssessmentId)) {
+                dispatch(updateAssessmentVersion(item.oldAssessmentId, item.newAssessmentId));
             }
         })
     }
