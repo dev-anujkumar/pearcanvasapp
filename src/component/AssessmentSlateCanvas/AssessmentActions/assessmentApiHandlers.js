@@ -9,8 +9,7 @@ import {
     UPDATE_ELM_ITEM_ID,
     SET_ASSESSMENT_METADATA,
     SET_USAGE_TYPE,
-    SET_INTERACTIVE_METADATA,
-    ASESSMENT_UPDATE_DATA_ARRAY
+    SET_INTERACTIVE_METADATA
 } from "../../../constants/Action_Constants";
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent, fetchAssessmentItems } from './assessmentActions.js';
