@@ -943,99 +943,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     else if(appStore.parentUrn && appStore.parentUrn.contentUrn) { // For Aside/WE
         parentEntityUrn = appStore.parentUrn.contentUrn
     }
-    else if(asideParent.type === ElementConstants.BLOCK_LIST){
+    else if(asideParent?.type === ElementConstants.BLOCK_LIST){ // parentEntityUrn for Glossary/Footnote inside blocklist
         let indexes = index &&  typeof (index) !== 'number' && index.split('-');
         let indexesLen = indexes.length
-        switch(indexesLen) {
-            case 3:
-                // parentEntityUrn for BlockList(level1)
-                parentEntityUrn = newBodymatter[indexes[0]]?.listdata?.bodymatter[indexes[1]]?.contentUrn
-                break
-            case 4:
-                // parentEntityUrn for WE/AS > BlockList(level1)
-                if(newBodymatter[indexes[0]].type === ElementConstants.ELEMENT_ASIDE) {
-                    parentEntityUrn = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.contentUrn
-                }
-                break
-            case 5:
-                // parentEntityUrn for WE(SB) > BlockList(level1)
-            if(newBodymatter[indexes[0]]?.type === ElementConstants.ELEMENT_ASIDE) {
-               parentEntityUrn = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata.bodymatter[indexes[3]]?.contentUrn
-            } else if(newBodymatter[indexes[0]]?.type === ElementConstants.SHOW_HIDE && asideParent?.parent?.showHideType) { // parentEntityUrn for ShowHide > BlockList(level1)
-                parentEntityUrn = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.contentUrn
-            } else if(newBodymatter[indexes[0]]?.type === ElementConstants.MULTI_COLUMN) { // parentEntityUrn for 2C/3C > BlockList(level1)
-                parentEntityUrn = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.contentUrn
-            }
-            else {// parentEntityUrn for BlockList(level2)
-            parentEntityUrn = newBodymatter[indexes[0]]?.listdata?.bodymatter[indexes[1]]?.listitemdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.contentUrn
-            }
-            break
-            case 6: 
-            // parentEntityUrn for WE/AS > BlockList(level2)
-            if(newBodymatter[indexes[0]]?.type === ElementConstants.ELEMENT_ASIDE) {
-                parentEntityUrn = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.contentUrn
-            } else if(newBodymatter[indexes[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[indexes[0]]?.subtype === ElementConstants.TAB) { // parentEntityUrn for Tab > BlockList(level1)
-                parentEntityUrn = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.contentUrn
-            }
-            break;
-            case 7: 
-            // parentEntityUrn for WE/AS > BlockList(level2)
-            if(newBodymatter[indexes[0]]?.type === ElementConstants.ELEMENT_ASIDE) {
-                parentEntityUrn = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.contentUrn
-             } else if(newBodymatter[indexes[0]]?.type === ElementConstants.SHOW_HIDE && asideParent?.parent?.showHideType) { // parentEntityUrn for ShowHide > BlockList(level2)
-                parentEntityUrn = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.contentUrn
-            } else if(newBodymatter[indexes[0]]?.type === ElementConstants.MULTI_COLUMN) {  // parentEntityUrn for 2C/3C > BlockList(level2)
-                parentEntityUrn = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.contentUrn
-            }
-            else { // parentEntityUrn for BlockList(level3)
-            parentEntityUrn = newBodymatter[indexes[0]]?.listdata?.bodymatter[indexes[1]]?.listitemdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.contentUrn
-             }
-            break
-            case 8: 
-            // parentEntityUrn for WE/AS > BlockList(level3)
-            if(newBodymatter[indexes[0]]?.type === ElementConstants.ELEMENT_ASIDE) {
-                parentEntityUrn = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.contentUrn
-            } else if(newBodymatter[indexes[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[indexes[0]]?.subtype === ElementConstants.TAB) {// parentEntityUrn for Tab > BlockList(level3)
-                parentEntityUrn = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.contentUrn
-            }
-            break;
-            case 9: 
-            // parentEntityUrn for WE(SB) > BlockList(level3)
-            if(newBodymatter[indexes[0]]?.type === ElementConstants.ELEMENT_ASIDE) {
-                parentEntityUrn = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata.bodymatter[indexes[7]]?.contentUrn
-             } else if(newBodymatter[indexes[0]]?.type === ElementConstants.SHOW_HIDE && asideParent?.parent?.showHideType) { // parentEntityUrn for ShowHide > BlockList(level3)
-                parentEntityUrn = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.contentUrn
-            } else if(newBodymatter[indexes[0]]?.type === ElementConstants.MULTI_COLUMN) { // parentEntityUrn for 2C/3C > BlockList(level3)
-                parentEntityUrn = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.contentUrn
-            } else { // parentEntityUrn for BlockList(level4)
-            parentEntityUrn = newBodymatter[indexes[0]]?.listdata?.bodymatter[indexes[1]]?.listitemdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.contentUrn
-             }
-            break;
-            case 10: 
-            // parentEntityUrn for WE/AS > BlockList(level4)
-            if(newBodymatter[indexes[0]]?.type === ElementConstants.ELEMENT_ASIDE) {
-                parentEntityUrn = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]?.listdata?.bodymatter[indexes[8]]
-            } else if(newBodymatter[indexes[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[indexes[0]]?.subtype === ElementConstants.TAB) {// parentEntityUrn for Tab > BlockList(level3)
-                parentEntityUrn = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]?.listdata?.bodymatter[indexes[8]]?.contentUrn
-            }
-            break;
-            case 11: 
-            // parentEntityUrn for WE(SB) > BlockList(level4)
-            if(newBodymatter[indexes[0]]?.type === ElementConstants.ELEMENT_ASIDE) {
-                parentEntityUrn = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]?.listdata?.bodymatter[indexes[9]]?.contentUrn
-             } else if(newBodymatter[indexes[0]]?.type === ElementConstants.SHOW_HIDE && asideParent?.parent?.showHideType) { // parentEntityUrn for ShowHide > BlockList(level4)
-                parentEntityUrn = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]?.listdata?.bodymatter[indexes[9]]?.contentUrn
-            } else if(newBodymatter[indexes[0]]?.type === ElementConstants.MULTI_COLUMN) { // parentEntityUrn for 2C/3C > BlockList(level4)
-                parentEntityUrn = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]?.listdata?.bodymatter[indexes[9]]?.contentUrn
-            }
-            break;
-            case 12: 
-            // parentEntityUrn for Tab > BlockList(level4)
-            if(newBodymatter[indexes[0]]?.type === ElementConstants.MULTI_COLUMN && newBodymatter[indexes[0]]?.subtype === ElementConstants.TAB) {
-                parentEntityUrn = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]?.listdata?.bodymatter[indexes[8]]?.listitemdata?.bodymatter[indexes[9]]?.listdata?.bodymatter[indexes[10]]?.contentUrn
-            }
-            break;
-        }
+        parentEntityUrn = asideParent?.parentManifestList?.listdata?.bodymatter[indexes[indexesLen - 2]].contentUrn
     }
     else{ // elements in a slate
         parentEntityUrn = config.slateEntityURN
