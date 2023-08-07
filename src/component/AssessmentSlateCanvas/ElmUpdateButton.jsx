@@ -13,24 +13,12 @@ import { ELM_INT } from './AssessmentSlateConstants.js';
 import config from '../../config/config.js';
 
 const ElmUpdateButton = (props) => {
-    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status, assessmentItem, assessmentReducer, updateAssessmentVersion } = props;
+    const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status, assessmentItem } = props;
 
     useEffect(() => {
-        if(elmAssessment.showUpdateStatus && status && !hasReviewerSubscriberRole() && !assessmentItem){
+        if(elmAssessment.showUpdateStatus && status && !hasReviewerSubscriberRole()){
             updateElmVersion()
         }
-    }, [])
-
-    useEffect(() => {
-        const updateAssessmentItems = async () => {
-            if (elmAssessment.showUpdateStatus && status && !hasReviewerSubscriberRole() && assessmentItem) {
-                if (assessmentReducer?.hasOwnProperty(elmAssessment.targetId) && assessmentReducer[elmAssessment.targetId]?.oldWorkUrn && !config.updatedAssessments.includes(elmAssessment.targetId)) {
-                    const assessmentData = assessmentReducer[elmAssessment.targetId]
-                    await updateAssessmentVersion(assessmentData.oldWorkUrn, assessmentData.currentWorkUrn)
-                }
-            }
-        }
-        updateAssessmentItems()
     }, [])
 
     const setUpdateDiv = (assessment) => {

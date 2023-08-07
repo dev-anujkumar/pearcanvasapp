@@ -436,8 +436,6 @@ class ElementSingleAssessment extends Component {
                 embeddedElmClass={'embedded-assessment'}
                 status={true}
                 assessmentItem={true}
-                assessmentReducer={this.props.assessmentReducer}
-                updateAssessmentVersion={this.props.updateAssessmentVersion}
             />)
         }
     }

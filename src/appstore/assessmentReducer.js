@@ -21,7 +21,8 @@ const INITIAL_STATE = {
     itemUpdateEvent: false,
     dataFromElm: {},
     assessmenId: '',
-    reloadAfterAssessmentUpdate: false
+    reloadAfterAssessmentUpdate: false,
+    assessmentItemAutoUpdateData: []
 }
 
 const INITIAL_ACTION = {
@@ -106,18 +107,16 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 assessmenId: action.payload
             }
         case ASSESSMENT_RELOAD_CONFIRMATION: 
-        return {
-            ...state,
-            reloadAfterAssessmentUpdate: action.payload
-        }
-        case ASESSMENT_UPDATE_DATA: 
-        return {
-            ...state,
-            [action.payload.currentWorkUrn]: {
-                oldWorkUrn: action.payload.oldWorkUrn,
-                currentWorkUrn: action.payload.currentWorkUrn
+            return {
+                ...state,
+                reloadAfterAssessmentUpdate: action.payload
             }
-        }
+        case ASESSMENT_UPDATE_DATA: 
+            const stateData = state.assessmentItemAutoUpdateData ? state.assessmentItemAutoUpdateData : []
+            return {
+                ...state,
+                assessmentItemAutoUpdateData: [...stateData, action.payload]
+            }
         default:
             return state
     }
