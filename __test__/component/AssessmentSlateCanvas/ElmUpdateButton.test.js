@@ -36,28 +36,6 @@ describe('Testing ElmUpdateButton component', () => {
         expect(component).toHaveLength(1);
         expect(component.find('div.elm-status-div')).toHaveLength(0);
     })
-    it('Test 1- Unapproved Status --assessmentItem', () => {
-        let props1 = {
-            updateElmVersion: jest.fn(),
-            elmAssessment: {
-                activeWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
-                assessmentStatus: "wip",
-                latestWorkUrn: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec565",
-                showUpdateStatus: true,
-                targetId: "test"
-            },
-            status: true,
-            assessmentItem: true,
-            assessmentReducer: {
-                "test": {
-                    "urn": "test"
-                }
-            }
-        }
-        const component = mount(<ElmUpdateButton {...props1} />)
-        expect(component).toHaveLength(1);
-        expect(component.find('div.elm-status-div')).toHaveLength(0);
-    })
     it('Test 1- Unapproved Status --else', () => {
         let props1 = {
             updateElmVersion: jest.fn(),

@@ -11,7 +11,8 @@ import {
     ELM_ASSESSMENT_EDIT_ID,
     ELM_NEW_ITEM_DATA,
     ASSESSMENT_RELOAD_CONFIRMATION,
-    ASESSMENT_UPDATE_DATA
+    ASESSMENT_UPDATE_DATA_ARRAY,
+    UPDATED_ASSESSMENTS_ARRAY
 } from '../../src/constants/Action_Constants';
 
 const INITIAL_STATE = {
@@ -347,7 +348,7 @@ describe('Test AssessmentReducer', () => {
         })).toEqual({ usageTypeListData: {}, ...expectedState })
     })
 
-    it('ASESSMENT_UPDATE_DATA', () => {
+    it('ASESSMENT_UPDATE_DATA_ARRAY', () => {
         let payload = {
             currentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
             oldWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323486r4"
@@ -362,9 +363,29 @@ describe('Test AssessmentReducer', () => {
             }]
         }
         expect(reducer(INITIAL_STATE, {
-            type: ASESSMENT_UPDATE_DATA,
+            type: ASESSMENT_UPDATE_DATA_ARRAY,
             payload: payload
         })).toEqual({ usageTypeListData: {}, ...expectedState })
     })
 
+    it('UPDATED_ASSESSMENTS_ARRAY', () => {
+        let payload = {
+            currentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+            oldWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323486r4"
+        }
+        let expectedState = {
+            usageTypeListData: {},
+            currentEditAssessment: {},
+            itemUpdateEvent: false,
+            assessmentItemAutoUpdateData: [{
+                currentWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af",
+                oldWorkUrn: "urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323486r4"
+            }],
+            updatedAssessmentArray: ['urn:pearson:work:8fb703b9-4e21-4dac-968e-baf9323467af']
+        }
+        expect(reducer(INITIAL_STATE, {
+            type: UPDATED_ASSESSMENTS_ARRAY,
+            payload: payload
+        })).toEqual({ usageTypeListData: {}, ...expectedState })
+    })
 });
