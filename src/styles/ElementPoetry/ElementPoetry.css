@@ -28,6 +28,42 @@
     padding-left: 120px !important;
 }
 
+.DELineLevel1{
+    display: block;
+    padding-left: 40px !important;
+}
+.DELineLevel2 {
+    padding-left: 80px !important;
+}
+
+.DELineLevel3 {
+    padding-left: 120px !important;
+}
+.cypress-editable.CNLineLevel1{
+    display: block;
+    padding-left: 40px !important;
+}
+.cypress-editable.CNLineLevel2 {
+    padding-left: 80px !important;
+}
+
+.cypress-editable.CNLineLevel3 {
+    padding-left: 120px !important;
+}
+
+.SDLineLevel1{
+    display: block;
+    padding-left: 40px !important;
+}
+.SDLineLevel2 {
+    padding-left: 80px !important;
+}
+
+.SDLineLevel3 {
+    padding-left: 120px !important;
+}
+
+
 .poetryHideLabel {
     display: none;
 }
