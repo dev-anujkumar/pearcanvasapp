@@ -24,7 +24,8 @@ function DialogueContent(props) {
                     let currentNode = document.getElementById(activeEditorId);
                     const DEClassName = getDEClassType(currentNode?.classList)
                     let innerHTML, innerText;
-                    innerHTML = `<p ${DEClassName}>${currentNode.innerHTML}</p>`;
+                    innerHTML = `<p>${currentNode.innerHTML}</p>`
+                    if(DEClassName) innerHTML = `<p ${DEClassName}>${currentNode.innerHTML}</p>`;
                     innerText = currentNode.innerText
                     const obj = { 
                          ...props.model[props.index],

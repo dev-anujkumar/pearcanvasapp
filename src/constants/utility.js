@@ -773,7 +773,7 @@ export const prepareDialogueDom = (model) => {
     let lineModel = ConvertedModel ? ConvertedModel : '<span class="dialogueLine"><br /></span>'
     return lineModel;
 }
-
+// This function is use to add Playscript stageDirection class 
 export const prepareStageDirectionDom = (model) => {
     const ConvertedModel = model.includes('<p>') ? model?.replace(/<p>/g, "<p class ='stageDirectionLine'>") : model
     return ConvertedModel;
@@ -1086,6 +1086,7 @@ export const isDialogueIndent = (stanzaClassList) => {
     return (stanzaClassList?.contains('SDLineLevel1') || stanzaClassList?.contains('SDLineLevel2') || stanzaClassList?.contains('SDLineLevel3') || stanzaClassList?.contains('DELineLevel1') || stanzaClassList?.contains('DELineLevel2') || stanzaClassList?.contains('DELineLevel3')|| stanzaClassList?.contains('CNLineLevel1') || stanzaClassList?.contains('CNLineLevel2')|| stanzaClassList?.contains('CNLineLevel3'))
 }
 
+// This function is use to return Playscript character class 
 export const getDEClassType = (classList) => {
     if(classList?.contains("CNLineLevel1")) {
         return 'class=\"CNLineLevel1\"';
@@ -1093,11 +1094,9 @@ export const getDEClassType = (classList) => {
         return 'class=\"CNLineLevel2\"';
     } else if(classList?.contains("CNLineLevel3")) {
         return 'class=\"CNLineLevel3\"';
-    } else {
-        return "";
     }
 }
-
+// This function is use to return Playscript character class 
 export const getDEClassName = (classList) => {
     if(classList?.includes("CNLineLevel1")) {
         return 'CNLineLevel1';

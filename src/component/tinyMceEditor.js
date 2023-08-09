@@ -399,6 +399,11 @@ export class TinyMceEditor extends Component {
                     node = editor.selection.getNode().closest('.poetryLine');
                 }
             }
+            if(this.props?.element?.type === 'element-dialogue' && this.props.placeholder !=="Enter Character Name...") {
+                if (editor.selection.getNode().className.toLowerCase() !== 'dialogueLine') {
+                    node = editor.selection.getNode().closest('.dialogueLine');
+                }
+            }
             switch (e.command) {
                 
                 case "indent":
@@ -545,18 +550,15 @@ export class TinyMceEditor extends Component {
                     }
                     if (this.props?.element?.type === 'element-dialogue') {
                         const dialoguClassName = editor.selection?.getNode()?.className
-                        let classListWithFormatting = editor?.selection?.getNode()?.closest('span')?.classList
-                        let selectedTextWithFormatting = editor?.selection?.getNode()?.closest('span')?.innerText
-                        
+                        let nodeName = 'span'                        
                         if (this.props.placeholder === "Enter Character Name...") {
-                            classListWithFormatting = editor?.selection?.getNode()?.closest('h4')?.classList
-                            selectedTextWithFormatting = editor?.selection?.getNode()?.closest('h4')?.innerText
+                            nodeName = 'h4'
                         }
                         if (this.props.placeholder === "Enter Stage Directions...") {
-                            classListWithFormatting = editor?.selection?.getNode()?.closest('p')?.classList
-                            selectedTextWithFormatting = editor?.selection?.getNode()?.closest('p')?.innerText
+                            nodeName = 'p'
                         }
-
+                        let classListWithFormatting = editor?.selection?.getNode()?.closest(nodeName)?.classList
+                        let selectedTextWithFormatting = editor?.selection?.getNode()?.closest(nodeName)?.innerText
                         if (dialoguClassName?.includes('CNLineLevel1') || dialoguClassName?.includes('CNLineLevel2') || dialoguClassName?.includes('CNLineLevel3') || dialoguClassName?.includes('DELineLevel1') || dialoguClassName?.includes('DELineLevel2') || dialoguClassName?.includes('DELineLevel3') || dialoguClassName?.includes('SDLineLevel1') || dialoguClassName?.includes('SDLineLevel2') || dialoguClassName?.includes('SDLineLevel3')) {
                             if (this.props.placeholder === "Enter Character Name...") {
                                 editor.selection.getNode().className = 'characterPS cypress-editable';
@@ -2786,12 +2788,12 @@ export class TinyMceEditor extends Component {
                 className = selectedNode.className;
             }
             if (type && type === 'element-dialogue' && selectedNode) {
-                className = selectedNode?.classList ? selectedNode?.closest('span')?.className : selectedNode?.className
-                dialogueSelected = selectedNode?.classList ? selectedNode?.closest('span') : selectedNode
+                className = selectedNode.className;
                 if(this.props.placeholder==="Enter Character Name...") {
                     dialogueSelected = selectedNode?.classList?.length ? selectedNode : selectedNode?.closest('h4')
                 }
             }
+            
             if (content.match(/paragraphNumeroUno\b/)) {
                 content = content.replace(/paragraphNumeroUno\b/, "paragraphNumeroUnoIndentLevel1")
             }
@@ -2861,7 +2863,7 @@ export class TinyMceEditor extends Component {
         } 
         if (type === 'element-dialogue' && this.props.placeholder !== "Enter Stage Directions...") {
             if (selectedNode) {
-                let dialogueClassList = selectedNode?.classList?.length ? selectedNode?.classList : selectedNode?.closest('span')?.classList
+                let dialogueClassList = selectedNode?.classList
                 if (this.props.placeholder === "Enter Character Name...") {
                     dialogueClassList = selectedNode?.classList?.length ? selectedNode?.classList : selectedNode?.closest('h4')?.classList
                 }
@@ -2934,7 +2936,6 @@ export class TinyMceEditor extends Component {
         }
         else if (className && className.trim() === 'dialogueLine DELineLevel2') {
             dialogueSelected.className = 'dialogueLine DELineLevel1';
-            console.log("hello Everyiiiii", selectedNode.closest('span').classList)
             this.outdentRun = true;
         }
         else if (className && className.trim() === 'dialogueLine DELineLevel3') {
@@ -2957,11 +2958,11 @@ export class TinyMceEditor extends Component {
         if(type === 'element-dialogue' && this.props.placeholder !== "Enter Stage Directions...") {
             if (selectedNode) {
                 className = selectedNode.className;
-                let stanzaClassList = selectedNode?.classList?.length ? selectedNode?.classList : selectedNode?.closest('span')?.classList
+                let dialogueClassList = selectedNode?.classList
                 if(this.props.placeholder==="Enter Character Name...") {
-                    stanzaClassList = selectedNode?.classList?.length ? selectedNode?.classList : selectedNode?.closest('h4')?.classList
+                    dialogueClassList = selectedNode?.classList?.length ? selectedNode?.classList : selectedNode?.closest('h4')?.classList
                 }
-                if (!isElementIndent(stanzaClassList)) {
+                if (!isElementIndent(dialogueClassList)) {
                     document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                 }
             }
