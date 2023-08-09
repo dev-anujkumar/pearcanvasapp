@@ -943,10 +943,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     else if(appStore.parentUrn && appStore.parentUrn.contentUrn) { // For Aside/WE
         parentEntityUrn = appStore.parentUrn.contentUrn
     }
-    else if(asideParent?.type === ElementConstants.BLOCK_LIST){ // parentEntityUrn for Glossary/Footnote inside blocklist
-        let indexes = index &&  typeof (index) !== 'number' && index.split('-');
+    else if(asideParent?.type === ElementConstants.BLOCK_LIST  && index && typeof (index) !== 'number'){ // parentEntityUrn for Glossary/Footnote inside blocklist
+        let indexes = index.split('-');
         let indexesLen = indexes.length
-        parentEntityUrn = asideParent?.parentManifestList?.listdata?.bodymatter[indexes[indexesLen - 2]].contentUrn
+        parentEntityUrn = asideParent?.parentManifestList?.listdata?.bodymatter[indexes[indexesLen - 2]]?.contentUrn
     }
     else{ // elements in a slate
         parentEntityUrn = config.slateEntityURN
