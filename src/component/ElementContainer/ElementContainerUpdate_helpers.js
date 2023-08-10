@@ -1021,17 +1021,15 @@ export const processAndStoreUpdatedResponse = async (params) => {
     const currentSlateData = currentParentData[config.slateManifestURN];
     let { glossaryFootnoteValue, glossaryFootNoteCurrentValue, elementIndex: elementIndexFootnote } = getState().glossaryFootnoteReducer
     let { markedIndexValue, markedIndexCurrentValue, elementIndex: elementMarkedIndex } = getState().markedIndexReducer
-    const { saveAutoUpdateData, assessmentItemAutoUpdateData, updatedAssessmentArray } = getState().assessmentReducer;
+    const { assessmentItemAutoUpdateData, updatedAssessmentArray } = getState().assessmentReducer;
     // update Element in store based on AutoNumber Settings
     const autoNumberSettingsOption = getState().autoNumberReducer?.autoNumberOption
     const isAutoNumberingEnabled= getState().autoNumberReducer?.isAutoNumberingEnabled
     const autoNumberDetails = {autoNumberSettingsOption,isAutoNumberingEnabled}
-    // if (saveAutoUpdateData && saveAutoUpdateData.oldAssessmentId && saveAutoUpdateData.newAssessmentId) {
-    //     dispatch(updateAssessmentVersion(saveAutoUpdateData.oldAssessmentId, saveAutoUpdateData.newAssessmentId));
-    // }
+    // sending the VCS API call for the assessment items
     if(assessmentItemAutoUpdateData?.length) {
         assessmentItemAutoUpdateData.forEach(item => {
-            if(item && item.oldAssessmentId && item.oldAssessmentId && !updatedAssessmentArray?.includes(item.newAssessmentId)) {
+            if(item && item.oldAssessmentId && item.newAssessmentId && !updatedAssessmentArray?.includes(item.newAssessmentId)) {
                 dispatch(updateAssessmentVersion(item.oldAssessmentId, item.newAssessmentId));
             }
         })

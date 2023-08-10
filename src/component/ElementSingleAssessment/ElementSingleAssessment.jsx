@@ -513,10 +513,12 @@ class ElementSingleAssessment extends Component {
         showTocBlocker();
         disableHeader(true);
         const { assessmentItemAutoUpdateData } = this.props.assessmentReducer
+        // checking if the data for update is already there in assessmentItemAutoUpdateData reducer
         const filteredAssessmentData = assessmentItemAutoUpdateData?.some((item) =>
         item.oldAssessmentId === oldElmAssessmentId &&
         item.newAssessmentId === pufObj.id);
         this.props.saveAutoUpdateData(oldElmAssessmentId, pufObj.id);
+        // pushing the unique oldAssessmentId and newAssessmentId = pufObj.id in store
         if(!filteredAssessmentData){
             this.props.saveUpdatedAssessmentArray(oldElmAssessmentId, pufObj.id)
         }

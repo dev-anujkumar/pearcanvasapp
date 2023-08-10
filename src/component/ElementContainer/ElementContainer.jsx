@@ -1335,6 +1335,7 @@ class ElementContainer extends Component {
     handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}, triggeredFrom = '') => {
         // restrict saving call incase of read only content
         if(hasReviewerRole()) {
+            // condition to work on approved slate for Auto update on Assessment Item 
             if ((this.props.element?.figuredata?.type !== 'element-assessment' && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
                 return;

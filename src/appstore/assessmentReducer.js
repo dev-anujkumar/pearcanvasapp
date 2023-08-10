@@ -23,7 +23,8 @@ const INITIAL_STATE = {
     dataFromElm: {},
     assessmenId: '',
     reloadAfterAssessmentUpdate: false,
-    assessmentItemAutoUpdateData: []
+    assessmentItemAutoUpdateData: [],
+    updatedAssessmentArray: []
 }
 
 const INITIAL_ACTION = {

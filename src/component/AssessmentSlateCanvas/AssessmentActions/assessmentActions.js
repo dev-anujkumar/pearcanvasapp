@@ -199,6 +199,7 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
 export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
     let url = `${config.VCS_API_ENDPOINT}${config.projectUrn}/updateAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
     dispatch(saveAutoUpdateData("",""));
+    // dispatching updatedWorkUrn of the assessment item after VCS API call
     dispatch({
         type: UPDATED_ASSESSMENTS_ARRAY,
         payload: updatedWorkUrn

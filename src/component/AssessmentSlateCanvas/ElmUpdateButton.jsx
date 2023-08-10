@@ -35,6 +35,8 @@ const ElmUpdateButton = (props) => {
                     </div>
                 }
                 {!status && <div className={`elm-update-button ${embeddedElmClass}`} onClick={updateElmVersion}><b className='elm-update-button-text'>{buttonText}</b></div>}
+                {(status && hasReviewerSubscriberRole()) && <div className={`elm-status-div ${embeddedElmClass}`}>{(approveText === "Unapproved" && assessmentItem) ? "" : <span className={`${assessmentItem ? "approved-button-embedded" : "approved-button"} ` + approveIconClass}>{approvedIcon}</span>}<p className={`${assessmentItem ? "approved-button-text-embedded" : "approved-button-text"} ` + approveIconClass}>{approveText}</p></div>}
+
             </div>       
         } else {
             updateDiv = (elementType === ELM_INT) ? 
