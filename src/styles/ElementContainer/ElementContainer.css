@@ -53,7 +53,7 @@
     }
 }
 
-.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl):not(.tb):not(.tab):not(.tcc) * {
+.element-container.hideBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl) *, .element-container.showBorder:not(.as):not(.we):not(.cg):not(.pe):not(.multi-column):not(.sh):not(.bl):not(.tb):not(.tab):not(.tcc) * {
     cursor: default !important;
 }
 

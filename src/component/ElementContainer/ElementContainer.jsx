@@ -392,7 +392,7 @@ class ElementContainer extends Component {
             this.props.fetchCommentByElement(this.props.element.id);
         }
         // disabling Add comment icon for TCC Element in TOC
-        if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT && !isSlateLocked()) {
+        if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT) {
             this.handleCommunication(this.props.element.id);
         }
     }
@@ -1076,7 +1076,7 @@ class ElementContainer extends Component {
                 previousElementData.html.text = previousElementData.html.text.replace(/<br data-mce-bogus="1">/g, "<br>").replace(/(\r\n|\n|\r)/gm, '');
                 previousElementData.html.text = previousElementData.html.text.replace(/data-mce-bogus="all"/g, '')
                 tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
-                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
+                if (html && previousElementData.html && (this.replaceUnwantedtags(html) !== this.replaceUnwantedtags(previousElementData.html.text) || forceupdate) && !assetPopoverPopupIsVisible && !config.savingInProgress && !config.isGlossarySaving && !checkCanvasBlocker && elementType && primaryOption && secondaryOption) {
                     dataToSend = createUpdatedData(previousElementData.type, previousElementData, tempDiv, elementType, primaryOption, secondaryOption, activeEditorId, this.props.index, this, parentElement, showHideType, asideData, poetryData)
                     sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
                     config.isSavingElement = true
@@ -2915,16 +2915,15 @@ class ElementContainer extends Component {
     handleCommunication = ( elementId ) => {
         sendDataToIframe({
             'type': CanvasActiveElement,
-            'message': {"id":elementId, "active":true}
+            'message': {"id":elementId, "active":true, "isSlateLocked": isSlateLocked() }
         });   
     }
 
     addOrViewComment = (e, elementId, type) => {
         this.props.setActiveElement(this.props.element);
-        const currentLockedSlateUrn = this.props?.popupParentSlateData?.isPopupSlate ? config.tempSlateManifestURN : config.slateManifestURN;
-            sendDataToIframe({
+        sendDataToIframe({
                 'type': AddOrViewComment,
-                'message': { "id": elementId, "mode": type, "viewInCypress": false, "slateManifestUrn": currentLockedSlateUrn }
+                'message': { "id": elementId, "mode": type, "viewInCypress": false, "isSlateLocked": isSlateLocked() }
             });
         e.stopPropagation();
     }
