@@ -395,16 +395,6 @@ describe('Testing Element Single Assessment component', () => {
             expect(spyaddPuffAssessment).toHaveBeenCalled();
             spyaddPuffAssessment.mockClear();
         });
-        it('Test-4-showCustomPopup', () => {
-            elmAssessmentInstance.setState({
-                showUpdatePopup: true
-            })
-            elmAssessment.update();
-            elmAssessmentInstance.forceUpdate();
-            jest.spyOn(elmAssessmentInstance, 'showCustomPopup')
-            elmAssessmentInstance.showCustomPopup();
-            expect(elmAssessmentInstance.state.showElmUpdatePopup).toBe(true)
-        })
         it('Test-5-updatePufAssessment', () => {
             let pufObj = {
                 id: "urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464",
@@ -456,16 +446,6 @@ describe('Testing Element Single Assessment component', () => {
             expect(spyaddPuffAssessment).toHaveBeenCalled();
             spyaddPuffAssessment.mockClear();
         });
-        it('Test-10-showCustomPopup-else function', () => {
-            elmAssessmentInstance.setState({
-                showUpdatePopup: false
-            })
-            elmAssessment.update();
-            elmAssessmentInstance.forceUpdate();
-            jest.spyOn(elmAssessmentInstance, 'showCustomPopup')
-            elmAssessmentInstance.showCustomPopup();
-            expect(elmAssessmentInstance.state.showElmUpdatePopup).toBe(false)
-        })
         it('Test-6-updateElmAssessment', () => {
             let nextProps = {
                 model: singleAssessmentElmDefault,

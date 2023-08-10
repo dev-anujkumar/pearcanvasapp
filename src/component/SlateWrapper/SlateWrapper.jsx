@@ -34,7 +34,7 @@ import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlat
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js'
-import { assessmentConfirmationPopup, assessmentReloadConfirmation } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
+import { assessmentReloadConfirmation } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import { reloadSlate } from '../../component/ElementContainer/AssessmentEventHandling';
 import LazyLoad, {forceCheck} from "react-lazyload";
 import { createPowerPasteElements } from './SlateWrapper_Actions.js';
@@ -1134,18 +1134,6 @@ class SlateWrapper extends Component {
         }
     }
     /**
-    * @description - toggleAssessmentPopup function responsible for showing popup for latest version.
-    */
-    toggleAssessmentPopup = () => {
-        this.props.showBlocker(false)
-        hideTocBlocker()
-        hideBlocker()
-        if(this.props.showConfirmationPopup){
-            reloadSlate();
-            this.props.assessmentConfirmationPopup(false)
-        }
-    }
-    /**
     * @description - processRemoveConfirmation function responsible for opening confirmation popup for removing the narrative audio.
     */
 
@@ -1307,51 +1295,6 @@ class SlateWrapper extends Component {
         }
     }
 
-    /**
-    * @description - showAssessmentConfirmationPopup function responsible for opening confirmation popup for updating embeded assessments .
-    */
-    showAssessmentConfirmationPopup = () => {
-        if (this.props.showConfirmationPopup) {
-            this.props.showBlocker(true)
-            showTocBlocker();
-            const dialogText = ` All other Assessment Items in this project will now be updated to the new version of this Assessment`
-            // It opens different popup for assessment-slate when we update the assessment from the elm and different for assessment-item update
-            if (this.props?.slateData[config.slateManifestURN]?.contents?.bodymatter[0]?.type !== 'element-assessment') {      // this condition is to check whether the current slate is assessmentslate or not
-                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                setTimeout(() => {
-                    this.setState({
-                        updateAssessment: true
-                    })
-                    sendDataToIframe({ 'type': ShowLoader, 'message': { status: false } });
-                }, 4000);
-                return (
-                    <PopUp dialogText={dialogText}
-                        active={true}
-                        saveButtonText='OK'
-                        showConfirmation={true}
-                        assessmentConfirmation={`${this.state.updateAssessment ? "updateAssessment-enable" : "updateAssessment-disable"}`}
-                        assessmentClass="lock-message"
-                        togglePopup={this.toggleAssessmentPopup}
-                        hideCanvasBlocker={this.props.showBlocker}
-                    />
-                )
-            } else {
-                return (
-                    <PopUp dialogText={dialogText}
-                        active={true}
-                        saveButtonText='OK'
-                        showAssessmentConfirmation={true}
-                        assessmentClass="lock-message"
-                        togglePopup={this.toggleAssessmentPopup}
-                        hideCanvasBlocker={this.props.showBlocker}
-                    />
-                )
-            }
-        }
-        else {
-            return null
-        }
-    }
     showLockReleasePopup = () => {
         if (this.state.showReleasePopup) {
             this.props.showBlocker(true)
@@ -1633,7 +1576,6 @@ class SlateWrapper extends Component {
                 {this.showAudioRemoveConfirmationPopup()}
                 {this.showImageGlossaryRemoveConfirmationPopup()}
                 {this.showLockReleasePopup()}
-                {this.showAssessmentConfirmationPopup()}
                 {this.wirisAltTextPopup()}
                 {/* **************** Word Paste Popup ************ */}
                 {this.showWordPastePopup()}
@@ -1730,7 +1672,6 @@ export default connect(
         showSlateLockPopup,
         handleTCMData,
         fetchSlateData,
-        assessmentConfirmationPopup,
         getCommentElements,
         pasteElement,
         wirisAltTextPopup,

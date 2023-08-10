@@ -1,4 +1,4 @@
-import { c4PublishObj, publishTitleDelay } from '../../src/js/c4_module.js';
+import { publishSlate, publishTitle, publishTitleDelay } from '../../src/js/c4_module.js';
 import _ from 'lodash';
 var axios = require('axios');
 import * as sinon from 'sinon';
@@ -14,7 +14,7 @@ describe('Testing c4_modules', () => {
             cite = 'cite';
         jest.mock('axios');
         _.delay = jest.fn(() => {});
-        c4PublishObj.publishSlate(project, section, cite);
+        publishSlate(project, section, cite);
     })
 
     xit('Testing publishContent function', () => {
@@ -25,7 +25,7 @@ describe('Testing c4_modules', () => {
             timestamp: '31 Oct'
         }
         _.delay = jest.fn(() => {});
-        c4PublishObj.publishContent(pubConObj, pubCallBack);
+        publishContent(pubConObj, pubCallBack);
     })
 
     it('Testing publishTitle function', () => {
@@ -35,7 +35,7 @@ describe('Testing c4_modules', () => {
             callBack = jest.fn(),
             isPreview = true
         _.delay = jest.fn(jest.fn());
-        c4PublishObj.publishTitle(project, section, cite, callBack, isPreview);
+        publishTitle(project, section, cite, callBack, isPreview);
     })
 
     it('Testing publishTitleDelay function : true',() => {
