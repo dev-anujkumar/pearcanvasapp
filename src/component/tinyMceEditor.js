@@ -586,6 +586,7 @@ export class TinyMceEditor extends Component {
                                     classListWithFormatting?.remove('SDLineLevel1')
                                     classListWithFormatting?.remove('SDLineLevel2')
                                     classListWithFormatting?.remove('SDLineLevel3')
+                                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                                 }
                             } else {
                                 if (selectedTextWithFormatting === selectedText) {
@@ -619,6 +620,7 @@ export class TinyMceEditor extends Component {
                                 e.target.targetElm.children[0].classList.contains("heading6NummerEins") ||
                                 e.target.targetElm.children[0].classList.contains("paragraphNumeroUno") ||
                                 e.target.targetElm.children[0].classList.contains("pullQuoteNumeroUno") ||
+                                e.target.targetElm.children[0].classList.contains("stageDirectionLine") ||
                                 e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem"))
                         ) {
                             e.target.targetElm.children[0].innerHTML = textToReplace;
