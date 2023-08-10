@@ -47,6 +47,7 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     getTitleSubtitleModel: jest.fn(()=> ''),
     isOwnerRole:jest.fn(()=>{return true}),
     removeSpellCheckDOMAttributes: jest.fn(() => ''),
+    isSlateLocked: jest.fn(() => false),
     checkHTMLdataInsideString: () => {
         return ({
             toLowerCase: jest.fn(),
