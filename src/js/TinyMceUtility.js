@@ -319,15 +319,15 @@ export const setInstanceToolbar = (element,placeholder,showHideType, labelNumber
                 break;
             }
             case "Enter Dialogue...": {
-                toolbar = [...config.playScriptToolbar, 'mathml', 'chemml', 'inlinecode'];
+                toolbar = [...config.playScriptToolbarForIndent, 'mathml', 'chemml', 'inlinecode'];
                 break;
             }
             case "Enter Stage Directions...": {
-                toolbar = [...config.playScriptToolbar, 'italic', 'mathml', 'chemml', 'inlinecode'];
+                toolbar = [...config.playScriptToolbarForIndent, 'italic', 'mathml', 'chemml', 'inlinecode'];
                 break;
             }
             case "Enter Character Name...": {
-                    toolbar = [...config.playScriptToolbar, 'bold', 'mathml', 'chemml', 'inlinecode'];
+                    toolbar = [...config.playScriptToolbarForIndent, 'bold', 'mathml', 'chemml', 'inlinecode'];
                 break;
             }
             default: break;

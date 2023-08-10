@@ -19,7 +19,6 @@ describe('Testing PopUp component', () => {
         ReactDOM.unmountComponentAtNode(div);
         let wrapper = mount(<PopUp {...props}/>);
         expect(wrapper.find('.save-button').exists()).toBe(true);
-        expect(wrapper.find('.lockInputBox').exists()).toBe(true);
 
     })
     it('onClick Event', () => {

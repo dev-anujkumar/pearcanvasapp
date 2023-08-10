@@ -634,7 +634,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         }
         dispatch(handleTCMData(tcmManifestUrn));
     }
-    dispatch(resetAssessmentStore());//reset Assessment Store
+    // dispatch(resetAssessmentStore());//reset Assessment Store > commented to fix PCAT-20521
     const elementCount = getState().appStore.slateLength;
     let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
