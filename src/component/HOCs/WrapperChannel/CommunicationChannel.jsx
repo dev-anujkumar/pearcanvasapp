@@ -86,6 +86,8 @@ function CommunicationChannel(WrappedComponent) {
                     break;
                 case 'newSplitedSlate':
                     setTimeout(() => { this.hanndleSplitSlate(message) }, 1000)
+                    // Making condition true for triggering slate level save api
+                    localStorage.setItem('isChangeInSlate', 'true');
                     break;
                 case 'hideCommentsPanel':
                     this.props.toggleCommentsPanel(false);
@@ -370,6 +372,8 @@ function CommunicationChannel(WrappedComponent) {
                     if (message.calledFrom === "GlossaryImage" || message.calledFromImageGlossaryFootnote) {
                         this.handleImageData(message)
                     }
+                    // Making condition true for triggering slate level save api
+                    localStorage.setItem('isChangeInSlate', 'true');
                     this.props.saveSelectedAssetData(message)
                     break;
                 case 'saveAlfrescoDataToConfig':
@@ -1025,6 +1029,9 @@ function CommunicationChannel(WrappedComponent) {
                 let isRefreshBrowser = localStorage.getItem('browser_refresh');
                 if (isRefreshBrowser == '1') {
                     localStorage.setItem('browser_refresh', '0');
+                    // At the time slate versioning prevent trigger slate level save
+                } else if (localStorage.getItem('slateNewVersion') === 'true') {
+                    localStorage.removeItem('slateNewVersion');
                 } else {
                     triggerSlateLevelSave(config.slateEntityURN, CHANGE_SLATE_ACTION);
                 }

@@ -1061,6 +1061,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         // This check is added to prevent snapshots for TB element, it will be removed when TB element will support TCM
         const isTbElement = asideParent?.subtype === ElementConstants.TAB || asideParent?.parent?.subtype === ElementConstants.TAB || asideParent?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideParent?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
         const isBlockListElement = asideParent.type === ElementConstants.BLOCK_LIST
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         if (!isTbElement && !isBlockListElement) {
             if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
                 let showhideTypeVal = "", showHideObject = undefined
