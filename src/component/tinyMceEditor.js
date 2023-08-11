@@ -548,7 +548,7 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
-                    if (this.props?.element?.type === 'element-dialogue' && this.props.placeholder !== "Enter Stage Directions...") {
+                    if (this.props?.element?.type === 'element-dialogue') {
                         const dialoguClassName = editor.selection?.getNode()?.className
                         let nodeName = 'span'                        
                         if (this.props.placeholder === "Enter Character Name...") {
@@ -562,16 +562,17 @@ export class TinyMceEditor extends Component {
                         if (dialoguClassName?.includes('CNLineLevel1') || dialoguClassName?.includes('CNLineLevel2') || dialoguClassName?.includes('CNLineLevel3') || dialoguClassName?.includes('DELineLevel1') || dialoguClassName?.includes('DELineLevel2') || dialoguClassName?.includes('DELineLevel3') || dialoguClassName?.includes('SDLineLevel1') || dialoguClassName?.includes('SDLineLevel2') || dialoguClassName?.includes('SDLineLevel3')) {
                             if (this.props.placeholder === "Enter Character Name...") {
                                 editor.selection.getNode().className = 'characterPS cypress-editable';
+                                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                             }
                             else if (this.props.placeholder === "Enter Stage Directions...") {
                                 editor.selection.getNode().className = 'stageDirectionLine';
-                                editor?.selection?.getNode()?.closest('p')?.removeAttribute('style')
-                                editor?.selection?.getNode()?.closest('p')?.removeAttribute('data-mce-style')
+                                editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
+                                editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
                             }
                             else {
                                 editor.selection.getNode().className = 'dialogueLine';
+                                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                             }
-                            document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                         }
                         if (isDialogueIndent(classListWithFormatting)) {
                             if (this.props.placeholder === "Enter Character Name...") {
@@ -586,6 +587,9 @@ export class TinyMceEditor extends Component {
                                     classListWithFormatting?.remove('SDLineLevel1')
                                     classListWithFormatting?.remove('SDLineLevel2')
                                     classListWithFormatting?.remove('SDLineLevel3')
+                                    classListWithFormatting.add('stageDirectionLine')
+                                    editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
+                                    editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
                                 }
                             } else {
                                 if (selectedTextWithFormatting === selectedText) {
@@ -597,53 +601,54 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
-                    if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
-                        let textToReplace = window.getSelection().toString()
-                        if (isWirisIncluded) {
-                            if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula') || isWirisIncluded.classList.contains('imageAssetContent')) {
-                                textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`), '')
-                                this.clearFormateText = '';
+                    if (this.props?.element?.type !== 'element-dialogue') {
+                        if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
+                            let textToReplace = window.getSelection().toString()
+                            if (isWirisIncluded) {
+                                if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula') || isWirisIncluded.classList.contains('imageAssetContent')) {
+                                    textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`), '')
+                                    this.clearFormateText = '';
+                                }
+                            }
+                            else if ((e && e.target && e.target.targetElm && e.target.targetElm.children && e.target.targetElm.children.length) &&
+                                (
+                                    e.target.targetElm.children[0].classList.contains("paragraphNumeroUnoCitation") ||
+                                    e.target.targetElm.children[0].classList.contains("heading1NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("heading2NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("heading3NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("heading4NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("heading5NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("heading6NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("paragraphNumeroUno") ||
+                                    e.target.targetElm.children[0].classList.contains("pullQuoteNumeroUno") ||
+                                    e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem"))
+                            ) {
+                                e.target.targetElm.children[0].innerHTML = textToReplace;
+                            }
+                            else if (e.target.targetElm.nodeName === "CODE" && this.props.element.figuretype === 'codelisting') {
+                                spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'code', 'codeNoHighlightLine');
+                            }
+                            /*  For Figure type*/
+                            else {
+                                e.target.targetElm.innerHTML = textToReplace;
                             }
                         }
-                        else if ((e && e.target && e.target.targetElm && e.target.targetElm.children && e.target.targetElm.children.length) &&
-                            (
-                                e.target.targetElm.children[0].classList.contains("paragraphNumeroUnoCitation") ||
-                                e.target.targetElm.children[0].classList.contains("heading1NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("heading2NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("heading3NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("heading4NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("heading5NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("heading6NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("paragraphNumeroUno") ||
-                                e.target.targetElm.children[0].classList.contains("pullQuoteNumeroUno") ||
-                                // e.target.targetElm.children[0].classList.contains("stageDirectionLine") ||
-                                e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem"))
-                        ) {
-                            e.target.targetElm.children[0].innerHTML = textToReplace;
+                        else if (this.props.element.type === 'stanza') {
+                            let selection = window.getSelection();
+                            let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'div', 'poetryLine', selectedText);
+                            if (output === false) {
+                                return false;
+                            }
                         }
-                        else if (e.target.targetElm.nodeName === "CODE" && this.props.element.figuretype === 'codelisting') {
-                            spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'code', 'codeNoHighlightLine');
-                        }
-                        /*  For Figure type*/
-                        else {
-                            e.target.targetElm.innerHTML = textToReplace;
-                        }
-                    }
-                    else if (this.props.element.type === 'stanza') {
-                        let selection = window.getSelection();
-                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'div', 'poetryLine', selectedText);
-                        if (output === false) {
-                            return false;
-                        }
-                    }
-                    else if (this.props.element.figuretype === 'codelisting') {
-                        let selection = window.getSelection();
-                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'code', 'codeNoHighlightLine', selectedText);
-                        if (output === false) {
-                            return false;
+                        else if (this.props.element.figuretype === 'codelisting') {
+                            let selection = window.getSelection();
+                            let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'code', 'codeNoHighlightLine', selectedText);
+                            if (output === false) {
+                                return false;
+                            }
                         }
                     }
 
