@@ -26,6 +26,10 @@ class App extends Component {
         this.state = {
             isConfigLoaded : false
         };
+        let isRefreshBrowser = localStorage.getItem('browser_refresh');
+        if (isRefreshBrowser == '0') {
+            localStorage.setItem('isChangeInSlate', 'false');
+        } 
         this.getEnvConfig();
     }
     

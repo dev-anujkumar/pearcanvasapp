@@ -153,7 +153,7 @@ class OpenGlossaryAssets extends Component {
         }
         
         return (
-            <div className={'glossary-figuredropdown'} style={positionOfPopup} id='openFigureGlossary' ref = {this.wrapperRef} onBlur={() => this.handleClick(this)}>
+            <div className={'glossary-figuredropdown'} style={positionOfPopup} id='openFigureGlossary' ref = {this.wrapperRef} >
                 <div className="tabs-container">
                     <div className="audio-image-tab">
                         {
