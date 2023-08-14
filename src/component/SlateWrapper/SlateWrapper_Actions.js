@@ -100,6 +100,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         let currentSlateData = newParentData[config.slateManifestURN];
         const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
         /**This will be removed when BL supports TCM */
         const tempSlateWrapperConstants = [...slateWrapperConstants.elementType].filter( item => item !== "MANIFEST_LIST")
@@ -795,6 +797,8 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
         })
         .then((responseData) => {
             if (responseData && responseData.status == '200') {
+                // Making condition true for triggering slate level save api
+                localStorage.setItem('isChangeInSlate', 'true');
 
                 /* For hiding the spinning loader send HideLoader message to Wrapper component */
                 sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
@@ -1605,6 +1609,8 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 let responseData = Object.values(createdElemData.data)
                 const figureTypes = ["image", "mathImage", "table", "video", "audio"]
                 const interactiveType = ["3rd-party", "pdf", "web-link", "pop-up-web-link", "table"]
+                // Making condition true for triggering slate level save api
+                localStorage.setItem('isChangeInSlate', 'true');
 
                 // Condition to check whether any conatiner element got copy and paste. Fetch new conatiner data for the same.
                 if(selection.operationType === 'copy' && _requestData.content[0].hasOwnProperty('id') && _requestData.content[0].id.includes('manifest')){
@@ -1753,6 +1759,9 @@ export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
         }
     }).then(response => {
         if(response?.data?.status === "success"){
+            // Making condition true for triggering slate level save api
+            localStorage.setItem('isChangeInSlate', 'true');
+            localStorage.setItem('slateNewVersion', 'true');
         
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
             sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
