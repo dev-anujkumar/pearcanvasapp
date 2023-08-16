@@ -289,6 +289,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(async res =>{
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         let parentData = store;
         let currentParentData = JSON.parse(JSON.stringify(parentData));
         let currentSlateData = currentParentData[config.slateManifestURN];
