@@ -2532,7 +2532,7 @@ class ElementContainer extends Component {
             renderImages : this.props.tableElementAssetData
         }
         let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkOpenerElement(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element)));
-        let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element)));
+        let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element) || checkOpenerElement(element)));
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -3061,7 +3061,10 @@ class ElementContainer extends Component {
             let imageId;
             if (this.props.element.type === 'element-pdf') {
                 imageId = this.state.pdfSlateAssetId || this.props?.element?.elementdata?.assetid
-            } else {
+            }
+            else if(this.props?.element?.type === "openerelement"){
+                imageId = this.props?.element?.backgroundimage?.imageid}
+            else {
                 const figureData = this.props?.element?.figuredata || {};
                 if (figureData['imageid']) {
                     imageId = this.props?.element?.figuredata?.imageid;
