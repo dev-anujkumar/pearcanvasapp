@@ -548,14 +548,14 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
-                    if (this.props?.element?.type === 'element-dialogue' || (this.props?.element?.type === "element-authoredtext" && !this.props?.element?.elementdata.headers && this.props?.asideData?.type !== "manifestlist") ) {
+                    if (this.props?.element?.type === 'element-dialogue' || (this.props?.element?.type === "element-authoredtext" && !this.props?.element?.elementdata?.headers && this.props?.asideData?.type !== "manifestlist") ) {
                         const dialoguClassName = editor.selection?.getNode()?.className
-                        let authoredtextClass = this.props?.element?.type === "element-authoredtext" && this.props.element.elementdata.designtype === "handwritingstyle" ? 'paragraphNumeroUno handwritingstyle' : 'paragraphNumeroUno'
+                        let authoredtextClass = this.props?.element?.type === "element-authoredtext" && this.props?.element?.elementdata?.designtype === "handwritingstyle" ? 'paragraphNumeroUno handwritingstyle' : 'paragraphNumeroUno'
                         let nodeName = 'span'                        
                         if (this.props.placeholder === "Enter Character Name...") {
                             nodeName = 'h4'
                         }
-                        if (this.props.placeholder === "Enter Stage Directions..." || (this.props?.element?.type === "element-authoredtext" && this.props.placeholder === "Type Something...")) {
+                        if (this.props.placeholder === "Enter Stage Directions..." || (this.props?.element?.type === "element-authoredtext" && this.props?.placeholder === "Type Something...")) {
                             nodeName = 'p'
                         }
                         let classListWithFormatting = editor?.selection?.getNode()?.closest(nodeName)?.classList
@@ -573,7 +573,7 @@ export class TinyMceEditor extends Component {
                                 editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
                                 editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
                             }
-                            else if (this.props?.element?.type === "element-authoredtext" && this.props.placeholder === "Type Something...") {
+                            else if (this.props?.element?.type === "element-authoredtext" && this.props?.placeholder === "Type Something...") {
                                 editor.selection.getNode().className = authoredtextClass;
                                 editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
                                 editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
@@ -600,7 +600,7 @@ export class TinyMceEditor extends Component {
                                     editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
                                     editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
                                 }
-                            } else if (this.props?.element?.type === "element-authoredtext" && this.props.placeholder === "Type Something...") {
+                            } else if (this.props?.element?.type === "element-authoredtext" && this.props?.placeholder === "Type Something...") {
                                 if (selectedTextWithFormatting === selectedText) {
                                     classListWithFormatting?.remove('paragraphNumeroUnoIndentLevel1')
                                     classListWithFormatting?.remove('paragraphNumeroUnoIndentLevel2')
@@ -620,7 +620,7 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
-                    if (this.props?.element?.type !== 'element-dialogue' && !(this.props?.element?.type === "element-authoredtext" && !this.props?.element?.elementdata.headers && this.props?.asideData?.type !== "manifestlist")) {
+                    if (this.props?.element?.type !== 'element-dialogue' && !(this.props?.element?.type === "element-authoredtext" && !this.props?.element?.elementdata?.headers && this.props?.asideData?.type !== "manifestlist")) {
                         if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
                             e.preventDefault();
                             e.stopPropagation();
