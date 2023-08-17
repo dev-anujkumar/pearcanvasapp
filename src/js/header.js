@@ -26,7 +26,7 @@ export const GET_CURRENT_SLATE = function (){
 export const publishContent = function (type) {
     var projectURN = config_object.projectUrn;
     var citeURN = config_object.citeUrn;
-    var firstSlate = config_object.slateManifestURN;
+    var firstSlate = config_object.isPopupSlate ? config_object.tempSlateManifestURN : config_object.slateManifestURN;
     if(type == 'slatePreview') {
         publishSlate(projectURN,firstSlate,citeURN);
     }
