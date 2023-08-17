@@ -23,7 +23,7 @@ import { getGlossaryFootnoteId } from "../js/glossaryFootnote";
 import { checkforToolbarClick, customEvent, spanHandlers, removeBOM, getWirisAltText, removeImageCache, removeMathmlImageCache } from '../js/utils';
 import { saveGlossaryAndFootnote, setFormattingToolbar } from "./GlossaryFootnotePopup/GlossaryFootnote_Actions";
 import { ShowLoader, LaunchTOCForCrossLinking } from '../constants/IFrameMessageTypes';
-import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole, withoutCursorInitailizedElements, isStanzaIndent } from '../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, removeBlankTags, handleTextToRetainFormatting, handleTinymceEditorPlugins, getCookieByName, ALLOWED_ELEMENT_IMG_PASTE, removeStyleAttribute, GLOSSARY, MARKEDINDEX, allowedFormattings, validStylesTagList, getSelectionTextWithFormatting, findStylingOrder, ALLOWED_FORMATTING_TOOLBAR_TAGS, isSubscriberRole, withoutCursorInitailizedElements, isElementIndent, isDialogueIndent } from '../constants/utility.js';
 import store from '../appstore/store';
 import { MULTIPLE_LINE_POETRY_ERROR_POPUP, INSERT_NON_BREAKING_SPACE, NON_BREAKING_SPACE_SUPPORTED_ARRAY, INSERT_SPECIAL_CHARACTER, INSERT_A_BLANK } from '../constants/Action_Constants';
 import { ERROR_CREATING_GLOSSARY, ERROR_CREATING_ASSETPOPOVER, MANIFEST_LIST, MANIFEST_LIST_ITEM, TEXT, ERROR_DELETING_MANIFEST_LIST_ITEM, childNodeTagsArr, allowedClassName, stanzaIndentClassList } from '../component/SlateWrapper/SlateWrapperConstants.js';
@@ -399,6 +399,11 @@ export class TinyMceEditor extends Component {
                     node = editor.selection.getNode().closest('.poetryLine');
                 }
             }
+            if(this.props?.element?.type === 'element-dialogue' && this.props.placeholder !=="Enter Character Name...") {
+                if (editor.selection.getNode().className.toLowerCase() !== 'dialogueLine') {
+                    node = editor.selection.getNode().closest('.dialogueLine');
+                }
+            }
             switch (e.command) {
                 
                 case "indent":
@@ -534,7 +539,7 @@ export class TinyMceEditor extends Component {
                             editor.selection.getNode().className = 'poetryLine';
                             document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                         }
-                        if(isStanzaIndent(classListWithFormatting)) {
+                        if(isElementIndent(classListWithFormatting)) {
                             if (selectedTextWithFormatting === selectedText) {
                                 classListWithFormatting?.remove('poetryLineLevel1')
                                 classListWithFormatting?.remove('poetryLineLevel2')
@@ -543,52 +548,107 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
-                    if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
-                        let textToReplace = window.getSelection().toString()
-                        if (isWirisIncluded) {
-                            if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula') || isWirisIncluded.classList.contains('imageAssetContent')) {
-                                textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`), '')
-                                this.clearFormateText = '';
+                    if (this.props?.element?.type === 'element-dialogue') {
+                        const dialoguClassName = editor.selection?.getNode()?.className
+                        let nodeName = 'span'                        
+                        if (this.props.placeholder === "Enter Character Name...") {
+                            nodeName = 'h4'
+                        }
+                        if (this.props.placeholder === "Enter Stage Directions...") {
+                            nodeName = 'p'
+                        }
+                        let classListWithFormatting = editor?.selection?.getNode()?.closest(nodeName)?.classList
+                        let selectedTextWithFormatting = editor?.selection?.getNode()?.closest(nodeName)?.innerText
+                        if (dialoguClassName?.includes('CNLineLevel1') || dialoguClassName?.includes('CNLineLevel2') || dialoguClassName?.includes('CNLineLevel3') || dialoguClassName?.includes('DELineLevel1') || dialoguClassName?.includes('DELineLevel2') || dialoguClassName?.includes('DELineLevel3') || dialoguClassName?.includes('SDLineLevel1') || dialoguClassName?.includes('SDLineLevel2') || dialoguClassName?.includes('SDLineLevel3')) {
+                            if (this.props.placeholder === "Enter Character Name...") {
+                                editor.selection.getNode().className = 'characterPS cypress-editable';
+                                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                            }
+                            else if (this.props.placeholder === "Enter Stage Directions...") {
+                                editor.selection.getNode().className = 'stageDirectionLine';
+                                editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
+                                editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
+                            }
+                            else {
+                                editor.selection.getNode().className = 'dialogueLine';
+                                document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                             }
                         }
-                        else if ((e && e.target && e.target.targetElm && e.target.targetElm.children && e.target.targetElm.children.length) &&
-                            (
-                                e.target.targetElm.children[0].classList.contains("paragraphNumeroUnoCitation") ||
-                                e.target.targetElm.children[0].classList.contains("heading1NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("heading2NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("heading3NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("heading4NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("heading5NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("heading6NummerEins") ||
-                                e.target.targetElm.children[0].classList.contains("paragraphNumeroUno") ||
-                                e.target.targetElm.children[0].classList.contains("pullQuoteNumeroUno") ||
-                                e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem"))
-                        ) {
-                            e.target.targetElm.children[0].innerHTML = textToReplace;
-                        }
-                        else if (e.target.targetElm.nodeName === "CODE" && this.props.element.figuretype === 'codelisting') {
-                            spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'code', 'codeNoHighlightLine');
-                        }
-                        /*  For Figure type*/
-                        else {
-                            e.target.targetElm.innerHTML = textToReplace;
-                        }
-                    }
-                    else if (this.props.element.type === 'stanza') {
-                        let selection = window.getSelection();
-                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'div', 'poetryLine', selectedText);
-                        if (output === false) {
-                            return false;
+                        if (isDialogueIndent(classListWithFormatting)) {
+                            if (this.props.placeholder === "Enter Character Name...") {
+                                if (selectedTextWithFormatting === selectedText) {
+                                    classListWithFormatting?.remove('CNLineLevel1')
+                                    classListWithFormatting?.remove('CNLineLevel2')
+                                    classListWithFormatting?.remove('CNLineLevel3')
+                                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                                }
+                            } else if (this.props.placeholder === "Enter Stage Directions...") {
+                                if (selectedTextWithFormatting === selectedText) {
+                                    classListWithFormatting?.remove('SDLineLevel1')
+                                    classListWithFormatting?.remove('SDLineLevel2')
+                                    classListWithFormatting?.remove('SDLineLevel3')
+                                    classListWithFormatting.add('stageDirectionLine')
+                                    editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
+                                    editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
+                                }
+                            } else {
+                                if (selectedTextWithFormatting === selectedText) {
+                                    classListWithFormatting?.remove('DELineLevel1')
+                                    classListWithFormatting?.remove('DELineLevel2')
+                                    classListWithFormatting?.remove('DELineLevel3')
+                                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                                }
+                            }
                         }
                     }
-                    else if (this.props.element.figuretype === 'codelisting') {
-                        let selection = window.getSelection();
-                        let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'code', 'codeNoHighlightLine', selectedText);
-                        if (output === false) {
-                            return false;
+                    if (this.props?.element?.type !== 'element-dialogue') {
+                        if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            let isWirisIncluded = document.querySelector(`#cypress-${this.props.index} img`);
+                            let textToReplace = window.getSelection().toString()
+                            if (isWirisIncluded) {
+                                if (isWirisIncluded.classList.contains('Wirisformula') || isWirisIncluded.classList.contains('temp_Wirisformula') || isWirisIncluded.classList.contains('imageAssetContent')) {
+                                    textToReplace = this.innerTextWithMathMl(document.getElementById(`cypress-${this.props.index}`), '')
+                                    this.clearFormateText = '';
+                                }
+                            }
+                            else if ((e && e.target && e.target.targetElm && e.target.targetElm.children && e.target.targetElm.children.length) &&
+                                (
+                                    e.target.targetElm.children[0].classList.contains("paragraphNumeroUnoCitation") ||
+                                    e.target.targetElm.children[0].classList.contains("heading1NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("heading2NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("heading3NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("heading4NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("heading5NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("heading6NummerEins") ||
+                                    e.target.targetElm.children[0].classList.contains("paragraphNumeroUno") ||
+                                    e.target.targetElm.children[0].classList.contains("pullQuoteNumeroUno") ||
+                                    e.target.targetElm.children[0].classList.contains("heading2learningObjectiveItem"))
+                            ) {
+                                e.target.targetElm.children[0].innerHTML = textToReplace;
+                            }
+                            else if (e.target.targetElm.nodeName === "CODE" && this.props.element.figuretype === 'codelisting') {
+                                spanHandlers.handleSelectAllRemoveFormatting(this.props.index, 'code', 'codeNoHighlightLine');
+                            }
+                            /*  For Figure type*/
+                            else {
+                                e.target.targetElm.innerHTML = textToReplace;
+                            }
+                        }
+                        else if (this.props.element.type === 'stanza') {
+                            let selection = window.getSelection();
+                            let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'div', 'poetryLine', selectedText);
+                            if (output === false) {
+                                return false;
+                            }
+                        }
+                        else if (this.props.element.figuretype === 'codelisting') {
+                            let selection = window.getSelection();
+                            let output = spanHandlers.handleRemoveFormattingOnSpan(selection, e, 'code', 'codeNoHighlightLine', selectedText);
+                            if (output === false) {
+                                return false;
+                            }
                         }
                     }
 
@@ -824,15 +884,18 @@ export class TinyMceEditor extends Component {
                     setFormattingToolbar('disableTinymceToolbar')
                 }
             }
-            if (this.props?.element?.type === 'stanza') {
+            if (this.props?.element?.type === 'stanza' || (this?.props?.element?.type === 'element-dialogue' && this.props.placeholder !== "Enter Stage Directions...")) {
                 const stanzaClassList = e?.target?.classList
-                const stanzaClassListWithFormatting = e?.target?.closest('span')?.classList
-                if (!isStanzaIndent(stanzaClassList)) {
+                let stanzaClassListWithFormatting = e?.target?.closest('span')?.classList
+                if(this.props.placeholder==="Enter Character Name...") {
+                    stanzaClassListWithFormatting = e?.target?.closest('h4')?.classList
+                }
+                if (!isElementIndent(stanzaClassList)) {
                     document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                 } else {
                     document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
                 }
-                if(isStanzaIndent(stanzaClassListWithFormatting)) {
+                if(isElementIndent(stanzaClassListWithFormatting)) {
                     document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
                 }
             }
@@ -1065,12 +1128,12 @@ export class TinyMceEditor extends Component {
      * @param {*} editor  editor instance
      */
     handleStanzaIndent = (classListData, classListWithFormatting) => {
-        if (!isStanzaIndent(classListData)) {
+        if (!isElementIndent(classListData)) {
             document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
         } else {
             document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
         }
-        if (isStanzaIndent(classListWithFormatting)) {
+        if (isElementIndent(classListWithFormatting)) {
             document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
         }
     }
@@ -1228,10 +1291,13 @@ export class TinyMceEditor extends Component {
                         this.handleBlankLineArrowKeys(keyPressed, editor)
                     }
                 }
-                if (this.props?.element?.type === 'stanza') {
+                if (this.props?.element?.type === 'stanza' || this?.props?.element?.type === 'element-dialogue' && this.props.placeholder !== "Enter Stage Directions...") {
                     let currentElement = editor?.selection?.getNode();
                     const classListData = currentElement?.classList
-                    const classListWithFormatting = currentElement?.closest('span')?.classList
+                    let classListWithFormatting = currentElement?.closest('span')?.classList
+                    if(this.props.placeholder==="Enter Character Name..." ) {
+                        classListWithFormatting = currentElement?.closest('h4')?.classList
+                    }
                     this.handleStanzaIndent(classListData, classListWithFormatting)
                 }
             }
@@ -2721,11 +2787,19 @@ export class TinyMceEditor extends Component {
      */
     handleIndent = (e, editor, content, type, selectedNode) => {
         let className = null;
+        let dialogueSelected = selectedNode
         const { isBlockList} = this.props
         if(!isBlockList){
             if (type && type === 'stanza' && selectedNode) {
                 className = selectedNode.className;
             }
+            if (type && type === 'element-dialogue' && selectedNode) {
+                className = selectedNode.className;
+                if(this.props.placeholder==="Enter Character Name...") {
+                    dialogueSelected = selectedNode?.classList?.length ? selectedNode : selectedNode?.closest('h4')
+                }
+            }
+            
             if (content.match(/paragraphNumeroUno\b/)) {
                 content = content.replace(/paragraphNumeroUno\b/, "paragraphNumeroUnoIndentLevel1")
             }
@@ -2734,6 +2808,15 @@ export class TinyMceEditor extends Component {
             }
             else if (content.match(/paragraphNumeroUnoIndentLevel2\b/)) {
                 content = content.replace(/paragraphNumeroUnoIndentLevel2\b/, "paragraphNumeroUnoIndentLevel3")
+            }
+            if (content.match(/stageDirectionLine\b/)) {
+                content = content.replace(/stageDirectionLine\b/, "SDLineLevel1")
+            }
+            else if (content.match(/SDLineLevel1\b/)) {
+                content = content.replace(/SDLineLevel1\b/, "SDLineLevel2")
+            }
+            else if (content.match(/SDLineLevel2\b/)) {
+                content = content.replace(/SDLineLevel2\b/, "SDLineLevel3")
             }
         }
         if (isBlockList) {
@@ -2757,6 +2840,44 @@ export class TinyMceEditor extends Component {
             selectedNode.className = 'poetryLine poetryLineLevel3';
             this.indentRun = true;
         }
+        else if (className && className.trim() === 'dialogueLine') {
+            dialogueSelected.className = 'dialogueLine DELineLevel1';
+            this.indentRun = true;
+        }
+        else if (className && className.trim() === 'dialogueLine DELineLevel1') {
+            dialogueSelected.className = 'dialogueLine DELineLevel2';
+            this.indentRun = true;
+        }
+        else if (className && className.trim() === 'dialogueLine DELineLevel2') {
+            dialogueSelected.className = 'dialogueLine DELineLevel3';
+            this.indentRun = true;
+        }
+        else if (dialogueSelected?.classList?.contains('characterPS')) {
+            dialogueSelected?.classList?.add('CNLineLevel1') 
+            dialogueSelected?.classList?.remove('characterPS') 
+            this.indentRun = true;
+        }
+         else if (dialogueSelected?.classList?.contains('CNLineLevel1')) {
+            dialogueSelected?.classList?.add('CNLineLevel2') 
+            dialogueSelected?.classList?.remove('CNLineLevel1')
+            this.indentRun = true;
+        }
+        else if (dialogueSelected?.classList?.contains('CNLineLevel2')) {
+            dialogueSelected?.classList?.add('CNLineLevel3')
+            dialogueSelected?.classList?.remove('CNLineLevel2')
+            this.indentRun = true;
+        } 
+        if (type === 'element-dialogue' && this.props.placeholder !== "Enter Stage Directions...") {
+            if (selectedNode) {
+                let dialogueClassList = selectedNode?.classList
+                if (this.props.placeholder === "Enter Character Name...") {
+                    dialogueClassList = selectedNode?.classList?.length ? selectedNode?.classList : selectedNode?.closest('h4')?.classList
+                }
+                if (isElementIndent(dialogueClassList)) {
+                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
+                }
+            }
+        }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -2770,8 +2891,16 @@ export class TinyMceEditor extends Component {
      */
     handleOutdent = (e, editor, content, type, selectedNode) => {
         let className = null;
+        let dialogueSelected = selectedNode
         if (type && type === 'stanza' && selectedNode) {
             className = selectedNode.className;
+        }
+        if (type && type === 'element-dialogue' && selectedNode) {
+            className = selectedNode?.classList ? selectedNode?.closest('span')?.className : selectedNode?.className
+            dialogueSelected = selectedNode?.classList ? selectedNode?.closest('span') : selectedNode
+            if(this.props.placeholder==="Enter Character Name...") {
+                dialogueSelected = selectedNode?.classList?.length ? selectedNode : selectedNode?.closest('h4')
+            }
         }
         if (content.match(/paragraphNumeroUnoIndentLevel3\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel3\b/, "paragraphNumeroUnoIndentLevel2")
@@ -2781,6 +2910,16 @@ export class TinyMceEditor extends Component {
         }
         else if (content.match(/paragraphNumeroUnoIndentLevel1\b/)) {
             content = content.replace(/paragraphNumeroUnoIndentLevel1\b/, "paragraphNumeroUno")
+        }
+
+        if (content.match(/SDLineLevel3\b/)) {
+            content = content.replace(/SDLineLevel3\b/, "SDLineLevel2")
+        }
+        else if (content.match(/SDLineLevel2\b/)) {
+            content = content.replace(/SDLineLevel2\b/, "SDLineLevel1")
+        }
+        else if (content.match(/SDLineLevel1\b/)) {
+            content = content.replace(/SDLineLevel1\b/, "stageDirectionLine")
         }
 
         // Disable Outdent For Poetry-Stanza
@@ -2797,6 +2936,43 @@ export class TinyMceEditor extends Component {
             selectedNode.className = 'poetryLine poetryLineLevel2';
             this.outdentRun = true;
         }
+        else if (className && className.trim() === 'dialogueLine DELineLevel1') {
+            dialogueSelected.className = 'dialogueLine';
+            this.outdentRun = true;
+        }
+        else if (className && className.trim() === 'dialogueLine DELineLevel2') {
+            dialogueSelected.className = 'dialogueLine DELineLevel1';
+            this.outdentRun = true;
+        }
+        else if (className && className.trim() === 'dialogueLine DELineLevel3') {
+            dialogueSelected.className = 'dialogueLine DELineLevel2';
+            this.outdentRun = true;
+        }
+        else if (dialogueSelected?.classList?.contains('CNLineLevel3')) {
+            dialogueSelected?.classList?.add('CNLineLevel2') 
+            dialogueSelected?.classList?.remove('CNLineLevel3') 
+        }
+         else if (dialogueSelected?.classList?.contains('CNLineLevel2')) {
+            dialogueSelected?.classList?.add('CNLineLevel1') 
+            dialogueSelected?.classList?.remove('CNLineLevel2')
+    
+        }
+        else if (dialogueSelected?.classList?.contains('CNLineLevel1')) {
+            dialogueSelected?.classList?.add('characterPS')
+            dialogueSelected?.classList?.remove('CNLineLevel1')  
+        } 
+        if(type === 'element-dialogue' && this.props.placeholder !== "Enter Stage Directions...") {
+            if (selectedNode) {
+                className = selectedNode.className;
+                let dialogueClassList = selectedNode?.classList
+                if(this.props.placeholder==="Enter Character Name...") {
+                    dialogueClassList = selectedNode?.classList?.length ? selectedNode?.classList : selectedNode?.closest('h4')?.classList
+                }
+                if (!isElementIndent(dialogueClassList)) {
+                    document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
+                }
+            }
+        }
         if (!className) {
             this.setContentAndPlaceCaret(editor, content)
         }
@@ -2812,14 +2988,16 @@ export class TinyMceEditor extends Component {
         if (type && type === 'stanza' && selectedNode) {
             className = selectedNode.className;
             const stanzaClassList = selectedNode?.classList
-            if (!isStanzaIndent(stanzaClassList)) {
+            if (!isElementIndent(stanzaClassList)) {
                 document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
             }
         }
-        if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
-            e.preventDefault()
+        if (type !== 'element-dialogue') {
+            if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
+                e.preventDefault()
+            }
         }
-        if (content.match(/paragraphNumeroUnoIndentLevel3\b/) || (className && className.trim() === 'poetryLine poetryLineLevel3')) {
+        if (content.match(/paragraphNumeroUnoIndentLevel3\b/) || (className && className.trim() === 'poetryLine poetryLineLevel3') || content.match(/SDLineLevel3\b/)) {
             e.preventDefault()
         }
     }
@@ -2842,10 +3020,12 @@ export class TinyMceEditor extends Component {
                 document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
             }
         }
-        if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
-            e.preventDefault()
+        if (type !== 'element-dialogue') {
+            if (!content.match(/paragraphNumeroUno\b/) && !content.match(/paragraphNumeroUnoIndentLevel1\b/) && !content.match(/paragraphNumeroUnoIndentLevel2\b/) && !content.match(/paragraphNumeroUnoIndentLevel3\b/) && !className) {
+                e.preventDefault()
+            }
         }
-        if (content.match(/paragraphNumeroUno\b/) || (className && className.trim() === 'poetryLine')) {
+        if (content.match(/paragraphNumeroUno\b/) || (className && className.trim() === 'poetryLine') || content.match(/stageDirectionLine\b/)) {
             e.preventDefault()
         }
     }
@@ -3919,14 +4099,17 @@ export class TinyMceEditor extends Component {
                     tinymce.activeEditor.selection.collapse(false);
                     this.handleCodeClick(tinymce.activeEditor, true);
                 }
-                if (this.props?.element?.type === 'stanza') {
+                if (this.props?.element?.type === 'stanza' || this?.props?.element?.type === 'element-dialogue' && this.props.placeholder !== "Enter Stage Directions...") {
                     const data = tinymce.activeEditor?.selection?.getNode()
                     const stanzaClassList = data?.classList
-                    const stanzaClassListWithFormatting = data?.closest('span')?.classList
-                    if (!isStanzaIndent(stanzaClassList)) {
+                    let stanzaClassListWithFormatting = data?.closest('span')?.classList
+                    if(this.props.placeholder==="Enter Character Name...") {
+                        stanzaClassListWithFormatting = data?.closest('h4')?.classList
+                    }
+                    if (!isElementIndent(stanzaClassList)) {
                         document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                     }
-                    if(isStanzaIndent(stanzaClassListWithFormatting)) {
+                    if(isElementIndent(stanzaClassListWithFormatting)) {
                         document.querySelector(`button[title="Decrease indent"]`)?.classList?.remove('disabled-toolbar-button')
                     }
                 }

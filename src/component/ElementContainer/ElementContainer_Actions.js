@@ -119,6 +119,8 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         }
     )
     if (deleteElemData.status === 200) {
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         const deleteArgs = {
             deleteElemData: deleteElemData.data,
             dispatch,
@@ -159,8 +161,8 @@ export const contentEditableFalse = (updatedData) => {
  */
 export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
     if (hasReviewerRole()) {
-        // condition to work on approved slate for Auto update on Assessment slate 
-        if ((updatedData?.type !== 'element-assessment' && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
+        // condition to work on approved slate for Auto update on Assessment slate and items
+        if (((updatedData?.type !== 'element-assessment' ? updatedData?.figuredata?.type !== 'element-assessment' : false) && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return;
         }
@@ -252,6 +254,8 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             responseData : response.data,
             showHideObj
         }
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         processAndStoreUpdatedResponse(updateArgs)
         if (updatedData.type == "element-assessment") {
             let newAssessmentId = response?.data?.elementdata?.assessmentid;
@@ -879,6 +883,8 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         if (currentSlateData?.status === 'approved') {
             if (currentSlateData.type === "popup") {
                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });
@@ -963,6 +969,8 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
         if (currentSlateData?.status === 'approved') {
             if (currentSlateData.type === "popup") {
                 sendDataToIframe({ 'type': "tocRefreshVersioning", 'message': true });

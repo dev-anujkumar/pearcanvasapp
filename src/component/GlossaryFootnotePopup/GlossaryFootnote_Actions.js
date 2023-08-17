@@ -441,11 +441,29 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
             } else {
                 let indexes = index.split('-');
                 let indexesLen = indexes.length, condition;
-                if ((indexesLen == 4 || indexesLen == 5) && newBodymatter[tempIndex[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support glossary in text elements inside WE/AS of S/H
+                if ((indexesLen == 4 || indexesLen == 5 || indexesLen == 7 || indexesLen == 9 ||indexesLen == 11) && newBodymatter[tempIndex[0]].type === "showhide" && asideParent?.parent?.showHideType) {  
+                    if(asideParent.type === ElementConstants.BLOCK_LIST) {
+                        switch(indexesLen) {
+                            case 5: // Blocklist(level1) inside showhide element
+                                glossaryFootElem = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]
+                                break;
+                            case 7: // Blocklist(level2) inside showhide element
+                                glossaryFootElem = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]
+                            break;
+                            case 9: // Blocklist(level3) inside showhide element
+                                glossaryFootElem = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]
+                                break;
+                            case 11: // Blocklist(level4) inside showhide element
+                                glossaryFootElem = newBodymatter[indexes[0]]?.interactivedata[asideParent.parent.showHideType][indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]?.listdata?.bodymatter[indexes[9]]?.listitemdata?.bodymatter[indexes[10]]
+                                break;
+                        }
+                        
+                    } else {
+                    // to support glossary in text elements inside WE/AS of S/H
                     glossaryFootElem = newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]];
                     if (indexesLen == 5 && glossaryFootElem.type === 'manifest') {
                         glossaryFootElem = glossaryFootElem.contents.bodymatter[indexes[4]];
-                    } // To support glossary/footnote inside element of Tab of TB
+                    }} // To support glossary/footnote inside element of Tab of TB
                 } else if (newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
                     switch (indexesLen) {
                         case 4: // Text elements inside Tab element in TB
@@ -459,10 +477,24 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                             // TB->Tab->WE->BODY->Element
                             if (elementInTab?.type === ElementConstants.ELEMENT_ASIDE && elementInTab?.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) {
                                 glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                            } else if(elementInTab.type === ElementConstants.BLOCK_LIST) { // Blocklist(level1) inside TB element
+                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]
                             } else { // PE element stanza inside Tab element in TB
                                 glossaryFootElem = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].contents.bodymatter[indexes[5]];
                             }
-                            break;         
+                            break;
+                        case 8:
+                             // Blocklist(level2) inside TB element
+                            glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]
+                            break;
+                        case 10:
+                             // Blocklist(level3) inside TB element
+                            glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]?.listdata?.bodymatter[indexes[8]]?.listitemdata?.bodymatter[indexes[9]]
+                            break;
+                        case 12:
+                             // Blocklist(level4) inside TB element
+                            glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[0]?.groupeddata?.bodymatter[indexes[2]]?.groupdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]?.listdata?.bodymatter[indexes[8]]?.listitemdata?.bodymatter[indexes[9]]?.listdata?.bodymatter[indexes[10]]?.listitemdata?.bodymatter[indexes[11]]
+                            break;       
                     }
                 } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {  // to support glossary in text elements inside WE/AS of MultiColumn
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
@@ -486,7 +518,9 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                 } else if (indexesLen == 4) {  // to support glossary in Block Poetry before section break inside WE/Aside
                     if (elementType && elementType === 'stanza') {
                         glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[3]]
-                    } else {
+                    } else if(asideParent.type === ElementConstants.BLOCK_LIST) { // Blocklist(level1) inside WE/Aside
+                        glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata?.bodymatter[indexes[3]]
+                    } else{
                         // to support glossary in text elements inside WE/AS of MultiColumn
                         glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                     }
@@ -499,10 +533,52 @@ export const glossaaryFootnotePopup = (status, glossaaryFootnote, glossaryfootno
                         } else if (newBodymatter[indexes[0]]?.type === "showhide"){ // to support glossary in Block Poetry in SH
                             glossaryFootElem = newBodymatter[indexes[0]]?.interactivedata[asideParent?.showHideType][indexes[2]]?.contents.bodymatter[indexes[4]];
                         }
+                    } else if(asideParent.type === ElementConstants.BLOCK_LIST) { // Blocklist(level1) inside WE-SB/2C/3C
+                                if(newBodymatter[indexes[0]]?.type == ElementConstants.MULTI_COLUMN) {
+                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]
+                                } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) {
+                                    glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]
+                                }
                     } else {
                     // to support glossary in section break inside WE of MultiColumn
                     glossaryFootElem = newBodymatter[tempIndex[0]].groupeddata.bodymatter[tempIndex[1]].groupdata.bodymatter[tempIndex[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]]
                 }
+                } else if((indexesLen == 7 || indexesLen == 9 || indexesLen == 11) && asideParent.type === ElementConstants.BLOCK_LIST) {
+                    switch(indexesLen) {
+                        case 7: // Blocklist(level2) inside WE-SB/2C/3C
+                            if(newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN) {
+                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]
+                            } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) {
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]
+                            }
+                            break;
+                        case 9:  // Blocklist(level3) inside WE-SB/2C/3C
+                            if(newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN) {
+                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]
+                            } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) {
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]
+                            }
+                            break;
+                        case 11:  // Blocklist(level4) inside WE-SB/2C/3C
+                            if(newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN) {
+                                glossaryFootElem = newBodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]?.listdata?.bodymatter[indexes[9]]?.listitemdata?.bodymatter[indexes[10]]   
+                            } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) {
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.listdata?.bodymatter[indexes[3]]?.listitemdata?.bodymatter[indexes[4]]?.listdata?.bodymatter[indexes[5]]?.listitemdata?.bodymatter[indexes[6]]?.listdata?.bodymatter[indexes[7]]?.listitemdata?.bodymatter[indexes[8]]?.listdata?.bodymatter[indexes[9]]?.listitemdata?.bodymatter[indexes[10]]
+                            }
+                            break;
+                    }
+                } else if((indexesLen == 6 || indexesLen == 8 || indexesLen == 10) && asideParent.type === ElementConstants.BLOCK_LIST) {
+                    switch(indexesLen) {
+                        case 6: // Blocklist(level2) inside WE/Aside
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]
+                            break;
+                        case 8:  // Blocklist(level3) inside WE/Aside
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]
+                            break;
+                        case 10:  // Blocklist(level4) inside WE/Aside
+                                glossaryFootElem = newBodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.listdata?.bodymatter[indexes[2]]?.listitemdata?.bodymatter[indexes[3]]?.listdata?.bodymatter[indexes[4]]?.listitemdata?.bodymatter[indexes[5]]?.listdata?.bodymatter[indexes[6]]?.listitemdata?.bodymatter[indexes[7]]?.listdata?.bodymatter[indexes[8]]?.listitemdata?.bodymatter[indexes[9]]
+                            break;
+                    }
                 }
 
             }
@@ -682,7 +758,7 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     let workEditor, workContainer;
     let currentElement = store.getState().appStore.activeElement;
     const showHideElement = store.getState().appStore?.showHideObj;
-    
+
     /** Feedback status from elementData */
     let elementNodeData = document.querySelector(`[data-id='${elementWorkId}']`)?document.querySelector(`[data-id='${elementWorkId}']`).outerHTML.includes('feedback'):false
     let tcmFeedback =  elementNodeData;
@@ -867,7 +943,12 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
     else if(appStore.parentUrn && appStore.parentUrn.contentUrn) { // For Aside/WE
         parentEntityUrn = appStore.parentUrn.contentUrn
     }
-    else { // elements in a slate
+    else if(asideParent?.type === ElementConstants.BLOCK_LIST  && index && typeof (index) !== 'number'){ // parentEntityUrn for Glossary/Footnote inside blocklist
+        let indexes = index.split('-');
+        let indexesLen = indexes.length
+        parentEntityUrn = asideParent?.parentManifestList?.listdata?.bodymatter[indexes[indexesLen - 2]]?.contentUrn
+    }
+    else{ // elements in a slate
         parentEntityUrn = config.slateEntityURN
     }
 
@@ -979,7 +1060,10 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
         /** [PCAT-8289] ----------------------------------- TCM Snapshot Data handling ---------------------------------*/
         // This check is added to prevent snapshots for TB element, it will be removed when TB element will support TCM
         const isTbElement = asideParent?.subtype === ElementConstants.TAB || asideParent?.parent?.subtype === ElementConstants.TAB || asideParent?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideParent?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
-        if (!isTbElement) {
+        const isBlockListElement = asideParent.type === ElementConstants.BLOCK_LIST
+        // Making condition true for triggering slate level save api
+        localStorage.setItem('isChangeInSlate', 'true');
+        if (!isTbElement && !isBlockListElement) {
             if (elementTypeData.indexOf(elementType) !== -1 && typeWithPopup !== "poetry") {
                 let showhideTypeVal = "", showHideObject = undefined
                 if ((showHideElement || asideParent?.type === 'showhide') && elementType !== 'element-blockfeature') { /** Glossary-Footnotes inside Show-Hide */
@@ -1661,11 +1745,26 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
             } else {
                 let indexes = index.split('-');
                 let indexesLen = indexes.length, condition;
-                if ((indexesLen == 4 || indexesLen == 5) && newBodymatter[indexes[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support glossary in text elements inside WE/AS of S/H
+                if ((indexesLen == 4 || indexesLen == 5 || indexesLen == 7 || indexesLen == 9 ||indexesLen == 11) && newBodymatter[indexes[0]].type === "showhide" && asideParent?.parent?.showHideType) {  // to support glossary in text elements inside WE/AS of S/H
                     let elementInSH = newBodymatter[tempIndex[0]].interactivedata[asideParent.parent.showHideType][indexes[2]];
                     if (elementInSH.subtype === "workedexample" && indexesLen == 5 && elementInSH.elementdata.bodymatter[indexes[3]].type === 'manifest') {
                         newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
-                    } else {
+                        // Blocklist inside showhide element
+                    } else if(elementInSH.type === ElementConstants.BLOCK_LIST) {
+                        switch(indexesLen) {
+                            case 5: // Blocklist(level1) inside showhide
+                                newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = res.data
+                                break;
+                            case 7: // Blocklist(level2) inside showhide
+                                newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = res.data
+                            break;
+                            case 9: // Blocklist(level3) inside showhide
+                                newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = res.data
+                                break;
+                            case 11: // Blocklist(level4) inside showhide
+                                newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = res.data
+                                break;
+                        } }else {
                         newBodymatter[indexes[0]].interactivedata[asideParent.parent.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
                     } // To support glossary/footnote inside elements of Tab inside TB
                 } else if (newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN && newBodymatter[tempIndex[0]]?.subtype === ElementConstants.TAB) {
@@ -1681,10 +1780,22 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                             // TB->Tab->WE->BODY->Element
                             if (elementInTab?.type === ElementConstants.ELEMENT_ASIDE && elementInTab?.subtype === ElementConstants.ELEMENT_WORKEDEXAMPLE) {
                                 newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = res.data;
+                            } else if(elementInTab.type === ElementConstants.BLOCK_LIST){ //Blocklist(leve1) inside TB element
+                                newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]] = res.data
                             } else { // PE element stanza inside Tab element in TB
                                 newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].contents.bodymatter[indexes[5]] = res.data;
                             }
                             break;
+                        case 8: // Blocklist(level2) inside TB element
+                            newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]] = res.data
+                            break;
+                        case 10:// Blocklist(level3) inside TB element
+                            newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]] = res.data
+                            break
+                        case 12:
+                            // Blocklist(level4) inside TB element
+                            newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter[indexes[10]].listitemdata.bodymatter[indexes[11]] = res.data
+                            break
                     }
                 } else if (indexesLen == 4 && newBodymatter[tempIndex[0]].type === "groupedcontent") {
                     // aside inside multi column
@@ -1720,6 +1831,8 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                     if (elementType && elementType === 'stanza') {
                         // Block Poetry Inside WE/Aside before section break
                         newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[3]] = res.data;
+                    } else if(asideParent.type === ElementConstants.BLOCK_LIST) { // Blocklist(level1) inside WE/Aside
+                        newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]] = res.data
                     }
                     else {
                         // aside inside multi column
@@ -1735,10 +1848,56 @@ export const saveGlossaryAndFootnote = (elementWorkId, elementType, glossaryfoot
                         } else if (newBodymatter[indexes[0]] && newBodymatter[indexes[0]].type == "showhide"){ // Block Poetry Inside SH
                             newBodymatter[indexes[0]].interactivedata[asideParent?.showHideType][indexes[2]].contents.bodymatter[indexes[4]] = res.data 
                         }
-
-                    } else {
+                        //Blocklist(level1) inside WE-SB/2C/3C
+                    }else if(asideParent.type === ElementConstants.BLOCK_LIST) {
+                            if(newBodymatter[indexes[0]]?.type == ElementConstants.MULTI_COLUMN) {
+                                newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = res.data
+                            } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) {
+                                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = res.data
+                            }
+                        } else {
                     // element inside popup inside multi column
-                    newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data
+                        newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data
+                    }
+                } else if((indexesLen == 7 || indexesLen == 9 || indexesLen == 11) && asideParent.type === ElementConstants.BLOCK_LIST) { // glossary/footnote in WE/2C/3C > BlockList
+                    switch(indexesLen) {
+                        case 7:
+                            // WE-SB/2C/3C > Blocklist(level2)> glossary/foonote
+                            if(newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN) {
+                                newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = res.data
+                            } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) { //WE-SB
+                                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = res.data
+                            }
+                            break;
+                        case 9:
+                            // WE-SB/2C/3C > Blocklist(level3) > glossary/foonote
+                            if(newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN) {
+                                newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = res.data
+                            } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) { //WE-SB
+                                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = res.data
+                            }
+                            break;
+                        case 11:
+                            // WE-SB/2C/3C > Blocklist(level4) > glossary/foonote
+                            if(newBodymatter[tempIndex[0]].type === ElementConstants.MULTI_COLUMN) {
+                                newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = res.data
+                                
+                            } else if(newBodymatter[indexes[0]]?.type == ElementConstants.ELEMENT_ASIDE) { // WE-SB
+                                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]]  = res.data
+                            }
+                            break;
+                    }
+                } else if((indexesLen == 6 || indexesLen == 8 || indexesLen == 10) && asideParent.type === ElementConstants.BLOCK_LIST) {
+                    switch(indexesLen) {
+                        case 6: // Blocklist(level2) inside WE/2C/3C
+                                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]]= res.data
+                            break;
+                        case 8:  // Blocklist(level3) inside WE/2C/3C
+                                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]] = res.data
+                            break;
+                        case 10:  // Blocklist(level4) inside WE/2C/3C
+                                newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]] = res.data
+                            break;
                     }
                 }
             }

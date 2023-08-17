@@ -102,7 +102,7 @@ jest.mock('../../../src/constants/utility.js', () => {
         },
         isSubscriberRole: jest.fn(),
         withoutCursorInitailizedElements: ['figure', 'element-aside'],
-        isStanzaIndent: jest.fn()
+        isElementIndent: jest.fn()
     }
 })
 jest.mock('../../../src/js/glossaryFootnote.js', () => {

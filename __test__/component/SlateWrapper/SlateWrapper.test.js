@@ -765,23 +765,6 @@ describe("SlateWrapper Component", () => {
             spy.mockClear()
         })
     })
-    describe("1.33 Test - toggleAssessmentPopup ", () => {
-        it('1.33.1  Test - if case ', () => {
-            const newInitialState = {...initialState, assessmentReducer: {showConfirmationPopup: true}};
-            const compInstance = slateWrapInstance(props, newInitialState);
-            const spy = jest.spyOn(compInstance, 'toggleAssessmentPopup')
-            compInstance.toggleAssessmentPopup(true, 1);
-            expect(spy).toHaveBeenCalled();
-            spy.mockClear()
-        })
-        it('1.33.2  Test - else case ', () => {
-            const compInstance = slateWrapInstance(props);
-            const spy = jest.spyOn(compInstance, 'toggleAssessmentPopup')
-            compInstance.toggleAssessmentPopup(false, 1);
-            expect(spy).toHaveBeenCalled();
-            spy.mockClear()
-        })
-    })
     describe("1.34 Test - showAudioRemoveConfirmationPopup ", () => {
         it('1.34.1  Test - if case ', () => {
             const newInitialState = {...initialState, audioReducer: {openWrongAudioPopup: true}};

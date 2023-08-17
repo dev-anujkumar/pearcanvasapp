@@ -40,6 +40,7 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview, t
             elapsedTime,
             ...content_data
           });
+          sendDataToIframe({ 'type': 'projectPreviewLunched', 'message': { status: true } }) // sending message to trigger enable project preview icon 
           window.open(previewURL, '_blank');
           if (callBack) { callBack(); }
         } else {
@@ -100,6 +101,7 @@ export const publishSlate = (project, section, cite) => {
         })
         sendDataToIframe({ 'type': 'slatePreviewTriggered', 'message': { status: true } }) // sending message to trigger aggrigatedcomments API after getting response  
         setTimeout(() => {
+          sendDataToIframe({ 'type': 'slatePreviewLunched', 'message': { status: true } }) // sending message to trigger enable slate preview icon 
           window.open(previewURL, '_blank')
         }, 1100)
       } else {
