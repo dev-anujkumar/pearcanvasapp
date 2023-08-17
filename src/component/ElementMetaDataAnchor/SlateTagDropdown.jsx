@@ -89,11 +89,13 @@ class SlateTagDropdown extends React.Component {
     const {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs,lastAlignedLo
     } = this.prepareExtFrameworkData();
+    const {slateLockInfo} = this.props
     const currentSlateLF=this.props.currentSlateLF;
     const defaultLF=this.props.defaultLF;
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
     const slateVersioningStatus =  this.props?.slatePublishStatus || this.props?.setPopUpSlateLOstatus
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
+    const isSlateLocked = checkSlateLock(slateLockInfo)
     if(currentSlateLF=== CYPRESS_LF && this.props.permissions.includes('lo_edit_metadata')){
       this.props.toggleLOWarningPopup(true,e.target.innerText);
     } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
@@ -116,7 +118,8 @@ class SlateTagDropdown extends React.Component {
           'projectSharingRole': projectSharingRole,
           'isSubscribed': isSubscribed,
           'defaultLF': defaultLF,
-          "isApprovedSlate":slateVersioningStatus
+          "isApprovedSlate": slateVersioningStatus,
+          'isSlateLocked': isSlateLocked
         }
       })
 
@@ -159,9 +162,11 @@ class SlateTagDropdown extends React.Component {
     const {
       slateManifestURN, currentSlateLOData, apiKeys_LO, externalLFUrn, selectedLOs
     } = this.prepareExtFrameworkData();
+    const {slateLockInfo} = this.props
     const projectSharingRole = this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER'
     const isSubscribed = this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed
-    const slateVersioningStatus =  this.props?.slatePublishStatus || this.props?.setPopUpSlateLOstatus
+    const slateVersioningStatus =  this.props?.slatePublishStatus || this.props?.setPopUpSlateLOstatus;
+    const isSlateLocked = checkSlateLock(slateLockInfo)
     const currentSlateLF=this.props.currentSlateLF;
     const defaultLF=this.props.defaultLF;
     let assessmentuRN="";
@@ -211,7 +216,8 @@ class SlateTagDropdown extends React.Component {
             'defaultLF': defaultLF,
             'projectSharingRole': projectSharingRole,
             'isSubscribed': isSubscribed,
-            'isApprovedSlate':slateVersioningStatus
+            'isApprovedSlate': slateVersioningStatus,
+            'isSlateLocked': isSlateLocked
         }
       })
     }
@@ -233,7 +239,8 @@ class SlateTagDropdown extends React.Component {
             'previewData': previewData,
             'projectSharingRole': projectSharingRole,
             'isSubscribed': isSubscribed,
-            'isApprovedSlate':slateVersioningStatus
+            'isApprovedSlate':slateVersioningStatus,
+            'isSlateLocked': isSlateLocked
         }
       })
     }
@@ -278,7 +285,6 @@ const mapStateToProps = (state) => {
     }
 }
 const mapActionToProps = {
-    checkSlateLock,
     showSlateLockPopup,
     toggleLOWarningPopup
 }

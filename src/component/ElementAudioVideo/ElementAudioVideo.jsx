@@ -18,6 +18,7 @@ import PopUp from '../PopUp';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 import { updateAudioVideoDataForCompare, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { setAutoNumberSettingValue } from '../FigureHeader/AutoNumber_helperFunctions';
+import { getAssetMetadata } from './ElementAudioVideo_helper';
 /*** @description - ElementAudioVideo is a class based component. It is defined simply to make a skeleton of the audio-video-type element ***/
 
 class ElementAudioVideo extends Component {
@@ -314,7 +315,7 @@ class ElementAudioVideo extends Component {
     }
     handleSiteOptionsDropdown = (alfrescoPath, id, locationData, currentAsset) =>{
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
+        let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
         return axios.get(url,
             {
@@ -359,7 +360,7 @@ class ElementAudioVideo extends Component {
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
      */
-    handleC2MediaClick = (e) => {
+    handleC2MediaClick = async (e) => {
         const dropdownVal = setAutoNumberSettingValue(this.props?.model)
         this.props?.updateAutoNumberingDropdownForCompare({entityUrn: this.props?.model?.contentUrn, option: dropdownVal});
         this.props.handleFocus();
@@ -376,8 +377,27 @@ class ElementAudioVideo extends Component {
 
         if (figureData) {
             const id = figureData.videoid || figureData.audioid;
-            const type = this.props?.model?.figuretype ?? null;
-        
+            let type = this.props?.model?.figuretype ?? null;
+            if(id){                        // this condition checks if the asset is selected or not
+                const assetID = id?.replace("urn:pearson:alfresco:", "")
+                const properties = await getAssetMetadata(assetID)
+                let parsed = ''
+                if(properties && properties.hasOwnProperty('cm:description'))
+                {
+                    try{
+                        parsed = JSON.parse(properties["cm:description"])   // to parse properties['cm:description'] if the selected asset is smartlink-audio/smartlink-video
+                    }
+                    catch(e){
+                    }
+                    if(parsed)
+                    {
+                        if(parsed?.smartLinkType==='Audio')             // set the type if selected asset is smartlink-audio
+                        type = "smartlink:audio"
+                        else if(parsed?.smartLinkType==='Video')
+                        type = "smartlink:video"                       // set the type if selected asset is smartlink-video
+                    }
+                }
+            }
             currentAsset = {
                 id: id ? id.split(':').pop() : '', // get last
                 type,

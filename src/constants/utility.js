@@ -8,6 +8,7 @@ import config from '../config/config';
 import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
+import { checkSlateLock } from '../js/slateLockUtility';
 // DECLARATION - const or variables 
 export const PRIMARY_BUTTON = "primary";
 export const SECONDARY_BUTTON = "secondary";
@@ -99,7 +100,7 @@ export const isApprovedOrSubscribed = (authStore) => {
     const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     const slatePublishStatus = appStore.slateLevelData[config.slateManifestURN]?.type !== "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved";
     const isPopupReadOnly = appStore.slateLevelData[config.slateManifestURN]?.type === "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && appStore.slateLevelData[config.tempSlateManifestURN]?.status === "approved";
-    return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber);
+    return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber || isSlateLocked());
 }
 /**
  * This function checks the conditions for Reviewer users and approved/subscribed content both
@@ -111,19 +112,26 @@ export const isApproved = () =>{
     const authStore = store.getState();
     const {appStore} = authStore;
     const hasRole= appStore && appStore.roleId === "comment_only" && (hasProjectPermission('note_viewer'))
-    if(hasRole)  return false
+    if(hasRole && !isSlateLocked())  return false
     return isApprovedOrSubscribed(authStore)
 }
+
+export const isSlateLocked = () =>{
+    const authStore = store.getState();
+    const slateLockInfo = authStore?.slateLockReducer?.slateLockInfo;
+    return checkSlateLock(slateLockInfo);
+}
+
 
 
 export const hasReviewerRole = (value) => {
     const authStore = store.getState();
     const {appStore} = authStore;
     if (value) {
-        return !((hasProjectPermission(value) && !isApproved()) ? true : false)
+        return !((hasProjectPermission(value) && !isApproved() && !isSlateLocked()) ? true : false)
     }
     let hasRole = (appStore && (appStore.roleId === "comment_only"
-        && (hasProjectPermission('note_viewer'))) || isApproved());
+        && (hasProjectPermission('note_viewer'))) || isApproved() || isSlateLocked());
     return hasRole;
 }
 

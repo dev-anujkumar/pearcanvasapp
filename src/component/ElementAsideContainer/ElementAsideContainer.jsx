@@ -13,7 +13,6 @@ import { guid } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
-import { checkSlateLock } from "../../js/slateLockUtility.js"
 import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe, hasReviewerRole } from '../../constants/utility';
@@ -78,9 +77,6 @@ class ElementAsideContainer extends Component {
 
     handleFocus = (e) => {
 
-        if (checkSlateLock(this.props.slateLockInfo)) {
-            return false
-        }
         this.props.setActiveElement(this.props.element);
         let toolbar = config.asideToolbar
         if (toolbar && toolbar.length) {

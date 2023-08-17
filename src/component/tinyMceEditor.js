@@ -98,6 +98,9 @@ export class TinyMceEditor extends Component {
             skin: false,
             content_css: false,
             setup: (editor) => {
+                //tinymce editor readonly when reviewer or subscriber
+                if (hasReviewerRole()) editor.mode.set("readonly")
+
                 if (this.props.permissions && this.props.permissions.includes('authoring_mathml')) {
                     this.setChemistryFormulaIcon(editor);
                     this.setMathmlFormulaIcon(editor);
@@ -165,10 +168,6 @@ export class TinyMceEditor extends Component {
                         e.preventDefault();/** Prevent IMG resize for MathML images */
                     }
                 });
-                //tinymce editor readonly when reviewer or subscriber
-                if (hasReviewerRole()) {
-                    tinymce.activeEditor.mode.set("readonly");
-                }
 
                 editor.on('Change', (e) => {
                     /*
@@ -910,7 +909,7 @@ export class TinyMceEditor extends Component {
                 let parent = e.target.closest("dfn");
                 uri = parent.getAttribute('data-uri');
             }
-            this.glossaryBtnInstance.setDisabled(true)
+            this.glossaryBtnInstance && this.glossaryBtnInstance.setDisabled(true)
             if (alreadyExist) {
                 cbFunc = () => {
                     this.toggleGlossaryandFootnoteIcon(true);
@@ -963,7 +962,7 @@ export class TinyMceEditor extends Component {
             } else {
                 uri = span.getAttribute('data-uri');
             }
-            this.markedIndexBtnInstance.setDisabled(true)
+            this.markedIndexBtnInstance && this.markedIndexBtnInstance.setDisabled(true)
             if (isMarkedIndexExist) {
                 cbFunc = () => {
                     this.toggleMarkedIndexIcon(true);
@@ -1965,7 +1964,7 @@ export class TinyMceEditor extends Component {
                         }
                     }
                 }
-                if (NON_BREAKING_SPACE_SUPPORTED_ARRAY.includes(self.props?.element?.type) && self.props?.asideData?.type !== "manifestlist") {
+                if (NON_BREAKING_SPACE_SUPPORTED_ARRAY.includes(self.props?.element?.type)) {
                     items.push(nonBreakingOption)
                 }
                 callback(items);
