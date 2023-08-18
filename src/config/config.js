@@ -1,7 +1,7 @@
 let config = {
     NODE_ENV : process.env.NODE_ENV || "development",
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/toc-wrapper/index.html` : 'https://local-dev.pearson.com:4000',
-    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr` :"http://localhost:5000",
+    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `/cypress/api/trackchanges` :"http://localhost:5000",
     TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"https://test-structuredauthoring.pearson.com/cypress/trackchanges/index.html",
     STRUCTURE_API_URL :"https://contentapis-staging.pearsoncms.net/",
     LEARNING_OBJECTIVES_ENDPOINT:"https://contentapis-staging.pearsoncms.net/lo-api/",

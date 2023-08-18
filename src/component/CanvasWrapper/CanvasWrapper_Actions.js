@@ -1300,7 +1300,7 @@ export const openPopupSlate = (element, popupId) => dispatch => {
  */
 
 export const tcmCosConversionSnapshot = () => dispatch => {
-    return axios.patch(`/cypress/trackchanges-srvr/pre-snapshot/${config.projectUrn}`, {
+    return axios.patch(`/cypress/api/trackchanges/pre-snapshot/${config.projectUrn}`, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",

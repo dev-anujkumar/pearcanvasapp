@@ -1,12 +1,12 @@
 const ENV_NAME = 'dev'
 let cypressConfig = {
     WRAPPER_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/toc-wrapper/index.html` : 'https://local-dev.pearson.com:4000',
-    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr` :"http://localhost:5000",
+    LOCK_API_BASE_URL : process.env.NODE_ENV === 'production' ? `/cypress/api/trackchanges` :"http://localhost:5000",
     TCM_DASHBOARD_UI_URL: process.env.NODE_ENV === 'production' ? `${window.parent.origin}/cypress/trackchanges/index.html` :"http://local-dev.pearson.com:7000/",
-    TCM_SNAPSHOT_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tctxsnapshot` :"http://localhost:5000/tctxsnapshot",
-    TCM_SRVR_STATUS_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tcstats/proj/` :"http://localhost:5000/tcstats/proj/",
-    TCM_CANVAS_POPUP_DATA: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/tctx` :"http://localhost:5000/tctx",
-    TCM_CUT_COPY_URL: process.env.NODE_ENV === 'production' ? `/cypress/trackchanges-srvr/cut-copy-snapshots` :"http://localhost:5000/cut-copy-snapshots",
+    TCM_SNAPSHOT_URL: process.env.NODE_ENV === 'production' ? `/cypress/api/trackchanges/tctxsnapshot` :"http://localhost:5000/tctxsnapshot",
+    TCM_SRVR_STATUS_URL: process.env.NODE_ENV === 'production' ? `/cypress/api/trackchanges/tcstats/proj/` :"http://localhost:5000/tcstats/proj/",
+    TCM_CANVAS_POPUP_DATA: process.env.NODE_ENV === 'production' ? `/cypress/api/trackchanges/tctx` :"http://localhost:5000/tctx",
+    TCM_CUT_COPY_URL: process.env.NODE_ENV === 'production' ? `/cypress/api/trackchanges/cut-copy-snapshots` :"http://localhost:5000/cut-copy-snapshots",
     getENVConfig: process.env.NODE_ENV === "development" ? `https://${ENV_NAME}-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/` : '/cypress/api/canvas/cypress-api/',
     TINYMCE_SPELL_CHECKER_URL: process.env.NODE_ENV === "development" ? 'http://localhost:8080/ephox-spelling/': '/cypress/tinymce-srvr/ephox-spelling/',
     CYPRESS_API_ENDPOINT : `https://${ENV_NAME}-structuredauthoring.pearson.com/cypress/canvas-srvr/cypress-api/`,
