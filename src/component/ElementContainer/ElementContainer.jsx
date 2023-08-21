@@ -252,6 +252,13 @@ class ElementContainer extends Component {
                 this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
             }
         }
+        const elmInteractiveElem = checkInteractive(this.props.element)
+        if(this.props.element && elmInteractiveElem) {
+            const interactiveData = {
+                targetId: this.props.element?.figuredata?.interactiveid
+            }
+            this.props.fetchAssessmentMetadata('interactive', 'fromElementContainer', interactiveData);
+        }
     }
 
     handleClickOutside = (event) => {
