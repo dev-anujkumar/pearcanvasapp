@@ -28,21 +28,24 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
     }
     let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
-    return axios.get(url)
-        .then((res) => {
-            config.isSlateLockChecked = res.data.isLocked;
-            dispatch({
-                type: SET_SLATE_LOCK_STATUS,
-                payload: {
-                    ...res.data,
-                    userFirstName: "",
-                    userLastName: ""
-                }
-            })
+    return axios.get(url, {
+		headers: {
+			"Content-Type": "application/json",
+			'myCloudProxySession': config.myCloudProxySession
+		}
+    }).then((res) => {
+        config.isSlateLockChecked = res.data.isLocked;
+        dispatch({
+            type: SET_SLATE_LOCK_STATUS,
+            payload: {
+                ...res.data,
+                userFirstName: "",
+                userLastName: ""
+            }
         })
-        .catch((err) => {
-            console.log("%c Slate lock status API failed","background: black; color: white", err)
-        })
+    }).catch((err) => {
+        console.log("%c Slate lock status API failed", "background: black; color: white", err)
+    })
 }
 
 /**
@@ -57,13 +60,14 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
     }
     let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
-    return axios.get(url)
-        .then((res) => {
-            if(callback)
-                callback(res.data)
-        })
-        .catch((err) => {
-        })
+    return axios.get(url, {
+		headers: {
+			"Content-Type": "application/json",
+			'myCloudProxySession': config.myCloudProxySession
+		}
+    }).then((res) => {
+        if (callback) callback(res.data)
+    }).catch((err) => {})
 }  
 
 /**
@@ -85,17 +89,20 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
         slateId,
         lockDuration
     }
-    return axios.post(url, data)
-        .then((res) => {
-            config.releaseCallCount = 0
-            dispatch({
-                type : SET_LOCK_FLAG,
-                payload : true
-            })
+    return axios.post(url, data, {
+        headers: {
+			"Content-Type": "application/json",
+			'myCloudProxySession': config.myCloudProxySession
+		}
+    }).then((res) => {
+        config.releaseCallCount = 0
+        dispatch({
+            type : SET_LOCK_FLAG,
+            payload : true
         })
-        .catch((err) => {
-            console.log("error from set slate>>>>",err)
-        })
+    }).catch((err) => {
+        console.log("error from set slate>>>>",err)
+    })
  }
 
  /**
@@ -110,16 +117,19 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
        projectUrn,
        slateId
     }
-    return axios.post(url, data)
-       .then((res) => {
-            dispatch({
-                type : SET_LOCK_FLAG,
-                payload : false
-            })
+    return axios.post(url, data, {
+        headers: {
+			"Content-Type": "application/json",
+			'myCloudProxySession': config.myCloudProxySession
+		}
+    }).then((res) => {
+        dispatch({
+            type : SET_LOCK_FLAG,
+            payload : false
         })
-        .catch((err) => {
-            console.log("API error from release slate>>>>",err)
-        })
+    }).catch((err) => {
+        console.log("API error from release slate>>>>",err)
+    })
 }
 
 /**
@@ -134,23 +144,26 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
        projectUrn,
        slateId
     }
-    return axios.post(url, data)
-       .then((res) => {
-           store.dispatch({
-               type: SET_LOCK_FLAG,
-               payload: false
-           })
-           triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
-            if(callback){
-                callback(res.data)
-            }
+    return axios.post(url, data, {
+        headers: {
+			"Content-Type": "application/json",
+			'myCloudProxySession': config.myCloudProxySession
+		}
+    }).then((res) => {
+        store.dispatch({
+            type: SET_LOCK_FLAG,
+            payload: false
         })
-        .catch((err) => {
-            triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
-            if(callback){
-                callback(err)
-            }
-        })
+        triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
+        if(callback){
+            callback(res.data)
+        }
+    }).catch((err) => {
+        triggerSlateLevelSave(config.slateEntityURN, RELEASE_SLATE_LOCK_ACTION);
+        if(callback){
+            callback(err)
+        }
+    })
 }
 
 /**
