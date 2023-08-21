@@ -252,6 +252,7 @@ class ElementContainer extends Component {
                 this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
             }
         }
+        /* Updating the interactive data inside the store after the store reset */
         const elmInteractiveElem = checkInteractive(this.props.element)
         if(this.props.element && elmInteractiveElem) {
             const interactiveData = {
