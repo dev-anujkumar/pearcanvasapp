@@ -4,6 +4,7 @@ import config from './../../config/config';
 import { popupCutCopyParentData} from '../FigureHeader/AutoNumberActions';
 import elementConstant from '../ElementSaprator/ElementSepratorConstants';
 import { hasReviewerRole } from '../../constants/utility';
+import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions';
 
 // function to be called on click of refresh option
 const refreshElement = (props) => {
@@ -92,9 +93,12 @@ export const performCutCopy = (event, componentProps, type) => {
     popupCutCopyParentData(data);
 }
 
-export const copyToClipBoard = (e, _props) => {
+export const copyToClipBoard = async (e, _props) => {
     e.stopPropagation();
-    const text = _props.element.id || _props.element.versionUrn
+    let text = _props.element.id || _props.element.versionUrn
+    if (text.includes('manifest')) {
+        text = await getLatestVersion(_props.element.contentUrn)
+    }
     const tempElement = document.createElement('textarea');
     tempElement.value = text;
     document.body.appendChild(tempElement);
