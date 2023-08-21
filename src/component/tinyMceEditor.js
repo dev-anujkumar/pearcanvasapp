@@ -548,24 +548,33 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
-                    if (this.props?.element?.type === 'element-dialogue') {
+                    if (this.props?.element?.type === 'element-dialogue' || (this.props?.element?.type === "element-authoredtext" && !this.props?.element?.elementdata?.headers && this.props?.asideData?.type !== "manifestlist") ) {
                         const dialoguClassName = editor.selection?.getNode()?.className
+                        let authoredtextClass = this.props?.element?.type === "element-authoredtext" && this.props?.element?.elementdata?.designtype === "handwritingstyle" ? 'paragraphNumeroUno handwritingstyle' : 'paragraphNumeroUno'
                         let nodeName = 'span'                        
                         if (this.props.placeholder === "Enter Character Name...") {
                             nodeName = 'h4'
                         }
-                        if (this.props.placeholder === "Enter Stage Directions...") {
+                        if (this.props.placeholder === "Enter Stage Directions..." || (this.props?.element?.type === "element-authoredtext" && this.props?.placeholder === "Type Something...")) {
                             nodeName = 'p'
                         }
                         let classListWithFormatting = editor?.selection?.getNode()?.closest(nodeName)?.classList
                         let selectedTextWithFormatting = editor?.selection?.getNode()?.closest(nodeName)?.innerText
-                        if (dialoguClassName?.includes('CNLineLevel1') || dialoguClassName?.includes('CNLineLevel2') || dialoguClassName?.includes('CNLineLevel3') || dialoguClassName?.includes('DELineLevel1') || dialoguClassName?.includes('DELineLevel2') || dialoguClassName?.includes('DELineLevel3') || dialoguClassName?.includes('SDLineLevel1') || dialoguClassName?.includes('SDLineLevel2') || dialoguClassName?.includes('SDLineLevel3')) {
+                        if (dialoguClassName?.includes('CNLineLevel1') || dialoguClassName?.includes('CNLineLevel2') || dialoguClassName?.includes('CNLineLevel3')
+                         || dialoguClassName?.includes('DELineLevel1') || dialoguClassName?.includes('DELineLevel2') || dialoguClassName?.includes('DELineLevel3') || dialoguClassName?.includes('SDLineLevel1')
+                         || dialoguClassName?.includes('SDLineLevel2') || dialoguClassName?.includes('SDLineLevel3')|| dialoguClassName?.includes('paragraphNumeroUnoIndentLevel1')|| dialoguClassName?.includes('paragraphNumeroUnoIndentLevel2')
+                         || dialoguClassName?.includes('paragraphNumeroUnoIndentLevel3') ) {
                             if (this.props.placeholder === "Enter Character Name...") {
                                 editor.selection.getNode().className = 'characterPS cypress-editable';
                                 document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                             }
                             else if (this.props.placeholder === "Enter Stage Directions...") {
                                 editor.selection.getNode().className = 'stageDirectionLine';
+                                editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
+                                editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
+                            }
+                            else if (this.props?.element?.type === "element-authoredtext" && this.props?.placeholder === "Type Something...") {
+                                editor.selection.getNode().className = authoredtextClass;
                                 editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
                                 editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
                             }
@@ -591,7 +600,17 @@ export class TinyMceEditor extends Component {
                                     editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
                                     editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
                                 }
-                            } else {
+                            } else if (this.props?.element?.type === "element-authoredtext" && this.props?.placeholder === "Type Something...") {
+                                if (selectedTextWithFormatting === selectedText) {
+                                    classListWithFormatting?.remove('paragraphNumeroUnoIndentLevel1')
+                                    classListWithFormatting?.remove('paragraphNumeroUnoIndentLevel2')
+                                    classListWithFormatting?.remove('paragraphNumeroUnoIndentLevel3')
+                                    classListWithFormatting.add(authoredtextClass)
+                                    editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
+                                    editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
+                                }
+                            } 
+                            else {
                                 if (selectedTextWithFormatting === selectedText) {
                                     classListWithFormatting?.remove('DELineLevel1')
                                     classListWithFormatting?.remove('DELineLevel2')
@@ -601,7 +620,7 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
-                    if (this.props?.element?.type !== 'element-dialogue') {
+                    if (this.props?.element?.type !== 'element-dialogue' && !(this.props?.element?.type === "element-authoredtext" && !this.props?.element?.elementdata?.headers && this.props?.asideData?.type !== "manifestlist") && this.props?.element?.type !== 'stanza') {
                         if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
                             e.preventDefault();
                             e.stopPropagation();
