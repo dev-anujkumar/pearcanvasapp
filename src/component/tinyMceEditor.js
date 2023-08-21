@@ -620,7 +620,7 @@ export class TinyMceEditor extends Component {
                             }
                         }
                     }
-                    if (this.props?.element?.type !== 'element-dialogue' && !(this.props?.element?.type === "element-authoredtext" && !this.props?.element?.elementdata?.headers && this.props?.asideData?.type !== "manifestlist")) {
+                    if (this.props?.element?.type !== 'element-dialogue' && !(this.props?.element?.type === "element-authoredtext" && !this.props?.element?.elementdata?.headers && this.props?.asideData?.type !== "manifestlist") && this.props?.element?.type !== 'stanza') {
                         if (selectedText.trim() === document.getElementById(`cypress-${this.props.index}`).innerText.trim() && !(editor.targetElm.findChildren('ol').length || editor.targetElm.findChildren('ul').length)) {
                             e.preventDefault();
                             e.stopPropagation();
