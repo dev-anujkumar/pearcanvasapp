@@ -583,7 +583,7 @@ export class TinyMceEditor extends Component {
                                 document.querySelector(`button[title="Decrease indent"]`)?.classList?.add('disabled-toolbar-button')
                             }
                         }
-                        if (isDialogueIndent(classListWithFormatting)) {
+                        if (isDialogueIndent(classListWithFormatting) || classListWithFormatting?.contains('paragraphNumeroUnoIndentLevel3')|| classListWithFormatting?.contains('paragraphNumeroUnoIndentLevel2') || classListWithFormatting?.contains('paragraphNumeroUnoIndentLevel1')) {
                             if (this.props.placeholder === "Enter Character Name...") {
                                 if (selectedTextWithFormatting === selectedText) {
                                     classListWithFormatting?.remove('CNLineLevel1')
@@ -605,7 +605,12 @@ export class TinyMceEditor extends Component {
                                     classListWithFormatting?.remove('paragraphNumeroUnoIndentLevel1')
                                     classListWithFormatting?.remove('paragraphNumeroUnoIndentLevel2')
                                     classListWithFormatting?.remove('paragraphNumeroUnoIndentLevel3')
-                                    classListWithFormatting.add(authoredtextClass)
+                                    if (this.props?.element?.type === "element-authoredtext" && this.props?.element?.elementdata?.designtype === "handwritingstyle") {
+                                        classListWithFormatting.add("paragraphNumeroUno")
+                                        classListWithFormatting.add('handwritingstyle')
+                                    } else {
+                                        classListWithFormatting.add(authoredtextClass)
+                                    }
                                     editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('style')
                                     editor?.selection?.getNode()?.closest(nodeName)?.removeAttribute('data-mce-style')
                                 }
