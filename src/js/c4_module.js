@@ -99,7 +99,6 @@ export const publishSlate = (project, section, cite) => {
           elapsedTime,
           ...content_data,
         })
-        sendDataToIframe({ 'type': 'slatePreviewTriggered', 'message': { status: true } }) // sending message to trigger aggrigatedcomments API after getting response  
         setTimeout(() => {
           sendDataToIframe({ 'type': 'slatePreviewLunched', 'message': { status: true } }) // sending message to trigger enable slate preview icon 
           window.open(previewURL, '_blank')
