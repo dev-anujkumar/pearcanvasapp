@@ -979,7 +979,8 @@ class SlateWrapper extends Component {
                 this.renderButtonsonCondition(_elements);
                 /* @-isPdf_Assess-@ - TO check TYPE of current slate  */
                 const isPdf_Assess = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(config.slateType);
-                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress && !isSubscriberRole(projectSubscriptionDetails?.projectSharingRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)) {
+                const isSubscribedSlate = isSubscriberRole(projectSubscriptionDetails?.projectSharingRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)
+                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress && !isSubscribedSlate) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     const typeOfEle = _slateType === SLATE_TYPE_ASSESSMENT ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
@@ -1022,7 +1023,7 @@ class SlateWrapper extends Component {
                                         userRole={this.props.userRole}
                                         openCustomPopup = {this.openCustomPopup}
                                         slateType={_slateType}
-                                        element={element}
+                                        element={(element?.type === 'openerelement' && isSubscribedSlate) ? JSON.parse(JSON.stringify(element)) : element}
                                         index={index}
                                         handleCommentspanel={this.props.handleCommentspanel}
                                         elementSepratorProps={this.elementSepratorProps}
