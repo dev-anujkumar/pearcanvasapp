@@ -241,6 +241,7 @@ class ElementContainer extends Component {
         if (this.props.element !== prevProps.element) {
             let { element } = this.props
             let embeddedAssessment = checkEmbeddedElmAssessment(element);
+            const elmInteractiveElem = checkInteractive(element)
             if (this.props.element && embeddedAssessment === true) {
                 const assessmentID = element.figuredata.elementdata.assessmentid;
                 const assessmentItemID = element.figuredata.elementdata.assessmentitemid;
@@ -251,14 +252,13 @@ class ElementContainer extends Component {
                 }
                 this.props.fetchAssessmentMetadata('assessment', 'fromElementContainer', { targetId: assessmentID }, itemData);
             }
-        }
-        /* Updating the interactive data inside the store after the store reset */
-        const elmInteractiveElem = checkInteractive(this.props.element)
-        if(this.props.element && elmInteractiveElem) {
-            const interactiveData = {
-                targetId: this.props.element?.figuredata?.interactiveid
+            /* Updating the interactive data inside the store after the store reset */
+            if (element && elmInteractiveElem) {
+                const interactiveData = {
+                    targetId: element?.figuredata?.interactiveid
+                }
+                this.props.fetchAssessmentMetadata('interactive', 'fromElementContainer', interactiveData);
             }
-            this.props.fetchAssessmentMetadata('interactive', 'fromElementContainer', interactiveData);
         }
     }
 
