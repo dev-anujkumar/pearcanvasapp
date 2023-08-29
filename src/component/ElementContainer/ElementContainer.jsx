@@ -56,7 +56,7 @@ import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementConta
 import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement, checkOpenerElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI , OPENER_ELEMENT , FIGURE_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js';
@@ -83,7 +83,9 @@ import { checkHTMLdataInsideString, getCookieByName } from '../../constants/util
 import { prepareBqHtml } from '../../js/utils';
 import { hideToc } from '../../js/toggleLoader';
 import ElementConstants from './ElementConstants.js';
+import { interactivetype } from './ElementConstants';
 import ElementTCC from '../LtiSlate/ElementTCC.jsx';
+
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -3002,10 +3004,10 @@ class ElementContainer extends Component {
 
     handleFigurePopup = (togglePopup, elementType = null) => {
         let imageId;
-        if(this.props?.element?.figuretype === "interactive"){
+        if(this.props?.element?.figuretype === FIGURE_INTERACTIVE){
             imageId = this.props?.element?.figuredata?.interactiveid;
         }
-        else if(this.props?.element?.type === "openerelement"){
+        else if(this.props?.element?.type === OPENER_ELEMENT){
             imageId = this.props?.element?.backgroundimage?.imageid
         }else{
             imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
@@ -3062,7 +3064,7 @@ class ElementContainer extends Component {
             if (this.props.element.type === 'element-pdf') {
                 imageId = this.state.pdfSlateAssetId || this.props?.element?.elementdata?.assetid
             }
-            else if(this.props?.element?.type === "openerelement"){
+            else if(this.props?.element?.type === OPENER_ELEMENT){
                 imageId = this.props?.element?.backgroundimage?.imageid}
             else {
                 const figureData = this.props?.element?.figuredata || {};
@@ -3092,8 +3094,8 @@ class ElementContainer extends Component {
     handleEditButton = (event) => {
         event.stopPropagation();
         const { element } = this.props;
-        const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup","interactive"]
-        if ((element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) || (element?.type === 'openerelement')) {
+        const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup"]
+        if ((element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) || (element?.type === OPENER_ELEMENT) || (interactivetype.includes(element.figuredata?.interactivetype))) {
             if(element?.figuretype === 'tableasmarkup'){
                 this.props.prepareImageDataFromTable(element);
                 this.handleFigurePopup(true, 'TE');

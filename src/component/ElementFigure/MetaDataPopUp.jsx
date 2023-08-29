@@ -46,7 +46,7 @@ class MetaDataPopUp extends React.Component {
 			}
 		}).then(response => {
 			const { properties } = response?.data?.entry || {};	
-			if(this.props.element.figuretype === "interactive"){
+			if(this?.props?.element?.figuretype === "interactive"){
 				const avsJsonStringData = properties["avs:jsonString"] 
 				let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
 				this.setState({
@@ -72,7 +72,7 @@ class MetaDataPopUp extends React.Component {
 		let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
 		const { metaData,altText, longDescription } = this.state;
 		let body;
-		if(this.props.element.figuretype === "interactive"){
+		if(this?.props?.element?.figuretype === "interactive"){
 			const avsJsonStringData = metaData["avs:jsonString"] 
         	let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
 			avsStringData.linkLongDesc=longDescription

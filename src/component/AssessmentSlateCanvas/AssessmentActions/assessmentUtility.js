@@ -4,6 +4,8 @@
  */
 import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY, ELM_INT, FIGURE_INTERACTIVE, DEFAULT_IMAGE_SOURCE , OPENER_ELEMENT } from '../AssessmentSlateConstants.js';
 import {AUDIO ,VIDEO} from '../../../constants/Element_Constants.js';
+import { interactivetype } from '../../ElementContainer/ElementConstants.js';
+
 /** This is a function to set Assessment Title for Embedded Assessment
  * * @param model - object containig element data
 */
@@ -128,7 +130,6 @@ export const checkEmbeddedElmAssessment = (element, assessReducer) => {
 * @param element - element's details
 */
 export const checkInteractive = (element) => {
-    const interactivetype = ['3rd-party', 'web-link'];
     if (element?.type === ELEMENT_FIGURE && element.figuretype === FIGURE_INTERACTIVE &&
         (element.figuredata?.interactiveformat === ELM_INT || interactivetype.includes(element.figuredata?.interactivetype)) && element.figuredata?.interactiveid ) {
         return true;
@@ -136,6 +137,10 @@ export const checkInteractive = (element) => {
     return false;
 }
 
+/***
+* @description - This is the function to check if element is opener element
+* @param element - element's details
+*/
 export const checkOpenerElement = (element) => {
     if(element?.type === OPENER_ELEMENT){
         return true;
