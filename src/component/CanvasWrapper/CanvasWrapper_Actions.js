@@ -1777,12 +1777,10 @@ export const fetchProjectLFs = () => dispatch => {
     }).then(response => {
         if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
             const learningFrameworks = response.data.learningFrameworks;
-            const cypressLF = learningFrameworks.find(learningFramework => config.book_title.includes(learningFramework?.label?.en));
-            const externalLF = learningFrameworks.filter(learningFramework => !config.book_title.includes(learningFramework?.label?.en))
+            const externalLF = learningFrameworks.filter(learningFramework => config.book_title.includes(learningFramework?.label?.en))
             dispatch({
                 type: PROJECT_LEARNING_FRAMEWORKS,
                 payload: {
-                    cypressLF: cypressLF ?? {},
                     externalLF: externalLF ?? []
                 }
             });

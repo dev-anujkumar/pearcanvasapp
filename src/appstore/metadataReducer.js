@@ -11,7 +11,6 @@ const INIT_STATE = {
     showSlateLockPopup:false,
     isRenderMetdataLO:false,
     projectLearningFrameworks:{
-        cypressLF:{},
         externalLF:[]
     },
     currentSlateLF:"",
@@ -72,7 +71,6 @@ export default function (state = INIT_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 projectLearningFrameworks: {
-                    cypressLF: cypressLF ?? state.projectLearningFrameworks.cypressLF,
                     externalLF: externalLF ?? state.projectLearningFrameworks.externalLF
                 }
             }
