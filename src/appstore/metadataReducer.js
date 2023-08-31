@@ -67,7 +67,7 @@ export default function (state = INIT_STATE, action = INITIAL_ACTION) {
             }
         }
         case PROJECT_LEARNING_FRAMEWORKS:
-            const { cypressLF, externalLF } = action.payload
+            const { externalLF } = action.payload
             return {
                 ...state,
                 projectLearningFrameworks: {
