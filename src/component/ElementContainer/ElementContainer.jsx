@@ -3095,7 +3095,7 @@ class ElementContainer extends Component {
         event.stopPropagation();
         const { element } = this.props;
         const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup"]
-        if ((element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) || (element?.type === OPENER_ELEMENT) || (interactivetype.includes(element.figuredata?.interactivetype))) {
+        if ((element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) || (element?.type === OPENER_ELEMENT) || ((element?.figuretype === FIGURE_INTERACTIVE) && (interactivetype.includes(element.figuredata?.interactivetype)))) {
             if(element?.figuretype === 'tableasmarkup'){
                 this.props.prepareImageDataFromTable(element);
                 this.handleFigurePopup(true, 'TE');
