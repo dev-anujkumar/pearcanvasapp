@@ -2,8 +2,10 @@
  * Module - assessmentUtility
  * Description - This file contains utility functions related to assessments (full and embedded)
  */
-import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY, ELM_INT, FIGURE_INTERACTIVE, DEFAULT_IMAGE_SOURCE } from '../AssessmentSlateConstants.js';
+import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY, ELM_INT, FIGURE_INTERACTIVE, DEFAULT_IMAGE_SOURCE , OPENER_ELEMENT } from '../AssessmentSlateConstants.js';
 import {AUDIO ,VIDEO} from '../../../constants/Element_Constants.js';
+import { interactivetype } from '../../ElementContainer/ElementConstants.js';
+
 /** This is a function to set Assessment Title for Embedded Assessment
  * * @param model - object containig element data
 */
@@ -129,12 +131,22 @@ export const checkEmbeddedElmAssessment = (element, assessReducer) => {
 */
 export const checkInteractive = (element) => {
     if (element?.type === ELEMENT_FIGURE && element.figuretype === FIGURE_INTERACTIVE &&
-         element.figuredata?.interactiveformat === ELM_INT && element.figuredata?.interactiveid) {
+        (element.figuredata?.interactiveformat === ELM_INT || interactivetype.includes(element.figuredata?.interactivetype)) && element.figuredata?.interactiveid ) {
         return true;
     }
     return false;
 }
 
+/***
+* @description - This is the function to check if element is opener element
+* @param element - element's details
+*/
+export const checkOpenerElement = (element) => {
+    if(element?.type === OPENER_ELEMENT){
+        return true;
+    }
+    return false;
+}
 export const checkFigureMetadata = (element, buttonType = null) => {
     const figureImageTypes = ["image", "mathImage", "table"];
     const smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];

@@ -1,14 +1,19 @@
 import React from 'react';
 import { mount } from 'enzyme';
+import axios from 'axios';
 import MetaDataPopup from '../../../src/component/ElementFigure/MetaDataPopUp';
 
 describe('Testcase for MetaDataPopup Component', () => {
     let wrapper;
     let props = {
+        element:{
+            figuretype:"interactive"
+        },
         togglePopup: jest.fn()
     }
     beforeEach(() => {
         wrapper = mount(<MetaDataPopup {...props} />);
+
     });
     it("render without crashing", () => {
         expect(wrapper).toHaveLength(1);
@@ -31,7 +36,29 @@ describe('Testcase for MetaDataPopup Component', () => {
     })
     it('onClick Event metadata-import-button', () => {
         let togglePopup = jest.fn();
-        const component = mount(<MetaDataPopup togglePopup={togglePopup} />);
+        const mockResponse = { data: {entry: {properties: { "avs:jsonString":"{\n\"smartLinkThirdPartyVendorVal\":\"Geogebra\",\n\"linkLongDesc\":\"link long desc data to fetch\",\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"This is the sample  alt text from gk new data\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\"\n}"}}}, status: 200 }
+        axios.put = jest.fn(() => Promise.resolve(mockResponse));
+        axios.get =jest.fn(() => Promise.resolve(mockResponse));
+        const component = mount(<MetaDataPopup {...props} togglePopup={togglePopup} />);
+        component.setState({metaData:{
+            "avs:jsonString":"{\n\"smartLinkThirdPartyVendorVal\":\"Geogebra\",\n\"linkLongDesc\":\"link long desc data to fetch\",\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"This is the sample  alt text from gk new data\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\"\n}"
+        }})   
+        component.find('.metadata-import-button').simulate('click');
+        expect(axios.put).toHaveBeenCalledTimes(1);
+       })
+
+    it('onClick Event metadata-import-button else case', () => {
+        let props = {
+            element:{
+                figuretype:""
+            },
+            togglePopup: jest.fn()
+        }
+        let togglePopup = jest.fn();
+        const component = mount(<MetaDataPopup {...props} togglePopup={togglePopup} />);
+        component.setState({metaData:{
+            "avs:jsonString":"{\n\"smartLinkThirdPartyVendorVal\":\"Geogebra\",\n\"linkLongDesc\":\"link long desc data to fetch\",\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"This is the sample  alt text from gk new data\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\"\n}"
+        }})   
         component.find('.metadata-import-button').simulate('click');
     })
     it('Changing input altText', () => {

@@ -53,10 +53,10 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive, checkFigureMetadata, checkFigureInsideTableElement, checkOpenerElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI , OPENER_ELEMENT , FIGURE_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js';
@@ -83,7 +83,9 @@ import { checkHTMLdataInsideString, getCookieByName } from '../../constants/util
 import { prepareBqHtml } from '../../js/utils';
 import { hideToc } from '../../js/toggleLoader';
 import ElementConstants from './ElementConstants.js';
+import { interactivetype } from './ElementConstants';
 import ElementTCC from '../LtiSlate/ElementTCC.jsx';
+
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -2545,8 +2547,8 @@ class ElementContainer extends Component {
             normalText: TE_POP_UP_NORMAL_TEXT,
             renderImages : this.props.tableElementAssetData
         }
-        let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element)));
-        let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element)));
+        let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkOpenerElement(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element)));
+        let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element) || checkOpenerElement(element)));
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>
         }
@@ -3015,8 +3017,15 @@ class ElementContainer extends Component {
     }
 
     handleFigurePopup = (togglePopup, elementType = null) => {
-
-        let imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
+        let imageId;
+        if(this.props?.element?.figuretype === FIGURE_INTERACTIVE){
+            imageId = this.props?.element?.figuredata?.interactiveid;
+        }
+        else if(this.props?.element?.type === OPENER_ELEMENT){
+            imageId = this.props?.element?.backgroundimage?.imageid
+        }else{
+            imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
+        }
         imageId = imageId.replace('urn:pearson:alfresco:', '');
         this.props.showBlocker(togglePopup);
         if(elementType === 'TE'){
@@ -3068,7 +3077,10 @@ class ElementContainer extends Component {
             let imageId;
             if (this.props.element.type === 'element-pdf') {
                 imageId = this.state.pdfSlateAssetId || this.props?.element?.elementdata?.assetid
-            } else {
+            }
+            else if(this.props?.element?.type === OPENER_ELEMENT){
+                imageId = this.props?.element?.backgroundimage?.imageid}
+            else {
                 const figureData = this.props?.element?.figuredata || {};
                 if (figureData['imageid']) {
                     imageId = this.props?.element?.figuredata?.imageid;
@@ -3097,7 +3109,7 @@ class ElementContainer extends Component {
         event.stopPropagation();
         const { element } = this.props;
         const figureImageTypes = ["image", "mathImage", "table", "tableasmarkup"]
-        if (element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) {
+        if ((element?.type === 'figure' && figureImageTypes.includes(element?.figuretype)) || (element?.type === OPENER_ELEMENT) || ((element?.figuretype === FIGURE_INTERACTIVE) && (interactivetype.includes(element.figuredata?.interactivetype)))) {
             if(element?.figuretype === 'tableasmarkup'){
                 this.props.prepareImageDataFromTable(element);
                 this.handleFigurePopup(true, 'TE');
@@ -3105,7 +3117,8 @@ class ElementContainer extends Component {
                 this.handleFigurePopup(true);
             }
             
-        } else {
+        }
+        else {
             let fullAssessment = checkFullElmAssessment(element);
             let embeddedAssessment = checkEmbeddedElmAssessment(element);
             const isInteractive = checkInteractive(element);
