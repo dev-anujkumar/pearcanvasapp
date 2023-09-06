@@ -46,7 +46,6 @@ class MetaDataPopUp extends React.Component {
 			}
 		}).then(response => {
 			const { properties } = response?.data?.entry || {};	
-			console.log('aaaaajaaa',properties)
 			if(this?.props?.element?.figuretype === "interactive"){
 				const avsJsonStringData = properties["avs:jsonString"] 
 				let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
