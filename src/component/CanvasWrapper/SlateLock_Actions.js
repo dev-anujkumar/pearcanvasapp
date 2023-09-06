@@ -2,7 +2,7 @@ import axios from 'axios'
 import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
 import store from './../../appstore/store';
-import { hasReviewerRole } from '../../constants/utility';
+import { getCookieByName, hasReviewerRole } from '../../constants/utility';
 import { triggerSlateLevelSave } from '../../js/slateLevelSave.js';
 import { RELEASE_SLATE_LOCK_ACTION } from '../SlateWrapper/SlateWrapperConstants';
 
@@ -87,7 +87,10 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
     let data = {
         projectUrn,
         slateId,
-        lockDuration
+        lockDuration,
+        firstName: getCookieByName('FIRST_NAME'),
+        lastName: getCookieByName('LAST_NAME'),
+        userName: getCookieByName('USER_NAME')
     }
     return axios.post(url, data, {
         headers: {
