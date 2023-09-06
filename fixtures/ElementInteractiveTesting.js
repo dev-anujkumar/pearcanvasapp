@@ -671,6 +671,9 @@ export const OpenerElement = {
 	"type": "openerelement",
 	"figuretype": "interactive",
 	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "backgroundimage": {
+        "imageid":"urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec"
+    },
 	"title": {
 		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
 		"text": ""
