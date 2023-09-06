@@ -46,6 +46,7 @@ class MetaDataPopUp extends React.Component {
 			}
 		}).then(response => {
 			const { properties } = response?.data?.entry || {};	
+			console.log('aaaaajaaa',properties)
 			if(this?.props?.element?.figuretype === "interactive"){
 				const avsJsonStringData = properties["avs:jsonString"] 
 				let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
@@ -108,11 +109,17 @@ class MetaDataPopUp extends React.Component {
 	updateElementData = () => {
 		const { index, element, asideData } = this.props;
 		/*-- Form data to send to wip */
-		let figureData = { ...element.figuredata };
+		let figureData;
+		if(element?.type === "openerelement"){ 
+			figureData = element?.backgroundimage}
+		else{	
+			figureData = element?.figuredata
+		}
 		figureData.alttext = this.state.altText;
 		figureData.longdescription = this.state.longDescription;
 		/*-- Updata the image metadata in wip */
 		this.props.updateFigureData(figureData, index, element.id, asideData, () => {
+
 			this.props.handleFocus("updateFromC2")
 			this.props.handleBlur()
 		})
