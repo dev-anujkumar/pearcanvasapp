@@ -142,7 +142,7 @@ export const checkInteractive = (element) => {
 * @param element - element's details
 */
 export const checkOpenerElement = (element) => {
-    if(element?.type === OPENER_ELEMENT){
+    if(element?.type === OPENER_ELEMENT && element?.backgroundimage?.imageid){
         return true;
     }
     return false;
