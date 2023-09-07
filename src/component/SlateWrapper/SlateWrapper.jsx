@@ -1304,7 +1304,7 @@ class SlateWrapper extends Component {
     handleUnlockSlateWarning = (status) =>{
         if(status == 'ok'){
             releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, this.props.userRole, (res) => {
-                console.log('CHECKING RESPONSE IN releaseSlateLockWithCallback', res)
+                if(res.Status == "Success") config.isSlateLockChecked = false
             })
         }
         this.props.toggleUnlockSlateAction(false)
