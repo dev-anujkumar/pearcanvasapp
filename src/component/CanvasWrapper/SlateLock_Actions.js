@@ -118,7 +118,8 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
-       slateId
+       slateId,
+       firstName: getCookieByName('FIRST_NAME'),
     }
     return axios.post(url, data, {
         headers: {
@@ -145,7 +146,8 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
-       slateId
+       slateId,
+       firstName: getCookieByName('FIRST_NAME'),
     }
     return axios.post(url, data, {
         headers: {
