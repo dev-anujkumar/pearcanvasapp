@@ -791,7 +791,7 @@ class ElementContainer extends Component {
             return isValid;
         }
         let isAltTextLongDescModified = false;
-        if(previousElementData.figuredata.interactivetype === '3rd-party' || previousElementData.figuredata.interactivetype === "web-link") {
+        if(interactivetype.includes(previousElementData?.figuredata?.interactivetype)) {
             isAltTextLongDescModified = this.props.oldSmartLinkDataForCompare !== previousElementData.figureData
         }
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
@@ -2550,7 +2550,7 @@ class ElementContainer extends Component {
             normalText: TE_POP_UP_NORMAL_TEXT,
             renderImages : this.props.tableElementAssetData
         }
-        let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkSmartLinkInteractive(element) || checkOpenerElement(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element)));
+        let showEditButton = ( !hasReviewerRole() && (checkFullElmAssessment(element) || checkEmbeddedElmAssessment(element, this.props.assessmentReducer) || checkInteractive(element) || checkSmartLinkInteractive(element) || checkOpenerElement(element) || checkFigureMetadata(element, 'editButton') || checkFigureInsideTableElement(element)));
         let showAlfrescoExpandButton = ( !hasReviewerRole() && (checkFigureMetadata(element, 'alfrescoExpandButton') || checkFigureInsideTableElement(element) || checkOpenerElement(element)));
         if (!hasReviewerRole() && this.props.permissions && !(this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))) {
             elementOverlay = <div className="element-Overlay disabled" onClick={() => this.handleFocus()}></div>

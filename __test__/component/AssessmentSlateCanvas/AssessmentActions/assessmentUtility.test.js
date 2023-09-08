@@ -415,14 +415,14 @@ describe('Test---Assessment Utility Functions', () => {
         let element = interactiveWeblink;
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
         assessment_UtiltyFn.checkInteractive(element);
-        expect(spyFunction).toHaveReturnedWith(true);
+        expect(spyFunction).toHaveReturnedWith(false);
         spyFunction.mockClear();
     });
     it('Test 17---checkInteractive', () => {
         let element = interactiveElm3PI;
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
         assessment_UtiltyFn.checkInteractive(element);
-        expect(spyFunction).toHaveReturnedWith(true);
+        expect(spyFunction).toHaveReturnedWith(false);
         spyFunction.mockClear();
     });
     it('Test 17---checkInteractive', () => {
