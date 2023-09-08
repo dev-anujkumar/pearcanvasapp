@@ -4,7 +4,7 @@ import React from 'react';
 import * as assessment_UtiltyFn from '../../../../src/component/AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { newFigureObj } from '../../../../fixtures/ElementFigureTestingData';
 import { audioElementTypeAlfrescoWithData } from '../../../../fixtures/ElementAudioVideoTestingData';
-import { Interactive3party, interactiveElm3PI, interactiveWeblink, OpenerElement } from '../../../../fixtures/ElementInteractiveTesting';
+import { Interactive3party, interactiveElm3PI, interactiveWeblink, OpenerElement , SmartLinkinteractive } from '../../../../fixtures/ElementInteractiveTesting';
 
 describe('Test---Assessment Utility Functions', () => {
     describe('Test 1---setAssessmentTitle Function', () => {
@@ -422,13 +422,27 @@ describe('Test---Assessment Utility Functions', () => {
         let element = interactiveElm3PI;
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
         assessment_UtiltyFn.checkInteractive(element);
-        expect(spyFunction).toHaveReturnedWith(false);
+        expect(spyFunction).toHaveReturnedWith(true);
         spyFunction.mockClear();
     });
     it('Test 17---checkInteractive', () => {
         let element = {};
         const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkInteractive');
         assessment_UtiltyFn.checkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(false);
+        spyFunction.mockClear();
+    });
+    it('Test 17---checkSmartLinkInteractive', () => {
+        let element = SmartLinkinteractive;
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkSmartLinkInteractive');
+        assessment_UtiltyFn.checkSmartLinkInteractive(element);
+        expect(spyFunction).toHaveReturnedWith(true);
+        spyFunction.mockClear();
+    });
+    it('Test 17---checkSmartLinkInteractive', () => {
+        let element = {};
+        const spyFunction = jest.spyOn(assessment_UtiltyFn, 'checkSmartLinkInteractive');
+        assessment_UtiltyFn.checkSmartLinkInteractive(element);
         expect(spyFunction).toHaveReturnedWith(false);
         spyFunction.mockClear();
     });
