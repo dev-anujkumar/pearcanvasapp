@@ -62,6 +62,7 @@ import {  getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMedia
 import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions'
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 import TcmConstants from '../TcmSnapshots/TcmConstants';
+import { closeTcmPopup } from './TCM_Canvas_Popup_Integrations';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -582,6 +583,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
 export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledFrom, versionPopupReload, isFetchAnySlate) => (dispatch, getState) => {
     /** [TK-3289]- Fetch Data for All Slates */
     const startTime = performance.now();
+    dispatch(closeTcmPopup());
     dispatch(fetchAllSlatesData());
     /**sendDataToIframe({ 'type': 'fetchAllSlatesData', 'message': {} }); */
     localStorage.removeItem('newElement');
@@ -1775,12 +1777,10 @@ export const fetchProjectLFs = () => dispatch => {
     }).then(response => {
         if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
             const learningFrameworks = response.data.learningFrameworks;
-            const cypressLF = learningFrameworks.find(learningFramework => config.book_title.includes(learningFramework?.label?.en));
-            const externalLF = learningFrameworks.filter(learningFramework => !config.book_title.includes(learningFramework?.label?.en))
+            const externalLF = [...learningFrameworks]
             dispatch({
                 type: PROJECT_LEARNING_FRAMEWORKS,
                 payload: {
-                    cypressLF: cypressLF ?? {},
                     externalLF: externalLF ?? []
                 }
             });

@@ -1,7 +1,7 @@
 import axios from 'axios';
 const configOBJ = require('./../config/config');
 let config_object = configOBJ.default;
-import {c4PublishObj} from '../js/c4_module.js';
+import { publishSlate, publishTitle } from '../js/c4_module.js';
 import { releaseSlateLockWithCallback } from '../component/CanvasWrapper/SlateLock_Actions'
 import { sendDataToIframe } from '../constants/utility';
 var current_slate_urn='';
@@ -26,12 +26,12 @@ export const GET_CURRENT_SLATE = function (){
 export const publishContent = function (type) {
     var projectURN = config_object.projectUrn;
     var citeURN = config_object.citeUrn;
-    var firstSlate = config_object.slateManifestURN;
+    var firstSlate = config_object.isPopupSlate ? config_object.tempSlateManifestURN : config_object.slateManifestURN;
     if(type == 'slatePreview') {
-        c4PublishObj.publishSlate(projectURN,firstSlate,citeURN);
+        publishSlate(projectURN,firstSlate,citeURN);
     }
     else {
-        c4PublishObj.publishTitle(projectURN,firstSlate,citeURN, undefined, true, type);
+        publishTitle(projectURN,firstSlate,citeURN, undefined, true, type);
     }
 }
 let storageExist = ("sessionStorage" in window && window.sessionStorage);

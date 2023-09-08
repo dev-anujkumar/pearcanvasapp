@@ -113,7 +113,7 @@ export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlf
 }
 
 function handleSiteOptionsDropdown (alfrescoPath, id, currentAsset) {
-    let url = `${config.ALFRESCO_EDIT_METADATA}/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
+    let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
     let SSOToken = config.ssoToken;
     return axios.get(url,
         {
@@ -319,15 +319,15 @@ export const setInstanceToolbar = (element,placeholder,showHideType, labelNumber
                 break;
             }
             case "Enter Dialogue...": {
-                toolbar = [...config.playScriptToolbar, 'mathml', 'chemml', 'inlinecode'];
+                toolbar = [...config.playScriptToolbarForIndent, 'mathml', 'chemml', 'inlinecode'];
                 break;
             }
             case "Enter Stage Directions...": {
-                toolbar = [...config.playScriptToolbar, 'italic', 'mathml', 'chemml', 'inlinecode'];
+                toolbar = [...config.playScriptToolbarForIndent, 'italic', 'mathml', 'chemml', 'inlinecode'];
                 break;
             }
             case "Enter Character Name...": {
-                    toolbar = [...config.playScriptToolbar, 'bold', 'mathml', 'chemml', 'inlinecode'];
+                    toolbar = [...config.playScriptToolbarForIndent, 'bold', 'mathml', 'chemml', 'inlinecode'];
                 break;
             }
             default: break;

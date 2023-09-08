@@ -8,11 +8,12 @@ import {
     SET_ITEM_UPDATE_EVENT,
     RESET_ASSESSMENT_STORE,
     ELM_ASSESSMENT_EDIT_ID,
-    ASSESSMENT_CONFIRMATION_POPUP,
     ELM_NEW_ITEM_DATA,
     SET_ELM_PICKER_MSG,
     UPDATE_ASSESSMENT_ID,
-    ASSESSMENT_RELOAD_CONFIRMATION
+    ASSESSMENT_RELOAD_CONFIRMATION,
+    UPDATED_ASSESSMENTS_ARRAY,
+    ASESSMENT_UPDATE_DATA_ARRAY
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
@@ -41,7 +42,7 @@ const {
  * This action creator is used to fetch usage-type based on entityType
  */
 export const fetchUsageTypeData = (entityType) => (dispatch) => {
-    let url = `${config.STRUCTURE_READONLY_ENDPOINT}/usagetypes/v3/${entityType}?locale=en`;
+    let url = `${config.STRUCTURE_READONLY_ENDPOINT}usagetypes/v3/${entityType}?locale=en`;
     return axios.get(url, {
         headers: {
             myCloudProxySession: config.myCloudProxySession
@@ -198,6 +199,11 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
 export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch => {
     let url = `${config.VCS_API_ENDPOINT}${config.projectUrn}/updateAssessments/${oldWorkUrn}/${updatedWorkUrn}`;
     dispatch(saveAutoUpdateData("",""));
+    // dispatching updatedWorkUrn of the assessment item after VCS API call
+    dispatch({
+        type: UPDATED_ASSESSMENTS_ARRAY,
+        payload: updatedWorkUrn
+    })
     return axios.post(url, {}, {
         headers: {
             "Cache-Control": "no-cache",
@@ -205,11 +211,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
         }
     }).then((res) => {
         if (res.status == 202) {
-            if (config.slateType !== "assessment") {
-                dispatch(assessmentConfirmationPopup(true));
-            } else {
-                dispatch(assessmentReloadConfirmation(true))
-            }
+            dispatch(assessmentReloadConfirmation(true))
         }
     }).catch(() => {
         dispatch({
@@ -246,13 +248,6 @@ export const checkEntityUrn = (assessmentID) => async (dispatch) => {
     }))
     if (workIds.length > 0 && workIds[0] === workIds[1]) {
         dispatch(updateAssessmentVersion(assessmentID[0], assessmentID[1]))
-    }
-}
-
-export const assessmentConfirmationPopup = (data) => {
-    return {
-        type: ASSESSMENT_CONFIRMATION_POPUP,
-        payload: data
     }
 }
 
@@ -321,5 +316,15 @@ export const assessmentReloadConfirmation = (data) => {
     return {
         type: ASSESSMENT_RELOAD_CONFIRMATION,
         payload: data
+    }
+}
+
+export const saveUpdatedAssessmentArray = (oldAssessmentId, newAssessmentId) => {
+    return {
+        type: ASESSMENT_UPDATE_DATA_ARRAY,
+        payload: {
+            oldAssessmentId: oldAssessmentId,
+            newAssessmentId: newAssessmentId
+        }
     }
 }

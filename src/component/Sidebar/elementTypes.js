@@ -75,7 +75,7 @@ export default {
         },
         'primary-blockquote': {
             text: 'Blockquotes',
-            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag','alignment','IndexEntry'],
+            toolbar: ['bold','underline','strikethrough','orderedlist','unorderedlist', 'glossary','slatetag','alignment','IndexEntry','increaseindent','decreaseindent'],
             enum: 'BLOCKFEATURE',
             subtype: {
                 'secondary-pullquote': {
@@ -808,7 +808,7 @@ export default {
      'element-interactive': {
         'primary-elm-interactive': {
             text: 'Elm Interactive',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry','decreaseindent','increaseindent','orderedlist', 'unorderedlist'],
             enum: 'MMI_ELM',
             subtype: {
                 'secondary-elm-interactive': {
@@ -821,7 +821,7 @@ export default {
         },
         'primary-mmi': {
             text: 'Quad Interactive',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover', 'glossary','alignment', 'calloutIcon', 'IndexEntry','decreaseindent','increaseindent','orderedlist', 'unorderedlist'],
             enum: 'MMI',
             subtype: {
                 'secondary-interactive-mmi': {
@@ -894,7 +894,7 @@ export default {
     "popup": {
         "primary-popup": {
             text: 'Pop up window',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon', 'assetpopover','glossary', 'orderedlist', 'unorderedlist','increaseindent','decreaseindent','alignment', 'calloutIcon', 'IndexEntry'],
             dropdownDisabled: true,
             enum:'POP_UP',
             subtype: {
@@ -976,7 +976,7 @@ export default {
         "primary-poetry": {
             text: 'Block Poetry',
             enum: 'POETRY',
-            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent','alignment', 'calloutIcon', 'IndexEntry'],
+            toolbar: ['insertMedia','formatSelector','crossLinkingIcon','assetpopover','glossary', 'orderedlist', 'unorderedlist','decreaseindent','increaseindent','alignment', 'calloutIcon', 'IndexEntry'],
             dropdownDisabled: true,
             subtype: {
                 'secondary-poetry': {

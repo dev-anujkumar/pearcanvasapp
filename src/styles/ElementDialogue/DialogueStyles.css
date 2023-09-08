@@ -13,8 +13,30 @@
 
 .play-script .cypress-editable.place-holder::before{
     margin-top : 0px !important;
+    position: absolute;
+    left:10px;
 }
 
 .hideElement {
     display: none !important;
+}
+.DELineLevel1, .SDLineLevel1 {
+    display: block;
+    padding-left: 40px !important;
+}
+.DELineLevel2, .SDLineLevel2 {
+    padding-left: 80px !important;
+}
+.DELineLevel3, .SDLineLevel3 {
+    padding-left: 120px !important;
+}
+.cypress-editable.CNLineLevel1{
+    display: block;
+    padding-left: 50px !important;
+}
+.cypress-editable.CNLineLevel2 {
+    padding-left: 90px !important;
+}
+.cypress-editable.CNLineLevel3 {
+    padding-left: 130px !important;
 }

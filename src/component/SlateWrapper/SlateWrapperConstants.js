@@ -37,9 +37,7 @@ export const MANIFEST_LIST_ITEM = 'MANIFEST_LIST_ITEM';
 /* PDF Slate */
 export const ELEMENT_PDF = "ELEMENT_PDF";
 /*-----------------Pop Dialog text-------------------------- */
-export const ALREADY_USED_SLATE = "The following slate is already in use by another member."
 export const ALREADY_USED_SLATE_TOC = "The slate is locked by another user and thus the slate cannot be deleted."
-export const IN_USE_BY = "In use by: "
 export const REMOVE_LINKED_AUDIO = "Do you want to remove the linked Audio Book with the slate?"
 export const SPLIT_SLATE_WITH_ADDED_AUDIO = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
 export const NOT_AUDIO_ASSET = "Selected alfresco media type is not an Audio."
@@ -164,6 +162,7 @@ export const stanzaIndentClassList = ['poetryLine poetryLineLevel1', 'poetryLine
 export const SUBSCRIBER_BANNER_MESSAGE = "Read-only | Subscribed Slate"
 export const APPROVED_BANNER_MESSAGE1 = "Read-only | Approved Content"
 export const APPROVED_BANNER_MESSAGE2 = "- Editing content will create a new version of this slate"
+export const LOCKED_BANNER_MESSAGE = "Read-only | Locked"
 export const EDIT_CONTENT_BTN = "Edit Content"
 /************************************************************************************/
 export const SLATES_DEFAULT_LABEL = {

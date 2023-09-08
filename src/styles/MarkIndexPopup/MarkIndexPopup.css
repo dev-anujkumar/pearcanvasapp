@@ -241,6 +241,7 @@
     min-height: 24px;
     max-height: 50px;
     word-break: break-word;
+    pointer-events: none;
 }
 
 .markedindex-secondlevel-header .tooltip .tooltiptext.tooltip-bottom {

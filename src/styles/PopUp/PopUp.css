@@ -1000,7 +1000,7 @@ span.calloutFour > ins.diffmod{
 } */
 
 /* added css for list elements */
-li ol, li ul{
+ol:not(.te ol), ul:not(.te ul) {
   counter-reset: section !important;
 }
 ol li.listItemNumeroUnoNumber, 

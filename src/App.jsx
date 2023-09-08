@@ -18,7 +18,7 @@ import { modifyObjKeys } from './js/appUtils';
 // IMPORT - Assets // 
 import './styles/style.css';
 
-console.log("!!!!! ---- canvas-1.49.34 ---- !!!!!")
+console.log("!!!!! ---- canvas-1.51.5 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
@@ -26,6 +26,10 @@ class App extends Component {
         this.state = {
             isConfigLoaded : false
         };
+        let isRefreshBrowser = localStorage.getItem('browser_refresh');
+        if (isRefreshBrowser == '0') {
+            localStorage.setItem('isChangeInSlate', 'false');
+        } 
         this.getEnvConfig();
     }
     

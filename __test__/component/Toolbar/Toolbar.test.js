@@ -11,6 +11,7 @@ import * as utils from '../../../src/constants/utility';
 jest.mock('../../../src/constants/utility', () => ({
     sendDataToIframe: jest.fn(),
     hasReviewerRole: jest.fn(),
+    isSlateLocked: jest.fn(),
     handleTinymceEditorPlugins: jest.fn(()=> 'lists advlist placeholder charmap paste image casechange' ),
     isSubscriberRole: jest.fn().mockImplementationOnce( () => { return true })
 }))

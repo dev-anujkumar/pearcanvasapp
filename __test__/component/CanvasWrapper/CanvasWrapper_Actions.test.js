@@ -2794,20 +2794,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         config.book_title = 'Dev_LF_Ext_01'
         it('Test-10.1-fetchProjectLFs', () => {
             let expectedPayload = {
-                cypressLF: {
-                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
-                    "label": {
-                        "en": "ev_LF_Ext_0"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
-                },
-                externalLF: [{
-                    "urn": "urn:pearson:goalframework:73e75aaa-1d1d-4414-a042-9a45213a98ef",
-                    "label": {
-                        "en": "The Sociology Project 2.5"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/ukschools"
-                }]
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -2822,14 +2809,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         });
         it('Test-10.2-fetchProjectLFs Only External LF', () => {
             let expectedPayload = {
-                cypressLF: {},
-                externalLF: [{
-                    "urn": "urn:pearson:goalframework:73e75aaa-1d1d-4414-a042-9a45213a98ef",
-                    "label": {
-                        "en": "The Sociology Project 2.5"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/ukschools"
-                }]
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -2844,14 +2824,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         });
         it('Test-10.3-fetchProjectLFs Only Cypress LF', () => {
             let expectedPayload = {
-                cypressLF: {
-                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
-                    "label": {
-                        "en": "ev_LF_Ext_0"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
-                },
-                externalLF: []
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -2888,14 +2861,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         });
         it('Test-10.6-fetchProjectLFs Only Cypress LF and no External LF', () => {
             let expectedPayload = {
-                cypressLF: {
-                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
-                    "label": {
-                        "en": "ev_LF_Ext_0"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
-                },
-                externalLF: []
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');

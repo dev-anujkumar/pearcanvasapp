@@ -8,6 +8,7 @@ import config from '../config/config';
 import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
+import { checkSlateLock } from '../js/slateLockUtility';
 // DECLARATION - const or variables 
 export const PRIMARY_BUTTON = "primary";
 export const SECONDARY_BUTTON = "secondary";
@@ -94,7 +95,7 @@ export const isApprovedOrSubscribed = (authStore) => {
     const isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
     const slatePublishStatus = appStore.slateLevelData[config.slateManifestURN]?.type !== "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved";
     const isPopupReadOnly = appStore.slateLevelData[config.slateManifestURN]?.type === "popup" && appStore.slateLevelData[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && appStore.slateLevelData[config.tempSlateManifestURN]?.status === "approved";
-    return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber);
+    return ((slatePublishStatus  && !config?.isCypressPlusEnabled) || isPopupReadOnly || isSubscriber || isSlateLocked());
 }
 /**
  * This function checks the conditions for Reviewer users and approved/subscribed content both
@@ -106,19 +107,26 @@ export const isApproved = () =>{
     const authStore = store.getState();
     const {appStore} = authStore;
     const hasRole= appStore && appStore.roleId === "comment_only" && (hasProjectPermission('note_viewer'))
-    if(hasRole)  return false
+    if(hasRole && !isSlateLocked())  return false
     return isApprovedOrSubscribed(authStore)
 }
+
+export const isSlateLocked = () =>{
+    const authStore = store.getState();
+    const slateLockInfo = authStore?.slateLockReducer?.slateLockInfo;
+    return checkSlateLock(slateLockInfo);
+}
+
 
 
 export const hasReviewerRole = (value) => {
     const authStore = store.getState();
     const {appStore} = authStore;
     if (value) {
-        return !((hasProjectPermission(value) && !isApproved()) ? true : false)
+        return !((hasProjectPermission(value) && !isApproved() && !isSlateLocked()) ? true : false)
     }
     let hasRole = (appStore && (appStore.roleId === "comment_only"
-        && (hasProjectPermission('note_viewer'))) || isApproved());
+        && (hasProjectPermission('note_viewer'))) || isApproved() || isSlateLocked());
     return hasRole;
 }
 
@@ -713,10 +721,12 @@ export const getShowhideChildUrns = (element) => {
     }
 }
 
-export const removeClassesFromHtml = (html) => {
+export const removeClassesFromHtml = (html, SD_DE_indent) => {
     let tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
-    tinyMCE.$(tempDiv).find('p').removeAttr('class')
+    if (!SD_DE_indent) {
+        tinyMCE.$(tempDiv)?.find('p')?.removeAttr('class')
+    }
     return replaceUnwantedtags(tempDiv.innerHTML);
 }
 
@@ -762,6 +772,11 @@ export const prepareDialogueDom = (model) => {
     ConvertedModel = ConvertedModel && ConvertedModel.replace(/<\/p>/g, "")
     let lineModel = ConvertedModel ? ConvertedModel : '<span class="dialogueLine"><br /></span>'
     return lineModel;
+}
+// This function is use to add Playscript stageDirection class 
+export const prepareStageDirectionDom = (model) => {
+    const ConvertedModel = model.includes('<p>') ? model?.replace(/<p>/g, "<p class ='stageDirectionLine'>") : model
+    return ConvertedModel;
 }
 
 /**sets Owner key in localstorage
@@ -1061,7 +1076,35 @@ export const showNotificationOnCanvas = (message) => {
     }
 }
 
-// This function is use to handle Indentation for Poerty Element
-export const isStanzaIndent = (stanzaClassList) => {
-    return (stanzaClassList?.contains('poetryLineLevel1') || stanzaClassList?.contains('poetryLineLevel2') || stanzaClassList?.contains('poetryLineLevel3'))
+// This function is use to handle Indentation for the Element
+export const isElementIndent = (stanzaClassList) => {
+    return (stanzaClassList?.contains('poetryLineLevel1') || stanzaClassList?.contains('poetryLineLevel2') || stanzaClassList?.contains('poetryLineLevel3') || stanzaClassList?.contains('DELineLevel1') || stanzaClassList?.contains('DELineLevel2') || stanzaClassList?.contains('DELineLevel3')|| stanzaClassList?.contains('CNLineLevel1') || stanzaClassList?.contains('CNLineLevel2')|| stanzaClassList?.contains('CNLineLevel3'))
+}
+
+// This function is use to handle Indentation for Playscript
+export const isDialogueIndent = (stanzaClassList) => {
+    return (stanzaClassList?.contains('SDLineLevel1') || stanzaClassList?.contains('SDLineLevel2') || stanzaClassList?.contains('SDLineLevel3') || stanzaClassList?.contains('DELineLevel1') || stanzaClassList?.contains('DELineLevel2') || stanzaClassList?.contains('DELineLevel3')|| stanzaClassList?.contains('CNLineLevel1') || stanzaClassList?.contains('CNLineLevel2')|| stanzaClassList?.contains('CNLineLevel3'))
+}
+
+// This function is use to return Playscript character class 
+export const getDEClassType = (classList) => {
+    if(classList?.contains("CNLineLevel1")) {
+        return 'class=\"CNLineLevel1\"';
+    } else if(classList?.contains("CNLineLevel2")) {
+        return 'class=\"CNLineLevel2\"';
+    } else if(classList?.contains("CNLineLevel3")) {
+        return 'class=\"CNLineLevel3\"';
+    }
+}
+// This function is use to return Playscript character class 
+export const getDEClassName = (classList) => {
+    if(classList?.includes("CNLineLevel1")) {
+        return 'CNLineLevel1';
+    } else if(classList?.includes("CNLineLevel2")) {
+        return 'CNLineLevel2';
+    } else if(classList?.includes("CNLineLevel3")) {
+        return 'CNLineLevel3';
+    } else {
+        return "characterPS";
+    }
 }

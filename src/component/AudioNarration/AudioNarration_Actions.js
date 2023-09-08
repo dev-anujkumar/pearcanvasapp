@@ -159,6 +159,8 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
                 }
             });
             if (audioDataResponse && audioDataResponse.status == 200) {
+                // Making condition true for triggering slate level save api
+                localStorage.setItem('isChangeInSlate', 'true');
                 fetchAudioNarrationForContainer(slateData)
                 dispatch({ type: OPEN_AUDIO_NARRATION, payload: false })
                 dispatch({ type: ADD_AUDIO_NARRATION, payload: true })

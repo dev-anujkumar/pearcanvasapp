@@ -695,7 +695,7 @@ margin-left:6px;
   margin-right: auto;
 }
 .read-only{
-  margin-left: 10px;
+  margin-left: 8px;
   margin-right: auto;
   font-family: 'Open Sans',sans-serif;
   font-style: normal;
@@ -710,7 +710,7 @@ margin-left:6px;
   align-items: center;
   height:100%;
   float:left;
-  padding-left: 20px;
+  padding-left: 24px;
 }
 .separatorClass{
   cursor: default;
