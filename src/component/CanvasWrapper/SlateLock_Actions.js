@@ -120,6 +120,7 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
        projectUrn,
        slateId,
        firstName: getCookieByName('FIRST_NAME'),
+       userName: getCookieByName('USER_NAME')
     }
     return axios.post(url, data, {
         headers: {
@@ -148,6 +149,7 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
        projectUrn,
        slateId,
        firstName: getCookieByName('FIRST_NAME'),
+       userName: getCookieByName('USER_NAME')
     }
     return axios.post(url, data, {
         headers: {
