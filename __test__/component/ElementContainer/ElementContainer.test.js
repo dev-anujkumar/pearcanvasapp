@@ -4263,6 +4263,26 @@ describe('Test-Other Functions', () => {
         const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
         elementContainerInstance5.handleAlfrescoMetadataWindow();
     });
+    it('handleAlfrescoMetadataWindow method for openerelement ', () => {
+        let props77 = {
+            element: {
+                id: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319x',
+                type:'openerelement',
+                elementdata:{
+                    assetid:'urn:pearson:alfresco:abc'
+                }
+            },
+            permissions: [],
+            showBlocker: jest.fn(),
+            index: 0,
+            elementId: 'urn:pearson:work:f3fbd8cd-6e1b-464a-8a20-c62d4b9f319y',
+            updateElement: jest.fn(),
+            parentUrn: null
+        };
+        let elementContainer55 = mount(<Provider store={store}><ElementContainer {...props77} /></Provider>);
+        const elementContainerInstance5 = elementContainer55.find('ElementContainer').instance();
+        elementContainerInstance5.handleAlfrescoMetadataWindow();
+    });
 
 
     it('handleBlurAssessmentSlate method - calledFrom - updateAssessmentFormat', () => {
@@ -4679,6 +4699,38 @@ describe('Test-Other Functions', () => {
         const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
         elementContainerInstance5.handleAlfrescoMetadataWindow({stopPropagation: jest.fn()});
     });
+    it('handleFigurePopup for figuretype interactive', () => {
+        let props7 = {
+            element: {
+                figuretype : "interactive",
+                figuredata:{
+                    interactiveid: 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864',
+                }
+            },
+            showBlocker: jest.fn(),
+        };
+        let elementType = "TE"
+
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleFigurePopup(null,elementType);
+    });
+    it('handleFigurePopup for type openerelement', () => {
+        let props7 = {
+            element: {
+                type: "openerelement",
+                backgroundimage:{
+                    imageid: 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864',
+                }
+            },
+            showBlocker: jest.fn(),
+        };
+        let elementType = "TE"
+
+        let elementContainer5 = mount(<Provider store={store}><ElementContainer {...props7} /></Provider>);
+        const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
+        elementContainerInstance5.handleFigurePopup(null,elementType);
+    });
     it('handleFigurePopup', () => {
         let props7 = {
             element: {
@@ -4694,6 +4746,7 @@ describe('Test-Other Functions', () => {
         const elementContainerInstance5 = elementContainer5.find('ElementContainer').instance();
         elementContainerInstance5.handleFigurePopup(null,elementType);
     });
+
     it('handleFigurePopup : else ', () => {
         let props7 = {
             showBlocker: jest.fn(),

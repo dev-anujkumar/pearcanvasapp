@@ -865,6 +865,10 @@ export default {
                     enum: 'WEB_LINK',
                     wipValue: 'web-link',
                     attributes: {
+                        alt_text: {
+                            text: 'Alt Text',
+                            isEditable: false
+                        },
                         long_description: {
                             text: 'Long Description',
                             isEditable: false

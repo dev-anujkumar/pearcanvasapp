@@ -103,6 +103,7 @@ export const containerType = ['element-aside', 'manifest', 'citations', 'poetry'
 export const allowedFigureTypesForTCM = ['image', 'table', 'mathImage', 'audio', 'video', 'codelisting', 'authoredtext', "interactive", "assessment"]
 export const allowedParentType = ['popup', 'showhide']
 export const containersInSH = ['CONTAINER', 'CITATION', 'WORKED_EXAMPLE', 'POETRY'];
+export const interactivetype = ['3rd-party', 'web-link'];
 
 export const TE_POP_UP_HEADER_TEXT = 'Select an Image';
 export const TE_POP_UP_NORMAL_TEXT = 'Please select an image to open it in Alfresco for editing in a different tab on your browser';

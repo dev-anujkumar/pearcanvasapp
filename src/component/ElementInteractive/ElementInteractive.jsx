@@ -592,10 +592,8 @@ class Interactive extends React.Component {
                     },
                     "path": smartLinkPath
                 }
-                if (interactivetype === THIRD_PARTY) {
-                    figuredata.alttext = altText
-                }
                 if (interactivetype === THIRD_PARTY || interactivetype === EXTERNAL_WEBSITE_LINK) {
+                    figuredata.alttext = altText
                     figuredata.longdescription = longDescription
                 }
                 if (ctaSmartLinks.indexOf(interactivetype) > -1) {

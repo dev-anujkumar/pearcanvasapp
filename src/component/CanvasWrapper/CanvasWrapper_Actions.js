@@ -1777,7 +1777,7 @@ export const fetchProjectLFs = () => dispatch => {
     }).then(response => {
         if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
             const learningFrameworks = response.data.learningFrameworks;
-            const externalLF = learningFrameworks.filter(learningFramework => config.book_title.includes(learningFramework?.label?.en))
+            const externalLF = [...learningFrameworks]
             dispatch({
                 type: PROJECT_LEARNING_FRAMEWORKS,
                 payload: {
