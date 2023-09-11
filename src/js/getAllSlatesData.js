@@ -207,6 +207,39 @@ export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
             currentSlateAncestorData: currentSlateData
         }
     })
+
+}
+/**
+ * @function currentNodeAncestorData
+ * @description-This function is to set details for Current Node from AllSlatesData when view/unlink Subscriber option selected fron toc
+ * @param {Object} allSlatesData  
+*/
+export const currentNodeAncestorData = (item, matterType, tocNode = {}) => (dispatch, getState) => {
+    const { allSlateData } = getState().appStore
+    let ancestor = {
+        containerUrn: config.projectUrn,
+        entityUrn: config.projectEntityUrn,
+        title: config.book_title,
+        label: 'project'
+    },
+        currentNodeData = {};
+    const matterTypeData = allSlateData && allSlateData[matterType] ? allSlateData[matterType] : [];
+    currentNodeData = setCurrentNodeAncestorDataDetails(matterTypeData, ancestor, matterType, item)
+    let structure = [];
+    if(Object.keys(currentNodeData).length > 0) {
+        while('ancestor' in currentNodeData && currentNodeData.ancestor.label !== 'project') {
+            let ancestorTitle = currentNodeData.ancestor.title || 'Untitled';
+            if(Object.keys(tocNode).length > 0 && tocNode.entityUrn === currentNodeData.ancestor.entityUrn &&
+                ancestorTitle !== tocNode.title) {
+                ancestorTitle = tocNode.title;
+                currentNodeData.ancestor.title = tocNode.title;
+            }
+
+            structure.unshift(ancestorTitle);
+            currentNodeData = currentNodeData.ancestor;
+        }
+    }
+    sendDataToIframe({ 'type': 'fetchNodeAncestorData', 'message': structure });
 }
 
 export const fetchAnySlateData = (slateData) => dispatch =>{
@@ -236,6 +269,23 @@ const compareCurrentSlateUrn = (containerUrn, entityUrn) => {
     return false;
 }
 
+// funtion will return true when item id matches with the allslatedata else false
+const checkCurrentNodeUrn = (allSlatesData, item) => {
+    if (allSlatesData.includes(item?.entityUrn)) {
+        return true;
+    }
+    return false;
+}
+
+// funtion will return true when item id matches with the nested allslatedata else false
+const compareCurrentNodeUrn = (containerUrn, entityUrn, item) => {
+    if (item?.entityUrn === entityUrn) {
+        return true;
+    }
+    return false;
+}
+
+
 /**
  * @function setCurrentSlateAncestorDataDetails
  * @description-This is a recursive function to prepare structured data for the current Slate based and set its ancestors
@@ -263,6 +313,45 @@ const setCurrentSlateAncestorDataDetails = (matterTypeData, ancestor, matterType
                         ancestor: ancestor
                     })
                 return setCurrentSlateAncestorDataDetails(matterTypeData[key].contents, ancestor, matterType)
+                }
+            else {
+                continue;
+            }
+        }
+    }
+    else{
+        return ancestor
+    }
+}
+
+/**
+ * @function setCurrentNodeAncestorDataDetails
+ * @description-This is a recursive function to prepare structured data for the current Node based and set its ancestors
+ * @param {Array} matterTypeData  
+ * @param {Object} ancestor
+ * @param {String} matterType
+ * @param {object} item
+ * @returns {Object}
+*/
+const setCurrentNodeAncestorDataDetails = (matterTypeData, ancestor, matterType, item) => {
+    if (matterTypeData && matterTypeData.length > 0 && (checkCurrentNodeUrn(JSON.stringify(matterTypeData), item))) {
+        for (let key in matterTypeData) {
+            if (compareCurrentNodeUrn(matterTypeData[key].containerUrn, matterTypeData[key].entityUrn, item)) {
+                ancestor = Object.assign({},
+                    setItemDetails(matterTypeData[key]),
+                    {
+                        matterType,
+                        ancestor
+                    })
+                return ancestor;
+            }
+            else if (matterTypeData[key].contents && (checkCurrentNodeUrn(JSON.stringify(matterTypeData[key].contents), item))) {
+                ancestor = Object.assign({},
+                    setItemDetails(matterTypeData[key]),
+                    {
+                        ancestor
+                    })
+                                return setCurrentSlateAncestorDataDetails(matterTypeData[key].contents, ancestor, matterType)
             }
             else {
                 continue;
