@@ -131,7 +131,18 @@ export const checkEmbeddedElmAssessment = (element, assessReducer) => {
 */
 export const checkInteractive = (element) => {
     if (element?.type === ELEMENT_FIGURE && element.figuretype === FIGURE_INTERACTIVE &&
-        (element.figuredata?.interactiveformat === ELM_INT || interactivetype.includes(element.figuredata?.interactivetype)) && element.figuredata?.interactiveid ) {
+        element.figuredata?.interactiveformat === ELM_INT && element.figuredata?.interactiveid ) {
+        return true;
+    }
+    return false;
+}
+/***
+* @description - This is the function to check if a smartlink 3rd party and web link interactive
+* @param element - element's details
+*/
+export const checkSmartLinkInteractive = (element) => {
+    if (element?.type === ELEMENT_FIGURE && element.figuretype === FIGURE_INTERACTIVE &&
+        interactivetype.includes(element.figuredata?.interactivetype) && element.figuredata?.interactiveid ) {
         return true;
     }
     return false;
