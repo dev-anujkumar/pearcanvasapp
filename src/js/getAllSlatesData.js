@@ -351,7 +351,7 @@ const setCurrentNodeAncestorDataDetails = (matterTypeData, ancestor, matterType,
                     {
                         ancestor
                     })
-                                return setCurrentSlateAncestorDataDetails(matterTypeData[key].contents, ancestor, matterType)
+                return setCurrentNodeAncestorDataDetails(matterTypeData[key].contents, ancestor, matterType, item)
             }
             else {
                 continue;
