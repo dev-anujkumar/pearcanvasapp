@@ -6,8 +6,6 @@ import React from 'react';
 import '../../styles/PopUp/PopUp.css';
 import axios from 'axios';
 import config from '../../config/config';
-import { connect } from 'react-redux';
-import { saveSelectedAltTextLongDescData } from '../AlfrescoPopup/Alfresco_Action';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -120,7 +118,6 @@ class MetaDataPopUp extends React.Component {
                 altText: tempElementData.backgroundimage.alttext,
                 longDesc: tempElementData.backgroundimage.longdescription
             }
-			console.log("line123",altLongDescData)
             this.props.saveSelectedAltTextLongDescData(altLongDescData)
 		}
 		else{	
@@ -183,14 +180,5 @@ class MetaDataPopUp extends React.Component {
         );
     }
 }
-const mapActionToProps = (dispatch) =>{
-    return{
-        saveSelectedAltTextLongDescData: (payloadObj) => {
-            dispatch(saveSelectedAltTextLongDescData(payloadObj))
-        }
-    }
-}
-  
-export default connect(
-	null,
-    mapActionToProps) (MetaDataPopUp);
+
+export default MetaDataPopUp;
