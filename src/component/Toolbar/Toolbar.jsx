@@ -158,6 +158,7 @@ const _Toolbar = props => {
     const toolbarClass = (isSubscribed || isApprovedCondition || isLockedSlate) ? 'subscribe-approved-container' : 'toolbar-container'
     const separatorClass = isSubscribed || isApprovedCondition ? 'separatorClass' : ''
     const lockedByUser = props.slateLockInfo ? props.slateLockInfo.firstName !== "" ? `${props.slateLockInfo.lastName}, ${props.slateLockInfo.firstName}` : `${props.slateLockInfo.userId}` : ""
+    console.log('INSIDE TOOLBAR FILE TO CHECK LOCK STATUS', checkSlateLock(props.slateLockInfo))
     return (
         <div className={bannerClass}>
             <div className={toolbarClass}>
