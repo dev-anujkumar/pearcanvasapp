@@ -126,6 +126,13 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
         }
     }
 })
+jest.mock('../../../src/component/AlfrescoPopup/Alfresco_Action.js',() =>{
+    return { 
+        saveSelectedAltTextLongDescData: () => {
+        return jest.fn()
+    }
+    }
+})
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("innerText")) {
     Object.defineProperty(global.Element.prototype, 'innerText', {
