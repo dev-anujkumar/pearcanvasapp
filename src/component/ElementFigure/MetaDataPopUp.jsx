@@ -6,6 +6,8 @@ import React from 'react';
 import '../../styles/PopUp/PopUp.css';
 import axios from 'axios';
 import config from '../../config/config';
+import { connect } from 'react-redux';
+import { saveSelectedAltTextLongDescData } from '../AlfrescoPopup/Alfresco_Action';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -109,11 +111,17 @@ class MetaDataPopUp extends React.Component {
 		const { index, element, asideData } = this.props;
 				/*-- Form data to send to wip */
 		if(element?.type === "openerelement"){ 
-			let tempElementData = element
+			let tempElementData = {...element}
 			tempElementData.backgroundimage.alttext = this.state.altText;
 			tempElementData.backgroundimage.longdescription = this.state.longDescription;
 			this.props.updateOpenerElement(tempElementData)
 			this.props.handleFocus("updateFromC2")
+			const altLongDescData = {
+                altText: tempElementData.backgroundimage.alttext,
+                longDesc: tempElementData.backgroundimage.longdescription
+            }
+			console.log("line123",altLongDescData)
+            this.props.saveSelectedAltTextLongDescData(altLongDescData)
 		}
 		else{	
 		let	figureData = { ...element?.figuredata };
@@ -175,5 +183,14 @@ class MetaDataPopUp extends React.Component {
         );
     }
 }
-
-export default MetaDataPopUp;
+const mapActionToProps = (dispatch) =>{
+    return{
+        saveSelectedAltTextLongDescData: (payloadObj) => {
+            dispatch(saveSelectedAltTextLongDescData(payloadObj))
+        }
+    }
+}
+  
+export default connect(
+	null,
+    mapActionToProps) (MetaDataPopUp);
