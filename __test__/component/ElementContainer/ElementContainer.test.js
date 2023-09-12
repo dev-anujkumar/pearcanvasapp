@@ -1150,6 +1150,19 @@ describe('Test for element container component', () => {
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })
+        it('Render Element Container ----->saveSelectedAltTextLongDescData', () => {
+            let props = {
+                element: wipData.figure,
+                permissions: [],
+                saveSelectedAltTextLongDescData:jest.fn()
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'saveSelectedAltTextLongDescData') 
+            elementContainerInstance.saveSelectedAltTextLongDescData();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
         it('Render Element Container ----->Figure Element-Image', () => {
             let props = {
                 element: wipData.figure,
