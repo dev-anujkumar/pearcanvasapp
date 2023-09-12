@@ -41,8 +41,8 @@ class OpenerElement extends Component {
     }
     
     componentDidUpdate(prevProps) {
-                const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
-                if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
+            const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
+            if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.dataFromNewAlfresco(alfrescoAssetData)
         }
     }
