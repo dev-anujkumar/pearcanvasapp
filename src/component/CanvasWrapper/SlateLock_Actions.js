@@ -23,7 +23,6 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
         })
         return false
     }
-    console.log('INSIDE SLATELOCK ACTION', config.isSlateLockChecked)
     if(config.isSlateLockChecked){
         return false;
     }
