@@ -3617,14 +3617,6 @@ export class TinyMceEditor extends Component {
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
-                    config.editorRefID = this.editorRef.current.id;
-                    let timeoutId = setTimeout(() => {
-                        if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props?.element?.type) && this.props?.element?.figuretype !== "codelisting")) {
-                            const elementID = this.editorRef?.current?.id ? this.editorRef.current.id : config.editorRefID;
-                            document.getElementById(elementID).click();
-                        }
-                        clearTimeout(timeoutId)
-                    }, 0)
                     localStorage.removeItem('newElement');
                 }
                 let currentId = (this.editorRef.current ? this.editorRef.current.id : 'cypress-0');
@@ -3648,30 +3640,40 @@ export class TinyMceEditor extends Component {
                 let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 //PCAT-9077 - duplicate toolbar issue on element creation
                 tinymce.remove()
-                tinymce.init(this.editorConfig).then((d) => {
+                tinymce.init(this.editorConfig).then((d) => {   
+                    if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
+                        config.editorRefID = this.editorRef.current.id;
+                        let timeoutId = setTimeout(() => {
+                            if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props?.element?.type) && this.props?.element?.figuretype !== "codelisting")) {
+                                const elementID = this.editorRef?.current?.id ? this.editorRef.current.id : config.editorRefID;
+                                document.getElementById(elementID).click();
+                            }
+                            clearTimeout(timeoutId)
+                        }, 0)
+                    }
                     if (this.editorRef.current) {
 
-                        if (termText && termText.length && this.props.element.type === 'figure') {
-                            document.getElementById(currentId).innerHTML = termText;
+                            if (termText && termText.length && this.props.element.type === 'figure') {
+                                document.getElementById(currentId).innerHTML = termText;
+                            }
+    
+                            if (this.props.element && this.props.element.type === "element-blockfeature") {
+                                this.removeBogusTagsFromDom();
+                                this.removeAttributionBr();
+                            }
+    
+                            /*
+                                Making blinking cursor color again to black
+                            */
+                            this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
+                            if (!newElement) {
+                                this.fromtinyInitBlur = true;
+                                this.editorRef.current.focus();
+                                this.editorRef.current.blur();
+                                this.fromtinyInitBlur = false;
+                            }
                         }
-
-                        if (this.props.element && this.props.element.type === "element-blockfeature") {
-                            this.removeBogusTagsFromDom();
-                            this.removeAttributionBr();
-                        }
-
-                        /*
-                            Making blinking cursor color again to black
-                        */
-                        this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
-                        if (!newElement) {
-                            this.fromtinyInitBlur = true;
-                            this.editorRef.current.focus();
-                            this.editorRef.current.blur();
-                            this.fromtinyInitBlur = false;
-                        }
-                    }
-                }).catch((err) => console.log(err))
+                    }).catch((err) => console.log(err)) 
             }
         }
     }
