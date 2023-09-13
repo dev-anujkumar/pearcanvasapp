@@ -3653,27 +3653,27 @@ export class TinyMceEditor extends Component {
                     }
                     if (this.editorRef.current) {
 
-                            if (termText && termText.length && this.props.element.type === 'figure') {
-                                document.getElementById(currentId).innerHTML = termText;
-                            }
-    
-                            if (this.props.element && this.props.element.type === "element-blockfeature") {
-                                this.removeBogusTagsFromDom();
-                                this.removeAttributionBr();
-                            }
-    
-                            /*
-                                Making blinking cursor color again to black
-                            */
-                            this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
-                            if (!newElement) {
-                                this.fromtinyInitBlur = true;
-                                this.editorRef.current.focus();
-                                this.editorRef.current.blur();
-                                this.fromtinyInitBlur = false;
-                            }
+                        if (termText && termText.length && this.props.element.type === 'figure') {
+                            document.getElementById(currentId).innerHTML = termText;
                         }
-                    }).catch((err) => console.log(err)) 
+
+                        if (this.props.element && this.props.element.type === "element-blockfeature") {
+                            this.removeBogusTagsFromDom();
+                            this.removeAttributionBr();
+                        }
+
+                        /*
+                            Making blinking cursor color again to black
+                        */
+                        this.editorRef.current.style.caretColor = "rgb(0, 0, 0)";
+                        if (!newElement) {
+                            this.fromtinyInitBlur = true;
+                            this.editorRef.current.focus();
+                            this.editorRef.current.blur();
+                            this.fromtinyInitBlur = false;
+                        }
+                    }
+                }).catch((err) => console.log(err))
             }
         }
     }
