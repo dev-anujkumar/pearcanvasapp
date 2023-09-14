@@ -165,3 +165,14 @@ export const setLockPeriodFlag = (inLockPeriod) => (dispatch) => {
         payload : inLockPeriod
     })
 }
+
+export const saveLockDetails = (lockInfo) => (dispatch) =>{
+    dispatch({
+        type: SET_SLATE_LOCK_STATUS,
+        payload: {
+            ...lockInfo,
+            userFirstName: "",
+            userLastName: ""
+        }
+    })
+}

@@ -472,9 +472,8 @@ function CommunicationChannel(WrappedComponent) {
                     if(message?.labels)
                     this.props.setTocSlateLabel(message.labels)
                     break;
-                case 'lockStatusInInterval' :
-                    config.isSlateLockChecked = false
-                    this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
+                case 'lockUserDetailsFromCount' :
+                    this.props.saveLockDetails(message.lockInfo)
                     break;
             }
         }
