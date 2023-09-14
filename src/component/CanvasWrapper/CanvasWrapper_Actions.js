@@ -918,11 +918,12 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
         /** [TK-3289]- To get Current Slate details */
         dispatch(setCurrentSlateAncestorData(getState().appStore.allSlateData));
 
+        let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
         // get data for auto-numbering
         if(config.figureDataToBeFetched){
             const slateAncestors = getState().appStore.currentSlateAncestorData;
             const currentParentUrn = getContainerEntityUrn(slateAncestors);
-            dispatch(fetchProjectFigures(currentParentUrn));
+            isAutoNumberingEnabled && dispatch(fetchProjectFigures(currentParentUrn));
             dispatch(fetchFigureDropdownOptions());
             config.figureDataToBeFetched = false;
             const slateMatterType = getState().appStore.slateMatterType
@@ -1294,25 +1295,6 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 	}
 }
 
-/**
- * Create the pre-snapshots for cos converted projects
- * @param {*}  
- */
-
-export const tcmCosConversionSnapshot = () => dispatch => {
-    return axios.patch(`/cypress/trackchanges-srvr/pre-snapshot/${config.projectUrn}`, {
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            'myCloudProxySession': config.myCloudProxySession
-        }
-    }).then((response) => {
-        // console.log("response", response)
-    })
-        .catch(err => {
-            console.error('axios Error', err);
-        })
-}
 
 /**
  * Appends the created Unit element to the parent element and then to the slate.

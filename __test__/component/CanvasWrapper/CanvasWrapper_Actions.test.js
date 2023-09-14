@@ -2970,28 +2970,6 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
 
         
     });
-    describe('Test-12- tcmCosConversionSnapshot ', () => {
-        it('Test-12.1 tcmCosConversionSnapshot  - then Block', async () => {
-            let firstResponseData = {}
-            let dispatch = jest.fn();
-            axios.patch.mockImplementation(() => Promise.resolve(firstResponseData))
-            const spyFunction = jest.spyOn(canvasActions, 'tcmCosConversionSnapshot')
-            await canvasActions.tcmCosConversionSnapshot()(dispatch)
-            expect(dispatch).not.toHaveBeenCalled();
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
-        })
-        it('Test-12.2 tcmCosConversionSnapshot  - catch Block', async () => {
-            let firstResponseData = {}
-            let dispatch = jest.fn();
-            axios.patch.mockImplementation(() => Promise.reject(firstResponseData))
-            const spyFunction = jest.spyOn(canvasActions, 'tcmCosConversionSnapshot')
-            await canvasActions.tcmCosConversionSnapshot()(dispatch)
-            expect(dispatch).not.toHaveBeenCalled();
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
-        })
-    });
     describe('Test-12- fetchSlateAncestorData ', () => {
         it('Test-12.1 fetchSlateAncestorData', () => {
             let firstResponseData = {}

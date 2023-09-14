@@ -28,7 +28,9 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
     }
     let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
-    return axios.get(url)
+    // if projectUrn and slateId has values then only call should be triggered
+    if (projectUrn && slateId) {
+        return axios.get(url)
         .then((res) => {
             config.isSlateLockChecked = res.data.isLocked;
             dispatch({
@@ -43,6 +45,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
         .catch((err) => {
             console.log("%c Slate lock status API failed","background: black; color: white", err)
         })
+    }
 }
 
 /**
