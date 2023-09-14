@@ -109,11 +109,16 @@ class MetaDataPopUp extends React.Component {
 		const { index, element, asideData } = this.props;
 				/*-- Form data to send to wip */
 		if(element?.type === "openerelement"){ 
-			let tempElementData = element
+			let tempElementData = {...element}
 			tempElementData.backgroundimage.alttext = this.state.altText;
 			tempElementData.backgroundimage.longdescription = this.state.longDescription;
 			this.props.updateOpenerElement(tempElementData)
 			this.props.handleFocus("updateFromC2")
+			const altLongDescData = {
+                altText: tempElementData.backgroundimage.alttext,
+                longDesc: tempElementData.backgroundimage.longdescription
+            }
+            this.props.saveSelectedAltTextLongDescData(altLongDescData)
 		}
 		else{	
 		let	figureData = { ...element?.figuredata };
