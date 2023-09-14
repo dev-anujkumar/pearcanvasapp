@@ -152,7 +152,6 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.fetchLearnosityContent()
 
                     // call get project api here
-                    this.props.fetchFigureDropdownOptions();
                     this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
                     this.props.fetchDefaultLF(message.defaultLearningFramework)
@@ -189,6 +188,9 @@ function CommunicationChannel(WrappedComponent) {
                     let newMessage = { assessmentResponseMsg: message.assessmentResponseMsg };
                     this.props.isLOExist(newMessage);
                     this.props.currentSlateLO(newMessage);
+                    break;
+                case 'elementLabelCombineData':
+                    this.props.updateFigureDropdownValues(message)
                     break;
                 case 'refreshSlate':
                     this.handleRefreshSlate();

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import config from '../../config/config';
+import { sendDataToIframe } from '../../constants/utility.js'
 import {
     TOGGLE_COMMENTS_PANEL,
     FETCH_COMMENTS,
@@ -47,6 +48,7 @@ export const fetchComments = (contentUrn, title) => dispatch => {
             type: FETCH_COMMENTS,
             payload: { comments: response.data.comments, title }
         })
+        sendDataToIframe({ 'type': 'aggregatedCommentsData', 'message': response.data.comments });
 
     }).catch(error => {
         console.log("failed to fetch comment", error);

@@ -358,22 +358,6 @@ export const fetchElementTag = (element, index = 0) => {
     }
 }
 
-export const fetchFigureDropdownOptions = () => (dispatch, getState) => {
-    // Api to get Figure dropdown options
-    let isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
-    const figureDropdownOptionsURL = `${config.REACT_APP_API_URL}v1/project/${config.projectEntityUrn}/element-labels?isAutoNumberingEnabled=${isAutoNumberingEnabled}`;
-    return axios.get(figureDropdownOptionsURL, {
-        headers: {
-            "Content-Type": "application/json",
-            'myCloudProxySession': config.myCloudProxySession
-        }
-    }).then(response => {
-        let dropdownOptionsObj = response?.data;
-        dispatch(updateFigureDropdownValues(dropdownOptionsObj))
-    }).catch(error => {
-        console.log("Get figure dropdown options API Failed !!", error)
-    })
-}
 
 export const updateFigureDropdownValues = (dropdownOptionsObj) => (dispatch, getState) => {
     if (Object.keys(dropdownOptionsObj).length > 0) {
@@ -924,7 +908,6 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             const slateAncestors = getState().appStore.currentSlateAncestorData;
             const currentParentUrn = getContainerEntityUrn(slateAncestors);
             isAutoNumberingEnabled && dispatch(fetchProjectFigures(currentParentUrn));
-            dispatch(fetchFigureDropdownOptions());
             config.figureDataToBeFetched = false;
             const slateMatterType = getState().appStore.slateMatterType
             const allSlatesData = getState().appStore.allSlateData
