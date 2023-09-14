@@ -126,6 +126,13 @@ jest.mock('./../../../src/component/ElementContainer/ElementContainer_Actions.js
         }
     }
 })
+jest.mock('../../../src/component/AlfrescoPopup/Alfresco_Action.js',() =>{
+    return { 
+        saveSelectedAltTextLongDescData: () => {
+        return jest.fn()
+    }
+    }
+})
 global.document = (new JSDOM()).window.Element;
 if (!global.Element.prototype.hasOwnProperty("innerText")) {
     Object.defineProperty(global.Element.prototype, 'innerText', {
@@ -1140,6 +1147,19 @@ describe('Test for element container component', () => {
             const elementContainerInstance = elementContainer.find('ElementContainer').instance();
             const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'updateFigureData') 
             elementContainerInstance.updateFigureData();
+            expect(spyhandleBlur).toHaveBeenCalled()
+            spyhandleBlur.mockClear()
+        })
+        it('Render Element Container ----->saveSelectedAltTextLongDescData', () => {
+            let props = {
+                element: wipData.figure,
+                permissions: [],
+                saveSelectedAltTextLongDescData:jest.fn()
+            };
+            let elementContainer = mount(<Provider store={store}><ElementContainer {...props} /></Provider>);
+            const elementContainerInstance = elementContainer.find('ElementContainer').instance();
+            const spyhandleBlur  = jest.spyOn(elementContainerInstance, 'saveSelectedAltTextLongDescData') 
+            elementContainerInstance.saveSelectedAltTextLongDescData();
             expect(spyhandleBlur).toHaveBeenCalled()
             spyhandleBlur.mockClear()
         })

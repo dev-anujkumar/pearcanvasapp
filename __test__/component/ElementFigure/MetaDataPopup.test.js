@@ -133,4 +133,68 @@ describe('Testcase for MetaDataPopup Component', () => {
         jest.spyOn(instance, 'updateElementData')
         instance.updateElementData();
     })
+it('Test updateElementData function for opener element', () => {
+    let props = {
+        "figureUrl": "",
+        "imageId": "d7120e69-d6e9-41df-8777-e27c45f626bc",
+        "element": {
+            "id": "urn:pearson:work:7dd02338-1031-434a-abe5-b1b2cfa87ab8",
+            "type": "openerelement",
+            "figuretype": "image",
+            "subtype": "image25Text",
+            "schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+            "titlecontentintitlefield": true,
+            "alignment": "quarter-text",
+            "title": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": ""
+            },
+            "captions": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": ""
+            },
+            "credits": {
+                "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                "text": ""
+            },
+            "backgroundimage": {
+                "alttext":"alt",
+                "longdescription":"long",
+                "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imageid": "urn:pearson:alfresco:d7120e69-d6e9-41df-8777-e27c45f626bc",
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/d7120e69-d6e9-41df-8777-e27c45f626bc/unfigappA-001.png",
+                "height": "230",
+                "width": "306",
+                "type": "image",
+                "podwidth": ""
+            },
+            "html": {
+                "title": "<p></p>",
+                "text": "",
+                "postertext": "",
+                "captions": "<p></p>",
+                "credits": "<p></p>",
+                "footnotes": {
+
+                },
+                "assetsPopover": {
+
+                },
+                "glossaryentries": {
+
+                }
+            },
+            "versionUrn": "urn:pearson:work:7dd02338-1031-434a-abe5-b1b2cfa87ab8",
+            "contentUrn": "urn:pearson:entity:440ddff5-5771-4cb6-a975-81760e46a628"
+        },
+        "index": 2,
+        updateOpenerElement : jest.fn(),
+        handleFocus:jest.fn(),
+        saveSelectedAltTextLongDescData:jest.fn()
+     }
+    const component = mount(<MetaDataPopup {...props} />);
+    let instance = component.instance();
+    jest.spyOn(instance, 'updateElementData')
+    instance.updateElementData();
+})
 });
