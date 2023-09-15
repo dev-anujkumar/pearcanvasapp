@@ -29,7 +29,7 @@ import PopUp from '../PopUp';
 import Toast from '../Toast';
 import { hideBlocker, showTocBlocker, hideTocBlocker, disableHeader, showBlocker } from '../../js/toggleLoader';
 import { fetchAudioNarrationForContainer, deleteAudioNarrationForContainer, showAudioRemovePopup, showAudioSplitPopup , showWrongAudioPopup, audioGlossaryPopup} from '../AudioNarration/AudioNarration_Actions'
-import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus, releaseSlateLockWithCallback } from '../CanvasWrapper/SlateLock_Actions'
+import { setSlateLock, releaseSlateLock, setLockPeriodFlag, getSlateLockStatus} from '../CanvasWrapper/SlateLock_Actions'
 import { fetchSlateData, setActiveElement,openPopupSlate, isOwnersSubscribedSlate, isSubscribersSubscribedSlate } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { showSlateLockPopup, toggleLOWarningPopup } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import { getMetadataAnchorLORef } from '../ElementMetaDataAnchor/ExternalLO_helpers.js';
@@ -1303,10 +1303,7 @@ class SlateWrapper extends Component {
 
     handleUnlockSlateWarning = (status) =>{
         if(status == 'ok'){
-            releaseSlateLockWithCallback(config.projectUrn, config.slateManifestURN, this.props.userRole, (res) => {
-                if(res.Status == "Success") config.isSlateLockChecked = false
-                this.props.getSlateLockStatus(config.projectUrn, config.slateManifestURN)
-            })
+          this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN)
         }
         this.props.toggleUnlockSlateAction(false)
         this.props.showBlocker(false)
@@ -1726,7 +1723,6 @@ export default connect(
         approvedSlatePopupStatus,
         isSubscribersSubscribedSlate,
         assessmentReloadConfirmation,
-        toggleUnlockSlateAction,
-        releaseSlateLockWithCallback
+        toggleUnlockSlateAction
     }
 )(SlateWrapper);

@@ -128,13 +128,12 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
  * @param {*} slateId Slate manifest URN
  * @param {*} callback Callback method to be executed
  */
-export const releaseSlateLockWithCallback = (projectUrn, slateId, userRole, callback) =>{
+export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
        slateId
     }
-    if(userRole) data.roleId = userRole
     return axios.post(url, data)
        .then((res) => {
            store.dispatch({
