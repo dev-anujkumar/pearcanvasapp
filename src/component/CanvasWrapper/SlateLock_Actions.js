@@ -104,7 +104,7 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
   * @param {*} projectUrn Project URN
   * @param {*} slateId Slate manifest URN
   */
-export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
+export const releaseSlateLock = (projectUrn, slateId, releaseLockButton) => (dispatch) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
@@ -112,6 +112,10 @@ export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
     }
     return axios.post(url, data)
        .then((res) => {
+            if(releaseLockButton){
+                let lockInfo = {"isLocked":false,"userId":"","timestamp":"","firstName":"","lastName":""}
+                saveLockDetails(lockInfo)
+            }
             dispatch({
                 type : SET_LOCK_FLAG,
                 payload : false
@@ -165,6 +169,11 @@ export const setLockPeriodFlag = (inLockPeriod) => (dispatch) => {
     })
 }
 
+/**
+ * Action Creator
+ * Sets User details on slate from count API response 
+ * @param {*} lockInfo tells the user details
+ */
 export const saveLockDetails = (lockInfo) => (dispatch) =>{
     dispatch({
         type: SET_SLATE_LOCK_STATUS,
