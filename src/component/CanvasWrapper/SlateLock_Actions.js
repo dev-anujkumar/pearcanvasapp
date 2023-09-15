@@ -115,7 +115,7 @@ export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRol
        .then((res) => {
             if(releaseLockButton){
                 let lockInfo = {"isLocked":false,"userId":"","timestamp":"","firstName":"","lastName":""}
-                saveLockDetails(lockInfo)
+                dispatch(saveLockDetails(lockInfo))
             }
             dispatch({
                 type : SET_LOCK_FLAG,
