@@ -104,12 +104,13 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
   * @param {*} projectUrn Project URN
   * @param {*} slateId Slate manifest URN
   */
-export const releaseSlateLock = (projectUrn, slateId, releaseLockButton) => (dispatch) => {
+export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRole) => (dispatch) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
        slateId
     }
+    if(userRole) data.roleId = userRole
     return axios.post(url, data)
        .then((res) => {
             if(releaseLockButton){
