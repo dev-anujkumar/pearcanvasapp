@@ -414,7 +414,7 @@ class PopUp extends React.Component {
                 </div>
             )
         } 
-        if (props.unlockSlateToggle) {
+        if (props.unlockSlateToggle) { // Warning buttons actions on unlock button clicked by Admin
             return (
                 <div className={`dialog-buttons`}>
                     <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) =>props.handleUnlockSlate('ok')}>OK</span>
@@ -688,7 +688,7 @@ class PopUp extends React.Component {
             )
         }
         else if (props.unlockSlateToggle) {
-            //jsx dialog text
+            //jsx dialog text to show unlock warning message on Admin side
             return (
                 <>
                     <h2 className='tocDeleteHeader'>Warning</h2>

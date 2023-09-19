@@ -23,6 +23,10 @@ export const toggleSpellCheckAction = () => {
     }
 }
 
+/**
+ * Action for handling unlock button clicked status
+ */
+
 export const toggleUnlockSlateAction = (status) => (dispatch) =>{
     dispatch({
         type: TOGGLE_UNLOCK_SLATE,

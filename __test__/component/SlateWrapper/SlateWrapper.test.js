@@ -1206,7 +1206,7 @@ describe("SlateWrapper Component", () => {
     it('2.5  Test - handleUnlockSlateWarning ', () => {
         const newInitialState = {...initialState, appStore: {userRole: 'admin'}};
         const compInstance = slateWrapInstance(props, newInitialState);
-        const spy = jest.spyOn(compInstance, 'showUnlockSlatePopup')
+        const spy = jest.spyOn(compInstance, 'handleUnlockSlateWarning')
         const status = 'ok'
         compInstance.handleUnlockSlateWarning(status);
         expect(spy).toHaveBeenCalled();

@@ -113,7 +113,7 @@ export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRol
     if(userRole) data.roleId = userRole
     return axios.post(url, data)
        .then((res) => {
-            if(releaseLockButton){
+            if(releaseLockButton){ // Condition to remove the lockinfo data on Unlock button clicked by Admin
                 let lockInfo = {"isLocked":false,"userId":"","timestamp":"","firstName":"","lastName":""}
                 dispatch(saveLockDetails(lockInfo))
             }

@@ -1311,6 +1311,10 @@ class SlateWrapper extends Component {
         hideBlocker();
     } 
 
+    /**
+    * @description - showUnlockSlatePopup function responsible for showing warning Popup on Admin side when clicked on Unlock button.
+    */
+
     showUnlockSlatePopup = () => {
         if(this.props.unlockSlateToggle){
             this.props.showBlocker(true)
