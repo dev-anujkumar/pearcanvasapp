@@ -58,6 +58,8 @@ class GlossaryFootnoteMenu extends React.Component {
     * @param {event} 
     */
     closePopup = () => {
+        // removing tinymce instance when closing glossary/footnote popup tp fix PCAT-20297
+        if (!hasReviewerRole()) this.removeTinymceEditors();
         this.props.showGlossaaryFootnote(false);
     }
 
@@ -132,6 +134,18 @@ class GlossaryFootnoteMenu extends React.Component {
         }
     }
     /**
+     * Remove tinymce instance
+     */
+    removeTinymceEditors = () => {
+        for (let i = tinymce.editors.length - 1; i > -1; i--) {
+            let ed_id = tinymce.editors[i].id;
+            if (ed_id.includes('cypress')) {
+                tinymce.remove(`#${ed_id}`)
+            }
+        }
+    }
+
+    /**
     * @description - This function is to save the Content of Glossary and Footnote.
     * @param {event} 
     */
@@ -196,6 +210,8 @@ class GlossaryFootnoteMenu extends React.Component {
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                 saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, blockfeatureType, poetryField,audioGlossaryData,figureGlossaryData, markedIndexGlossaryData?.indexEntries)
             }
+            // removing tinymce instance when closing glossary/footnote popup tp fix PCAT-20297
+            this.removeTinymceEditors()
         }
         this.props.showGlossaaryFootnote(false);
     }
