@@ -1,12 +1,13 @@
 import {
     TOGGLE_BORDERS,
-    TOGGLE_PAGE_NUMBER, TOGGLE_SPELL_CHECK
+    TOGGLE_PAGE_NUMBER, TOGGLE_SPELL_CHECK, TOGGLE_UNLOCK_SLATE
 } from '../constants/Action_Constants';
 
 const INITIAL_STATE = {
     elemBorderToggle: true,
     pageNumberToggle:false,
-    spellCheckToggle : true
+    spellCheckToggle : true,
+    unlockSlateToggle: false
 }
 
 const INITIAL_ACTION = {
@@ -30,6 +31,11 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
             return {
                 ...state,
                 spellCheckToggle: !state.spellCheckToggle
+            }
+        case TOGGLE_UNLOCK_SLATE:
+            return {
+                ...state,
+                unlockSlateToggle: action.payload
             }
         default:
             return state

@@ -472,6 +472,9 @@ function CommunicationChannel(WrappedComponent) {
                     if(message?.labels)
                     this.props.setTocSlateLabel(message.labels)
                     break;
+                case 'lockUserDetailsFromCount' :
+                    this.props.saveLockDetails(message.lockInfo)
+                    break;
             }
         }
 

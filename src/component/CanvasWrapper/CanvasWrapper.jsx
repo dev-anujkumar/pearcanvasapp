@@ -16,7 +16,7 @@ import '../../styles/CanvasWrapper/style.css';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
 import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
-import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
+import { getSlateLockStatus, releaseSlateLock, saveLockDetails } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
@@ -371,6 +371,7 @@ export default connect(
         setCautionBannerStatus,
         approvedSlatePopupStatus,
         isSubscribersSubscribedSlate,
-        setTocSlateLabel
+        setTocSlateLabel,
+        saveLockDetails
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

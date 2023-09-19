@@ -10,7 +10,6 @@ const INIT_STATE = {
     showSlateLockPopup:false,
     isRenderMetdataLO:false,
     projectLearningFrameworks:{
-        cypressLF:{},
         externalLF:[]
     },
     currentSlateLF:"",

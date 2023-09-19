@@ -26,8 +26,12 @@ const ShowHideUiBlock = (props) => {
 			const elemSepratorIndex = sectionType === showHideConstants.SHOW ? `${index}-0-${i+1}` : `${index}-2-${i+1}`;
 			return (
 					<React.Fragment key={item?.id}>
-						{ renderElements(item, indexes) }
-						{ showSeprator(elemSepratorIndex, item?.id) }
+						<LazyLoad
+						once={true}
+						placeholder={<div data-id={item?.id}><LargeLoader /></div>}>
+							{ renderElements(item, indexes) }
+							{ showSeprator(elemSepratorIndex, item?.id) }
+						</LazyLoad>
 					</React.Fragment>
 				)
 		})
@@ -98,10 +102,7 @@ const ShowHideUiBlock = (props) => {
 			elementType: "showhide",
 			manifestUrn: element.id
 		}
-		return <LazyLoad
-			once={true}
-			placeholder={<div data-id={element.id}><LargeLoader /></div>}> 
-		<ElementContainer
+		return <ElementContainer
 			element = {item}
 			index = {eleIndex}
 			parentUrn = {shParentUrn}
@@ -122,7 +123,6 @@ const ShowHideUiBlock = (props) => {
 			handleUndoOption = {props.handleUndoOption}
 			closeUndoTimer = {props.closeUndoTimer}
 		/>
-		</LazyLoad>
 	}
 
 	return (

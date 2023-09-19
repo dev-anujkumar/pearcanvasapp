@@ -1,5 +1,5 @@
 import {
-    TOGGLE_BORDERS, TOGGLE_PAGE_NUMBER, TOGGLE_SPELL_CHECK
+    TOGGLE_BORDERS, TOGGLE_PAGE_NUMBER, TOGGLE_SPELL_CHECK, TOGGLE_UNLOCK_SLATE
 } from '../../constants/Action_Constants';
 
 /**
@@ -21,4 +21,15 @@ export const toggleSpellCheckAction = () => {
     return {
         type : TOGGLE_SPELL_CHECK
     }
+}
+
+/**
+ * Action for handling unlock button clicked status
+ */
+
+export const toggleUnlockSlateAction = (status) => (dispatch) =>{
+    dispatch({
+        type: TOGGLE_UNLOCK_SLATE,
+        payload: status
+    })
 }

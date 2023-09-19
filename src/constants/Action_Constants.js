@@ -59,6 +59,7 @@ export const SET_ELEMENT_STATUS = "SET_ELEMENT_STATUS"
 export const TOGGLE_BORDERS = 'TOGGLE_BORDERS'
 export const TOGGLE_PAGE_NUMBER = 'TOGGLE_PAGE_NUMBER'
 export const TOGGLE_SPELL_CHECK = 'TOGGLE_SPELL_CHECK'
+export const TOGGLE_UNLOCK_SLATE = 'TOGGLE_UNLOCK_SLATE'
 
 
 /*---------------Slate Lock -------------------*/
