@@ -3617,14 +3617,15 @@ export class TinyMceEditor extends Component {
                 this.setToolbarByElementType();
                 // Make element active on element create, set toolbar for same and remove localstorage values
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
-                    config.editorRefID = this.editorRef.current.id;
-                    let timeoutId = setTimeout(() => {
-                        if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props?.element?.type) && this.props?.element?.figuretype !== "codelisting")) {
-                            const elementID = this.editorRef?.current?.id ? this.editorRef.current.id : config.editorRefID;
-                            document.getElementById(elementID).click();
-                        }
-                        clearTimeout(timeoutId)
-                    }, 0)
+                    // commented this code and moved to tinymce.init() function on line 3652 for issue of toolbar not initializing in the first time.(PCAT-20362)
+                    // config.editorRefID = this.editorRef.current.id;
+                    // let timeoutId = setTimeout(() => {
+                    //     if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props?.element?.type) && this.props?.element?.figuretype !== "codelisting")) {
+                    //         const elementID = this.editorRef?.current?.id ? this.editorRef.current.id : config.editorRefID;
+                    //         document.getElementById(elementID).click();
+                    //     }
+                    //     clearTimeout(timeoutId)
+                    // }, 0)
                     localStorage.removeItem('newElement');
                 }
                 let currentId = (this.editorRef.current ? this.editorRef.current.id : 'cypress-0');
@@ -3648,7 +3649,19 @@ export class TinyMceEditor extends Component {
                 let termText = tinyMCE.$("#" + currentId) && tinyMCE.$("#" + currentId).html();
                 //PCAT-9077 - duplicate toolbar issue on element creation
                 tinymce.remove()
-                tinymce.init(this.editorConfig).then((d) => {
+                tinymce.init(this.editorConfig).then((d) => {   
+                    //Clicking logic from above is moved here to fix issue of toolbar not initializing for the first time of creation of element (PCAT-20362).
+                    //Issue was because of the click placement, so moving the code here.
+                    if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
+                        config.editorRefID = this.editorRef.current.id;
+                        let timeoutId = setTimeout(() => {
+                            if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props?.element?.type) && this.props?.element?.figuretype !== "codelisting")) {
+                                const elementID = this.editorRef?.current?.id ? this.editorRef.current.id : config.editorRefID;
+                                document.getElementById(elementID).click();
+                            }
+                            clearTimeout(timeoutId)
+                        }, 0)
+                    }
                     if (this.editorRef.current) {
 
                         if (termText && termText.length && this.props.element.type === 'figure') {
