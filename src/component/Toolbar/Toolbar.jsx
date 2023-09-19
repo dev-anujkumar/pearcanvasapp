@@ -182,7 +182,7 @@ const _Toolbar = props => {
                 <LockIcon />
                 <div><span className='read-only'>{LOCKED_BANNER_MESSAGE} </span><span className='locked-user'>by {lockedByUser} </span>
                 {roleId === 'admin' &&
-                <span><Button className="lock-button" variant="outlined"  onClick={handleUnlockClick}>Unlock Slate</Button></span>
+                <Button className="lock-button" variant="outlined"  onClick={handleUnlockClick}>Unlock Slate</Button>
                 }
                 </div>
             </div> : '' }
