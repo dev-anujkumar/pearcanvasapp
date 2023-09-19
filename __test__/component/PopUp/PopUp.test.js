@@ -452,5 +452,18 @@ describe('Testing PopUp component', () => {
             instance.handleKeyDown(e);
             expect(wrapper.instance().props.isSplitSlatePopup).toEqual(true);
         });
+        it('testCase for unlockSlateToggle',() => {
+            let props = {
+                handleUnlockSlate:jest.fn(),
+                handleCancelUnlock:jest.fn(),
+                unlockSlateToggle:true
+            }
+            let wrapper = mount(<PopUp {...props}/>);
+            wrapper.find('.lo-save-button').simulate('click');
+            wrapper.find('.cancel-button').simulate('click');
+            const component = mount(<PopUp {...props}/>);
+            component.instance().isChecked=true
+            expect(component.instance().props.unlockSlateToggle).toEqual(true);
+        });
     });
 })

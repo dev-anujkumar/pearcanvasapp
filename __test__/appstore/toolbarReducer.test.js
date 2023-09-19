@@ -5,6 +5,7 @@ const INIT_STATE = {
     elemBorderToggle: true,
     pageNumberToggle:false,
     spellCheckToggle: true,
+    unlockSlateToggle: false
 }
 const expectedState={
     ...INIT_STATE,

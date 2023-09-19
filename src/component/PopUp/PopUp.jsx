@@ -418,7 +418,7 @@ class PopUp extends React.Component {
             return (
                 <div className={`dialog-buttons`}>
                     <span option={PRIMARY_BUTTON} className={`lo-save-button`} onClick={(e) =>props.handleUnlockSlate('ok')}>OK</span>
-                    <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.handleCancelUnlock('cancel')}>{props.cancelBtnText}</span>
+                    <span option={SECONDARY_BUTTON} className={`cancel-button`} onClick={(e) => props.handleCancelUnlock('cancel')}>{props.cancelBtnText}</span>
                 </div>
             )
         } else if (props.isCurrentSlate === 'subscriber') {

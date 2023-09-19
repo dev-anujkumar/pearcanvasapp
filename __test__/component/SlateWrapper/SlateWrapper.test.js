@@ -73,7 +73,7 @@ const initialState = {
         userId: 'c5Test01'
     }, withinLockPeriod: true },
     appStore: { slateTitleUpdated: {}, slateLevelData : {}, activeElement: {} },
-    toolbarReducer: { elemBorderToggle: true },
+    toolbarReducer: { elemBorderToggle: true, unlockSlateToggle: false },
     metadataReducer: { currentSlateLOData: [{}] },
     audioReducer: {openRemovePopUp: false, openSplitPopUp: true},
     searchReducer: {searchTerm: 'searchTerm-123', parentId: 'parentId-123', deeplink: false, scroll: ""},
@@ -1192,6 +1192,23 @@ describe("SlateWrapper Component", () => {
         const compInstance = slateWrapInstance(props);
         const spy = jest.spyOn(compInstance, 'renderElement')
         compInstance.renderElement([], "pdfslate", "");
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('2.4  Test - showUnlockSlatePopup ', () => {
+        const newInitialState = {...initialState, toolbarReducer: {unlockSlateToggle: true}};
+        const compInstance = slateWrapInstance(props, newInitialState);
+        const spy = jest.spyOn(compInstance, 'showUnlockSlatePopup')
+        compInstance.showUnlockSlatePopup();
+        expect(spy).toHaveBeenCalled();
+        spy.mockClear()
+    })
+    it('2.5  Test - handleUnlockSlateWarning ', () => {
+        const newInitialState = {...initialState, appStore: {userRole: 'admin'}};
+        const compInstance = slateWrapInstance(props, newInitialState);
+        const spy = jest.spyOn(compInstance, 'showUnlockSlatePopup')
+        const status = 'ok'
+        compInstance.handleUnlockSlateWarning(status);
         expect(spy).toHaveBeenCalled();
         spy.mockClear()
     })
