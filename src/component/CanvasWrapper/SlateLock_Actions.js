@@ -77,10 +77,13 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
  * @param {*} lockDuration Lock duration
  */
 export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) => {
+    console.log('CHECKING SLATE LOCK HERE 111 --->>>')
     if(process.env.NODE_ENV === "development"){
         return false
     }
+    console.log('222 --->>>')
     if(hasReviewerRole()) return;
+    console.log('3333 --->>>')
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/setlock`
 
     let data = {
@@ -116,8 +119,11 @@ export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRol
     if(userRole) data.roleId = userRole
     return axios.post(url, data)
        .then((res) => {
-            if(releaseLockButton){ // Condition to setLock for Admin
+            if(releaseLockButton){ // Condition to remove the lockinfo data on Unlock button clicked by Admin
+                let lockInfo = {"isLocked":false,"userId":"","timestamp":"","firstName":"","lastName":""}
+                dispatch(saveLockDetails(lockInfo))
                 const lockDuration = 5400
+                console.log('INSIDE RELEASE LOCK')
                 dispatch(setSlateLock(projectUrn, slateId, lockDuration))
             }
             dispatch({
