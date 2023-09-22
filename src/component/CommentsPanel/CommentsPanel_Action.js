@@ -48,7 +48,12 @@ export const fetchComments = (contentUrn, title) => dispatch => {
             type: FETCH_COMMENTS,
             payload: { comments: response.data.comments, title }
         })
-        sendDataToIframe({ 'type': 'aggregatedCommentsData', 'message': response.data.comments });
+        sendDataToIframe({
+            'type': 'aggregatedCommentsData', 'message': {
+                commentsData: response.data.comments,
+                contentUrn
+            }
+        });
 
     }).catch(error => {
         console.log("failed to fetch comment", error);
