@@ -747,12 +747,12 @@ margin-left:6px;
 
 .lock-button{
   color: #005A70 !important;
-  height: 30px;
+  height: 28px;
   font-family: Open Sans;
   font-size: 13px !important;
   font-weight: 400 !important;
-  line-height: 18px;
-  letter-spacing: 0px;
+  line-height: 18px !important;
+  letter-spacing: 0px !important;
   text-align: center;
   background-color: #ffffff !important;
   border: solid 1px #005A70 !important;
