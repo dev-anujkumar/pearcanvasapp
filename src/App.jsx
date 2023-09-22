@@ -18,6 +18,7 @@ import { modifyObjKeys } from './js/appUtils';
 // IMPORT - Assets // 
 import './styles/style.css';
 
+console.log("PACE environment Tag --- canvas-1.50.28");
 console.log("!!!!! ---- canvas-1.50.28 ---- !!!!!")
 
 class App extends Component {
