@@ -93,3 +93,6 @@ p[data-mce-bogus="all"] {
     font-size: 12px;
     font-family: 'Open Sans', sans-serif;
  }
+.record-icon {
+    float: right;
+}

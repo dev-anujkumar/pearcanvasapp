@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import TinyMceEditor from "./../tinyMceEditor"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import KeyboardWrapper from '../Keyboard/KeyboardWrapper.jsx';
+import Dictaphone from '../Dictaphone/Dictaphone.jsx';
+
 export class ElementAuthoring extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +39,10 @@ export class ElementAuthoring extends Component {
           openMarkedIndexPopUp = {openMarkedIndexPopUp}
           markedIndexValue={markedIndexValue}
           parentManifestListItem={this?.props?.parentManifestListItem}
-        />
+         />
+         <div className='record-icon'>
+           <Dictaphone />
+         </div>
        </KeyboardWrapper>
        
     )
