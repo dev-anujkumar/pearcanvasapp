@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 // import { createSpeechlySpeechRecognition } from 'speech-recognition-polyfill'
-import { Box, IconButton } from '@mui/material'
+import {IconButton } from '@mui/material'
 import MicIcon from '@mui/icons-material/Mic'
 import TextField from '@mui/material/TextField'
+import tinymce from 'tinymce/tinymce';
 
 // const appId = 'a7a97c3c-f49d-4db5-b9e5-81c8620ba89e'
 // const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(appId)
@@ -12,9 +13,18 @@ import TextField from '@mui/material/TextField'
 function Dictaphone(props) {
     const [speechText, setSpeechText] = useState('')
     const [isRecording, setIsRecording] = useState(false)
-    const toggleRecording = () => {
+    const toggleRecording = (finalTranscript) => {
         if (isRecording) {
             SpeechRecognition.stopListening()
+            const editor = tinymce?.activeEditor
+            let selection = editor.selection;
+
+            // Get the cursor position
+            let cursorPos = selection.getRng();
+
+            // Insert the text at the cursor position
+            editor.insertContent(finalTranscript, { skip_undo: true }, cursorPos);
+            resetTranscript()
         } else {
             startListening()
         }
@@ -27,62 +37,33 @@ function Dictaphone(props) {
     }
 
     const {
-        transcript, listening, browserSupportsSpeechRecognition, finalTranscript, interimTranscript
-        , ...data
+        transcript, browserSupportsSpeechRecognition, finalTranscript, resetTranscript
     } = useSpeechRecognition()
-    console.log('data', interimTranscript)
-    if (finalTranscript !== '' && interimTranscript === '' && !listening) {
-        console.log('speech end')
-        // listening = false
+    
+    const startListening = () => {
+        SpeechRecognition.startListening({ continuous: true })
+        tinymce.activeEditor.focus()
     }
-    const startListening = () => SpeechRecognition.startListening({ continuous: true })
     if (!browserSupportsSpeechRecognition) {
         return <span>Browser doesn't support speech recognition.</span>
     }
 
     return (
         <div>
-            {/* <TextField
+            {isRecording &&
+                <TextField 
                 label='Recorded Speech to Text'
                 variant='outlined'
                 multiline
                 rows={4}
                 value={transcript}
                 fullWidth
-
-                InputProps={{
-                    endAdornment: (
-                        <IconButton
-                            color='primary'
-                            aria-label='record'
-                            onClick={toggleRecording}
-                            style={{ position: 'absolute', bottom: 0, right: 0 }}
-                            onTouchEnd={SpeechRecognition.stopListening}
-                            onMouseUp={SpeechRecognition.stopListening}
-                        >
-                            <Box
-                                borderRadius='50%'
-                                width='40px'
-                                height='40px'
-                                backgroundColor={speechText ? '#4CAF50' : '#e0e0e0'}
-                                display='flex'
-                                alignItems='center'
-                                justifyContent='center'
-                            >
-                                <MicIcon style={{ color: 'white' }} />
-                            </Box>
-                        </IconButton>
-                    )
-                }}
-            /> */}
+                />}
             <IconButton
                 color='primary'
                 aria-label='record'
-                onClick={toggleRecording}
-                style={{ position: 'absolute', bottom: 0, right: 0 }}
-                onTouchEnd={SpeechRecognition.stopListening}
-                onMouseUp={SpeechRecognition.stopListening}
-                backgroundColor={speechText ? '#4CAF50' : '#e0e0e0'}
+                onClick={() => toggleRecording(finalTranscript)}
+                style={{ position: 'absolute', bottom: 0, right: 0, backgroundColor: isRecording ? '#007fa3' : '#dcdcdc', color: isRecording && '#f0f8ff'}}
             >
                 <MicIcon />
             </IconButton>
