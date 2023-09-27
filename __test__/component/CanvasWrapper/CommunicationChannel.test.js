@@ -276,7 +276,6 @@ describe('Testing communication channel', () => {
         currentSlateLOType: jest.fn(),
         getProjectDetails: jest.fn(),
         fetchProjectLFs: jest.fn(),
-        tcmCosConversionSnapshot: jest.fn(),
         addNewComment: jest.fn(),
         deleteComment: jest.fn(),
         handleSlateRefresh: jest.fn(),

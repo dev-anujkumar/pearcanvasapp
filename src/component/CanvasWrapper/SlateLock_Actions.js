@@ -28,7 +28,9 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
     }
     let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
-    return axios.get(url)
+    // if projectUrn and slateId has values then only call should be triggered
+    if (projectUrn && slateId) {
+        return axios.get(url)
         .then((res) => {
             config.isSlateLockChecked = res.data.isLocked;
             dispatch({
@@ -43,6 +45,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
         .catch((err) => {
             console.log("%c Slate lock status API failed","background: black; color: white", err)
         })
+    }
 }
 
 /**
@@ -104,14 +107,21 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
   * @param {*} projectUrn Project URN
   * @param {*} slateId Slate manifest URN
   */
-export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
+export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRole) => (dispatch) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
        projectUrn,
        slateId
     }
+    if(userRole) data.roleId = userRole
     return axios.post(url, data)
        .then((res) => {
+            if(releaseLockButton){ // Condition to remove the lockinfo data on Unlock button clicked by Admin
+                let lockInfo = {"isLocked":false,"userId":"","timestamp":"","firstName":"","lastName":""}
+                dispatch(saveLockDetails(lockInfo))
+                const lockDuration = 5400
+                dispatch(setSlateLock(projectUrn, slateId, lockDuration))
+            }
             dispatch({
                 type : SET_LOCK_FLAG,
                 payload : false
@@ -162,5 +172,21 @@ export const setLockPeriodFlag = (inLockPeriod) => (dispatch) => {
     dispatch({
         type : SET_LOCK_FLAG,
         payload : inLockPeriod
+    })
+}
+
+/**
+ * Action Creator
+ * Sets User details on slate from count API response 
+ * @param {*} lockInfo tells the user details
+ */
+export const saveLockDetails = (lockInfo) => (dispatch) =>{
+    dispatch({
+        type: SET_SLATE_LOCK_STATUS,
+        payload: {
+            ...lockInfo,
+            userFirstName: "",
+            userLastName: ""
+        }
     })
 }

@@ -85,6 +85,7 @@ import { hideToc } from '../../js/toggleLoader';
 import ElementConstants from './ElementConstants.js';
 import { interactivetype } from './ElementConstants';
 import ElementTCC from '../LtiSlate/ElementTCC.jsx';
+import { saveSelectedAltTextLongDescData } from '../AlfrescoPopup/Alfresco_Action';
 
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -1796,6 +1797,12 @@ class ElementContainer extends Component {
     updateFigureData = (figureData, index, elementId, asideData, cb) => {
         this.props.updateFigureData(figureData, index, elementId, asideData, cb)
     }
+     /**
+     * Updates openerelement store
+     */
+    saveSelectedAltTextLongDescData = (altLongDescData) => {
+        this.props.saveSelectedAltTextLongDescData(altLongDescData)
+    }
 
     toolbarHandling = (action = "") => {
         const slateStatus = this.props?.slateLevelData[config.slateManifestURN]?.status
@@ -2676,6 +2683,8 @@ class ElementContainer extends Component {
                             index={this.props.index}
                             asideData={this.props.asideData}
                             updateOpenerElement={this.updateOpenerElement}
+                            saveSelectedAltTextLongDescData={this.saveSelectedAltTextLongDescData}
+
                         />}
                     {this.state.showAlfrescoEditPopupforTE &&
                         <MetaDataPopUpForTE
@@ -3327,6 +3336,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         updateTabTitle: (previousElementData, index, parentElement) => {
             dispatch(updateTabTitle(previousElementData, index, parentElement));
+        },
+        saveSelectedAltTextLongDescData: (payloadObj) => {
+            dispatch(saveSelectedAltTextLongDescData(payloadObj))
         }
     }
 }

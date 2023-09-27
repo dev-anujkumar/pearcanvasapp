@@ -16,11 +16,11 @@ import '../../styles/CanvasWrapper/style.css';
 import { timeSince, removeWirisOverlay } from '../../js/appUtils.js'
 import { sendDataToIframe, hasReviewerRole, isOwnerRole, isSubscriberRole } from '../../constants/utility.js';
 import { CanvasIframeLoaded, ShowHeader,TocToggle,NextSlate, PreviousSlate, ShowLoader } from '../../constants/IFrameMessageTypes.js';
-import { getSlateLockStatus, releaseSlateLock } from './SlateLock_Actions'
+import { getSlateLockStatus, releaseSlateLock, saveLockDetails } from './SlateLock_Actions'
 import GlossaryFootnoteMenu from '../GlossaryFootnotePopup/GlossaryFootnoteMenu.jsx';
 import {updateElement, getTableEditorData, clearElementStatus, approvedSlatePopupStatus}from '../../component/ElementContainer/ElementContainer_Actions'
 // IMPORT - Actions //
-import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, tcmCosConversionSnapshot, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, fetchFigureDropdownOptions, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate,setTocSlateLabel } from './CanvasWrapper_Actions';
+import { fetchSlateData,getProjectDetails, fetchSlateAncestorData, fetchAuthUser, openPopupSlate, setSlateLength, fetchLearnosityContent, fetchProjectLFs, setProjectSharingRole, setProjectSubscriptionDetails, isOwnersSubscribedSlate, updateFigureDropdownValues, fetchLOBList, setCautionBannerStatus, isSubscribersSubscribedSlate,setTocSlateLabel } from './CanvasWrapper_Actions';
 import {toggleCommentsPanel, addNewComment, deleteComment, fetchComments,fetchCommentByElement} from '../CommentsPanel/CommentsPanel_Action'
 import { convertToListElement } from '../ListElement/ListElement_Action.js';
 import { handleSplitSlate,setUpdatedSlateTitle, setSlateType, setSlateEntity, setSlateParent, setSlateMatterType, cypressPlusEnabled } from '../SlateWrapper/SlateWrapper_Actions'
@@ -338,7 +338,6 @@ export default connect(
         setSlateLength,
         toggleElemBordersAction,
         togglePageNumberAction,
-        tcmCosConversionSnapshot,
         assetIdForSnapshot,
         audioGlossaryPopup,
         fetchLearnosityContent,
@@ -354,7 +353,6 @@ export default connect(
         showWrongImagePopup,
         setProjectSharingRole,
         setProjectSubscriptionDetails,
-        fetchFigureDropdownOptions,
         isOwnersSubscribedSlate,
         markedIndexPopup,
         fetchProjectFigures,
@@ -372,6 +370,7 @@ export default connect(
         approvedSlatePopupStatus,
         isSubscribersSubscribedSlate,
         setTocSlateLabel,
-        currentNodeAncestorData
+        currentNodeAncestorData,
+        saveLockDetails
     }
 )(CommunicationChannelWrapper(CanvasWrapper));

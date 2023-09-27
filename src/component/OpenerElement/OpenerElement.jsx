@@ -39,7 +39,7 @@ class OpenerElement extends Component {
         this.setWrapperRef = this.setWrapperRef.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
     }
-
+    
     componentDidUpdate(prevProps) {
         const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
@@ -448,6 +448,7 @@ class OpenerElement extends Component {
         return COImg
     }
     componentDidMount() {
+        this.props.saveSelectedAltTextLongDescData({})
         document.addEventListener('mousedown', this.handleClickOutside);
     }
 
