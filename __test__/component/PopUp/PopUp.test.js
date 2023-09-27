@@ -459,7 +459,7 @@ describe('Testing PopUp component', () => {
                 unlockSlateToggle:true
             }
             let wrapper = mount(<PopUp {...props}/>);
-            wrapper.find('.lo-save-button').simulate('click');
+            wrapper.find('.save-button').simulate('click');
             wrapper.find('.cancel-button').simulate('click');
             const component = mount(<PopUp {...props}/>);
             component.instance().isChecked=true
