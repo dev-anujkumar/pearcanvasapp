@@ -1741,6 +1741,7 @@ export const fetchProjectLFs = () => dispatch => {
         }
     }).then(response => {
         if (response.status === 200 && response?.data?.learningFrameworks?.length > 0) {
+            sendDataToIframe({ 'type': 'learningFrameworksData', 'message': response.data });
             const learningFrameworks = response.data.learningFrameworks;
             const externalLF = [...learningFrameworks]
             dispatch({
