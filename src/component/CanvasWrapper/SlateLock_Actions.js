@@ -34,7 +34,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
         .then((res) => {
             config.isSlateLockChecked = res.data.isLocked;
             sendDataToIframe({
-                'type': 'lockedFromCanvas',
+                'type': 'updateLockedSlate',
                 'message': {lockInfo: {...res.data, slateId: slateId}}
             })
             dispatch({
