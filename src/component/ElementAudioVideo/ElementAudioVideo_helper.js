@@ -6,7 +6,7 @@ import config from "../../config/config";
  *@param assetID - This is the asset ID for which metadata is fetched
 */
 export const getAssetMetadata = async (assetID) => {
-  let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/` + assetID;
+  let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/` + assetID;
   const response = await axios.get(url, {
     headers: {
       "Content-Type": "application/json",

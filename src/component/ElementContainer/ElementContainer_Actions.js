@@ -1033,7 +1033,7 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
  const getAltTextLongDesc = async (id) => {
     let imgId = id.substring(id.indexOf(":") + 1, id.lastIndexOf(":"));
     try{
-        let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${imgId}`;
+        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/${imgId}`;
         let response = await axios.get(url,
             {
                 headers: {
@@ -1148,7 +1148,7 @@ export const saveTEMetadata = async (editedImageList) => {
             for(let i=0; i< editedImagesArray.length; i++){
                 let { altText, imgId, longdescription} = editedImagesArray[i];
                 let id = imgId.substring(imgId.indexOf(":") + 1, imgId.lastIndexOf(":"));
-                url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/${id}`;
+                url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/${id}`;
                 const body = {
                     properties: { 
                         "cplg:altText": altText,
