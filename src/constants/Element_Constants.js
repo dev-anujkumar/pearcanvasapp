@@ -352,4 +352,4 @@ export const DECORATIVE = "DECORATIVE"
 export const DECORATIVE_IMAGE = "primary-image-decorative"
 
 /* Unlock Slate Button */
-export const UNLOCKSLATEWARNING = 'Content may be lost if the locked user is still active and working on an element'
+export const UNLOCKSLATEWARNING = 'Content may be lost if the locked user is still active and working on an element. This slate will now get locked in your name.'
