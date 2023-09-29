@@ -978,6 +978,34 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
+    test('Test for elementLabelCombineData case', () => {
+        let event = {
+            data: {
+                type: "elementLabelCombineData",
+                message: {
+                    "test":""
+                }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    test('Test for unlinkTocContainer case', () => {
+        let event = {
+            data: {
+                type: "unlinkTocContainer",
+                message: {
+                    "test":""
+                }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
     test('Test for cancelCEPopup case', () => {
         let event = {
             data: {
