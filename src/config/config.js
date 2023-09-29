@@ -26,7 +26,7 @@ let config = {
     SLATE_PREVIEW_ENDPOINT: 'https://tooling-dev.pearsoncms.net/aws-invoke/',
     MYCLOUD_END_POINT:'https://mycloud.preprod.pearson.com/auth/json/pearson',
     ALFRESCO_CITE_API: 'https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000',
-    ALFRESCO_EDIT_METADATA:"https://staging.api.pearson.com/content/cmis/uswip-aws/",
+    ALFRESCO_EDIT_METADATA:"https://staging.api.pearson.com/content/cmis/uswip-aws/alfresco-proxy/",
     ALFRESCO_EDIT_ENDPOINT: "https://usppewip.cms.pearson.com/share/page/document-details?nodeRef=workspace://SpacesStore/",
     LOGOUT_API:'https://mycloud.preprod.pearson.com/auth/json/pearson/sessions?_action=logout',
     PREVIEW_ASSESSMENT_LO_ENDPOINT : "https://cite-qa.pearson.com/",
