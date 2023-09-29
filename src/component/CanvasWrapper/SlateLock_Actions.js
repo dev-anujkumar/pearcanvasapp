@@ -2,7 +2,7 @@ import axios from 'axios'
 import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
 import store from './../../appstore/store';
-import { hasReviewerRole } from '../../constants/utility';
+import { hasReviewerRole, sendDataToIframe } from '../../constants/utility';
 import { triggerSlateLevelSave } from '../../js/slateLevelSave.js';
 import { RELEASE_SLATE_LOCK_ACTION } from '../SlateWrapper/SlateWrapperConstants';
 
@@ -33,6 +33,10 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
         return axios.get(url)
         .then((res) => {
             config.isSlateLockChecked = res.data.isLocked;
+            sendDataToIframe({
+                'type': 'updateLockedSlate',
+                'message': {lockInfo: {...res.data, slateId: slateId}}
+            })
             dispatch({
                 type: SET_SLATE_LOCK_STATUS,
                 payload: {
