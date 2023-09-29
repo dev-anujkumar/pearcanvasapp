@@ -1819,17 +1819,20 @@ const getLOBList = () => {
 	})
 }
 export const fetchLOBList = () => async (dispatch) => {
-	try {
-		const response = await getLOBList();
-		if (response.status === 200) {
-			dispatch({
-                type: PROJECT_LOB_LIST,
-                payload: response.data.details.listOfLob
-            });
-				}
-	} catch (error) {
-		console.error("Error in fetching the list of Line of Business from the project", error);
-	}
+    const LOBList = store.getState().projectInfo?.LOBList;
+    if (!LOBList || LOBList?.length === 0) {
+        try {
+            const response = await getLOBList();
+            if (response.status === 200) {
+                dispatch({
+                    type: PROJECT_LOB_LIST,
+                    payload: response.data.details.listOfLob
+                });
+                    }
+        } catch (error) {
+            console.error("Error in fetching the list of Line of Business from the project", error);
+        }
+    }
 }
 
 export const setCautionBannerStatus = (status) => (dispatch, getState) => {

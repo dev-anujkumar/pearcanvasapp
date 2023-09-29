@@ -18,6 +18,7 @@ import {
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
 import config from '../../../config/config';
+import store from '../../../appstore/store.js';
 import assessmentApiHandlers from './assessmentApiHandlers.js';
 import { handleRefreshSlate } from '../../ElementContainer/AssessmentEventHandling.js';
 import { hideBlocker} from '../../../js/toggleLoader';
@@ -42,19 +43,23 @@ const {
  * This action creator is used to fetch usage-type based on entityType
  */
 export const fetchUsageTypeData = (entityType) => (dispatch) => {
-    let url = `${config.STRUCTURE_READONLY_ENDPOINT}usagetypes/v3/${entityType}?locale=en`;
-    return axios.get(url, {
-        headers: {
-            myCloudProxySession: config.myCloudProxySession
-        }
-    }).then((res) => {
-        dispatchUsageTypeList(entityType, res, 200, dispatch);
-        dispatchUsageTypeData(entityType, prepareUsageTypeData(res), 200, dispatch);
-    })
-    .catch((error) => {
-        dispatchUsageTypeData(entityType, [], 404, dispatch);
-        console.error('Error in Fetching UsageType from API>>>', error)
-    })
+    const usageTypeList = store.getState().appStore?.usageTypeListData?.usageTypeList;
+    const usageTypeListData = store.getState().assessmentReducer?.usageTypeListData;
+    if (!usageTypeList || Object.keys(usageTypeListData).length === 0) {
+        let url = `${config.STRUCTURE_READONLY_ENDPOINT}usagetypes/v3/${entityType}?locale=en`;
+        return axios.get(url, {
+            headers: {
+                myCloudProxySession: config.myCloudProxySession
+            }
+        }).then((res) => {
+            dispatchUsageTypeList(entityType, res, 200, dispatch);
+            dispatchUsageTypeData(entityType, prepareUsageTypeData(res), 200, dispatch);
+        })
+        .catch((error) => {
+            dispatchUsageTypeData(entityType, [], 404, dispatch);
+            console.error('Error in Fetching UsageType from API>>>', error)
+        })
+    }
 }
 /**
  * This action creator is used to fetch the assessment metadata including status
