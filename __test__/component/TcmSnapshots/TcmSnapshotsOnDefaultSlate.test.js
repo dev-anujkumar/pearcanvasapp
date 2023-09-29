@@ -358,6 +358,118 @@ describe('Test-16-Function--tcmSnapshotsOnDefaultSlate', () => {
         tcmSnapshotsOnDefaultSlate.tcmSnapshotsOnDefaultSlate(snapshotsData, null, containerElement, null, true, {}, 1, false);
 
     })
+    it('Test-16.5-Function--tcmSnapshotsOnDefaultSlate', () => {
+        config.isPopupSlate = true;
+        const actionStatus = {
+            action: "delete",
+            status: "accepted",
+            fromWhere: "create"
+        }
+        const snapshotsData = {
+            wipData: {
+                type: "",
+                interactivedata: {
+                    show: [
+                        {
+                            type: "element-aside"
+                        }
+                    ]
+                },
+                elementdata: {
+                    bodymatter: [
+                        {
+                            type: "manifest",
+                            contents: {
+                                bodymatter: [
+                                    {
+                                        type: "popup",
+                                        popupdata: {
+                                            'formatted-title': "formattedTitle"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                contents: {
+                    bodymatter: [
+                        {
+                            id: 1
+                        }
+                    ]
+                }
+            },
+            slateManifestVersioning: {},
+            popupInContainer: null,
+            actionStatus,
+            tag: {},
+            elementId: {
+                parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+            }
+        }
+        let containerElement = {
+            showHideObj: {},
+            sectionType: "section"
+        }
+        tcmSnapshotsOnDefaultSlate.tcmSnapshotsOnDefaultSlate(snapshotsData, null, containerElement, null, true, {}, 1, false);
+    })
+    it('Test-16.5-Function--tcmSnapshotsOnDefaultSlate', () => {
+        config.isPopupSlate = true;
+        const actionStatus = {
+            action: "delete",
+            status: "accepted",
+            fromWhere: "create"
+        }
+        const snapshotsData = {
+            wipData: {
+                type: "",
+                interactivedata: {
+                    show: [
+                        {
+                            type: "element-aside"
+                        }
+                    ]
+                },
+                elementdata: {
+                    bodymatter: [
+                        {
+                            type: "manifest",
+                            contents: {
+                                bodymatter: [
+                                    {
+                                        type: "popup",
+                                        popupdata: {
+                                            'formatted-title': "formattedTitle"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                contents: {
+                    bodymatter: [
+                        {
+                            id: 1
+                        }
+                    ]
+                }
+            },
+            slateManifestVersioning: {},
+            popupInContainer: null,
+            actionStatus,
+            tag: {},
+            elementId: {
+                parentId: "urn:pearson:work:3525235-324323-4432sfe31"
+            }
+        }
+        let containerElement = {
+            showHideObj: {},
+            sectionType: "section"
+        }
+        tcmSnapshotsOnDefaultSlate.tcmSnapshotsOnDefaultSlate(snapshotsData, null, containerElement, null, true, {}, 1, false, 'check');
+    })
 })
 describe('Test-4-Function--4--fetchParentData', () => {
     let manifest1 = "urn:pearson:manifest:90b59454-2e5d-46f2-968f-fd1d636d0edb";
@@ -745,6 +857,63 @@ describe('tcmSnapshotsOnDefaultSlate conditions',()=>{
     })    
 })
 describe("tcmSnapshotsCreateAsideWE", () => {
+    it('sectionType availabe in elementContainer', () => {
+        const snapshotsData = {
+            wipData: {
+                id:'',
+                type: 'group',
+                subtype: "",
+                contentUrn:'',
+                interactivedata: {
+                    'show': []
+                },
+                contents: {
+                    bodymatter: [{}]
+                },
+                elementdata: {
+                    bodymatter: [
+                        {
+                            type:'manifest',
+                            id:'123',
+                            contents:{
+                                bodymatter:[
+                                    {
+                                        type:'',
+                                        id:'123'
+                                    },
+                                ]
+                            }
+                        },
+                    ]
+                },      
+                groupeddata: {
+                    bodymatter: [
+                        {
+                        groupdata:{
+                            bodymatter:[
+                                {
+                                type:'tcmSnapshotsMultiColumn'
+                                }
+                            ]
+                        }
+                        }
+                    ]
+                }
+            },
+            tag: {
+                parentTag: "test"
+            },
+            elementId: {
+                parentId: "test"
+            },
+            actionStatus: {
+                action:"Test"
+            }
+        }
+        let containerElement={showHideObj:{currentElement:{type:'element-aside'},element:{sectionType:'test'}},sectionType:'test'}
+        jest.spyOn(tcmSnapshotsOnDefaultSlate, 'tcmSnapshotsInContainerElements');
+        tcmSnapshotsOnDefaultSlate.tcmSnapshotsCreateAsideWE(snapshotsData, '', '', '',containerElement);
+    })
     it('sectionType availabe in elementContainer', () => {
         let containerElement={showHideObj:{currentElement:{type:'element-aside'},element:{sectionType:'test'}},sectionType:'test'}
         jest.spyOn(tcmSnapshotsOnDefaultSlate, 'tcmSnapshotsInContainerElements');

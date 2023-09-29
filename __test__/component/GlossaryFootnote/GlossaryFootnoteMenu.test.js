@@ -249,7 +249,9 @@ describe("Increase coverage", () => {
                     }
                 }
             }
-        }
+        },
+        editors: [{ id: 'cypress-0-0' }],
+        remove:jest.fn()
     }
     it('renders saveContent function correctly GloassaryData conditional coverage - 1', () => {
         props2.figureGlossaryData = {}

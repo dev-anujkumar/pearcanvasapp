@@ -41,7 +41,6 @@ export const ALREADY_USED_SLATE_TOC = "The slate is locked by another user and t
 export const REMOVE_LINKED_AUDIO = "Do you want to remove the linked Audio Book with the slate?"
 export const SPLIT_SLATE_WITH_ADDED_AUDIO = "There is an audio file linked with this slate. If you want to split the slate, you will need to re-do the narrative audio file for this slate and the newly generated split slate. Do you want to proceed with Split action?"
 export const NOT_AUDIO_ASSET = "Selected alfresco media type is not an Audio."
-export const LOCK_DURATION = 120000   //120000ms = 2mins of inactivity to test PCAT-20172. Will revert the change in future
 export const SYNTAX_HIGHLIGHTING = "Turning auto-highlighting on will clear any recent formatting in this content. Are you sure?"
 export const REMOVE_LINKED_IMAGE_GLOSSARY = "Do you want to remove the linked Image with the slate?"
 export const NOT_IMAGE_ASSET = "Selected alfresco media type is not an Image."

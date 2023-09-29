@@ -119,6 +119,8 @@ export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRol
             if(releaseLockButton){ // Condition to remove the lockinfo data on Unlock button clicked by Admin
                 let lockInfo = {"isLocked":false,"userId":"","timestamp":"","firstName":"","lastName":""}
                 dispatch(saveLockDetails(lockInfo))
+                const lockDuration = 5400
+                dispatch(setSlateLock(projectUrn, slateId, lockDuration))
             }
             dispatch({
                 type : SET_LOCK_FLAG,

@@ -3326,7 +3326,6 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         })
     });
 });
-
 describe('Test-15 updateFigureDropdownValues', () => {
     let getState = () => {
         return {
