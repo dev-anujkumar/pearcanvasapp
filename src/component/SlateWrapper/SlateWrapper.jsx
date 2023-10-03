@@ -1304,6 +1304,16 @@ class SlateWrapper extends Component {
     handleUnlockSlateWarning = (status) =>{
         if(status == 'ok'){
           this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN, true, this.props.userRole)
+          sendDataToIframe({
+            'type': 'updateLockedSlate',
+            'message': {lockInfo: {
+                firstName: "",
+                isLocked: false,
+                lastName: "",
+                userId:"",
+                slateId: config.slateManifestURN
+            }}
+        })
         }
         this.props.toggleUnlockSlateAction(false)
         this.props.showBlocker(false)
