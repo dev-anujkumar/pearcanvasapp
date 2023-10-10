@@ -131,6 +131,7 @@ class GlossaryFootnoteMenu extends React.Component {
                 return !newDefDom.isEqualNode(oldDefDom)
         }
     }
+
     /**
     * @description - This function is to save the Content of Glossary and Footnote.
     * @param {event} 

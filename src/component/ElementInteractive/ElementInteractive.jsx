@@ -592,10 +592,8 @@ class Interactive extends React.Component {
                     },
                     "path": smartLinkPath
                 }
-                if (interactivetype === THIRD_PARTY) {
-                    figuredata.alttext = altText
-                }
                 if (interactivetype === THIRD_PARTY || interactivetype === EXTERNAL_WEBSITE_LINK) {
+                    figuredata.alttext = altText
                     figuredata.longdescription = longDescription
                 }
                 if (ctaSmartLinks.indexOf(interactivetype) > -1) {
@@ -661,7 +659,7 @@ class Interactive extends React.Component {
 
     handleSiteOptionsDropdown = (alfrescoPath, id, currentAsset) =>{
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
+        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
         return axios.get(url,
             {

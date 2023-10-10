@@ -6,7 +6,7 @@ import '../../styles/Toolbar/Toolbar.css';
 import '../../styles/GlossaryFootnotePopup/GlossaryFootnotePopup.css'
 import SlateTagDropdown from '../ElementMetaDataAnchor/SlateTagDropdown.jsx';
 
-import { toggleElemBordersAction } from './Toolbar_Actions.js';
+import { toggleUnlockSlateAction } from './Toolbar_Actions.js';
 import { slateTagDisable, slateTagEnable, audioNarration, audioNarrationEnable, collapseHeader, expandHeader, searchIcon,
     searchClose, searchUp, searchDown } from '../../images/TinyMce/TinyMce.jsx';
 import { checkSlateLock } from '../../js/slateLockUtility.js'
@@ -20,6 +20,7 @@ import { slateVersioning } from '../SlateWrapper/SlateWrapper_Actions';
 import { MOVED_TO_WIP } from '../../constants/Element_Constants';
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
 import { ALLOWED_SLATES_IN_RC, APPROVED_BANNER_MESSAGE1, APPROVED_BANNER_MESSAGE2, EDIT_CONTENT_BTN, LOCKED_BANNER_MESSAGE, SLATES_DEFAULT_LABEL, SUBSCRIBER_BANNER_MESSAGE } from '../SlateWrapper/SlateWrapperConstants';
+import Button from '@mui/material/Button';
 
 const _Toolbar = props => {
     const { isToolBarBlocked,roleId } = props;
@@ -49,7 +50,13 @@ const _Toolbar = props => {
             document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
         } 
     }
-      
+    
+    /**
+     * Function for unlock slate button action
+     */
+    const handleUnlockClick = (e) => {
+        props.toggleUnlockSlateAction(true)
+    }
 
     /**
   * Function for show/hide audio Narration icon
@@ -173,7 +180,11 @@ const _Toolbar = props => {
             (checkSlateLock(props.slateLockInfo)) ? 
             <div className='toolbar-text'>
                 <LockIcon />
-                <div><span className='read-only'>{LOCKED_BANNER_MESSAGE} </span>by {lockedByUser} </div>
+                <div><span className='read-only'>{LOCKED_BANNER_MESSAGE} </span><span className='locked-user'>by {lockedByUser} </span>
+                {roleId === 'admin' &&
+                <Button className="lock-button" variant="outlined"  onClick={handleUnlockClick}>Unlock Slate</Button>
+                }
+                </div>
             </div> : '' }
 
                 <div className={`header ${isToolBarBlocked} ${accessToolbar} ${isReadOnly}`} id="tinymceToolbar"></div>
@@ -254,9 +265,7 @@ const _Toolbar = props => {
 }
 
 const mapStateToProps = (state) => {
-    const { elemBorderToggle } = state.toolbarReducer.elemBorderToggle
     return {
-        elemBorderToggle,
         permissions: state.appStore.permissions,
         currentSlateLOData: state.metadataReducer.currentSlateLOData,
         slateType: state.appStore.slateType,
@@ -273,10 +282,18 @@ const mapStateToProps = (state) => {
     }
 }
 
-const mapActionToProps = {
-    toggleElemBorders: toggleElemBordersAction,
-    checkSlateLock,
-    slateVersioning
+const mapActionToProps = (dispatch) =>{
+    return{
+        checkSlateLock: (payloadObj) => {
+            dispatch(checkSlateLock(payloadObj))
+        },
+        slateVersioning: (payloadObj) => {
+            dispatch(slateVersioning(payloadObj))
+        },
+        toggleUnlockSlateAction: (payloadObj) => {
+            dispatch(toggleUnlockSlateAction(payloadObj))
+        }
+    }
 }
 
 const Toolbar = connect(mapStateToProps, mapActionToProps)(_Toolbar)

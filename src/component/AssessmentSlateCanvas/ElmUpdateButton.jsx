@@ -10,7 +10,6 @@ import { approvedIcon } from '../../../src/images/ElementButtons/ElementButtons.
 import { hasReviewerSubscriberRole } from '../../constants/utility.js';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { ELM_INT } from './AssessmentSlateConstants.js';
-import config from '../../config/config.js';
 
 const ElmUpdateButton = (props) => {
     const { elmAssessment, updateElmVersion, buttonText, embeddedElmClass, elementType, status, assessmentItem } = props;
@@ -19,7 +18,7 @@ const ElmUpdateButton = (props) => {
         if(elmAssessment.showUpdateStatus && status && !hasReviewerSubscriberRole()){
             updateElmVersion()
         }
-    }, [])
+    }, [elmAssessment.showUpdateStatus])
 
     const setUpdateDiv = (assessment) => {
         let updateDiv;

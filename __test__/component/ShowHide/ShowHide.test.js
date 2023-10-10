@@ -37,6 +37,14 @@ const event = {
 	oldDraggableIndex: 0
 }
 
+jest.mock('../../../src/component/SlateWrapper/SlateWrapper_Actions', () => {
+    return {
+        swapElement: () => async (dispatch, getState) => {
+			return Promise.resolve()
+			}
+    }
+})
+
 jest.mock('../../../src/component/tinyMceEditor.js', () => {
     return function () {
         return (<div>null</div>)
@@ -185,6 +193,14 @@ describe('1. ShowHide test cases', () => {
 		const compInstance = showhideInstance(props);
 		const spy = jest.spyOn(compInstance, 'onSortUpdate')
 		compInstance.onSortUpdate(event, "show");
+		expect(spy).toHaveBeenCalled();
+		spy.mockClear()
+    });
+	it('1.2 Test onSortUpdate else case', () => {
+		config.slateManifestURN = "urn:pearson:manifest:e62ba6f4-315c-4510-9200-f5cbe110a8bc";
+		const compInstance = showhideInstance(props);
+		const spy = jest.spyOn(compInstance, 'onSortUpdate')
+		compInstance.onSortUpdate(event, "");
 		expect(spy).toHaveBeenCalled();
 		spy.mockClear()
     });

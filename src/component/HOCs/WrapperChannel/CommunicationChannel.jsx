@@ -152,10 +152,8 @@ function CommunicationChannel(WrappedComponent) {
                     this.props.fetchLearnosityContent()
 
                     // call get project api here
-                    this.props.fetchFigureDropdownOptions();
                     this.props.getProjectDetails()
                     this.props.fetchProjectLFs()
-                    this.props.tcmCosConversionSnapshot()       // for creation of pre-snapshots for cos converted projects
                     this.props.fetchDefaultLF(message.defaultLearningFramework)
                     break;
                 case 'permissionsDetails':
@@ -190,6 +188,9 @@ function CommunicationChannel(WrappedComponent) {
                     let newMessage = { assessmentResponseMsg: message.assessmentResponseMsg };
                     this.props.isLOExist(newMessage);
                     this.props.currentSlateLO(newMessage);
+                    break;
+                case 'elementLabelCombineData':
+                    this.props.updateFigureDropdownValues(message)
                     break;
                 case 'refreshSlate':
                     this.handleRefreshSlate();
@@ -471,6 +472,9 @@ function CommunicationChannel(WrappedComponent) {
                 case 'sendSlatesLabel':
                     if(message?.labels)
                     this.props.setTocSlateLabel(message.labels)
+                    break;
+                case 'lockUserDetailsFromCount' :
+                    this.props.saveLockDetails(message.lockInfo)
                     break;
             }
         }

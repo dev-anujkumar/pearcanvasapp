@@ -18,7 +18,9 @@ import {
     getCurrentlyLinkedImage, 
     assetPopoverPopup, 
     getAssetPopoverId, 
-    searchForFiguresAction
+    searchForFiguresAction,
+    assetIdForSnapshot,
+    getElementVersionContent
 } from '../../../src/component/AssetPopover/AssetPopover_Actions';
 
 jest.mock('../../../src/constants/Action_Constants', ()=> {
@@ -134,6 +136,50 @@ describe('testingAssetPopoverActions',() => {
         }
         getCurrentlyLinkedImage(id, cb);
     })
+    it('testing------- getElementVersionContent if', () => {
+        let id = "/work/g"
+        const users = [{name: 'Bob'}];
+        const resp = { data: users, status: 200, json:jest.fn(() => users) };
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+             resolve(resp);
+           });
+        });
+        getElementVersionContent(id)
+    })
+    it('testing------- getElementVersionContent catch', () => {
+        let id = "/work/g"
+        const users = [{name: 'Bob'}];
+        const resp = { data: users, status: 200, json:jest.fn(() => users) };
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+             reject(resp);
+           });
+        });
+        getElementVersionContent(id)
+    })
+    it('testing------- getElementVersionContent else', () => {
+        let id = "work"
+        const users = [{name: 'Bob'}];
+        const resp = { data: users, status: 200, json:jest.fn(() => users) };
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+             resolve(resp);
+           });
+        });
+        getElementVersionContent(id)
+    })
+    it('testing------- getElementVersionContent else catch', () => {
+        let id = "work"
+        const users = [{name: 'Bob'}];
+        const resp = { data: users, status: 200, json:jest.fn(() => users) };
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+             reject(resp);
+           });
+        });
+        getElementVersionContent(id)
+    })
     it('testing------- searchForFiguresAction if', () => {
         let searchTerm = 'search', stateImageData = [{'a': '1', 'b' : '2'}]
         let result = searchForFiguresAction(searchTerm, stateImageData)
@@ -165,11 +211,39 @@ describe('testingAssetPopoverActions',() => {
         });
         searchForFiguresAction(searchTerm, stateImageData)(dispatch);
     })
+    it('testing------- searchForFiguresAction catch', async () => {
+        let searchTerm = 'search', stateImageData = null, currentlySearching = false
+        const users = [{name: 'Bob'}];
+        const resp = {data: users, json: jest.fn(()=> [])};
+        let  performance = {
+            now : jest.fn()
+        }
+        const store = mockStore({ todos: [] });
+        let dispatch = (obj) => {
+            if(obj.type){
+                expect(obj.type).toEqual('IMAGES_FROM_API');
+            }
+        }
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+                reject(resp);
+            });
+        });
+        searchForFiguresAction(searchTerm, stateImageData)(dispatch);
+    })
     it('testing------- assetPopoverPopup', () => {
         let argsObj = false;
         let result = assetPopoverPopup(argsObj);
         expect(result).toMatchObject({
             type: 'TOGGLE_LO_DROPDOWN',
+           
+        });
+    })
+    it('testing------- assetIdForSnapshot', () => {
+        let argsObj = false;
+        let result = assetIdForSnapshot(argsObj);
+        expect(result).toMatchObject({
+            type: 'ASSET_ID_SNAPSHOT',
            
         });
     })
@@ -185,6 +259,31 @@ describe('testingAssetPopoverActions',() => {
         global.fetch = jest.fn().mockImplementationOnce(() => {
             return new Promise((resolve, reject) => {
              resolve(resp);
+           });
+        });
+        const cb = jest.fn()
+        getAssetPopoverId(id).then((data) => async function(){
+            const response = await data
+
+            expect(data).toEqual(users)
+        })
+        .catch(e =>
+            expect(e).toEqual({
+              error: 'User with 2 not found.',
+            }))
+    })
+    it('testing------- getAssetPopoverId catch', () => {
+        // let result = getAssetPopoverId();
+        // expect(result).toMatchObject({
+        //     type: 'TOGGLE_BORDERS'
+        // });
+        let id = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
+        const users = [{id : '123'}];
+        const resp = {data: users, json: jest.fn(() => [])};   
+
+        global.fetch = jest.fn().mockImplementationOnce(() => {
+            return new Promise((resolve, reject) => {
+             reject(resp);
            });
         });
         const cb = jest.fn()

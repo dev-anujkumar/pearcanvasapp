@@ -584,3 +584,169 @@ export const interactiveElm = {
 	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
 	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
 }
+export const interactiveWeblink = {
+	"id": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"type": "figure",
+	"figuretype": "interactive",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+	"title": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"subtitle": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "title added"
+	},
+	"captions": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"credits": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"figuredata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+		"interactiveid": "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+		"interactivetype": "web-link",
+		"interactiveformat": "mmi",
+		"interactivetitle": "Interative 2 -UCA"
+	},
+	"html": {
+		"title": "<p></p>",
+		"subtitle": "<p>title added</p>",
+		"text": "",
+		"postertext": "",
+		"captions": "<p></p>",
+		"credits": "<p></p>",
+		"footnotes": {},
+		"glossaryentries": {}
+	},
+	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
+}
+export const interactiveElm3PI = {
+	"id": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"type": "figure",
+	"figuretype": "interactive",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+	"title": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"subtitle": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "title added"
+	},
+	"captions": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"credits": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"figuredata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+		"interactiveid": "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+		"interactiveformat": "mmi-elm",
+		"interactivetitle": "Interative 2 -UCA"
+	},
+	"html": {
+		"title": "<p></p>",
+		"subtitle": "<p>title added</p>",
+		"text": "",
+		"postertext": "",
+		"captions": "<p></p>",
+		"credits": "<p></p>",
+		"footnotes": {},
+		"glossaryentries": {}
+	},
+	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
+}
+export const SmartLinkinteractive = {
+	"id": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"type": "figure",
+	"figuretype": "interactive",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+	"title": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"subtitle": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "title added"
+	},
+	"captions": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"credits": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"figuredata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+		"interactiveid": "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+		"interactivetype": "3rd-party",
+		"interactiveformat": "mmi",
+		"interactivetitle": "Interative 2 -UCA"
+	},
+	"html": {
+		"title": "<p></p>",
+		"subtitle": "<p>title added</p>",
+		"text": "",
+		"postertext": "",
+		"captions": "<p></p>",
+		"credits": "<p></p>",
+		"footnotes": {},
+		"glossaryentries": {}
+	},
+	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
+}
+export const OpenerElement = {
+	"id": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"type": "openerelement",
+	"figuretype": "interactive",
+	"schema": "http://schemas.pearson.com/wip-authoring/figure/1",
+    "backgroundimage": {
+        "imageid":"urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec"
+    },
+	"title": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"subtitle": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": "title added"
+	},
+	"captions": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"credits": {
+		"schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+		"text": ""
+	},
+	"figuredata": {
+		"schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+		"interactiveid": "urn:pearson:work:baf20494-42b2-4bb8-9d3d-07b5fb7f24ec",
+		"interactivetype": "web-link",
+		"interactiveformat": "mmi",
+		"interactivetitle": "Interative 2 -UCA"
+	},
+	"html": {
+		"title": "<p></p>",
+		"subtitle": "<p>title added</p>",
+		"text": "",
+		"postertext": "",
+		"captions": "<p></p>",
+		"credits": "<p></p>",
+		"footnotes": {},
+		"glossaryentries": {}
+	},
+	"versionUrn": "urn:pearson:work:8a64d0f6-23c4-4fb8-8584-e11e6bfe86f7",
+	"contentUrn": "urn:pearson:entity:0a56a50e-57da-4aa4-8255-233ed88f132f"
+}

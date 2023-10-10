@@ -20,6 +20,13 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview, t
     if (isPreview == true) {
       content_data["preview"] = true;
     }
+    // GTM event object
+    let content_data_GTM = {};
+    content_data_GTM["projectManifest"] = project;
+    content_data_GTM["sectionManifest"] = section;
+    if (isPreview) {
+      content_data_GTM["preview"] = true;
+    }
 
     axios.post(content_url, JSON.stringify(content_data), {
       headers: {
@@ -38,7 +45,7 @@ export function publishTitleDelay(project, section, cite, callBack, isPreview, t
           const elapsedTime = performance.now() - startTime
           triggerCustomEventsGTM('preview-type', {
             elapsedTime,
-            ...content_data
+            ...content_data_GTM
           });
           sendDataToIframe({ 'type': 'projectPreviewLunched', 'message': { status: true } }) // sending message to trigger enable project preview icon 
           window.open(previewURL, '_blank');
@@ -65,6 +72,12 @@ export const publishSlate = (project, section, cite) => {
     citeManifest: cite,
     requester: config_object.userEmail,//"requester": "james.cooney@pearson.com",
     timestamp: new Date().toISOString(),//"timestamp": "2017-04-23T18:25:43.511Z"
+    proactiveSlatePreview: proactiveSlatePreview,
+  }
+  // GTM event object
+  const content_data_GTM = {
+    projectManifest: project,
+    sectionManifest: section,
     proactiveSlatePreview: proactiveSlatePreview,
   }
   let xApiKey = ''
@@ -97,9 +110,8 @@ export const publishSlate = (project, section, cite) => {
         const elapsedTime = performance.now() - startTime
         triggerCustomEventsGTM('preview-type', {
           elapsedTime,
-          ...content_data,
+          ...content_data_GTM,
         })
-        sendDataToIframe({ 'type': 'slatePreviewTriggered', 'message': { status: true } }) // sending message to trigger aggrigatedcomments API after getting response  
         setTimeout(() => {
           sendDataToIframe({ 'type': 'slatePreviewLunched', 'message': { status: true } }) // sending message to trigger enable slate preview icon 
           window.open(previewURL, '_blank')

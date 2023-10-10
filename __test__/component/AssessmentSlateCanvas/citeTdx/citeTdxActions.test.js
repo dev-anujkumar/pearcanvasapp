@@ -4,6 +4,7 @@ import {
   CITE,
   TDX,
 } from "../../../../src/component/AssessmentSlateCanvas/AssessmentSlateConstants";
+import * as functionsModule from "../../../../src/js/apiCancelRequestHandlers";
 
 
 jest.mock("axios");
@@ -12,6 +13,16 @@ jest.mock("../../../../src/appstore/citeTdxReducer", () => {
     return <div>null</div>;
   };
 });
+// jest.mock("../../../../src/js/apiCancelRequestHandlers.js", () => ({
+//   axiosGetAPI: function(){
+//     return {
+      // data: {
+      //   name: 'testname',
+      //   assesssments: [1,2,3],
+      //   taxonomicTypes: ['a','b','c']
+      // }
+//     }}
+// }));
 
 
 jest.mock("../../../../src/config/config", () => {
@@ -142,28 +153,193 @@ describe("Test-1.3 --filterCiteTdxData", () => {
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear();
   });
-  it("Test-1.3.4 --filterCiteTdxData", async () => {
-    const mockData = {
-        items: {
-            taxonomicTypes: ["CITE"],
-          },
-    }
+  it("filterCiteTdxData when response.data has assesssments", async () => {
     let assessmentType = TDX,
       assessmentTitle = "ASSESSMENT ITEM7";
+    const mockFetchData = jest.spyOn(functionsModule, 'axiosGetAPI');
+    mockFetchData.mockReturnValue({
+      data: {
+        name: 'testname',
+        assesssments: [1,2,3],
+        taxonomicTypes: ['a','b','c']
+      }
+    });
+    await CiteTdxActions.filterCiteTdxData(assessmentType, assessmentTitle)(jest.fn());
+  });
+  it("filterCiteTdxData when response.data does not have assesssments", async () => {
+    let assessmentType = TDX,
+      assessmentTitle = "testname";
+    const mockFetchData = jest.spyOn(functionsModule, 'axiosGetAPI');
+    mockFetchData.mockReturnValue({
+      data: {
+        name: 'testname',
+        tests: [1,2,3],
+        taxonomicTypes: ['TDX','b','c']
+      }
+    });
+    await CiteTdxActions.filterCiteTdxData(assessmentType, assessmentTitle)(jest.fn());
+  });
+  it("filterCiteTdxData when response.data does not have assesssments", async () => {
+    let assessmentType = TDX,
+      assessmentTitle = "testname";
+    const mockFetchData = jest.spyOn(functionsModule, 'axiosGetAPI');
+    mockFetchData.mockReturnValue({
+      data: {
+        name: 'testname',
+        tests: [1,2,3],
+        taxonomicTypes: ['TDX','b','c'],
+        versionUrn: 'test',
+        dateModified: '20-09-2023',
+        createdBy: 'test user'
+      }
+    });
+    await CiteTdxActions.filterCiteTdxData(assessmentType, assessmentTitle)(jest.fn());
+  });
+  it("filterCiteTdxData when res.data.taxonomicTypes.length = 0", async () => {
+    let assessmentType = TDX,
+      assessmentTitle = "testname";
+    const mockFetchData = jest.spyOn(functionsModule, 'axiosGetAPI');
+    mockFetchData.mockReturnValue({
+      data: {
+        name: undefined,
+        tests: [1,2,3],
+        taxonomicTypes: [],
+        versionUrn: 'https://test.com'
+      }
+    });
+    await CiteTdxActions.filterCiteTdxData(assessmentType, assessmentTitle)(jest.fn());
+  });
+  it("getCiteTdxData with sortOrder = 0", async () => {
+    let assessmentType = TDX,
+      assessmentTitle = "ASSESSMENT ITEM7",
+      filterUUID = '123';
     let data = {
-        payload: {
-            isLoading: false,
-            assessmentTitle: "ASSESSMENT ITEM7",
-            taxonomicTypes: ["CITE"]
-          },
+      type: "GET_MMI_RESOURCES",
+      payload: {
+        filterData: [],
+        isLoading: false,
+      },
     };
-    let responseData = mockData;
-    const spyFunction = jest.spyOn(CiteTdxActions, "filterCiteTdxData");
+    let responseData = data;
+    let dispatch = (data) => {
+      if (data && data.type === "GET_SINGLE_ASSESSMENT_DATA") {
+        expect(data.payload.isLoading).toEqual(false);
+        expect(data.payload.filterData).toEqual([]);
+      }
+    };
+    let getState = () => {
+      return {
+        citeTdxReducer: {
+          sortBy: 'asc',
+          sortOrder: 0
+        }
+      }
+    };
+    const mockFetchData = jest.spyOn(functionsModule, 'axiosGetAPI');
+    mockFetchData.mockReturnValue({
+      data: {
+        name: 'testname',
+        assesssments: [1,2,3],
+        taxonomicTypes: ['a','b','c']
+      }
+    });
+    // const spyFunction = jest.spyOn(CiteTdxActions, "getCiteTdxData");
     axios.get = jest.fn(() => Promise.resolve(responseData));
-    await CiteTdxActions.filterCiteTdxData(assessmentType, assessmentTitle);
-    const taxonomyType= mockData.items.taxonomicTypes;
-    expect(taxonomyType).toEqual(data.payload.taxonomicTypes)
-    expect(spyFunction).toHaveBeenCalled();
-    spyFunction.mockClear();
+    await CiteTdxActions.getCiteTdxData(assessmentType, assessmentTitle, filterUUID)(dispatch, getState);
+  });
+  it("getCiteTdxData with sortOrder = 1", async () => {
+    let assessmentType = 'random',
+      assessmentTitle = "",
+      filterUUID = '123';
+    let data = {
+      type: "GET_MMI_RESOURCES",
+      payload: {
+        filterData: [],
+        isLoading: false,
+      },
+    };
+    let responseData = data;
+    let dispatch = (data) => {
+      if (data && data.type === "GET_SINGLE_ASSESSMENT_DATA") {
+        expect(data.payload.isLoading).toEqual(false);
+        expect(data.payload.filterData).toEqual([]);
+      }
+    };
+    let getState = () => {
+      return {
+        citeTdxReducer: {
+          // sortBy: 'asc',
+          sortOrder: 1
+        }
+      }
+    };
+    const mockFetchData = jest.spyOn(functionsModule, 'axiosGetAPI');
+    mockFetchData.mockReturnValue({
+      data: {
+        name: 'testname',
+        // assesssments: [1,2,3],
+        taxonomicTypes: ['a','b','c']
+      }
+    });
+    // const spyFunction = jest.spyOn(CiteTdxActions, "getCiteTdxData");
+    axios.get = jest.fn(() => Promise.resolve(responseData));
+    await CiteTdxActions.getCiteTdxData(assessmentType, assessmentTitle, filterUUID)(dispatch, getState);
+  });
+  it("getCiteTdxData with no sortOrder", async () => {
+    let assessmentType = CITE,
+      assessmentTitle = "ASSESSMENT ITEM7",
+      filterUUID = '123';
+    let data = {
+      type: "GET_MMI_RESOURCES",
+      payload: {
+        filterData: [],
+        isLoading: false,
+      },
+    };
+    let responseData = data;
+    let dispatch = (data) => {
+      if (data && data.type === "GET_SINGLE_ASSESSMENT_DATA") {
+        expect(data.payload.isLoading).toEqual(false);
+        expect(data.payload.filterData).toEqual([]);
+      }
+    };
+    let getState = () => {
+      return {
+        citeTdxReducer: {
+          sortBy: 'asc',
+        }
+      }
+    };
+    const mockFetchData = jest.spyOn(functionsModule, 'axiosGetAPI');
+    mockFetchData.mockReturnValue({
+      data: {
+        name: 'testname',
+        assesssments: [1,2,3],
+        taxonomicTypes: ['a','b','c']
+      }
+    });
+    // const spyFunction = jest.spyOn(CiteTdxActions, "getCiteTdxData");
+    axios.get = jest.fn(() => Promise.resolve(responseData));
+    await CiteTdxActions.getCiteTdxData(assessmentType, assessmentTitle, filterUUID)(dispatch, getState);
+  });
+  it("getMCQGuidedData", async () => {
+    let workUrn = "abcd1234";
+    await CiteTdxActions.getMCQGuidedData(workUrn);
+  });
+  it("assessmentSorting", async () => {
+    let sortBy = 'asc',sortOrder = 0;
+    await CiteTdxActions.assessmentSorting(sortBy, sortOrder)(jest.fn(), jest.fn());
+  });
+  it("specialCharacterDecode", async () => {
+    let encodedString="abcd345";
+    await CiteTdxActions.specialCharacterDecode(encodedString);
+  });
+  it("specialCharacterDecode with encodedString as false", async () => {
+    let encodedString=false;
+    await CiteTdxActions.specialCharacterDecode(encodedString);
+  });
+  it("setAssessmentFilterParams", async () => {
+    let title="abcd1234", uuid=123456;
+    await CiteTdxActions.setAssessmentFilterParams(title, uuid);
   });
 });

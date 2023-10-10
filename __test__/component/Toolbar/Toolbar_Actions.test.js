@@ -1,13 +1,13 @@
 import {
-    toggleElemBordersAction, togglePageNumberAction, toggleSpellCheckAction
+    toggleElemBordersAction, togglePageNumberAction, toggleSpellCheckAction, toggleUnlockSlateAction
 } from '../../../src/component/Toolbar/Toolbar_Actions'
 
 jest.mock('../../../src/constants/Action_Constants', ()=> {
     return {
         TOGGLE_BORDERS : 'TOGGLE_BORDERS',
         TOGGLE_PAGE_NUMBER: 'TOGGLE_PAGE_NUMBER',
-        TOGGLE_SPELL_CHECK: 'TOGGLE_SPELL_CHECK'
-
+        TOGGLE_SPELL_CHECK: 'TOGGLE_SPELL_CHECK',
+        TOGGLE_UNLOCK_SLATE: 'TOGGLE_UNLOCK_SLATE'
     }
 })
 
@@ -34,4 +34,14 @@ describe('testingToolbarActions',() => {
             type: 'TOGGLE_SPELL_CHECK'
         });
     })
+    it('testing------- toggline unlock button  action', () => {
+        const status = true;
+        const expectedPayload = {
+          type: 'TOGGLE_UNLOCK_SLATE',
+          payload: status
+        };
+        const dispatch = jest.fn();
+        toggleUnlockSlateAction(status)(dispatch);
+        expect(dispatch).toHaveBeenCalledWith(expectedPayload);
+      });
 })

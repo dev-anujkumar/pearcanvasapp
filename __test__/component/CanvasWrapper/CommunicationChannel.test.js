@@ -276,11 +276,11 @@ describe('Testing communication channel', () => {
         currentSlateLOType: jest.fn(),
         getProjectDetails: jest.fn(),
         fetchProjectLFs: jest.fn(),
-        tcmCosConversionSnapshot: jest.fn(),
         addNewComment: jest.fn(),
         deleteComment: jest.fn(),
         handleSlateRefresh: jest.fn(),
         setTocContainersAutoNumberList: jest.fn(),
+        saveLockDetails: jest.fn(),
         projectLearningFrameworks: {
             externalLF: [
                 { "urn": 'urn:pearson:goalframework:f35b6132-fab1-4358-848f-70e791b2e797' },
@@ -970,6 +970,34 @@ describe('Testing communication channel', () => {
                 type: "getAssessmentLOResponse",
                 message: {
                     assessmentResponseMsg: "LO in Assessment"
+                }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    test('Test for elementLabelCombineData case', () => {
+        let event = {
+            data: {
+                type: "elementLabelCombineData",
+                message: {
+                    "test":""
+                }
+            }
+        }
+        const spyhandleIncommingMessages = jest.spyOn(channelInstance, 'handleIncommingMessages')
+        channelInstance.handleIncommingMessages(event);
+        expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
+        spyhandleIncommingMessages.mockClear()
+    })
+    test('Test for unlinkTocContainer case', () => {
+        let event = {
+            data: {
+                type: "unlinkTocContainer",
+                message: {
+                    "test":""
                 }
             }
         }
@@ -2759,4 +2787,19 @@ describe('Testing communication channel', () => {
         expect(channelInstance.handleIncommingMessages).toHaveBeenCalled()
         spyhandleIncommingMessages.mockClear()
     })
+    it("Test for lockUserDetailsFromCount case", () => {
+      let event = {
+        data: {
+          type: "lockUserDetailsFromCount",
+          message: { lockInfo: "test" },
+        },
+      };
+      const spysendingPermissions = jest.spyOn(
+        channelInstance,
+        "handleIncommingMessages"
+      );
+      channelInstance.handleIncommingMessages(event);
+      expect(channelInstance.handleIncommingMessages).toHaveBeenCalled();
+      spysendingPermissions.mockClear();
+    });
 })

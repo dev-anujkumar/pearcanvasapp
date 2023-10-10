@@ -18,7 +18,7 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, LOCK_DURATION, SHOW_HIDE,POP_UP ,
+    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
     MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, APPROVE_NORMAL_SLATE, APPROVE_OWNER_SLATE, ALLOWED_SLATES_IN_RC, RELEASE_SLATE_LOCK_ACTION
 } from './SlateWrapperConstants';
@@ -40,7 +40,7 @@ import LazyLoad, {forceCheck} from "react-lazyload";
 import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
-import { TEXT_SOURCE, externalLOWarningtxt } from '../../constants/Element_Constants.js';
+import { TEXT_SOURCE, externalLOWarningtxt, UNLOCKSLATEWARNING } from '../../constants/Element_Constants.js';
 import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
@@ -51,6 +51,7 @@ import KeyboardUpDown from '../Keyboard/KeyboardUpDown.jsx';
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
 import { approvedSlatePopupStatus } from '../ElementContainer/ElementContainer_Actions';
 import { triggerSlateLevelSave } from '../../js/slateLevelSave';
+import { toggleUnlockSlateAction } from '../Toolbar/Toolbar_Actions'
 
 let random = guid();
 
@@ -376,7 +377,7 @@ class SlateWrapper extends Component {
             clearTimeout(timer)
             timer = setTimeout(() => {
                 this.debounceReleaseHandler(callback, _context)
-            }, LOCK_DURATION)
+            }, config.LOCK_DURATION)
         }
     }
 
@@ -979,7 +980,8 @@ class SlateWrapper extends Component {
                 this.renderButtonsonCondition(_elements);
                 /* @-isPdf_Assess-@ - TO check TYPE of current slate  */
                 const isPdf_Assess = [SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(config.slateType);
-                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress && !isSubscriberRole(projectSubscriptionDetails?.projectSharingRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)) {
+                const isSubscribedSlate = isSubscriberRole(projectSubscriptionDetails?.projectSharingRole, projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)
+                if (_elements.length === 0 && isPdf_Assess && config.isDefaultElementInProgress && !isSubscribedSlate) {
                     config.isDefaultElementInProgress = false;
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                     const typeOfEle = _slateType === SLATE_TYPE_ASSESSMENT ? ELEMENT_ASSESSMENT : ELEMENT_PDF;
@@ -1022,7 +1024,7 @@ class SlateWrapper extends Component {
                                         userRole={this.props.userRole}
                                         openCustomPopup = {this.openCustomPopup}
                                         slateType={_slateType}
-                                        element={element}
+                                        element={(element?.type === 'openerelement' && isSubscribedSlate) ? JSON.parse(JSON.stringify(element)) : element}
                                         index={index}
                                         handleCommentspanel={this.props.handleCommentspanel}
                                         elementSepratorProps={this.elementSepratorProps}
@@ -1294,6 +1296,51 @@ class SlateWrapper extends Component {
             this.props.assessmentReloadConfirmation(false);
         }
     }
+
+    /**
+    * @description - handleUnlockSlateWarning function responsible for unlocking slate by Admin Users.
+    */
+
+    handleUnlockSlateWarning = (status) =>{
+        if(status == 'ok'){
+          this.props.releaseSlateLock(config.projectUrn, config.slateManifestURN, true, this.props.userRole)
+          sendDataToIframe({
+            'type': 'updateLockedSlate',
+            'message': {lockInfo: {
+                firstName: "",
+                isLocked: false,
+                lastName: "",
+                userId:"",
+                slateId: config.slateManifestURN
+            }}
+        })
+        }
+        this.props.toggleUnlockSlateAction(false)
+        this.props.showBlocker(false)
+        hideTocBlocker();
+        hideBlocker();
+    } 
+
+    /**
+    * @description - showUnlockSlatePopup function responsible for showing warning Popup on Admin side when clicked on Unlock button.
+    */
+
+    showUnlockSlatePopup = () => {
+        if(this.props.unlockSlateToggle){
+            this.props.showBlocker(true)
+            showTocBlocker()
+            return (
+                <PopUp dialogText={UNLOCKSLATEWARNING}
+                    active={true}
+                    unlockSlateToggle = {this.props.unlockSlateToggle}
+                    handleUnlockSlate = {this.handleUnlockSlateWarning}
+                    handleCancelUnlock = {this.handleUnlockSlateWarning}
+                    tocDeleteClass={'listConfirmation'}
+                />
+            )
+        }
+    }
+
 
     showLockReleasePopup = () => {
         if (this.state.showReleasePopup) {
@@ -1585,6 +1632,7 @@ class SlateWrapper extends Component {
                 {/* **************** Approved to WIP Warning Popup ************* */}
                 {/* **************** To reload slate after assessment update ************* */}
                 {this.reloadSlateAfterAssessmentUpdate()}
+                {this.showUnlockSlatePopup()}
             </React.Fragment>
         );
     }
@@ -1645,7 +1693,8 @@ const mapStateToProps = state => {
         asideData: state.appStore.asideData,
         approvedSlatePopupstatus: state.appStore.approvedSlatePopupstatus,
         elemBorderToggle: state.toolbarReducer.elemBorderToggle,
-        reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate
+        reloadAfterAssessmentUpdate: state.assessmentReducer.reloadAfterAssessmentUpdate,
+        unlockSlateToggle: state.toolbarReducer.unlockSlateToggle
     };
 };
 
@@ -1687,6 +1736,7 @@ export default connect(
         slateVersioning,
         approvedSlatePopupStatus,
         isSubscribersSubscribedSlate,
-        assessmentReloadConfirmation
+        assessmentReloadConfirmation,
+        toggleUnlockSlateAction
     }
 )(SlateWrapper);

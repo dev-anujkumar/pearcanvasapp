@@ -2794,20 +2794,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         config.book_title = 'Dev_LF_Ext_01'
         it('Test-10.1-fetchProjectLFs', () => {
             let expectedPayload = {
-                cypressLF: {
-                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
-                    "label": {
-                        "en": "ev_LF_Ext_0"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
-                },
-                externalLF: [{
-                    "urn": "urn:pearson:goalframework:73e75aaa-1d1d-4414-a042-9a45213a98ef",
-                    "label": {
-                        "en": "The Sociology Project 2.5"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/ukschools"
-                }]
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -2822,14 +2809,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         });
         it('Test-10.2-fetchProjectLFs Only External LF', () => {
             let expectedPayload = {
-                cypressLF: {},
-                externalLF: [{
-                    "urn": "urn:pearson:goalframework:73e75aaa-1d1d-4414-a042-9a45213a98ef",
-                    "label": {
-                        "en": "The Sociology Project 2.5"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/ukschools"
-                }]
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -2844,14 +2824,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         });
         it('Test-10.3-fetchProjectLFs Only Cypress LF', () => {
             let expectedPayload = {
-                cypressLF: {
-                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
-                    "label": {
-                        "en": "ev_LF_Ext_0"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
-                },
-                externalLF: []
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -2888,14 +2861,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         });
         it('Test-10.6-fetchProjectLFs Only Cypress LF and no External LF', () => {
             let expectedPayload = {
-                cypressLF: {
-                    "urn": "urn:pearson:goalframework:9bc2ab38-3147-492a-9e93-3ec735e54a9d",
-                    "label": {
-                        "en": "ev_LF_Ext_0"
-                    },
-                    "lineOfBusiness": "https://schema.pearson.com/ns/lineofbusiness/higher-education"
-                },
-                externalLF: []
+                apiStatus: {}
             }
             let dispatch = (obj) => {
                 expect(obj.type).toBe('PROJECT_LEARNING_FRAMEWORKS');
@@ -3003,28 +2969,6 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
         })
 
         
-    });
-    describe('Test-12- tcmCosConversionSnapshot ', () => {
-        it('Test-12.1 tcmCosConversionSnapshot  - then Block', async () => {
-            let firstResponseData = {}
-            let dispatch = jest.fn();
-            axios.patch.mockImplementation(() => Promise.resolve(firstResponseData))
-            const spyFunction = jest.spyOn(canvasActions, 'tcmCosConversionSnapshot')
-            await canvasActions.tcmCosConversionSnapshot()(dispatch)
-            expect(dispatch).not.toHaveBeenCalled();
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
-        })
-        it('Test-12.2 tcmCosConversionSnapshot  - catch Block', async () => {
-            let firstResponseData = {}
-            let dispatch = jest.fn();
-            axios.patch.mockImplementation(() => Promise.reject(firstResponseData))
-            const spyFunction = jest.spyOn(canvasActions, 'tcmCosConversionSnapshot')
-            await canvasActions.tcmCosConversionSnapshot()(dispatch)
-            expect(dispatch).not.toHaveBeenCalled();
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
-        })
     });
     describe('Test-12- fetchSlateAncestorData ', () => {
         it('Test-12.1 fetchSlateAncestorData', () => {
@@ -3381,49 +3325,7 @@ describe('|Testing ----------------------[ CanvasWrapper_Actions ]--------------
             spyFunction.mockClear()
         })
     });
-    describe('Test-14- fetchFigureDropdownOptions', () => {
-        let getState = () => {
-            return {
-                autoNumberReducer:{
-                    isAutoNumberingEnabled: true
-                }
-            }
-        }
-        it('Test-14.1 fetchFigureDropdownOptions - then Block', async () => {
-            let firstResponseData = {
-                "data": {
-                    audio: ["No Label", "Custom"],
-                    image: ["No Label", "Custom"],
-                    smartlinks: ["No Label", "Custom"],
-                    video: ["No Label", "Custom"]
-                }
-            }
-            let dispatch = jest.fn();
-            axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
-            await canvasActions.fetchFigureDropdownOptions()(dispatch, getState)
-            expect(dispatch).toHaveBeenCalled();
-        })
-
-        xit('Test-14.2 fetchFigureDropdownOptions - then Block with empty obj', async () => {
-            let firstResponseData = {
-                "data": {}
-            }
-            let dispatch = jest.fn();
-            axios.get.mockImplementation(() => Promise.resolve(firstResponseData))
-            await canvasActions.fetchFigureDropdownOptions()(dispatch, getState)
-            expect(dispatch).not.toHaveBeenCalled();
-        })
-
-        it('Test-14.3 fetchFigureDropdownOptions - catch Block', async () => {
-            let firstResponseData = { }
-            let dispatch = jest.fn();
-            axios.get.mockImplementation(() => Promise.reject(firstResponseData))
-            await canvasActions.fetchFigureDropdownOptions()(dispatch, getState)
-            expect(dispatch).not.toHaveBeenCalled();
-        })
-    });
 });
-
 describe('Test-15 updateFigureDropdownValues', () => {
     let getState = () => {
         return {

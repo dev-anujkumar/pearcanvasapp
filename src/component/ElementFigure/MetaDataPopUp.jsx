@@ -37,7 +37,7 @@ class MetaDataPopUp extends React.Component {
     * @param {event} 
     */
 	getAlfrescoMetadata = () => {
-		let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
+		let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
 		axios.get(url, {
 			headers: {
 				"Content-Type": "application/json",
@@ -46,24 +46,48 @@ class MetaDataPopUp extends React.Component {
 			}
 		}).then(response => {
 			const { properties } = response?.data?.entry || {};	
+			if(this?.props?.element?.figuretype === "interactive"){
+				const avsJsonStringData = properties["avs:jsonString"] 
+				let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
+				this.setState({
+					metaData: properties,
+					altText: avsStringData.imageAltText,
+					longDescription: avsStringData.linkLongDesc,
+					disabledButton:true
+				})}
+			else{
 				this.setState({
 					metaData: properties,
 					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
 					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
 					disabledButton:true
 				})
+			}
 			}).catch(error => {
 				console.error("error--", error);
 			})
 	}
 	/*- Retrive the changed data from state and Updata alfresco metadata in alfresco -*/
 	sendAlfrescoMetadata = () => {
-		let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
-		const { altText, longDescription } = this.state;
-		const body = {
-			properties: { 
-				"cplg:altText": altText,
-				"cplg:longDescription": longDescription
+		let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
+		const { metaData,altText, longDescription } = this.state;
+		let body;
+		if(this?.props?.element?.figuretype === "interactive"){
+			const avsJsonStringData = metaData["avs:jsonString"] 
+        	let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
+			avsStringData.linkLongDesc=longDescription
+			avsStringData.imageAltText=altText
+			body = {
+				properties: { 
+					"avs:jsonString": JSON.stringify(avsStringData),
+				}
+			}}
+		else{
+			body={
+				properties:{
+					"cplg:altText": altText,
+					"cplg:longDescription": longDescription
+				}
 			}
 		}
 		axios.put(url, body, {
@@ -83,15 +107,28 @@ class MetaDataPopUp extends React.Component {
 
 	updateElementData = () => {
 		const { index, element, asideData } = this.props;
-		/*-- Form data to send to wip */
-		let figureData = { ...element.figuredata };
+				/*-- Form data to send to wip */
+		if(element?.type === "openerelement"){ 
+			let tempElementData = {...element}
+			tempElementData.backgroundimage.alttext = this.state.altText;
+			tempElementData.backgroundimage.longdescription = this.state.longDescription;
+			this.props.updateOpenerElement(tempElementData)
+			this.props.handleFocus("updateFromC2")
+			const altLongDescData = {
+                altText: tempElementData.backgroundimage.alttext,
+                longDesc: tempElementData.backgroundimage.longdescription
+            }
+            this.props.saveSelectedAltTextLongDescData(altLongDescData)
+		}
+		else{	
+		let	figureData = { ...element?.figuredata };
 		figureData.alttext = this.state.altText;
 		figureData.longdescription = this.state.longDescription;
 		/*-- Updata the image metadata in wip */
 		this.props.updateFigureData(figureData, index, element.id, asideData, () => {
 			this.props.handleFocus("updateFromC2")
 			this.props.handleBlur()
-		})
+		})}
 	}
 
     render() {

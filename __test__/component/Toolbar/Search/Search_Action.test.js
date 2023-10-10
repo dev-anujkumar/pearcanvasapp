@@ -438,3 +438,32 @@ describe('-----------------Testing Search Actions-----------------', () => {
         });
     });
 });
+
+it('testing 3------- getContainerData ', () => {
+    let getState = () => {
+        return {
+            appStore: {
+                pageNumberData: {},
+                slateLevelData: DefaultAssessmentSlateData,
+                isLearnosityProjectInfo: [],
+            },
+        };
+    }
+    const searchTerm = 'urn:pearson:manifest:c565f350-b712-41ef-823a-a66baffa0b89'
+    const responseData = {
+        data: {
+            "urn:pearson:manifest:c565f350-b712-41ef-823a-a66baffa0b89": {
+                contents: {
+                    bodymatter: [{
+                        "id": "urn:pearson:manifest:c565f350-b712-41ef-823a-a66baffa0b89",
+                    }]
+                }
+            }
+        }
+    }
+    // config.slateManifestURN = "urn:pearson:manifest:c565f350-b712-41ef-823a-a66baffa0b89";
+    axios.get = jest.fn(() => Promise.resolve(responseData));
+    actions.getContainerData(searchTerm)(jest.fn(), getState)
+    // expect(spygetContainerData).toHaveBeenCalled();
+    // spygetContainerData.mockClear();
+});

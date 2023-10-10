@@ -2,7 +2,7 @@ import axios from 'axios'
 import config from '../../config/config';
 import { SET_SLATE_LOCK_STATUS, SET_LOCK_FLAG } from '../../constants/Action_Constants'
 import store from './../../appstore/store';
-import { getCookieByName, hasReviewerRole } from '../../constants/utility';
+import { getCookieByName, hasReviewerRole, sendDataToIframe } from '../../constants/utility';
 import { triggerSlateLevelSave } from '../../js/slateLevelSave.js';
 import { RELEASE_SLATE_LOCK_ACTION } from '../SlateWrapper/SlateWrapperConstants';
 
@@ -28,24 +28,33 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
     }
     let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
     
-    return axios.get(url, {
-		headers: {
-			"Content-Type": "application/json",
-			'myCloudProxySession': config.myCloudProxySession
-		}
-    }).then((res) => {
-        config.isSlateLockChecked = res.data.isLocked;
-        dispatch({
-            type: SET_SLATE_LOCK_STATUS,
-            payload: {
-                ...res.data,
-                userFirstName: "",
-                userLastName: ""
+    // if projectUrn and slateId has values then only call should be triggered
+    if (projectUrn && slateId) {
+        return axios.get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                'myCloudProxySession': config.myCloudProxySession
             }
         })
-    }).catch((err) => {
-        console.log("%c Slate lock status API failed", "background: black; color: white", err)
-    })
+        .then((res) => {
+            config.isSlateLockChecked = res.data.isLocked;
+            sendDataToIframe({
+                'type': 'updateLockedSlate',
+                'message': {lockInfo: {...res.data, slateId: slateId}}
+            })
+            dispatch({
+                type: SET_SLATE_LOCK_STATUS,
+                payload: {
+                    ...res.data,
+                    userFirstName: "",
+                    userLastName: ""
+                }
+            })
+        })
+        .catch((err) => {
+            console.log("%c Slate lock status API failed","background: black; color: white", err)
+        })
+    }
 }
 
 /**
@@ -114,26 +123,33 @@ export const setSlateLock = (projectUrn, slateId, lockDuration) => (dispatch) =>
   * @param {*} projectUrn Project URN
   * @param {*} slateId Slate manifest URN
   */
-export const releaseSlateLock = (projectUrn, slateId) => (dispatch) => {
+export const releaseSlateLock = (projectUrn, slateId, releaseLockButton, userRole) => (dispatch) => {
     let url = `${config.LOCK_API_BASE_URL}/locks/typ/releaselock`
     let data = {
-       projectUrn,
-       slateId,
-       firstName: getCookieByName('FIRST_NAME'),
-       userName: getCookieByName('USER_NAME')
+        projectUrn,
+        slateId,
+        firstName: getCookieByName('FIRST_NAME'),
+        userName: getCookieByName('USER_NAME')
     }
+    if (userRole) data.roleId = userRole
     return axios.post(url, data, {
         headers: {
-			"Content-Type": "application/json",
-			'myCloudProxySession': config.myCloudProxySession
-		}
+            "Content-Type": "application/json",
+            'myCloudProxySession': config.myCloudProxySession
+        }
     }).then((res) => {
+        if (releaseLockButton) { // Condition to remove the lockinfo data on Unlock button clicked by Admin
+            let lockInfo = { "isLocked": false, "userId": "", "timestamp": "", "firstName": "", "lastName": "" }
+            dispatch(saveLockDetails(lockInfo))
+            const lockDuration = 5400
+            dispatch(setSlateLock(projectUrn, slateId, lockDuration))
+        }
         dispatch({
-            type : SET_LOCK_FLAG,
-            payload : false
+            type: SET_LOCK_FLAG,
+            payload: false
         })
     }).catch((err) => {
-        console.log("API error from release slate>>>>",err)
+        console.log("API error from release slate>>>>", err)
     })
 }
 
@@ -182,5 +198,21 @@ export const setLockPeriodFlag = (inLockPeriod) => (dispatch) => {
     dispatch({
         type : SET_LOCK_FLAG,
         payload : inLockPeriod
+    })
+}
+
+/**
+ * Action Creator
+ * Sets User details on slate from count API response 
+ * @param {*} lockInfo tells the user details
+ */
+export const saveLockDetails = (lockInfo) => (dispatch) =>{
+    dispatch({
+        type: SET_SLATE_LOCK_STATUS,
+        payload: {
+            ...lockInfo,
+            userFirstName: "",
+            userLastName: ""
+        }
     })
 }

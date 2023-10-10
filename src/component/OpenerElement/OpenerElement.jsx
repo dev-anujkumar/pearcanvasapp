@@ -39,7 +39,7 @@ class OpenerElement extends Component {
         this.setWrapperRef = this.setWrapperRef.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
     }
-
+    
     componentDidUpdate(prevProps) {
         const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
@@ -89,7 +89,7 @@ class OpenerElement extends Component {
     
     handleSiteOptionsDropdown = (alfrescoPath, id, currentAsset) =>{
         let that = this
-        let url = `${config.ALFRESCO_EDIT_METADATA}alfresco-proxy/api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
+        let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
         let SSOToken = config.ssoToken;
         return axios.get(url,
             {
@@ -448,6 +448,7 @@ class OpenerElement extends Component {
         return COImg
     }
     componentDidMount() {
+        this.props.saveSelectedAltTextLongDescData({})
         document.addEventListener('mousedown', this.handleClickOutside);
     }
 
