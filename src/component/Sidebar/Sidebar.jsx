@@ -706,7 +706,6 @@ class Sidebar extends Component {
 
     /**@description render playbackMode for 3PI smartlink for added alfresco assets*/
     playbackMode = () => {
-        console.log('props',this.props)
         let playbackMode = '';
         if (this.state.activeElementType) {
             playbackMode = intendedPlaybackModeDropdown.map(item => {
@@ -719,7 +718,7 @@ class Sidebar extends Component {
                 active = 'active';
             }
             let disableClass = hasReviewerRole()  ? "pointer-events-none" : '';
-            disableClass = disableClass + (removeBlankSpaceAndConvertToLowercase(this.props.activeElement.vendor) === "vitalsource" ? "disablePlaybackMode" : "")
+            disableClass = disableClass + (removeBlankSpaceAndConvertToLowercase(this.props?.activeElement?.vendor) === "vitalsource" ? "disablePlaybackMode" : "")
             playbackMode = <div
                 className={`element-dropdown`}>
                 <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
