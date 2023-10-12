@@ -3,8 +3,8 @@ import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
 import { matchHTMLwithRegex, removeBlankTags, getDesignType } from '../../constants/utility.js'
 import store from '../../appstore/store'
-import { POD_DEFAULT_VALUE, intendedPlaybackModeDropdown } from '../../constants/Element_Constants'
-import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { findElementType, getDefaultPlaybackMode } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
@@ -321,10 +321,10 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
 
     // updating the intendedPlayBackMode for 3PI smartlink
     //commenting this code for future reference
-    // const {assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue} = containerContext.props.activeElement
-    // if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink) {
-    //     data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : intendedPlaybackModeDropdown[0].value
-    // }
+    const { assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue } = containerContext.props.activeElement
+    if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink) {
+        data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : getDefaultPlaybackMode(previousElementData?.figuredata)
+    }
 
     if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
         previousElementData.figuredata.interactivetype === "web-link") {
