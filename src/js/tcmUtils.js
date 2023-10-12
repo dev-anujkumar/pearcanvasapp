@@ -65,16 +65,6 @@ const TCMUtils = {
     return moment(intTime).format(formatter);
   },
 
-  /**
-   * This method is used to replace &nbsp; with space character
-   * @param {String} contentStr
-   */
-  replaceNBSPWithSpace(contentStr) {
-    let replacingStr = contentStr;
-    if (!replacingStr) return replacingStr;
-    replacingStr = replacingStr.replace(/&nbsp;/g, ' ');
-    return replacingStr;
-  },
 
   /**
    * This method is used to check the element type

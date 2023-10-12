@@ -778,6 +778,18 @@
   max-height: 50vh;
   position: relative;
 }
+.dialog-window.tcm-canvas-popup .non-breaking-space {
+  margin: 0px 1px;
+  position: relative;
+  bottom: -0.5px;
+  color: transparent;
+  text-decoration-color: #FF0000;
+  text-decoration-line: underline;
+  pointer-events: none;
+}
+.non-breaking-space ins {
+  color: transparent !important;
+}
 
 .dialog-window p {
   margin: 0 0 0 0 !important;

@@ -21,7 +21,7 @@ const AcceptedTransactionsDataMapper = {
     } = data;
 
     // replacing the &nbsp; with space character
-    acceptedElementSnapshot = TCMUtils.replaceNBSPWithSpace(acceptedElementSnapshot);
+    acceptedElementSnapshot = acceptedElementSnapshot
     elementChangeType = elementChangeType.toLowerCase();
     returnValue.elementChangeType = elementChangeType;
     returnValue.theme = elementChangeType === 'delete' ? 'deleted' : 'changeAccepted';
