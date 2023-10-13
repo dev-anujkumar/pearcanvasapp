@@ -387,18 +387,10 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
 const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) || document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
-    const authStore = store.getState();
-    let startNumber, isNumbered, isSyntaxhighlighted;
-    if (authStore?.projectInfo?.projectSharingRole === "OWNER" && authStore?.projectInfo?.projectSubscriptionDetails?.isSubscribed) {
-        startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber") || previousElementData?.figuredata?.startNumber;
-        isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered") || previousElementData?.figuredata?.numbered;
-        isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || previousElementData?.figuredata?.syntaxhighlighting;
-    }
-    else {
-        startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
-        isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered") || true;
-        isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || true;
-    }
+    let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber") || previousElementData?.figuredata?.startNumber;
+    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered") || previousElementData?.figuredata?.numbered;
+    let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || previousElementData?.figuredata?.syntaxhighlighting;
+
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),
         subtitleDOM = document.getElementById(`cypress-${index}-2`),
