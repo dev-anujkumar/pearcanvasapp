@@ -139,9 +139,9 @@ describe('Test for Sidebar component', () => {
        
         const spySetSecondary = jest.spyOn(sidebarInstance, 'setSecondary');
         sidebarInstance.setSecondary(secondaryValue, secondaryLabel);
-        expect(sidebar.find('.element-dropdown').length).toBe(3)
+        expect(sidebar.find('.element-dropdown').length).toBe(4)
         expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(1)
-        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(1)
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(2)
         expect(spySetSecondary).toHaveBeenCalled();
     });
 
@@ -1270,6 +1270,13 @@ describe('Test for Sidebar component', () => {
             sidebarInstance.handleIntendedPlaybackDropdown(event);
             expect(sidebarInstance.state.attrInput).toEqual('');
         })
+         
+         it("renderIntendedPlaybackDropdownLabel method ", () => {
+             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props} /></Provider>);
+             const sidebarInstance = sidebar.find('Sidebar').instance();
+             sidebarInstance.renderIntendedPlaybackDropdownLabel("default");
+             expect(sidebarInstance.state.attrInput).toEqual('');
+         })
         it("playbackMode method ", () => {
             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();

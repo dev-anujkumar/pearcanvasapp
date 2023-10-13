@@ -39,7 +39,7 @@ import {
 } from '../../constants/Action_Constants';
 import { fetchComments, fetchCommentByElement } from '../CommentsPanel/CommentsPanel_Action';
 import elementTypes from './../Sidebar/elementTypes';
-import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel } from '../../constants/utility.js';
+import { sendDataToIframe, requestConfigURI, createTitleSubtitleModel, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
 import { triggerCustomEventsGTM } from '../../js/ga';
 import { HideLoader, SET_CONTROL_VOCAB_DETAILS, UPDATE_PROJECT_METADATA, WORKFLOW_ROLES, SET_LEARNOSITY_CONTENT } from '../../constants/IFrameMessageTypes.js';
 import elementDataBank from './elementDataBank'
@@ -63,6 +63,7 @@ import { updateLastAlignedLO } from '../ElementMetaDataAnchor/ElementMetaDataAnc
 import { getJoinedPdfStatus } from '../PdfSlate/CypressPlusAction';
 import TcmConstants from '../TcmSnapshots/TcmConstants';
 import { closeTcmPopup } from './TCM_Canvas_Popup_Integrations';
+import { DEFAULT_PLAYBACK_MODE } from '../SlateWrapper/SlateWrapperConstants';
 
 export const findElementType = (element, index) => {
     let elementType = {};
@@ -186,7 +187,8 @@ export const findElementType = (element, index) => {
                         let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         const { interactiveSubtypeConstants: { THIRD_PARTY } } = TcmConstants;
                         const assetIdFor3PISmartlink = element?.figuredata?.interactivetype === THIRD_PARTY && element?.figuredata?.interactiveid ? element?.figuredata?.interactiveid : '';
-                        const selectedIntendedPlaybackModeValue = element?.figuredata?.intendedPlaybackMode ? element?.figuredata?.intendedPlaybackMode : intendedPlaybackModeDropdown[0].value;
+                        const selectedIntendedPlaybackModeValue = element?.figuredata?.intendedPlaybackMode ? element?.figuredata?.intendedPlaybackMode : getDefaultPlaybackMode(element?.figuredata);
+                        const vendor = element?.figuredata?.vendor
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
                             primaryOption: elementDataBank[element.type][element.figuretype][interactiveData]["primaryOption"],
@@ -195,7 +197,8 @@ export const findElementType = (element, index) => {
                             podwidth,
                             ...elementDataBank[element.type][element.figuretype][interactiveData],
                             assetIdFor3PISmartlink,
-                            selectedIntendedPlaybackModeValue
+                            selectedIntendedPlaybackModeValue,
+                            vendor
                         }
                         break;
                     case "assessment":
@@ -1848,4 +1851,17 @@ export const setTocSlateLabel = (label) => (dispatch) => {
         type: SET_TOC_SLATE_LABEL,
         payload: label
     })
+}
+/**
+ * This function returns the default intendedplayback mode for selected 3PI smartlink
+ * asset based on the vendor
+ * @param {Object} elementData
+ * @returns
+ */
+export const getDefaultPlaybackMode = (elementData) => {
+    if (elementData) {
+        const vendor = elementData?.vendor ?? "none";
+        let playbackMode = DEFAULT_PLAYBACK_MODE[removeBlankSpaceAndConvertToLowercase(vendor)];
+        return playbackMode
+    }
 }
