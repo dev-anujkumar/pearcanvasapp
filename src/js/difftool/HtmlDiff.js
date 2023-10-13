@@ -26,7 +26,7 @@ const specialCaseClosingTags = new Map([
     ['</abbr>', 0],
 ]);
 
-const specialCaseOpeningTagRegex = /<((strong)|(abbr)|(code)|(b)|(i)|(dfn)|(em)|(big)|(small)|(u)|(sub)|(sup)|(strike)|(s))[\>\s]+/ig;
+const specialCaseOpeningTagRegex = /<((strong)|(abbr)|(code)|(b)|(i)|(dfn)|(em)|(big)|(small)|(u)|(sub)|(sup)|(strike)|(s)|(span.*class="non-breaking-space"))[\>\s]+/ig;
 
 class HtmlDiff {
     constructor(oldText, newText) {
