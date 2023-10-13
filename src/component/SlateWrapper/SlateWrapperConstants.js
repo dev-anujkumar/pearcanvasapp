@@ -211,5 +211,8 @@ export const DEFAULT_PLAYBACK_MODE = {
     "usolver": "inline",
     "acloserlook": "modal",
     "vitalsource": "default",
-    "none":"modal"
+    "none": "modal",
+    "unitytiny":"default"
 }
+export const UNITY_TINY = "unitytiny"
+export const DISABLE_PLAYBACK_MODE_VENDORS = ['vitalsource','unitytiny'] 

@@ -11,7 +11,7 @@ import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole, getSlateType, getCookieByName, isSlateLocked, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE, DISABLE_PLAYBACK_MODE_VENDORS } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from '../../constants/Element_Constants.js';
@@ -707,6 +707,7 @@ class Sidebar extends Component {
     /**@description render playbackMode for 3PI smartlink for added alfresco assets*/
     playbackMode = () => {
         let playbackMode = '';
+        const disablePlaybackMode = DISABLE_PLAYBACK_MODE_VENDORS.includes(removeBlankSpaceAndConvertToLowercase(this.props?.activeElement?.vendor))
         if (this.state.activeElementType) {
             playbackMode = intendedPlaybackModeDropdown.map(item => {
                 return <li key={item?.value} data-value={item?.value} onClick={this.handleIntendedPlaybackDropdown}>
@@ -718,7 +719,7 @@ class Sidebar extends Component {
                 active = 'active';
             }
             let disableClass = hasReviewerRole()  ? "pointer-events-none" : '';
-            disableClass = disableClass + (removeBlankSpaceAndConvertToLowercase(this.props?.activeElement?.vendor) === "vitalsource" ? "disablePlaybackMode" : "")
+            disableClass = disableClass + (disablePlaybackMode ? "disablePlaybackMode" : "")
             playbackMode = <div
                 className={`element-dropdown`}>
                 <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>

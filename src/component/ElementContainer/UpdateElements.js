@@ -1,7 +1,7 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
-import { matchHTMLwithRegex, removeBlankTags, getDesignType } from '../../constants/utility.js'
+import { matchHTMLwithRegex, removeBlankTags, getDesignType, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
 import store from '../../appstore/store'
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
 import { findElementType, getDefaultPlaybackMode } from "../CanvasWrapper/CanvasWrapper_Actions";
@@ -9,6 +9,7 @@ import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForFigures } from '../FigureHeader/AutoNumber_helperFunctions';
+import { UNITY_TINY } from '../SlateWrapper/SlateWrapperConstants';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -322,7 +323,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     // updating the intendedPlayBackMode for 3PI smartlink
     //commenting this code for future reference
     const { assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue } = containerContext.props.activeElement
-    if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink) {
+    if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink && removeBlankSpaceAndConvertToLowercase(previousElementData?.figuredata?.vendor) !== UNITY_TINY) {
         data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : getDefaultPlaybackMode(previousElementData?.figuredata)
     }
 
