@@ -58,7 +58,8 @@ jest.mock('./../../../src/constants/utility.js', () => ({
     isApproved: jest.fn().mockImplementationOnce = () => {
         return true
     },
-    getShowhideChildUrns: jest.fn()
+    getShowhideChildUrns: jest.fn(),
+    removeBlankSpaceAndConvertToLowercase: jest.fn(() => "vitalsource") 
 }))
 jest.mock('./../../../src/config/config.js', () => ({
     colors : ["#000000", "#003057", "#505759", "#005A70", "#006128"],
