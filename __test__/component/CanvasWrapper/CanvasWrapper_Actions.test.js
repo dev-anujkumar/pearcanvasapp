@@ -76,7 +76,8 @@ jest.mock('../../../src/constants/utility.js', () => {
             return "<p><label>LABEL&nbsp;</label>TITLE</p>"
         },
         requestConfigURI: jest.fn(),
-        createLabelNumberTitleModel: jest.fn()
+        createLabelNumberTitleModel: jest.fn(),
+        removeBlankSpaceAndConvertToLowercase: jest.fn(() => "pearsoncanadainline")
     }
 });
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshots_Utility', () => {
@@ -3533,6 +3534,13 @@ it('Testing getLOBDiscussionItems - catch block', async () => {
     }
     const spyFunction = jest.spyOn(canvasActions,'getLOBDiscussionItems')
     canvasActions.getLOBDiscussionItems(true)(dispatch);
+    expect(spyFunction).toHaveBeenCalled();
+    spyFunction.mockClear()
+})
+it('Testing getDefaultPlaybackMode - else', () => {
+
+    const spyFunction = jest.spyOn(canvasActions, 'getDefaultPlaybackMode')
+    canvasActions.getDefaultPlaybackMode('');
     expect(spyFunction).toHaveBeenCalled();
     spyFunction.mockClear()
 })

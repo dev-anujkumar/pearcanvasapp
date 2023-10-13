@@ -369,3 +369,8 @@ pointer-events: none;
     order: 1;
     flex-grow: 0;
 }
+
+.disablePlaybackMode {
+    opacity: 50%;
+    pointer-events: none;
+}

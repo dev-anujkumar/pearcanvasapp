@@ -1,14 +1,15 @@
 import elementTypeConstant from './ElementConstants'
 import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
-import { matchHTMLwithRegex, removeBlankTags, getDesignType } from '../../constants/utility.js'
+import { matchHTMLwithRegex, removeBlankTags, getDesignType, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
 import store from '../../appstore/store'
-import { POD_DEFAULT_VALUE, intendedPlaybackModeDropdown } from '../../constants/Element_Constants'
-import { findElementType } from "../CanvasWrapper/CanvasWrapper_Actions";
+import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { findElementType, getDefaultPlaybackMode } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumberConstants';
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForFigures } from '../FigureHeader/AutoNumber_helperFunctions';
+import { UNITY_TINY } from '../SlateWrapper/SlateWrapperConstants';
 const indivisualData = {
     schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
     textsemantics: [ ],
@@ -321,10 +322,10 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
 
     // updating the intendedPlayBackMode for 3PI smartlink
     //commenting this code for future reference
-    // const {assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue} = containerContext.props.activeElement
-    // if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink) {
-    //     data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : intendedPlaybackModeDropdown[0].value
-    // }
+    const { assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue } = containerContext.props.activeElement
+    if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink && removeBlankSpaceAndConvertToLowercase(previousElementData?.figuredata?.vendor) !== UNITY_TINY) {
+        data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : getDefaultPlaybackMode(previousElementData?.figuredata)
+    }
 
     if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
         previousElementData.figuredata.interactivetype === "web-link") {
@@ -387,9 +388,9 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
 const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
 
     let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) || document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
-    let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber")
-    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered") || true;
-    let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || true ;
+    let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber") || previousElementData?.figuredata?.startNumber;
+    let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered") || previousElementData?.figuredata?.numbered;
+    let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || previousElementData?.figuredata?.syntaxhighlighting;
 
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),

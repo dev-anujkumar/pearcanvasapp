@@ -814,12 +814,12 @@
   }
 }
 ins{
-  background: rgb(153, 230, 103);
-  color: rgb(121, 121, 121);
+  background: #C3F273;
+  color: #081E27;
 }
 del{
-  background: rgb(253, 118, 127);
-  color: rgb(121, 121, 121);
+  background: #FFDAD9;
+  color: #081E27;
   text-decoration: line-through;
 }
 .dialog-window.tcm-canvas-popup::-webkit-scrollbar {
@@ -849,7 +849,7 @@ a.paragraphNumeroUnoFootnote ins{
 
 a.paragraphNumeroUnoFootnote del{
   text-decoration-line: line !important;
-  background: rgb(253, 118, 127) !important;
+  background: #FFDAD9 !important;
 } 
 
 .dialog-window.tcm-canvas-popup abbr.Pearson-Component.AssetPopoverTerm ins{
@@ -878,7 +878,7 @@ span.answerLineContent{
 }
 ins.mod{
   background: rgb(251, 188, 72) !important;
-  color: rgb(121, 121, 121);
+  color: #081E27;
 }
 
 /* added css for callout, Glossary in tCM after accepted changes */
