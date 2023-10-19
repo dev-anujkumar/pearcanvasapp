@@ -1303,5 +1303,28 @@ describe('Test for Sidebar component', () => {
             sidebarInstance.playbackMode();
             expect(sidebarInstance.state.attrInput).toEqual('');
         })
+         it('componentWillUnmount Event', () => {
+             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props} /></Provider>);
+             const sidebarInstance = sidebar.find('Sidebar').instance();
+             sidebarInstance.componentWillUnmount();
+         })
+         it('handleClickOutside Event', () => {
+             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props} /></Provider>);
+             const sidebarInstance = sidebar.find('Sidebar').instance();
+             const event = {
+                 target:[]
+             }
+             sidebarInstance.playbackModeRef = "playbackmode"
+             sidebarInstance.handleClickOutside(event);
+         })
+         it('handleClickOutside Event else case', () => {
+             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props} /></Provider>);
+             const sidebarInstance = sidebar.find('Sidebar').instance();
+             const event = {
+                 target: ["playbackmoderef"]
+             }
+             sidebarInstance.playbackModeRef = null
+             sidebarInstance.handleClickOutside(event);
+         })
     })
 });
