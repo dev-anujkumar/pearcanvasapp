@@ -1064,14 +1064,23 @@ export const removedDOMAttributes = (innerHTML, className) => {
     return tempDiv?.innerHTML;
 }
 
-export const showNotificationOnCanvas = (message) => {
+export const showNotificationOnCanvas = (message, type) => {
     let linkNotification = document.getElementById('link-notification');
     if (linkNotification) {
+        if(type && type==='metadataUpdated')
+        {
+            linkNotification.style.background = '#000000'
+            linkNotification.style.fontSize = '14px'
+        }
         linkNotification.innerText = message;
         linkNotification.style.display = "block";
         setTimeout(() => {
             linkNotification.style.display = "none";
             linkNotification.innerText = "";
+            if(type && type==='metadataUpdated'){
+                linkNotification.style.background = '#444'
+                linkNotification.style.fontSize = '12px'
+            }
         }, 3000);
     }
 }

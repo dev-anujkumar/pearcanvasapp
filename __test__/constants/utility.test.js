@@ -491,6 +491,27 @@ describe('Testing Function - showNotificationOnCanvas', () => {
       let result = showNotificationOnCanvas();
       expect(result).toBe(undefined);
     });
+    it("Case 3", () => {
+        jest.useFakeTimers()
+        document.getElementById = () => {
+          return {
+            innerHTML: '<div id=""></div>',
+            innerText: "",
+            style: {
+              display: "",
+            },
+          };
+        };
+        let result = showNotificationOnCanvas('','metadataUpdated');
+        expect(result).toBe(undefined);
+        jest.advanceTimersByTime(3000)
+      });
+      it("Case 4", () => {
+        jest.useFakeTimers()
+        let result = showNotificationOnCanvas();
+        expect(result).toBe(undefined);
+        jest.advanceTimersByTime(3000)
+      });
 })
 
 describe('Testing Function - handleTextToRetainFormatting', () => {

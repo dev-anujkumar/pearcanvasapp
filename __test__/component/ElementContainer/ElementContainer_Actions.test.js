@@ -79,7 +79,6 @@ jest.mock('../../../src/component/ElementContainer/ElementContainerUpdate_helper
 jest.mock('../../../src/js/TinyMceUtility.js', () => ({
     checkBlockListElement: jest.fn(() => { return { parentData: {} } })
 }));
-
 let cb = new stub();
 jest.setTimeout(10000);
 
@@ -2783,5 +2782,56 @@ describe("Decorative image conversion Testing", () => {
         store.dispatch(actions.fetchOldDataAfterConversion({}, 'testing'));
         expect(store.getActions().type).toEqual(expectedActions.type);
         spyUpdateMultipleColumnData.mockClear();
+    })
+    it('testing------- getalfrescometadata ------method', async () => {
+        let mock = new MockAdapter(axios);
+        const data = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            "type": "element-authoredtext",
+        }
+        mock.onGet(`${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/` + 'imageid').reply(200, data);
+        const spyupdateElement = jest.spyOn(actions, 'getAlfrescoMetadataForAsset');
+        actions.getAlfrescoMetadataForAsset('imageid','image')
+        expect(spyupdateElement).toHaveBeenCalled()
+    })
+    it('testing------- getalfrescometadata ------method interactive', async () => {
+        let mock = new MockAdapter(axios);
+        const data = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            "type": "element-authoredtext",
+            entry: {
+                properties: {
+                    "avs:jsonString": "{\n\"smartLinkThirdPartyVendorVal\":\"Metrodigi\",\n\"smartLinkOptimizedMobileVal\":\"Yes\",\n\"height\":\"455\",\n\"width\":\"515\",\n\"linkLongDesc\":\"\",\n\"imageReferenceURL\":\"\",\n\"imageAltText\":\"\",\n\"captionText\":\"\",\n\"copyrightCreditText\":\"\"\n}"
+                }
+            }
+        }
+        mock.onGet(`${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/` + 'imageid').reply(200, data);
+        const spyupdateElement = jest.spyOn(actions, 'getAlfrescoMetadataForAsset');
+        actions.getAlfrescoMetadataForAsset('imageid','interactive')
+        expect(spyupdateElement).toHaveBeenCalled()
+    })
+    it('testing------- getalfrescometadata ------method interactive else', async () => {
+        let mock = new MockAdapter(axios);
+        const data = {
+            "id": "urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a",
+            "type": "element-authoredtext",
+            entry: {
+                properties: {
+                    "avs:jsonString": 34
+                }
+            }
+        }
+        mock.onGet(`${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/` + 'imageid').reply(200, data);
+        const spyupdateElement = jest.spyOn(actions, 'getAlfrescoMetadataForAsset');
+        actions.getAlfrescoMetadataForAsset('imageid','interactive')
+        expect(spyupdateElement).toHaveBeenCalled()
+    })
+    xit('testing------- getalfrescometadata ------method else', async () => {
+        let mock = new MockAdapter(axios);
+        const data = undefined
+        mock.onGet(`${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/` + 'imageid').reply(500, data);
+        const spyupdateElement = jest.spyOn(actions, 'getAlfrescoMetadataForAsset');
+        actions.getAlfrescoMetadataForAsset('imageid','image')
+        expect(spyupdateElement).toBeDefined()
     })
 })
