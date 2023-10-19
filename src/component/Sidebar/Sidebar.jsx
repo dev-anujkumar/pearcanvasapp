@@ -62,6 +62,7 @@ class Sidebar extends Component {
             isPlayBackDropdownOpen: false,
             selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue
         };
+        this.playbackModeRef = React.createRef();
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -106,6 +107,21 @@ class Sidebar extends Component {
         return null;
     }
 
+    handleClickOutside = (event) => {
+        if (this.playbackModeRef && !this.playbackModeRef?.current?.contains(event.target)) {
+            this.setState({
+                isPlayBackDropdownOpen: false
+            })
+        }
+    }
+    /**handling intendedPlaymode on outside click*/
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+    
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
     setToggleForAside = (activeElement, asideTitleData) => {
         if (activeElement && asideTitleData) {
             const asideObj = asideTitleData.filter(obj => {
@@ -728,7 +744,7 @@ class Sidebar extends Component {
                     <span> {dropdownArrow} </span>
                 </div>
                 {this.modalBanner()}
-                <ul className={`element-dropdown-content secondary-options playback-dropdown ${active}`}>
+                <ul ref={this.playbackModeRef} className={`element-dropdown-content secondary-options playback-dropdown ${active}`}>
                     {playbackMode}
                 </ul>
             </div>;
