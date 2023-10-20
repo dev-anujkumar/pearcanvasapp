@@ -996,7 +996,8 @@ function CommunicationChannel(WrappedComponent) {
                     let tocDelete = this.props.permissions.includes('toc_delete_entry') ? 'toc_delete_entry' : ""
                     let tocRearrage = this.props.permissions.includes('toc_rearrange_entry') ? 'toc_rearrange_entry' : ""
                     let tocAdd = this.props.permissions.includes('toc_add_pages') ? 'toc_add_pages' : ""
-                    permissionObj.permissions = [tocEditTitle, tocDelete, tocRearrage, tocAdd]
+                    let unlinkContent = this.props.permissions.includes('unlink_content_from_TOC') ? 'unlink_content_from_TOC' : ""
+                    permissionObj.permissions = [tocEditTitle, tocDelete, tocRearrage, tocAdd, unlinkContent]
                 }
                 permissionObj.roleId = this.props.roleId;
             }

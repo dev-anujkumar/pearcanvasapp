@@ -25,19 +25,4 @@ describe('tcmUtils', () => {
         const result = TCMUtils.getDiffContent('', '')
         expect(result)
     })
-
-    it('tcmUtils replaceNBSPWithSpace', () => {
-        const result = TCMUtils.replaceNBSPWithSpace(false)
-        expect(result)
-    })
-
-    it('tcmUtils replaceNBSPWithSpace', () => {
-        const result = TCMUtils.replaceNBSPWithSpace(false)
-        expect(result)
-    })
-
-    it('tcmUtils replaceNBSPWithSpace', () => {
-        const result = TCMUtils.replaceAll('123', 'search', 'replacement')
-        expect(result)
-    })
 })

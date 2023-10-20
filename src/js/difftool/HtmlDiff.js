@@ -24,9 +24,10 @@ const specialCaseClosingTags = new Map([
     ['</dfn>', 0],
     ['</code>', 0],
     ['</abbr>', 0],
+    ['</span>', 0],
 ]);
 
-const specialCaseOpeningTagRegex = /<((strong)|(abbr)|(code)|(b)|(i)|(dfn)|(em)|(big)|(small)|(u)|(sub)|(sup)|(strike)|(s))[\>\s]+/ig;
+const specialCaseOpeningTagRegex = /<((strong)|(abbr)|(code)|(b)|(i)|(dfn)|(em)|(big)|(small)|(u)|(sub)|(sup)|(strike)|(s)|(span))[\>\s]+/ig;
 
 class HtmlDiff {
     constructor(oldText, newText) {
@@ -124,6 +125,7 @@ class HtmlDiff {
     }
 
     processEqualOperation(opp) {
+        this.handleCalloutData()
         let result = this.newWords.filter((s, pos) => pos >= opp.startInNew && pos < opp.endInNew);
         this.content.push(result.join(''));
     }
@@ -328,6 +330,46 @@ class HtmlDiff {
         }
 
         return null;
+    }
+
+    /**
+     * Handle Callouts Update
+     */
+    handleCalloutData() {
+        const calloutRegex = /<span (.*?)[data-calloutid=(.*?)](.*?)>/g;
+        if (this.newWords && this.newWords.length) {
+            this.newWords.map((word, index) => {
+                const isCallout = word.match(calloutRegex)
+                if (isCallout && isCallout[0]) {
+                    const isCalloutUpdated = this.findCalloutSpan(isCallout[0]);
+                    if (isCalloutUpdated) {
+                        this.newWords[index + 1] = `<ins class="mod">${this.newWords[index + 1]}</ins>`
+                    }
+                }
+            })
+        }
+    }
+
+    findCalloutSpan(calloutData) {
+        let hiddenDiv = document.createElement('div');
+        hiddenDiv.innerHTML = calloutData;
+        hiddenDiv.style.visibility = 'hidden';
+        document.body.appendChild(hiddenDiv);
+        let isCalloutUpdate = false;
+        if (hiddenDiv && hiddenDiv.children && hiddenDiv.children.length && hiddenDiv.children[0].dataset && hiddenDiv.children[0].dataset.calloutid) {
+            const calloutId = hiddenDiv.children[0].dataset.calloutid;
+            if (calloutId) {
+                const calloutRegex = new RegExp("<span (.*?)data-calloutid=\"" + calloutId + "\"(.*?)>", "g");
+                this.oldWords && this.oldWords.length && this.oldWords.map(oldWord => {
+                    const issameCallout = oldWord.match(calloutRegex);
+                    if (issameCallout && issameCallout[0] && oldWord !== calloutData) {
+                        isCalloutUpdate = true
+                    }
+                })
+            }
+        }
+        document.body.removeChild(hiddenDiv);
+        return isCalloutUpdate;
     }
 }
 

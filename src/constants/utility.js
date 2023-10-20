@@ -1108,3 +1108,11 @@ export const getDEClassName = (classList) => {
         return "characterPS";
     }
 }
+/**
+ * This function remove blankspaces and converters the provided string in lowercase
+ * @param {String} string 
+ * @returns 
+ */
+export const removeBlankSpaceAndConvertToLowercase = (string) => {
+    if (string) return string.split(' ').join('').toLowerCase()
+}

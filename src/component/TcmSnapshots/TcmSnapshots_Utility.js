@@ -896,7 +896,7 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
     snapshotData = handleBlankLineDom(snapshotData,'BlankLine');
     snapshotData = snapshotData && snapshotData.replace(/data-mce-href="#"/g,'');
     snapshotData = snapshotData && removeCalloutTitle(snapshotData);
-    snapshotData = snapshotData?.includes("non-breaking-space") ? removedDOMAttributes(snapshotData, 'non-breaking-space') : snapshotData
+    // snapshotData = snapshotData?.includes("non-breaking-space") ? removedDOMAttributes(snapshotData, 'non-breaking-space') : snapshotData
     return snapshotData
 }
 /**

@@ -778,6 +778,18 @@
   max-height: 50vh;
   position: relative;
 }
+.dialog-window.tcm-canvas-popup .non-breaking-space {
+  margin: 0px 1px;
+  position: relative;
+  bottom: -0.5px;
+  color: transparent;
+  text-decoration-color: #FF0000;
+  text-decoration-line: underline;
+  pointer-events: none;
+}
+.non-breaking-space ins {
+  color: transparent !important;
+}
 
 .dialog-window p {
   margin: 0 0 0 0 !important;
@@ -802,12 +814,12 @@
   }
 }
 ins{
-  background: rgb(153, 230, 103);
-  color: rgb(121, 121, 121);
+  background: #C3F273;
+  color: #081E27;
 }
 del{
-  background: rgb(253, 118, 127);
-  color: rgb(121, 121, 121);
+  background: #FFDAD9;
+  color: #081E27;
   text-decoration: line-through;
 }
 .dialog-window.tcm-canvas-popup::-webkit-scrollbar {
@@ -837,7 +849,7 @@ a.paragraphNumeroUnoFootnote ins{
 
 a.paragraphNumeroUnoFootnote del{
   text-decoration-line: line !important;
-  background: rgb(253, 118, 127) !important;
+  background: #FFDAD9 !important;
 } 
 
 .dialog-window.tcm-canvas-popup abbr.Pearson-Component.AssetPopoverTerm ins{
@@ -866,7 +878,7 @@ span.answerLineContent{
 }
 ins.mod{
   background: rgb(251, 188, 72) !important;
-  color: rgb(121, 121, 121);
+  color: #081E27;
 }
 
 /* added css for callout, Glossary in tCM after accepted changes */
@@ -898,6 +910,25 @@ span.calloutOne > ins.diffmod{
     text-decoration: underline dotted #F56831;
     position: relative;
     background: rgb(251, 188, 72);
+}
+
+.modal-content.tcm-canvas-popup  span.calloutOne .diffins,
+.modal-content.tcm-canvas-popup  span.calloutFour .diffins {
+  background: #fbbc48;
+  color: #f56831;
+  position: relative;
+}
+.modal-content.tcm-canvas-popup  span.calloutTwo .diffins,
+.modal-content.tcm-canvas-popup  span.calloutThree .diffins {
+  background: #fbbc48;
+  color: #f56831;
+  position: relative;
+}
+.modal-content.tcm-canvas-popup span.calloutOne .mod,
+.modal-content.tcm-canvas-popup  span.calloutTwo .mod,
+.modal-content.tcm-canvas-popup  span.calloutThree .mod,
+.modal-content.tcm-canvas-popup  span.calloutFour .mod {
+  color: #f56831;
 }
 /* .modal-content.tcm-canvas-popup span.calloutOne:hover::after {
   content: 'Callout: Option 1';
