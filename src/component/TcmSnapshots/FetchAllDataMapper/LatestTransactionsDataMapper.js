@@ -26,10 +26,10 @@ const LatestTransactionsDataMapper = {
     } = data;
 
     // replacing the &nbsp; with space character
-    acceptedElementSnapshot = TCMUtils.replaceNBSPWithSpace(acceptedElementSnapshot);
+    acceptedElementSnapshot = acceptedElementSnapshot
 
   // replacing the &nbsp; with space character
-  pendingElementSnapshot = TCMUtils.replaceNBSPWithSpace(pendingElementSnapshot);
+  pendingElementSnapshot = pendingElementSnapshot
     if (acceptedElementType !== pendingElementType) {
       result.prevElementType = elementChangeType === 'delete' ? pendingElementType && TCMUtils.getElementType(pendingElementType) : acceptedElementType && TCMUtils.getElementType(acceptedElementType);
     } else {

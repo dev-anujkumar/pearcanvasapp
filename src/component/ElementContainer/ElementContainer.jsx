@@ -25,7 +25,7 @@ import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
 import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole, isApproved, isSlateLocked, hasReviewerSubscriberRole } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole, isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';
@@ -829,20 +829,20 @@ class ElementContainer extends Component {
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
         let podwidth = this.props?.activeElement?.podwidth;
         // Commented for future reference > for intended playback mode
-        // const oldIntendedPlaybackModeValue = previousElementData?.figuredata?.intendedPlaybackMode;
-        // const currentIntendedPlaybackModeValue =  this.props?.activeElement?.selectedIntendedPlaybackModeValue;
-        // const is3PIIntendedPlaybackDropdownUpdate = oldIntendedPlaybackModeValue !== currentIntendedPlaybackModeValue;
+        const oldIntendedPlaybackModeValue = previousElementData?.figuredata?.intendedPlaybackMode;
+        const currentIntendedPlaybackModeValue = this.props?.activeElement?.selectedIntendedPlaybackModeValue;
+        const is3PIIntendedPlaybackDropdownUpdate = ((removeBlankSpaceAndConvertToLowercase(previousElementData?.figuredata?.vendor) !== slateWrapperConstants.UNITY_TINY) && (oldIntendedPlaybackModeValue !== currentIntendedPlaybackModeValue));
         let oldImage = this.props.oldImage;
              oldImage = this.props.oldSmartLinkDataForCompare.interactiveid;
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel') && (previousElementData.figuretype !== 'tableasmarkup')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
             // add is3PIIntendedPlaybackDropdownUpdate  in the below check for intended playback mode
-            let isValid = validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth);
+            let isValid = (is3PIIntendedPlaybackDropdownUpdate || validateLabelNumberSetting(this.props, previousElementData, this.removeClassesFromHtml, titleHTML, numberHTML, subtitleHTML, captionHTML, creditsHTML, oldImage, podwidth, smartlinkContexts, index, this.changeInPodwidth));
             return isValid;
         }
         let isAltTextLongDescModified = false;
         if(interactivetype.includes(previousElementData?.figuredata?.interactivetype)) {
-            isAltTextLongDescModified = this.props.oldSmartLinkDataForCompare !== previousElementData.figureData
+            isAltTextLongDescModified = this.props.oldSmartLinkDataForCompare !== previousElementData.figuredata
         }
         if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === "pop-up-web-link" ||
             previousElementData.figuredata.interactivetype === "web-link" || previousElementData.figuredata.interactivetype === '3rd-party' || 
@@ -857,7 +857,7 @@ class ElementContainer extends Component {
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 this.removeClassesFromHtml(posterTextHTML) !== this.removeClassesFromHtml(oldPosterText) ||
                 oldImage !== newInteractiveid ||
-                this.changeInPodwidth(podwidth, previousElementData?.figuredata?.posterimage?.podwidth) || isAltTextLongDescModified
+                this.changeInPodwidth(podwidth, previousElementData?.figuredata?.posterimage?.podwidth) || isAltTextLongDescModified || is3PIIntendedPlaybackDropdownUpdate
                 );
         }
         else {
