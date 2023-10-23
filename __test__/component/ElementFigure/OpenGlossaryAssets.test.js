@@ -9,7 +9,7 @@ const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 const initialState = {
     audioReducer: {
-        audioData:  {
+        audioData: {
             "containerUrn": "urn:pearson:manifest:3e986eb4-47de-4abe-a4b6-903702c43742",
             "projectUrn": "urn:pearson:distributable:680aac6d-a035-475e-9f78-7ec42599b17f",
             "containerEntityUrn": "urn:pearson:entity:3d39b57a-1ca3-4919-8771-c3295ee833e9",
@@ -32,24 +32,14 @@ const initialState = {
         }
     },
     appStore: {
-        figureGlossaryData:{
-        "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
-        "imageid": "urn:pearson: alfresco: e2b1710e - a000 - 4625 - b582 - 367261a2cd0e",
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/e2b1710e-a000-4625-b582-367261a2cd0e/2.jpeg",
-        "height": "450",
-        "width": "350",
-        "alttext": "Alt Text for Snow white change alt text update kdvb",
-        "longdescription": "Snow White Description change long desc test",
-        "type": "image"
+        figureGlossaryData: {
+        }
     }
-}
-
 };
-let store = mockStore(initialState);
-describe('Testing OpenAudioBook component', () => {
-    let props = {
-        closeAssetsPopup : jest.fn(),
-        audioData:  {
+
+const initialState2 = {
+    audioReducer: {
+        audioData: {
             "containerUrn": "urn:pearson:manifest:3e986eb4-47de-4abe-a4b6-903702c43742",
             "projectUrn": "urn:pearson:distributable:680aac6d-a035-475e-9f78-7ec42599b17f",
             "containerEntityUrn": "urn:pearson:entity:3d39b57a-1ca3-4919-8771-c3295ee833e9",
@@ -65,31 +55,208 @@ describe('Testing OpenAudioBook component', () => {
             }
             ]
         },
-        showRemoveImageGlossaryPopup:jest.fn(),
-        showAudioRemovePopup : jest.fn(), 
-        isGlossary :false,
-        audioGlossaryData: {},
-        figureGlossaryData:{},
+        audioGlossaryData: {
+        }
+    },
+    appStore: {
+        figureGlossaryData: {
+            "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            "imageid": "urn:pearson: alfresco: e2b1710e - a000 - 4625 - b582 - 367261a2cd0e",
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/e2b1710e-a000-4625-b582-367261a2cd0e/2.jpeg",
+            "height": "450",
+            "width": "350",
+            "alttext": "Alt Text for Snow white change alt text update kdvb",
+            "longdescription": "Snow White Description change long desc test",
+            "type": "image"
+        }
     }
-    const e = {
-        target: {
-            tagName: "p"
+
+};
+let store = mockStore(initialState);
+let store2 = mockStore(initialState2);
+
+describe('Testing OpenAudioBook component', () => {
+    let props = {
+        closeAssetsPopup: jest.fn(),
+        audioData: {
+            "containerUrn": "urn:pearson:manifest:3e986eb4-47de-4abe-a4b6-903702c43742",
+            "projectUrn": "urn:pearson:distributable:680aac6d-a035-475e-9f78-7ec42599b17f",
+            "containerEntityUrn": "urn:pearson:entity:3d39b57a-1ca3-4919-8771-c3295ee833e9",
+            "data": [{
+                "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce794",
+                "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+                "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
+            },
+            {
+                "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce894",
+                "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+                "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
+            }
+            ]
         },
-        stopPropagation() { }
+        showRemoveImageGlossaryPopup: jest.fn(),
+        showAudioRemovePopup: jest.fn(),
+        isGlossary: false,
+        audioGlossaryData: {},
+        figureGlossaryData: {},
     }
     mockAxios.post = jest.fn().mockResolvedValueOnce('');
 
     const narrativeAudio = mount(<Provider store={store}><OpenGlossaryAssets {...props} /></Provider>);
-    
     narrativeAudio.find('.close-icon').simulate('click');
-    
+
     let narrativeAudioInstance = narrativeAudio.find('OpenGlossaryAssets').instance();
     const spyopenConfirmationBox = jest.spyOn(narrativeAudioInstance, 'openAudioConfirmationBox')
-    const spyopenImageConfirmationBox = jest.spyOn(narrativeAudioInstance,'openImageConfirmationBox')
+    const spyopenImageConfirmationBox = jest.spyOn(narrativeAudioInstance, 'openImageConfirmationBox')
 
     test('renders without crashing', () => {
         expect(narrativeAudio).toHaveLength(1);
-        let instance = narrativeAudio.instance(); 
+        let instance = narrativeAudio.instance();
+        expect(instance).toBeDefined();
+    })
+    it('Test-componentWillUnmount Function', () => {
+        const spycomponentWillUnmount = jest.spyOn(narrativeAudioInstance, 'componentWillUnmount')
+        narrativeAudioInstance.componentWillUnmount();
+        expect(spycomponentWillUnmount).toHaveBeenCalled()
+        spycomponentWillUnmount.mockClear()
+    })
+    it('Test-handleClickOutside', () => {
+        const event = {
+            target: "target",
+        }
+        jest.spyOn(narrativeAudioInstance, 'handleClickOutside')
+        narrativeAudioInstance.wrapperRef.current = { contains: () => { return event.target } }
+        narrativeAudioInstance.setState({
+            imageGlossaryPopupStatus: false,
+        })
+        narrativeAudio.update();
+        narrativeAudioInstance.forceUpdate();
+        narrativeAudioInstance.handleClickOutside(event);
+        expect(narrativeAudioInstance.state.imageGlossaryPopupStatus).toBe(false)
+    })
+    it('Test-openAudioConfirmationBox', () => {
+        narrativeAudioInstance.openAudioConfirmationBox({});
+        narrativeAudioInstance.forceUpdate();
+        narrativeAudio.update();
+        expect(spyopenConfirmationBox).toHaveBeenCalled()
+        spyopenConfirmationBox.mockClear()
+    })
+    it('Test-openImageConfirmationBox', () => {
+        narrativeAudioInstance.openImageConfirmationBox({});
+        narrativeAudioInstance.forceUpdate();
+        narrativeAudio.update();
+        expect(spyopenImageConfirmationBox).toHaveBeenCalled()
+        spyopenImageConfirmationBox.mockClear()
+    })
+})
+
+describe('when audio is selected from glossary', () => {
+    let props = {
+        audioData: {},
+        showAudioRemovePopup: jest.fn(),
+        isGlossary: true,
+        closeAssetsPopup: jest.fn(),
+        audioGlossaryData: {
+            "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce894",
+            "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+            "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
+        }
+    }
+    mockAxios.post = jest.fn().mockResolvedValueOnce('');
+    const narrativeAudio = mount(<Provider store={store}><OpenGlossaryAssets {...props} /></Provider>);
+    let narrativeAudioInstance = narrativeAudio.find('OpenGlossaryAssets').instance();
+    narrativeAudio.find('.close-icon-image').simulate('click');
+    const spyNarrativeAudioInstance = jest.spyOn(narrativeAudioInstance, 'handleTab')
+    test('renders without crashing', () => {
+        expect(narrativeAudio).toHaveLength(1);
+        let instance = narrativeAudio.instance();
+        expect(instance).toBeDefined();
+    })
+    it('testing closeAddAudioBook ', () => {
+        narrativeAudioInstance.closeAddAudioBook();
+        expect(narrativeAudioInstance.state.replaceToggle).toBe(false)
+    })
+    it('testing closeFigurePopup ', () => {
+        narrativeAudioInstance.closeFigurePopup();
+        expect(narrativeAudioInstance.state.replaceToggle).toBe(false)
+    })
+    it('testing handleReplaceImageButton', () => {
+        narrativeAudioInstance.handleReplaceImageButton();
+        expect(narrativeAudioInstance.state.replaceToggle).toBe(false)
+    })
+    it('testing handleTab', () => {
+        narrativeAudio.find('#audio-tab').simulate('click');
+        expect(spyNarrativeAudioInstance).toHaveBeenCalled();
+    })
+})
+
+describe('when image is selected from glossary', () => {
+    let props = {
+        showRemoveImageGlossaryPopup: jest.fn(),
+        figureGlossaryData: {
+            "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+            "imageid": "urn:pearson: alfresco: e2b1710e - a000 - 4625 - b582 - 367261a2cd0e",
+            "path": "https://cite-media-stg.pearson.com/legacy_paths/e2b1710e-a000-4625-b582-367261a2cd0e/2.jpeg",
+            "height": "450",
+            "width": "350",
+            "alttext": "Alt Text for Snow white change alt text update kdvb",
+            "longdescription": "Snow White Description change long desc test",
+            "type": "image"
+        }
+    }
+    mockAxios.post = jest.fn().mockResolvedValueOnce('');
+
+    const imageWrapper = mount(<Provider store={store}><OpenGlossaryAssets {...props} /></Provider>);
+    let imageWrapperInstance = imageWrapper.find('OpenGlossaryAssets').instance();
+    imageWrapper.find('.close-icon-image').simulate('click');
+    test('renders without crashing', () => {
+        expect(imageWrapper).toHaveLength(1);
+        let instance = imageWrapper.instance();
+        expect(instance).toBeDefined();
+    })
+    it('testing closeFigurePopup ', () => {
+        imageWrapperInstance.closeFigurePopup();
+        expect(imageWrapperInstance.state.replaceToggle).toBe(false)
+    })
+})
+
+describe('Testing OpenAudioBook component', () => {
+    let props = {
+        closeAssetsPopup: jest.fn(),
+        audioData: {
+            "containerUrn": "urn:pearson:manifest:3e986eb4-47de-4abe-a4b6-903702c43742",
+            "projectUrn": "urn:pearson:distributable:680aac6d-a035-475e-9f78-7ec42599b17f",
+            "containerEntityUrn": "urn:pearson:entity:3d39b57a-1ca3-4919-8771-c3295ee833e9",
+            "data": [{
+                "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce794",
+                "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+                "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
+            },
+            {
+                "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce894",
+                "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
+                "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
+            }
+            ]
+        },
+        showRemoveImageGlossaryPopup: jest.fn(),
+        showAudioRemovePopup: jest.fn(),
+        isGlossary: false,
+        audioGlossaryData: {},
+        figureGlossaryData: {},
+    }
+    mockAxios.post = jest.fn().mockResolvedValueOnce('');
+
+    const narrativeAudio = mount(<Provider store={store2}><OpenGlossaryAssets {...props} /></Provider>);
+
+    narrativeAudio.find('.close-icon').simulate('click');
+    let narrativeAudioInstance = narrativeAudio.find('OpenGlossaryAssets').instance();
+    const spyopenConfirmationBox = jest.spyOn(narrativeAudioInstance, 'openAudioConfirmationBox')
+    const spyopenImageConfirmationBox = jest.spyOn(narrativeAudioInstance, 'openImageConfirmationBox')
+
+    test('renders without crashing', () => {
+        expect(narrativeAudio).toHaveLength(1);
+        let instance = narrativeAudio.instance();
         expect(instance).toBeDefined();
     })
     it('Test-openAudioConfirmationBox', () => {
@@ -108,13 +275,13 @@ describe('Testing OpenAudioBook component', () => {
     })
 })
 
-describe('when audio is selected from glossary',()=>{
+describe('when audio is selected from glossary', () => {
     let props = {
-        audioData:  {},
-        showAudioRemovePopup : jest.fn(), 
-        isGlossary :true,
-        closeAssetsPopup:jest.fn(),
-        audioGlossaryData:   {
+        audioData: {},
+        showAudioRemovePopup: jest.fn(),
+        isGlossary: true,
+        closeAssetsPopup: jest.fn(),
+        audioGlossaryData: {
             "narrativeAudioUrn": "135222a8-0dc2-4375-9488-2790133ce894",
             "location": "https://cite-media-stg.pearson.com/legacy_paths/135222a8-0dc2-4375-9488-2790133ce794/Automation_Audio_3.mp3",
             "title": { "en": "Automation_Audio_3.mp3" }, "format": "audio/mpeg"
@@ -127,33 +294,32 @@ describe('when audio is selected from glossary',()=>{
         stopPropagation() { }
     }
     mockAxios.post = jest.fn().mockResolvedValueOnce('');
-    const narrativeAudio = mount(<Provider store={store}><OpenGlossaryAssets {...props} /></Provider>);
+    const narrativeAudio = mount(<Provider store={store2}><OpenGlossaryAssets {...props} /></Provider>);
     let narrativeAudioInstance = narrativeAudio.find('OpenGlossaryAssets').instance();
     narrativeAudio.find('.close-icon-image').simulate('click');
-    const spyNarrativeAudioInstance = jest.spyOn(narrativeAudioInstance,'handleTab')
     test('renders without crashing', () => {
         expect(narrativeAudio).toHaveLength(1);
-        let instance = narrativeAudio.instance(); 
+        let instance = narrativeAudio.instance();
         expect(instance).toBeDefined();
     })
-    it('testing closeAddAudioBook ',()=>{
+    it('testing closeAddAudioBook ', () => {
         narrativeAudioInstance.closeAddAudioBook();
         expect(narrativeAudioInstance.state.replaceToggle).toBe(false)
     })
-    it('testing closeFigurePopup ',()=>{
+    it('testing handleReplaceAudioButton', () => {
+        narrativeAudioInstance.handleReplaceAudioButton();
+        expect(narrativeAudioInstance.state.replaceToggle).toBe(false)
+    })
+    it('testing closeFigurePopup ', () => {
         narrativeAudioInstance.closeFigurePopup();
         expect(narrativeAudioInstance.state.replaceToggle).toBe(false)
     })
-    it('testing handleTab',()=>{
-        narrativeAudio.find('#audio-tab').simulate('click');
-        expect (spyNarrativeAudioInstance).toHaveBeenCalled();
-    })
 })
 
-describe('when image is selected from glossary',()=>{
+describe('when image is selected from glossary', () => {
     let props = {
-        showRemoveImageGlossaryPopup:jest.fn(),
-        figureGlossaryData:{
+        showRemoveImageGlossaryPopup: jest.fn(),
+        figureGlossaryData: {
             "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
             "imageid": "urn:pearson: alfresco: e2b1710e - a000 - 4625 - b582 - 367261a2cd0e",
             "path": "https://cite-media-stg.pearson.com/legacy_paths/e2b1710e-a000-4625-b582-367261a2cd0e/2.jpeg",
@@ -164,29 +330,23 @@ describe('when image is selected from glossary',()=>{
             "type": "image"
         }
     }
-    const e = {
-        target: {
-            tagName: "p"
-        },
-        stopPropagation() { }
-    }
     mockAxios.post = jest.fn().mockResolvedValueOnce('');
 
-    const imageWrapper = mount(<Provider store={store}><OpenGlossaryAssets {...props} /></Provider>);
+    const imageWrapper = mount(<Provider store={store2}><OpenGlossaryAssets {...props} /></Provider>);
     let imageWrapperInstance = imageWrapper.find('OpenGlossaryAssets').instance();
     imageWrapper.find('.close-icon-image').simulate('click');
-    const spyImageInstance = jest.spyOn(imageWrapperInstance,'handleTab')
+    const spyImageInstance = jest.spyOn(imageWrapperInstance, 'handleTab')
     test('renders without crashing', () => {
         expect(imageWrapper).toHaveLength(1);
-        let instance = imageWrapper.instance(); 
+        let instance = imageWrapper.instance();
         expect(instance).toBeDefined();
     })
-    it('testing closeFigurePopup ',()=>{
+    it('testing closeFigurePopup ', () => {
         imageWrapperInstance.closeFigurePopup();
         expect(imageWrapperInstance.state.replaceToggle).toBe(false)
     })
-    it('testing image handleTab',()=>{
+    it('testing image handleTab', () => {
         imageWrapper.find('#image-tabs').simulate('click');
-        expect (spyImageInstance).toHaveBeenCalled();
+        expect(spyImageInstance).toHaveBeenCalled();
     })
 })
