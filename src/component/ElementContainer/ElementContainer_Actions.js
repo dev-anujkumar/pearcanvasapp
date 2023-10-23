@@ -23,6 +23,7 @@ import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownData
 import { updateAutoNumberedElement } from './UpdateElements';
 import { updateAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import store from '../../appstore/store';
+import { FIGURE_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB, MULTI_COLUMN } = ElementConstants;
 
 const { 
@@ -1261,4 +1262,43 @@ export const fetchOldDataAfterConversion = (conversionData) => (dispatch) => {
         type: FETCH_CONVERSION_DATA,
         payload: conversionData
     })
+}
+
+/**
+ * @description - This function fetches the asset's metadata from alfresco 
+ * @param assetId - Asset's ID
+ * @param figuretype - Figuretype of the element
+ * @returns - alt-text and long-description for the asset
+ */
+
+export const getAlfrescoMetadataForAsset = async (assetId, figuretype) => {
+    let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/`+ assetId;
+    try{
+        const response = await axios.get(url, {
+            headers: {
+                "Content-Type": "application/json",
+                "apikey": config.CMDS_APIKEY,
+                'myCloudProxySession': config.myCloudProxySession
+            }
+        })
+        if(response && response?.status === 200){
+            const { properties } = response?.data?.entry || {};	
+            if(figuretype === FIGURE_INTERACTIVE){
+                const avsJsonStringData = properties["avs:jsonString"] 
+                let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
+                return {
+                    altText: avsStringData?.imageAltText,
+                    longDescription: avsStringData?.linkLongDesc,
+            }}
+            else{
+                return {
+                    altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
+                    longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
+                }
+            }
+        }
+    }
+    catch(error) {
+        console.error("Error in fetching metadata", error);
+    }
 }

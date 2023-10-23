@@ -17,7 +17,7 @@ import OpenerElement from '../OpenerElement';
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
 import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
-         prepareImageDataFromTable, storeDeleteElementKeys, updateTabTitle } from './ElementContainer_Actions';
+         prepareImageDataFromTable, storeDeleteElementKeys, updateTabTitle, getAlfrescoMetadataForAsset } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
@@ -53,10 +53,10 @@ import { OnCopyContext } from '../CutCopyDialog/copyUtil.js'
 import { setSelection } from '../CutCopyDialog/CopyUrn_Action.js';
 import { openElmAssessmentPortal, fetchAssessmentMetadata, resetAssessmentStore, editElmAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import { handleElmPortalEvents, handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling.js';
-import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive,checkSmartLinkInteractive, checkFigureMetadata, checkFigureInsideTableElement, checkOpenerElement } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { checkFullElmAssessment, checkEmbeddedElmAssessment, checkInteractive,checkSmartLinkInteractive, checkFigureMetadata, checkFigureInsideTableElement, checkOpenerElement, checkImageForMetadata } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import { setScroll } from './../Toolbar/Search/Search_Action.js';
 import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search_Constants.js';
-import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI , OPENER_ELEMENT , FIGURE_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
+import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI , OPENER_ELEMENT , FIGURE_INTERACTIVE, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
 import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js';
@@ -339,7 +339,7 @@ class ElementContainer extends Component {
     /**
      * function will be called on element focus of tinymce instance
      */
-    handleFocus = (updateFromC2Flag, showHideObj, event, labelText) => {
+    handleFocus = async (updateFromC2Flag, showHideObj, event, labelText) => {
         if (event && labelText !== 'fg') {
             event.stopPropagation();
         }
@@ -401,6 +401,55 @@ class ElementContainer extends Component {
                 this.toolbarHandling('add')
             }
             this.props.fetchCommentByElement(this.props.element.id);
+        }
+        /*--Fetches and updates the alt-text and long-desc for the active element(figure, smartlink, opener) and updates the same in the settings panel*/
+        if(this.state.borderToggle==='showBorder' && !hasReviewerRole()){
+                if(element?.type===ELEMENT_FIGURE){
+                    if(checkImageForMetadata(element) && element?.figuredata?.imageid){
+                        const assetId = element?.figuredata?.imageid?.replace('urn:pearson:alfresco:', '')
+                        const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
+                        if(assetMetadata?.altText!==element?.figuredata?.alttext || assetMetadata?.longDescription!==element?.figuredata?.longdescription){
+                            let	figureData = { ...element?.figuredata };
+                            figureData.alttext = assetMetadata?.altText;
+                            figureData.longdescription = assetMetadata?.longDescription;
+		                    /*-- Updata the image metadata in wip */
+                            this.updateFigureData(figureData, index, element?.id, this.props.asideData, () => {
+                            this.handleFocus("updateFromC2")
+                            this.handleBlur()
+                            })
+                        }
+                    }
+                    else if(checkSmartLinkInteractive(element)){
+                        const assetId = element?.figuredata?.interactiveid?.replace('urn:pearson:alfresco:', '')
+                        const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
+		                /*-- Updata the image metadata in wip */
+                        if(assetMetadata?.altText!==element?.figuredata?.alttext || assetMetadata?.longDescription!==element?.figuredata?.longdescription){
+                            let	figureData = { ...element?.figuredata };
+                            figureData.alttext = assetMetadata?.altText;
+                            figureData.longdescription = assetMetadata?.longDescription;
+                            this.updateFigureData(figureData, index, element?.id, this.props.asideData, () => {
+                                this.handleFocus("updateFromC2")
+                                this.handleBlur()
+                            })
+                        }
+                    }
+                }
+                else if(checkOpenerElement(element)){
+                    const assetId = element?.backgroundimage?.imageid?.replace('urn:pearson:alfresco:', '')
+                    const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
+                    if(assetMetadata?.altText!==element?.backgroundimage?.alttext || assetMetadata?.longDescription!==element?.backgroundimage?.longdescription){
+                        let tempElementData = {...element}
+                        tempElementData.backgroundimage.alttext = assetMetadata?.altText;
+                        tempElementData.backgroundimage.longdescription = assetMetadata?.longDescription;
+                        this.updateOpenerElement(tempElementData)
+                        this.handleFocus("updateFromC2")
+                        const altLongDescData = {
+                        altText: tempElementData?.backgroundimage?.alttext,
+                        longDesc: tempElementData?.backgroundimage?.longdescription
+                        }
+                        this.saveSelectedAltTextLongDescData(altLongDescData)
+                    }
+                }
         }
         // disabling Add comment icon for TCC Element in TOC
         if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT) {
