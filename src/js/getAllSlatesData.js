@@ -46,7 +46,7 @@ const setItemDetails = (item) => {
 */
 const prepareContainerData = (matterContent, matterType) => {
     let matterData = [];
-    matterContent && matterContent.forEach((item) => {
+    matterContent && matterContent?.length && matterContent.forEach((item) => {
         if (matterType) {
             matterData.push(
                 Object.assign({}, setItemDetails(item), {
