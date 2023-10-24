@@ -1220,9 +1220,15 @@ class ElementContainer extends Component {
                             if(primaryOption === DECORATIVE_IMAGE) {
                                 delete dataToSend.captions
                                 delete dataToSend.title
-                                delete dataToSend.html?.title
-                                delete dataToSend.html?.captions
-                                delete dataToSend.html?.text
+                                if (dataToSend?.html?.hasOwnProperty('title')) {
+                                    delete dataToSend.html.title
+                                }
+                                if (dataToSend?.html?.hasOwnProperty('captions')) {
+                                    delete dataToSend.html.captions
+                                }
+                                if (dataToSend?.html?.hasOwnProperty('text')) {
+                                    delete dataToSend.html.text
+                                }
                                 if(this.props.isAutoNumberingEnabled) {
                                     dataToSend.numberedandlabel = false
                                 }

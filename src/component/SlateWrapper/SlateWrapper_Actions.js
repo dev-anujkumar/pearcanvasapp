@@ -1574,9 +1574,15 @@ export const pasteElement = (params) => async (dispatch, getState) => {
 
         // Handling the cut/copy/paste of decorative images
         if(selection?.element?.figuredata?.decorative) {
-            delete _requestData.content[0]?.html?.captions
-            delete _requestData.content[0]?.html?.text
-            delete _requestData.content[0]?.html?.title
+            if (_requestData.content[0]?.html.hasOwnProperty('captions')) {
+                delete _requestData.content[0].html.captions;
+            }
+            if (_requestData.content[0]?.html.hasOwnProperty('text')) {
+                delete _requestData.content[0].html.text;
+            }
+            if (_requestData.content[0]?.html.hasOwnProperty('title')) {
+                delete _requestData.content[0].html.title;
+            }
             _requestData.content[0].numberedandlabel = false
             _requestData.content[0].figuretype = selection?.element?.figuretype
             _requestData.content[0].subtype = selection?.element?.subtype
