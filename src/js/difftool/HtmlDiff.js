@@ -338,7 +338,7 @@ class HtmlDiff {
     handleCalloutData() {
         const calloutRegex = /<span (.*?)[data-calloutid=(.*?)](.*?)>/g;
         if (this.newWords && this.newWords.length) {
-            this.newWords.map((word, index) => {
+            this.newWords.forEach((word, index) => {
                 const isCallout = word.match(calloutRegex)
                 if (isCallout && isCallout[0]) {
                     const isCalloutUpdated = this.findCalloutSpan(isCallout[0]);
@@ -360,7 +360,7 @@ class HtmlDiff {
             const calloutId = hiddenDiv.children[0].dataset.calloutid;
             if (calloutId) {
                 const calloutRegex = new RegExp("<span (.*?)data-calloutid=\"" + calloutId + "\"(.*?)>", "g");
-                this.oldWords && this.oldWords.length && this.oldWords.map(oldWord => {
+                this.oldWords && this.oldWords.length && this.oldWords.forEach(oldWord => {
                     const issameCallout = oldWord.match(calloutRegex);
                     if (issameCallout && issameCallout[0] && oldWord !== calloutData) {
                         isCalloutUpdate = true
