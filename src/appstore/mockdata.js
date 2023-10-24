@@ -1626,19 +1626,6 @@ export default {
                   }
                 ]
               },
-              "groupeddata":{
-                "bodymatter": [
-                  {
-                    "groupdata":{
-                      "bodymatter":{
-                        "elementData":{
-                          "bodymatter":[]
-                        }
-                      }
-                    }
-                  }
-                ]
-              },
               "contents": {
                 "bodymatter": [
                   {
@@ -1764,19 +1751,6 @@ export default {
                         }
                       }
                     ]
-                  }
-                ]
-              },
-              "groupeddata":{
-                "bodymatter": [
-                  {
-                    "groupdata":{
-                      "bodymatter":{
-                        "elementData":{
-                          "bodymatter":[]
-                        }
-                      }
-                    }
                   }
                 ]
               },
@@ -2341,7 +2315,6 @@ export default {
             {
               "id": "urn:pearson:manifest:8f825efb-9582-41df-995c-383dcdefc06b",
               "type": "groupedcontent",
-              "subtype": "tab",
               "interactivedata": [[{subtype:"workedexample"}], 
               [
                 {
