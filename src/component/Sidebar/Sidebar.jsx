@@ -735,7 +735,7 @@ class Sidebar extends Component {
                 active = 'active';
             }
             let disableClass = hasReviewerRole()  ? "pointer-events-none" : '';
-            disableClass = disableClass + (disablePlaybackMode ? "disablePlaybackMode" : "")
+            disableClass = `${disableClass} ${disablePlaybackMode ? "disablePlaybackMode" : ""}`
             playbackMode = <div
                 className={`element-dropdown`}>
                 <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
