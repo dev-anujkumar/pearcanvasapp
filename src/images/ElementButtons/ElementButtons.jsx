@@ -93,10 +93,10 @@ export const audioIcon = (function () {
 export const videoIcon = (function () {
     return (
         <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <rect fill="#D8D8D8" width="36" height="36" rx="3" />
                 <path d="M7.902 7.024h21.074v21.074H7.902z" />
-                <path d="M22.83 16.244V13.17a.88.88 0 0 0-.879-.878H11.415a.88.88 0 0 0-.878.878v8.78a.88.88 0 0 0 .878.878H21.95a.88.88 0 0 0 .878-.878v-3.073l3.512 3.512v-9.658l-3.512 3.512z" fill="#323232" fill-rule="nonzero" />
+                <path d="M22.83 16.244V13.17a.88.88 0 0 0-.879-.878H11.415a.88.88 0 0 0-.878.878v8.78a.88.88 0 0 0 .878.878H21.95a.88.88 0 0 0 .878-.878v-3.073l3.512 3.512v-9.658l-3.512 3.512z" fill="#323232" fillRule="nonzero" />
             </g>
         </svg>
     )
@@ -105,10 +105,10 @@ export const videoIcon = (function () {
 export const smartlinkIcon = (function () {
     return (
         <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <rect fill="#D8D8D8" width="36" height="36" rx="3" />
                 <path d="M6 6h24v24H6z" />
-                <path d="M17 27h-1l1-7h-3.5c-.88 0-.33-.75-.31-.78 1.29-2.28 3.23-5.68 5.82-10.22h1l-1 7h3.51c.4 0 .62.19.4.66C18.97 23.55 17 27 17 27z" fill="#323232" fill-rule="nonzero" />
+                <path d="M17 27h-1l1-7h-3.5c-.88 0-.33-.75-.31-.78 1.29-2.28 3.23-5.68 5.82-10.22h1l-1 7h3.51c.4 0 .62.19.4.66C18.97 23.55 17 27 17 27z" fill="#323232" fillRule="nonzero" />
             </g>
         </svg>
     )
@@ -117,10 +117,10 @@ export const smartlinkIcon = (function () {
 export const figureAudioIcon = (function () {
     return (
         <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <rect fill="#D8D8D8" width="36" height="36" rx="3" />
                 <path d="M6 6h24v24H6z" />
-                <path d="M18 9a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8h-4v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9zm-5 12v4h-2v-4h2zm12 4h-2v-4h2v4z" fill="#323232" fill-rule="nonzero" />
+                <path d="M18 9a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8h-4v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9zm-5 12v4h-2v-4h2zm12 4h-2v-4h2v4z" fill="#323232" fillRule="nonzero" />
             </g>
         </svg>
 
@@ -130,11 +130,11 @@ export const figureAudioIcon = (function () {
 export const figureDeleteIcon = (function () {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <g>
                     <g>
                         <g>
-                            <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1006.000000, -527.000000) translate(1000.000000, 521.000000) translate(6.000000, 6.000000)" />
+                            <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-1006.000000, -527.000000) translate(1000.000000, 521.000000) translate(6.000000, 6.000000)" />
                             <path fill="#AA0100" d="M6.889 18.222c0 .982.796 1.778 1.778 1.778h7.11c.983 0 1.779-.796 1.779-1.778V7.556H6.889v10.666m2.187-6.329l1.253-1.253 1.893 1.884 1.885-1.884 1.253 1.253-1.884 1.885 1.884 1.884-1.253 1.254-1.885-1.885-1.884 1.885-1.254-1.254 1.885-1.884-1.893-1.885m6.257-7.004L14.444 4H10l-.889.889H6v1.778h12.444V4.889h-3.11z" transform="translate(-1006.000000, -527.000000) translate(1000.000000, 521.000000) translate(6.000000, 6.000000)" />
                         </g>
                     </g>
@@ -532,7 +532,7 @@ export const searchDisussion = (() => {
 export const commentFlagged = (() => {
     return (
         <svg width="11" height="12" viewBox="3 3 12 12" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <path fill="#FFF" d="M11.635 5.412 11.353 4H5v12h1.412v-4.941h3.953l.282 1.412h4.941V5.41z" />
             </g>
         </svg>  
