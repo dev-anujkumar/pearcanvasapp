@@ -27,7 +27,7 @@ export const validStylesTagList = ['strong','em','u','s','sup','sub','code'];
 export const allowedFormattings = ['bold','italic','underline','strikethrough','superscript','subscript'];
 export const validFirstNodeTags = ['span','dfn'];
 export const withoutCursorInitailizedElements = ['figure', 'element-aside'];
-export const ALLOWED_ENVIRONMENT_NAMES = ['dev', 'test', 'qa', 'staging', 'perf'];
+export const ALLOWED_ENVIRONMENT_NAMES = ['dev', 'test', 'qa', 'staging', 'perf', 'prf', 'stg', 'smk'];
 
 // function to get the environment name based on host
 export const requestConfigURI = () => {
