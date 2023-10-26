@@ -18,6 +18,8 @@ class MetaDataPopUp extends React.Component {
         this.state = {
            altText:"",
 		   longDescription:"",
+		   fetchedAltText: '',
+		   fetchedLongDesc: '',
 		   active:'',
 		   disableTextFields:false,
 		   disableUpdateButton:false
@@ -55,6 +57,8 @@ class MetaDataPopUp extends React.Component {
 				this.setState({
 					metaData: properties,
 					altText: avsStringData.imageAltText,
+					fetchedAltText: avsStringData.imageAltText,
+					fetchedLongDesc: avsStringData.linkLongDesc,
 					longDescription: avsStringData.linkLongDesc,
 					disableTextFields: true,
 					disableUpdateButton: (this?.props?.element?.figuredata?.alttext===avsStringData?.imageAltText && this?.props?.element?.figuredata?.longdescription===avsStringData?.linkLongDesc) ? false : true
@@ -62,6 +66,8 @@ class MetaDataPopUp extends React.Component {
 			else{
 				this.setState({
 					metaData: properties,
+					fetchedAltText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
+					fetchedLongDesc: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
 					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
 					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
 					disableTextFields:  true,
@@ -142,6 +148,20 @@ class MetaDataPopUp extends React.Component {
 		})}
 	}
 
+	handleChangeAltText = (e) => {
+		if(e?.target?.value===this.state.fetchedAltText && this.state.longDescription===this.state.fetchedLongDesc)
+		this.setState({altText: e?.target?.value, disableUpdateButton: false})
+		else
+		this.setState({altText: e?.target?.value, disableUpdateButton: true})
+	}
+
+	handleChangeLongDesc = (e) => {
+		if(e?.target?.value===this.state.fetchedLongDesc && this.state.altText===this.state.fetchedAltText)
+		this.setState({ longDescription: e?.target?.value, disableUpdateButton: false})
+		else
+		this.setState({ longDescription: e?.target?.value, disableUpdateButton: true})
+	}
+
     render() {
         const { togglePopup } = this.props;
 		const { altText, longDescription, active } = this.state;
@@ -166,7 +186,7 @@ class MetaDataPopUp extends React.Component {
 									placeholder="Enter your text here" 
 									value={altText}
                                     disabled ={this.state.disableTextFields ? false : true}
-									onChange={(e) => this.setState({ altText: e.target.value, disableUpdateButton: true })}
+									onChange={(e) => {this.handleChangeAltText(e)}}
 								/>
 							</div>
 							<div className= {`long-description-body ${active === 'longBody' ? 'active' : ""}`} onClick={()=>this.handleActiveState('longBody')}>
@@ -179,7 +199,7 @@ class MetaDataPopUp extends React.Component {
 									placeholder="Enter your text here" 
 									value={longDescription}
 								    disabled ={this.state.disableTextFields ? false : true}
-									onChange={(e) => this.setState({ longDescription: e.target.value, disableUpdateButton: true })}>
+									onChange={(e) => {this.handleChangeLongDesc(e)}}>
 								</textarea>
 							</div>
 						</div>
