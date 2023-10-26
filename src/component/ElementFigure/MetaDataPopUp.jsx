@@ -149,19 +149,17 @@ class MetaDataPopUp extends React.Component {
 	}
 
 	handleChangeAltText = (e) => {
-		this.setState({ altText: e?.target?.value })
 		if(e?.target?.value===this.state.fetchedAltText && this.state.longDescription===this.state.fetchedLongDesc)
-		this.setState({disableUpdateButton: false})
+		this.setState({altText: e?.target?.value, disableUpdateButton: false})
 		else
-		this.setState({disableUpdateButton: true})
+		this.setState({altText: e?.target?.value, disableUpdateButton: true})
 	}
 
 	handleChangeLongDesc = (e) => {
-		this.setState({ longDescription: e?.target?.value })
 		if(e?.target?.value===this.state.fetchedLongDesc && this.state.altText===this.state.fetchedAltText)
-		this.setState({disableUpdateButton: false})
+		this.setState({ longDescription: e?.target?.value, disableUpdateButton: false})
 		else
-		this.setState({disableUpdateButton: true})
+		this.setState({ longDescription: e?.target?.value, disableUpdateButton: true})
 	}
 
     render() {
