@@ -17,7 +17,7 @@ const {
     OVERRIDE_NUMBER_VALUE
 } = AUTO_NUMBER_PROPERTIES;
 
-export const { 
+export const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_RESUME_NUMBER,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -27,8 +27,8 @@ export const {
 
 /**
  * This function is responsible for setting the value in "Label&Number Settings" Dropdown
- * @param {*} element 
- * @returns 
+ * @param {*} element
+ * @returns
  */
 export const setAutoNumberSettingValue = (element) => {
     if (element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == false) {
@@ -50,9 +50,9 @@ export const setAutoNumberSettingValue = (element) => {
 }
 
 /**
- * 
- * @param {*} element 
- * @returns 
+ *
+ * @param {*} element
+ * @returns
  */
 export const getOverridedNumberValue = (element) => {
     if ((element.hasOwnProperty(NUMBERED_AND_LABEL) && element[NUMBERED_AND_LABEL] == false)) {
@@ -83,10 +83,10 @@ const checkKeysInObj = (Obj) => {
 
 /**
  * Prepare the payload for updating Auto-numbered Element
- * @param {*} autoNumberOption 
- * @param {*} titleHTML 
- * @param {*} numberHTML 
- * @returns 
+ * @param {*} autoNumberOption
+ * @param {*} titleHTML
+ * @param {*} numberHTML
+ * @returns
  */
 export const setAutonumberingValuesForPayload = (autoNumberOption, titleHTML, numberHTML, isPayloadValid) => {
     let objToReturn = {};
@@ -174,9 +174,9 @@ export const getValueOfLabel = (figuretype) => {
 
 /**
  * This function returns the content to be shown in Preview Div
- * @param {*} element 
- * @param {*} param1 
- * @returns 
+ * @param {*} element
+ * @param {*} param1
+ * @returns
  */
 export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, parentNumber, currentLabelValue, labelNumberSetting, currentNumberValue }) => {
     let labelValue = imgLabelValue
@@ -197,9 +197,9 @@ export const getLabelNumberPreview = (element, { imgLabelValue, imgNumberValue, 
 
 /**
  * This function returns the Number of TOC Container which is prefix for Element's Number Field
- * @param {*} slateAncestors 
- * @param {*} autoNumberingDetails 
- * @returns 
+ * @param {*} slateAncestors
+ * @param {*} autoNumberingDetails
+ * @returns
  */
 export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
     const containerEntityUrn = getContainerEntityUrn(slateAncestors)
@@ -227,10 +227,10 @@ export const getContainerNumber = (slateAncestors, autoNumberingDetails) => {
 }
 
 /**
- * This function returns the current slate's TOC Container EntityUrn 
+ * This function returns the current slate's TOC Container EntityUrn
  * whose Number will be prefixed with the auto-numbered element
- * @param {*} slateAncestors 
- * @returns 
+ * @param {*} slateAncestors
+ * @returns
  */
 export const getContainerEntityUrn = (slateAncestors) =>{
 
@@ -262,10 +262,10 @@ export const getContainerEntityUrn = (slateAncestors) =>{
 
 /**
  * This function returns the Label Field Value for the auto-numbered Element
- * @param {*} element 
- * @param {*} figureLabelValue 
- * @param {*} containerNumber 
- * @returns 
+ * @param {*} element
+ * @param {*} figureLabelValue
+ * @param {*} containerNumber
+ * @returns
  */
 export const getLabelNumberFieldValue = (element, figureLabelValue, settingsOption) => {
     let elementLabel = figureLabelValue || element?.displayedlabel;
@@ -290,8 +290,8 @@ export const getLabelNumberFieldValue = (element, figureLabelValue, settingsOpti
 
 /**
  * This function prepares the auto-number sequence for Elements
- * @param {*} imagesData 
- * @returns 
+ * @param {*} imagesData
+ * @returns
  */
 export const prepareAutoNumberList = (imagesData) => {
     let imagesList = { ...imagesData };
@@ -328,10 +328,10 @@ export const prepareAutoNumberList = (imagesData) => {
 
 /**
  * This function returns the Number Field Value for the auto-numbered Element
- * @param {*} parentIndex 
- * @param {*} element 
- * @param {*} autoNumberElementsIndex 
- * @returns 
+ * @param {*} parentIndex
+ * @param {*} element
+ * @param {*} autoNumberElementsIndex
+ * @returns
  */
 export const getNumberData = (parentIndex, element, autoNumberElementsIndex) => {
     const autoNumber_KeyMapper = store.getState()?.autoNumberReducer?.autoNumber_KeyMapper
@@ -415,7 +415,7 @@ export const updateAutonumberingOnElementTypeUpdate = (newElement, element, auto
             getAutoNumberSequence(autoNumberedElements, dispatch);
         } else if (activeLabelElements.length === 1) {
             checkElementExistenceInOtherSlates(newElement, slateEntityUrn, getState, dispatch);
-        } 
+        }
     } catch(error){
         console.error(error)
     }
@@ -455,10 +455,10 @@ export const updateAutonumberingKeysInStore = (updatedData, autoNumberedElements
 }
 
 /**
- * This function prepares the data, from response of the numbered API, in the desired format 
- * @param {*} data 
- * @param {*} matterType 
- * @returns 
+ * This function prepares the data, from response of the numbered API, in the desired format
+ * @param {*} data
+ * @param {*} matterType
+ * @returns
  */
 export const getNumberedElements = (data, matterType) => {
     let numberedElements = {};
@@ -473,16 +473,16 @@ export const getNumberedElements = (data, matterType) => {
 }
 /**
  * This function will validate the label & number for make the saving call
- * @param {*} props 
- * @param {*} previousElementData 
- * @param {*} removeClassesFromHtml 
- * @param {*} titleHTML 
- * @param {*} numberHTML 
- * @param {*} subtitleHTML 
- * @param {*} captionHTML 
- * @param {*} creditsHTML 
- * @param {*} oldImage 
- * @param {*} podwidth 
+ * @param {*} props
+ * @param {*} previousElementData
+ * @param {*} removeClassesFromHtml
+ * @param {*} titleHTML
+ * @param {*} numberHTML
+ * @param {*} subtitleHTML
+ * @param {*} captionHTML
+ * @param {*} creditsHTML
+ * @param {*} oldImage
+ * @param {*} podwidth
  * @param {*} smartlinkContexts
  * @param {*} index
  * @param {*} changeInPodwidth
@@ -494,7 +494,7 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
         let isValidValues = setAutonumberingValuesForPayload(props.autoNumberOption.option, titleHTML, numberHTML, true);
         if (!isValidValues) return false;
     }
-    // Selecting default case 
+    // Selecting default case
     if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) && props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
         return true;
     }
@@ -543,14 +543,14 @@ export const validateLabelNumberSetting = (props, previousElementData, removeCla
             changeInPodwidth(podwidth, previousElementData?.figuredata?.posterimage?.podwidth)
         );
     }
-    
+
     return result;
 }
 
 /**
  *  Returns the Label Dropdown Values based on Figuretype
- * @param {*} previousElementData 
- * @returns 
+ * @param {*} previousElementData
+ * @returns
  */
 export const generateDropdownDataForFigures = (previousElementData) => {
     const figureDropdownData = store.getState()?.appStore?.figureDropdownData
@@ -590,8 +590,8 @@ export const generateDropdownDataForFigures = (previousElementData) => {
 
 /**
  *  Returns the Label Dropdown Values based on subtype
- * @param {*} previousElementData 
- * @returns 
+ * @param {*} previousElementData
+ * @returns
  */
  export const generateDropdownDataForContainers = (previousElementData) => {
     const figureDropdownData = store.getState()?.appStore?.figureDropdownData;

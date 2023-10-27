@@ -1,6 +1,6 @@
 /**
-* @discription - FigureCard is a function based component. This component generate a card 
-* of a row of the body table 
+* @discription - FigureCard is a function based component. This component generate a card
+* of a row of the body table
 * for each search result given to it
 */
 import React from 'react';

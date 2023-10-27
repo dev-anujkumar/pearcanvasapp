@@ -9,8 +9,8 @@ const {
 } = config
 
 /**
- * Triggers Slate level save api on different events 
- * @param {*} entityURN Slate URN 
+ * Triggers Slate level save api on different events
+ * @param {*} entityURN Slate URN
  * @param {*} triggerAction event name
  */
 export const triggerSlateLevelSave = (entityURN, triggerAction, paramDetails = {}) => {

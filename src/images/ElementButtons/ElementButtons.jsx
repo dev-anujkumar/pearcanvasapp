@@ -25,7 +25,7 @@ export const editInCypressPlus = (() => {
       </svg>
     )
   })();
-  
+
 
 export const textIcon = (function () {
     return (<svg id="textIcon" viewBox="0 0 16 16" width="16" height="16" version="1.1" xmlns="http://www.w3.org/2000/svg"><rect width="16" height="16" fill="none" /><path d="M14.2,1.5H3.8a.71.71,0,0,0-.8.7V4.4H4.5V3H8.3V15H6v1.5h6V15H9.8V3h3.8V4.5H15V2.2A.71.71,0,0,0,14.2,1.5Z" /></svg>)
@@ -67,7 +67,7 @@ export const stanzaIcon = (function () {
 
 export const imageIcon = (function () {
     return (<svg id="image-media" viewBox="0 0 16 14" width="18" height="18" version="1.1" xmlns="http://www.w3.org/2000/svg"><rect width="18" height="18" fill="none" ></rect><path d="M15,2h0V14H1V2H15Zm0-1H1A1,1,0,0,0,0,2V14a1,1,0,0,0,1,1H15a1,1,0,0,0,1-1V2a1,1,0,0,0-1-1Z" transform="translate(0 -1)"></path><path d="M13,4.5A1.5,1.5,0,1,1,11.5,3,1.5,1.5,0,0,1,13,4.5Z" transform="translate(0 -1)"></path><path d="M14,13H2V11L5.5,5l4,5h1L14,7Z" transform="translate(0 -1)"></path></svg>)
-    
+
 })();
 
 export const interativeIcon = (function () {
@@ -93,10 +93,10 @@ export const audioIcon = (function () {
 export const videoIcon = (function () {
     return (
         <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <rect fill="#D8D8D8" width="36" height="36" rx="3" />
                 <path d="M7.902 7.024h21.074v21.074H7.902z" />
-                <path d="M22.83 16.244V13.17a.88.88 0 0 0-.879-.878H11.415a.88.88 0 0 0-.878.878v8.78a.88.88 0 0 0 .878.878H21.95a.88.88 0 0 0 .878-.878v-3.073l3.512 3.512v-9.658l-3.512 3.512z" fill="#323232" fill-rule="nonzero" />
+                <path d="M22.83 16.244V13.17a.88.88 0 0 0-.879-.878H11.415a.88.88 0 0 0-.878.878v8.78a.88.88 0 0 0 .878.878H21.95a.88.88 0 0 0 .878-.878v-3.073l3.512 3.512v-9.658l-3.512 3.512z" fill="#323232" fillRule="nonzero" />
             </g>
         </svg>
     )
@@ -105,10 +105,10 @@ export const videoIcon = (function () {
 export const smartlinkIcon = (function () {
     return (
         <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <rect fill="#D8D8D8" width="36" height="36" rx="3" />
                 <path d="M6 6h24v24H6z" />
-                <path d="M17 27h-1l1-7h-3.5c-.88 0-.33-.75-.31-.78 1.29-2.28 3.23-5.68 5.82-10.22h1l-1 7h3.51c.4 0 .62.19.4.66C18.97 23.55 17 27 17 27z" fill="#323232" fill-rule="nonzero" />
+                <path d="M17 27h-1l1-7h-3.5c-.88 0-.33-.75-.31-.78 1.29-2.28 3.23-5.68 5.82-10.22h1l-1 7h3.51c.4 0 .62.19.4.66C18.97 23.55 17 27 17 27z" fill="#323232" fillRule="nonzero" />
             </g>
         </svg>
     )
@@ -117,10 +117,10 @@ export const smartlinkIcon = (function () {
 export const figureAudioIcon = (function () {
     return (
         <svg width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <rect fill="#D8D8D8" width="36" height="36" rx="3" />
                 <path d="M6 6h24v24H6z" />
-                <path d="M18 9a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8h-4v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9zm-5 12v4h-2v-4h2zm12 4h-2v-4h2v4z" fill="#323232" fill-rule="nonzero" />
+                <path d="M18 9a9 9 0 0 0-9 9v7c0 1.1.9 2 2 2h4v-8h-4v-1c0-3.87 3.13-7 7-7s7 3.13 7 7v1h-4v8h4c1.1 0 2-.9 2-2v-7a9 9 0 0 0-9-9zm-5 12v4h-2v-4h2zm12 4h-2v-4h2v4z" fill="#323232" fillRule="nonzero" />
             </g>
         </svg>
 
@@ -130,11 +130,11 @@ export const figureAudioIcon = (function () {
 export const figureDeleteIcon = (function () {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <g>
                     <g>
                         <g>
-                            <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1006.000000, -527.000000) translate(1000.000000, 521.000000) translate(6.000000, 6.000000)" />
+                            <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-1006.000000, -527.000000) translate(1000.000000, 521.000000) translate(6.000000, 6.000000)" />
                             <path fill="#AA0100" d="M6.889 18.222c0 .982.796 1.778 1.778 1.778h7.11c.983 0 1.779-.796 1.779-1.778V7.556H6.889v10.666m2.187-6.329l1.253-1.253 1.893 1.884 1.885-1.884 1.253 1.253-1.884 1.885 1.884 1.884-1.253 1.254-1.885-1.885-1.884 1.885-1.254-1.254 1.885-1.884-1.893-1.885m6.257-7.004L14.444 4H10l-.889.889H6v1.778h12.444V4.889h-3.11z" transform="translate(-1006.000000, -527.000000) translate(1000.000000, 521.000000) translate(6.000000, 6.000000)" />
                         </g>
                     </g>
@@ -158,7 +158,7 @@ export const containerIcon = (function () {
 
 export const workedExampleIcon = (function () {
     return (
-        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg"  width="25" height="20" x="0px" y="0px" viewBox="14 13 37 34">  
+        <svg id="workedExampleIcon" xmlns="http://www.w3.org/2000/svg"  width="25" height="20" x="0px" y="0px" viewBox="14 13 37 34">
             <g id="Artboard_5">
                 <rect width="64" height="64" fill="#fff"></rect>
                 <g id="Group_2311" transform="translate(-53 -403)">
@@ -300,12 +300,12 @@ export const singleAssessmentItemIcon = (()=>{
             <path fill="#FFF" d="M9 6.3H18V7.699999999999999H9z"/>
         </g>
     </svg>
-    
+
         )
     })();
 
 export const elmSortDown = (()=>{
-        return (      
+        return (
             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 31.49 31.49" xmlSpace="preserve" width="15" height="10" transform="rotate(90)">
                 <path fill="#1E201D" d="M21.205,5.007c-0.429-0.444-1.143-0.444-1.587,0c-0.429,0.429-0.429,1.143,0,1.571l8.047,8.047H1.111,C0.492,14.626,0,15.118,0,15.737c0,0.619,0.492,1.127,1.111,1.127h26.554l-8.047,8.032c-0.429,0.444-0.429,1.159,0,1.587,c0.444,0.444,1.159,0.444,1.587,0l9.952-9.952c0.444-0.429,0.444-1.143,0-1.571L21.205,5.007z"/>
             </svg>
@@ -313,7 +313,7 @@ export const elmSortDown = (()=>{
     })();
 
 export const elmSortUp = (()=>{
-        return (      
+        return (
             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 31.49 31.49" xmlSpace="preserve" width="15" height="10" transform="rotate(-90)">
                 <path fill="#1E201D" d="M21.205,5.007c-0.429-0.444-1.143-0.444-1.587,0c-0.429,0.429-0.429,1.143,0,1.571l8.047,8.047H1.111,C0.492,14.626,0,15.118,0,15.737c0,0.619,0.492,1.127,1.111,1.127h26.554l-8.047,8.032c-0.429,0.444-0.429,1.159,0,1.587,c0.444,0.444,1.159,0.444,1.587,0l9.952-9.952c0.444-0.429,0.444-1.143,0-1.571L21.205,5.007z"/>
             </svg>
@@ -321,11 +321,11 @@ export const elmSortUp = (()=>{
     })();
 
 export const elmNavigateBack = (()=>{
-        return ( 
+        return (
             <svg fill='rgb(86, 83, 83)' transform="rotate(-90)" width="15" height="15" viewBox="0 0 24 24">
                 <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path>
                 <path d="M0 0h24v24H0z" fill="none"></path>
-            </svg>     
+            </svg>
             )
         })();
 
@@ -349,7 +349,7 @@ export const citationElement = (() => {
 })();
 
 export const tableElemIcon = (() => {
-    return ( 
+    return (
         <svg id="tableIcon" style ={{width: "20px", height: "20px", fill: "#9e9e9e"}} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 24 24">
             <path d="M5,4H19A2,2 0 0,1 21,6V18A2,2 0 0,1 19,20H5A2,2 0 0,1 3,18V6A2,2 0 0,1 5,4M5,8V12H11V8H5M13,8V12H19V8H13M5,14V18H11V14H5M13,14V18H19V14H13Z" />
         </svg>
@@ -408,7 +408,7 @@ export const nextIcon = (() => {
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="20" viewBox="0 0 12 20">
         <path fill="#005A70" d="M1.944 20c.536 0 1.073-.133 1.475-.532l8.045-7.973c.402-.399.536-.93.536-1.462 0-.531-.268-1.063-.536-1.462L3.419.598c-.804-.797-2.011-.797-2.816 0-.804.797-.804 1.993 0 2.79l6.704 6.645-6.704 6.645c-.804.797-.804 1.993 0 2.79.269.4.805.532 1.341.532z"/>
     </svg>
-    
+
 
     )
 })();
@@ -525,17 +525,17 @@ export const searchDisussion = (() => {
                     <path fill="#A8A8A8" fillRule="nonzero" d="M15.435 14.063h-.723l-.256-.247c.897-1.043 1.437-2.397 1.437-3.87C15.893 6.662 13.23 4 9.946 4 6.662 4 4 6.662 4 9.946s2.662 5.947 5.946 5.947c1.473 0 2.827-.54 3.87-1.437l.247.256v.723L18.637 20 20 18.637l-4.565-4.574zm-5.489 0c-2.278 0-4.116-1.839-4.116-4.117S7.668 5.83 9.946 5.83c2.278 0 4.117 1.838 4.117 4.116 0 2.278-1.839 4.117-4.117 4.117z" transform="translate(-247 -141) translate(235 133) translate(12 8)"/>
                 </g>
             </g>
-        </svg>    
+        </svg>
     )
 })()
 
 export const commentFlagged = (() => {
     return (
         <svg width="11" height="12" viewBox="3 3 12 12" xmlns="http://www.w3.org/2000/svg">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <path fill="#FFF" d="M11.635 5.412 11.353 4H5v12h1.412v-4.941h3.953l.282 1.412h4.941V5.41z" />
             </g>
-        </svg>  
+        </svg>
     )
 })()
 

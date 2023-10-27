@@ -4,7 +4,7 @@ import { sendDataToIframe} from '../constants/utility';
 export const modifyObjKeys = (obj, newObj) => {
     Object.keys(obj).forEach(function(key) {
       delete obj[key];
-    });      
+    });
     Object.keys(newObj).forEach(function(key) {
       obj[key] = newObj[key];
     });
@@ -33,14 +33,14 @@ export const timeSince = (countTimer) => {
     if (interval && interval.label != 'second') {
         count = Math.floor(seconds / interval.seconds);
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus : `Refreshed, ${count} ${interval.label == 'second' ? '' : interval.label} ago`} });
-    }        
+    }
 }
 
 export const removeWirisOverlay =() =>{
     let targetNode = document.querySelector('body');
-        // Options for the observer (which mutations to observe)		
+        // Options for the observer (which mutations to observe)
         var config = { attributes: true };
-        // Callback function to execute when mutations are observed		
+        // Callback function to execute when mutations are observed
         let callbackOb = function (mutationsList, observercb) {
             for (var mutation of mutationsList) {
                 if (mutation.type === 'attributes') {
@@ -55,9 +55,9 @@ export const removeWirisOverlay =() =>{
                 }
             }
         };
-        // Create an observer instance linked to the callback function		
+        // Create an observer instance linked to the callback function
         let observer = new MutationObserver(callbackOb);
-        // Start observing the target node for configured mutations	
+        // Start observing the target node for configured mutations
         if (targetNode)
             observer.observe(targetNode, config);
 }

@@ -1,6 +1,6 @@
 import { sendDataToIframe } from '../constants/utility.js';
 import {ShowLoader} from '../constants/IFrameMessageTypes.js';
-/** 
+/**
  * method 'showBlocker' used to send the message to wrapper via html 5 message for enabling tocBlocker
  *  **/
 export const showBlocker = () => {
@@ -9,7 +9,7 @@ export const showBlocker = () => {
     disableHeader(true);
 }
 
-/** 
+/**
  * method 'hideBlocker' used to send the message to wrapper via html 5 message for disabling tocBlocker
  *  **/
 export const hideBlocker = () => {

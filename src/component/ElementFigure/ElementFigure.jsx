@@ -49,7 +49,7 @@ class ElementFigure extends Component {
                 alfrescoSiteData:{...response}
             })
           })
-        } 
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -81,7 +81,7 @@ class ElementFigure extends Component {
         disableHeader(false);
         let imageData = data;
         let epsURL = imageData.epsUrl? imageData.epsUrl : "";
-        let figureType = data?.content?.mimeType?.split('/')[0]             
+        let figureType = data?.content?.mimeType?.split('/')[0]
         //commented lines will be used to update the element data
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
@@ -115,7 +115,7 @@ class ElementFigure extends Component {
                 longdescription: longDesc,
                 type: figureType,
             }
-            
+
             Object.assign(setFigureData, (Object.keys(scaleMarkerData).length > 0) ? { scaleimage: scaleMarkerData } : null);
 
             this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId,this.props.asideData, () => {
@@ -145,7 +145,7 @@ class ElementFigure extends Component {
             }
             // to blank the elementId and asset data after update
             let payloadObj = {
-                asset: {}, 
+                asset: {},
                 id: ''
             }
             this.props.saveSelectedAssetData(payloadObj)
@@ -192,7 +192,7 @@ class ElementFigure extends Component {
                 let messageObj = {
                     appName:'cypress',
                     citeName: citeName,
-                    citeNodeRef: nodeRefs, 
+                    citeNodeRef: nodeRefs,
                     elementId: this.props.elementId,
                     currentAsset
                  }
@@ -273,9 +273,9 @@ class ElementFigure extends Component {
                 }
             })
             .then(function (response) {
-            
-               let payloadObj = {launchAlfrescoPopup: true, 
-                alfrescoPath: alfrescoPath, 
+
+               let payloadObj = {launchAlfrescoPopup: true,
+                alfrescoPath: alfrescoPath,
                 alfrescoListOption: response.data.list.entries,
                 id,
                 locationData
@@ -327,12 +327,12 @@ class ElementFigure extends Component {
         var figureJsx;
 
         let figureHtmlData = getLabelNumberTitleHTML(model);
-        
+
         if (model && model.figuretype === 'authoredtext') {
             let posterText = model.html.text
             if (posterText === "" || posterText === '<p></p>') {
                 posterText = '<br />';
-            } 
+            }
             /**JSX for MathML/ChemML Editor*/
             figureJsx = <div className={divClass}>
                 <figure className={figureClass} resource="">
@@ -359,12 +359,12 @@ class ElementFigure extends Component {
                 </div>
             </div>
         } else if (model && model.figuretype === 'codelisting') {
-        
+
             let preformattedText = model.html && model.html.preformattedtext && model.html.preformattedtext.replace(/<p>/g, "")
             preformattedText = preformattedText && preformattedText.replace(/<\/p>/g, "")
             let processedText = preformattedText ? preformattedText : '<span class="codeNoHighlightLine"><br /></span>';
             if (!preformattedText || preformattedText === '<p></p>'){
-                processedText = '<span class="codeNoHighlightLine"><br /></span>' 
+                processedText = '<span class="codeNoHighlightLine"><br /></span>'
             }
 
             /**JSX for Block Code Editor*/

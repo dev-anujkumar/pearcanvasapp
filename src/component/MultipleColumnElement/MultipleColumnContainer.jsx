@@ -143,7 +143,7 @@ class MultipleColumnContainer extends PureComponent {
                                 source={MULTICOLUMN_SOURCE}
                                 handleCopyPastePopup={this.props.handleCopyPastePopup}
                                 dataId = {element.id}
-                            />  
+                            />
                             </LazyLoad>
                         </React.Fragment>
                     )
@@ -217,9 +217,9 @@ class MultipleColumnContainer extends PureComponent {
                                 let dataObj = this.prepareSwapData(evt, parentUrn)
                                 this.props.swapElement(dataObj, () => { })
                                 this.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
-                                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
+                                sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                             },
-                        }}  
+                        }}
                         tag="div"
                         ref={(c) => {
                             if (c) {
@@ -251,12 +251,12 @@ class MultipleColumnContainer extends PureComponent {
                 </React.Fragment>
             )
         })
-        
+
     }
 
      /**
      * Handles focus
-     * @param {Object} event 
+     * @param {Object} event
      */
       handleFocus = (event) => {
         if(event && event.target && !(event.target.classList.contains('container-multi-column-group-3c'))){

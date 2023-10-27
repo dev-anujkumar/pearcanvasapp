@@ -39,7 +39,7 @@ export const handleCutPasteInDiffSlate = (parentEntityUrn, elements, getState, d
 
 /**
  * Handle AUTO-NUMBERING on Delete
- * @param {*} params 
+ * @param {*} params
  */
 export const handleAutoNumberingOnCopyPaste = async (params) => {
     const {
@@ -191,7 +191,7 @@ export const updateAutoNumberSequenceOnCopyElements = (params) => {
 
 
 /**
- *  This function resets sequence after CUT/COPY Operation 
+ *  This function resets sequence after CUT/COPY Operation
  * for a container having autonumbered elements
  * @param {*} params
  */
@@ -208,7 +208,7 @@ export const updateAutoNumberSequenceOnCutCopyContainers = (params) => {
     } = params;
     let oldNumberedElements = { ...numberedElements }
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
-    /* get numberedElements with Object Values as Arrays for easy iteration 
+    /* get numberedElements with Object Values as Arrays for easy iteration
     where is array of elements is corr to current figureParentEntityUrn ONLY */
     Object.keys(oldNumberedElements).forEach(labelType => {
         if ((Array.isArray(oldNumberedElements[labelType]) && oldNumberedElements[labelType]?.length === 0) || (Object.keys(oldNumberedElements[labelType])?.length < 0)) {
@@ -236,7 +236,7 @@ export const updateAutoNumberSequenceOnCutCopyContainers = (params) => {
                 const currentSlateStartIndex = oldNumberedElements[elementLabel]?.findIndex(ele => ele.slateEntityUrn === currentSlateEntityUrn)
                 //replace entire list of same label elements for this slate in the main autonumbered sequence
                 numberedElements[elementLabel][figureParentEntityUrn].splice(currentSlateStartIndex, oldLabelElements.length, ...activeNumberedElements)
-            } else {// when no element of same label on given slate 
+            } else {// when no element of same label on given slate
                 if (tocContainerSlateList?.indexOf(currentSlateEntityUrn) === 0) { // when inserting on the first slate on the container
                     //insert at beginning of list
                     numberedElements[elementLabel][figureParentEntityUrn].splice(0, 0, ...activeNumberedElements)

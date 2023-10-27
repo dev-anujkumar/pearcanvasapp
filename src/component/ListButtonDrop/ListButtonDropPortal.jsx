@@ -109,7 +109,7 @@ class ListButtonDropPortal extends Component {
                                     }
                                 }
                             )
-                          
+
                         }else if (element.type === "showhide"){
                             this.props?.asideData?.type === "showhide" && this.props.asideData && element.interactivedata[this.props?.asideData?.sectionType].find(
                                 (nselement) => {
@@ -215,7 +215,7 @@ class ListButtonDropPortal extends Component {
  /**
   * function to get selected element metadata
   * @param {String} elementId
-  * @param {Object} elementData 
+  * @param {Object} elementData
   * @returns {Array} selected element metadata
  */
  getBlockListMetaData = (elementId, elementData) => {

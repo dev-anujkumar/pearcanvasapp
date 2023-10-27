@@ -189,7 +189,7 @@ class ElementSingleAssessment extends Component {
         })
     }
 
-    
+
     setChangeUsageType = (usageType) => {
         this.setState({
             activeAsseessmentUsageType: usageType,
@@ -201,7 +201,7 @@ class ElementSingleAssessment extends Component {
         })
     }
     /**
-     * @description This function is used to toggle changeUsageTypePopup 
+     * @description This function is used to toggle changeUsageTypePopup
      * @param {*} toggleValue Boolean value
      * @param {*} event event object
      */
@@ -233,7 +233,7 @@ class ElementSingleAssessment extends Component {
         }
         return null
     }
-    
+
     updateUsageTypeAfterProceed = (flag,evt) =>{
         this.prohibitPropagation(evt);
         this.showCanvasBlocker(false);
@@ -262,14 +262,14 @@ class ElementSingleAssessment extends Component {
     }
 
     /*** @description - This function is to handle Focus on the Assessment element on click*/
-    
+
     handleAssessmentFocus = (event) => {
         if(event){
             event.stopPropagation();
         }
         this.props.handleFocus();
     }
-    /*** @description - This function is to handle Blur on the Assessment element on blur*/       
+    /*** @description - This function is to handle Blur on the Assessment element on blur*/
     handleAssessmentBlur = () =>{
         this.props.handleBlur("","",this.props.index);
     }
@@ -310,8 +310,8 @@ class ElementSingleAssessment extends Component {
         });
     }
     /***
-    *  @description - This is the function to add CITE/TDX to Embedded-Assessment  
-    * @param citeTdxObj - The object contains data about CITE/TDX Assessment 
+    *  @description - This is the function to add CITE/TDX to Embedded-Assessment
+    * @param citeTdxObj - The object contains data about CITE/TDX Assessment
     */
     addCiteTdxAssessment = (citeTdxObj, parentPageNo=1) => {
         showTocBlocker();
@@ -442,7 +442,7 @@ class ElementSingleAssessment extends Component {
 
     /*** @description This function is used to open Version update Popup */
     openUpdateElmPopup = (event) => {
-        this.prohibitPropagation(event);   
+        this.prohibitPropagation(event);
         if (hasReviewerRole() || !(this.props.permissions && this.props.permissions.includes('elements_add_remove'))) {
             return true;
         }
@@ -506,8 +506,8 @@ class ElementSingleAssessment extends Component {
     }
 
     /***
-    *  @description - This is the function to add Elm/Learnosity to Embedded-Assessment  
-    * @param pufObj - The object contains data about Elm/Learnosity Assessment 
+    *  @description - This is the function to add Elm/Learnosity to Embedded-Assessment
+    * @param pufObj - The object contains data about Elm/Learnosity Assessment
     */
     updatePufAssessment = (pufObj, oldElmAssessmentId) => {
         showTocBlocker();
@@ -616,7 +616,7 @@ class ElementSingleAssessment extends Component {
                 {this.renderAssessmentType(model, index)}
                 {this.state.changeUsageTypePopup && this.showChangeUsageTypePopup()}
                 {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType== CITE ? CITE : TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
-                {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}     
+                {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}
             </div>
         );
     }

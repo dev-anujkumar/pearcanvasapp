@@ -20,7 +20,7 @@ function showCommentsManagerAsideIcon(element, elmUrn) {
                     if(ele?.type === SHOW_HIDE) { /* Ex. -  WE:Body/SectionBreak:SH:P*/
                      elmUrn.push(ele.id)
                         showCommentsManagerIconInSH(ele, elmUrn);
-                    } 
+                    }
                     else { elmUrn.push(ele.id) } /* Ex. -  WE:Body/SectionBreak:P*/
                 })
             }
@@ -81,7 +81,7 @@ function showCommentsManagerMultiColIcon(element, elmUrn) {
 
 /**
 * @function showCommentsManagerIconInSH
-* @description Show comment's manager icon in right side of element inside Shohide; Ex. -  SH:P 
+* @description Show comment's manager icon in right side of element inside Shohide; Ex. -  SH:P
 */
 function showCommentsManagerIconInSH(element, elmUrn) {
      ["show","hide"].forEach(sectionType => {

@@ -29,7 +29,7 @@ export const projectInfo = (state = initialState, action={type:'', payload:{}}) 
                 ...action.payload
             }
         }
-        
+
         case UPDATE_USAGE_TYPE: {
           return {
             ...state,
@@ -72,7 +72,7 @@ export const projectInfo = (state = initialState, action={type:'', payload:{}}) 
             workflowRole: action.payload,
           }
         }
-        
+
         case SET_PROJECT_SHARING_ROLE: {
           return {
             ...state,

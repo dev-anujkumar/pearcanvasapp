@@ -39,10 +39,10 @@ export class ElementAuthoring extends Component {
           parentManifestListItem={this?.props?.parentManifestListItem}
         />
        </KeyboardWrapper>
-       
+
     )
 
-    
+
   }
 }
 ElementAuthoring.defaultProps = {

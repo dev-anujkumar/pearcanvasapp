@@ -19,8 +19,8 @@ class SlateTagDropdown extends React.Component {
         }
         this.warningActionIntiator=''
     }
-   
-    
+
+
     componentWillMount() {
         document.addEventListener('mousedown', this.handleClick, false);
     }
@@ -30,10 +30,10 @@ class SlateTagDropdown extends React.Component {
     handleClick = (e) => {
         if (this.closestByClass(e.target, 'leaningobjective-block')) {
         return;
-            
+
         }
         this.props.closeLODropdown()
-       
+
     }
     closestByClass = function(el, clazz) {
     // Traverse the DOM up with a while loop
@@ -100,7 +100,7 @@ class SlateTagDropdown extends React.Component {
       this.props.toggleLOWarningPopup(true,e.target.innerText);
     } else if (e?.target?.innerText == AlignToExternalFrameworkSlateDropdown && this.props.permissions.includes('lo_edit_metadata')) {
       sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
-      sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
+      sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } });
       sendDataToIframe({
         'type': OpenLOPopup,
         'message': {
@@ -127,7 +127,7 @@ class SlateTagDropdown extends React.Component {
       this.props.closeLODropdown();
     }
 
-  } 
+  }
 
   /** Enable/Disable External LOs Link Option based on External LF linked to Project*/
   checkExternalFramework = () => {
@@ -149,7 +149,7 @@ class SlateTagDropdown extends React.Component {
 
   toggleLoOptionsDropdownAS = () => {
     sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
-    sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
+    sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } });
     if(this.node3.style.display=='block'){
       this.node3.style.display='none'
     }
@@ -184,7 +184,7 @@ class SlateTagDropdown extends React.Component {
         case LEARNING_TEMPLATE:
         case PUF:
         case LEARNOSITY:
-        default: 
+        default:
             assessmentTypeLO = ASSESSMENT_ITEM
             break;
     }
@@ -196,7 +196,7 @@ class SlateTagDropdown extends React.Component {
         projectEntityUrn:config.projectEntityUrn
     }
     sendDataToIframe({ 'type': 'tocToggle', 'message': { open: false } })
-    sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } }); 
+    sendDataToIframe({ 'type': 'canvasBlocker', 'message': { open: true } });
     if(popupType==='add'){
       sendDataToIframe({
         'type': OpenLOPopup,
@@ -256,7 +256,7 @@ class SlateTagDropdown extends React.Component {
               <ul>
                 <div>
                   {
-                    !isExternalLoInAssessment?                
+                    !isExternalLoInAssessment?
                     <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
                     :
                     <li onClick={this.toggleLoOptionsDropdownAS} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span><span className='lo-navigation-icon2'>{loNextIcon}</span></li>
@@ -269,8 +269,8 @@ class SlateTagDropdown extends React.Component {
                       <li className= {`${subscriberContent}`} onClick={() =>this.openAssessmentExternalPopup('add')}>{AddEditLOsAssessmentSlate}</li>
                       <li className={this.props.isLOExist ? '' : 'disabled'} onClick={() =>this.openAssessmentExternalPopup('view')}>{ViewLOsAssessmentSlate}</li>
                 </ul>
-            </div> 
-        </div>            
+            </div>
+        </div>
         )
     }
 }

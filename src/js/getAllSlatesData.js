@@ -14,7 +14,7 @@ export const fetchAllSlatesData = () => dispatch => {
 /**
  * @function getAllSlatesData
  * @description-This function is to send data from TOC as allSlateData to the appStore
- * @param {Object} allSlateData  
+ * @param {Object} allSlateData
 */
 export const getAllSlatesData = (allSlateData) => dispatch => {
     dispatch(prepareAllSlateData(allSlateData))
@@ -24,7 +24,7 @@ export const getAllSlatesData = (allSlateData) => dispatch => {
  * @function setItemDetails
  * @description-This function is to prepare details for an item
  * @param {Object} item
- * @returns {Object}  
+ * @returns {Object}
 */
 const setItemDetails = (item) => {
     if (item && item.label != 'project') {
@@ -40,9 +40,9 @@ const setItemDetails = (item) => {
 /**
  * @function prepareContainerData
  * @description-This function is to prepare structured data for a given  matterContent
- * @param {Array} matterContent  
+ * @param {Array} matterContent
  * @param {String} matterType
- * @returns {Array}  
+ * @returns {Array}
 */
 const prepareContainerData = (matterContent, matterType) => {
     let matterData = [];
@@ -66,7 +66,7 @@ const prepareContainerData = (matterContent, matterType) => {
 /**
  * @function prepareContents
  * @description-This function is to prepare structured data for a given  matterContent
- * @param {Object} data  
+ * @param {Object} data
  * @returns {Array}
 */
 const prepareContents = (data) => {
@@ -80,7 +80,7 @@ const prepareContents = (data) => {
 /**
  * @function prepareAllSlateData
  * @description-This function is to prepare structured data for the parentData and childData recevied from TOC
- * @param {object} allSlatesData  
+ * @param {object} allSlatesData
 */
 export const prepareAllSlateData = (allSlatesData) => dispatch => {
     let parentData = allSlatesData && allSlatesData['parentData'] ? allSlatesData['parentData'] : {},
@@ -149,9 +149,9 @@ const setAllMatterContent = (processedData, childrenData) => {
 
 /**
  * @function setChildContents
- * @description-This function is to set Contents for Current Container 
- * @param {Object} container  
- * @param {Object} childrenData  
+ * @description-This function is to set Contents for Current Container
+ * @param {Object} container
+ * @param {Object} childrenData
  * @returns {Object}
 */
 const setChildContents = (container, childrenData) => {
@@ -166,7 +166,7 @@ const setChildContents = (container, childrenData) => {
 /**
  * @function setCurrentSlateAncestorData
  * @description-This function is to set details for Current Slate from AllSlatesData
- * @param {Object} allSlatesData  
+ * @param {Object} allSlatesData
 */
 export const setCurrentSlateAncestorData = (allSlateData) => dispatch => {
 
@@ -239,7 +239,7 @@ const compareCurrentSlateUrn = (containerUrn, entityUrn) => {
 /**
  * @function setCurrentSlateAncestorDataDetails
  * @description-This is a recursive function to prepare structured data for the current Slate based and set its ancestors
- * @param {Array} matterTypeData  
+ * @param {Array} matterTypeData
  * @param {Object} ancestor
  * @param {String} matterType
  * @returns {Object}

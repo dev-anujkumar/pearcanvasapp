@@ -34,9 +34,9 @@ class AssessmentSlateCanvas extends Component {
         }
     }
 
-    /*** 
-    * @description - This is the function to add Elm/Learnosity Assessments to Assessment Slate 
-    * @param pufObj - The object contains data about Elm/Learnosity Assessment 
+    /***
+    * @description - This is the function to add Elm/Learnosity Assessments to Assessment Slate
+    * @param pufObj - The object contains data about Elm/Learnosity Assessment
     */
     addPufAssessment = (pufObj, activeAssessmentType, updateType, cb) => {
         showTocBlocker();
@@ -47,9 +47,9 @@ class AssessmentSlateCanvas extends Component {
         }
     }
 
-    /*** 
-    * @description - This is the function to add CITE/TDX Assessments to Assessment Slate 
-    * @param citeTdxObjs - The object contains data about CITE/TDX Assessment 
+    /***
+    * @description - This is the function to add CITE/TDX Assessments to Assessment Slate
+    * @param citeTdxObjs - The object contains data about CITE/TDX Assessment
     * @param activeAssessmentType currwnt assessment format (CITE/TDX)
     */
     addCiteTdxAssessment = (citeTdxObj, activeAssessmentType) => {

@@ -26,7 +26,7 @@ const {
     let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
     let uniqID = imageData.id ? imageData.id : "";
     let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
-    let figureType = data?.content?.mimeType?.split('/')[0]             
+    let figureType = data?.content?.mimeType?.split('/')[0]
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
     const imgData = `<img imageid="urn:pearson:alfresco:${uniqID}" src=${epsURL} height="150" width="112"  class="imageAssetContent" data-id="${imageID}"/>`;
     const imageTypes = ["image", "table", "mathImage", "authoredtext"];
@@ -86,8 +86,8 @@ export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlf
                 const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                 const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                 const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
-                let messageObj = {appName:'cypress', citeName: citeName, 
-                    citeNodeRef: citeNodeRef, 
+                let messageObj = {appName:'cypress', citeName: citeName,
+                    citeNodeRef: citeNodeRef,
                     elementId: element.id,
                     editor: true,
                     currentAsset
@@ -126,8 +126,8 @@ function handleSiteOptionsDropdown (alfrescoPath, id, currentAsset) {
         })
         .then(function (response) {
            let payloadObj = {
-            launchAlfrescoPopup: true, 
-            alfrescoPath: alfrescoPath, 
+            launchAlfrescoPopup: true,
+            alfrescoPath: alfrescoPath,
             alfrescoListOption: response.data.list.entries,
             id,
             editor: true,
@@ -157,11 +157,11 @@ export const checkForDataIdAttribute =(defModel) => {
 }
 
 /**
- * function to get selected block list immediate parent container details 
- * @param {Object} bodymatter 
- * @param {Number} start 
- * @param {Number} end 
- * @param {Array} indexes 
+ * function to get selected block list immediate parent container details
+ * @param {Object} bodymatter
+ * @param {Number} start
+ * @param {Number} end
+ * @param {Array} indexes
  * @returns {Object}
  */
 export const getBLParentContainer = (bodymatter, start, end, indexes) => {
@@ -177,8 +177,8 @@ export const getBLParentContainer = (bodymatter, start, end, indexes) => {
 }
 
 /**
- * function to check if selected container is inside block list and get its parent container details 
- * @param {Object} data 
+ * function to check if selected container is inside block list and get its parent container details
+ * @param {Object} data
  * @param {String} keypressed
  * @returns {Boolean}
  */
@@ -253,7 +253,7 @@ export const isElementInsideBlocklist = (activeElement, slateData) => {
             }if((contents?.bodymatter[indexes[0]]?.type === "element-aside" && data?.asideData?.type === 'manifestlist') || (config.isPopupSlate && parentElement?.type === 'element-aside'))
                 return true
             if ((parentElement && parentElement.type === "groupedcontent" && data.asideData.parentManifestList) || (config.isPopupSlate && parentElement?.type === "groupedcontent"))
-                return true;  
+                return true;
             if ((indexes && indexes.length && contents?.bodymatter[indexes[0]] && 'type' in contents?.bodymatter[indexes[0]] && contents?.bodymatter[indexes[0]]?.type === MANIFEST_LIST) ||  (config.isPopupSlate && data?.asideData?.type === MANIFEST_LIST)) {
                 return true;
             }
@@ -312,9 +312,9 @@ export const setInstanceToolbar = (element,placeholder,showHideType, labelNumber
     }
     if (element?.type === "element-dialogue") {
         switch(placeholder){
-            case "Enter Act Title...": 
-            case "Enter Scene Title...": 
-            case "Enter Credit...": { 
+            case "Enter Act Title...":
+            case "Enter Scene Title...":
+            case "Enter Credit...": {
                 toolbar = [...config.playScriptToolbar, 'glossary'];
                 break;
             }

@@ -95,7 +95,7 @@ export const findElementType = (element, index) => {
                         elementType['primaryOption'] = elementDataBank["element-authoredtext-handwriting"]["primaryOption"];
                         elementType['secondaryOption'] = elementDataBank["element-authoredtext-handwriting"]["secondaryOption"];
                     }
-                } 
+                }
                 else {
                     elementType['primaryOption'] = elementDataBank[element.type]["primaryOption"];
                     elementType['secondaryOption'] = elementDataBank[element.type]["secondaryOption"];
@@ -220,7 +220,7 @@ export const findElementType = (element, index) => {
                             primaryOption: elementDataBank[element.type][element.figuretype]["primaryOption"],
                             ...elementDataBank[element.type][element.figuretype][assessmentFormat]
                         }
-                        element.figuredata.elementdata.assessmentformat = assessmentFormat 
+                        element.figuredata.elementdata.assessmentformat = assessmentFormat
                         elementType["usageType"]= element.figuredata.elementdata.usagetype ? element.figuredata.elementdata.usagetype : ""
                         break;
                 }
@@ -236,7 +236,7 @@ export const findElementType = (element, index) => {
                 else if (element.subtype !== "workedexample" && (element.designtype == "" || element.designtype == undefined)) {
                     element.designtype = "asideLearningObjective";
                 }
-                
+
                 elementType = {
                     elementType: elementDataBank[element.type][element.subtype]["elementType"],
                     ...elementDataBank[element.type][element.subtype][element.designtype]
@@ -293,17 +293,17 @@ export const findElementType = (element, index) => {
             case  'groupedcontent':
                 elementType = {
                     elementType: elementDataBank[element.type]["elementType"],
-                    primaryOption: elementDataBank[element.type]["primaryOption"]  
+                    primaryOption: elementDataBank[element.type]["primaryOption"]
                 }
                 if (element?.width && element?.subtype === 'tab') {
                     elementType["primaryOption"] = TABBED_2_COLUMN.ELEMENT_NAME;
                     elementType["secondaryOption"] = elementDataBank[element.type]["wider-60-40"]["secondaryOption"]
                 } else if (element.width && element.groupproportions) {
-                    // checking for column 3 proportion to set primaryOption 
-                    if(element.groupproportions === MULTI_COLUMN_3C.ELEMENT_PROPORTION) elementType["primaryOption"] = MULTI_COLUMN_3C.ELEMENT_NAME; 
+                    // checking for column 3 proportion to set primaryOption
+                    if(element.groupproportions === MULTI_COLUMN_3C.ELEMENT_PROPORTION) elementType["primaryOption"] = MULTI_COLUMN_3C.ELEMENT_NAME;
                     elementType["secondaryOption"] = elementDataBank[element.type][`${element.width}-${element.groupproportions}`]["secondaryOption"]
                 } else {
-                    elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"] 
+                    elementType["secondaryOption"] = elementDataBank[element.type]["wider-50-50"]["secondaryOption"]
                 }
                 break;
             case "group":
@@ -332,7 +332,7 @@ export const findElementType = (element, index) => {
                     elementType: elementDataBank[dialogueType]["elementType"],
                     primaryOption: elementDataBank[dialogueType]["primaryOption"],
                     secondaryOption: elementDataBank[dialogueType]["secondaryOption"],
-                 
+
                 }
                 break;
             }
@@ -348,7 +348,7 @@ export const findElementType = (element, index) => {
     elementType['index'] = index;
     elementType['elementWipType'] = element.type;
     elementType['toolbar'] = [];
-    
+
     if (elementType.elementType && elementType.elementType !== '') {
         elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption] && elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
         elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption] && elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
@@ -462,7 +462,7 @@ export const resetLOBDiscussionItems = ()  => async (dispatch) => {
     dispatch({
         type: "UPDATE_DISCUSSION_ITEMS",
         payload: []
-    })  
+    })
 }
 
 export const getProjectDetails = () => (dispatch, getState) => {
@@ -532,7 +532,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             })
 
             // call api to get usage types
-            
+
             const usageTypeEndPoint = 'structure-api/usagetypes/v3/discussion';
             const usageTypeUrl = `${config.STRUCTURE_API_URL}${usageTypeEndPoint}`;
             //console.log("the usage type url is ", config.STRUCTURE_API_URL, usageTypeEndPoint)
@@ -552,17 +552,17 @@ export const getProjectDetails = () => (dispatch, getState) => {
                     payload: usageType
                 })
             }
-                
+
             }).catch(error => {
-            }) 
-        
+            })
+
             // call api to get discussion items
             /* If LOB is english, then it will change to onlineenglishproficiency(OEP) */
             dispatch(getLOBDiscussionItems(lineOfBusiness))
         }
     }).catch(error => {
         console.log("API Failed!!!")
-    })  
+    })
 }
 
 
@@ -587,7 +587,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             allElemPageData: []
         }
     });
-   
+
     let isPopupSlate = config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup" ? true :false;
 
     if (config.cachedActiveElement && config.cachedActiveElement.element && config.cachedActiveElement.element.type == "popup") {
@@ -626,19 +626,19 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
         apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&metadata=true&elementCount=${elementCount}`
-    } 
+    }
     return axios.get(apiUrl, {
         headers: {
             "Content-Type": "application/json",
             'myCloudProxySession': config.myCloudProxySession
         }
-    }).then(slateData => { 
+    }).then(slateData => {
         // isFetchAnySlate is the confirmation we get from RC for RC's related slateDetails fetching
         if(!isFetchAnySlate){
          /* Slate tag issue */
          if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].classList.remove("disable");
-         }     
+         }
         let newVersionManifestId=Object.values(slateData.data)[0].id;
 
         /* This code will get the last aligned LO from the local storage and update the redux store */
@@ -670,7 +670,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(getJoinedPdfStatus(hasMergedPdf))
         }
         const slatePublishStatus = slateData?.data[newVersionManifestId]?.status === "approved" && slateData?.data[newVersionManifestId]?.type !== "popup";
-            
+
         sendDataToIframe({ 'type': 'slateVersionStatus', 'message': slatePublishStatus });
         if(slateData?.data[newVersionManifestId]?.type !== "popup") {
         sendDataToIframe({ 'type': 'slateVersionStatusWithManifest', 'message': {
@@ -696,7 +696,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             else if(versioning && versioning.type==="popup"){
                 let parentData = getState().appStore.slateLevelData;
                 let newslateData = JSON.parse(JSON.stringify(parentData));
-                delete Object.assign(newslateData, {[Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];     
+                delete Object.assign(newslateData, {[Object.values(slateData.data)[0].id]: newslateData[config.slateManifestURN] })[config.slateManifestURN];
                 config.slateManifestURN= Object.values(slateData.data)[0].id
                 newslateData[config.slateManifestURN] = Object.values(slateData.data)[0];
                 config.tcmStatusPopupGlossary = true
@@ -705,7 +705,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     payload: {
                         slateLevelData: newslateData
                     }
-                })       
+                })
             }
 			else {
                 config.slateManifestURN= Object.values(slateData.data)[0].id
@@ -738,7 +738,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     });
                 }
             }
-            
+
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
@@ -770,7 +770,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateLevelData: newslateData
                         }
                     })
-                } 
+                }
                 else if ((versioning?.type === 'showhide' || (versioning.calledFrom == 'showhide'))) {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
@@ -796,7 +796,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     let index
                     if (versioning.subtype === "tab") {
                         versioning.index = versioning.indexes ? versioning.indexes : versioning.index
-                    } 
+                    }
                     if(typeof versioning.index === "number"){
                         index = versioning.index;
                     }
@@ -811,7 +811,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         }
                     })
 
-                } 
+                }
                 else if (versioning.type === 'manifestlist') {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
@@ -838,8 +838,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     let contentUrn = slateData.data[manifestURN].contentUrn;
                     let title = slateData.data[manifestURN].contents.title ? slateData.data[manifestURN].contents.title.text : '';
                      /**
-                     * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be 
-                     * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate 
+                     * [BG-1522]- On clicking the Notes icon, only the comments of last active element should be
+                     * displayed in the Comments Panel, when user navigates back to the slate or refreshes the slate
                      */
                     let appData =  config.lastActiveElementId;
                     if (page === 0) {
@@ -851,7 +851,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             dispatch(fetchComments(contentUrn, title))
                         }
                     }
-                    
+
                     config.totalPageCount = slateData.data[manifestURN].pageCount;
                     config.pageLimit = slateData.data[manifestURN].pageLimit;
                     let parentData = getState().appStore.slateLevelData;
@@ -881,7 +881,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                         dispatch({
                             type: SET_ACTIVE_ELEMENT,
                             payload: {}
-                        });    
+                        });
 
                         let slateWrapperNode = document.getElementById('slateWrapper');
                         let searchString = window.location.search;
@@ -932,7 +932,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(fetchSlateAncestorData());
         }
         const elapsedTime = performance.now() - startTime;
-        
+
         triggerCustomEventsGTM('slate-load', {
             elapsedTime,
             manifestURN,
@@ -987,7 +987,7 @@ export const fetchSlateAncestorData = (tocNode = {}) => (dispatch, getState) => 
             }
         });
     }
-    
+
     sendDataToIframe({ 'type': 'projectStructure', 'message': { structure } })
 }
 
@@ -1071,7 +1071,7 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 } else if (indexesLen == 3 && newBodymatter[indexes[0]].type !== "showhide") {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audioid 
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audioid
                         // && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata.audio.path
                     }
                 }
@@ -1126,7 +1126,7 @@ function getPathOfFigureAsset(bodymatter, indexes, keyName, activeID, asideData)
             /* Get the path of Figure element of showhide */
             return figureObject?.figuredata?.hasOwnProperty(keyName) ? figureObject.figuredata[keyName] : "";
         }
-    }  
+    }
 }
 
 const setOldinteractiveIdPath = (getState, activeElement, elementIndex) => {
@@ -1240,11 +1240,11 @@ export const fetchAuthUser = () => dispatch => {
         document.cookie = (userInfo.userId)?`USER_ID=${userInfo.userId};path=/;`:`USER_ID=;path=/;`;
 		document.cookie = (userInfo.firstName)?`FIRST_NAME=${userInfo.firstName};path=/;`:`FIRST_NAME=;path=/;`;
 		document.cookie = (userInfo.lastName)?`LAST_NAME=${userInfo.lastName};path=/;`:`LAST_NAME=;path=/;`;
-        
-        /* 
+
+        /*
         To update the latest info
         Since GetFirst Salte was called before fetch user
-        so sending user info with postmessage 
+        so sending user info with postmessage
         */
 
         sendDataToIframe({
@@ -1254,7 +1254,7 @@ export const fetchAuthUser = () => dispatch => {
                 firstName: userInfo.firstName ? userInfo.firstName : '',
                 lastName: userInfo.lastName ? userInfo.lastName : ''
             }
-            
+
         });
     })
         .catch(err => {
@@ -1284,8 +1284,8 @@ export const openPopupSlate = (element, popupId) => dispatch => {
 
 /**
  * Appends the created Unit element to the parent element and then to the slate.
- * @param {*} paramObj 
- * @param {*} responseData 
+ * @param {*} paramObj
+ * @param {*} responseData
  */
 export const appendCreatedElement = async (paramObj, responseData) => {
     let {
@@ -1317,7 +1317,7 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                 targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
                 break;
             case 5:
-                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]          
+                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]
                 break;
             case 6:
                 // TB->Tab->AS/WE->HEAD->Popup
@@ -1334,7 +1334,7 @@ export const appendCreatedElement = async (paramObj, responseData) => {
         if (targetPopupElement) {
             targetPopupElement.popupdata["formatted-title"] = responseData
             if (popupField === "formatted-title") {
-                
+
                 targetPopupElement.popupdata["formatted-title"].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
             }
             else {
@@ -1349,7 +1349,7 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                    _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]] = targetPopupElement;
                     break;
                 case 5:
-                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;          
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;
                     break;
                 case 6:
                     // TB->Tab->AS/WE->HEAD->Popup
@@ -1442,7 +1442,7 @@ function prepareDataForTcmCreate(parentElement, popupField , responseData, getSt
  */
 const getRequestData = (parentElement) => {
     let dataToSend = {}
-    let metaDataField = "formattedTitle" 
+    let metaDataField = "formattedTitle"
     dataToSend = {
         "projectUrn": config.projectUrn,
         "slateEntityUrn": parentElement.contentUrn,
@@ -1455,7 +1455,7 @@ const getRequestData = (parentElement) => {
 export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex, slateManifestURN, createdFromFootnote, cgTitleFieldData = {}) => (dispatch, getState) => {
     let _requestData =  getRequestData(parentElement)
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
-    return axios.post(url, 
+    return axios.post(url,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -1524,9 +1524,9 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
     } else {
         _requestData.metaDataField = "formattedTitle";
     }
-    
+
     let url = `${config.REACT_APP_API_URL}v1/slate/element`
-    return axios.post(url, 
+    return axios.post(url,
         JSON.stringify(_requestData),
         {
             headers: {
@@ -1765,7 +1765,7 @@ export const fetchProjectLFs = () => dispatch => {
 };
 
 /**
- * setProjectSharingRole is responsible to dispatch an action to set 
+ * setProjectSharingRole is responsible to dispatch an action to set
  * project sharing role
  * @param {String} role
  */
@@ -1777,9 +1777,9 @@ export const setProjectSharingRole = role => (dispatch) => {
 }
 
 /**
- * setProjectSubscriptionDetails is responsible to dispatch an action to 
+ * setProjectSubscriptionDetails is responsible to dispatch an action to
  * set project subscription details based on toc container selection
- * @param {Object} subscriptionDetails 
+ * @param {Object} subscriptionDetails
  */
 export const setProjectSubscriptionDetails = (subscriptionDetails) => (dispatch) => {
     dispatch({

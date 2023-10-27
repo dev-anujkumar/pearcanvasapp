@@ -147,7 +147,7 @@ class HtmlDiff {
                         specialCaseTagInjection = '<ins class="mod" '+" asset-id="+assetId+'>';
                     } else {
                         specialCaseTagInjection = '<ins class="mod">';
-                    } 
+                    }
                     if (tag === 'del') {
                         words.shift();
 
@@ -374,7 +374,7 @@ class HtmlDiff {
 }
 
 HtmlDiff.execute = function (oldText, newText) {
-    //Added to correct the formatting of Inline Code 
+    //Added to correct the formatting of Inline Code
     const textToReplace = ' id="inline-code-attacher"';
     if (oldText.includes('inline-code-attacher')) {
         oldText =  TCMUtils.replaceAll(oldText,textToReplace,'');

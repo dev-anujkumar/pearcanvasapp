@@ -4,7 +4,7 @@ const elementDataBank = {
         "elementType" : "element-authoredtext",
         "primaryOption" : "primary-paragraph",
         "secondaryOption" : "secondary-paragraph"
-    }, 
+    },
      "manifestlist" : {
         "elementType" : "manifestlist",
         "primaryOption" : "primary-column-1",
@@ -86,7 +86,7 @@ const elementDataBank = {
             "elementType" : "element-authoredtext",
             "primaryOption" : "primary-list",
             "secondaryOption" : "secondary-list-4"
-        },   
+        },
         "upper-roman" : {
             "elementType" : "element-authoredtext",
             "primaryOption" : "primary-list",
@@ -103,7 +103,7 @@ const elementDataBank = {
             "secondaryOption" : "secondary-list-7"
         }
     },
-    
+
     "figure" : {
         "image" : {
             "elementType" : "figure",

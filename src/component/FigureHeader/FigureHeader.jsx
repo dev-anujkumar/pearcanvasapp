@@ -16,7 +16,7 @@ import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx';
 
-const { 
+const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_RESUME_NUMBER,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -31,7 +31,7 @@ const KEYBOARD_ENABLE = [TABLE, MATH_IMAGE, MATH_ML, BLOCK_CODE, IMAGE, AUDIO, V
  */
 function useOutsideAlerter(ref, setLabelNumberSettingDropDown, setLabelDropDown) {
     useEffect(() => {
-        
+
         function handleClickOutside(event) {
             if (ref.current && !ref.current.contains(event.target)) {
                 const div = ref.current;
@@ -259,7 +259,7 @@ export const FigureHeader = (props) => {
          }
      }
 
-    const isEnableKeyboard = () => { 
+    const isEnableKeyboard = () => {
         if (props.model?.figuredata?.programlanguage === "Select" ) {
                 return false
             }
@@ -294,7 +294,7 @@ export const FigureHeader = (props) => {
                 labelElement?.nextElementSibling?.classList?.remove('floating-label');
             } else if (lastIndex[lastIndex.length - 1] == '1') {
                 labelElement?.nextElementSibling?.classList?.remove('floating-number');
-            } 
+            }
         } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
             labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
@@ -321,7 +321,7 @@ export const FigureHeader = (props) => {
                 labelElement?.nextElementSibling?.classList?.add('floating-label');
             } else if (lastIndex[lastIndex.length - 1] == '1') {
                 labelElement?.nextElementSibling?.classList?.add('floating-number');
-            } 
+            }
         }
     }
 
@@ -427,7 +427,7 @@ export const FigureHeader = (props) => {
                 </div>}
                 {
                    removeLabelCondition &&  (showLabelField && labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ?
-                    <KeyboardWrapper index={`${props.index}-0`}  enable={isEnableKeyboard()}>                                             
+                    <KeyboardWrapper index={`${props.index}-0`}  enable={isEnableKeyboard()}>
                         <div className='image-label'>
                             <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-0`} placeholder="Label" tagName={'h4'} className={figLabelClass + " figureLabel "} model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
                             <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? "transition-none" : "floating-label"}>Label</label>

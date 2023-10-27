@@ -146,7 +146,7 @@ export default {
         },
         enumType: 'text',
     },
-    
+
     'figure': {
         'primary-image-figure': {
             text: 'Figure Image',
@@ -177,7 +177,7 @@ export default {
                     text: '75% Text Width',
                     labelText: 'Fg',
                     enum: 'IMAGE_75_TEXT'
-                },               
+                },
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
                     labelText: 'Fg',
@@ -487,7 +487,7 @@ export default {
                     text: 'XML',
                     labelText: 'BCE',
                     enum: 'XML'
-                },      
+                },
             }
         },
         'primary-editor-table-equation': {
@@ -742,17 +742,17 @@ export default {
         },
         enumType: 'workedexample'
     },
-	'element-assessment': {		
-        'primary-single-assessment': {		
+	'element-assessment': {
+        'primary-single-assessment': {
             text: 'Single Assessment',
             toolbar:['insertMedia','bold','italic','underline','strikethrough','clearformatting','increaseindent','decreaseindent','footnote','glossary','orderedlist','unorderedlist','mathml','chemml','inlinecode','superscript','subscript','specialcharactor','undo','redo','crossLinkingIcon','assetpopover','slatetag','alignment', 'calloutIcon', 'IndexEntry'],
-            enum: 'SINGLE_ASSESSMENT',		
-            subtype: {	
+            enum: 'SINGLE_ASSESSMENT',
+            subtype: {
                 'secondary-single-assessment-puf': {
                     text: 'Elm',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_PUF'
-                },	
+                },
                 'secondary-single-assessment-cite': {
                     text: 'QuAD CITE',
                     labelText: 'Qu',
@@ -763,47 +763,47 @@ export default {
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_TDX'
                 },
-                
+
                 'secondary-single-assessment-learnosity': {
                     text: 'Learnosity',
                     labelText: 'Qu',
                     enum: 'SINGLE_ASSESSMENT_LEARNOSITY'
                 }
-            }		
+            }
         },
         'primary-assessment-slate' : {
             text: 'Assessment Slate',
-            enum: '',		
-            subtype: {		
+            enum: '',
+            subtype: {
                 'secondary-assessment-puf' : {
-                    text: 'ELM',		
-                    labelText: 'As',
-                    enum: 'ELEMENT_ASSESSMENT'	
-                },
-                'secondary-assessment-cite': {		
-                    text: 'QuAd CITE',		
+                    text: 'ELM',
                     labelText: 'As',
                     enum: 'ELEMENT_ASSESSMENT'
-                },		
-                'secondary-assessment-tdx': {		
-                    text: 'TDX',		
-                    labelText: 'As',
-                    enum: 'ELEMENT_ASSESSMENT'		
                 },
-                
-                'secondary-assessment-learnosity' : {
-                    text: 'LEARNOSITY',		
+                'secondary-assessment-cite': {
+                    text: 'QuAd CITE',
                     labelText: 'As',
-                    enum: 'ELEMENT_ASSESSMENT'	
+                    enum: 'ELEMENT_ASSESSMENT'
+                },
+                'secondary-assessment-tdx': {
+                    text: 'TDX',
+                    labelText: 'As',
+                    enum: 'ELEMENT_ASSESSMENT'
+                },
+
+                'secondary-assessment-learnosity' : {
+                    text: 'LEARNOSITY',
+                    labelText: 'As',
+                    enum: 'ELEMENT_ASSESSMENT'
                 },
                 'secondary-assessment-learningtemplate' : {
-                    text: 'LEARNING TEMPLATE',		
+                    text: 'LEARNING TEMPLATE',
                     labelText: 'As',
-                    enum: 'ELEMENT_ASSESSMENT'	
-                }			
+                    enum: 'ELEMENT_ASSESSMENT'
+                }
             }
         },
-        enumType: 'assessment',		
+        enumType: 'assessment',
     },
      'element-interactive': {
         'primary-elm-interactive': {
@@ -850,7 +850,7 @@ export default {
                         long_description: {
                             text: 'Long Description',
                             isEditable: false
-                        }            
+                        }
                     }
                 },
                 'secondary-interactive-smartlink-pdf': {
@@ -872,7 +872,7 @@ export default {
                         long_description: {
                             text: 'Long Description',
                             isEditable: false
-                        } 
+                        }
                     }
                 },
                 'secondary-interactive-smartlink-pop-up-web-link': {
@@ -904,7 +904,7 @@ export default {
                     enum : "NA"
                 }
             }
-        } 
+        }
     },
     "showhide": {
         "primary-showhide": {
@@ -918,7 +918,7 @@ export default {
                     enum : "NA"
                 }
             }
-        } 
+        }
     },
     "openerelement": {
         "primary-openerelement": {
@@ -942,7 +942,7 @@ export default {
                     isEditable: false
                 }
             }
-        } 
+        }
     },
     'citations' : {
         'primary-citations-group': {
@@ -971,7 +971,7 @@ export default {
                 }
             }
         }
-    },   
+    },
     "poetry" : {
         "primary-poetry": {
             text: 'Block Poetry',
@@ -985,7 +985,7 @@ export default {
                     enum: 'NA',
                 }
             }
-        } 
+        }
     },
     "stanza" : {
         "primary-stanza": {
@@ -1000,14 +1000,14 @@ export default {
                     enum: 'NA',
                 }
             }
-        } 
+        }
     },
-    'groupedcontent': {		
-        'primary-multicolumn': {		
+    'groupedcontent': {
+        'primary-multicolumn': {
             text: '2 Column',
             toolbar: [],
-            enum: 'MULTI_COLUMN',		
-            subtype: {		
+            enum: 'MULTI_COLUMN',
+            subtype: {
                 'secondary-multicolumn-wider': {
                     text: 'Wider than text width 60/40%',
                     labelText: '2C',
@@ -1028,19 +1028,19 @@ export default {
                     labelText: '2C',
                     enum: 'TEXT_WIDTH_50_50'
                 }
-            }		
+            }
         },
-        'primary-multicolumn-3c': {		
+        'primary-multicolumn-3c': {
             text: '3 Column',
             toolbar: [],
-            enum: 'MULTI_COLUMN',	
-            subtype: {		
+            enum: 'MULTI_COLUMN',
+            subtype: {
                 'secondary-multicolumn-3c-wider': {
                     text: 'Wider than text width 33/33/33%',
                     labelText: '3C',
                     enum: 'WIDER_33_33_33'
                 }
-            }		
+            }
         },
         'primary-tabbed-elem': {
             text: 'Tabbed 2 Column',
@@ -1054,7 +1054,7 @@ export default {
                 }
             }
         },
-        enumType: 'multicolumn'		
+        enumType: 'multicolumn'
     },
     'group': {
         'primary-tab': {
@@ -1104,7 +1104,7 @@ export default {
                     enum: 'NA',
                 }
             }
-        } 
+        }
     },
     "discussion" : {
         "primary-element-discussion": {
@@ -1118,6 +1118,6 @@ export default {
                     enum: 'NA',
                 }
             }
-        } 
-    }, 
+        }
+    },
 };

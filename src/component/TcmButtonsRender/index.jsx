@@ -16,14 +16,14 @@ class RenderTCMIcons extends React.Component {
 
 /**
     * This function Launch TCM SPA w.r.t. current Element
-*/    
+*/
     handleTCMSPALaunch = (e, elementId) =>{
         if (config.isSavingElement) {
             return false
         }
         e.stopPropagation();
         loadTrackChanges(elementId)
-    }    
+    }
     render() {
         const element = {id: this.props.tcmSnapshotData?.eURN}
         let userName = this.props.elementEditor ? this.props.elementEditor : this.props.tcmSnapshotData?.trackChangeApprover

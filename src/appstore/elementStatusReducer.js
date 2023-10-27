@@ -7,7 +7,7 @@ const INITIAL_ACTION = {
 }
 
 const elementStatusReducer = (state = INITIAL_STATE, action = INITIAL_ACTION) => {
-    
+
     if (action.type === SET_ELEMENT_STATUS) {
         if (action.payload.clearEntries) {
             return {}

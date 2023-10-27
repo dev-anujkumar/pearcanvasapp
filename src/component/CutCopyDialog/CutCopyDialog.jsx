@@ -9,22 +9,22 @@ import { getLatestVersion } from '../TcmSnapshots/TcmSnapshot_Actions';
 // function to be called on click of refresh option
 const refreshElement = (props) => {
     let index = null;
-    // handling blockquote index for element refresh 
+    // handling blockquote index for element refresh
     if(props?.element?.elementdata?.type === 'blockquote' && props?.index) {
         index = props?.index + '-0';
     }
     props.handleBlur(true, null, index, null, null, null, 'REFRESH_ELEMENT');
-    // calling the function to close copy menu 
+    // calling the function to close copy menu
     props.toggleCopyMenu(false);
 }
 
 const CutCopyDialog = props => {
-    
+
     const positionStyle = { left: `${props.copyClickedX}px`, top: `${props.copyClickedY}px` }
     const popupSlateNotAcceptedTypes = ['groupedcontent', 'showhide', 'citations', 'element-citation', 'poetry', 'stanza'];
     const refreshRestrictedElementTypes = ['groupedcontent', 'showhide', 'citations', 'element-aside', 'manifestlist', 'popup', 'discussion', 'poetry', 'element-dialogue', 'openerelement', 'element-generateLOlist', 'element-learningobjectivemapping', 'element-pdf', 'element-assessment', 'manifest','element-tcc'];
     let allowToShowOptions = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.element?.type) ? false : true;
-    const showRefreshOption = (refreshRestrictedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true 
+    const showRefreshOption = (refreshRestrictedElementTypes.includes(props?.element?.type) || (props?.element?.type == 'figure' && props?.element?.figuretype === 'assessment')) ? false : true
     return (
         <div style={positionStyle} className="copy-menu-container">
             <div className="copy-menu">

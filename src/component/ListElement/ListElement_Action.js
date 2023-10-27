@@ -4,7 +4,7 @@ import elementList from '../Sidebar/elementTypes.js';
 import { conversionElement, updateBlockListMetadata } from '../Sidebar/Sidebar_Action.js';
 
 // ************************************************************************
-// *************************** List Template ****************************** 
+// *************************** List Template ******************************
 let _listObjectTemplate_ = {
     "id": "",
     "type": "element-list",
@@ -109,7 +109,7 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
             asideData
         }, fromToolbar));
     }
-   
+
 
     // dispatch(updateElementType(activeElement, type));
     // dispatch({

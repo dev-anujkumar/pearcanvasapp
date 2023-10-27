@@ -43,7 +43,7 @@ function CommunicationChannel(WrappedComponent) {
          */
         initTocCommunictionChannel = () => {
             if (window.addEventListener) {
-                // For standards-compliant web browsers       
+                // For standards-compliant web browsers
                 window.addEventListener("message", this.handleIncommingMessages, false);
             }
             else {
@@ -165,7 +165,7 @@ function CommunicationChannel(WrappedComponent) {
                 case 'getSlateLOResponse':
                     if (message?.LOList?.length) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
-                        message.LOList.map(loData => {                            
+                        message.LOList.map(loData => {
                             loData.label.en = loData.label.en.replace(regex, "<img src='$1'></img>");
                         });
                         this.props.currentSlateLOMath(message.LOList);
@@ -196,7 +196,7 @@ function CommunicationChannel(WrappedComponent) {
                     this.handleRefreshSlate();
                     triggerSlateLevelSave(config.slateEntityURN, SLATE_REFRESH_ACTION);
                     break;
-                case 'closeUndoTimer' : 
+                case 'closeUndoTimer' :
                     this.setState({
                         closeUndoTimer: message.status
                     })
@@ -242,7 +242,7 @@ function CommunicationChannel(WrappedComponent) {
                                 dataToSend.elementdata.loAssociation = message.slateTagEnabled
                                 dataToSend.slateVersionUrn = slateManifestUrn
                                 dataToSend.html = {title : `<p>${dataToSend.elementdata.assessmenttitle}</p>`}
-                                if(approvedAssessmentCheck && assessmenId){    // this is to update id and versionUrn if assessment slate status is approved 
+                                if(approvedAssessmentCheck && assessmenId){    // this is to update id and versionUrn if assessment slate status is approved
                                     dataToSend.id = assessmenId
                                     dataToSend.versionUrn = assessmenId
                                 }
@@ -418,7 +418,7 @@ function CommunicationChannel(WrappedComponent) {
                         currentProjectId: config.projectUrn,
                         slateEntityUrn: config.slateEntityURN
                     }
-                    this.props.fetchAudioNarrationForContainer(slateData)   
+                    this.props.fetchAudioNarrationForContainer(slateData)
                     break;
                 case 'ResetAutoNumberSequence':
                     this.props.setTocContainersAutoNumberList(message.autoNumberingDetails)
@@ -451,7 +451,7 @@ function CommunicationChannel(WrappedComponent) {
                 case "getAssessmentData":
                     this.getAssessmentForWillowAlignment(message);
                     break;
-                case "preflightElementFocus": 
+                case "preflightElementFocus":
                     config.currentElementUrn = message
                     break;
                 case "pendingTcmStatus":
@@ -580,13 +580,13 @@ function CommunicationChannel(WrappedComponent) {
 
         /**
          * Updates the element count and refreshes slate
-         * @param {String} message element count in a slate 
+         * @param {String} message element count in a slate
          */
         changeSlateLength = (message) => {
             this.props.setSlateLength(message)
             this.handleRefreshSlate()
         }
-        
+
         /**
          * Handle the element update action on linking a page
          */
@@ -606,7 +606,7 @@ function CommunicationChannel(WrappedComponent) {
                 var div = document.createElement("div");
                 div.innerHTML = html;
                 const pageLinkText = div.innerText
-                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');              
+                let elementContainer = document.querySelector('.element-container[data-id="' + linkData.elementId + '"]');
                 activeElement = elementContainer.querySelectorAll('.cypress-editable');
                 activeElement.forEach((item) => {
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
@@ -640,7 +640,7 @@ function CommunicationChannel(WrappedComponent) {
                 activeElement.forEach((item) => {
                     if (item.classList.contains('mce-content-body') || !item.classList.contains('place-holder')) {
                         if (item.querySelector(`[asset-id="${linkData.linkId}"]`) || item.querySelector('#' + linkData.linkId)) {
-                           
+
                             tinymce.activeEditor.undoManager.transact(() => {
                                 item.focus();
                                 editor = item;
@@ -675,7 +675,7 @@ function CommunicationChannel(WrappedComponent) {
                 asset: message.asset,
                 launchAlfrescoPopup: false,
                 isInlineEditor: message.isEditor,
-                imageArgs: this.props.imageArgs                
+                imageArgs: this.props.imageArgs
             }
             this.props.saveInlineImageData(params);
             hideBlocker();
@@ -748,10 +748,10 @@ function CommunicationChannel(WrappedComponent) {
                 /** Save button Click - Add new Ext LOs*/
                 if (message.currentSlateLF == EXTERNAL_LF && message?.statusForExtLOSave === true) {
                     this.handleExtLOData(message);
-                } 
-                /** Cancel button Click Unlink All LOs from MA Elements */ 
-                else { 
-                    this.handleUnlinkedLOData(message); 
+                }
+                /** Cancel button Click Unlink All LOs from MA Elements */
+                else {
+                    this.handleUnlinkedLOData(message);
                 }
             }
         }
@@ -784,7 +784,7 @@ function CommunicationChannel(WrappedComponent) {
             }
         }
         /**
-         * This function is responsible for handling the unlinked LOs w.r.t. Slate 
+         * This function is responsible for handling the unlinked LOs w.r.t. Slate
          * and updating the Metadata Anchor Elements on Slate after warning Popup Action
          * @param {*} message Event Message on Saving Ext LF LO data for Slate
          */
@@ -827,7 +827,7 @@ function CommunicationChannel(WrappedComponent) {
             });
         }
         /**
-         * This function is responsible for handling the updated LOs w.r.t. Slate 
+         * This function is responsible for handling the updated LOs w.r.t. Slate
          * and updating the Metadata Anchor Elements on Slate
          * @param {*} message Event Message on Saving Ext LF LO data for Slate
          */
@@ -1030,7 +1030,7 @@ function CommunicationChannel(WrappedComponent) {
                 this.props.setUpdatedSlateTitle(currentSlateObject)
             }
             if (message && message.node) {
-                // To prevent the change slate focus action on browser refresh 
+                // To prevent the change slate focus action on browser refresh
                 let isRefreshBrowser = localStorage.getItem('browser_refresh');
                 if (isRefreshBrowser == '1') {
                     localStorage.setItem('browser_refresh', '0');

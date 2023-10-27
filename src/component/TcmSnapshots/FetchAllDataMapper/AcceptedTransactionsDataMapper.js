@@ -31,7 +31,7 @@ const AcceptedTransactionsDataMapper = {
 
       returnValue.contentDifference = JSON.parse(acceptedElementSnapshot).contentSnapshot;
       returnValue.lastAcceptedContent = JSON.parse(acceptedElementSnapshot).contentSnapshot;
-    
+
     returnValue.trackChangeApprover = authorName;
     returnValue.changeStatus = changeStatus.toLowerCase();
     returnValue.feedback = feedBackData;

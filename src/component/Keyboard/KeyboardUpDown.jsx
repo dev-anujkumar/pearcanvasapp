@@ -15,7 +15,7 @@ const KeyboardUpDown = (props) => {
 
     const getLastChild = (element) => {
         if(element && element.lastChild) {
-            if(element.lastChild?.nodeName === "A" 
+            if(element.lastChild?.nodeName === "A"
             && element.lastChild?.classList?.contains('paragraphNumeroUnoFootnote')){
                 return element.lastChild
             }
@@ -36,11 +36,11 @@ const KeyboardUpDown = (props) => {
 
             const scrollTo = element.getBoundingClientRect().top - divHeight / 3;
             parentNode.scrollBy(0, scrollTo);
-            
+
             // const firstChild = childElement?.firstChild ? childElement.firstChild : childElement;
             // in case of para firstChild is childElement.first child
             // in case of Image childElement is null;
-            
+
             const tinymceChild = getTinymceElement(childElement);
             const lastChild = getLastChild(tinymceChild);
             if(lastChild) {
@@ -91,7 +91,7 @@ const KeyboardUpDown = (props) => {
             }
         }
         else {
-            // element not there 
+            // element not there
             // in case of down arrow press
             if (parentNode.scrollHeight > parentNode.scrollTop + divHeight) {
                 parentNode.scrollBy(0, divHeight);
@@ -127,7 +127,7 @@ const KeyboardUpDown = (props) => {
                     }
                 });
                 // if last tinymce is not blured then cursor will
-                // keep on showing if next element is non text 
+                // keep on showing if next element is non text
                 // element, like image's Label
                 allInteractiveElements[selectedNodeIndex]?.childNodes[1]?.blur();
                 if (event.keyCode === 38 && selectedNodeIndex !== 0) {

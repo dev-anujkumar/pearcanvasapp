@@ -94,7 +94,7 @@ const BlockList = (props) => {
     if (props?.element?.listtype === 'ordered') {
         if (props?.element?.startNumber > 1) {
             return (
-                <ol class="decimal" style={{ 'counterIncrement': `section ${props?.element?.startNumber - 1}` }}>
+                <ol className="decimal" style={{ 'counterIncrement': `section ${props?.element?.startNumber - 1}` }}>
                     {
                         fetchLi(props?.element?.subtype)
                     }
@@ -103,7 +103,7 @@ const BlockList = (props) => {
         }
         else {
             return (
-                <ol class="decimal">
+                <ol className="decimal">
                     {
                         fetchLi(props?.element?.subtype)
                     }
@@ -114,7 +114,7 @@ const BlockList = (props) => {
     }
     else {
         return (
-            <ul class="disc">
+            <ul className="disc">
                 {
                     fetchLi("unordered")
                 }

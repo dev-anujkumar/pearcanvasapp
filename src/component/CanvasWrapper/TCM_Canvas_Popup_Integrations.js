@@ -23,7 +23,7 @@ const openTCMPopup = (elemData, index, id, dispatch) => {
     let eURN = id;
     if(elemData.elemURN.includes("+")) {
         // check if element data has plus
-        // if yes send elementurn plus as elementurn 
+        // if yes send elementurn plus as elementurn
         // else send element id;
         eURN = elemData.elemURN;
     }
@@ -31,9 +31,9 @@ const openTCMPopup = (elemData, index, id, dispatch) => {
     const elemIndex = [{ index, urn: id }]
     const tcmData = FetchAllDataMapper.processResponse([elemData], id, elemIndex);
     const elemEditorName = elemData.latestPendingTransaction?.elementEditor ? elemData.latestPendingTransaction.elementEditor : elemData.latestAcceptedTransaction?.elementEditor
-    const tcmObject = { 
+    const tcmObject = {
          isTCMCanvasPopup: true,
-         tcmElemData: tcmData.result[0], 
+         tcmElemData: tcmData.result[0],
          elemData: eURN,
          elementEditor: elemEditorName,
          tcmStatus: elemData.latestAcceptedTransaction ? true : false,
@@ -42,7 +42,7 @@ const openTCMPopup = (elemData, index, id, dispatch) => {
         }
         dispatch({
             type: LAUNCH_TCM_CANVAS_POPUP,
-            payload: {...tcmObject, theme:''}, 
+            payload: {...tcmObject, theme:''},
             })
 }
 
@@ -91,7 +91,7 @@ export const handleTCM = (element, index, isPopupOpen, prevElementId) => (dispat
         }
         else if(elementURNs.length > 1) {
             // cut copy case
-            // in case of cut copy get latest snapshot. 
+            // in case of cut copy get latest snapshot.
              const latestElement = elementURNs.sort((a, b) => {
                 if(getLatestPendingOrAccepted(a).changeTime > getLatestPendingOrAccepted(b).changeTime){
                 return -1

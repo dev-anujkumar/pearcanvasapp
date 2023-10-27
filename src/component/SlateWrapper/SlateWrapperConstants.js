@@ -85,7 +85,7 @@ export const checkTCM = element => {
                 case 'assessment': return ASSESSMENT;
                 default: return TEXT;
             }
-            
+
         case 'showhide': return SHOW_HIDE;
 
         case "element-aside": return CONTAINER;
@@ -215,4 +215,4 @@ export const DEFAULT_PLAYBACK_MODE = {
     "unitytiny":"default"
 }
 export const UNITY_TINY = "unitytiny"
-export const DISABLE_PLAYBACK_MODE_VENDORS = ['vitalsource','unitytiny'] 
+export const DISABLE_PLAYBACK_MODE_VENDORS = ['vitalsource','unitytiny']

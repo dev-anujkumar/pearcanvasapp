@@ -3,7 +3,7 @@ const INITIAL_STATE = {
     showApoCurrentlyLinked : false,        // Show or not currently linked part of the window
     showApoBody : false,                   // Show or not APO Body
     showApoFooter : true,                  // Show or not APO footer
-    figures : [],  
+    figures : [],
     videos : [],
     audios : [],
     interactives : [],
@@ -38,7 +38,7 @@ export default function assetPopoverReducer (state = INITIAL_STATE, action = INI
                 showApoFooter : true,
                 showApoBody : false,
                 noSearchResultFound : true,
-                figures : [],  
+                figures : [],
                 videos : [],
                 audios : [],
                 interactives : [],
@@ -53,7 +53,7 @@ export default function assetPopoverReducer (state = INITIAL_STATE, action = INI
         case 'IMAGES_FROM_API': {        //Seacrch For figures
             return {
                 ...state,
-                figures : action.payload.figures,  
+                figures : action.payload.figures,
                 videos : action.payload.videos,
                 audios : action.payload.audios,
                 interactives : action.payload.interactives,
@@ -71,7 +71,7 @@ export default function assetPopoverReducer (state = INITIAL_STATE, action = INI
         case 'IMAGES_FROM_API_FAIL': {         //If searching fails
             return {
                 ...state,
-                figures : [],  
+                figures : [],
                 videos : [],
                 audios : [],
                 interactives : [],

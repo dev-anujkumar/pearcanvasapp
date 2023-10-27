@@ -26,7 +26,7 @@ import store from '../../appstore/store';
 import { FIGURE_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB, MULTI_COLUMN } = ElementConstants;
 
-const { 
+const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
@@ -64,7 +64,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
         .then(response => {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
             Comment.commentUrn = response.data.commentUrn
-           
+
             dispatch({
                 type: ADD_NEW_COMMENT,
                 payload: Comment
@@ -102,7 +102,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         }
     }
     if(type === 'popup'){
-        dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index)) 
+        dispatch(fetchPOPupSlateData(elmId, contentUrn, 0 , element, index))
     }
     const { showHideObj } = getState().appStore
     let elementParentEntityUrn = cutCopyParentUrn ? cutCopyParentUrn.contentUrn : parentUrn && parentUrn.contentUrn || config.slateEntityURN
@@ -139,7 +139,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
             element
         }
         onDeleteSuccess(deleteArgs)
-    } 
+    }
     else {
         showError(deleteElemData.status, dispatch, "delete Api failed")
     }
@@ -150,7 +150,7 @@ export const contentEditableFalse = (updatedData) => {
         if(updatedData.html && updatedData.html.text){
             let data = updatedData.html.text;
             updatedData.html.text = data.replace('contenteditable="true"','contenteditable="false"');
-            return updatedData ; 
+            return updatedData ;
         }
     }
 }
@@ -185,7 +185,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
          * @updatedData - is the updated element details that has been fetch from a RC slate
          */
         let updateBodymatter = isFromRC ? [updatedData] : getState()?.appStore?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter;
-        const helperArgs = { 
+        const helperArgs = {
             updatedData,
             asideData,
             parentUrn,
@@ -239,7 +239,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
                 }
             }
         )
-    
+
         const updateArgs = {
             updatedData,
             elementIndex,
@@ -262,9 +262,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
             let newAssessmentId = response?.data?.elementdata?.assessmentid;
             config.assessmentId = newAssessmentId;
             store.dispatch(updateAssessmentId(response?.data?.id));
-        }    
+        }
         if (updateArgs?.responseData?.figuredata?.decorative) { // updating figure data after sending saving call for decorative images
-            store.dispatch(updateFigureImageDataForCompare(updateArgs?.responseData?.figuredata));  
+            store.dispatch(updateFigureImageDataForCompare(updateArgs?.responseData?.figuredata));
         }
     }
     catch(error) {
@@ -306,7 +306,7 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                 }
             }
             /* Update figure inside Aside/WE in S/H */
-        } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) { 
+        } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) {
             let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
             let figure;
             if (sectionType) {
@@ -376,10 +376,10 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                             newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].figuredata = figureData
                             //element = condition
                         }
-                    
+
                     }
                 } /* TB:Tab:Fig && TB:Tab:AS/WE:Fig */
-            } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === MULTI_COLUMN && newBodymatter[indexes[0]].subtype === TAB) { 
+            } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === MULTI_COLUMN && newBodymatter[indexes[0]].subtype === TAB) {
                 switch (indexesLen) {
                     case 4: // TB->Tab->Figure
                         condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
@@ -469,7 +469,7 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter, sectionTyp
         } else /* "Table in Showhide" - Update the store on adding data in table */
         if (sectionType && elm?.interactivedata?.[sectionType]) {
             elm.interactivedata[sectionType] = updateTableEditorData(elementId, tableData, elm.interactivedata[sectionType], sectionType)
-        } 
+        }
         else if (elm.elementdata && elm.elementdata.bodymatter) {
             elm.elementdata.bodymatter = updateTableEditorData(elementId, tableData, elm.elementdata.bodymatter, sectionType)
         }
@@ -488,14 +488,14 @@ const updateTableEditorData = (elementId, tableData, slateBodyMatter, sectionTyp
 /**
 * @function createShowHideElement
 * @description-This function is to create elements inside showhide
-* @param {String} elementId - id of parent element (ShowHide)   
+* @param {String} elementId - id of parent element (ShowHide)
 * @param {String} type - type of section in showhide element - show|hide|revealAnswer
 * @param {Object} index - Array of indexs
 * @param {String} parentContentUrn - contentUrn of parent element(showhide)
 * @param {Function} cb - )
 * @param {Object} parentElement - parent element(showhide)
 * @param {String} parentElementIndex - index of parent element(showhide) on slate
-* @param {String} type2BAdded - type of new element to be addedd - text|image 
+* @param {String} type2BAdded - type of new element to be addedd - text|image
 */
 export const createShowHideElement = (elementId, type, index, parentContentUrn, cb, parentElement, parentElementIndex, type2BAdded) => (dispatch, getState) => {
     localStorage.setItem('newElement', 1);
@@ -537,7 +537,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             response: createdElemData.data,
             cypressPlusProjectStatus: getState()?.appStore?.isCypressPlusEnabled
         };
-        //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed 
+        //This check is to prevent TCM snapshots for creation of BL in SH once BL will support TCM then it will be removed
         // check modified to prevent snapshots for TB element
         const isTbElement = parentElement?.grandParent?.asideData?.subtype === TAB || parentElement?.grandParent?.asideData?.parent?.subtype === TAB;
         if (type2BAdded !== "MANIFEST_LIST" && !isTbElement) {
@@ -566,7 +566,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 let sectionOfSH = [];
                 sectionOfSH.push(createdElemData.data);
                 shObject.interactivedata[type] = sectionOfSH;
-            }   
+            }
         }
         if(parentElement.status && parentElement.status === "approved") cascadeElement(parentElement, dispatch, parentElementIndex)
 
@@ -576,7 +576,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
             // isTbElement condition restrict tcm operations for tb and its nested elements
             if(type2BAdded !== "MANIFEST_LIST" && !isTbElement) {
             if (containersInSH.includes(type2BAdded)) {
-                prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);    
+                prepareDataForTcmCreate(type2BAdded, createdElemData.data, getState, dispatch);
             } else {
                 prepareDataForTcmCreate("TEXT", createdElemData.data, getState, dispatch);
             }}
@@ -629,7 +629,7 @@ export const showError = (error, dispatch, errorMessage) => {
 
 const cascadeElement = (parentElement, dispatch, parentElementIndex) => {
     parentElement.indexes = parentElementIndex;
-    dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,"")); 
+    dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,""));
 }
 
 /**
@@ -859,7 +859,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         status: updatedSlateLevelData.status
     }
     if (isAutoNumberingEnabled && previousData?.hasOwnProperty('numberedandlabel')) {
-        
+
         dataToSend = {
             ...dataToSend,
             html : {
@@ -1045,12 +1045,12 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
                 }
             });
         const {properties} = response.data.entry;
-        return { 
+        return {
             altText : properties["cplg:altText"] ?? "",
             longdescription: properties["cplg:longDescription"] ?? ""
         }
     } catch(error){
-        return { 
+        return {
             altText : "",
             longdescription: ""
         }
@@ -1059,8 +1059,8 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
 
 /**
  * This is a recursive function will collect image data from HTML element within a cell, such as, OL, UL & P
- * @param {*} node 
- * @param {*} imagesArrayOfObj 
+ * @param {*} node
+ * @param {*} imagesArrayOfObj
  */
 const getImageFromHTMLElement = async (node, imagesArrayOfObj) => {
     if(node?.nodeName === 'IMG' && (node?.className === "imageAssetContent")){
@@ -1082,12 +1082,12 @@ const getImageFromHTMLElement = async (node, imagesArrayOfObj) => {
 
 /**
  * This function will prepare data for "Expand in alfresco POP-UP" and update the redux store
- * Format: 
+ * Format:
  * {
  *   imgSrc: "",
  *   imgId : "",
  *   alttext : "",
- *    longdescription : ""   
+ *    longdescription : ""
  * }
  * @param {*} element Table element Object
  */
@@ -1126,8 +1126,8 @@ export const prepareImageDataFromTable = element => async (dispatch) => {
 
 /**
  * This is an action, which will update the edited data in store
- * @param {*} imageObject 
- * @returns 
+ * @param {*} imageObject
+ * @returns
  */
 export const updateEditedData = (imageObject) => (dispatch) => {
     dispatch({
@@ -1138,7 +1138,7 @@ export const updateEditedData = (imageObject) => (dispatch) => {
 
 /**
  * This function will make an saving API call to update the altText & longDescription
- * @param {*} editedImageList 
+ * @param {*} editedImageList
  */
 export const saveTEMetadata = async (editedImageList) => {
     try{
@@ -1151,7 +1151,7 @@ export const saveTEMetadata = async (editedImageList) => {
                 let id = imgId.substring(imgId.indexOf(":") + 1, imgId.lastIndexOf(":"));
                 url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/${id}`;
                 const body = {
-                    properties: { 
+                    properties: {
                         "cplg:altText": altText,
                         "cplg:longDescription": longdescription
                     }
@@ -1166,7 +1166,7 @@ export const saveTEMetadata = async (editedImageList) => {
                 promiseArray.push(response);
             }
             await Promise.all(promiseArray);
-    
+
         }
     } catch(error){
     }
@@ -1265,7 +1265,7 @@ export const fetchOldDataAfterConversion = (conversionData) => (dispatch) => {
 }
 
 /**
- * @description - This function fetches the asset's metadata from alfresco 
+ * @description - This function fetches the asset's metadata from alfresco
  * @param assetId - Asset's ID
  * @param figuretype - Figuretype of the element
  * @returns - alt-text and long-description for the asset
@@ -1282,9 +1282,9 @@ export const getAlfrescoMetadataForAsset = async (assetId, figuretype) => {
             }
         })
         if(response && response?.status === 200){
-            const { properties } = response?.data?.entry || {};	
+            const { properties } = response?.data?.entry || {};
             if(figuretype === FIGURE_INTERACTIVE){
-                const avsJsonStringData = properties["avs:jsonString"] 
+                const avsJsonStringData = properties["avs:jsonString"]
                 let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
                 return {
                     altText: avsStringData?.imageAltText,

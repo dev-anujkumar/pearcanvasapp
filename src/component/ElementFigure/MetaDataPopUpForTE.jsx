@@ -8,7 +8,7 @@ import {LargeLoader} from '../SlateWrapper/ContentLoader.jsx';
 
 /**
  * @description This is a functional component for "Edit in Alfresco" of Table Element.
- * @param {*} props 
+ * @param {*} props
  */
 const MetaDataPopUpForTE = (props) => {
   const {imageList, editedImageList, updateEditedData, togglePopup} = props
@@ -32,14 +32,14 @@ const MetaDataPopUpForTE = (props) => {
       setDisableButton(false);
       setimageID(imgId);
       setimageSrc(imgSrc);
-      
+
       if(checkHTMLInString(altText)){
         setAltTextErr(true);
       }
       if(checkHTMLInString(longdescription)){
         setLongDescErr(true);
       }
-    } 
+    }
   }, [props.imageList]);
 
   useEffect(()=> {
@@ -144,7 +144,7 @@ const MetaDataPopUpForTE = (props) => {
             img.setAttribute('alt', altText);
             img.setAttribute('data-longdescription', longdescription);
             img.removeAttribute('data-alttext')
-        }   
+        }
         });
         figureData.tableasHTML = dummyDiv.innerHTML;
 		    /*-- Updata the image metadata in wip */
@@ -178,7 +178,7 @@ const MetaDataPopUpForTE = (props) => {
       <div className="model">
         <div tabIndex="0" className="te-model-popup">
           <div className='figure-popup editPopupforTE'>
-          {imageList?.length > 0 ? 
+          {imageList?.length > 0 ?
             <React.Fragment>
               <div className="dialog-button1">
                   <span className="edit-metadata">Edit Alfresco Metadata</span>
@@ -186,7 +186,7 @@ const MetaDataPopUpForTE = (props) => {
                 <div className='left-right-container'>
                 <div className="left-container">
                   <div className='outer-img-container'>
-                    <img className='inner-img-container' src={imageSrc} id={imageID} /> 
+                    <img className='inner-img-container' src={imageSrc} id={imageID} />
                   </div>
                   <div className='outer-img-array-container'>
                   {imageList.length > 3 && <span className={`left-arrow ${index === 0 ? 'disable' : ''}`} onClick={traverseLeft}><div className={`left-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>}
@@ -195,13 +195,13 @@ const MetaDataPopUpForTE = (props) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
                           return (
                           <div className={`img-inside-array ${(imageList.length <= 3 && imgIndex === 0) ? 'first-img' : '' }`}>
-                             <img 
+                             <img
                                key={image.imgId}
-                               className='seperate-img' 
-                               src={image.imgSrc} 
+                               className='seperate-img'
+                               src={image.imgSrc}
                                id={image.imgId}
                                onClick={() => changeImageOnClick(imgIndex)}
-                               style={ ( image.imgId === imageID && index == imgIndex ) ? {  border: '1px solid #005a70' } : {border: 'none'} } 
+                               style={ ( image.imgId === imageID && index == imgIndex ) ? {  border: '1px solid #005a70' } : {border: 'none'} }
                              />
                           </div>
                           )
@@ -216,7 +216,7 @@ const MetaDataPopUpForTE = (props) => {
                     <div className={`alt-text-body-table ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}>
                       <p className={`alt-text ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}> Alt Text </p>
                       <input
-                        autocomplete="off"
+                        autoComplete="off"
                         id="altText_AM"
                         name="altText"
                         type="text"
@@ -267,7 +267,7 @@ const MetaDataPopUpForTE = (props) => {
                 </div>
               </div>
             </React.Fragment>
-          : <LargeLoader />} 
+          : <LargeLoader />}
           </div>
         </div>
       </div>
@@ -275,7 +275,7 @@ const MetaDataPopUpForTE = (props) => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return { 
+  return {
     updateEditedData: (editedData) => {
       dispatch(updateEditedData(editedData))
     },

@@ -59,7 +59,7 @@ const DialogueSeprator = (props) => {
                             <Button
                                 onClick={(event) => {
                                     // add stage direction
-                                   
+
                                     props.addElement(elementIndex, updatedIndex, defaultSDElement, psElement);
                                     setDetails(false);
                                 }}

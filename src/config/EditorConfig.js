@@ -5,7 +5,7 @@ import 'tinymce/plugins/spellchecker/plugin.min.js';
 import { checkBlockListElement, handleC2MediaClick } from '../js/TinyMceUtility.js';
 import ElementConstants from '../component/ElementContainer/ElementConstants.js';
 export const EditorConfig = {
-    
+
     formats: {
         // Changes the default format for h1 to have a class of heading
         'paragraph': { block: 'p', classes: 'paragraphNumeroUno' },

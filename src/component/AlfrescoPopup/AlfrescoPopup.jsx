@@ -136,7 +136,7 @@ function AlfrescoPopup(props) {
         let tempData = props.alfrescoPath
         tempData.alfresco = alfrescoData
         sendDataToIframe({ 'type': 'saveAlfrescoDataToConfig', 'message': tempData })
-        let payloadObj = {launchAlfrescoPopup: false, 
+        let payloadObj = {launchAlfrescoPopup: false,
             alfrescoPath: props.alfrescoPath
         }
         handleClose()
@@ -220,9 +220,9 @@ function AlfrescoPopup(props) {
                         }}
                     >
                         {props.alfrescoListOption.map((values, index) => (
-                        <CustomizedMenuItem 
-                            ref={menuRef} 
-                            key={index} 
+                        <CustomizedMenuItem
+                            ref={menuRef}
+                            key={index}
                             value={values.entry.id}
                         ><span className='dropdown-items'>{values.entry.site.title}</span></CustomizedMenuItem>
                         ))}

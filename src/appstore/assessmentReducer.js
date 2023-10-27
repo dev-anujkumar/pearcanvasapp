@@ -108,18 +108,18 @@ export default function assessmentReducer(state = INITIAL_STATE, action = INITIA
                 ...state,
                 assessmenId: action.payload
             }
-        case ASSESSMENT_RELOAD_CONFIRMATION: 
+        case ASSESSMENT_RELOAD_CONFIRMATION:
             return {
                 ...state,
                 reloadAfterAssessmentUpdate: action.payload
             }
-        case ASESSMENT_UPDATE_DATA_ARRAY: 
+        case ASESSMENT_UPDATE_DATA_ARRAY:
             const assesssmentArray = state.assessmentItemAutoUpdateData ? state.assessmentItemAutoUpdateData : []
             return {
                 ...state,
                 assessmentItemAutoUpdateData: [...assesssmentArray, action.payload]
             }
-        case UPDATED_ASSESSMENTS_ARRAY: 
+        case UPDATED_ASSESSMENTS_ARRAY:
             const updatedAssessmentArray = state.updatedAssessmentArray ? state.updatedAssessmentArray : []
             return {
                 ...state,

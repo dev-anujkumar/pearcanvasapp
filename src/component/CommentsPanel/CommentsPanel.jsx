@@ -107,7 +107,7 @@ class CommentsPanel extends React.Component {
     }
 
     /**
-     * 
+     *
      * @discription - This function is for close all dropdown
      */
     closeAllDropdown = () => {
@@ -116,7 +116,7 @@ class CommentsPanel extends React.Component {
     }
 
    /**
-   * 
+   *
    * @discription - This function is for search comments
    */
     handleSearchInput = (e) => {
@@ -129,7 +129,7 @@ class CommentsPanel extends React.Component {
     }
 
     /**
-     * 
+     *
      * @discription - This function is for sort the comments
     */
     setSort = ({ target }) => {
@@ -147,7 +147,7 @@ class CommentsPanel extends React.Component {
     }
 
     /**
-     * 
+     *
      * @discription - This function is for set the status comments
      * @param {string} status - status of filter comment
      */
@@ -165,7 +165,7 @@ class CommentsPanel extends React.Component {
         })
     }
     /**
-    * 
+    *
     * @discription - This function is to toogle  the order dropdown
     * @param {string} show - value true or false to toggle dropdown
     */
@@ -177,7 +177,7 @@ class CommentsPanel extends React.Component {
         })
     }
     /**
-    * 
+    *
     * @discription - This function is to toogle  the status dropdown
     * @param {string} show - value true or false to toggle dropdown
     */
@@ -190,7 +190,7 @@ class CommentsPanel extends React.Component {
         })
     }
  /**
-  * 
+  *
   * @discription - This function is to update comment of element
   * @param {string} commentUrn - commnet urn to be updated
   * @param {string} updatedComment - updated comment
@@ -202,7 +202,7 @@ class CommentsPanel extends React.Component {
 
 
     /**
-     * 
+     *
      * @discription - This function is to update comment of element
      * @param {string} commentUrn - commnet urn to be updated
      * @param {object} reply - value of reply and comment detail
@@ -214,7 +214,7 @@ class CommentsPanel extends React.Component {
 
 
     /**
-    * 
+    *
     * @discription - This function is to update comment of element
     * @param {string} commentUrn - commnet urn to be updated
     * @param {object} resolveString - status of comment to be change:resolve,open
@@ -228,13 +228,13 @@ class CommentsPanel extends React.Component {
 
 
     /**
-    * 
+    *
     * @discription - This function is to get user detail of project
     */
 
 
     /**
-    * 
+    *
     * @discription - This function is to update the assignee of the comment.
     * @param {string} commentUrn - commnet urn to be updated
     * @param {object} newAssignee - New Assignee to be updated in comment
@@ -250,7 +250,7 @@ class CommentsPanel extends React.Component {
     }
 
     /**
-    * 
+    *
     * @discription - This function is to delete the comment
     * @param {string} commentUrn - commnet urn to be updated
     * @param {string} elementId - Elemenet id to de updated
@@ -261,8 +261,8 @@ class CommentsPanel extends React.Component {
     }
 
     /**
-    * 
-    * @discription - This function is to render the jsx of comment 
+    *
+    * @discription - This function is to render the jsx of comment
     @param {Object} props - objct of comments
     @return {String} - returns the jsx code of the comment
     */
@@ -301,7 +301,7 @@ class CommentsPanel extends React.Component {
     }
 
    /**
-   * 
+   *
    *@discription - This function is to filter the comments
    @param {Object} props - objct of comments
    @return {String} - returns the final filterd comment

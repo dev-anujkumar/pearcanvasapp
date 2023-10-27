@@ -11,7 +11,7 @@ import {
 import { prepareAutoNumberList, getNumberedElements } from './AutoNumber_helperFunctions';
 import store from '../../appstore/store'
 /**
- * 
+ *
  */
 
 const commonHeaders = {
@@ -23,7 +23,7 @@ const commonHeaders = {
 /**
  * This API fetches the autonumbered elements in the current TOC Container (P,C,FM,BM)
  * @param {*} currentParentUrn TOC Container EntityUrn
- * @returns 
+ * @returns
  */
 export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
     try{
@@ -36,7 +36,7 @@ export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
         const containerUrl = ['frontMatter', 'backMatter'].includes(currentParentUrn) ? `${figureUrl}?aside=true` : `${figureUrl}&aside=true`;
         let figurePromise = axios.get(figureUrl, {headers});
         let containerPromise = axios.get(containerUrl, {headers});
-        
+
         let response = await Promise.all([figurePromise, containerPromise]);
         let projectContent = {}
         response.forEach(res => {
@@ -69,9 +69,9 @@ export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
 
 /**
  * Prepare the Final Autonumbered Elements Sequence
- * @param {*} numberedElements 
- * @param {*} autoNumberElementsIndex 
- * @returns 
+ * @param {*} numberedElements
+ * @param {*} autoNumberElementsIndex
+ * @returns
  */
 const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIndex) => {
     const autoNumber_IndexMapper = store.getState()?.autoNumberReducer?.autoNumber_IndexMapper
@@ -86,8 +86,8 @@ const setAutoNumberSequenceForElements = (numberedElements, autoNumberElementsIn
 
 /**
  * Save the Final Autonumbered Elements Sequence in Store
- * @param {*} numberedElements 
- * @param {*} dispatch 
+ * @param {*} numberedElements
+ * @param {*} dispatch
  */
 export const getAutoNumberSequence = (numberedElements, dispatch) => {
     let autoNumberElementsIndex = {}
@@ -102,8 +102,8 @@ export const getAutoNumberSequence = (numberedElements, dispatch) => {
 
 /**
  * Prepare the Endpoint to get Autonumbered Elements at Container TOC Container Level  (P,C,FM,BM)
- * @param {*} containerEntityUrn 
- * @returns 
+ * @param {*} containerEntityUrn
+ * @returns
  */
 const getAPIUrl = (containerEntityUrn) => {
     let matterType = "";
@@ -127,8 +127,8 @@ const getAPIUrl = (containerEntityUrn) => {
 
 /**
  * Set TOC Container's AutoNumbbering Details in Store
- * @param {*} autoNumberingDetails 
- * @returns 
+ * @param {*} autoNumberingDetails
+ * @returns
  */
 export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch => {
     dispatch({
@@ -139,9 +139,9 @@ export const setTocContainersAutoNumberList = (autoNumberingDetails) => dispatch
 
 /**
  * Function to Enable/Disable Autonumbering in Canvas
- * @param {*} flag 
- * @param {*} configValue 
- * @returns 
+ * @param {*} flag
+ * @param {*} configValue
+ * @returns
  */
 export const isAutoNumberEnabled = (flag, configValue) => dispatch => {
     return dispatch({
@@ -162,9 +162,9 @@ export const commonDispatch = (dispatch, type, payload) => {
 
 /**
  * Get Slate's Content | Used for getting Popup Slate's bodymatter
- * @param {*} manifestURN 
- * @param {*} entityURN 
- * @returns 
+ * @param {*} manifestURN
+ * @param {*} entityURN
+ * @returns
  */
 export const getSlateLevelData = async (manifestURN, entityURN) => {
     let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content`;

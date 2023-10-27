@@ -48,7 +48,7 @@ export const findNearestElement = (elementsArr, elementObj, elementType, index =
                 }
                 return objToReturn;
             }
-        }   
+        }
     }
     return objToReturn;
 }
@@ -139,9 +139,9 @@ const getAllElementsInManifest = async (containerData, numberedElements, created
 
 /**
  * Prepare list of media elements in Showhide
- * @param {*} containerData 
- * @param {*} numberedElements 
- * @returns 
+ * @param {*} containerData
+ * @param {*} numberedElements
+ * @returns
  */
 const getAllElementsInShowhide = async (containerData, numberedElements, createdElementData) => {
     const showHideContent = await containerBodyMatter(containerData);
@@ -161,9 +161,9 @@ const getAllElementsInShowhide = async (containerData, numberedElements, created
 
 /**
  * Prepare list of media elements in MultiColumn 2C/3C
- * @param {*} containerData 
- * @param {*} numberedElements 
- * @returns 
+ * @param {*} containerData
+ * @param {*} numberedElements
+ * @returns
  */
  const getAllElementsInMultiColumn = async (containerData, numberedElements, createdElementData) => {
     if (containerData?.groupeddata?.bodymatter?.length > 0) {
@@ -190,9 +190,9 @@ const getAllElementsInShowhide = async (containerData, numberedElements, created
 
 /**
  * Get List of Media Elements on a Slate
- * @param {*} bodyMatter 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} bodyMatter
+ * @param {*} imagesList
+ * @returns
  */
 export const getSameElementsInsideElement = async (bodyMatter, numberedElements = [], createdElementData) => {
     if (bodyMatter?.length > 0) {
@@ -308,7 +308,7 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
                 item.indexPos = count;
                 count++;
             });
-            nearestElementObj = findNearestElement(slateElements, elementObj, labelType);         
+            nearestElementObj = findNearestElement(slateElements, elementObj, labelType);
             if (nearestElementObj && Object.keys(nearestElementObj)?.length > 0 && nearestElementObj?.obj && Object.keys(nearestElementObj.obj)?.length > 0) {
                 let index = elementsList[slateEntityForAutonumber]?.findIndex(element => element.contentUrn === nearestElementObj?.obj?.contentUrn);
                 index = nearestElementObj?.key === 'above' ? index + 1 : index;
@@ -334,9 +334,9 @@ export const handleAutonumberingOnCreate = (type, createdElementData) => async (
 
 /**
  * Get List of Media Elements on a Slate
- * @param {*} bodyMatter 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} bodyMatter
+ * @param {*} imagesList
+ * @returns
  */
 export const handleAutonumberingForElementsInContainers = async (bodyMatter, elementObj, createdElementData, elementsList, slateAncestorData, autoNumberedElementsObj, slateElements, listType, labelType, getState, dispatch) => {
     let elementsInContainer = await findElementsInContainer(bodyMatter[elementObj.indexPos[0]], [], createdElementData);
@@ -416,9 +416,9 @@ export const appendElementToList = (elementsArr, createdElementData, labelType, 
 
 /**
  * Returns all slates inside FM/BM/Chapter
- * @param {*} inputArr 
- * @param {*} slatesArr 
- * @returns 
+ * @param {*} inputArr
+ * @param {*} slatesArr
+ * @returns
  */
 export const getAllSlatesListInsideParent = (inputArr, slatesArr) => {
     inputArr?.forEach(innerObj => {
@@ -434,9 +434,9 @@ export const getAllSlatesListInsideParent = (inputArr, slatesArr) => {
 
 /**
  * Checks for chapters inside part/volume
- * @param {*} inputArr 
- * @param {*} slatesArr 
- * @returns 
+ * @param {*} inputArr
+ * @param {*} slatesArr
+ * @returns
  */
 export const updateSlateData = (allSlateData, chaptersArr) => {
     allSlateData.forEach(innerObj => {
@@ -453,9 +453,9 @@ export const updateSlateData = (allSlateData, chaptersArr) => {
 
 /**
  * Checks nearest same type element in diff slates
- * @param {*} createdElementData 
- * @param {*} slateEntityURN 
- * @returns 
+ * @param {*} createdElementData
+ * @param {*} slateEntityURN
+ * @returns
  */
 export const checkElementExistenceInOtherSlates = (createdElementData, slateEntityURN, getState, dispatch) => {
     let allSlateData = getState()?.appStore?.allSlateData;

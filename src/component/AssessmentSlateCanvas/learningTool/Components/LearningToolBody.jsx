@@ -11,7 +11,7 @@ const LearningToolBody = (props) => {
     const [resultsPerPage, setResultsPerPage] = useState(25);
     const [currentPage, setCurrentPage] = useState(1);
     const { searchLoading, apiResponse, selectedResultData, learningToolPageLimit, selectedFigure, learningToolTableHeaders, showLTBody, errorFlag } = props;
-    
+
     useEffect(() => {
         setCurrentPage(1);
     }, [apiResponse]);

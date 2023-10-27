@@ -67,10 +67,10 @@ export const assetIdForSnapshot = (assetID) => {
  * Get images from manifest Api
  */
 export const searchForFiguresAction = (searchTerm, stateImageData) => {
-  
+
   searchterm = searchTerm;
   if (stateImageData && stateImageData.length > 0) { // hit api and store data in imageData
-    //We have image data now dispatch an action for render filter data 
+    //We have image data now dispatch an action for render filter data
     return store.dispatch({
       type: 'USE_STATE_IMAGE_DATA',
       payload: {
@@ -134,7 +134,7 @@ export const assetPopoverPopup = (args) => {
 }
 
 /**
- * create asset pop over ID api 
+ * create asset pop over ID api
  */
 export async function getAssetPopoverId(workUrn) {
   try {
@@ -171,7 +171,7 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
         'apikey': config.APO_API_KEY,
         myCloudProxySession: config.myCloudProxySession
       }
-      
+
     })
     let data = await response?.json()
     if (data.length && response?.status == 200) {
@@ -223,7 +223,7 @@ export const getElementVersionContent = async (elementId) =>{
           'apikey': config.APO_API_KEY,
           myCloudProxySession: config.myCloudProxySession
         }
-      })    
+      })
       let data = await response.json()
           sendDataToIframe({'type': HideLoader,'message': { status: false }});
           currentlyLinkedData["id"] = data?.id ? data.id : "";
@@ -231,7 +231,7 @@ export const getElementVersionContent = async (elementId) =>{
           currentlyLinkedData["caption"] = data?.captions?.text ? data.captions.text : "";
           return currentlyLinkedData
     } catch (err) {
-      sendDataToIframe({'type': HideLoader,'message': { status: false }});        
+      sendDataToIframe({'type': HideLoader,'message': { status: false }});
       console.log("err from narrative api 3", err)
       return currentlyLinkedData
     }

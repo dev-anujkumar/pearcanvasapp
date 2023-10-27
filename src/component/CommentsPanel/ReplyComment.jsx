@@ -14,7 +14,7 @@ class ReplyComment extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function displays the reply box in slate view
     */
     showReplyBox = (props) => {
@@ -34,7 +34,7 @@ class ReplyComment extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to update the text of comment
     */
     updateCommentText = (e) => {
@@ -44,7 +44,7 @@ class ReplyComment extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to reply comment
     */
     replyComment = (e) => {
@@ -65,7 +65,7 @@ class ReplyComment extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to return jsx of reply menu
     @param {String} index - index of comments
     @param {Array} reply - Array of reply  comments
@@ -87,7 +87,7 @@ class ReplyComment extends React.Component {
                     <div className="text-medium color-gray-71 mb-4">
                         <p className="hyphens">
                         {typeof reply.commentString === 'string' ? <CommentMention urn={reply.commentUrn} projectUsers={this.props.users} readOnly comment={reply.commentString} />: null }
-                        
+
                         </p>
                     </div>
                 </div>
@@ -96,7 +96,7 @@ class ReplyComment extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to return jsx of reply form
     @param {Array} props - Array of reply  comments
     @return {String} - returns the jsx code of the reply form

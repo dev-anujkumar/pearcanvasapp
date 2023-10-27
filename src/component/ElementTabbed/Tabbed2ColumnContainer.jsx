@@ -86,7 +86,7 @@ export const Tabbed2Column = (props) => {
                         onChange={function (items, sortable, evt) { }}
                     >
                         {renderTabElement(element, element?.groupeddata?.bodymatter, parentUrn, asideData, props.index)}
-                    </Sortable> 
+                    </Sortable>
                 </div>
             )
         } else {
