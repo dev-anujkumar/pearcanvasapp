@@ -1315,7 +1315,7 @@ describe('Test for Sidebar component', () => {
                  target:[]
              }
              sidebarInstance.playbackModeRef = "playbackmode"
-             sidebarInstance.playbackModeRef = "playbackmodelabel"
+             sidebarInstance.playbackModeLabelRef = "playbackmodelabel"
              sidebarInstance.handleClickOutside(event);
          })
          it('handleClickOutside Event else case', () => {
