@@ -198,7 +198,7 @@ export const checkFigureInsideTableElement = (element) => {
 
 /*** @description - This is the function to check if an elm embedded assessment has update available */
 export const checkElmAssessmentStatus = (assessmentId, props) => {
-    if (assessmentId && props && props.assessmentReducer && props.assessmentReducer[assessmentId] && props.assessmentReducer[assessmentId].showUpdateStatus) {
+    if (assessmentId && props && props.assessmentReducer && props.assessmentReducer[assessmentId] && props.assessmentReducer[assessmentId].showUpdateStatus == true) {
         return true;
     }
     return false;
