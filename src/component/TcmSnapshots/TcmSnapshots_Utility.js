@@ -7,7 +7,7 @@
 import config from '../../config/config.js';
 import { sendElementTcmSnapshot, getLatestVersion } from './TcmSnapshot_Actions.js';
 import { setSemanticsSnapshots, fetchElementsTag, getInteractiveSubtypeData, removeCalloutTitle } from './ElementSnapshot_Utility.js';
-import { getTitleSubtitleModel, removedDOMAttributes } from '../../constants/utility';
+import { getTitleSubtitleModel } from '../../constants/utility';
 /*************************Import Constants*************************/
 import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectElement } from '../../appstore/keyboardReducer';
-import { hasReviewerRole } from '../../constants/utility';
 
 export const QUERY_SELECTOR = `cypress-keyboard`;
 export const NORMAL_SELECTOR = `cypress-`

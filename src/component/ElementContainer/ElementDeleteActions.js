@@ -5,7 +5,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { hideBlocker } from '../../js/toggleLoader';
-import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { deleteBlockListElement } from '../ElementContainer/ElementContainerDelete_helpers';

@@ -28,7 +28,6 @@ import {
     OWNERS_SUBSCRIBED_SLATE,
     UPDATE_FIGURE_DROPDOWN_OPTIONS,
     ERROR_API_POPUP,
-    SLATE_FIGURE_ELEMENTS,
     OEP_DISCUSSION,
     UPDATE_AUTONUMBER_MAPPER_KEYS,
     PROJECT_LOB_LIST,
@@ -47,7 +46,7 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, fetchAnySlateData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB, intendedPlaybackModeDropdown } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
