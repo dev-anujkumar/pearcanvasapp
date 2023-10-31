@@ -179,7 +179,7 @@ class MetaDataPopUp extends React.Component {
 							<div className={`alt-text-body ${active === 'altBody' ? 'active' : ""}`} onClick={()=>this.handleActiveState('altBody')} >
 								<p className={`alt-text ${active === 'altBody' ? 'active' : ""}`}>Alt Text</p>
 								<input
-								    autoComplete="off"
+								    autocomplete="off"
 									id="altText_AM"
 									name="altText_AM"
 									type="text"

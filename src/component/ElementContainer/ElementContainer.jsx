@@ -2679,7 +2679,7 @@ class ElementContainer extends Component {
                         {this.renderColorTextButton(element, permissions)}
                     </div>
                         : ''}
-                    <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" + labelText.toLowerCase()} ${borderToggle} ${readOnlyBorder}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick={(e) => this.handleFocus("", "", e, labelText)} spellCheck={`${spellCheckToggle}`}>
+                    <div className={`element-container ${(labelText.toLowerCase() == "2c" || labelText.toLowerCase() == "3c") ? "multi-column" : "" + labelText.toLowerCase()} ${borderToggle} ${readOnlyBorder}`} data-id={element.id} onFocus={() => this.toolbarHandling('remove')} onBlur={() => this.toolbarHandling('add')} onClick={(e) => this.handleFocus("", "", e, labelText)} spellcheck={`${spellCheckToggle}`}>
                         {selectionOverlay}{elementOverlay}{bceOverlay}{editor}
                         {/* {this.state.audioPopupStatus && <OpenAudioBook closeAudioBookDialog={()=>this.handleAudioPopupLocation(false)} isGlossary ={true} position = {this.state.position}/>} */}
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}

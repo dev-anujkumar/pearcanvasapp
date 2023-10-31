@@ -216,7 +216,7 @@ const MetaDataPopUpForTE = (props) => {
                     <div className={`alt-text-body-table ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}>
                       <p className={`alt-text ${altTextErr === true ? "invalid" : active === 'altBody' ? 'active' : "" }`}> Alt Text </p>
                       <input
-                        autoComplete="off"
+                        autocomplete="off"
                         id="altText_AM"
                         name="altText"
                         type="text"
