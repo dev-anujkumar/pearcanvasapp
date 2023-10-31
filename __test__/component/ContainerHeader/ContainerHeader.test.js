@@ -94,6 +94,13 @@ describe('Testing ContainerHeader component', () => {
         containerHeaderWrapper2.find('div.figure-label-number').simulate('click');
         containerHeaderWrapper2.find('.figure-number-dropdown ul li').at(0).simulate('click');
     })
+    it('Checking for workedexampleCustom case k', () => {
+        let containerHeaderWrapper2 = mount(<Provider store={store}><ContainerHeader {...props8} /></Provider>);
+        containerHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        containerHeaderWrapper2.find('.figure-number-dropdown ul li').at(0).simulate('click');
+        containerHeaderWrapper2.find('div.figure-label-number').simulate('click');
+        containerHeaderWrapper2.find('.figure-number-dropdown ul li').at(0).simulate('click');
+    })
 
 })
 
