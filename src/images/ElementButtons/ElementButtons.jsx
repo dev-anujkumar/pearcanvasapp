@@ -35,7 +35,7 @@ export const textIcon = (function () {
 
 export const blockTextIcon = (function () {
     return (<svg id="blockTextIcon" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <g id="poetry-icon/hover-copy" stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+    <g id="poetry-icon/hover-copy" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <rect id="Rectangle" fill="#EEEEEE" opacity="0.100000001" x="0" y="0" width="24" height="24"></rect>
         <g id="Group-10-Copy-3" transform="translate(10.667262, 13.667262) rotate(-135.000000) translate(-10.667262, -13.667262) translate(4.667262, 3.167262)">
             <path d="M6.00486653,8.42633854 L6,0 L12,11.088559 C9.64908956,13.0042877 8.47363434,15.1168809 8.47363434,17.4263385" id="Path-3" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
@@ -49,14 +49,14 @@ export const blockTextIcon = (function () {
 
 export const stanzaIcon = (function () {
     return (<svg width="16px" height="14px" viewBox="0 0 16 14" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <g id="PCAT-7012-Poetry" stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+        <g id="PCAT-7012-Poetry" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
             <g id="05" transform="translate(-1107.000000, -618.000000)">
                 <g id="icon/element/Stanza" transform="translate(1103.000000, 613.000000)">
-                    <rect id="Rectangle" fill="#EEEEEE" fill-rule="evenodd" opacity="0" x="0" y="0" width="24" height="24"></rect>
-                    <polyline id="Path" fill="#454545" fill-rule="nonzero" points="7.88888889 11 19.8888889 11 19.8888889 9 7.88888889 9"></polyline>
-                    <polyline id="Path" fill="#454545" fill-rule="nonzero" points="4 5 4 7 20 7 20 5"></polyline>
-                    <polyline id="Path" fill="#454545" fill-rule="nonzero" points="7.88888889 19 19.8888889 19 19.8888889 17 7.88888889 17"></polyline>
-                    <polygon id="Path" fill="#454545" fill-rule="nonzero" points="4 15 20 15 20 13 4 13"></polygon>
+                    <rect id="Rectangle" fill="#EEEEEE" fillRule="evenodd" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                    <polyline id="Path" fill="#454545" fillRule="nonzero" points="7.88888889 11 19.8888889 11 19.8888889 9 7.88888889 9"></polyline>
+                    <polyline id="Path" fill="#454545" fillRule="nonzero" points="4 5 4 7 20 7 20 5"></polyline>
+                    <polyline id="Path" fill="#454545" fillRule="nonzero" points="7.88888889 19 19.8888889 19 19.8888889 17 7.88888889 17"></polyline>
+                    <polygon id="Path" fill="#454545" fillRule="nonzero" points="4 15 20 15 20 13 4 13"></polygon>
                 </g>
             </g>
         </g>
@@ -294,7 +294,7 @@ export const elmAssessmentItem = (()=>{
 export const singleAssessmentItemIcon = (()=>{
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
-        <g fill="none" fill-rule="evenodd" transform="translate(-3 -3)">
+        <g fill="none" fillRule="evenodd" transform="translate(-3 -3)">
             <rect width="18" height="18" x="3" y="3" fill="#CD1F2A" rx="2"/>
             <circle cx="7" cy="7" r="1" fill="#FFF"/>
             <path fill="#FFF" d="M9 6.3H18V7.699999999999999H9z"/>
@@ -333,10 +333,10 @@ export const elmNavigateBack = (()=>{
 export const citationElement = (() => {
     return (
         <svg width="18px" height="13px" viewBox="0 0 18 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
-            <g id="PCAT-7012-Poetry" stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+            <g id="PCAT-7012-Poetry" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                 <g id="05" transform="translate(-1072.000000, -619.000000)">
                     <g id="icon/element/CitationElement" transform="translate(1069.000000, 613.000000)">
-                        <rect id="Rectangle" fill="#EEEEEE" fill-rule="evenodd" opacity="0" x="0" y="0" width="24" height="24"></rect>
+                        <rect id="Rectangle" fill="#EEEEEE" fillRule="evenodd" opacity="0" x="0" y="0" width="24" height="24"></rect>
                         {/* <text id="CT" fontFamily="SFCompactDisplay-Medium, SF Compact Display" fontSize="16" fontWeight="400" fill="grey"> */}
                         <text id="CT" fontFamily="Arial Narrow, serif" fontSize="15" fontWeight="500" fill="grey">
                             {/* <tspan x="2" y="19">CT</tspan> */}
@@ -362,12 +362,12 @@ export const multiColumnContainer = (() => {
     return (
         <svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
             {/* <title>icon/element/MultiColumn</title> */}
-            <g id="Multi-column-group" stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+            <g id="Multi-column-group" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                 <g id="02" transform="translate(-934.000000, -582.000000)">
                     <g id="Group" transform="translate(203.000000, 296.000000)">
                         <g id="icon/element/multi-column" transform="translate(728.000000, 283.000000)">
-                            <rect id="Rectangle" fill-opacity="0" fill="#EEEEEE" fill-rule="evenodd" x="0" y="0" width="24" height="24"></rect>
-                            <path d="M8.8,3 C10.0150264,3 11,3.98497355 11,5.2 L11,5.2 L11,18.8 C11,20.0150264 10.0150264,21 8.8,21 L8.8,21 L5.2,21 C3.98497355,21 3,20.0150264 3,18.8 L3,18.8 L3,5.2 C3,3.98497355 3.98497355,3 5.2,3 L5.2,3 Z M18.8,3 C20.0150264,3 21,3.98497355 21,5.2 L21,5.2 L21,18.8 C21,20.0150264 20.0150264,21 18.8,21 L18.8,21 L15.2,21 C13.9849736,21 13,20.0150264 13,18.8 L13,18.8 L13,5.2 C13,3.98497355 13.9849736,3 15.2,3 L15.2,3 Z M8.8,5 L5.2,5 C5.08954305,5 5,5.08954305 5,5.2 L5,5.2 L5,18.8 C5,18.9104569 5.08954305,19 5.2,19 L5.2,19 L8.8,19 C8.91045695,19 9,18.9104569 9,18.8 L9,18.8 L9,5.2 C9,5.08954305 8.91045695,5 8.8,5 L8.8,5 Z M18.8,5 L15.2,5 C15.0895431,5 15,5.08954305 15,5.2 L15,5.2 L15,18.8 C15,18.9104569 15.0895431,19 15.2,19 L15.2,19 L18.8,19 C18.9104569,19 19,18.9104569 19,18.8 L19,18.8 L19,5.2 C19,5.08954305 18.9104569,5 18.8,5 L18.8,5 Z" id="Combined-Shape" fill="#9e9e9e" fill-rule="nonzero"></path>
+                            <rect id="Rectangle" fillOpacity="0" fill="#EEEEEE" fillRule="evenodd" x="0" y="0" width="24" height="24"></rect>
+                            <path d="M8.8,3 C10.0150264,3 11,3.98497355 11,5.2 L11,5.2 L11,18.8 C11,20.0150264 10.0150264,21 8.8,21 L8.8,21 L5.2,21 C3.98497355,21 3,20.0150264 3,18.8 L3,18.8 L3,5.2 C3,3.98497355 3.98497355,3 5.2,3 L5.2,3 Z M18.8,3 C20.0150264,3 21,3.98497355 21,5.2 L21,5.2 L21,18.8 C21,20.0150264 20.0150264,21 18.8,21 L18.8,21 L15.2,21 C13.9849736,21 13,20.0150264 13,18.8 L13,18.8 L13,5.2 C13,3.98497355 13.9849736,3 15.2,3 L15.2,3 Z M8.8,5 L5.2,5 C5.08954305,5 5,5.08954305 5,5.2 L5,5.2 L5,18.8 C5,18.9104569 5.08954305,19 5.2,19 L5.2,19 L8.8,19 C8.91045695,19 9,18.9104569 9,18.8 L9,18.8 L9,5.2 C9,5.08954305 8.91045695,5 8.8,5 L8.8,5 Z M18.8,5 L15.2,5 C15.0895431,5 15,5.08954305 15,5.2 L15,5.2 L15,18.8 C15,18.9104569 15.0895431,19 15.2,19 L15.2,19 L18.8,19 C18.9104569,19 19,18.9104569 19,18.8 L19,18.8 L19,5.2 C19,5.08954305 18.9104569,5 18.8,5 L18.8,5 Z" id="Combined-Shape" fill="#9e9e9e" fillRule="nonzero"></path>
                         </g>
                     </g>
                 </g>
@@ -382,7 +382,7 @@ export const elmInteractiveIcon = (() => {
             <defs>
                 <path id="yuua8t3uoa" d="M22.75 2.333H5.25c-1.604 0-2.917 1.313-2.917 2.917v17.5c0 1.604 1.313 2.917 2.917 2.917h17.5c1.604 0 2.917-1.313 2.917-2.917V5.25c0-1.604-1.313-2.917-2.917-2.917zm-9.45 9.333V18.2h6.533v.133c0 2.762-2.238 5-5 5h-1.666c-2.762 0-5-2.238-5-5v-1.666c0-2.762 2.238-5 5-5h.132zm6.533 0v5.6h-5.6v-5.6h5.6zm0-6.533v5.6h-5.6v-5.6h5.6z" />
             </defs>
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <mask id="mg3xnxeabb" fill="#fff">
                     <use xlinkHref="#yuua8t3uoa" />
                 </mask>
@@ -442,8 +442,8 @@ export const approvedIcon = (() => {
 export const stageDirectionIcon = (() => {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
-                <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1036 -501) translate(391 432) translate(645 69)" />
+            <g fill="none" fillRule="evenodd">
+                <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-1036 -501) translate(391 432) translate(645 69)" />
                 <path fill="gray" d="M16.958 4.452c-.053-.165-.17-.302-.324-.38-.154-.08-.333-.094-.497-.04l-2.728.889c-.343.111-.53.48-.419.823l.137.421-6.94 5.11-2.736.892c-.165.054-.301.17-.38.325-.078.154-.093.334-.04.499l1.664 5.13c.09.277.345.452.62.452.067 0 .135-.01.202-.032l2.736-.891 1.407.007C9.942 18.994 11.128 20 12.544 20c1.405 0 2.583-.991 2.877-2.313l1.442.008.137.42c.053.166.17.303.324.381.092.048.194.072.296.072.068 0 .136-.011.201-.032l2.728-.889c.343-.112.53-.48.419-.824l-4.01-12.371zM5.734 17.096l-1.26-3.888 1.596-.52 1.26 3.888-1.596.52zm6.81 1.597c-.688 0-1.278-.426-1.523-1.029l3.04.016c-.25.594-.835 1.013-1.517 1.013zm-3.918-2.349l-.686-2.116-.685-2.116 6.296-4.637 1.93 5.958.958 2.952-7.813-.041zm9.412.746l-.08-.247v-.001l-1.723-5.316-1.803-5.564 1.488-.485 3.606 11.128-1.488.485z" transform="translate(-1036 -501) translate(391 432) translate(645 69)" />
             </g>
 
@@ -454,9 +454,9 @@ export const stageDirectionIcon = (() => {
 export const dialougeElementIcon = (() => {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
-                <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1036 -465) translate(391 432) translate(645 33)" />
-                <path fill="#000" fill-rule="nonzero" d="M19.2 7.2h-1.6v7.2H7.2V16c0 .44.36.8.8.8h8.8L20 20V8c0-.44-.36-.8-.8-.8zM16 12V4.8c0-.44-.36-.8-.8-.8H4.8c-.44 0-.8.36-.8.8V16l3.2-3.2h8c.44 0 .8-.36.8-.8z" transform="translate(-1036 -465) translate(391 432) translate(645 33)" />
+            <g fill="none" fillRule="evenodd">
+                <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-1036 -465) translate(391 432) translate(645 33)" />
+                <path fill="#000" fillRule="nonzero" d="M19.2 7.2h-1.6v7.2H7.2V16c0 .44.36.8.8.8h8.8L20 20V8c0-.44-.36-.8-.8-.8zM16 12V4.8c0-.44-.36-.8-.8-.8H4.8c-.44 0-.8.36-.8.8V16l3.2-3.2h8c.44 0 .8-.36.8-.8z" transform="translate(-1036 -465) translate(391 432) translate(645 33)" />
             </g>
         </svg>
 
@@ -470,7 +470,7 @@ export const learnosityIcon = (() => {
             <defs>
                 <polygon id="path-1" points="0.1471 0.1948 3.943 0.1948 3.943 14.0078 0.1471 14.0078"></polygon>
             </defs>
-            <g id="Icon-/-Learnosity" stroke="none" strokeWidth="1" fill="none" fill-rule="evenodd">
+            <g id="Icon-/-Learnosity" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                 <g id="Group-10" transform="translate(2.000000, 2.000000)">
                     <path d="M9.9713,2.9963 L9.9713,16.8003 L4.8653,19.7033 C4.3893,19.9683 3.7953,19.6363 3.7953,19.1053 L3.7953,0.6913 C3.7953,0.1603 4.3893,-0.1717 4.8653,0.0933 L9.9713,2.9963 Z" id="Fill-1" fill="#F03232"></path>
                     <path d="M9.9713,2.9963 L9.9713,16.8003 L15.0783,19.7033 C15.5533,19.9683 16.1473,19.6363 16.1473,19.1053 L16.1473,0.6913 C16.1473,0.1603 15.5533,-0.1717 15.0783,0.0933 L9.9713,2.9963 Z" id="Fill-3" fill="#FFCD19"></path>
@@ -491,12 +491,12 @@ export const learnosityIcon = (() => {
 export const tickIcon = (() => {
     return (
         <svg id="tick-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                <g>
                   <g>
                      <g>
-                        <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-921 -146) translate(911 138) translate(10 8)"/>
-                        <path fill="#000" fill-rule="nonzero" d="M21 7L9 19 3.5 13.5 4.91 12.09 9 16.17 19.59 5.59z" transform="translate(-921 -146) translate(911 138) translate(10 8)"/>
+                        <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-921 -146) translate(911 138) translate(10 8)"/>
+                        <path fill="#000" fillRule="nonzero" d="M21 7L9 19 3.5 13.5 4.91 12.09 9 16.17 19.59 5.59z" transform="translate(-921 -146) translate(911 138) translate(10 8)"/>
                      </g>
                   </g>
                </g>
@@ -508,9 +508,9 @@ export const tickIcon = (() => {
 export const discussionCloseIcon = (() => {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
-                <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-1197 -97) translate(1197 97)" />
-                <path fill="#005A70" fill-rule="nonzero" d="M18 7.209L16.791 6 12 10.791 7.209 6 6 7.209 10.791 12 6 16.791 7.209 18 12 13.209 16.791 18 18 16.791 13.209 12z" transform="translate(-1197 -97) translate(1197 97)" />
+            <g fill="none" fillRule="evenodd">
+                <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-1197 -97) translate(1197 97)" />
+                <path fill="#005A70" fillRule="nonzero" d="M18 7.209L16.791 6 12 10.791 7.209 6 6 7.209 10.791 12 6 16.791 7.209 18 12 13.209 16.791 18 18 16.791 13.209 12z" transform="translate(-1197 -97) translate(1197 97)" />
             </g>
         </svg>
     )
@@ -519,10 +519,10 @@ export const discussionCloseIcon = (() => {
 export const searchDisussion = (() => {
     return (
         <svg width="24" height="24" viewBox="0 0 24 24">
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <g>
-                    <path fill="#EEE" fill-opacity="0" d="M0 0H24V24H0z" transform="translate(-247 -141) translate(235 133) translate(12 8)"/>
-                    <path fill="#A8A8A8" fill-rule="nonzero" d="M15.435 14.063h-.723l-.256-.247c.897-1.043 1.437-2.397 1.437-3.87C15.893 6.662 13.23 4 9.946 4 6.662 4 4 6.662 4 9.946s2.662 5.947 5.946 5.947c1.473 0 2.827-.54 3.87-1.437l.247.256v.723L18.637 20 20 18.637l-4.565-4.574zm-5.489 0c-2.278 0-4.116-1.839-4.116-4.117S7.668 5.83 9.946 5.83c2.278 0 4.117 1.838 4.117 4.116 0 2.278-1.839 4.117-4.117 4.117z" transform="translate(-247 -141) translate(235 133) translate(12 8)"/>
+                    <path fill="#EEE" fillOpacity="0" d="M0 0H24V24H0z" transform="translate(-247 -141) translate(235 133) translate(12 8)"/>
+                    <path fill="#A8A8A8" fillRule="nonzero" d="M15.435 14.063h-.723l-.256-.247c.897-1.043 1.437-2.397 1.437-3.87C15.893 6.662 13.23 4 9.946 4 6.662 4 4 6.662 4 9.946s2.662 5.947 5.946 5.947c1.473 0 2.827-.54 3.87-1.437l.247.256v.723L18.637 20 20 18.637l-4.565-4.574zm-5.489 0c-2.278 0-4.116-1.839-4.116-4.117S7.668 5.83 9.946 5.83c2.278 0 4.117 1.838 4.117 4.116 0 2.278-1.839 4.117-4.117 4.117z" transform="translate(-247 -141) translate(235 133) translate(12 8)"/>
                 </g>
             </g>
         </svg>    
@@ -542,7 +542,7 @@ export const commentFlagged = (() => {
 export const closeIcon = (function () {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <path fill="#fff" fill-rule="nonzero" d="M20 5.611L18.389 4 12 10.389 5.611 4 4 5.611 10.389 12 4 18.389 5.611 20 12 13.611 18.389 20 20 18.389 13.611 12z" />
+            <path fill="#fff" fillRule="nonzero" d="M20 5.611L18.389 4 12 10.389 5.611 4 4 5.611 10.389 12 4 18.389 5.611 20 12 13.611 18.389 20 20 18.389 13.611 12z" />
         </svg>
     )
 })();
