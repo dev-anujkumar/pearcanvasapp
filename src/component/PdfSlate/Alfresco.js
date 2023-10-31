@@ -54,7 +54,6 @@ export const handleC2MediaClick = (props) => {
 
 const handleSiteOptionsDropdown = (alfrescoPath, id, props, currentAsset) =>{
     let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-    let SSOToken = config.ssoToken;
     return axios.get(url,
  {
             headers: {

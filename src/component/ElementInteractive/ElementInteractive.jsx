@@ -327,7 +327,7 @@ class Interactive extends React.Component {
      * @param {event} index
      */
     renderInteractiveType = (element, itemId, index, slateLockInfo) => {
-        let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass,path;
+        let divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass;
         var context = element && element.figuredata && element.figuredata.interactivetype;
         
         /**------------------ Set classes for jsx based on interactivetype value ------------------*/
@@ -446,7 +446,6 @@ class Interactive extends React.Component {
                 interactivetitle: pufObj.title,
                 interactiveformat: ELM_INT
             }
-            const interactiveType = pufObj.interactiveType ?? this.props?.model?.figuredata?.interactivetype;
                 const thumbnailData = await this.getVideoMCQandGuidedThumbnail(pufObj.id);
                 figureData.posterimage = thumbnailData?.posterImage;
                 figureData.alttext = thumbnailData?.alttext;
@@ -660,7 +659,6 @@ class Interactive extends React.Component {
     handleSiteOptionsDropdown = (alfrescoPath, id, currentAsset) =>{
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        let SSOToken = config.ssoToken;
         return axios.get(url,
             {
                 headers: {
@@ -698,7 +696,6 @@ class Interactive extends React.Component {
             e.stopPropagation();
             return;
         }
-        let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
@@ -714,7 +711,6 @@ class Interactive extends React.Component {
                 type,
             };
         }
-        var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
@@ -853,7 +849,6 @@ class Interactive extends React.Component {
 
     render() {
         const { model, itemId, index, slateLockInfo } = this.props;
-        const isReviewer = hasReviewerRole() ? "pointer-events-none" : "";
         try {
             return (
                     <>

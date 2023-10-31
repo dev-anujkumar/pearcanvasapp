@@ -72,7 +72,6 @@ export const guid = () => {
 
 export const hasProjectPermission = (value) => {
     const authStore = store.getState();
-    const {projectInfo} = authStore;
     const isReadOnlyContent = isApprovedOrSubscribed(authStore)
     let permissions = authStore && authStore.appStore.permissions;
     let hasPermissions = permissions && permissions.includes(value);

@@ -31,7 +31,6 @@ class AddAudioBook extends React.Component {
     handleSiteOptionsDropdown = (alfrescoPath, id, isGlossary,currentAsset) => {
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        let SSOToken = config.ssoToken;
         return axios.get(url,
             {
                 headers: {
@@ -62,7 +61,6 @@ class AddAudioBook extends React.Component {
         if(hasReviewerRole()){
             return true
         }
-        let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;

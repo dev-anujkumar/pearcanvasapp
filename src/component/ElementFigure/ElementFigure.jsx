@@ -171,12 +171,10 @@ class ElementFigure extends Component {
             type: figureDataObj.type,
         } : null;
 
-        let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
         }
-        var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
         if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
             if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
@@ -262,7 +260,6 @@ class ElementFigure extends Component {
     handleSiteOptionsDropdown = (alfrescoPath, id, locationData) =>{
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        let SSOToken = config.ssoToken;
         return axios.get(url,
             {
                 headers: {

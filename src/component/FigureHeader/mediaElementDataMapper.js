@@ -13,7 +13,6 @@ export const mediaElementAPI_Handler = (params, projectContent, numberedElements
     let {
         elementType,
         autoNumberedElements,
-        atContainerLevel
     } = params
     // config.atContainerLevel = atContainerLevel
     if (projectContent['frontMatter']?.length > 0) {

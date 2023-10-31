@@ -29,7 +29,6 @@ class RenderTCMIcons extends React.Component {
         let userName = this.props.elementEditor ? this.props.elementEditor : this.props.tcmSnapshotData?.trackChangeApprover
         let date = this.props.tcmSnapshotData?.originalLastUpdatedTimestamp
         let readableDate = this.props.tcmSnapshotData?.lastUpdatedTimestamp
-        let readableTime = TCMUtiles.formatTime(date)
         return (
             <div className="tcmContainer">
             <div className="userNametcmIconContainer">
