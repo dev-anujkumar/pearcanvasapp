@@ -2,7 +2,8 @@
  * Module - assessmentUtility
  * Description - This file contains utility functions related to assessments (full and embedded)
  */
-import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY, ELM_INT, FIGURE_INTERACTIVE, DEFAULT_IMAGE_SOURCE , OPENER_ELEMENT } from '../AssessmentSlateConstants.js';
+import { LEARNING_TEMPLATE, PUF, ELEMENT_FIGURE, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY, ELM_INT,
+        FIGURE_INTERACTIVE, DEFAULT_IMAGE_SOURCE , OPENER_ELEMENT } from '../AssessmentSlateConstants.js';
 import {AUDIO ,VIDEO} from '../../../constants/Element_Constants.js';
 import { interactivetype } from '../../ElementContainer/ElementConstants.js';
 
@@ -116,7 +117,8 @@ export const checkFullElmAssessment = (element) => {
 * @param element - element's details
 */
 export const checkEmbeddedElmAssessment = (element, assessReducer) => {
-    if (element && element.type == ELEMENT_FIGURE && element.figuretype == FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && isElmLearnosityAssessment(element.figuredata.elementdata) && element.figuredata.elementdata.assessmentid) {
+    if (element && element.type == ELEMENT_FIGURE && element.figuretype == FIGURE_ASSESSMENT && element.figuredata
+        && element.figuredata.elementdata && isElmLearnosityAssessment(element.figuredata.elementdata) && element.figuredata.elementdata.assessmentid) {
         const id = element.figuredata.elementdata.assessmentid;
         const status = assessReducer?.hasOwnProperty(id) ?
                     assessReducer[id].showUpdateStatus : false;    
@@ -181,7 +183,8 @@ export const checkFigureMetadata = (element, buttonType = null) => {
     }
     else if (hasElements.includes(element?.figuretype) && elementAssetId !== '' && buttonType === 'alfrescoExpandButton') {
         return true
-    } else if (smartlinkContexts.includes(element?.figuredata?.interactivetype) && element?.figuredata?.interactiveid && element?.figuredata?.interactiveid !== '' && buttonType === 'alfrescoExpandButton') {
+    } else if (smartlinkContexts.includes(element?.figuredata?.interactivetype) && element?.figuredata?.interactiveid &&
+              element?.figuredata?.interactiveid !== '' && buttonType === 'alfrescoExpandButton') {
         return true;
     }
     return false;

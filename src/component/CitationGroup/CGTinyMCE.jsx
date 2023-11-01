@@ -19,7 +19,9 @@ const CGTinyMCE = (props) => {
         id : context.id,
         placeholder : "Enter Title...",
         tagName : 'h4',
-        model : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].html && context.element.contents["formatted-title"].html.text ? getTitleSubtitleModel(context.element.contents["formatted-title"].html.text, "formatted-subtitle").replace(/&nbsp;/g, "") : `<p class="paragraphNumeroUno"><br/></p>`,
+        model : context.element.contents && context.element.contents["formatted-title"] && context.element.contents["formatted-title"].html &&
+                 context.element.contents["formatted-title"].html.text ? getTitleSubtitleModel(context.element.contents["formatted-title"].html.text, "formatted-subtitle")
+                 .replace(/&nbsp;/g, "") : `<p class="paragraphNumeroUno"><br/></p>`,
         currentElement : context.element.contents && context.element.contents["formatted-title"],
         handleEditorFocus : context.handleFocus,
         handleBlur  :  context.handleBlur,
@@ -60,5 +62,6 @@ export const createPopupUnit = (popupField, forceupdate, index, parentElement, p
         cgTitleFieldData.asideData = props.citationAsideData;
         cgTitleFieldData.parentElement = context.element;
     }
-    props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(true, currentElementData, index, null, null, cgTitleFieldData), index, config.slateManifestURN, null, cgTitleFieldData)
+    props.createPopupUnit(popupField, parentElement, (currentElementData) => context.handleBlur(true, currentElementData, index, null, null, cgTitleFieldData),
+    index, config.slateManifestURN, null, cgTitleFieldData)
 }

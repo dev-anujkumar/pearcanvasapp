@@ -2,7 +2,8 @@
 * Search Bar Component of Learning Tool/Learning App Assessment
 */
 import React, { useState } from 'react';
-import { prepareAppTypeList, prepareDisciplineList, searchHeaders, TYPE_LEARNING_APP, TYPE_DISCIPLINE, DEFAULT_OPTION, PLACEHOLDER_TITLE, PLACEHOLDER_KEYWORD, BUTTON_TEXT_SEARCH } from '../learningToolUtility.js';
+import { prepareAppTypeList, prepareDisciplineList, searchHeaders, TYPE_LEARNING_APP, TYPE_DISCIPLINE, DEFAULT_OPTION,
+         PLACEHOLDER_TITLE, PLACEHOLDER_KEYWORD, BUTTON_TEXT_SEARCH } from '../learningToolUtility.js';
 import '../../../../styles/DropdownMenu/style.css';
 import error_icon from '../../../../images/AssessmentSlateCanvas/error_icon.svg'
 import { hasReviewerRole } from '../../../../constants/utility.js';
@@ -92,7 +93,9 @@ const LearningToolHeader = (props) => {
                             <span className="dropdown-menu-arrow"></span>
                         </div>
                         {showAppTypeValues ? openAppTypeDropdown &&
-                            <Dropdown showDropdown={showAppTypeValues} ulClass={`learningAppType ${showAppTypeValues == false ? "dis-api-fail" : ""}`} type={TYPE_LEARNING_APP} dropdownList={appTypeMenu} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} /> : null}
+                            <Dropdown showDropdown={showAppTypeValues} ulClass={`learningAppType ${showAppTypeValues == false ? "dis-api-fail" : ""}`}
+                             type={TYPE_LEARNING_APP} dropdownList={appTypeMenu} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange}
+                             hasDefaultOption={true} /> : null}
                     </td>
                     <td className='data-disc' onClick={!hasReviewerRole() && toggleDisciplineDropdown}>{/* Discipline Dropdown */}
                         <div className="learningAppType" title={selectedDiscipline ? selectedDiscipline : DEFAULT_OPTION}>
@@ -100,15 +103,19 @@ const LearningToolHeader = (props) => {
                             <span className="dropdown-menu-arrow"></span>
                         </div>
                         {showDisFilterValues ? openDisciplineDropdown &&
-                            <Dropdown showDropdown={showDisFilterValues} ulClass={`learningAppType ${showDisFilterValues == false ? "dis-api-fail" : ""}`} type={TYPE_DISCIPLINE} dropdownList={disciplineMenu} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange} hasDefaultOption={true} /> : null}
+                            <Dropdown showDropdown={showDisFilterValues} ulClass={`learningAppType ${showDisFilterValues == false ? "dis-api-fail" : ""}`}
+                             type={TYPE_DISCIPLINE} dropdownList={disciplineMenu} dropdownClass={'learning-tool-dropdown'} clickHandlerFn={handleDropdownChange}
+                             hasDefaultOption={true} /> : null}
                     </td>
                     <td>{/* Search Keyword */}
-                        <InputSearch searchId={"learningToolSearchBar"} searchClass={`learningToolSearchBar ${showError ? "error" : ""}`} maxInputLimit={100} placeholderText={PLACEHOLDER_KEYWORD} searchValueHandler={handleKeywordChange} />
+                        <InputSearch searchId={"learningToolSearchBar"} searchClass={`learningToolSearchBar ${showError ? "error" : ""}`} maxInputLimit={100}
+                         placeholderText={PLACEHOLDER_KEYWORD} searchValueHandler={handleKeywordChange} />
                         {showError ? <img className="exclamation-icon" src={error_icon}></img> : ""}
                         <div className={`learning-search-text ${showError ? "errorSpan" : ""}`}>{searchTextCondition}</div>
                     </td>
                     <td>{/* Search Title */}
-                        <InputSearch searchId={"learningToolSearchBar"} searchClass={"learningToolSearchBar"} maxInputLimit={100} placeholderText={PLACEHOLDER_TITLE} searchValueHandler={setSearchTitle} />
+                        <InputSearch searchId={"learningToolSearchBar"} searchClass={"learningToolSearchBar"} maxInputLimit={100} placeholderText={PLACEHOLDER_TITLE}
+                         searchValueHandler={setSearchTitle} />
                     </td>
                     <td>
                         <button disabled={!selectedTypeValue || searchLoading} className="learning-tool-button" onClick={handleSearch}>{BUTTON_TEXT_SEARCH}</button>

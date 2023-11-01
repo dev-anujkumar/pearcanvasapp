@@ -114,7 +114,8 @@ const DiscussionDialog = ({
           <div className={showDiscussionLOBDropdown ? "LOBDropdownAndSearchboxContainer" : ""}>
             {showDiscussionLOBDropdown && <div className="LOBDropdownContainer"><div className="LOB-label">LOB</div>
             <div className="LOBDropdown" >
-              <Select variant="standard" MenuProps={selectMenuProps} className={defaultLOBDropdownValue === "select" ? "selectInDropdown" : "LOBInDropdown"} value={defaultLOBDropdownValue} IconComponent={CustomDropDownIcon} onChange={(e) => setSelectedLOBValue(e.target.value)}>
+              <Select variant="standard" MenuProps={selectMenuProps} className={defaultLOBDropdownValue === "select" ?
+               "selectInDropdown" : "LOBInDropdown"} value={defaultLOBDropdownValue} IconComponent={CustomDropDownIcon} onChange={(e) => setSelectedLOBValue(e.target.value)}>
                 <MenuItem value="select" className="selectOption">Select</MenuItem>
                 {options.map((x) => (<MenuItem className="LOBMenuList" value={x.lineOfBusiness}>{x.label}</MenuItem>))}
               </Select>

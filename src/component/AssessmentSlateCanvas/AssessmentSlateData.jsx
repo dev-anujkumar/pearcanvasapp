@@ -12,7 +12,8 @@ import config from '../../config/config';
 import './../../styles/AssessmentSlateCanvas/AssessmentSlateCanvas.css';
 import { sendDataToIframe, hasReviewerRole, defaultMathImagePath, isSubscriberRole } from '../../constants/utility.js';
 import { TAXONOMIC_ID_DISCIPLINES } from './learningTool/learningToolUtility.js';
-import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, FULL_ASSESSMENT_LEARNOSITY, Resource_Type, UPDATE_ASSESSMENT_TYPE,CHANGE_USAGE_TYPE } from './AssessmentSlateConstants.js';
+import { assessmentFormats, CITE, TDX, PUF, LEARNING_TEMPLATE, LEARNOSITY, FULL_ASSESSMENT_LEARNOSITY, Resource_Type,
+         UPDATE_ASSESSMENT_TYPE,CHANGE_USAGE_TYPE } from './AssessmentSlateConstants.js';
 /** ----- Import - Action Creators ----- */
 import { setCurrentCiteTdx, assessmentSorting, setAssessmentFilterParams } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { closeLtAction, openLtAction, openLTFunction, fetchLearningTemplates } from './learningTool/learningToolActions';
@@ -53,7 +54,8 @@ class AssessmentSlateData extends Component {
         let newMessage = { assessmentResponseMsg: false };
         this.props.isLOExist(newMessage);
         if (this.props.model?.elementdata?.assessmentid) {
-            const isSubscribed = isSubscriberRole(this.props?.projectSubscriptionDetails?.projectSharingRole, this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)
+            const isSubscribed = isSubscriberRole(this.props?.projectSubscriptionDetails?.projectSharingRole,
+                                 this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed)
             const sendMessageForSlateTag = !isSubscribed
             this.sendDataAssessment(this.props, sendMessageForSlateTag);
             const assessmentFormat = this.props.model && this.props.setAssessmentFormat(this.props.model)
@@ -82,11 +84,13 @@ class AssessmentSlateData extends Component {
             const newAssessmentData = assessmentReducer[assessmentSlateObj.assessmentId]
             if (assessmentReducer.dataFromElm) {
                 const { dataFromElm } = assessmentReducer;
-                if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
+                if (dataFromElm?.type == 'ElmCreateInPlace' && dataFromElm.resourceType == Resource_Type.ASSESSMENT &&
+                     dataFromElm.elmUrl && dataFromElm.usageType && dataFromElm.elementUrn === this.props.model.id) {
                     window.open(dataFromElm.elmUrl);
                     handlePostMsgOnAddAssess(this.addPufAssessment, dataFromElm.usageType, Resource_Type.ASSESSMENT, 'add', 'fromCreate');
                     this.props.setElmPickerData({});
-                } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.ASSESSMENT && dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
+                } else if (dataFromElm?.type == 'SaveElmData' && dataFromElm.resourceType == Resource_Type.ASSESSMENT &&
+                         dataFromElm.pufObj && dataFromElm.elementUrn === this.props.model.id) {
                     this.addPufAssessment(dataFromElm.pufObj);
                     this.props.setElmPickerData({});
                 }
@@ -115,7 +119,8 @@ class AssessmentSlateData extends Component {
     /*** @description - Close Dropdown on body click
     */
     handleClickOutside = e => {
-        if (!(this.dropdownRef.current && this.dropdownRef.current.contains(e.target)) && !(e.target.classList.contains("slate_assessment_type_dropdown")) && (this.state.openUsageDropdown == true || this.state.openAssessmentDropdown == true) ) {
+        if (!(this.dropdownRef.current && this.dropdownRef.current.contains(e.target)) &&
+         !(e.target.classList.contains("slate_assessment_type_dropdown")) && (this.state.openUsageDropdown == true || this.state.openAssessmentDropdown == true) ) {
             this.setState({ openUsageDropdown: false,openAssessmentDropdown:false });
           }
     }
@@ -137,7 +142,9 @@ class AssessmentSlateData extends Component {
                 if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                     this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
                 }
-                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentUrn, apiKeys_LO, externalLFUrn:externalLFUrn, isElementUpdate, currentContainerUrn: config.slateManifestURN, loAssociation: this.props?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter[0]?.elementdata?.loAssociation } });
+                sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentUrn, apiKeys_LO, externalLFUrn:externalLFUrn,
+                                isElementUpdate, currentContainerUrn: config.slateManifestURN, loAssociation:
+                                 this.props?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter[0]?.elementdata?.loAssociation } });
             }
             else { //set tag to grey heresss                 
                 let newMessage = { assessmentResponseMsg: false };
@@ -290,7 +297,8 @@ class AssessmentSlateData extends Component {
     */
     linkLearningApp = (selectedLearningType) => {
         this.props.handleCanvasBlocker.ShowLoader(true);
-        this.props.updateAssessment(selectedLearningType.learningtemplateUrn, "", selectedLearningType.label.en, LEARNING_TEMPLATE, this.state.activeAssessmentUsageType, 'insert', selectedLearningType.learningsystem, selectedLearningType.templateid, selectedLearningType.type);
+        this.props.updateAssessment(selectedLearningType.learningtemplateUrn, "", selectedLearningType.label.en, LEARNING_TEMPLATE,
+         this.state.activeAssessmentUsageType, 'insert', selectedLearningType.learningsystem, selectedLearningType.templateid, selectedLearningType.type);
         this.setState({
             isUpdateFinal: false
         })
@@ -537,11 +545,15 @@ class AssessmentSlateData extends Component {
         let assessmentSlateJSX;
 
         if ((activeAssessmentType === CITE || activeAssessmentType === TDX) && showCiteTdxComponent === true) {
-            return <RootCiteTdxComponent openedFrom={'slateAssessment'} closeWindowAssessment={() => this.closeWindowAssessment()} assessmentType={activeAssessmentType} addCiteTdxFunction={this.addCiteTdxAssessment} usageTypeMetadata={activeAssessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} setCiteTdxFilterData={this.setCiteTdxFilterData} assessmentSlateObj={assessmentSlateObj}/>
+            return <RootCiteTdxComponent openedFrom={'slateAssessment'} closeWindowAssessment={() => this.closeWindowAssessment()}
+             assessmentType={activeAssessmentType} addCiteTdxFunction={this.addCiteTdxAssessment} usageTypeMetadata={activeAssessmentUsageType}
+             parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} searchTitle={this.state.searchTitle}
+            filterUUID={this.state.filterUUID} setCiteTdxFilterData={this.setCiteTdxFilterData} assessmentSlateObj={assessmentSlateObj}/>
         } else if (changeLearningData && activeAssessmentType === LEARNING_TEMPLATE) {
             return <LearningTool closePopUp={this.closeLTLAPopUp} linkLearningApp={this.linkLearningApp} closelearningPopup={this.closelearningPopup} />
         } else if (getAssessmentData && getAssessmentDataPopup === false && changeLearningData === false) {
-            assessmentSlateJSX = this.state.isUpdateFinal ? this.showNewAssessmentSlate(activeAssessmentType, activeAssessmentUsageType) : this.showFinalAssessmentSlate(slatePlaceholder, activeAssessmentType, assessmentSlateObj, activeAssessmentUsageType);
+            assessmentSlateJSX = this.state.isUpdateFinal ? this.showNewAssessmentSlate(activeAssessmentType, activeAssessmentUsageType) :
+            this.showFinalAssessmentSlate(slatePlaceholder, activeAssessmentType, assessmentSlateObj, activeAssessmentUsageType);
         } else if (getAssessmentData && (getAssessmentDataPopup === true || learningToolStatus)) {
             assessmentSlateJSX = this.showSuccessMessage(slatePlaceholder.title,activeAssessmentUsageType);
         } else {
@@ -581,7 +593,8 @@ class AssessmentSlateData extends Component {
     setUsageType = (assessmentUsageType) => { 
         let newSlateSelectType = <div className="assessment-label">Select usage type<span className="required">*</span></div>
         let usageType = <><div className="slate_assessment_metadata_container">
-            {this.props.getAssessmentData === false && this.props.getAssessmentDataPopup === false ? newSlateSelectType : this.state.isUpdateFinal === false ? <div className="assessment-label">Usage type</div> : newSlateSelectType}
+            {this.props.getAssessmentData === false && this.props.getAssessmentDataPopup === false ? newSlateSelectType :
+             this.state.isUpdateFinal === false ? <div className="assessment-label">Usage type</div> : newSlateSelectType}
             <div className="slate_assessment_type_dropdown" onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
                 <span className="slate_assessment_dropdown_label" id="AssessmentSlateUsageType">{assessmentUsageType ? assessmentUsageType : "Select"}</span>
                 <span className="slate_assessment_dropdown_image"></span>
@@ -702,9 +715,11 @@ class AssessmentSlateData extends Component {
     setAssessmentType = (assessmentUsageType, assessmentType, calledFrom) => {
         let newSlateAssessmentSelect = <div className="assessment-label">Select assessment type</div>
         let assessmentSelectionType = <><div className={`assessment-parent ${assessmentUsageType ? '' : 'disabled'}`}>
-            {this.props.getAssessmentData === false && this.props.getAssessmentDataPopup === false ? newSlateAssessmentSelect : this.state.isUpdateFinal === false ? <div className="assessment-label">Assessment type</div> : newSlateAssessmentSelect}
+            {this.props.getAssessmentData === false && this.props.getAssessmentDataPopup === false ?
+             newSlateAssessmentSelect : this.state.isUpdateFinal === false ? <div className="assessment-label">Assessment type</div> : newSlateAssessmentSelect}
             <div className="slate_assessment_type_dropdown activeDropdown" onClick={this.toggleAssessmentTypeDropdown}>
-                <span className="slate_assessment_dropdown_label" title={assessmentType ? assessmentFormats[assessmentType] : ""}>{assessmentType ? assessmentFormats[assessmentType] : "Select"}</span>
+                <span className="slate_assessment_dropdown_label" title={assessmentType ? assessmentFormats[assessmentType] : ""}>
+                    {assessmentType ? assessmentFormats[assessmentType] : "Select"}</span>
                 {this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? "" : <span className="slate_assessment_dropdown_image"></span>}
                 <div className="clr"></div>
                 {(!(this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName)) && this.state.openAssessmentDropdown &&
@@ -724,7 +739,8 @@ class AssessmentSlateData extends Component {
             {this.setUsageType(assessmentUsageType)}
             {this.setAssessmentType(assessmentUsageType,assessmentType,"addASFormat")}
             <div className="clr"></div>
-            <div className={`slate_assessment_type_button ${assessmentType && assessmentUsageType ? '' : 'disabled'}`} onClick={(e) => this.mainAddAssessment(e, assessmentType)}>Add Assessment</div>
+            <div className={`slate_assessment_type_button ${assessmentType && assessmentUsageType ? '' : 'disabled'}`}
+             onClick={(e) => this.mainAddAssessment(e, assessmentType)}>Add Assessment</div>
             <div className="clr"></div>
         </div>
 

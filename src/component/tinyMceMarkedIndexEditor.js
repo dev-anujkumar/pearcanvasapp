@@ -139,7 +139,8 @@ export class ReactMarkedIndexEditor extends React.Component {
     let activeElement = editor.dom.getParent(editor.selection.getStart(), ".markedindex-editor");
     let contentHTML = e.target.innerHTML;
     if (activeElement) {
-      let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
+      let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') 
+      || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
 
       if (activeElement.innerText.trim().length || isContainsMath) {
         activeElement.classList.remove('place-holder')
@@ -206,7 +207,8 @@ export class ReactMarkedIndexEditor extends React.Component {
       contentHTML = e.target.getContent(),
       activeElement = editor.dom.getParent(editor.selection.getStart(), ".markedindex-editor");
     if (activeElement) {
-      let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
+      let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes('class="Wirisformula') 
+                          || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false
       if (content.trim().length || contentHTML.match(/<math/g) || isContainsMath) {
         activeElement.classList.remove('place-holder')
       }
@@ -365,7 +367,8 @@ export class ReactMarkedIndexEditor extends React.Component {
     testElem.innerHTML = model;
 
     if (testElem && model) {
-      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
+      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula')
+                          || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
       if (testElem.innerHTML && testElem.innerText?.trim() == "" && !testElem.innerText?.trim().length && !isContainsMath) {
         this.placeHolderClass = tempPlaceHolderclass;
       } else {
@@ -463,7 +466,8 @@ export class ReactMarkedIndexEditor extends React.Component {
           Before setting wiris remove the classes to prevent it converting to mathml
         */
         let tempContainerHtml = tinyMCE.$("#" + activeEditorId).html()
-        tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula')
+                            .replace(/\sWirisformula/g, ' temp_Wirisformula');
 
         tinymce.remove('#' + activeEditorId)
         tinymce.$('.wrs_modal_desktop').remove();
@@ -513,14 +517,17 @@ export class ReactMarkedIndexEditor extends React.Component {
     let propsGlossaryFootNoteCurrentValue = this.props.markIndexCurrentValue;
     let markIndexCurrentValue;
     try {
-      markIndexCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
+      markIndexCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ?
+                              (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
     }
     catch (err) {
       markIndexCurrentValue = propsGlossaryFootNoteCurrentValue;
     }
     markIndexCurrentValue = markIndexCurrentValue && markIndexCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
     return (
-        <p ref={this.editorRef} className={`${this.placeHolderClass} ${hasReviewerRole() ? "crossReferenceReadOnly" : ""}`} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable={!hasReviewerRole()} id={this.props.id} dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
+        <p ref={this.editorRef} className={`${this.placeHolderClass} ${hasReviewerRole() ? "crossReferenceReadOnly" : ""}`}
+        placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable={!hasReviewerRole()} id={this.props.id}
+        dangerouslySetInnerHTML={{ __html: markIndexCurrentValue }} ></p>
     )
   }
 }

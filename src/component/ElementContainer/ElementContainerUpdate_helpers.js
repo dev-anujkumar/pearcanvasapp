@@ -64,14 +64,16 @@ export const updateNewVersionElementInStore = (paramObj) => {
     else if (asideData && asideData.type == 'element-aside') {
         asideData.indexes = indexes;
         if (indexes.length === 2 || indexes.length === 3) {
-            dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+            dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0,
+            asideData, CONTAINER_VERSIONING, false));
         } else if (indexes.length === 4 && asideData.parent.type === 'groupedcontent') {
             dispatch(fetchSlateData(asideData.parent.id, asideData.parent.parentContentUrn, 0, asideData, CONTAINER_VERSIONING, false));
             /* Handeling of elements after versioning inside Aside/WE inside S/H */
         } else if ((indexes.length === 4 || indexes.length === 5) && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
             dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }
-    } else if (updatedData?.type == "element-authoredtext" && updatedData?.metaDataField === "formattedTitle" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
+    } else if (updatedData?.type == "element-authoredtext" && updatedData?.metaDataField === "formattedTitle" && asideData?.parent?.type === 'showhide' &&
+        asideData?.parent?.showHideType) {
         asideData.indexes = indexes;
         asideData.type = 'citations';
         dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
@@ -83,12 +85,14 @@ export const updateNewVersionElementInStore = (paramObj) => {
         dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false))
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
-        if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5 || indexes.length === 6) && asideData.type === "poetry") {
+        if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 ||
+            indexes.length === 5 || indexes.length === 6) && asideData.type === "poetry") {
             dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }  else if (asideData && asideData.type == 'groupedcontent') {
             asideData.indexes = indexes;
             if (indexes.length === 2 || indexes.length === 3) {
-                dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
+                dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0,
+                asideData, CONTAINER_VERSIONING, false));
             }
         } else {
         parentElement.index = elementIndex;
@@ -96,7 +100,8 @@ export const updateNewVersionElementInStore = (paramObj) => {
         dispatch(fetchSlateData(parentVersionUrn, parentElement.contentUrn, 0, parentElement, CONTAINER_VERSIONING, false));
     } 
     }
-    else if (parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField || updatedData.sectionType === "postertextobject") ) {
+    else if (parentElement && parentElement.type === "popup" && updatedData.elementParentEntityUrn && (updatedData.metaDataField ||
+        updatedData.sectionType === "postertextobject") ) {
         dispatch(fetchSlateData(updatedData.slateVersionUrn, updatedData.elementParentEntityUrn, 0, parentElement, CONTAINER_VERSIONING, true)); 
     }
     else {
@@ -176,9 +181,11 @@ export const updateElementInStore = (paramsObj) => {
         const indexes = elementIndex.split("-")
         let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
         /** Updation of AutoNumbered Elements */
-        if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+        if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) &&
+            autoNumberSettingsOption?.entityUrn === element.contentUrn) {
             element = { ...element, ...updatedData }
-            const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+            const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel,
+                manualoverride: element?.manualoverride })
             element = { ...dataToReturn }
         }
         _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]] = {
@@ -196,9 +203,11 @@ export const updateElementInStore = (paramsObj) => {
         const indexes = elementIndex.split("-")
         let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
         /** Updation of AutoNumbered Elements */
-        if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+        if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) &&
+            autoNumberSettingsOption?.entityUrn === element.contentUrn) {
             element = { ...element, ...updatedData }
-            const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+            const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel,
+                manualoverride: element?.manualoverride })
             element = { ...dataToReturn }
         }
         _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] = {
@@ -227,9 +236,11 @@ export const updateElementInStore = (paramsObj) => {
             let element;
             switch (indexes.length) {
                 case 5: // AS/WE->HEAD->Pop up Element
-                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata;
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                    .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata;
                     if (updatedData?.sectionType === "postertextobject") {
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata.postertextobject[0] = {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata.postertextobject[0] = {
                             ...element.postertextobject[0],
                             html: updatedData?.html,
                             elementdata: {
@@ -238,7 +249,8 @@ export const updateElementInStore = (paramsObj) => {
                             },
                         }
                     } else {
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata["formatted-title"] = {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0]
+                        .groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata["formatted-title"] = {
                             ...element["formatted-title"],
                             html: updatedData?.html,
                             elementdata: {
@@ -249,9 +261,11 @@ export const updateElementInStore = (paramsObj) => {
                     }
                     break;
                 case 6: // WE->BODY->Pop up Element
-                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata;
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                    .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata;
                     if (updatedData?.sectionType === "postertextobject") {
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata.postertextobject[0] = {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata.postertextobject[0] = {
                             ...element.postertextobject[0],
                             html: updatedData?.html,
                             elementdata: {
@@ -260,7 +274,8 @@ export const updateElementInStore = (paramsObj) => {
                             },
                         }
                     } else {
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata["formatted-title"] = {
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata["formatted-title"] = {
                             ...element["formatted-title"],
                             html: updatedData?.html,
                             elementdata: {
@@ -276,21 +291,26 @@ export const updateElementInStore = (paramsObj) => {
             let element;
             switch (indexes.length) {
                 case 5: // AS/WE->HEAD->Element
-                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                    .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
                     break;
                 case 6: // WE->BODY->Element
-                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                    element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                    .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
                     break;
             }
             /** Updation of AutoNumbered Elements */
-            if (isAutoNumberingEnabled && element?.type == FIGURE && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+            if (isAutoNumberingEnabled && element?.type == FIGURE && autoNumberFigureTypesAllowed.includes(element?.figuretype) &&
+                autoNumberSettingsOption?.entityUrn === element.contentUrn) {
                 element = { ...element, ...updatedData }
-                const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel,
+                                     manualoverride: element?.manualoverride })
                 element = { ...dataToReturn }
             }
             switch (indexes.length) {
                 case 5: // AS/WE->HEAD->Element
-                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = {
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata
+                    .bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = {
                         ...element,
                         ...updatedData,
                         elementdata: {
@@ -303,7 +323,8 @@ export const updateElementInStore = (paramsObj) => {
                     }
                     break;
                 case 6: // WE->BODY->Element
-                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = {
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata
+                    .bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = {
                         ...element,
                         ...updatedData,
                         elementdata: {
@@ -326,7 +347,8 @@ export const updateElementInStore = (paramsObj) => {
            if(parentElement?.type === "popup") {
                 const element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata;
                 if(updatedData.sectionType === "postertextobject"){
-                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata.postertextobject[0] = {
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]]
+                    .popupdata.postertextobject[0] = {
                         ...element.postertextobject[0],
                         html: updatedData?.html,
                         elementdata: {
@@ -335,7 +357,8 @@ export const updateElementInStore = (paramsObj) => {
                         },
                     }
                 } else {
-                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata["formatted-title"] = {
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]]
+                    .popupdata["formatted-title"] = {
                         ...element["formatted-title"],
                         html: updatedData?.html,
                         elementdata: {
@@ -345,7 +368,8 @@ export const updateElementInStore = (paramsObj) => {
                     }
                 }
             }else if (parentElement?.type == "showhide" && showHideType) {
-                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType].map((showHideData) => {
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]]
+                .interactivedata[showHideType].map((showHideData) => {
                     if (showHideData.id == updatedData.id) {
                         showHideData.elementdata.text = updatedData.elementdata.text;
                         showHideData.html = updatedData.html;
@@ -356,9 +380,11 @@ export const updateElementInStore = (paramsObj) => {
                 /** updation of text and figure elements inside aside/WE of multicolumn */
                 let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                 /** Updation of AutoNumbered Elements */
-                if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype)
+                    && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
                     element = { ...element, ...updatedData }
-                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel,
+                                        manualoverride: element?.manualoverride })
                     element = { ...dataToReturn }
                 }
                 _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = {
@@ -376,9 +402,11 @@ export const updateElementInStore = (paramsObj) => {
         } else if(indexes?.length == 5 && parentUrn?.elementType === "manifest") {
             /* 2C:WE-BODY/Section Break:PS */
             if(parentElement?.type === "popup") {  /* 2C:WE-BODY/Section Break:Popup*/
-                let element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata;
+                let element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata
+                .bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata;
                 if(updatedData.sectionType === "postertextobject"){ /* 2C:WE-BODY/Section Break:Popup: posterobjectdata*/
-                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata.postertextobject[0] = {
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata
+                    .bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata.postertextobject[0] = {
                         ...element.postertextobject[0],
                         html: updatedData?.html,
                         elementdata: {
@@ -387,7 +415,8 @@ export const updateElementInStore = (paramsObj) => {
                         },
                     }
                 } else { /* 2C:WE-BODY/Section Break:Popup: formatted-title */
-                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata["formatted-title"] = {
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata
+                    .bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata["formatted-title"] = {
                         ...element["formatted-title"],
                         html: updatedData?.html,
                         elementdata: {
@@ -397,21 +426,26 @@ export const updateElementInStore = (paramsObj) => {
                     }
                 }
             } else if (parentElement?.type == "showhide" && showHideType) {
-                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType].map((showHideData) => {
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata
+                .bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType].map((showHideData) => {
                     if (showHideData.id == updatedData.id) {
                         showHideData.elementdata.text = updatedData.elementdata.text;
                         showHideData.html = updatedData.html;
                     }
                 })
             }else {
-                let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                let element = _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata
+                .bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
                 /** Updation of AutoNumbered Elements */
-                if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) &&
+                    autoNumberSettingsOption?.entityUrn === element.contentUrn) {
                     element = { ...element, ...updatedData }
-                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel,
+                                        manualoverride: element?.manualoverride })
                     element = { ...dataToReturn }
                 }
-                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = {
+                _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents
+                .bodymatter[indexes[4]] = {
                     ...element,
                     ...updatedData,
                     elementdata: {
@@ -449,8 +483,10 @@ export const updateElementInStore = (paramsObj) => {
                         html: updatedData.html
                     };
                     /** Updation of AutoNumbered Elements */
-                    if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
-                        const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                    if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) &&
+                        autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                        const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel,
+                            manualoverride: element?.manualoverride })
                         element = { ...dataToReturn }
                     }
                 }
@@ -462,8 +498,10 @@ export const updateElementInStore = (paramsObj) => {
                         html: updatedData.html
                     };
                     /** Updation of AutoNumbered Elements */
-                    if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) && autoNumberSettingsOption?.entityUrn === element.contentUrn) {
-                        const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel, manualoverride: element?.manualoverride })
+                    if (isAutoNumberingEnabled && element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(element?.figuretype) &&
+                        autoNumberSettingsOption?.entityUrn === element.contentUrn) {
+                        const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, element, { displayedlabel: element?.displayedlabel,
+                                            manualoverride: element?.manualoverride })
                         element = { ...dataToReturn }
                     }
                 }
@@ -490,8 +528,10 @@ export const updateElementInStore = (paramsObj) => {
                                                     html: updatedData.html
                                                 };
                                                 /** Updation of AutoNumbered Elements */
-                                                if (isAutoNumberingEnabled && item?.type == 'figure' && autoNumberFigureTypesAllowed.includes(item?.figuretype) && autoNumberSettingsOption?.entityUrn === item.contentUrn) {
-                                                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, item, { displayedlabel: item?.displayedlabel, manualoverride: item?.manualoverride })
+                                                if (isAutoNumberingEnabled && item?.type == 'figure' && autoNumberFigureTypesAllowed.includes(item?.figuretype) &&
+                                                    autoNumberSettingsOption?.entityUrn === item.contentUrn) {
+                                                    const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, item, { displayedlabel: item?.displayedlabel,
+                                                                        manualoverride: item?.manualoverride })
                                                     item = { ...dataToReturn }
                                                 }
                                             }
@@ -511,8 +551,10 @@ export const updateElementInStore = (paramsObj) => {
                                                 html: updatedData.html
                                             };
                                             /** Updation of AutoNumbered Elements */
-                                            if (isAutoNumberingEnabled && asideChild?.type == 'figure' && autoNumberFigureTypesAllowed.includes(asideChild?.figuretype) && autoNumberSettingsOption?.entityUrn === asideChild.contentUrn) {
-                                                const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, asideChild, { displayedlabel: asideChild?.displayedlabel, manualoverride: asideChild?.manualoverride })
+                                            if (isAutoNumberingEnabled && asideChild?.type == 'figure' && autoNumberFigureTypesAllowed.includes(asideChild?.figuretype) &&
+                                                autoNumberSettingsOption?.entityUrn === asideChild.contentUrn) {
+                                                const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, asideChild,
+                                                                    { displayedlabel: asideChild?.displayedlabel, manualoverride: asideChild?.manualoverride })
                                                 asideChild = { ...dataToReturn }
                                             }
                                         }
@@ -546,8 +588,10 @@ export const updateElementInStore = (paramsObj) => {
                                 html: updatedData.html
                             };
                             /** Updation of AutoNumbered Elements */
-                            if (isAutoNumberingEnabled && nestedEle?.type == 'figure' && autoNumberFigureTypesAllowed.includes(nestedEle?.figuretype) && autoNumberSettingsOption?.entityUrn === nestedEle.contentUrn) {
-                                const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, nestedEle, { displayedlabel: nestedEle?.displayedlabel, manualoverride: nestedEle?.manualoverride })
+                            if (isAutoNumberingEnabled && nestedEle?.type == 'figure' && autoNumberFigureTypesAllowed.includes(nestedEle?.figuretype) &&
+                                autoNumberSettingsOption?.entityUrn === nestedEle.contentUrn) {
+                                const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, nestedEle,
+                                                    { displayedlabel: nestedEle?.displayedlabel, manualoverride: nestedEle?.manualoverride })
                                 nestedEle = { ...dataToReturn }
                             }
                         }
@@ -595,8 +639,10 @@ export const updateElementInStore = (paramsObj) => {
                                         html: updatedData.html
                                     };
                                     /** Updation of AutoNumbered Elements */
-                                    if (isAutoNumberingEnabled && ele?.type == 'figure' && autoNumberFigureTypesAllowed.includes(ele?.figuretype) && autoNumberSettingsOption?.entityUrn === ele.contentUrn) {
-                                        const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, ele, { displayedlabel: ele?.displayedlabel, manualoverride: ele?.manualoverride })
+                                    if (isAutoNumberingEnabled && ele?.type == 'figure' && autoNumberFigureTypesAllowed.includes(ele?.figuretype) &&
+                                        autoNumberSettingsOption?.entityUrn === ele.contentUrn) {
+                                        const dataToReturn = updateAutoNumberedElement(autoNumberSettingsOption?.option, ele, { displayedlabel: ele?.displayedlabel,
+                                            manualoverride: ele?.manualoverride })
                                         ele = { ...dataToReturn }
                                     }
                                 }
@@ -748,44 +794,64 @@ export const updateElementInStore = (paramsObj) => {
                 let indexes = parentElement.index.split("-")
                 if(asideData.parent && asideData.parent.type==="showhide"){
                     if(indexes.length===5){
-                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]] = updatedData
                     }
                     else if(indexes.length===7){
-                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
                     }
                     else if(indexes.length===9){
-                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]]
+                        .listitemdata.bodymatter[indexes[8]] = updatedData
                     }
                     else{
-                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
+                        _slateBodyMatter[indexes[0]].interactivedata[asideData?.parent?.showHideType][indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]]
+                        .listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
                     } // check the update of BL in Tab element of TB
                 } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB && asideData?.type === BLOCK_LIST) {
                     switch (indexes.length) {
                         case 6: // TB:Tab:c1:BL Level 1 nesting
-                            _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]] = updatedData;
+                            _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                            .groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]] = updatedData;
                             break;
                         case 8: // TB:Tab:c1:BL Level 2 nesting
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]] = updatedData;
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]]
+                        .listitemdata.bodymatter[indexes[7]] = updatedData;
                             break;
                         case 10: // TB:Tab:c1:BL Level 3 nesting
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]] = updatedData;
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata
+                        .bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]] = updatedData;
                             break;
                         case 12: // TB:Tab:c1:BL Level 4 nesting
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter[indexes[10]].listitemdata.bodymatter[indexes[11]] = updatedData;
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata
+                        .bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata
+                        .bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter[indexes[10]].listitemdata
+                        .bodymatter[indexes[11]] = updatedData;
                             break;
                     }
                 }else if(asideData.parent && asideData.parent.type==="groupedcontent" && asideData?.type === 'manifestlist'){
                     if(indexes.length===5){
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata
+                        .bodymatter[indexes[4]] = updatedData
                     }
                     else if(indexes.length===7){
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata
+                        .bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
                     }
                     else if(indexes.length===9){
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata
+                        .bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata
+                        .bodymatter[indexes[8]] = updatedData
                     }
                     else{
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata
+                        .bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata
+                        .bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
                     }
                 } // check the update of BL in multicolumn and according to the BL's length update the updated data
                 // check the update of BL in Aside/WE header and according to the BL's length update the updated data
@@ -794,27 +860,38 @@ export const updateElementInStore = (paramsObj) => {
                         _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]] = updatedData
                     }
                     else if(indexes.length===6){
-                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]] = updatedData
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata
+                        .bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]] = updatedData
                     }
                     else if(indexes.length===8){
-                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]] = updatedData
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata
+                        .bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]] = updatedData
                     }
                     else{
-                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]] = updatedData
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata
+                        .bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata
+                        .bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]] = updatedData
                     }
                 }// check the update of BL in WE body and according to the BL's length update the updated data
-                else if(_slateBodyMatter[indexes[0]]?.type === "element-aside" && _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].type === "manifestlist"){
+                else if(_slateBodyMatter[indexes[0]]?.type === "element-aside" && _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents
+                .bodymatter[indexes[2]].type === "manifestlist"){
                     if(indexes.length===5){
-                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]] = updatedData
                     }
                     else if(indexes.length===7){
-                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
                     }
                     else if(indexes.length===9){
-                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]]
+                        .listitemdata.bodymatter[indexes[8]] = updatedData
                     }
                     else{
-                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
+                        _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]]
+                        .listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter[indexes[10]] = updatedData
                     }
                 }
                 else{
@@ -823,16 +900,21 @@ export const updateElementInStore = (paramsObj) => {
                         _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]] = updatedData
                     }
                     else if(indexes.length===5){
-                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]] = updatedData
                     }
                     else if(indexes.length===7){
-                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]] = updatedData
                     }
                     else{
-                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]] = updatedData
+                        _slateBodyMatter[indexes[0]].listdata.bodymatter[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]]
+                        .listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]]
+                        .listitemdata.bodymatter[indexes[8]] = updatedData
                     }
                 }
-            } else if(element?.type === SHOW_HIDE && asideData?.type === 'poetry' && element?.id == asideData?.grandParent?.asideData?.id) { /**updation of stanza inside PE element inside SH */
+            } else if(element?.type === SHOW_HIDE && asideData?.type === 'poetry' && element?.id == asideData?.grandParent?.asideData?.id)
+                { /**updation of stanza inside PE element inside SH */
                 const sectionType = asideData?.showHideType;
                 element?.interactivedata?.[sectionType].forEach((showHideData, showHideIndex) => {
                     if(showHideData?.type === 'poetry' && showHideData?.id === asideData?.id) {
@@ -886,8 +968,10 @@ export function updateShowhideElements(element, updatedData, indexs, {isAutoNumb
                     showHideElement.elementdata.text = updatedData.elementdata.text;
                 } else if(showHideElement?.type === FIGURE) { /* For update - FIGURE */
                     /** Updation of AutoNumbered Elements */
-                    if (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(showHideElement?.figuretype) && autoNumberSettingsOption?.entityUrn === updatedData.contentUrn) {
-                        updateFigureElement_InSH(autoNumberSettingsOption?.option, showHideElement, { displayedlabel: updatedData?.displayedlabel, manualoverride: updatedData?.manualoverride })
+                    if (isAutoNumberingEnabled && autoNumberFigureTypesAllowed.includes(showHideElement?.figuretype) &&
+                        autoNumberSettingsOption?.entityUrn === updatedData.contentUrn) {
+                        updateFigureElement_InSH(autoNumberSettingsOption?.option, showHideElement,
+                        { displayedlabel: updatedData?.displayedlabel, manualoverride: updatedData?.manualoverride })
                     }
                     showHideElement.figuredata = updatedData?.figuredata;
                 } else if(showHideElement?.type === ELEMENT_DIALOGUE) { /* For update PS  - linenumber */
@@ -958,13 +1042,15 @@ export const collectDataAndPrepareTCMSnapshot = async (params) => {
     } = params
     const isElementInBlockList = isElementInsideBlocklist({ index: elementIndex }, currentParentData)
     const assetRemoveidForSnapshot = getState().assetPopOverSearch.assetID;
-    const isPopupOrShowhideElement = ((parentElement?.type === POOPUP_ELEMENT) || (parentElement?.type === SHOW_HIDE && !(updatedData?.metaDataField || updatedData?.sectionType === 'creditsarray'))|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) && 
+    const isPopupOrShowhideElement = ((parentElement?.type === POOPUP_ELEMENT) || (parentElement?.type === SHOW_HIDE &&
+        !(updatedData?.metaDataField || updatedData?.sectionType === 'creditsarray'))|| (asideData?.type === SHOW_HIDE && parentElement?.type === MULTI_COLUMN)) &&
         (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && (updatedData.sectionType == undefined || updatedData.sectionType == 'bodymatter')) ? true : false
     const oldFigureData = getState().appStore.oldFiguredata
     //This check will be removed once Blocklist will support TCM
     // Check modified to prevent snapshots for TB element. This will be removed when TB supports TCM
-    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
+    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB ||
+        asideData?.grandParent?.asideData?.parent?.subtype === TAB;
     if (asideData?.type !== "manifestlist" && !isTbElement) {
         if (elementTypeTCM.indexOf(responseData.type) !== -1 && (isPopupOrShowhideElement || noAdditionalFields) && !isElementInBlockList) {
             const containerElement = {
@@ -1127,7 +1213,8 @@ export const updateStore = (paramObj) => {
     const commonArgs = {
         updatedData, responseData, getState, dispatch
     }
-    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
+    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB ||
+        asideData?.grandParent?.asideData?.parent?.subtype === TAB;
     if ((updatedData?.loData) || updatedData.elementVersionType === "element-generateLOlist") {
         if (updatedData?.loData?.length && responseData?.loData?.length) {
             updateMetadataAnchorLOsinStore({...commonArgs,currentSlateData})
@@ -1204,9 +1291,11 @@ export const updateStoreInCanvas = (params) => {
     const autoNumberSettingsOption = getState().autoNumberReducer?.autoNumberOption
     const isAutoNumberingEnabled= getState().autoNumberReducer?.isAutoNumberingEnabled
     const autoNumberDetails = {autoNumberSettingsOption,isAutoNumberingEnabled}
-    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB || asideData?.grandParent?.asideData?.parent?.subtype === TAB;
+    const isTbElement = asideData?.subtype === TAB || asideData?.parent?.subtype === TAB || asideData?.grandParent?.asideData?.subtype === TAB ||
+            asideData?.grandParent?.asideData?.parent?.subtype === TAB;
     //tcm update code
-    const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined || updatedData.sectionType !== undefined) ? true : false;
+    const isPopupOrShowhideElement = parentElement && (parentElement.type === 'popup' || parentElement.type === 'showhide') && (updatedData.metaDataField !== undefined ||
+            updatedData.sectionType !== undefined) ? true : false;
     const noAdditionalFields = (updatedData.metaDataField == undefined && (updatedData.sectionType == undefined || updatedData.sectionType == 'bodymatter')) ? true : false;
     if (config.tcmStatus) {
         //This check will be removed once Blocklist will support TCM

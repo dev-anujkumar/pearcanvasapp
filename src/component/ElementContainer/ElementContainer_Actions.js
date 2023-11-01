@@ -3,11 +3,11 @@ import config from '../../config/config';
 import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe, hasReviewerRole, createLabelNumberTitleModel, hasReviewerSubscriberRole } from '../../constants/utility.js';
 import { triggerCustomEventsGTM } from '../../js/ga';
-import {
-    fetchSlateData
-} from '../CanvasWrapper/CanvasWrapper_Actions';
-import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS,
-         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA, DELETE_ELEMENT_KEYS, APPROVED_SLATE_POPUP_STATUS, DECO_TO_OTHER_IMG_TYPES, FETCH_CONVERSION_DATA } from "./../../constants/Action_Constants";
+import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
+import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_UPDATE, CREATE_SHOW_HIDE_ELEMENT, ERROR_POPUP,DELETE_SHOW_HIDE_ELEMENT, STORE_OLD_ASSET_FOR_TCM, UPDATE_MULTIPLE_COLUMN_INFO,
+         UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, SLATE_FIGURE_ELEMENTS,
+         UPDATE_TABLE_ELEMENT_ASSET_DATA, UPDATE_TABLE_ELEMENT_EDITED_DATA, DELETE_ELEMENT_KEYS, APPROVED_SLATE_POPUP_STATUS,
+        DECO_TO_OTHER_IMG_TYPES, FETCH_CONVERSION_DATA } from "./../../constants/Action_Constants";
 import { fetchPOPupSlateData} from '../../component/TcmSnapshots/TcmSnapshot_Actions.js'
 import { processAndStoreUpdatedResponse, updateStoreInCanvas } from "./ElementContainerUpdate_helpers";
 import { onDeleteSuccess } from "./ElementContainerDelete_helpers";
@@ -160,10 +160,12 @@ export const contentEditableFalse = (updatedData) => {
  * @param {*} updatedData the updated content
  * @param {*} elementIndex index of the element on the slate
  */
-export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement, poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
+export const updateElement = (updatedData, elementIndex, parentUrn, asideData, showHideType, parentElement,
+    poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
     if (hasReviewerRole()) {
         // condition to work on approved slate for Auto update on Assessment slate and items
-        if (((updatedData?.type !== 'element-assessment' ? updatedData?.figuredata?.type !== 'element-assessment' : false) && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
+        if (((updatedData?.type !== 'element-assessment' ? updatedData?.figuredata?.type !== 'element-assessment' : false)
+        && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return;
         }
@@ -306,7 +308,8 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                 }
             }
             /* Update figure inside Aside/WE in S/H */
-        } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE || asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) { 
+        } else if((asideData?.type === ELEMENT_ASIDE || asideDataFromAfrescoMetadata?.type === ELEMENT_ASIDE ) && (asideData?.parent?.type === SHOW_HIDE ||
+            asideDataFromAfrescoMetadata?.parent?.type === SHOW_HIDE ) && indexes?.length >= 4) { 
             let sectionType = asideData?.parent?.showHideType ? asideData?.parent?.showHideType : asideDataFromAfrescoMetadata?.parent?.showHideType;
             let figure;
             if (sectionType) {
@@ -382,13 +385,16 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
             } else if (Array.isArray(newBodymatter) && newBodymatter[indexes[0]].type === MULTI_COLUMN && newBodymatter[indexes[0]].subtype === TAB) { 
                 switch (indexesLen) {
                     case 4: // TB->Tab->Figure
-                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]];
                         break;
                     case 5: // TB->Tab->AS/WE->HEAD->Figure
-                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
                         break;
                     case 6: // TB->Tab->AS/WE->BODY->Figure
-                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                        condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]]
+                        .groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
                         break;
                 }
                 if (condition.versionUrn === elementId) {
@@ -399,7 +405,8 @@ export const updateFigureData = (figureData, elementIndex, elementId, asideDataF
                 if (indexesLen == 4) {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                 } else if (indexesLen == 5) {
-                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                    condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                    .elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
                 }
                 if (condition.versionUrn === elementId) {
                     dataToSend = condition?.figuredata
@@ -443,7 +450,8 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
         const sectionType = getState()?.appStore?.asideData?.sectionType || getState()?.appStore?.asideData?.parent?.showHideType;
         const newParentData = JSON.parse(JSON.stringify(parentData));
         if (newParentData[config.slateManifestURN].status === 'wip') {
-            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId], newParentData[config.slateManifestURN].contents.bodymatter, sectionType)
+            newParentData[config.slateManifestURN].contents.bodymatter = updateTableEditorData(elementid, response.data[elementId],
+            newParentData[config.slateManifestURN].contents.bodymatter, sectionType)
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
         } else if (newParentData[config.slateManifestURN].status === 'approved') {
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });
@@ -609,7 +617,8 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
                 const listType = autoNumber_ElementTypeToStoreKeysMapper[type2BAdded];
                 const labelType = createdElemData?.data?.displayedlabel;
                 elementsList = autoNumberedElementsObj[listType];
-                handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData, autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
+                handleAutonumberingForElementsInContainers(newBodymatter, elementObj, createdElemData.data, elementsList, slateAncestorData,
+                autoNumberedElementsObj, slateFigures, listType, labelType, getState, dispatch);
             }
         }
         if(cb){
@@ -822,7 +831,8 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
         if(autoNumberOption === AUTO_NUMBER_SETTING_REMOVE_NUMBER || autoNumberOption === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER){
             delete updatedElement['displayedlabel']
         }
-        const dataToReturn = updateAutoNumberedElement(autoNumberOption, updatedElement, { displayedlabel: updatedElement?.displayedlabel, manualoverride: updatedElement?.manualoverride })
+        const dataToReturn = updateAutoNumberedElement(autoNumberOption, updatedElement, { displayedlabel: updatedElement?.displayedlabel,
+                            manualoverride: updatedElement?.manualoverride })
         updatedElement = { ...dataToReturn }
     }
     const updateParams = {

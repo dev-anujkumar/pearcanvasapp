@@ -96,7 +96,8 @@ export const generateCommonFigureData = (index, previousElementData, elementType
     creditsText = creditsText.replace(/(\r\n|\n|\r)/gm, '');
     let podwidth;
     if(previousElementData.figuretype === 'image' || previousElementData.figuretype === "table" || previousElementData.figuretype === "mathImage" ){
-        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+        let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) ||
+                            document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
         podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || POD_DEFAULT_VALUE
         previousElementData.figuredata.podwidth = podwidth ? (podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`) : ''
     }  
@@ -208,7 +209,8 @@ export const podHtmlmatchWithRegex = (html) => {
  * @param {*} primaryOption 
  * @param {*} secondaryOption 
  */
-export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption,isAutoNumberingEnabled, autoNumberOption, containerContext ) => {
+export const generateCommonFigureDataInteractive = (index, previousElementData, elementType, primaryOption, secondaryOption,isAutoNumberingEnabled,
+    autoNumberOption, containerContext ) => {
     const oldFigureData = Object.assign({},previousElementData.figuredata);
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),
@@ -264,7 +266,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             delete previousElementData.figuredata.posterimage;
         }
         if(previousElementData.figuredata.interactivetype === '3rd-party' || previousElementData.figuredata.interactivetype === "table" ){
-            let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) || document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
+            let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.figureElement`) ||
+            document.querySelector(`div.element-container.fg.showBorder[data-id="${previousElementData.id}"] div.figureElement`)
             const podwidth = getAttributeBCE && getAttributeBCE.getAttribute("podwidth") || POD_DEFAULT_VALUE;
             const podwidthToSend = podwidth ? (podHtmlmatchWithRegex(podwidth) ? podwidth : `print${podwidth}`) : '';
             if (previousElementData.figuredata.hasOwnProperty('posterimage')) {
@@ -323,7 +326,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
     // updating the intendedPlayBackMode for 3PI smartlink
     //commenting this code for future reference
     const { assetIdFor3PISmartlink, selectedIntendedPlaybackModeValue } = containerContext.props.activeElement
-    if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink && removeBlankSpaceAndConvertToLowercase(previousElementData?.figuredata?.vendor) !== UNITY_TINY) {
+    if (previousElementData?.figuredata?.interactivetype === '3rd-party' && assetIdFor3PISmartlink &&
+        removeBlankSpaceAndConvertToLowercase(previousElementData?.figuredata?.vendor) !== UNITY_TINY) {
         data.figuredata.intendedPlaybackMode = selectedIntendedPlaybackModeValue ? selectedIntendedPlaybackModeValue : getDefaultPlaybackMode(previousElementData?.figuredata)
     }
 
@@ -387,7 +391,8 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
  */
 const generateCommonFigureDataBlockCode = (index, previousElementData, elementType, primaryOption, secondaryOption, isAutoNumberingEnabled, autoNumberOption) => {
 
-    let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) || document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
+    let getAttributeBCE = document.querySelector(`div.element-container.active[data-id="${previousElementData.id}"] div.blockCodeFigure`) ||
+    document.querySelector(`div.element-container.bce.showBorder[data-id="${previousElementData.id}"] div.blockCodeFigure`)
     let startNumber = getAttributeBCE && getAttributeBCE.getAttribute("startnumber") || previousElementData?.figuredata?.startNumber;
     let isNumbered = getAttributeBCE && getAttributeBCE.getAttribute("numbered") || previousElementData?.figuredata?.numbered;
     let isSyntaxhighlighted = getAttributeBCE && getAttributeBCE.getAttribute("syntaxhighlighting") || previousElementData?.figuredata?.syntaxhighlighting;
@@ -395,7 +400,8 @@ const generateCommonFigureDataBlockCode = (index, previousElementData, elementTy
     let titleDOM = document.getElementById(`cypress-${index}-0`),
         numberDOM = document.getElementById(`cypress-${index}-1`),
         subtitleDOM = document.getElementById(`cypress-${index}-2`),
-        preformattedText = document.getElementById(`cypress-${index}-3`).innerHTML ? document.getElementById(`cypress-${index}-3`).innerHTML : '<span class="codeNoHighlightLine"><br /></span>',
+        preformattedText = document.getElementById(`cypress-${index}-3`).innerHTML ? document.getElementById(`cypress-${index}-3`).innerHTML :
+        '<span class="codeNoHighlightLine"><br /></span>',
         captionDOM = document.getElementById(`cypress-${index}-4`),
         creditsDOM = document.getElementById(`cypress-${index}-5`)
 
@@ -666,7 +672,8 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
         delete previousElementData.figuredata.id;
     }
     /** [PCAT-7961] | case(2) - As no image is present for the assessment,the  'posterimage' key is removed */
-    let isPosterImage = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata && previousElementData.figuredata.elementdata.posterimage
+    let isPosterImage = previousElementData && previousElementData.figuredata && previousElementData.figuredata.elementdata &&
+    previousElementData.figuredata.elementdata.posterimage
     if (isPosterImage) {
         delete previousElementData.figuredata.elementdata.posterimage
     }
@@ -685,7 +692,8 @@ export const generateAssessmentData = (index, previousElementData, elementType, 
  * @param {*} secondaryOption 
  */
 export const generateAssessmentSlateData = (index, previousElementData, elementType, primaryOption, secondaryOption) => {
-    let assessmenttitle = previousElementData.elementdata.assessmentformat == 'learningtemplate' ? previousElementData.elementdata.templatelabel : previousElementData.elementdata.assessmenttitle;
+    let assessmenttitle = previousElementData.elementdata.assessmentformat == 'learningtemplate' ? previousElementData.elementdata.templatelabel :
+    previousElementData.elementdata.assessmenttitle;
     let dataToSend = {
         ...previousElementData,
         inputType: elementTypes[elementType][primaryOption]['subtype'][secondaryOption]['enum'],
@@ -777,7 +785,8 @@ export const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousEle
  * @param {*} index 
  * @param {*} containerContext 
  */
-export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,parentElement,showHideType,asideData, isAutoNumberingEnabled, autoNumberOption) => {
+export const createUpdatedData = (type, previousElementData, node, elementType, primaryOption, secondaryOption, activeEditorId, index, containerContext,
+    parentElement,showHideType,asideData, isAutoNumberingEnabled, autoNumberOption) => {
     let { appStore } = store.getState()
     let dataToReturn = {}
     switch (type){
@@ -818,7 +827,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {}
                 },
-                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" && previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
+                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" &&
+                previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
 
@@ -848,7 +858,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 if(parentElement.contents && parentElement.contents["formatted-title"] && parentElement.contents["formatted-title"]["id"] === previousElementData.id){
                     dataToReturn["metaDataField"] = "formattedTitle";
                 }
-                else if(parentElement.contents && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length && parentElement.contents["creditsarray"][0]["id"] === previousElementData.id){
+                else if(parentElement.contents && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length &&
+                    parentElement.contents["creditsarray"][0]["id"] === previousElementData.id){
                     dataToReturn["sectionType"] = "creditsarray";
                 }
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
@@ -857,7 +868,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 dataToReturn["metaDataField"] = "formattedTitle"
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
             } 
-            else if(asideData?.type==="manifestlist" && (parentElement && (parentElement?.type === "showhide" && showHideType) || parentElement?.type === "groupedcontent") || asideData?.parent?.type === 'element-aside' || config.isPopupSlate) {
+            else if(asideData?.type==="manifestlist" && (parentElement && (parentElement?.type === "showhide" && showHideType) ||
+                parentElement?.type === "groupedcontent") || asideData?.parent?.type === 'element-aside' || config.isPopupSlate) {
                 dataToReturn["elementParentEntityUrn"] = containerContext?.props?.parentManifestListItem?.contentUrn
             }
             else if(parentElement && parentElement.type === "showhide" && showHideType){
@@ -872,7 +884,8 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                                 dataToReturn["metaDataField"] = "formattedTitle";
                                 dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
                             }
-                            if(poetryElement?.contents?.creditsarray && poetryElement?.contents?.creditsarray.length && poetryElement?.contents?.creditsarray[0]["id"] === previousElementData.id) {
+                            if(poetryElement?.contents?.creditsarray && poetryElement?.contents?.creditsarray.length &&
+                                poetryElement?.contents?.creditsarray[0]["id"] === previousElementData.id) {
                                 dataToReturn["sectionType"] = "creditsarray";
                                 dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
                             }
@@ -892,24 +905,28 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     case elementTypeConstant.FIGURE_MATH_IMAGE:
                     case elementTypeConstant.FIGURE_TABLE:
                     case elementTypeConstant.FIGURE_TABLE_EDITOR:
-                        dataToReturn = generateCommonFigureData(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureData(index, previousElementData, figureElementType, figurePrimaryOption,
+                            figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_VIDEO:
                     case elementTypeConstant.FIGURE_AUDIO:
-                        dataToReturn = generateCommonFigureData(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureData(index, previousElementData, figureElementType, figurePrimaryOption,
+                            figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_ASSESSMENT:
                         dataToReturn = generateAssessmentData(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption)
                         break;
                     case elementTypeConstant.INTERACTIVE:
-
-                        dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption, containerContext)
+                        dataToReturn = generateCommonFigureDataInteractive(index, previousElementData, figureElementType, figurePrimaryOption,
+                            figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption, containerContext)
                         break;
                     case  elementTypeConstant.FIGURE_CODELISTING:
-                        dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureDataBlockCode(index, previousElementData, figureElementType, figurePrimaryOption,
+                            figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                     case elementTypeConstant.FIGURE_AUTHORED_TEXT:
-                        dataToReturn = generateCommonFigureDataAT(index, previousElementData, figureElementType, figurePrimaryOption, figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
+                        dataToReturn = generateCommonFigureDataAT(index, previousElementData, figureElementType, figurePrimaryOption,
+                            figureSecondaryOption, isAutoNumberingEnabled, autoNumberOption)
                         break;
                 }
                 

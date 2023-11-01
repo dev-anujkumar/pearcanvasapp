@@ -83,7 +83,8 @@ const AssessmentAPIHandlers = {
         let createDate = new Date(nextData.dateCreated);
         const checkVersionIsClean = AssessmentAPIHandlers.checkElmVersionIsClean(nextData);
         // || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)
-        if ((nextData.status.includes('final')) || (checkVersionIsClean == false) || (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10)) || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)) {
+        if ((nextData.status.includes('final')) || (checkVersionIsClean == false) ||
+            (new Date(nextData.dateModified) > createDate.setSeconds(createDate.getSeconds() + 10)) || (nextData.isVersionOf && nextData.isVersionOf[0] !== previousWorkUrn)) {
             return true /*Update*/
         }
         return false    /*Approved*/
@@ -146,7 +147,8 @@ const AssessmentAPIHandlers = {
     /** @description This function handles assessment-metadata API response for Assessment */
     assessmentMetadataHandler: async (responseData, calledFrom, assessmentData, assessmentItemData, dispatch) => {
         const assessmentStatus = AssessmentAPIHandlers.setAssessmentStatus(responseData.status);
-        const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : 'Elm assessment';
+        const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ?
+                                specialCharacterDecode(responseData.defaultTitle) : 'Elm assessment';
         let dataForUpdate = AssessmentAPIHandlers.prepareUnapprovedData(responseData, assessmentTitle, assessmentStatus, assessmentData);
         if (calledFrom == 'fromNextVersion') {  /* APPROVED | UPDATE */
             dataForUpdate = AssessmentAPIHandlers.prepareApprovedData(assessmentData, responseData, assessmentTitle);

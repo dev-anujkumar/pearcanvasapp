@@ -73,7 +73,8 @@ class FilterAssessmentData extends Component {
             <React.Fragment>
                 <div className={`filter-container ${this.props.openedFrom === "singleSlateAssessmentInner" ? 'inner-assessment':''}`}>
                     <form>
-                        {this.props.setCurrentAssessment && this.props.setCurrentAssessment.title && this.props.setCurrentAssessment.id && this.props.openedFrom === "singleSlateAssessmentInner" &&
+                        {this.props.setCurrentAssessment && this.props.setCurrentAssessment.title && this.props.setCurrentAssessment.id &&
+                         this.props.openedFrom === "singleSlateAssessmentInner" &&
                             <div className="assessemnt-title-container">
                                 <div className="elm-navigate-back-icon" onClick={this.props.assessmentNavigateBack} >{elmNavigateBack}</div>
                                 <div className="assessment-title">{specialCharacterDecode(this.props.setCurrentAssessment.title)}</div>
@@ -87,7 +88,8 @@ class FilterAssessmentData extends Component {
                                     <div className="flex-container">
                                         <div className="input-Container">
                                             {this.state.assessTitleFocus && <label>Title:</label>}
-                                            <input type="text" id="assessTitleFocus" autoComplete="on" name="searchAssessment" value={this.state.searchAssessment} onChange={this.handleChange} placeholder="Search by Title" onBlur={this.handleBlur} onFocus={this.handleFocus} />
+                                            <input type="text" id="assessTitleFocus" autoComplete="on" name="searchAssessment" value={this.state.searchAssessment}
+                                             onChange={this.handleChange} placeholder="Search by Title" onBlur={this.handleBlur} onFocus={this.handleFocus} />
                                         </div>
                                     </div>
 
@@ -95,7 +97,8 @@ class FilterAssessmentData extends Component {
                                 <div className="filter-uuid">
                                     <div className="input-Container">
                                         {this.state.assessUUIDFocus && <label>UUID:</label>}
-                                        <input type="text" id="assessUUIDFocus" name="filterUUID" value={this.state.filterUUID} onChange={this.handleChange} placeholder="Filter by UUID" onBlur={this.handleBlur} onFocus={this.handleFocus} />
+                                        <input type="text" id="assessUUIDFocus" name="filterUUID" value={this.state.filterUUID} onChange={this.handleChange}
+                                         placeholder="Filter by UUID" onBlur={this.handleBlur} onFocus={this.handleFocus} />
                                     </div>
                                 </div>
                             </div>

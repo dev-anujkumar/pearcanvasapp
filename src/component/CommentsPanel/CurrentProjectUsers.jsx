@@ -30,7 +30,8 @@ class CurrentProjectUsers extends React.Component {
                         users.map((item, i) => {
                                 let fullName = item.lastName + ',' + item.firstName
                             return (
-                                <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
+                                <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`}
+                                 key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
                             )
                         }
                         )
@@ -44,7 +45,8 @@ class CurrentProjectUsers extends React.Component {
                         users.map((item, i) => {
                                 let fullName = item.label
                             return (
-                                <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`} key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
+                                <li className={`assign-user-list-items ${currentAssingnee == fullName ? "asignee-selected" : ""}`}
+                                 key={i} onClick={(e) => this.getUser(fullName, e)}>{fullName}</li>
                             )
                         }
                         )

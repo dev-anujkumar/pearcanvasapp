@@ -17,7 +17,14 @@ const BlockMathCode = (props) => {
     return (
         <KeyboardWrapper index={`${props.index}-3`} enable={props.isEnableKeyboard}>
             <div className={divClass}>
-                <TinyMceEditor onFigureImageFieldFocus={props.onFigureImageFieldFocus} onFigureImageFieldBlur={props.onFigureImageFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-3`} placeholder={placeHolder} tagName={tagName} className={tinyMceClass} model={model} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
+                <TinyMceEditor onFigureImageFieldFocus={props.onFigureImageFieldFocus}
+                onFigureImageFieldBlur={props.onFigureImageFieldBlur} permissions={props.permissions}
+                openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model}
+                handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-3`}
+                placeholder={placeHolder} tagName={tagName} className={tinyMceClass} model={model}
+                slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue}
+                glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement}
+                showHideType={props.showHideType} />
                 <label className={getLabelClass(elementType, props)}>{placeHolder}</label>
             </div>
         </KeyboardWrapper>

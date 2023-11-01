@@ -168,11 +168,14 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
     // sending durn when assessment/assessment item/elm interactives are inside frontmatter or backmatter in the url to launch elm
     const elmContainerUrn = config.parentContainerUrn && config.parentOfParentItem !== "frontmatter" && config.parentOfParentItem !== "backmatter"
     let { assessmentWorkUrn, projDURN, assessmentItemWorkUrn, interactiveId, elementId } = assessmentData
-    let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${elmContainerUrn ? config.parentContainerUrn : projDURN}&projectUrn=${projDURN}`;
+    let url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/editInPlace?containerUrn=${elmContainerUrn ?
+                 config.parentContainerUrn : projDURN}&projectUrn=${projDURN}`;
     if (assessmentItemWorkUrn.trim() != "") {
-        url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${elmContainerUrn ? config.parentContainerUrn : projDURN}&projectUrn=${projDURN}`;
+        url = `${config.ELM_PORTAL_URL}/launch/editor/assessment/${assessmentWorkUrn}/item/${assessmentItemWorkUrn}/editInPlace?containerUrn=${elmContainerUrn ?
+                 config.parentContainerUrn : projDURN}&projectUrn=${projDURN}`;
     } else if(interactiveId){
-        url = `${config.ELM_PORTAL_URL}/launch/editor/interactive/${interactiveId}/editInPlace?containerUrn=${elmContainerUrn ? config.parentContainerUrn : projDURN}&projectUrn=${projDURN}`;
+        url = `${config.ELM_PORTAL_URL}/launch/editor/interactive/${interactiveId}/editInPlace?containerUrn=${elmContainerUrn ?
+                 config.parentContainerUrn : projDURN}&projectUrn=${projDURN}`;
     }
     /* Append Element id in url to identify post messages for which element, if exist */
     url = elementId ? `${url}&elementUrn=${elementId}` : url;

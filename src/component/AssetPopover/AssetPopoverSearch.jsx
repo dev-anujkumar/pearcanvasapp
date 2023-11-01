@@ -6,7 +6,8 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apoSearchSaveAction, removeAssetLinkAction, getAssetPopoverId, assetIdForSnapshot } from './AssetPopover_Actions.js';
+import { apoSearchCloseAction, searchForFiguresAction, selectedFigureAction, apoSearchSaveAction, removeAssetLinkAction,
+        getAssetPopoverId, assetIdForSnapshot } from './AssetPopover_Actions.js';
 import '../../styles/AssetPopover/assetPopoverStyles.css';
 import ApiResults from './ApiResults.jsx';
 import { clearAssetPopoverLink } from './openApoFunction.js';
@@ -59,7 +60,8 @@ class AssetPopoverSearch extends React.Component {
             domNode = currentElementNode.querySelector('abbr[asset-id="' + apoObject.assetId + '"');
             originalText = domNode.innerHTML;
             assetPopoverDomId = apoObject.assetId;
-            domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
+            domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' +
+                                elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
             this.apoSearchClose();
             setTimeout(() => {
                 let currentElem = document.getElementById(tinymce.activeEditor.id);
@@ -80,7 +82,8 @@ class AssetPopoverSearch extends React.Component {
                         domNode = document.getElementById('asset-popover-attacher');
                         originalText = domNode.innerHTML;
                         assetPopoverDomId = assetPopoverId;
-                        domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
+                        domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' +
+                                            assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
                     });
                     this.apoSearchClose();
                     setTimeout(() => {
@@ -178,7 +181,8 @@ class AssetPopoverSearch extends React.Component {
                 if (shouldOpenCurrentlyLinked) {
                     if (!isSearchResultFound) {
                         return <section className="modalFooter">
-                            <button disabled={!isFigureSelected} className="myButton" onClick={() => this.apoSearchSave(this.props.apoObject, this.props.selectedFigureValue)}>Update Link</button>
+                            <button disabled={!isFigureSelected} className="myButton"
+                             onClick={() => this.apoSearchSave(this.props.apoObject, this.props.selectedFigureValue)}>Update Link</button>
                             <button className="myButton" onClick={this.apoSearchClose}>Cancel</button>
                         </section>
                     } else {
@@ -191,7 +195,8 @@ class AssetPopoverSearch extends React.Component {
                     if (!isSearchResultFound && shouldShowApoBody) {
                         return <section className="modalFooter">
                             <button  className="myButton" onClick={this.apoSearchClose}>Cancel</button>
-                            <button disabled={!isFigureSelected} className="myButton" onClick={() => this.apoSearchSave(this.props.apoObject, this.props.selectedFigureValue)}>Save</button>
+                            <button disabled={!isFigureSelected} className="myButton"
+                             onClick={() => this.apoSearchSave(this.props.apoObject, this.props.selectedFigureValue)}>Save</button>
                         </section>
                     }
                 }
@@ -220,7 +225,8 @@ class AssetPopoverSearch extends React.Component {
                 <div className="containerApo">
                     <section className="modalHeader header__search-bar">
                         <img className="seach_icon" src={searchIcon} />
-                        <input className="searchBarApo" placeholder="Search figures, asides, worked examples etc..." type="text" readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
+                        <input className="searchBarApo" placeholder="Search figures, asides, worked examples etc..." type="text" 
+                            readOnly={hasReviewerRole()} onChange={(e) => this.searchForFigures(e, stateImageData)} />
                         <img className="modal__close" src={closeIcon} onClick={this.apoSearchClose}/>
                         {/* <label className="modal__close" onClick={this.apoSearchClose}></label> */}
                     </section>
@@ -257,7 +263,9 @@ const mapActionToProps = {
  * Get State as a props here in this component
  */
 const mapStateToProps = (state, props) => {
-    const { figures, videos, audios, interactives, smartLinkInteractives, asides, tables, workedExamples, showApoCurrentlyLinked, showApoBody, showApoFooter, selectedFigureValue, noSearchResultFound, figureIsSelected, apoObject, searchTerm, figureDetails, timeByAPI, currentlyLinkedImageData } = state.assetPopOverSearch;
+    const { figures, videos, audios, interactives, smartLinkInteractives, asides, tables, workedExamples, showApoCurrentlyLinked, showApoBody,
+         showApoFooter, selectedFigureValue, noSearchResultFound, figureIsSelected, apoObject, searchTerm, figureDetails, timeByAPI,
+        currentlyLinkedImageData } = state.assetPopOverSearch;
     return {
         figures,
         videos,

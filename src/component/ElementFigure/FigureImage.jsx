@@ -8,7 +8,8 @@ import BlockMathCode from './BlockMathCode.jsx';
 import { DEFAULT_IMAGE_SOURCE, labelHtmlData } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
-import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype, getCookieByName } from '../../constants/utility';
+import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize,
+        dropdownValueForFiguretype, labelValueForFiguretype, getCookieByName } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import { decoToOtherTypeConversion, fetchOldDataAfterConversion, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
 import figureData from './figureTypes';
@@ -19,7 +20,8 @@ import { updateFigureImageDataForCompare } from '../ElementContainer/ElementCont
 import { connect } from 'react-redux';
 import PopUp from '../PopUp';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
-import { setAutoNumberSettingValue, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions.js';
+import { setAutoNumberSettingValue, AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+        AUTO_NUMBER_SETTING_OVERRIDE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER } from '../FigureHeader/AutoNumber_helperFunctions.js';
 import FigureHeader from '../FigureHeader/FigureHeader.jsx';
 import { IMAGE, TABLE, MATH_IMAGE, TABLE_AS_MARKUP, MATH_ML, BLOCK_CODE } from './ElementFigure_Constants'
 import { launchTableSPA } from './ElementFigure_Utility';
@@ -45,7 +47,8 @@ class FigureImage extends Component {
             figureLabelValue: labelValueForFiguretype(this.props?.model),
             figureNumberLabelValue: 'Default Auto-number',
             figureLabelData: dropdownValueForFiguretype(this.props?.model, this.props?.figureDropdownData),
-            figureNumberLabelData: [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER],
+            figureNumberLabelData: [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER,
+                                    AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER, AUTO_NUMBER_SETTING_OVERRIDE_NUMBER],
             figureDropDown: false,
             figureNumberDropDown: false,
             deleteassetPopup: false
@@ -61,7 +64,8 @@ class FigureImage extends Component {
                 alfrescoSiteData: { ...response }
             })
         })
-        let figureHtmlData = this.props.isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ? {formattedLabel: `<p>${this.props.model.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.model);
+        let figureHtmlData = this.props.isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ?
+                            {formattedLabel: `<p>${this.props.model.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.model);
         let figureLabelValue = this.state;
         const labelList = dropdownValueForFiguretype(this.props?.model, this.props?.figureDropdownData)
         let dropdownData = this.convertOptionsToLowercase(labelList);
@@ -248,7 +252,8 @@ class FigureImage extends Component {
         hideTocBlocker();
         disableHeader(false);
         let imageData = data;
-        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'] && imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'] &&
+                    imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
         let figureType = data?.content?.mimeType?.split('/')[0]
         //commented lines will be used to update the element data
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
@@ -264,12 +269,14 @@ class FigureImage extends Component {
         }
 
         /**let scaleMarkerData = {};
-        Object.assign(scaleMarkerData, (data && data.scalemarker && data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
+        Object.assign(scaleMarkerData, (data && data.scalemarker &&
+             data.scalemarker.properties) ? { schema: 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image' } : null,
             (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.id || null } : null,
             (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.name || "The alttext for the scale image" } : null,
             (data && data.scalemarker && data.scalemarker.epsUrl) ? { "path": data.scalemarker.epsUrl || null } : null,
             (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
-            (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ? { "width": data.properties["exif:pixelXDimension"] || null } : null,
+            (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ?
+            { "width": data.properties["exif:pixelXDimension"] || null } : null,
         ); */
         let scaleMarkerAsset = {};
             if (data.scalemarker) {
@@ -277,7 +284,8 @@ class FigureImage extends Component {
                     'schema': 'http://schemas.pearson.com/wip-authoring/image/1#/definitions/image',
                     'imageid': data.scalemarker?.id ?? data?.id ?? null,
                     'alttext': data.scalemarker?.name ?? "The alttext for the scale image",
-                    'path': data.scalemarker?.epsUrl ? data.scalemarker?.epsUrl : data.scalemarker?.['institution-urls']?.[0]?.publicationUrl ? data.scalemarker['institution-urls'][0].publicationUrl : "",
+                    'path': data.scalemarker?.epsUrl ? data.scalemarker?.epsUrl : data.scalemarker?.['institution-urls']?.[0]?.publicationUrl ?
+                     data.scalemarker['institution-urls'][0].publicationUrl : "",
                     'height': data.scalemarker?.properties?.["exif:pixelYDimension"] ?? null,
                     'width': data.scalemarker?.properties?.["exif:pixelXDimension"] ?? null
                 };
@@ -511,13 +519,15 @@ class FigureImage extends Component {
                 break;
                 case MATH_ML:
                 case BLOCK_CODE:
-                    figureJsx = <BlockMathCode isEnableKeyboard={this.isEnableKeyboard()} {...this.props} figureTypeData={figureTypeData} onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} />
+                    figureJsx = <BlockMathCode isEnableKeyboard={this.isEnableKeyboard()}
+                    {...this.props} figureTypeData={figureTypeData} onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} />
                 break;
                 case TABLE:
                 case MATH_IMAGE:
                 case IMAGE:
                 default:
-                    figureJsx = <FigureImageAsset isEnableKeyboard={this.isEnableKeyboard()} {...this.props} figureTypeData={figureTypeData} imgSrc={this.state.imgSrc} alfrescoSite={this.state.alfrescoSite} addFigureResource={this.addFigureResource} toggleDeletePopup={this.toggleDeletePopup} />
+                    figureJsx = <FigureImageAsset isEnableKeyboard={this.isEnableKeyboard()} {...this.props} figureTypeData={figureTypeData}
+                    imgSrc={this.state.imgSrc} alfrescoSite={this.state.alfrescoSite} addFigureResource={this.addFigureResource} toggleDeletePopup={this.toggleDeletePopup} />
                 break;
             }
         }
@@ -561,7 +571,8 @@ class FigureImage extends Component {
             figCreditClass = figureAlignment['figCreditClass'];
         let figureHtmlData = getLabelNumberTitleHTML(model);
         let { figureLabelValue } = this.state;
-        let figureLabelFromApi = isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1 ? model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
+        let figureLabelFromApi = isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1 ?
+                                model.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
         if (!(isAutoNumberingEnabled)) {
             if (this.props.decoToOtherTypes && model?.id === this.props.conversionData?.id) { // if the image conversion is from decorative to any other figure type
@@ -636,7 +647,8 @@ class FigureImage extends Component {
                                                         }
                                                     }
                                                 }}>
-                                                    <div className={this.props.selectedElement === `${QUERY_SELECTOR}-${this.props.index}-label-1` ? "figure-label-highlight" : "figure-label"} onClick={this.handleFigureDropdown}>
+                                                    <div className={this.props.selectedElement === `${QUERY_SELECTOR}-${this.props.index}-label-1` ?
+                                                    "figure-label-highlight" : "figure-label"} onClick={this.handleFigureDropdown}>
                                                         <span>{figureLabelValue}</span>
                                                         <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                                                     </div>
@@ -658,20 +670,42 @@ class FigureImage extends Component {
                                         {figureLabelValue === 'Custom' ?
                                             <KeyboardWrapper index={`${this.props.index}-0`}  enable={this.isEnableKeyboard()}>                                             
                                             <div className='image-label'>
-                                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus}
+                                                    onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions}
+                                                    openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                                                    handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`}
+                                                    placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel}
+                                                    slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                                                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId}
+                                                    parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                                                 
-                                                <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
+                                                <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ?
+                                                                 "transition-none" : "floating-label"}>Label Name</label>
                                             </div> </KeyboardWrapper>:
                                             <div className='image-label hide-field'>
                                                 {/* <KeyboardWrapper index={`${this.props.index}-0`}  enable>  */}
-                                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur}
+                                                    permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                                                    element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur}
+                                                    index={`${this.props.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "}
+                                                    model={figureHtmlData.formattedLabel} slateLockInfo={this.props.slateLockInfo}
+                                                    glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                                                    elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
                                                 {/* </KeyboardWrapper> */}
-                                                <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
+                                                <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" :
+                                                "floating-label"}>Label Name</label>
                                             </div>
                                         }
                                     <KeyboardWrapper index={`${this.props.index}-1`} enable={this.isEnableKeyboard()}>        
                                         <div className={`floating-number-group`}>
-                                                <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType}  contenteditable={ !hasReviewerRole()} />
+                                                <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur}
+                                                permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp}
+                                                element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur}
+                                                index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber "}
+                                                model={figureHtmlData.formattedNumber} slateLockInfo={this.props.slateLockInfo}
+                                                glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup}
+                                                elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType}
+                                                contenteditable={ !hasReviewerRole()} />
                                             
                                             <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
                                         </div>
@@ -679,7 +713,13 @@ class FigureImage extends Component {
                                     </header>
                                     <KeyboardWrapper index={`${this.props.index}-2`} enable={this.isEnableKeyboard()}>
                                         <div className={`floating-title-group`}>
-                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType}/>
+                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur}
+                                            permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                                            handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-2`}
+                                            placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle}
+                                            slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                                            glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement}
+                                            showHideType={this.props.showHideType}/>
                                             <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
                                         </div>
                                     </KeyboardWrapper>
@@ -693,17 +733,33 @@ class FigureImage extends Component {
                                 }
                             </>
                             {isDecorativeImage ? '' : <figcaption >
-                            <KeyboardWrapper enable={this.isEnableKeyboard()} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-4`:`${this.props.index}-3`}>
+                            <KeyboardWrapper enable={this.isEnableKeyboard()}
+                             index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-4`:`${this.props.index}-3`}>
                                 <div className={`floating-caption-group`}>
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-4`:`${this.props.index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={captionsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur}
+                                    permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                                    handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur}
+                                    index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-4`:`${this.props.index}-3`}
+                                    placeholder="Caption" tagName={'p'} className={figCaptionClass + " figureCaption"} model={captionsHtml}
+                                    slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement}
+                                    showHideType={this.props.showHideType} />
                                     <label className={checkHTMLdataInsideString(this.props?.model?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
                                 </div>
                                 </KeyboardWrapper>
                             </figcaption>}
                             <figcredit >
-                            <KeyboardWrapper enable={this.isEnableKeyboard()} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`}>      
+                            <KeyboardWrapper enable={this.isEnableKeyboard()}
+                            index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`}>      
                                 <div className={`floating-credit-group`}>
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={creditsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType}/>     
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur}
+                                    permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model}
+                                    handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur}
+                                    index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`}
+                                    placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={creditsHtml}
+                                    slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue}
+                                    glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement}
+                                    showHideType={this.props.showHideType}/>     
                                     <label className={checkHTMLdataInsideString(this.props?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
                                 </div>
                             </KeyboardWrapper>

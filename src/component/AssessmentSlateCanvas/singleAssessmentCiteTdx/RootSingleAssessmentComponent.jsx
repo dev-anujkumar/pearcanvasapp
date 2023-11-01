@@ -36,9 +36,12 @@ class RootSingleAssessmentComponent extends Component {
       <div className="vex-overlay cite-wrapper">
         <div className={`root-container ${this.props.isBannerVisible ? 'cite-wrapper-banner' : ''}`}>
             <CiteTdxHeader headerProps={this.headerProps} resetPage={this.props.resetPage}/>
-              <FilterAssessmentData  openedFrom = {this.props.openedFrom} setCurrentAssessment={this.props.setCurrentAssessment} assessmentNavigateBack={this.props.assessmentNavigateBack}/>
+              <FilterAssessmentData  openedFrom = {this.props.openedFrom} setCurrentAssessment={this.props.setCurrentAssessment}
+               assessmentNavigateBack={this.props.assessmentNavigateBack}/>
               <CiteTdxSingleAssessmentTable assessmentType={this.props.assessmentType} openedFrom = {this.props.openedFrom}/>
-              <CiteTdxFooter openedFrom = {this.props.openedFrom} closeWindowAssessment={this.headerProps.closeWindowAssessment} addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata} setCurrentAssessment={this.props.setCurrentAssessment} resetPage={this.props.resetPage} isInnerComponent={true}/>
+              <CiteTdxFooter openedFrom = {this.props.openedFrom} closeWindowAssessment={this.headerProps.closeWindowAssessment}
+              addCiteTdxFunction={this.props.addCiteTdxFunction} usageTypeMetadata={this.props.usageTypeMetadata}
+              setCurrentAssessment={this.props.setCurrentAssessment} resetPage={this.props.resetPage} isInnerComponent={true}/>
         </div>
       </div>
     );

@@ -126,7 +126,8 @@ export class ReactEditor extends React.Component {
     let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
     let contentHTML = e.target.innerHTML;
     if (activeElement) {
-      let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
+      let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')
+                           || contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
       if (activeElement.innerText.trim().length || isContainsMath) {
         activeElement.classList.remove('place-holder')
       }
@@ -146,7 +147,8 @@ export class ReactEditor extends React.Component {
         contentHTML = e.target.getContent(),
         activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
     if (activeElement) {
-        let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula')||contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
+        let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes('class="Wirisformula') ||
+                            contentHTML.match(/<img/).input.includes('class="temp_Wirisformula')):false
         if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
             activeElement.classList.remove('place-holder')
         }
@@ -310,7 +312,8 @@ export class ReactEditor extends React.Component {
     testElem.innerHTML = model;
 
     if (testElem && model) {
-      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
+      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula')
+                          || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
       if (testElem.innerHTML && testElem.innerText?.trim() == "" && !testElem.innerText?.trim().length && !isContainsMath) {
         this.placeHolderClass = tempPlaceHolderclass;
       } else {
@@ -410,7 +413,8 @@ export class ReactEditor extends React.Component {
           Before setting wiris remove the classes to prevent it converting to mathml
         */
         let tempContainerHtml = tinyMCE.$("#" + activeEditorId).html()
-        tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula')
+                            .replace(/\sWirisformula/g, ' temp_Wirisformula');
 
         tinymce.remove('#' + activeEditorId)
         tinymce.$('.wrs_modal_desktop').remove();
@@ -463,7 +467,8 @@ export class ReactEditor extends React.Component {
     // && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
     let glossaryFootNoteCurrentValue;
     try{
-      glossaryFootNoteCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
+      glossaryFootNoteCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ?
+                                      (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
     }
     catch(err){
       glossaryFootNoteCurrentValue = propsGlossaryFootNoteCurrentValue;
@@ -472,8 +477,12 @@ export class ReactEditor extends React.Component {
     
     return (
       <div className={`glossary-toolbar ${isReviewer? "pointer-events-none" : ""}`}>
-        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable={`${!isReviewer}`} id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
-        {/* {markedIndexIcon && (this.props.elementType === "element-authoredtext" || this.props.elementType === 'element-list') ? <span dangerouslySetInnerHTML={{__html: markedIndexIcon}} onClick={ this.openMarkedIndexPopUp }></span>: null} */}
+        <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable={`${!isReviewer}`}
+        id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue &&
+        glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula')
+        .replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>
+        {/* {markedIndexIcon && (this.props.elementType === "element-authoredtext" || this.props.elementType === 'element-list') ?
+         <span dangerouslySetInnerHTML={{__html: markedIndexIcon}} onClick={ this.openMarkedIndexPopUp }></span>: null} */}
       </div>
     )
   }

@@ -61,7 +61,8 @@ class ApiResults extends React.Component {
                     matchingAssets.map((value, index) => {
                         const assetTitle = getTitle(value);
                         const assetCaption = getCaption(value);
-                        return <FigureCard forInputKey={index} key={index} figureDetails={value} title={assetTitle} caption={assetCaption} path={value.path ?? assetTitle} selectedFigure={selectedFigure} />
+                        return <FigureCard forInputKey={index} key={index} figureDetails={value} title={assetTitle}
+                        caption={assetCaption} path={value.path ?? assetTitle} selectedFigure={selectedFigure} />
                     })
                 }
             </>

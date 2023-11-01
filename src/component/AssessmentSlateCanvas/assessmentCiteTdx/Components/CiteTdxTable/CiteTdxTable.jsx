@@ -36,7 +36,8 @@ class CiteTdxTable extends Component {
             let sortingData = Object.keys(this.state.sortBy).map((ele, index) => {
                 return {
                     [ele]: {
-                        sortIcon: sortByParameter === ele ? this.props.sortingData.sortOrder ? elmSortUp : elmSortDown : this.state.sortBy[sortByParameter].sortFlag ? elmSortDown : elmSortUp,
+                        sortIcon: sortByParameter === ele ? this.props.sortingData.sortOrder ? elmSortUp : elmSortDown :
+                         this.state.sortBy[sortByParameter].sortFlag ? elmSortDown : elmSortUp,
                         sortFlag: sortByParameter === ele ? this.props.sortingData.sortOrder ? false : true : this.state.sortBy[sortByParameter].sortFlag,
                         className: sortByParameter === ele ? 'active' : 'inactive'
                     }
@@ -94,7 +95,8 @@ class CiteTdxTable extends Component {
                                 {this.tableHeaders.map(item => (
                                     <th key={`assessment-${item}`} className={`assessment-row-class ${item.toLowerCase()}`}>{item}
                                     {(item === "Title" || item === "Date Modified")  && this.state.sortBy[item] &&
-                                    <div className={`sort-icon ${this.state.sortBy[item].className} ${apiData.assessments.length > 1 ? '':'disabled'}`} onClick={() => this.setSort(item)}>{this.state.sortBy[item].sortIcon}</div>
+                                    <div className={`sort-icon ${this.state.sortBy[item].className} ${apiData.assessments.length > 1 ?
+                                        '':'disabled'}`} onClick={() => this.setSort(item)}>{this.state.sortBy[item].sortIcon}</div>
                                     }
                                     </th>
 
@@ -105,15 +107,20 @@ class CiteTdxTable extends Component {
                                 {apiData.assessments.map((item, index) => {
                                     return (
                                         <React.Fragment key={`assessment-${index}`}>
-                                            <tr className ={(this.props.currentAssessmentSelected && this.props.currentAssessmentSelected.versionUrn=== item.versionUrn) ? 'selected':''}>
+                                            <tr className ={(this.props.currentAssessmentSelected &&
+                                                this.props.currentAssessmentSelected.versionUrn=== item.versionUrn) ? 'selected':''}>
                                                 <td className="td-class">
-                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn} onClick={() => this.addAssessment(item)} checked={this.props.currentAssessmentSelected.versionUrn=== item.versionUrn} />
+                                                    <input type="radio" className="radio-button" name="assessment-radio" value={item.versionUrn}
+                                                     onClick={() => this.addAssessment(item)} checked={this.props.currentAssessmentSelected.versionUrn=== item.versionUrn} />
                                                     <span className="elmAssessmentItem-icon">{elmAssessmentItem}</span>
                                                     <span className="assessment-titles" title={specialCharacterDecode(item.name)}>{specialCharacterDecode(item.name)}</span>
                                                 </td>
-                                                <td><span className="assessment-type">{this.props.assessmentType === CITE ? CITE.toUpperCase() : this.props.assessmentType === TDX? TDX.toUpperCase() : MMI.toUpperCase()}</span></td>
-                                                <td><span className="modifiedby-date" title={item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:mmA') : ""}>{item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:mmA') : 'NA'}</span></td>
-                                                <td><span className="modifiedby-data" title={item.modifiedBy ? item.modifiedBy : ""}>{item.modifiedBy ? item.modifiedBy : 'NA'}</span></td>
+                                                <td><span className="assessment-type">{this.props.assessmentType === CITE ? CITE.toUpperCase() :
+                                                 this.props.assessmentType === TDX? TDX.toUpperCase() : MMI.toUpperCase()}</span></td>
+                                                <td><span className="modifiedby-date" title={item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:mmA') : ""}>
+                                                    {item.modifiedDate ? moment(item.modifiedDate).format('DD MMM YYYY, hh:mmA') : 'NA'}</span></td>
+                                                <td><span className="modifiedby-data" title={item.modifiedBy ? item.modifiedBy : ""}>
+                                                    {item.modifiedBy ? item.modifiedBy : 'NA'}</span></td>
                                                 <td><span className="assessment-uuid" title={item.versionUrn.slice(17)}>{item.versionUrn.slice(17)}</span></td>
                                             </tr>
                                         </React.Fragment>)
@@ -121,7 +128,8 @@ class CiteTdxTable extends Component {
                             </tbody>
                         </table>
                     }
-                    {(apiData && apiData.assessments && apiData.assessments.length == 0) && (this.props.isLoading == false) && (assessmenterrFlag == false)&& <div className ="no-result">No results found</div>}
+                    {(apiData && apiData.assessments && apiData.assessments.length == 0) && (this.props.isLoading == false) &&
+                     (assessmenterrFlag == false)&& <div className ="no-result">No results found</div>}
                 </div>
             </div>
         );

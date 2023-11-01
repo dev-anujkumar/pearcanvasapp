@@ -134,8 +134,10 @@ export const findElementType = (element, index) => {
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         podwidth = element.figuredata.podwidth
                         elementType = {
-                            elementType: element?.figuredata?.decorative ? elementDataBank[element.type]["decorativeImage"]["elementType"] : elementDataBank[element.type][element.figuretype]["elementType"],
-                            primaryOption: element?.figuredata?.decorative ? elementDataBank[element.type]["decorativeImage"]["primaryOption"] : elementDataBank[element.type][element.figuretype]["primaryOption"],
+                            elementType: element?.figuredata?.decorative ? elementDataBank[element.type]["decorativeImage"]["elementType"] :
+                                        elementDataBank[element.type][element.figuretype]["elementType"],
+                            primaryOption: element?.figuredata?.decorative ? elementDataBank[element.type]["decorativeImage"]["primaryOption"] :
+                                        elementDataBank[element.type][element.figuretype]["primaryOption"],
                             altText,
                             longDesc,
                             podwidth,
@@ -184,10 +186,13 @@ export const findElementType = (element, index) => {
                         longDesc = element.figuredata.longdescription ? element.figuredata.longdescription : ""
                         let interactiveFormat = element.figuredata.interactiveformat;
                         let podwidth = element?.figuredata?.posterimage?.podwidth;
-                        let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ? element.figuredata.interactiveformat : element.figuredata.interactivetype;
+                        let interactiveData = (interactiveFormat == "mmi" || interactiveFormat == ELM_INT) ?
+                                             element.figuredata.interactiveformat : element.figuredata.interactivetype;
                         const { interactiveSubtypeConstants: { THIRD_PARTY } } = TcmConstants;
-                        const assetIdFor3PISmartlink = element?.figuredata?.interactivetype === THIRD_PARTY && element?.figuredata?.interactiveid ? element?.figuredata?.interactiveid : '';
-                        const selectedIntendedPlaybackModeValue = element?.figuredata?.intendedPlaybackMode ? element?.figuredata?.intendedPlaybackMode : getDefaultPlaybackMode(element?.figuredata);
+                        const assetIdFor3PISmartlink = element?.figuredata?.interactivetype === THIRD_PARTY &&
+                                                     element?.figuredata?.interactiveid ? element?.figuredata?.interactiveid : '';
+                        const selectedIntendedPlaybackModeValue = element?.figuredata?.intendedPlaybackMode ?
+                                                                 element?.figuredata?.intendedPlaybackMode : getDefaultPlaybackMode(element?.figuredata);
                         const vendor = element?.figuredata?.vendor
                         elementType = {
                             elementType: elementDataBank[element.type][element.figuretype]["elementType"],
@@ -350,7 +355,8 @@ export const findElementType = (element, index) => {
     elementType['toolbar'] = [];
     
     if (elementType.elementType && elementType.elementType !== '') {
-        elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption] && elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
+        elementType['tag'] = elementTypes[elementType.elementType][elementType.primaryOption] &&
+        elementTypes[elementType.elementType][elementType.primaryOption].subtype[elementType.secondaryOption].labelText;
         elementType['toolbar'] = elementTypes[elementType.elementType][elementType.primaryOption] && elementTypes[elementType.elementType][elementType.primaryOption].toolbar;
     }
     return elementType;
@@ -623,9 +629,11 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     }
     dispatch(resetAssessmentStore());//reset Assessment Store
     const elementCount = getState().appStore.slateLength;
-    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}`
+    let apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/
+                ${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&elementCount=${elementCount}`
     if (versionPopupReload) {
-        apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}/container/${entityURN}/content?page=${page}&metadata=true&elementCount=${elementCount}`
+        apiUrl = `${config.REACT_APP_API_URL}v1/project/${config.projectUrn}/entity/${config.projectEntityUrn}
+        /container/${entityURN}/content?page=${page}&metadata=true&elementCount=${elementCount}`
     } 
     return axios.get(apiUrl, {
         headers: {
@@ -649,14 +657,16 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
             dispatch(updateLastAlignedLO(lastAlignedLoForCurrentSlate));
         }
 
-        if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' || slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")){
+        if(config.slateManifestURN !== newVersionManifestId && (slateData.data[newVersionManifestId].type === 'manifest' ||
+         slateData.data[newVersionManifestId].type === "chapterintro" || slateData.data[newVersionManifestId].type === "titlepage")){
             config.slateManifestURN = newVersionManifestId
             manifestURN = newVersionManifestId
         }
         /** PCAT-8900 - Updating Full Assessments - Elm */
         if (config.slateType == FIGURE_ASSESSMENT && slateData && slateData.data[newVersionManifestId]) {
             let slateBodymatter = slateData.data[newVersionManifestId].contents.bodymatter
-            if (slateBodymatter[0] && slateBodymatter[0].type == ELEMENT_ASSESSMENT && isElmLearnosityAssessment(slateBodymatter[0].elementdata) && slateBodymatter[0].elementdata.assessmentid) {
+            if (slateBodymatter[0] && slateBodymatter[0].type == ELEMENT_ASSESSMENT && isElmLearnosityAssessment(slateBodymatter[0].elementdata) &&
+                 slateBodymatter[0].elementdata.assessmentid) {
                 const assessmentData = { targetId: slateBodymatter[0].elementdata.assessmentid }
                 config.saveElmOnAS = true
                 dispatch(fetchAssessmentMetadata(FIGURE_ASSESSMENT, 'fromFetchSlate', assessmentData, {}));
@@ -746,8 +756,10 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     if (versioning.indexes.length === 4 && versioning.parent.type === 'groupedcontent') {
-                        newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]].groupeddata.bodymatter[versioning.indexes[1]] = Object.values(slateData.data)[0].groupeddata.bodymatter[versioning.indexes[1]];
-                    } else if ((versioning.indexes.length === 4 || versioning.indexes.length === 5) && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
+                        newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]].groupeddata.bodymatter[versioning.indexes[1]] =
+                        Object.values(slateData.data)[0].groupeddata.bodymatter[versioning.indexes[1]];
+                    } else if ((versioning.indexes.length === 4 || versioning.indexes.length === 5) &&
+                             versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
                         newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]] = Object.values(slateData.data)[0];
                     } else {
                         let index = versioning.indexes[0];
@@ -759,7 +771,8 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
                             slateLevelData: newslateData
                         }
                     })
-                } else if ((versioning?.type === "manifestlist" || versioning?.type == "citations") && versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
+                } else if ((versioning?.type === "manifestlist" || versioning?.type == "citations") &&
+                            versioning?.parent?.type === 'showhide' && versioning?.parent?.showHideType) {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     newslateData[config.slateManifestURN].contents.bodymatter[versioning.indexes[0]] = Object.values(slateData.data)[0];
@@ -1061,7 +1074,8 @@ const setOldAudioVideoPath = (getState, activeElement, elementIndex, type) => {
                 if (indexesLen == 2) {
                     condition = newBodymatter[indexes[0]].elementdata.bodymatter[indexes[1]]
                     if (condition.versionUrn == activeElement.id) {
-                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio && bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audioid
+                        oldPath = bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audio &&
+                                 bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].figuredata.audioid
                     }
                 } else if (indexesLen == 3 && parentUrn && parentUrn.elementType === "group") {
                     condition = newBodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
@@ -1317,18 +1331,22 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                 targetPopupElement = targetPopupElement.elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]]
                 break;
             case 5:
-                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]]          
+                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]]
+                .elementdata.bodymatter[popupElementIndex[3]]          
                 break;
             case 6:
                 // TB->Tab->AS/WE->HEAD->Popup
                 if (targetPopupElement?.type === ElementConstants.MULTI_COLUMN && targetPopupElement?.subtype === ElementConstants.TAB) {
-                    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]];
+                    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]]
+                    .groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]];
                 } else {
-                    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]];
+                    targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]]
+                    .elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]];
                 }
                 break;
             case 7: // TB->Tab->AS/WE->BODY->Popup
-                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]].contents.bodymatter[popupElementIndex[5]];
+                targetPopupElement = targetPopupElement.groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]]
+                .groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]].contents.bodymatter[popupElementIndex[5]];
                 break;
         }
         if (targetPopupElement) {
@@ -1346,21 +1364,29 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                     _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]] = targetPopupElement;
                     break;
                 case 4:
-                   _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]].contents.bodymatter[popupElementIndex[2]] = targetPopupElement;
+                   _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]]
+                   .contents.bodymatter[popupElementIndex[2]] = targetPopupElement;
                     break;
                 case 5:
-                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;          
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]]
+                    .elementdata.bodymatter[popupElementIndex[3]] = targetPopupElement;          
                     break;
                 case 6:
                     // TB->Tab->AS/WE->HEAD->Popup
-                    if (_slateObject.contents.bodymatter[popupElementIndex[0]]?.type === ElementConstants.MULTI_COLUMN && _slateObject.contents.bodymatter[popupElementIndex[0]]?.subtype === ElementConstants.TAB) {
-                        _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]] = targetPopupElement;
+                    if (_slateObject.contents.bodymatter[popupElementIndex[0]]?.type === ElementConstants.MULTI_COLUMN &&
+                         _slateObject.contents.bodymatter[popupElementIndex[0]]?.subtype === ElementConstants.TAB) {
+                        _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]]
+                        .groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]]
+                        .elementdata.bodymatter[popupElementIndex[4]] = targetPopupElement;
                     } else {
-                        _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]] = targetPopupElement;
+                        _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata
+                        .bodymatter[popupElementIndex[2]].elementdata.bodymatter[popupElementIndex[3]].contents.bodymatter[popupElementIndex[4]] = targetPopupElement;
                     }
                     break;
                 case 7: // TB->Tab->AS/WE->BODY->Popup
-                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]].contents.bodymatter[popupElementIndex[5]] = targetPopupElement;
+                    _slateObject.contents.bodymatter[popupElementIndex[0]].groupeddata.bodymatter[popupElementIndex[1]].groupdata.bodymatter[0].groupeddata
+                    .bodymatter[popupElementIndex[2]].groupdata.bodymatter[popupElementIndex[3]].elementdata.bodymatter[popupElementIndex[4]].contents
+                    .bodymatter[popupElementIndex[5]] = targetPopupElement;
                     break;
                 default:
                     _slateObject.contents.bodymatter[popupElementIndex[0]] = targetPopupElement;

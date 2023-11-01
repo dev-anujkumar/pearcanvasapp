@@ -96,7 +96,16 @@ const TCMUtils = {
     let tempimageAssetContents = JSON.parse(JSON.stringify(imageAssetContents));
     if(mathMLImages){
       for(let index = 0; index < mathMLImages.length; index++) {
-        mathMLImages[index] = mathMLImages[index].replace(/ height=\\"[0-9]*\\"/, '').replace(/ width=\\"[0-9]*\\"/, '').replace(/ align=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ class=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ role=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ style=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ alt=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ draggable=\\"[a-zA-Z]*\\"/, '').replace(/ data-custom-editor=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ data-mce-style=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ height=\\\\\\"[0-9]*\\\\\\"/, '').replace(/ width=\\\\\\"[0-9]*\\\\\\"/, '').replace(/ align=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ class=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ role=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ style=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ alt=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ draggable=\\\\\\"[a-zA-Z]*\\\\\\"/, '').replace(/ data-custom-editor=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ data-mce-style=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/(?:\.png)[?][0-9].*?[\\"]/g,'.png\\');
+        mathMLImages[index] = mathMLImages[index].replace(/ height=\\"[0-9]*\\"/, '').replace(/ width=\\"[0-9]*\\"/, '')
+        .replace(/ align=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ class=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '')
+        .replace(/ role=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ style=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '')
+        .replace(/ alt=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ draggable=\\"[a-zA-Z]*\\"/, '')
+        .replace(/ data-custom-editor=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ data-mce-style=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '')
+        .replace(/ height=\\\\\\"[0-9]*\\\\\\"/, '').replace(/ width=\\\\\\"[0-9]*\\\\\\"/, '').replace(/ align=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '')
+        .replace(/ class=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ role=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '')
+        .replace(/ style=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ alt=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '')
+        .replace(/ draggable=\\\\\\"[a-zA-Z]*\\\\\\"/, '').replace(/ data-custom-editor=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '')
+        .replace(/ data-mce-style=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/(?:\.png)[?][0-9].*?[\\"]/g,'.png\\');
         data = data.replace(tempmathMLImages[index],mathMLImages[index]);
       }
        
@@ -104,7 +113,10 @@ const TCMUtils = {
     // PCAT-11983 - removing extra attributes from img tag to prevent duplicate tracking
     if (imageAssetContents) {
       for (let index = 0; index < imageAssetContents.length; index++) {
-        imageAssetContents[index] = imageAssetContents[index].replace(/ data-id=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ data-id=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ data-mce-src=\\"[a-zA-Z0-9-+_!@#$%^&*./, ?;:]*\\"/, '').replace(/ data-mce-src=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*./, ?;:]*\\\\\\"/, '').replace(/ data-mce-selected=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '').replace(/ data-mce-selected=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '');
+        imageAssetContents[index] = imageAssetContents[index].replace(/ data-id=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '')
+        .replace(/ data-id=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/ data-mce-src=\\"[a-zA-Z0-9-+_!@#$%^&*./, ?;:]*\\"/, '')
+        .replace(/ data-mce-src=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*./, ?;:]*\\\\\\"/, '').replace(/ data-mce-selected=\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\"/, '')
+        .replace(/ data-mce-selected=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '');
         data = data.replace(tempimageAssetContents[index], imageAssetContents[index]);
       }
     }
