@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { Button, Dialog, DialogActions, DialogTitle, FormControl, Select, MenuItem, InputLabel, DialogContent, DialogContentText } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { styled } from '@mui/material/styles';
 import '../../styles/AlfrescoPopup/AlfrescoPopup.css'
 import config from '../../config/config'
-import { sendDataToIframe, getPrimaryButtonClass, PRIMARY_BUTTON, SECONDARY_BUTTON } from '../../constants/utility';
+import { sendDataToIframe, PRIMARY_BUTTON, SECONDARY_BUTTON } from '../../constants/utility';
 import axios from 'axios';
 import { alfrescoPopup, saveSelectedAlfrescoElement } from "../AlfrescoPopup/Alfresco_Action";
 import { connect } from 'react-redux';
