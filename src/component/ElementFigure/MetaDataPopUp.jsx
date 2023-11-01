@@ -61,7 +61,8 @@ class MetaDataPopUp extends React.Component {
 					fetchedLongDesc: avsStringData.linkLongDesc,
 					longDescription: avsStringData.linkLongDesc,
 					disableTextFields: true,
-					disableUpdateButton: (this?.props?.element?.figuredata?.alttext===avsStringData?.imageAltText && this?.props?.element?.figuredata?.longdescription===avsStringData?.linkLongDesc) ? false : true
+					disableUpdateButton: (this?.props?.element?.figuredata?.alttext===avsStringData?.imageAltText &&
+										  this?.props?.element?.figuredata?.longdescription===avsStringData?.linkLongDesc) ? false : true
 				})}
 			else{
 				this.setState({
@@ -71,7 +72,11 @@ class MetaDataPopUp extends React.Component {
 					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
 					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
 					disableTextFields:  true,
-					disableUpdateButton: checkOpenerElement(this.props.element) ? (this?.props?.element?.backgroundimage?.alttext===properties["cplg:altText"] && this?.props?.element?.backgroundimage?.longdescription===properties["cplg:longDescription"] ? false : true) :  (this?.props?.element?.figuredata?.alttext===properties["cplg:altText"] && this?.props?.element?.figuredata?.longdescription===properties["cplg:longDescription"]) ? false : true
+					disableUpdateButton: checkOpenerElement(this.props.element) ?
+										 (this?.props?.element?.backgroundimage?.alttext===properties["cplg:altText"] &&
+										  this?.props?.element?.backgroundimage?.longdescription===properties["cplg:longDescription"] ? false : true) :
+										 (this?.props?.element?.figuredata?.alttext===properties["cplg:altText"] &&
+										  this?.props?.element?.figuredata?.longdescription===properties["cplg:longDescription"]) ? false : true
 				})
 			}
 			}).catch(error => {
@@ -170,9 +175,13 @@ class MetaDataPopUp extends React.Component {
 				<div tabIndex="0" className="model-popup">
 					<div className="figure-popup">
 						<div className="dialog-button">
-						    <div className="edit-metadata">{checkImageForMetadata(this.props.element) ? 'Image Metadata' : checkSmartLinkInteractive(this.props.element) ? 'Smart Link Metadata' : 'Opener Element Metadata'}</div>
+						    <div className="edit-metadata">{checkImageForMetadata(this.props.element) ? 'Image Metadata' :
+							 checkSmartLinkInteractive(this.props.element) ? 'Smart Link Metadata' : 'Opener Element Metadata'}</div>
 							<div className='edit-metadata-sub-heading'>
-								Editing the Alt Text and Long Description will update the {checkImageForMetadata(this.props.element) ? 'Image' : checkSmartLinkInteractive(this.props.element) ? 'Smart Link' : 'Opener Element'} Metadata. This will impact all instances of this {checkImageForMetadata(this.props.element) ? 'image' : checkSmartLinkInteractive(this.props.element) ? 'Smart Link' : 'Opener Element'} in your team's Projects.
+								Editing the Alt Text and Long Description will update the {checkImageForMetadata(this.props.element) ? 'Image' :
+								checkSmartLinkInteractive(this.props.element) ? 'Smart Link' :
+								'Opener Element'} Metadata. This will impact all instances of this {checkImageForMetadata(this.props.element) ? 'image' :
+								checkSmartLinkInteractive(this.props.element) ? 'Smart Link' : 'Opener Element'} in your team's Projects.
 							</div>
 						</div>
 						<div className="figuremetadata-field">
@@ -204,7 +213,8 @@ class MetaDataPopUp extends React.Component {
 							</div>
 						</div>
 						<div className="metadata-button">
-						   <span className={`metadata-import-button ${this.state.disableUpdateButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Update Metadata</span>
+						   <span className={`metadata-import-button ${this.state.disableUpdateButton ? '' : "disabled"}`}
+							onClick={(e) => this.sendAlfrescoMetadata(e)}>Update Metadata</span>
 						   <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
 						</div>	
 					</div>

@@ -168,7 +168,8 @@ class ElementPoetry extends Component {
         poetryData = (type === "element-aside") ? {...poetryData, parent: { id, type, contentUrn }} : poetryData;
         
         /* Adding parent id and type to update redux store while creating new element inside 2c->Block Poetry->Stanza */
-        poetryData = (type === ElementConstants.MULTI_COLUMN && !subtype) ? {...poetryData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
+        poetryData = (type === ElementConstants.MULTI_COLUMN && !subtype) ? {...poetryData, parent: { id, type, columnId,
+                    columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
         
         /* Adding parent id , type and showHideType to update redux store while creating new element inside SH->Block Poetry->Stanza */
         poetryData = (type === "showhide") ? { ...poetryData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType } } : poetryData;

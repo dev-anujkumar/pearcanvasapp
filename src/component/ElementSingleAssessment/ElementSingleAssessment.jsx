@@ -12,12 +12,14 @@ import { UsageTypeDropdown } from '../AssessmentSlateCanvas/UsageTypeDropdown/Us
 import RootCiteTdxComponent from '../AssessmentSlateCanvas/assessmentCiteTdx/RootCiteTdxComponent.jsx';
 import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssessmentCiteTdx/RootSingleAssessmentComponent.jsx'
 import { setCurrentCiteTdx, setCurrentInnerCiteTdx, assessmentSorting, specialCharacterDecode } from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
-import { setAssessmentUsageType, setAssessmentProperties, checkElmAssessmentStatus, setAssessmentItemTitle, getAssessmentTitle } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
+import { setAssessmentUsageType, setAssessmentProperties, checkElmAssessmentStatus, setAssessmentItemTitle,
+        getAssessmentTitle } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility.js';
 import PopUp from '../PopUp';
 import ElmUpdateButton from '../AssessmentSlateCanvas/ElmUpdateButton.jsx'
 import { DEFAULT_ASSESSMENT_SOURCE } from '../../constants/Element_Constants.js';
 import { PUF, LEARNOSITY, ELM_UPDATE_BUTTON, CITE, TDX, Resource_Type,CHANGE_USAGE_TYPE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
-import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions, setElmPickerData, setNewItemFromElm, saveUpdatedAssessmentArray } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
+import { fetchAssessmentMetadata, updateAssessmentVersion, checkEntityUrn, saveAutoUpdateData, fetchAssessmentVersions,
+        setElmPickerData, setNewItemFromElm, saveUpdatedAssessmentArray } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
 import config from '../../config/config';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
@@ -90,7 +92,8 @@ class ElementSingleAssessment extends Component {
         const latestItem = assessmentData?.items?.find(itemdata => itemdata.oldItemId == assessmentItemId)
         const latestItemId = latestItem?.latestItemId;
         const saveEventUpdate = latestItem?.shouldUpdateOnSaveEvent;
-        if (((assessmentReducer.itemUpdateEvent && !assessmentData.showUpdateStatus) && (saveEventUpdate && (latestItemId && assessmentItemId != latestItemId) || (assessmentTitle != assessmentData.assessmentTitle))) ||
+        if (((assessmentReducer.itemUpdateEvent && !assessmentData.showUpdateStatus) && (saveEventUpdate && (latestItemId &&
+            assessmentItemId != latestItemId) || (assessmentTitle != assessmentData.assessmentTitle))) ||
             (!assessmentData.showUpdateStatus && ((assessmentTitle != assessmentData.assessmentTitle) || (latestItemId && assessmentItemId != latestItemId)))) {
             this.updateElmOnSaveEvent(this.props);
         }
@@ -100,8 +103,10 @@ class ElementSingleAssessment extends Component {
         this.setState({
             assessmentTitle: title,
             activeAsseessmentUsageType: this.props.model && setAssessmentUsageType(this.props.model),
-            assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
-            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata && this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
+            assessmentId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata &&
+            this.props.model.figuredata.elementdata.assessmentid ? this.props.model.figuredata.elementdata.assessmentid : null,
+            assessmentItemId: this.props.model && this.props.model.figuredata && this.props.model.figuredata.elementdata &&
+            this.props.model.figuredata.elementdata.assessmentitemid ? this.props.model.figuredata.elementdata.assessmentitemid : null,
             assessmentItemTitle: this.props.model && setAssessmentItemTitle(this.props.model)
         })
         let newElement = localStorage.getItem('newElement');
@@ -114,11 +119,14 @@ class ElementSingleAssessment extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if ('model' in nextProps && 'figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata && 'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
+        if ('model' in nextProps && 'figuredata' in nextProps.model && 'elementdata' in nextProps.model.figuredata &&
+            'assessmentformat' in nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentformat !== prevState.elementType) {
             let title = getAssessmentTitle(nextProps.model) != null ? getAssessmentTitle(nextProps.model).replace(/<\/?[^>]+(>|$)/g, "") : null;
             return {
-                assessmentId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentid ? nextProps.model.figuredata.elementdata.assessmentid : "",
-                assessmentItemId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentitemid ? nextProps.model.figuredata.elementdata.assessmentitemid : "",
+                assessmentId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentid ?
+                nextProps.model.figuredata.elementdata.assessmentid : "",
+                assessmentItemId: nextProps.model.figuredata && nextProps.model.figuredata.elementdata && nextProps.model.figuredata.elementdata.assessmentitemid ?
+                nextProps.model.figuredata.elementdata.assessmentitemid : "",
                 assessmentTitle: title,
                 elementType: nextProps.model.figuredata.elementdata.assessmentformat || "",
                 assessmentItemTitle: setAssessmentItemTitle(nextProps.model)
@@ -328,7 +336,8 @@ class ElementSingleAssessment extends Component {
             })
         }
         else {
-            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn, assessmentTitle: specialCharacterDecode(citeTdxObj.title), assessmentItemTitle: specialCharacterDecode(citeTdxObj.singleAssessmentID.name) },
+            this.setState({ assessmentId: citeTdxObj.id, assessmentItemId: citeTdxObj.singleAssessmentID.versionUrn,
+                assessmentTitle: specialCharacterDecode(citeTdxObj.title), assessmentItemTitle: specialCharacterDecode(citeTdxObj.singleAssessmentID.name) },
                 () => {
                     let oldAssessmentId = this.props.model.figuredata.elementdata.assessmentid
                     this.saveAssessment(() => {
@@ -546,10 +555,14 @@ class ElementSingleAssessment extends Component {
         const { assessmentTitle, assessmentId, assessmentItemTitle, assessmentItemId } = this.state;
         const { assessmentid, assessmentitemid, assessmentitemtitle } = modelProps.figuredata.elementdata;
         const headerJSX = <div className='assessment-metadata-container'>
-            <div className='assessment-metadata title-field'><p className='single-assessment-title title-field'>TITLE: </p><span className='embedded-title'>{assessmentTitle}</span></div>
-            <div className='assessment-metadata'><p className='single-assessment-title'>ID: </p><span className='embedded-id'>{assessmentId ? assessmentId : (assessmentid ? assessmentid : "")}</span></div>
-            <div className='assessment-metadata title-field'><p className='single-assessment-title title-field'>ITEM TITLE: </p><span className='embedded-itemtitle'>{assessmentItemTitle ? assessmentItemTitle : (assessmentitemtitle ? assessmentitemtitle : "")}</span></div>
-            <div className='assessment-metadata'><p className='single-assessment-title'>ITEM ID: </p><span className='embedded-itemid'>{assessmentItemId ? assessmentItemId : (assessmentitemid ? assessmentitemid : "")}</span></div>
+            <div className='assessment-metadata title-field'><p className='single-assessment-title title-field'>TITLE: </p>
+            <span className='embedded-title'>{assessmentTitle}</span></div>
+            <div className='assessment-metadata'><p className='single-assessment-title'>ID: </p>
+            <span className='embedded-id'>{assessmentId ? assessmentId : (assessmentid ? assessmentid : "")}</span></div>
+            <div className='assessment-metadata title-field'><p className='single-assessment-title title-field'>ITEM TITLE: </p>
+            <span className='embedded-itemtitle'>{assessmentItemTitle ? assessmentItemTitle : (assessmentitemtitle ? assessmentitemtitle : "")}</span></div>
+            <div className='assessment-metadata'><p className='single-assessment-title'>ITEM ID: </p>
+            <span className='embedded-itemid'>{assessmentItemId ? assessmentItemId : (assessmentitemid ? assessmentitemid : "")}</span></div>
         </div>
         return headerJSX;
     }
@@ -571,7 +584,8 @@ class ElementSingleAssessment extends Component {
                 <div className="singleAssessment_Dropdown_Container">
                     <div className="single-assessment-usagetype-container">
                         <div className="singleAssessment_Dropdown_SelectLabel">Select usage type<span className="required">*</span></div>
-                        <div className={`singleAssessment_Dropdown_activeDropdown ${(elementType == PUF || elementType == LEARNOSITY) ? 'isElmUpdate' : ""}`} onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
+                        <div className={`singleAssessment_Dropdown_activeDropdown ${(elementType == PUF || elementType == LEARNOSITY) ? 'isElmUpdate' : ""}`}
+                         onClick={!hasReviewerRole() && this.toggleUsageTypeDropdown} >
                             <span className="singleAssessment_Dropdown_currentLabel">{activeAsseessmentUsageType ? activeAsseessmentUsageType : 'Select'}</span>
                             <span className="singleAssessment_Dropdown_arrow">{dropdownArrow}</span>
                             {
@@ -590,7 +604,8 @@ class ElementSingleAssessment extends Component {
                         <span className='last-updated-time'>|</span>
                         <div className="embedded-assessment-time">
                             <div className='last-updated-time time-updated-embedded'>Last Updated:</div>
-                            <div className='last-updated-time-format time-updated-embedded'>{assessmentCreatedDate ? moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</div>
+                            <div className='last-updated-time-format time-updated-embedded'>{assessmentCreatedDate ?
+                            moment(assessmentCreatedDate).format('DD MMM YYYY, hh:mmA') : ''}</div>
                         </div>
                     </div>
                 </div>}
@@ -615,8 +630,16 @@ class ElementSingleAssessment extends Component {
             <div className="figureElement" onClick = {this.handleAssessmentFocus}>
                 {this.renderAssessmentType(model, index)}
                 {this.state.changeUsageTypePopup && this.showChangeUsageTypePopup()}
-                {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType== CITE ? CITE : TDX} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo} isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle} filterUUID={this.state.filterUUID} />:""}
-                {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment} activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'} closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType} addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}     
+                {this.state.showAssessmentPopup? <RootCiteTdxComponent openedFrom = {'singleSlateAssessment'}
+                closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.elementType== CITE ? CITE : TDX}
+                addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType} parentPageNo={this.state.parentPageNo}
+                isReset={this.state.isReset} resetPage={this.resetPage} AssessmentSearchTitle={this.AssessmentSearchTitle} searchTitle={this.state.searchTitle}
+                filterUUID={this.state.filterUUID} />:""}
+                {this.state.showSinglePopup ? <RootSingleAssessmentComponent setCurrentAssessment ={this.state.setCurrentAssessment}
+                activeAssessmentType={this.state.activeAssessmentType} openedFrom = {'singleSlateAssessmentInner'}
+                closeWindowAssessment = {()=>this.closeWindowAssessment()} assessmentType = {this.state.activeAssessmentType}
+                addCiteTdxFunction = {this.addCiteTdxAssessment} usageTypeMetadata = {this.state.activeAsseessmentUsageType}
+                assessmentNavigateBack = {this.assessmentNavigateBack} resetPage={this.resetPage}/>:""}     
             </div>
         );
     }

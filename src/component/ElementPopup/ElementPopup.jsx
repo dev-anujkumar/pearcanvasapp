@@ -58,7 +58,8 @@ class ElementPopup extends React.Component {
     
     renderSlate =()=>{
         const { element, index, slateLevelData } = this.props
-        const sUrn = findKey(slateLevelData, (slate) => (slate.type === "manifest" || slate.type === "chapterintro" ||  slate.type ==="titlepage" || slate.type === "moduleintro" || slate.type === "partintro" || slate.type === "volumeintro"))
+        const sUrn = findKey(slateLevelData, (slate) => (slate.type === "manifest" || slate.type === "chapterintro" ||
+                    slate.type ==="titlepage" || slate.type === "moduleintro" || slate.type === "partintro" || slate.type === "volumeintro"))
         const eUrn = slateLevelData[sUrn] && slateLevelData[sUrn].contentUrn
         config.tempSlateManifestURN = sUrn
         config.tempSlateEntityURN = eUrn
@@ -79,7 +80,8 @@ class ElementPopup extends React.Component {
         if (!config.popupCreationCallInProgress && !hasReviewerRole()) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: true } })
             config.popupCreationCallInProgress = true
-            await this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate, currentElementData, index, null), index, config.slateManifestURN, createdFromFootnote)
+            await this.props.createPopupUnit(popupField, parentElement, (currentElementData) => this.props.handleBlur(forceupdate,
+                currentElementData, index, null), index, config.slateManifestURN, createdFromFootnote)
         }
     }
     renderPopup = () => {        

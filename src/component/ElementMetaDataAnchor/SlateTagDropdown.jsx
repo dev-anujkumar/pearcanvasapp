@@ -249,7 +249,8 @@ class SlateTagDropdown extends React.Component {
     render = () => {
       const enableExtLO =this.checkExternalFramework();
       const isExternalLoInAssessment = this.checkExternalFrameworkAS();
-      const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' && this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? "disable-buttton" : "";
+      const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' &&
+                                this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? "disable-buttton" : "";
       return (
         <div>
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
@@ -259,7 +260,8 @@ class SlateTagDropdown extends React.Component {
                     !isExternalLoInAssessment?                
                     <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
                     :
-                    <li onClick={this.toggleLoOptionsDropdownAS} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span><span className='lo-navigation-icon2'>{loNextIcon}</span></li>
+                    <li onClick={this.toggleLoOptionsDropdownAS} className={enableExtLO ? '' : 'disable-buttton'}><span>{AlignToExternalFrameworkSlateDropdown}</span>
+                    <span className='lo-navigation-icon2'>{loNextIcon}</span></li>
                   }
                 </div>
               </ul>

@@ -147,7 +147,8 @@ export function ElementSaprator(props) {
             isChildElementNotAcceptedInPopup = asideNotAcceptedTypes.includes(props?.asideData?.type)
         }
         let allowToShowPasteIcon = config.isPopupSlate && popupSlateNotAcceptedTypes.includes(props?.elementSelection?.element?.type) ? false : true;
-        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation && !isChildElementNotAcceptedInPopup && separatorProps?.asideData?.parent?.subtype !== TAB && separatorProps?.asideData?.grandParent?.asideData?.parent?.subtype !== TAB) {
+        if (allowToShowPasteIcon && (allowedRoles.includes(props.userRole) || permissions.includes('cut/copy')) && pasteValidation &&
+            !isChildElementNotAcceptedInPopup && separatorProps?.asideData?.parent?.subtype !== TAB && separatorProps?.asideData?.grandParent?.asideData?.parent?.subtype !== TAB) {
             return (
                 <div className={`elemDiv-expand paste-button-wrapper ${(type == 'cut' && !pasteIcon) ? 'disabled' : ''}`} onClickCapture={(e) => props.onClickCapture(e)}>
                     <Tooltip direction='paste' tooltipText='Paste element'>
@@ -167,7 +168,10 @@ export function ElementSaprator(props) {
         const parentContainerForShowHide = ["groupedcontent", "element-aside"]
         const hasPasteFromWordPermission = hasProjectPermission("paste_from_word") ;
         let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
-        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type)) || (parentUrn?.subtype === TAB) || (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB)) {
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn ||
+            (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) ||
+            (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type)) ||
+            (parentUrn?.subtype === TAB) || (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB)) {
             return null;
         }
         let insertionIndex = firstOne ? index : index + 1
@@ -203,9 +207,11 @@ export function ElementSaprator(props) {
     const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
     let hideElementSeperator = hasReviewerRole() ? 'hideToolbar' : '';
     return (
-        <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`} id = {props.dataId}>
+        <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` :
+        `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`} id = {props.dataId}>
             <div className='elemDiv-split' onClickCapture={(e) => props.onClickCapture(e)}>
-                {permissions && permissions.includes('split_slate') && hideSplitSlateIcon && !config.isPopupSlate && !props.firstOne && !(HIDE_SPLIT_SLATE_CONTAINER.includes(props.setSlateParent)  && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
+                {permissions && permissions.includes('split_slate') && hideSplitSlateIcon && !config.isPopupSlate && !props.firstOne &&
+                !(HIDE_SPLIT_SLATE_CONTAINER.includes(props.setSlateParent)  && config.slateType == CONTAINER_INTRO) ? <Tooltip direction='right' tooltipText='Split Slate'>
                     {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button type='split' onClick={splitSlateClickHandler} />} </Tooltip> : ''}
             </div>
             <div className='elemDiv-hr'>
@@ -216,7 +222,8 @@ export function ElementSaprator(props) {
             <div className='elemDiv-expand'>
                 <div className="dropdown" ref={buttonRef}>
                     <Tooltip direction='picker' tooltipText='Element Picker' showClass={showClass}>
-                        {permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button onClick={(event) => toggleElementList(event)} className="dropbtn" type="expand" />}
+                        {permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button onClick={(event) => toggleElementList(event)}
+                        className="dropbtn" type="expand" />}
                     </Tooltip>
                     <div id="myDropdown" className={showClass ? 'dropdown-content show' : 'dropdown-content'}>
                         <ul>
@@ -261,9 +268,11 @@ function renderConditionalButtons(esProps,sectionBreak,elementType,subtype){
         } 
         else {
         if (sectionBreak) {                                          /** Container : Other cases in Wored Example*/
-            return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER && buttonType !== TABBED_TAB;
+            return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION &&
+            buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER && buttonType !== TABBED_TAB;
         } else {                                                     /** Container : Aside| Section in WE*/
-            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER && buttonType !== TABBED_TAB;
+            return buttonType !== OPENER && buttonType !== SECTION_BREAK && buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON &&
+            buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== POETRY_ELEMENT && buttonType !== MULTI_COLUMN_CONTAINER && buttonType !== TABBED_TAB;
         }
     }
     })
@@ -287,7 +296,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
         }else {            
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
-                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION && buttonType !== STANZA_ELEMENT && buttonType !== TABBED_TAB;
+                return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION &&
+                buttonType !== STANZA_ELEMENT && buttonType !== TABBED_TAB;
             })
         }
 
@@ -348,7 +358,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
             if(event){
                 event.stopPropagation();
             }
-            if (elem.buttonType === "interactive-elem-button" || elem.buttonType === "container-elem-button" || elem.buttonType === "block-text-button" || elem.buttonType === "multi-column-group") {
+            if (elem.buttonType === "interactive-elem-button" || elem.buttonType === "container-elem-button" || elem.buttonType === "block-text-button" ||
+            elem.buttonType === "multi-column-group") {
                 setData(typeOfContainerElements(elem, props));
                 if(elem.buttonType !== showInteractiveOption.type){
                     setshowInteractiveOption({status:true,type:elem.buttonType});
@@ -396,11 +407,13 @@ export function typeOfContainerElements(elem, props) {
     newData = (elem?.buttonType === "container-elem-button" && asideData?.type === "groupedcontent") ? {["Add Aside"]: newData["Add Aside"]} : newData;
     /* Do not show Tabbed 2 column option inside Popup slate  */
 
-    newData = (elem?.buttonType === "multi-column-group" && (config.isPopupSlate || !config.ENABLE_TAB_ELEMENT)) ? {["2-column"]: newData["2-column"], ["3-column"]: newData["3-column"]} : newData;
+    newData = (elem?.buttonType === "multi-column-group" && (config.isPopupSlate || !config.ENABLE_TAB_ELEMENT)) ? {["2-column"]:
+                newData["2-column"], ["3-column"]: newData["3-column"]} : newData;
     /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
     /* Do not show SH and Pop up option if Aside/WE is inside SH  */
     /* Do not show block poetry option inside SH if SH is inside Aside/WE/MultiColumn */
-    if ((asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) || (asideData?.grandParent?.asideData && Object.keys(asideData.grandParent.asideData).length)) {
+    if ((asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === SHOW_HIDE) || (asideData?.grandParent?.asideData &&
+        Object.keys(asideData.grandParent.asideData).length)) {
         switch (elem?.buttonType) {
             case "interactive-elem-button":
                 newData = {

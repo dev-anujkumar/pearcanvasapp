@@ -189,7 +189,8 @@ const MetaDataPopUpForTE = (props) => {
                     <img className='inner-img-container' src={imageSrc} id={imageID} /> 
                   </div>
                   <div className='outer-img-array-container'>
-                  {imageList.length > 3 && <span className={`left-arrow ${index === 0 ? 'disable' : ''}`} onClick={traverseLeft}><div className={`left-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>}
+                  {imageList.length > 3 && <span className={`left-arrow ${index === 0 ? 'disable' : ''}`}
+                   onClick={traverseLeft}><div className={`left-arrow-icon`}><img width="12px" height="12px" src={moveArrow} /></div></span>}
                     <span className='inner-img-array'>
                     {imageList && imageList.map((image, imgIndex) => {
                       if(imgIndex >= lowerIndex && imgIndex <= upperIndex){
@@ -208,7 +209,8 @@ const MetaDataPopUpForTE = (props) => {
                       }
                     })}
                     </span>
-                    {imageList.length > 3 && <span className={`right-arrow ${index === (imageList.length - 1) ? 'disable' : '' }`} onClick={traverseRight}><div className={`right-arrow-icon`}>{imageList.length > 3 && <img width="12px" height="12px" src={moveArrow} />}</div></span>}
+                    {imageList.length > 3 && <span className={`right-arrow ${index === (imageList.length - 1) ? 'disable' : '' }`}
+                    onClick={traverseRight}><div className={`right-arrow-icon`}>{imageList.length > 3 && <img width="12px" height="12px" src={moveArrow} />}</div></span>}
                   </div>
                 </div>
                 <div className="right-container">

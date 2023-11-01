@@ -40,7 +40,8 @@ const TabbedTinyMCE = (props) => {
         className : "figureTitle formatted-text",
         id : props.id,
         tagName : 'h4',
-        model : props.element?.hasOwnProperty('html') && props.element["html"].title ? getTitleSubtitleModel(props.element["html"].title, "formatted-subtitle").replace(/&nbsp;/g, ""): `<p class="paragraphNumeroUno"><br/></p>`,
+        model : props.element?.hasOwnProperty('html') && props.element["html"].title ?
+                getTitleSubtitleModel(props.element["html"].title, "formatted-subtitle").replace(/&nbsp;/g, ""): `<p class="paragraphNumeroUno"><br/></p>`,
         handleEditorFocus : props.handleFocus,
         handleBlur  :  props.handleBlur,
         slateLockInfo : props.slateLockInfo,

@@ -58,7 +58,8 @@ class FigureUserInterface extends Component {
             })
         })
         this.updateDropdownOptions();
-        let figureHtmlData = this.checkForAutoNumberedContent(this.props.element) ? { formattedLabel: `<p>${this.props.element?.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.element);
+        let figureHtmlData = this.checkForAutoNumberedContent(this.props.element) ? { formattedLabel: `<p>${this.props.element?.displayedlabel}</p>`} :
+        getLabelNumberTitleHTML(this.props.element);
         let figureLabelValue = this.state;
         figureLabelValue = dropdownValueAtIntialize(this.state.figureLabelData, figureHtmlData.formattedLabel);
         this.setState({ figureLabelValue: figureLabelValue });
@@ -70,7 +71,8 @@ class FigureUserInterface extends Component {
     }
 
     checkForAutoNumberedContent = (currentElement) =>{
-        if((currentElement?.figuretype === 'audio' || currentElement?.figuretype === 'video' || currentElement?.figuretype === 'interactive') && this.props?.isAutoNumberingEnabled){
+        if((currentElement?.figuretype === 'audio' || currentElement?.figuretype === 'video' || currentElement?.figuretype === 'interactive') &&
+        this.props?.isAutoNumberingEnabled){
             return true
         }
         return false
@@ -284,7 +286,8 @@ class FigureUserInterface extends Component {
 
 
 
-    generateUpdateAssetJSX = (element, assetTitleText, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension,interactiveformat) => {
+    generateUpdateAssetJSX = (element, assetTitleText, assetIcon, assetPath, assetBackgroundType, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite,
+        imageDimension,interactiveformat) => {
         const approval = this.props?.assessmentReducer[element.figuredata.interactiveid]?.assessmentStatus === "final";
         const buttonTitle = approval?"Approved":"Unapproved";
         const smallButtonClass = approval? "small_rounded_btn": "small_rounded_btn2";
@@ -304,12 +307,15 @@ class FigureUserInterface extends Component {
                     <div className="media-button-group">
                         <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${this.props.index}-update-asset`}>
                         <div onClick={() => {if(this.isEnableKeyboard()){this.updateRef.current.focus()}}}>
-                         <div onKeyDown={this.clickNode} ref={this.updateRef} tabIndex={0} className={`update-figure-button ${isReviewer}`} onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
+                         <div onKeyDown={this.clickNode} ref={this.updateRef} tabIndex={0} className={`update-figure-button ${isReviewer}`}
+                          onClick={this.props.handleC2MediaClick}>{updateButtonText}</div>
                         </div>
                         </KeyboardWrapper>
                     <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${this.props.index}-delete-asset`}>
                      <div onClick={() => {if(this.isEnableKeyboard) {this.deleteRef.current.focus()}}}>
-                         <div onKeyDown={this.clickNode} ref={this.deleteRef} tabIndex={0} className={`delete-figure-button ${isReviewer} ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
+                         <div onKeyDown={this.clickNode} ref={this.deleteRef} tabIndex={0} className={`delete-figure-button ${isReviewer}
+                          ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}>
+                            <img width="24px" height="24px" src={figureDeleteIcon} /></div>
                      </div>
                         </KeyboardWrapper>
                      
@@ -323,13 +329,18 @@ class FigureUserInterface extends Component {
                             interactiveformat === "mmi-elm" ?
                                 <div className="media-image-info">
                                     <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
-                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""} <SmallRoundedButton icon={smallButtonIcon} className={smallButtonClass} buttonTitle={buttonTitle} approval={approval}/> </span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'>
+                                        {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""} <SmallRoundedButton icon={smallButtonIcon}
+                                        className={smallButtonClass} buttonTitle={buttonTitle} approval={approval}/> </span> </div>
                                 </div>
                                 :
                                 <div className="media-image-info">
                                     <div className='image-figure'><p className='image-text'>{assetIdText} </p> <span className='image-info'> {assetId ? assetId : ""} </span> </div>
-                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'> {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
-                                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>{assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite && (alfrescoSite !== '' || alfrescoSite !== undefined) ? alfrescoSite : this.state.alfrescoSite : ""} </span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>{assetPathText} </p> <span className='image-info'>
+                                        {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? assetPath : ""}</span> </div>
+                                    <div className='image-figure-path'><p className='image-text'>Alfresco Site: </p> <span className='image-info'>
+                                        {assetPath && assetPath !== DEFAULT_VIDEO_POSTER_IMAGE ? alfrescoSite && (alfrescoSite !== '' || alfrescoSite !== undefined) ?
+                                        alfrescoSite : this.state.alfrescoSite : ""} </span> </div>
                                 </div>
                     }
                 </div>
@@ -374,14 +385,16 @@ class FigureUserInterface extends Component {
             case AUDIO:
                 assetJsx =
                     assetId ?
-                        this.generateUpdateAssetJSX(element, assetTitleText, figureAudioIcon, assetPath, updateAudioReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension) 
+                        this.generateUpdateAssetJSX(element, assetTitleText, figureAudioIcon, assetPath, updateAudioReel, updateButtonText, assetIdText, assetId,
+                            assetPathText, alfrescoSite, imageDimension) 
                         :
                         this.generateAddAssetJSX(figureAudioIcon, assetTitleText, addButtonText, audioReel, assetIdText, assetPathText)
                 break;
             case VIDEO:
                 assetJsx =
                     assetId ?
-                        this.generateUpdateAssetJSX(element, assetTitleText, videoIcon, assetPath, updateVideoReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
+                        this.generateUpdateAssetJSX(element, assetTitleText, videoIcon, assetPath, updateVideoReel, updateButtonText, assetIdText, assetId,
+                            assetPathText, alfrescoSite, imageDimension)
                         :
                         this.generateAddAssetJSX(videoIcon, assetTitleText, addButtonText, videoReel, assetIdText, assetPathText)
                 break;
@@ -391,25 +404,29 @@ class FigureUserInterface extends Component {
 
                         element.figuredata.interactiveformat === MMI ?
                             assetId ?
-                                this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID:", assetId, "Version:", alfrescoSite, imageDimension, MMI)
+                                this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID:",
+                                assetId, "Version:", alfrescoSite, imageDimension, MMI)
                                 :
                                 this.generateAddAssetJSX(smartlinkIcon, "QuaD Interactive", "Add an Interactive", slPosterImage, "Item ID:", assetPathText, MMI)
                             :
                             element.figuredata.interactiveformat === ELM_INT ?
                                 assetId ?
-                                    this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID:", assetId, "Version:", alfrescoSite, imageDimension, ELM_INT)
+                                    this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, "Update Interactive", "Item ID:",
+                                    assetId, "Version:", alfrescoSite, imageDimension, ELM_INT)
                                     :
                                     this.generateAddAssetJSX(smartlinkIcon, "Elm Interactive", "Add an Interactive", slPosterImage, "Item ID:", "Version:", ELM_INT)
                                 :
                                 assetId ?
-                                    this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
+                                    this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, slPosterImage, updateButtonText, assetIdText,
+                                        assetId, assetPathText, alfrescoSite, imageDimension)
                                     :
                                     this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, slPosterImage, assetIdText, assetPathText)
                     )
                     :
                     (
                         assetId ?
-                            this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, pdSLfPosterImage, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
+                            this.generateUpdateAssetJSX(element, assetTitleText, smartlinkIcon, assetPath, pdSLfPosterImage, updateButtonText, assetIdText, assetId,
+                                assetPathText, alfrescoSite, imageDimension)
                             :
                             this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, pdSLfPosterImage, assetIdText, assetPathText)
                     )
@@ -462,10 +479,12 @@ class FigureUserInterface extends Component {
 
 
     render() {
-        const { element, permissions, openGlossaryFootnotePopUp, handleFocus, handleBlur, index, slateLockInfo, glossaryFootnoteValue, glossaaryFootnotePopup, elementId, alfrescoSite, isAutoNumberingEnabled } = this.props;
+        const { element, permissions, openGlossaryFootnotePopUp, handleFocus, handleBlur, index, slateLockInfo, glossaryFootnoteValue,
+                glossaaryFootnotePopup, elementId, alfrescoSite, isAutoNumberingEnabled } = this.props;
         let figureHtmlData = getLabelNumberTitleHTML(element);
         let { figureLabelValue } = this.state;
-        let figureLabelFromApi = (isAutoNumberingEnabled && element.figuretype !== INTERACTIVE) ? this.props.element.displayedlabel : checkHTMLdataInsideString(figureHtmlData.formattedLabel);
+        let figureLabelFromApi = (isAutoNumberingEnabled && element.figuretype !== INTERACTIVE) ? this.props.element.displayedlabel :
+                                checkHTMLdataInsideString(figureHtmlData.formattedLabel);
         let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
         if (!(this.checkForAutoNumberedContent(this.props.element))) {
             if (dropdownData.indexOf(figureLabelFromApi.toLowerCase()) > -1) {
@@ -531,7 +550,8 @@ class FigureUserInterface extends Component {
                 break;
             case INTERACTIVE:
                 assetId = element.figuredata.interactiveid ? element.figuredata.interactiveid : '';
-                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle : element.figuredata.interactiveformat === 'mmi' ? "QUAD" : element.figuredata.interactiveformat === 'mmi-elm' ? "Elm Interactive" : 'Smart link';
+                assetTitleText = element.figuredata?.interactivetitle ? element.figuredata?.interactivetitle :
+                                element.figuredata.interactiveformat === 'mmi' ? "QUAD" : element.figuredata.interactiveformat === 'mmi-elm' ? "Elm Interactive" : 'Smart link';
                 addButtonText = "Add a Smart Link";
                 assetIdText = "Asset ID:";
                 assetPathText = "Asset Path:";
@@ -541,7 +561,8 @@ class FigureUserInterface extends Component {
         }
         let posterText;
         if (element.figuretype === INTERACTIVE && imageDimension === '') {
-            posterText = element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ? checkHTMLdataInsideString(element.html.postertext).replace(/&nbsp;/g, "") : '';
+            posterText = element.html.postertext && !BLANK_PARA_VALUES.includes(element.html.postertext) ?
+                         checkHTMLdataInsideString(element.html.postertext).replace(/&nbsp;/g, "") : '';
             let testTextarea = document.createElement("textarea");
             testTextarea.innerHTML = posterText;
             posterText = testTextarea.value;
@@ -571,7 +592,9 @@ class FigureUserInterface extends Component {
                                     <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
                                     <KeyboardWrapper index={`${this.props.index}-figure-label`} enable={this.isEnableKeyboard()}>
                                         <div onClick={() => {if(this.isEnableKeyboard()) {this.figureLabelRef.current.focus()}}}> 
-                                            <div onKeyDown={this.clickNode} tabIndex={0} ref={this.figureLabelRef}  className={this.props.selectedElement === `${QUERY_SELECTOR}-${this.props.index}-figure-label` ? "figure-label-highlight" : "figure-label"} onClick={this.handleFigureDropdown}>
+                                            <div onKeyDown={this.clickNode} tabIndex={0} ref={this.figureLabelRef}
+                                            className={this.props.selectedElement === `${QUERY_SELECTOR}-${this.props.index}-figure-label` ?
+                                                     "figure-label-highlight" : "figure-label"} onClick={this.handleFigureDropdown}>
                                                 <span>{figureLabelValue}</span>
                                                 <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
                                             </div>
@@ -584,7 +607,8 @@ class FigureUserInterface extends Component {
                                          <ul ref={this.labelListRef}>
                                             {this.state.figureLabelData.map((label, i) => {
                                                 return (
-                                                    <li onKeyDown={this.clickNode} tabIndex={0} currentIndex={i} className="media-dropdown-options" key={i} onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
+                                                    <li onKeyDown={this.clickNode} tabIndex={0} currentIndex={i} className="media-dropdown-options" key={i}
+                                                    onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
                                                       
                                                 )
 
@@ -597,20 +621,36 @@ class FigureUserInterface extends Component {
                                     <KeyboardWrapper index={`${index}-0`} enable={this.isEnableKeyboard()}>
                                         
                                         <div className='image-label'>
-                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur}
+                                            permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus}
+                                            handleBlur={handleBlur} index={`${index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "}
+                                            model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue}
+                                            glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}
+                                            handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                             <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
                                         </div>
 
                                     </KeyboardWrapper>
                                         :
                                         <div className='image-label hide-field'>
-                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur}
+                                            permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus}
+                                            handleBlur={handleBlur} index={`${index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass}
+                                            model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue}
+                                            glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}
+                                            handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                             <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
                                         </div>
                                 }
                                 <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${index}-1`}>
                                     <div className="floating-number-group">
-                                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-1`} placeholder="Number" tagName={'h4'} className={figNumberClass} model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}  contenteditable={ !hasReviewerRole()} />
+                                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur}
+                                        permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus}
+                                        handleBlur={handleBlur} index={`${index}-1`} placeholder="Number" tagName={'h4'} className={figNumberClass}
+                                        model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue}
+                                        glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}
+                                        handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
+                                        contenteditable={ !hasReviewerRole()} />
                                         <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
                                     </div>
                                 </KeyboardWrapper>
@@ -619,7 +659,12 @@ class FigureUserInterface extends Component {
                             </header>
                                 <KeyboardWrapper  index={`${index}-2`} enable={this.isEnableKeyboard()}>
                                 <div className="floating-title-group">
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass} model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur}
+                                    permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus}
+                                    handleBlur={handleBlur} index={`${index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass}
+                                    model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue}
+                                    glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}
+                                    handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                     <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
                                 </div>
                                 </KeyboardWrapper>
@@ -631,22 +676,33 @@ class FigureUserInterface extends Component {
                                             <span className="Enter-Button-Label">{posterText ? posterText : "Enter Button Label"}</span>
                                         </div>
                                         <div className={`hide-field actionPUdiv ${index}`} >
-                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter Button Label" className={"actionPU hyperLinkText"} tagName={'p'} model={element.html.postertext ? element.html.postertext : ""} handleEditorFocus={handleFocus} handleBlur={handleBlur} slateLockInfo={slateLockInfo} elementId={elementId} element={element} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                            <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur}
+                                            permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} index={`${index}-3`} placeholder="Enter Button Label"
+                                            className={"actionPU hyperLinkText"} tagName={'p'} model={element.html.postertext ? element.html.postertext : ""}
+                                            handleEditorFocus={handleFocus} handleBlur={handleBlur} slateLockInfo={slateLockInfo} elementId={elementId} element={element}
+                                            handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                         </div>
                                     </div>
                                     :
                                     null
                             }
                             <div className={`figure-element-container interface-container ${isReviewer}`}>
-                                <div id="figure_add_div" className={`pearson-component image figureData ${element.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
-                                    {this.renderAssetSection(element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText, alfrescoSite, imageDimension)}
+                                <div id="figure_add_div" className={`pearson-component image figureData ${element.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`}
+                                 data-type={dataType} >
+                                    {this.renderAssetSection(element, assetId, assetTitleText, assetIdText, assetPath, assetPathText, addButtonText, updateButtonText,
+                                     alfrescoSite, imageDimension)}
                                 </div>
                             </div>
                             <figcaption className={captionDivClass} >
                             <KeyboardWrapper enable={this.isEnableKeyboard()} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} >
                                 
                                 <div className="floating-caption-group">
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass} model={captionsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur}
+                                    permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus}
+                                    handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} placeholder="Caption" tagName={'p'}
+                                    className={figCaptionClass} model={captionsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue}
+                                    glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}
+                                    handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                     <label className={checkHTMLdataInsideString(element?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
                                 </div>
                                 </KeyboardWrapper>
@@ -654,7 +710,12 @@ class FigureUserInterface extends Component {
                             <figcredit >
                                 <KeyboardWrapper enable={this.isEnableKeyboard()} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`}>
                                     <div className="floating-credit-group">
-                                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass} model={creditsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
+                                        <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur}
+                                        permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus}
+                                        handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`} placeholder="Credit"
+                                        tagName={'figureCredit'} className={figCreditClass} model={creditsHtml} slateLockInfo={slateLockInfo}
+                                        glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id}
+                                        handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                         <label className={checkHTMLdataInsideString(element?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
                                     </div>
                                 </KeyboardWrapper>
