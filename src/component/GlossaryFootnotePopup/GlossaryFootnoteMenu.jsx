@@ -22,7 +22,11 @@ class GlossaryFootnoteMenu extends React.Component {
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
             /** Case - event target is not even wiris modal */
-            if (!(document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') && document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) && !document.getElementById('openAudioBook') && !document.getElementById('openFigureGlossary') && !document.getElementById('ext_AddAnAsset') && !document.getElementById('ext_ProductLink') && !document.getElementById('popup') && !document.querySelector('div.modal-content.wiris-alt-text-popup')?.contains(event.target) && !document.getElementById('alfresco-picker')) {
+            if (!(document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)') &&
+            document.querySelector('.wrs_modal_dialogContainer:not(.wrs_closed)').contains(event.target)) &&
+            !document.getElementById('openAudioBook') && !document.getElementById('openFigureGlossary') && !document.getElementById('ext_AddAnAsset') &&
+            !document.getElementById('ext_ProductLink') && !document.getElementById('popup') && !document.querySelector('div.modal-content.wiris-alt-text-popup')
+            ?.contains(event.target) && !document.getElementById('alfresco-picker')) {
                 this.saveContent()
             }
         }
@@ -47,7 +51,9 @@ class GlossaryFootnoteMenu extends React.Component {
         const { showGlossaaryFootnote, glossaryFootnoteValue, glossaryFootNoteCurrentValue } = this.props;
         return (
             <div>
-                <GlossaryFootnotePopup permissions={this.props.permissions} setWrapperRef={this.setWrapperRef} showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup} saveContent={this.saveContent} glossaryFootNoteCurrentValue={glossaryFootNoteCurrentValue} />
+                <GlossaryFootnotePopup permissions={this.props.permissions} setWrapperRef={this.setWrapperRef}
+                showGlossaaryFootnote={showGlossaaryFootnote} glossaryFootnoteValue={glossaryFootnoteValue} closePopup={this.closePopup}
+                saveContent={this.saveContent} glossaryFootNoteCurrentValue={glossaryFootNoteCurrentValue} />
             </div>
         )
     }
@@ -66,7 +72,8 @@ class GlossaryFootnoteMenu extends React.Component {
             return;
         }
         let tempDiv = document.createElement('div');
-        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
+        html = html.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula')
+        .replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
         html=html.trim();
         tempDiv.innerHTML = html;
         /** BG-2332 | PCAT-7409 | Multiple Superseeded formatting entry is created in WIP when 
@@ -184,18 +191,24 @@ class GlossaryFootnoteMenu extends React.Component {
             let isMarkedIndexPresent = (markedIndexGlossaryData?.markedIndexEntryURN) && (markedIndexGlossaryData?.markedIndexEntryURN !== "") ? true : false;
             let isAudioDataPresent = audioGlossaryData && Object.keys(audioGlossaryData).length > 0;
             let isFigureDataPresent = figureGlossaryData && Object.keys(figureGlossaryData).length > 0;
-            const audioTerm = `<p audio-id=${audioGlossaryData.narrativeAudioUrn} audio-path=${audioGlossaryData.location} ${isMarkedIndexPresent?"mark-index-id="+markedIndexGlossaryData?.markedIndexEntryURN: ""}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
+            const audioTerm = `<p audio-id=${audioGlossaryData.narrativeAudioUrn} audio-path=${audioGlossaryData.location}
+            ${isMarkedIndexPresent?"mark-index-id="+markedIndexGlossaryData?.markedIndexEntryURN: ""}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
             term = term.innerHTML.match(/<p>/g) ? term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
-                : isAudioDataPresent ? audioTerm : `<p  ${isMarkedIndexPresent? "mark-index-id="+markedIndexGlossaryData?.markedIndexEntryURN : ""}>${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
-            const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}<img src="${figureGlossaryData.path}" class="imageAssetContent" width="${figureGlossaryData.width}" height="${figureGlossaryData.height}" imageid="${figureGlossaryData.imageid}" ></p>`;
+                : isAudioDataPresent ? audioTerm : `<p  ${isMarkedIndexPresent? "mark-index-id="+markedIndexGlossaryData?.markedIndexEntryURN : ""}>
+                ${term.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
+            const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}
+            <img src="${figureGlossaryData.path}" class="imageAssetContent" width="${figureGlossaryData.width}"
+            height="${figureGlossaryData.height}" imageid="${figureGlossaryData.imageid}" ></p>`;
             definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") 
                         : isFigureDataPresent ? imageDefinition : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             term = this.replaceUnwantedtags(term);
             definition = this.replaceUnwantedtags(definition);
-            if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText, this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase()) || this.props.markedIndexGlossaryData.isDifference == true ){
+            if(this.glossaryFootnoteDifference(term, definition, this.props.glossaryFootNoteCurrentValue.glossaryContentText,
+                this.props.glossaryFootNoteCurrentValue.footnoteContentText, glossaryFootnoteValue.type.toLowerCase()) || this.props.markedIndexGlossaryData.isDifference == true ){
                 config.isGlossarySaving = true;
                 sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, blockfeatureType, poetryField,audioGlossaryData,figureGlossaryData, markedIndexGlossaryData?.indexEntries)
+                saveGlossaryAndFootnote(elementWorkId, elementType, glossaryfootnoteid, type, term, definition, elementSubType, typeWithPopup, blockfeatureType,
+                    poetryField,audioGlossaryData,figureGlossaryData, markedIndexGlossaryData?.indexEntries)
             }
         }
         this.props.showGlossaaryFootnote(false);
