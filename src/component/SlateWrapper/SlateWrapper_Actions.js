@@ -33,7 +33,7 @@ import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
 import ElementConstants from '../ElementContainer/ElementConstants';
-import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE, TAB, MULTI_COLUMN, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';

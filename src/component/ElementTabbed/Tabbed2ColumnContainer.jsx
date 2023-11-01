@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import Sortable from 'react-sortablejs';
 import { connect } from 'react-redux';
 import config from "../../config/config.js";

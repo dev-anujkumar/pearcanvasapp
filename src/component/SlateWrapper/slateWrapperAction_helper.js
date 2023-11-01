@@ -13,7 +13,6 @@ import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
 import { handleAutoNumberingOnCopyPaste } from '../FigureHeader/AutoNumber_CutCopy_helpers';
 import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
-import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { MANIFEST_LIST } from '../../constants/Element_Constants';
 const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP, POETRY_ELEMENT } = ElementConstants;
 

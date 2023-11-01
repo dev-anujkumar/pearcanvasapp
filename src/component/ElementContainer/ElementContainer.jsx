@@ -16,16 +16,16 @@ import PopUp from '../PopUp';
 import OpenerElement from '../OpenerElement';
 import { glossaaryFootnotePopup } from './../GlossaryFootnotePopup/GlossaryFootnote_Actions';
 import {markedIndexPopup } from './../MarkIndexPopup/MarkIndex_Action'
-import { addComment, deleteElement, updateElement, createShowHideElement, deleteShowHideUnit, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
+import { addComment, deleteElement, updateElement, createShowHideElement, getElementStatus, updateMultipleColumnData, storeOldAssetForTCM, updateAsideNumber, prepareAsideTitleForUpdate,
          prepareImageDataFromTable, storeDeleteElementKeys, updateTabTitle, getAlfrescoMetadataForAsset } from './ElementContainer_Actions';
 import { deleteElementAction } from './ElementDeleteActions.js';
 import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, AUDIO, VIDEO, IMAGE, INTERACTIVE, TABLE_ELEMENT, labelHtmlData, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, TABLE_ELEMENT, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB, DECORATIVE_IMAGE } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
-import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isSubscriberRole, isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
+import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
 import ListElement from '../ListElement';
 import config from '../../config/config';

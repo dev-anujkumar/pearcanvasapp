@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-import { hasReviewerRole, sendDataToIframe, hasProjectPermission, isSubscriberRole } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe, hasProjectPermission } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'

@@ -9,9 +9,8 @@ import { MANIFEST_LIST, MANIFEST_LIST_ITEM, BLOCK_LIST_ELEMENT_EVENT_MAPPING, MU
 import store from '../appstore/store';
 import ElementConstants from '../component/ElementContainer/ElementConstants';
 
-import { autoNumberFigureTypesAllowed, autoNumberContainerTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumberFieldsPlaceholders } from '../component/FigureHeader/AutoNumberConstants';
+import { autoNumberFigureTypesAllowed, LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../component/FigureHeader/AutoNumberConstants';
 const {
-    AUTO_NUMBER_SETTING_RESUME_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_NUMBER,
     AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER
 } = LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES
@@ -23,9 +22,7 @@ const {
  export const dataFromAlfresco = (data, editor, imageArgs, cb) => {
     let imageData = data;
     let epsURL = imageData?.epsUrl ? imageData?.epsUrl : imageData.hasOwnProperty('institution-urls') ? (imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "") :"" ;
-    let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
     let uniqID = imageData.id ? imageData.id : "";
-    let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
     let figureType = data?.content?.mimeType?.split('/')[0]
     const imageID = `imageAssetContent:${uniqID}:${Math.floor(1000 + Math.random() * 9000)}`
     const imgData = `<img imageid="urn:pearson:alfresco:${uniqID}" src=${epsURL} height="150" width="112"  class="imageAssetContent" data-id="${imageID}"/>`;
@@ -114,7 +111,6 @@ export const handleC2MediaClick = (permissions, editor, element, saveSelectedAlf
 
 function handleSiteOptionsDropdown (alfrescoPath, id, currentAsset) {
     let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-    let SSOToken = config.ssoToken;
     return axios.get(url,
         {
             headers: {
