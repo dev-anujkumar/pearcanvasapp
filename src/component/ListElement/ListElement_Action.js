@@ -67,7 +67,8 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
     //         //************ this is to cover wip conversion case *************
     //         if (!element.html) {
     //             element.html = {
-    //                 "text": "<ol class='upper-alpha' treelevel='1' style='counter-increment: none;'><li class='reset listItemNumeroUnoUpperAlpha'>This is a default text and will perform working once wip conversion is ready</li></ol>"
+    //                 "text": "<ol class='upper-alpha' treelevel='1' style='counter-increment: none;'><li class='reset listItemNumeroUnoUpperAlpha'>
+    //                  This is a default text and will perform working once wip conversion is ready</li></ol>"
     //             }
     //         }
     //         //***************************************************************
@@ -144,13 +145,17 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
 //         case 'decimal':
 //             return `<ol class='decimal' treelevel='1' style='counter-increment: section ${startvalue};'><li class='reset listItemNumeroUnoNumber'>${innerText}</li></ol>`;
 //         case 'upper-alpha':
-//             return `<ol class='upper-alpha' treelevel='1' style='counter-increment: section ${startvalue};'><li class='reset listItemNumeroUnoUpperAlpha'>${innerText}</li></ol>`;
+//             return `<ol class='upper-alpha' treelevel='1' style='counter-increment: section ${startvalue};'>
+//             <li class='reset listItemNumeroUnoUpperAlpha'>${innerText}</li></ol>`;
 //         case 'lower-alpha':
-//             return `<ol class='lower-alpha' treelevel='1' style='counter-increment: section ${startvalue};'><li class='reset listItemNumeroUnoLowerAlpha'>${innerText}</li></ol>`;
+//             return `<ol class='lower-alpha' treelevel='1' style='counter-increment: section ${startvalue};'>
+//             <li class='reset listItemNumeroUnoLowerAlpha'>${innerText}</li></ol>`;
 //         case 'upper-roman':
-//             return `<ol class='upper-roman' treelevel='1' style='counter-increment: section ${startvalue};'><li class='reset listItemNumeroUnoUpperRoman'>${innerText}</li></ol>`;
+//             return `<ol class='upper-roman' treelevel='1' style='counter-increment: section ${startvalue};'>
+//             <li class='reset listItemNumeroUnoUpperRoman'>${innerText}</li></ol>`;
 //         case 'lower-roman':
-//             return `<ol class='lower-roman' treelevel='1' style='counter-increment: section ${startvalue};'><li class='reset listItemNumeroUnoLowerRoman'>${innerText}</li></ol>`;
+//             return `<ol class='lower-roman' treelevel='1' style='counter-increment: section ${startvalue};'>
+//             <li class='reset listItemNumeroUnoLowerRoman'>${innerText}</li></ol>`; */}
 //         case 'no-style':
 //             return `<ol class='none' treelevel='1' style='counter-increment: none;'><li class='listItemNumeroUnoNone reset'>${innerText}</li></ol>`;
 //         case 'disc':

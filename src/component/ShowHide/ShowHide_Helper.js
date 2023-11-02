@@ -125,23 +125,29 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList, element
 					_slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]]?.contents.bodymatter[iList[2]]; /* WE:Body:SH:Element */
                 break;
             case 6: /* TB:Tab:SH:Element */
-                if (parentElement?.subtype === ElementConstants.TAB || parentElement?.parent?.subtype === ElementConstants.TAB || parentElement?.grandParent?.asideData?.subtype === ElementConstants.TAB) {
-                    sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[iList[2]].groupdata.bodymatter[iList[3]];
+                if (parentElement?.subtype === ElementConstants.TAB || parentElement?.parent?.subtype === ElementConstants.TAB ||
+                    parentElement?.grandParent?.asideData?.subtype === ElementConstants.TAB) {
+                    sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[iList[2]]
+                    .groupdata.bodymatter[iList[3]];
                 } else {
                     /* 2C:AS/WE-Head:SH:Element */
                     sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]];
                 }
                 break;
             case 7: /* TB:Tab:AS/WE-Head:SH:Element */
-                if (parentElement?.parent?.subtype === ElementConstants.TAB || parentElement?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
-                    sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[iList[2]].groupdata.bodymatter[iList[3]]?.elementdata.bodymatter[iList[4]];
+                if (parentElement?.parent?.subtype === ElementConstants.TAB || parentElement?.grandParent?.asideData?.parent?.subtype ===
+                    ElementConstants.TAB) {
+                    sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata
+                    .bodymatter[iList[2]].groupdata.bodymatter[iList[3]]?.elementdata.bodymatter[iList[4]];
                     /* 2C:WE-Body:SH:Element */ 
                 } else {
-                    sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
+                    sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata
+                    .bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
                 }
                 break;
             case 8: /* TB:Tab:WE-Body:SH:Element */
-                sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[iList[2]].groupdata.bodymatter[iList[3]]?.elementdata.bodymatter[iList[4]]?.contents.bodymatter[iList[5]];
+                sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata
+                .bodymatter[iList[2]].groupdata.bodymatter[iList[3]]?.elementdata.bodymatter[iList[4]]?.contents.bodymatter[iList[5]];
         }
         if(sh_Element?.type === ElementConstants.SHOW_HIDE) {
             return sh_Element;
@@ -214,21 +220,26 @@ const getTextElementInShowHide = (bodymatter, indexes, showHideObj, parentElemen
             break;
         case 6: /*TB:Tab:SH:Element */
             if (parentElement?.grandParent?.asideData?.type === ElementConstants.MULTI_COLUMN && parentElement?.grandParent?.asideData?.subtype === ElementConstants.TAB) {
-                showHideElement =  bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+                showHideElement =  bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0]?.groupeddata
+                .bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
             } else { /* 2C:AS/WE-Head:SH:Element */
                 showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]
             }
             break;
         case 7:
             // TB->Tab->AS/WE->HEAD->S/H
-            if (parentElement?.grandParent?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && parentElement?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
-                showHideElement =  bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+            if (parentElement?.grandParent?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && parentElement?.grandParent?.asideData?.parent?.subtype ===
+                ElementConstants.TAB) {
+                showHideElement =  bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[indexes[2]].groupdata
+                .bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
             } else {
-                showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]?.contents?.bodymatter[indexes[4]];
+                showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata
+                .bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]?.contents?.bodymatter[indexes[4]];
             }
             break;
         case 8: // TB->Tab->WE->BODY->S/H
-            showHideElement =  bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+            showHideElement =  bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata
+            .bodymatter[0]?.groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
             break;
     }
     const showHideType = findSectionType(indexes[indexLength -2])
@@ -256,10 +267,12 @@ const getFigureElementsInShowHide = (bodymatter, indexes, showHideObj) => {
             showHideElement = bodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]//.interactivedata[showHideObj.showHideType][indexes[4]]
             break;
         case 7:
-            showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]//.interactivedata[showHideObj.showHideType][indexes[5]]
+            showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]
+            ?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]//.interactivedata[showHideObj.showHideType][indexes[5]]
             break;
         case 8:
-            showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]?.contents?.bodymatter[indexes[4]]//.interactivedata[showHideObj.showHideType][indexes[6]]
+            showHideElement = bodymatter[indexes[0]]?.groupeddata?.bodymatter[indexes[1]]
+            ?.groupdata?.bodymatter[indexes[2]]?.elementdata?.bodymatter[indexes[3]]?.contents?.bodymatter[indexes[4]]//.interactivedata[showHideObj.showHideType][indexes[6]]
             break;
     }
     const showHideType = (indexLength > 2) && findSectionType(indexes[indexLength -3])
@@ -321,7 +334,8 @@ export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeE
         /* Get the SH element to update footnote and glossery of inner element */
         let sh_Object = getShowHideElement(bodymatter, shAtIndex, indexes, activeElemType, asideParent);
         if(sh_Object?.type === ElementConstants.SHOW_HIDE && sectionType && shAtIndex) {
-            const elementInSH = activeElemType === ElementConstants.BLOCKFEATURE ? sh_Object.interactivedata[sectionType][indexes[shAtIndex - 2]] : sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]];
+            const elementInSH = activeElemType === ElementConstants.BLOCKFEATURE ?
+            sh_Object.interactivedata[sectionType][indexes[shAtIndex - 2]] : sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]];
             /* Folloing condition is to get element where Footnote and Glossery added */
             if(typeof (resData) === "string" && resData === "GetElementWithFnGlry_SH") {
                 /** @function onGlossaryFnUpdateSuccessInShowHide - Being reused to get element when - */
@@ -351,7 +365,8 @@ export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeE
 /*
 export const onGlossaryFnUpdateSuccessInShowHide123 = (resData, bodymatter, activeElemType, showHideObj, indexes) => {
     const indexLength = Array.isArray(indexes) ? indexes.length : 0;
-    const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] : (figElements.includes(activeElemType)) ? indexes[indexLength - 3] : "" : ""
+    const showHideIndex = (indexLength > 2) ? (textElements.includes(activeElemType)) ? indexes[indexLength - 2] :
+    (figElements.includes(activeElemType)) ? indexes[indexLength - 3] : "" : ""
     const showHideType = findSectionType(showHideIndex)
     if (activeElemType && showHideType) {
         switch (indexes.length) {
@@ -374,21 +389,25 @@ export const onGlossaryFnUpdateSuccessInShowHide123 = (resData, bodymatter, acti
                 break
             case 6:
                 if (textElements.includes(activeElemType)) {
-                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType][indexes[5]] = resData
+                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata
+                    .bodymatter[indexes[3]].interactivedata[showHideType][indexes[5]] = resData
                 } else if (figElements.includes(activeElemType)) {
                     bodymatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].interactivedata[showHideType][indexes[4]] = resData
                 }
                 break
             case 7:
                 if (textElements.includes(activeElemType)) {
-                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
+                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata
+                    .bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
                 } else if (figElements.includes(activeElemType)) {
-                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType][indexes[5]] = resData
+                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata
+                    .bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].interactivedata[showHideType][indexes[5]] = resData
                 }
                 break
             case 8:
                 if (figElements.includes(activeElemType)) {
-                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
+                    bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata
+                    .bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].interactivedata[showHideType][indexes[6]] = resData
                 }
                 break
         }

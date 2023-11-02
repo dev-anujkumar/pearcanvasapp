@@ -66,7 +66,8 @@ class PdfSlate extends Component {
 		try {
 			/* Check "desc" property should not be other than "PDF" */
 			const isPdf = pdfData && pdfData?.content?.mimeType?.split('/')[1]
-			const smartLinkString = (pdfData.properties["cm:description"] && pdfData.properties["cm:description"].toLowerCase() !== "eps media") ? pdfData.properties["cm:description"] : "{}";
+			const smartLinkString = (pdfData.properties["cm:description"] && pdfData.properties["cm:description"].toLowerCase() !== "eps media") ?
+			pdfData.properties["cm:description"] : "{}";
 			let isSmartLinkAsset = smartLinkString !== "{}" ? true : false
 			let smartlinkAvsString = (isSmartLinkAsset === true) ? smartLinkString : {}
 			const smartLinkDesc = (typeof smartlinkAvsString === 'string')? JSON.parse(smartlinkAvsString) : smartlinkAvsString;

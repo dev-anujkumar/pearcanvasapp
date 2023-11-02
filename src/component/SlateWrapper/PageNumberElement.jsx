@@ -102,9 +102,12 @@ class PageNumberElement extends React.Component {
         if (loader)
             content = <div className='pageNumberBoxLoader'><div className='loadingpagenumber'></div></div>
         else {
-            content = <div className={'pageNumberBox' + ((permissions.includes('edit_print_page_no') || permissions.includes('toggle_element_page_no')) ? '' : 'disableClass')} id={"pageNumberBox-" + element.id}>
+            content = <div className={'pageNumberBox' + ((permissions.includes('edit_print_page_no') || permissions.includes('toggle_element_page_no')) ? '' :
+            'disableClass')} id={"pageNumberBox-" + element.id}>
                 Page #
-            <input className="textBox" readOnly={hasReviewerRole()} onBlur={(e) => { !hasReviewerRole() && this.updatePageNumber(e) }} onChange={this.pageNoChangeHandler} maxLength="8" value={pageNumber} onMouseLeave={(e) => { }} onMouseEnter={(e) => { }} type="text" onClick={this.textBoxClicked} onKeyPress={this.handleKeyUp} />
+            <input className="textBox" readOnly={hasReviewerRole()} onBlur={(e) => { !hasReviewerRole() && this.updatePageNumber(e) }}
+            onChange={this.pageNoChangeHandler} maxLength="8" value={pageNumber} onMouseLeave={(e) => { }} onMouseEnter={(e) => { }} type="text"
+            onClick={this.textBoxClicked} onKeyPress={this.handleKeyUp} />
                 {
                     (pageNumber && pageNumber != '' && elemid && elemid === element.id) ?
                         <span className="closeBtn" onMouseDown={this.removePageNumber}>
@@ -127,7 +130,8 @@ class PageNumberElement extends React.Component {
             else{
                 return (
                     <div className='pageNumberCover hoverNumberCover'>
-                        <div className={'pageNumberBox' + ((permissions.includes('edit_print_page_no') || permissions.includes('toggle_element_page_no')) ? '' : 'disableClass')} id={"pageNumberBox-" + element.id}>
+                        <div className={'pageNumberBox' + ((permissions.includes('edit_print_page_no') || permissions.includes('toggle_element_page_no')) ? '' :
+                        'disableClass')} id={"pageNumberBox-" + element.id}>
                             Page #
                         <input className="textBox" defaultValue={pageNumber} type="text" />
                         </div>

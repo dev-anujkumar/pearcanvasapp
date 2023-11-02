@@ -442,7 +442,8 @@ class OpenerElement extends Component {
             <div className="select-image-label">Select an Image</div>
             <div className="select-image-co-buttons">
                 <div className={`${hasReviewerRole() ? "cursor-pointer" : ""} select-image-global-button`} onClick={this.handleC2GlobalCO}>Global Opener Element Site</div>
-                <div className={`${hasReviewerRole() ? "cursor-pointer" : ""} select-image-alresco-button`} onClick={this.handleC2MediaClick}>Choose from project's Alfresco site</div>
+                <div className={`${hasReviewerRole() ? "cursor-pointer" : ""} select-image-alresco-button`}
+                onClick={this.handleC2MediaClick}>Choose from project's Alfresco site</div>
             </div>
         </div>
         return COImg
@@ -492,11 +493,14 @@ class OpenerElement extends Component {
                     </div>
                     <div className="opener-label-box oe-number-box">
                         <div className="opener-number-text">Number</div>
-                        <input className={"element-dropdown-title opener-number" + isDisable} maxLength="9" value={this.state.number} type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} onClick={this.handleToolbarOpener}/>
+                        <input className={"element-dropdown-title opener-number" + isDisable} maxLength="9" value={this.state.number}
+                        type="text" onChange={this.handleOpenerNumberChange} onKeyPress={this.numberValidatorHandler} onBlur={this.handleBlur} onClick={this.handleToolbarOpener}/>
                     </div>
                     <div className="opener-label-box oe-title-box">
                         <div className="opener-title-text">Title</div>
-                        <TinyMceEditor permissions={this.props.permissions} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.handleBlur} index={`${this.props.index}-2`} tagName='opener' className={"element-dropdown-title opener-title" + isDisable} model={openerHtmlData.formattedTitle} slateLockInfo={this.props.slateLockInfo} elementId={this.props.elementId}/>
+                        <TinyMceEditor permissions={this.props.permissions} element={this.props.element} handleEditorFocus={this.props.handleFocus}
+                        handleBlur={this.handleBlur} index={`${this.props.index}-2`} tagName='opener' className={"element-dropdown-title opener-title" + isDisable}
+                        model={openerHtmlData.formattedTitle} slateLockInfo={this.props.slateLockInfo} elementId={this.props.elementId}/>
                     </div>
                 </div>
                 {imgSrc?this.renderExistingCOImage():this.renderDefaultCOImage()}

@@ -147,7 +147,8 @@ export const onPasteSuccess = async (params) => {
     slateOldNumberedContainerElements = await getAsideElementsWrtKey(currentSlateData?.contents?.bodymatter, ELEMENT_ASIDE, slateOldNumberedContainerElements);
     const cypressPlusProjectStatus = getState()?.appStore?.isCypressPlusEnabled
     /** [PCAT-8289] ---------------------------- TCM Snapshot Data handling ------------------------------*/
-    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 && (cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type!=='popup' && responseData?.type!==MANIFEST_LIST) {
+    if (slateWrapperConstants.elementType.indexOf(slateWrapperConstants.checkTCM(responseData)) !== -1 &&
+    (cutSnap || asideData?.type === SHOW_HIDE) && responseData?.type!=='popup' && responseData?.type!==MANIFEST_LIST) {
         const snapArgs = {
             newParentData,
             currentSlateData,
@@ -235,7 +236,8 @@ export const onPasteSuccess = async (params) => {
                     } else {
                         newIndex = indexes;
                     }
-                    if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest" && selcetIndex.length === 5 ) { /* paste inner level elements inside 2C/Aside */
+                    if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest" && selcetIndex.length === 5 )
+                    { /* paste inner level elements inside 2C/Aside */
                         item?.groupeddata?.bodymatter?.[selcetIndex[1]]?.groupdata?.bodymatter?.[selcetIndex[2]]?.elementdata?.bodymatter?.map(item_L0 => {
                             if(item_L0?.id === parentUrn.manifestUrn) { /* 2/3C:WE:SectionBreak: Paste Element */
                                 item_L0?.contents.bodymatter?.splice(cutIndex, 0, responseData)

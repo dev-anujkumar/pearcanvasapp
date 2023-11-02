@@ -11,7 +11,9 @@ import './../../styles/Sidebar/Sidebar.css';
 import { hasReviewerRole, getSlateType, getCookieByName, isSlateLocked, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE, DISABLE_PLAYBACK_MODE_VENDORS } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE,
+        PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE,
+        DISABLE_PLAYBACK_MODE_VENDORS } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from '../../constants/Element_Constants.js';
@@ -165,7 +167,9 @@ class Sidebar extends Component {
       captionHTML = captionHTML.replace(/<br>/g, '').replace(/\&nbsp;/g, '').trim();
 
     // showing set to decorative image popup only if image element fields have any values in them
-      let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === '' && numberHTML === '') || (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT)) && subtitleHTML === '' && captionHTML === '')
+      let popupEnableCheckForDecoConversion = (((!this.props.isAutoNumberingEnabled && titleHTML === '' && numberHTML === '') ||
+      (this.props.isAutoNumberingEnabled && titleHTML === 'Figure' && settingHTML === LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES.AUTO_NUMBER_SETTING_DEFAULT))
+        && subtitleHTML === '' && captionHTML === '')
       this.setState({
         elementDropdown: "",
         fontBulletElementDropdown: "",
@@ -338,7 +342,8 @@ class Sidebar extends Component {
                 if (this.state.activeElementType === 'element-assessment') {
                     delete primaryOptionList[1];
                 }
-                let disabledPrimaryOptions = ["primary-mathml-equation", "primary-blockcode-equation", "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup"];
+                let disabledPrimaryOptions = ["primary-mathml-equation", "primary-blockcode-equation", "primary-editor-table-equation",
+                "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup"];
                 if (disabledPrimaryOptions.indexOf(activePrimaryOption) > -1) {
                     className = "disabled"
                 }
@@ -354,7 +359,8 @@ class Sidebar extends Component {
                 if (this.state.elementDropdown === 'primary') {
                     active = 'active';
                 }
-                const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
+                const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" &&
+                this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
                     {isSmartlinkElement && <div className='categories'>{CATEGORY}</div>}
@@ -373,7 +379,8 @@ class Sidebar extends Component {
         else if (this.props.activeElement.elementWipType == "element-learningobjectivemapping") {
             primaryOptions = <div className="learning-obejective-text"><b>Metadata Anchor</b>
                 <div className="element-dropdown">
-                    <div className="element-dropdown-title" data-element="primary">Learning Objective<svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg></div>
+                    <div className="element-dropdown-title" data-element="primary">Learning Objective<svg className="dropdown-arrow"
+                    viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg></div>
                 </div>
             </div>
 
@@ -383,7 +390,8 @@ class Sidebar extends Component {
             primaryOptions = <div className="panel_show_module">
                 <div className="learning-obejective-text"><b>Metadata Anchor</b></div>
                 <p>Show Module Name</p>
-                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName} disabled={hasReviewerRole()} checked={this.props.showModule ? true : false} /><span className={`slider round ${isReadOnly}`}></span></label>
+                <label className="switch"><input type="checkbox" onClick={!config.savingInProgress && this.showModuleName}
+                disabled={hasReviewerRole()} checked={this.props.showModule ? true : false} /><span className={`slider round ${isReadOnly}`}></span></label>
             </div>;
             return primaryOptions;
         }
@@ -420,7 +428,8 @@ class Sidebar extends Component {
         if ((data === "fontStyle" && this.state.fontBulletElementDropdown === 'font') || (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet')) {
             active = 'active';
         } 
-        const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
+        const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" &&
+        this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
         
         fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
             className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
@@ -623,15 +632,19 @@ class Sidebar extends Component {
                 }
                 //Removing Select option from dropdown values
                 if (languageDropdownOptions.length )  languageDropdownOptions = languageDropdownOptions.filter(option => option.text !== 'Select')
-                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) ||
+                (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId &&
+                this.props.cutCopySelection?.operationType === "cut"))
                 const disableClass = hasReviewerRole() ? "pointer-events-none" : ''
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
                     {isSmartlinkElement && <div className='sub-categories'>{SUB_CATEGORY}</div>}
-                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled} ${isSmartlinkElement}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                    {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled} ${isSmartlinkElement}`}
+                    data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
-                    </div>) : (<div className={`element-dropdown-title bce ${disabled} ${disableClass}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
+                        </div>) : (<div className={`element-dropdown-title bce ${disabled} ${disableClass}`} data-element="secondary" onClick={enableColumn3SecondaryOption ?
+                         null : this.toggleElementDropdown}>
                         <Autocomplete
                             disablePortal
                             disableClearable
@@ -639,7 +652,8 @@ class Sidebar extends Component {
                             noOptionsText={'No result found'}
                             style={{ width: 210 }}
                             ListboxProps={{ style: { maxHeight: "270px" } }}
-                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? {"text": "","labelText": "BCE","enum": ""} : secondaryOptionObject[this.state.activeSecondaryOption]}
+                            value={secondaryOptionObject[this.state.activeSecondaryOption].text == 'Select' ? {"text": "","labelText": "BCE","enum": ""} :
+                                    secondaryOptionObject[this.state.activeSecondaryOption]}
                             options={languageDropdownOptions}
                             onChange={(e,value)=>{this.handleSecondaryLanguageChange(e,value)}}
                             getOptionLabel={(option) => option.text}
@@ -819,9 +833,11 @@ class Sidebar extends Component {
                     let isDisable = (item === 'attribution' ? hasReviewerRole() : !attributionsObject[item].isEditable)
                     if (this.props?.activeElement?.elementType === "openerelement") {
                         if (item === "alt_text") {
-                            attrValue = this.props?.alfrescoAltLongDescData?.hasOwnProperty("altText") ? this.props?.alfrescoAltLongDescData?.altText : this.props?.activeElement?.altText ? this.props?.activeElement?.altText : ""
+                            attrValue = this.props?.alfrescoAltLongDescData?.hasOwnProperty("altText") ?
+                            this.props?.alfrescoAltLongDescData?.altText : this.props?.activeElement?.altText ? this.props?.activeElement?.altText : ""
                         } else if (item === "long_description") {
-                            attrValue = this.props?.alfrescoAltLongDescData?.hasOwnProperty("longDesc") ? this.props?.alfrescoAltLongDescData?.longDesc : this.props?.activeElement?.longDesc ? this.props?.activeElement?.longDesc : ""
+                            attrValue = this.props?.alfrescoAltLongDescData?.hasOwnProperty("longDesc") ? this.props?.alfrescoAltLongDescData?.longDesc :
+                            this.props?.activeElement?.longDesc ? this.props?.activeElement?.longDesc : ""
                         }
                     } else {
                         if (item === "alt_text") {
@@ -833,7 +849,8 @@ class Sidebar extends Component {
                     }
                     return <div key={item} data-attribution={attributionsObject[item].text}>
                         <div>{attributionsObject[item].text}</div>
-                        <textarea className="attribution-editor" onBlur={this.handleBQAttributionBlur} disabled={isDisable} name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
+                        <textarea className="attribution-editor" onBlur={this.handleBQAttributionBlur} disabled={isDisable}
+                        name={item} value={attrValue} onChange={this.handleAttrChange}></textarea>
                     </div>
                 });
             }
@@ -843,18 +860,21 @@ class Sidebar extends Component {
                 if (attrNode) {
                     attrNode.setAttribute("numbered", ((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true))
                     attrNode.setAttribute("startNumber", (this.state.bceNumberStartFrom ? this.state.bceNumberStartFrom : '1'))
-                    attrNode.setAttribute("syntaxhighlighting", ((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true))
+                    attrNode.setAttribute("syntaxhighlighting", ((this.state.syntaxHighlightingToggleValue ||
+                    this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true))
                 }
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleBceToggle} />
-                            <span className="slider round"></span></label>
+                        <label className="switch"><input type="checkbox"
+                        checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true}
+                        onClick={!hasReviewerRole() && !config.savingInProgress && this.handleBceToggle} /><span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleBceNumber} value={this.state.bceNumberStartFrom}
-                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleBceBlur} />
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleBceNumber}
+                        value={this.state.bceNumberStartFrom} disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) ||
+                        hasReviewerRole()} onBlur={this.handleBceBlur} />
                     </div>
                 </div>
                 return attributions;
@@ -864,13 +884,15 @@ class Sidebar extends Component {
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleDialogueToggle} />
-                            <span className="slider round"></span></label>
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ?
+                        this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleDialogueToggle} />
+                        <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleDialogueNumber} value={this.state.bceNumberStartFrom}
-                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.handleDialogueBlur} />
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.handleDialogueNumber}
+                        value={this.state.bceNumberStartFrom} disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) ||
+                        hasReviewerRole()} onBlur={this.handleDialogueBlur} />
                     </div>
                 </div>
                 return attributions;
@@ -886,13 +908,15 @@ class Sidebar extends Component {
                 attributions = <div>
                     <div className="panel_show_module">
                         <div className="toggle-value-bce">Use Line Numbers</div>
-                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleNumberedLineToggle} />
+                        <label className="switch"><input type="checkbox" checked={(this.state.bceToggleValue || this.state.bceToggleValue === false) ?
+                            this.state.bceToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleNumberedLineToggle} />
                             <span className="slider round"></span></label>
                     </div>
                     <div className="alt-Text-LineNumber" >
                         <div className="toggle-value-bce">Start numbering from</div>
-                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.setStartLineNumber} value={this.state.bceNumberStartFrom}
-                            disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) || hasReviewerRole()} onBlur={this.saveElementAttributes} />
+                        <input type="number" id="line-number" className="line-number" min="1" onChange={!config.savingInProgress && this.setStartLineNumber}
+                        value={this.state.bceNumberStartFrom} disabled={!((this.state.bceToggleValue || this.state.bceToggleValue === false) ? this.state.bceToggleValue : true) ||
+                        hasReviewerRole()} onBlur={this.saveElementAttributes} />
                     </div>
                 </div>
                 return attributions;
@@ -1054,7 +1078,8 @@ class Sidebar extends Component {
     }
 
     handleSyntaxHighlightingToggle = () => {
-        let currentToggleValue = !((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue == false) ? this.state.syntaxHighlightingToggleValue : true);
+        let currentToggleValue = !((this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue == false) ?
+        this.state.syntaxHighlightingToggleValue : true);
         if (currentToggleValue) {
             this.handleSyntaxHighlightingPopup(true);
         }
@@ -1128,7 +1153,8 @@ class Sidebar extends Component {
             return <div className="panel_syntax_highlighting">
                 <div className="toggle-value-bce">Syntax-highlighting</div>
                 <label className="switch">
-                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ? this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleSyntaxHighlightingToggle} />
+                    <input type="checkbox" checked={(this.state.syntaxHighlightingToggleValue || this.state.syntaxHighlightingToggleValue === false) ?
+                    this.state.syntaxHighlightingToggleValue : true} onClick={!hasReviewerRole() && !config.savingInProgress && this.handleSyntaxHighlightingToggle} />
                     <span className="slider round"></span>
                 </label>
             </div>
@@ -1216,7 +1242,8 @@ class Sidebar extends Component {
         const {activeElement} = this.props;
         return (
             <>
-                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" && this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
+                {this.props.activeElement && Object.keys(this.props.activeElement).length !== 0 && this.props.activeElement.elementType !== "element-authoredtext" &&
+                this.props.activeElement.elementType !== 'discussion' && this.props.activeElement.primaryOption !== 'primary-tabbed-elem' && <div className="canvas-sidebar">
                     <div className="canvas-sidebar-heading">Settings</div>
                     {this.primaryOption()}
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
@@ -1225,7 +1252,8 @@ class Sidebar extends Component {
                     {activeElement?.assetIdFor3PISmartlink && this.playbackMode()}
                     {!isDecorativeImage && this.attributions()}
                     {this.podOption()}
-                    {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
+                    {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove}
+                    togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
                     {this.state.activeElementType ==="manifestlist" && <div>
                     <div className="canvas-sidebar-font-bullet-type">Font Type</div>
                     {this.fontBulletOption("fontStyle")}

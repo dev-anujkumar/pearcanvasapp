@@ -92,14 +92,16 @@ export const CrossReference = ({crossRefValue}) => {
                     <Tooltip direction="bottom cross-ref-tooltip" showClass={crossRef.length === 0 ? true : false} tooltipText={crossRef.join(',')}>
                         <div className="markedindex-secondlevel-label" onClick={handleDropDownClick}>
                             <label className="cross-reference-lable">Cross Reference (See Also)</label>
-                            <ReactMarkedIndexEditor className='markedindex-editor place-holder cross-reference' id='markedindex-cross-reference' markIndexCurrentValue={crossRef.join(',')} filterCrossRef={filterCrossRef} isFilterCrossRefNeeded={crossRefValue?.length > 0 ? false : true}/>
+                            <ReactMarkedIndexEditor className='markedindex-editor place-holder cross-reference' id='markedindex-cross-reference'
+                             markIndexCurrentValue={crossRef.join(',')} filterCrossRef={filterCrossRef} isFilterCrossRefNeeded={crossRefValue?.length > 0 ? false : true}/>
                             <label id="cross-ref" className={crossRef.length === 0 ? 'show-cross-ref-label' : 'hide-cross-ref-label'} onClick={focusOnPara}>None</label>
                         </div>
                     </Tooltip>
                 </div>
             </div>
             {
-                popUpStatus && <CrossRefCheckbox selectedData={crossRef} handleSelectedCheckboxValue={handleSelectedCheckboxValue} dropDownList={filteredDropDown.length > 0 ? filteredDropDown : []}/>
+                popUpStatus && <CrossRefCheckbox selectedData={crossRef} handleSelectedCheckboxValue={handleSelectedCheckboxValue}
+                dropDownList={filteredDropDown.length > 0 ? filteredDropDown : []}/>
             }
             {
                 !filteredDropDown?.length && showErrorMsg && <div className="cross-ref-dropdown-without-result">

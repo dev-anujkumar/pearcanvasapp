@@ -214,7 +214,8 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
             return false
         }
 
-        let currentLevel = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel')) || (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
+        let currentLevel = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel')) ||
+        (anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
         let updatelistFlag = true;
 
         // prevent tab indent event at last level of list tree //
@@ -245,7 +246,8 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
          */
         else if ((e.shiftKey || e.which === 8) && !isMultilineSelection) {
             let closestLi = (anchorNode.tagName === 'LI') ? anchorNode : anchorNode.closest('li');
-            let closestTreeLevel = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel') || anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
+            let closestTreeLevel = (anchorNode.closest('ol') && anchorNode.closest('ol').getAttribute('treelevel') ||
+            anchorNode.closest('ul') && anchorNode.closest('ul').getAttribute('treelevel'));
             /**
              * Case - prevent hitting Shift+TAB on very first list tree level
              */

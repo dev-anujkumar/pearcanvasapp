@@ -95,10 +95,12 @@ componentWillMount() {
       secondLevel = secondLevel.innerHTML.match(/<p>/g) ? secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
         : `<p>${secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
 
-      if (this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))) {
+      if (this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel,
+        this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))) {
         config.isGlossarySaving = true;
         sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
-        saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null, poetryField, null, null, null, crossReferences)
+        saveGlossaryAndFootnote(elementWorkId, elementType, markIndexid, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null,
+        poetryField, null, null, null, crossReferences)
       }
     }
     this.props.showMarkedIndexPopup(false);
@@ -129,15 +131,18 @@ componentWillMount() {
         : `<p>${secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
 
       
-      let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel, this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))
+      let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel,
+      this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))
       if(markedIndexEntryURN){
         if(checkDifference){
-          await saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null, poetryField,null,null,null,crossReferences);
+          await saveGlossaryAndFootnote(elementWorkId, elementType, markedIndexEntryURN, type, firstLevel, secondLevel, elementSubType,
+          typeWithPopup,null, poetryField,null,null,null,crossReferences);
         }
         this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, markedIndexEntryURN, checkDifference, crossReferences);
       } else{
         getGlossaryFootnoteId(this.props.glossaryData.glossaryFootnoteValue.elementWorkId, "MARKEDINDEX", async res => {
-          await saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null, poetryField,null,null,null,crossReferences);
+          await saveGlossaryAndFootnote(elementWorkId, elementType, res.data.id, type, firstLevel, secondLevel, elementSubType, typeWithPopup,null,
+          poetryField,null,null,null,crossReferences);
           this.props.markedIndexPopupOverGlossary(false, firstLevel, secondLevel, res.data.id, checkDifference, crossReferences);
           this.props.showingToastMessage(true);
         });
@@ -178,7 +183,8 @@ componentWillMount() {
       let ed_id = tinymce.editors[i].id;
       if (ed_id.includes('markedindex')) {
         let tempContainerHtml = tinyMCE.$("#" + ed_id).html();
-        tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+        tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula')
+        .replace(/\sWirisformula/g, ' temp_Wirisformula');
         document.getElementById(ed_id).innerHTML = tempContainerHtml;
         tinymce.remove(`#${ed_id}`)
         tinymce.$('.wrs_modal_desktop').remove();
@@ -263,7 +269,8 @@ componentWillMount() {
             <div className="markedindex-word-header">
               <div id='markedindex-editor' onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
                 <div className="markedindex-word-title">
-                  <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.firstLevel} className='markedindex-editor place-holder index-entry' id='markedindex-0' markedLabelId="firstLevel" />
+                  <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.firstLevel}
+                  className='markedindex-editor place-holder index-entry' id='markedindex-0' markedLabelId="firstLevel" />
                   <label id="firstLevel" className="transition-none">Index Entry</label>
                 </div>
               </div>
@@ -272,7 +279,8 @@ componentWillMount() {
             <div className="markedindex-secondlevel-header">
               <div id="index-secondlevel-attacher" onFocus={() => this.toolbarHandling(null, 'remove')} onBlur={(e) => this.toolbarHandling(e, 'add')}>
                 <div className="markedindex-secondlevel-label">
-                  <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel} className='markedindex-editor place-holder sub-entry' id='markedindex-1' markedLabelId="secondLevel" />
+                  <ReactMarkedIndexEditor permissions={this.props.permissions} markIndexCurrentValue={this.props.markedIndexCurrentValue?.secondLevel}
+                  className='markedindex-editor place-holder sub-entry' id='markedindex-1' markedLabelId="secondLevel" />
                   <label id="secondLevel" className={this.state.markIndexCurrentValue === '' ? "floating-title" : "transition-none"} >Sub-Entry</label>
                 </div>
               </div>
@@ -282,7 +290,8 @@ componentWillMount() {
 
             <div className="button-group">
               <Tooltip direction="removeMarkedIndex" tooltipText="Remove Index entry">
-                {buttonText === 'Update' ? <span className={`deleteMarkedIndexbutton ${isReadOnly}`} onClick={() => this.showMarkedIndexWarningPopup(true)}><img className='markedindex-delete-icon' src={figureDeleteIcon} /></span> : ''}
+                {buttonText === 'Update' ? <span className={`deleteMarkedIndexbutton ${isReadOnly}`}
+                onClick={() => this.showMarkedIndexWarningPopup(true)}><img className='markedindex-delete-icon' src={figureDeleteIcon} /></span> : ''}
               </Tooltip>
               <span className="printIndx-cancel-button" onClick={this.closePopUp}>Cancel</span>
               <span className={`printIndex-save-button ${isReadOnly}`} disabled={false} onClick={this.saveMarkedIndex}>{buttonText}</span>

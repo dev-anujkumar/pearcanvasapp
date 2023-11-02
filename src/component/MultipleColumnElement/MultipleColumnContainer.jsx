@@ -198,7 +198,8 @@ class MultipleColumnContainer extends PureComponent {
             }
             this['cloneCOSlateControlledSource_4' + random] = this.renderElement(_bodyMatter, parentUrn, index)
             return (
-                <div className={`container-multi-column-group-3c ${constants.setClassByElementType(this.context.element)} column-${columnIndex}`} data-id={_containerId} container-type={_containerType}>
+                <div className={`container-multi-column-group-3c ${constants.setClassByElementType(this.context.element)} column-${columnIndex}`}
+                data-id={_containerId} container-type={_containerType}>
                     <Sortable
                         options={{
                             ...constants.sortableOptions,

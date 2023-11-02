@@ -121,7 +121,8 @@ class ListButtonDropPortal extends Component {
                             )
                         } else if (element.type === "groupedcontent") {
                             let indexes = activeElement.index.split("-")
-                            let liElement = element.groupeddata && element.groupeddata.bodymatter[indexes[1]] && element.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
+                            let liElement = element.groupeddata && element.groupeddata.bodymatter[indexes[1]] &&
+                            element.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                             if (liElement && liElement.id === activeElement.elementId) {
                                 isMatched = liElement.type === 'element-list'
                                 isMatched && (listElement = liElement)
@@ -190,15 +191,19 @@ class ListButtonDropPortal extends Component {
                 let indexes = activeElement?.index.split("-");
                 let parentElement= slateData[config.slateManifestURN]?.contents?.bodymatter[indexes[0]];
                 if(this?.props?.asideData.parent && this?.props?.asideData.parent.type === "showhide"){
-                    metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[this?.props?.asideData?.parent?.showHideType][indexes[2]]);
+                    metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[indexes[0]]
+                    .interactivedata[this?.props?.asideData?.parent?.showHideType][indexes[2]]);
                 }else if(parentElement.type ==="element-aside" && parentElement.elementdata?.bodymatter[indexes[1]]?.type === "manifestlist"){
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,parentElement.elementdata?.bodymatter[indexes[1]]);
                 }else if(parentElement.type ==="element-aside" && parentElement.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist"){
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,parentElement.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]);
-                }else if(this?.props?.asideData?.parent?.type === 'groupedcontent' && parentElement?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.type === "manifestlist"){
-                    metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,parentElement?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]);
+                }else if(this?.props?.asideData?.parent?.type === 'groupedcontent' && parentElement?.groupeddata?.bodymatter[indexes[1]]
+                    ?.groupdata?.bodymatter[indexes[2]]?.type === "manifestlist"){
+                    metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,parentElement?.groupeddata?.bodymatter[indexes[1]]
+                    ?.groupdata?.bodymatter[indexes[2]]);
                 }else{
-                    metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[activeElement.index.split("-")[0]]);
+                    metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents
+                    .bodymatter[activeElement.index.split("-")[0]]);
                 }
                 if (metaDataBlockList && metaDataBlockList.length) {
                     this.startValue = metaDataBlockList[0].startValue

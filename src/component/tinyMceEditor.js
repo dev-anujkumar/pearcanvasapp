@@ -41,7 +41,7 @@ import elementList from './Sidebar/elementTypes';
 import { getParentPosition} from './CutCopyDialog/copyUtil';
 
 import { handleC2MediaClick, dataFromAlfresco, checkForDataIdAttribute, checkBlockListElement, isNestingLimitReached,
-     isElementInsideBlocklist, checkActiveElement, setInstanceToolbar, restoreSelectionAtNode }  from '../js/TinyMceUtility.js';
+        isElementInsideBlocklist, checkActiveElement, setInstanceToolbar, restoreSelectionAtNode }  from '../js/TinyMceUtility.js';
 import { saveInlineImageData ,saveSelectedAlfrescoElement } from "../component/AlfrescoPopup/Alfresco_Action.js"
 import ElementConstants from './ElementContainer/ElementConstants';
 import { moveCursor } from './Keyboard/KeyboardWrapper.jsx';
@@ -158,8 +158,12 @@ export class TinyMceEditor extends Component {
             },
 
             init_instance_callback: (editor) => {
-                const isAutoNumberField = (this.props.isAutoNumberingEnabled && (this.props?.element?.type == 'figure' && autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn)
-                if (isAutoNumberField || config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) && this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
+                const isAutoNumberField = (this.props.isAutoNumberingEnabled && (this.props?.element?.type == 'figure' &&
+                autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) ||
+                autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) &&
+                autoNumberFieldsPlaceholders.includes(this.props?.placeholder) && this.props?.autoNumberOption?.entityUrn === this.props?.element?.contentUrn)
+                if (isAutoNumberField || config.ctaButtonSmartlinkContexts.includes(this.props?.element?.figuredata?.interactivetype) &&
+                this.props?.className === "actionPU hyperLinkText" && this.props?.placeholder === "Enter Button Label") {
                     editor.shortcuts.remove('meta+u', '', '');
                     editor.shortcuts.remove('meta+b', '', '');
                     editor.shortcuts.remove('meta+i', '', '');
@@ -2684,7 +2688,9 @@ export class TinyMceEditor extends Component {
             if(hasReviewerRole()){
                 e.preventDefault();
             }
-            if (this.props.isAutoNumberingEnabled && (autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) || autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && this.props?.placeholder === 'Number' && this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
+            if (this.props.isAutoNumberingEnabled && (autoNumberFigureTypesAllowed.includes(this.props?.element?.figuretype) ||
+            autoNumberContainerTypesAllowed.includes(this.props?.element?.type)) && this.props?.placeholder === 'Number' &&
+            this.props?.labelNumberSetting === AUTO_NUMBER_SETTING_RESUME_NUMBER) {
                 const currentValue = e.clipboardData.getData('Text');
                 const isNum = /^[1-9][0-9]*$/.test(currentValue);
                 let isValidPaste = true

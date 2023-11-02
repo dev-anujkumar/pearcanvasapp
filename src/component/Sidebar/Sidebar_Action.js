@@ -60,7 +60,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         outputSubType = outputSubTypeList[[newElementData['secondaryOption']]]
 
         if (oldElementData.type === "figure") {
-            if (!(imageSource.includes(oldElementData.figuretype) && (imageDestination.includes(newElementData['primaryOption']) || newElementData.primaryOption === DECORATIVE_IMAGE)) && oldElementData.figuretype !== 'codelisting' && !oldElementData.figuredata.interactivetype){
+            if (!(imageSource.includes(oldElementData.figuretype) && (imageDestination.includes(newElementData['primaryOption']) ||
+            newElementData.primaryOption === DECORATIVE_IMAGE)) && oldElementData.figuretype !== 'codelisting' && !oldElementData.figuredata.interactivetype){
                 oldElementData.figuredata = {...figureDataBank[newElementData['primaryOption']]}
             }
             if(oldElementData.figuredata.srctype){
@@ -76,13 +77,15 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             }
 
             /* On conversion of primary option type, change the POD value to default value */
-            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage" || oldElementData.figuredata?.decorative) &&
+            if((oldElementData.figuretype  === 'image'|| oldElementData.figuretype === "table" || oldElementData.figuretype === "mathImage" ||
+            oldElementData.figuredata?.decorative) &&
             inputPrimaryOptionType !== outputPrimaryOptionType ){
                 oldElementData.figuredata.podwidth = POD_DEFAULT_VALUE
             }
 
         /* on Conversion removing the tinymce instance for BCE element*/
-        if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] === 'primary-blockcode-equation') &&
+        if ((outputPrimaryOptionType && outputPrimaryOptionType['enum'] === "BLOCK_CODE_EDITOR" || newElementData && newElementData['primaryOption'] ===
+        'primary-blockcode-equation') &&
             newElementData['secondaryOption'] === "secondary-blockcode-language-default") {
             if (tinymce && tinymce.activeEditor && tinymce.activeEditor.id) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
@@ -95,7 +98,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         if(oldElementData.figuretype && oldElementData.figuretype === "codelisting" && newElementData['primaryOption'] === "primary-blockcode-equation") {
             oldElementFigureData = JSON.parse(JSON.stringify(oldElementData.figuredata));
-            oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']].subtype[newElementData['secondaryOption']].text;
+            oldElementData.figuredata.programlanguage = elementTypes[newElementData['elementType']][newElementData['primaryOption']]
+            .subtype[newElementData['secondaryOption']].text;
              oldElementData.figuredata.preformattedtext = [];
         }
 
@@ -258,7 +262,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         slateEntity : appStore.parentUrn && Object.keys(appStore.parentUrn).length !== 0 ?appStore.parentUrn.contentUrn:config.slateEntityURN
     }
     const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled
-    if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType && conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
+    if (newElementData.primaryOption !== "primary-list" && conversionDataToSend.inputType === conversionDataToSend.outputType &&
+    conversionDataToSend.inputSubType === conversionDataToSend.outputSubType) {
         return;
     }
     if (showHideObj) {
@@ -296,7 +301,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         let currentSlateData = currentParentData[config.slateManifestURN];
         /** [PCAT-8289] -------------------------------- TCM Snapshot Data handling ----------------------------------*/
         // This check is added to prevent snapshots for TB element, it will be removed when TB element will support TCM
-        const isTbElement = appStore?.asideData?.subtype === ElementConstants.TAB || appStore?.asideData?.parent?.subtype === ElementConstants.TAB || appStore?.asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || appStore?.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
+        const isTbElement = appStore?.asideData?.subtype === ElementConstants.TAB || appStore?.asideData?.parent?.subtype === ElementConstants.TAB ||
+        appStore?.asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || appStore?.asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
         if (!isTbElement) {
             if (elementType.indexOf(oldElementData.type) !== -1) {
                 if (oldElementData && (oldElementData.figuretype == "codelisting" || oldElementData.figuretype == "interactive")) {
@@ -377,7 +383,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                         bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]] = res.data;
                         break;
                     case 5:
-                        bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res.data;
+                        bodymatter[indexes[0]].interactivedata[appStore?.asideData?.parent?.showHideType][indexes[2]].elementdata.bodymatter[indexes[3]].contents
+                        .bodymatter[indexes[4]] = res.data;
                         break;
                 }
             } else {
@@ -391,10 +398,12 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         } else if(appStore?.asideData?.parent?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.parent?.subtype === ElementConstants.TAB) {
             switch(indexes.length) {
                 case 5:
-                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = res.data;
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata
+                    .bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]] = res.data;
                     break;
                 case 6:
-                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = res.data;
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata
+                    .bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]] = res.data;
                     break;
             }
         } else if(appStore?.asideData?.parent?.type === "groupedcontent") {
@@ -403,7 +412,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                     focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]] = res?.data;
                     break;
                 case 5:
-                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]] = res?.data;
+                    focusedElement[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents
+                    .bodymatter[indexes[4]] = res?.data;
                     break;
             }
             // Tab Element of TB element
@@ -416,8 +426,10 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 if(newElementData.elementId === focusedElement[index].id) {
                     focusedElement[index] = res.data
                 } else {
-                    if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) || ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents) || 'interactivedata' in bodymatter[index]) {
-                        focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||  focusedElement[index].contents && focusedElement[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
+                    if(('elementdata' in focusedElement[index] && 'bodymatter' in focusedElement[index].elementdata) ||
+                     ('contents' in focusedElement[index] && 'bodymatter' in focusedElement[index].contents) || 'interactivedata' in bodymatter[index]) {
+                    focusedElement = focusedElement[index].elementdata && focusedElement[index].elementdata.bodymatter ||
+                    focusedElement[index].contents && focusedElement[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                     }
                 }
             }
@@ -451,7 +463,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
         }
         const asideElementTypes = ['element-aside', 'element-workedexample'];
         if (asideElementTypes.includes(newElementData.elementType)) {
-            const hasAsideNumber = (res.data?.html?.title && (res.data?.html?.title !== "<p class='paragraphNumeroUno'></p>" && res.data?.html?.title !== "<p></p>")) ? true : false;
+            const hasAsideNumber = (res.data?.html?.title && (res.data?.html?.title !== "<p class='paragraphNumeroUno'></p>" &&
+            res.data?.html?.title !== "<p></p>")) ? true : false;
             activeElementObject.asideNumber = hasAsideNumber
         }
         dispatch({
@@ -689,7 +702,8 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
             dispatch(convertElement(showhideElement.currentElement, elementData, activeElement, store, indexes, fromToolbar, showhideElement));
             // If Element is inside Tab Element of TB element
         } else if (appStore?.asideData?.type === ElementConstants.MULTI_COLUMN && appStore?.asideData?.subtype === ElementConstants.TAB) {
-            let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
+            let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata
+            .bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]];
             dispatch(convertElement(elementOldData, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
         } else if (appStore && appStore.parentUrn && appStore.parentUrn.elementType === "group") {
             let elementOldData = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
@@ -699,10 +713,12 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
             let elementOldDataTab;
             switch(indexes.length) {
                 case 5:
-                    elementOldDataTab = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
+                    elementOldDataTab = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata
+                    .bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]];
                     break;
                 case 6:
-                    elementOldDataTab = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
+                    elementOldDataTab = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata
+                    .bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]];
                     break;
             }
             dispatch(convertElement(elementOldDataTab, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
@@ -713,7 +729,8 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     elementOldData2C = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]];
                     break;
                 case 5:
-                    elementOldData2C = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
+                    elementOldData2C = bodymatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata
+                    .bodymatter[indexes[3]].contents.bodymatter[indexes[4]];
                     break;
             }
             dispatch(convertElement(elementOldData2C, elementData, activeElement, store, indexes, fromToolbar, showHideObj));
@@ -728,8 +745,10 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                     if(elementData.elementId === bodymatter[index].id) {
                         dispatch(convertElement(bodymatter[index], elementData, activeElement, store, indexes, fromToolbar,showHideObj));
                     } else {
-                        if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
-                            bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
+                        if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) ||
+                        ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
+                        bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents &&
+                         bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                         }
                         
                     }
@@ -800,18 +819,23 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
         } else {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
             //For Nested BL inside SH i.e Slate->SH->BL->BL || For Parent BL inside SH i.e Slate->SH->BL
-            if ((dataToUpdate?.asideData?.parent?.type && dataToUpdate.asideData.parent.type === "showhide" && dataToUpdate?.asideData?.parent?.showHideType) || (dataToUpdate?.asideData?.type && dataToUpdate.asideData.type === "showhide" && dataToUpdate?.asideData?.sectionType)) {
+            if ((dataToUpdate?.asideData?.parent?.type && dataToUpdate.asideData.parent.type === "showhide" && dataToUpdate?.asideData?.parent?.showHideType) ||
+            (dataToUpdate?.asideData?.type && dataToUpdate.asideData.type === "showhide" && dataToUpdate?.asideData?.sectionType)) {
                 let showHideSection = dataToUpdate?.asideData?.parent?.showHideType ? dataToUpdate.asideData.parent.showHideType : dataToUpdate.asideData.sectionType;
-                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].interactivedata[showHideSection][slateLevelBLIndex[2]], dataToSend)
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]
+                .interactivedata[showHideSection][slateLevelBLIndex[2]], dataToSend)
             } // For Nested BL inside AS i.e Slate->AS/WE(header)->BL 
             else if(parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.type === "groupedcontent"){
-                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.groupeddata?.bodymatter[slateLevelBLIndex[1]]?.groupdata?.bodymatter[slateLevelBLIndex[2]], dataToSend)
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.groupeddata
+                ?.bodymatter[slateLevelBLIndex[1]]?.groupdata?.bodymatter[slateLevelBLIndex[2]], dataToSend)
             }// For Nested BL inside 2C & 3C i.e Slate->2C/3C->BL 
-            else if((dataToUpdate?.slateLevelBLIndex?.length)%2 === 0 && parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.type === "element-aside"){
-                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].elementdata.bodymatter[slateLevelBLIndex[1]], dataToSend)
+            else if((dataToUpdate?.slateLevelBLIndex?.length)%2 === 0 && parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.type ===
+                "element-aside"){updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]
+                .elementdata.bodymatter[slateLevelBLIndex[1]], dataToSend)
             } // For Nested BL inside AS i.e Slate->WE(Body)->BL 
             else if(parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.type === "element-aside"){
-                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.elementdata?.bodymatter[slateLevelBLIndex[1]]?.contents?.bodymatter[slateLevelBLIndex[2]], dataToSend)
+                updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.elementdata
+                ?.bodymatter[slateLevelBLIndex[1]]?.contents?.bodymatter[slateLevelBLIndex[2]], dataToSend)
             }//For BL on Slate Level i.e Slate->BL
             else {
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]], dataToSend)
