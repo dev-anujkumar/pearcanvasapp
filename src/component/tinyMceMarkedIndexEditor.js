@@ -57,7 +57,7 @@ export class ReactMarkedIndexEditor extends React.Component {
           }
         });
         editor.on('init', (e) => {
-          editor.shortcuts.remove('meta+u', '', ''); 
+          editor.shortcuts.remove('meta+u', '', '');
           editor.shortcuts.remove('meta+b', '', '');
           editor.shortcuts.remove('meta+i', '', '');
           if (document.querySelector('div.index-container')) {
@@ -329,7 +329,7 @@ export class ReactMarkedIndexEditor extends React.Component {
   addMathmlFormulaButton = editor => {
     /*
       Adding button and bind exec command on clicking the button to open the Mathml editor
-      Default command tiny_ce)wiris_openFormulaEditor is not working, so have added the command 
+      Default command tiny_ce)wiris_openFormulaEditor is not working, so have added the command
       copying from wiris plugin file(onAction)
     */
     editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
@@ -507,7 +507,7 @@ export class ReactMarkedIndexEditor extends React.Component {
       const indexEntry = document.getElementById('markedindex-0')?.innerHTML?.replace('<br data-mce-bogus="1">', "")?.replace('&nbsp;', "");
       if(indexEntry) {
         document.getElementById("markedindex-cross-reference").contentEditable = true;
-      } else { 
+      } else {
         document.getElementById("markedindex-cross-reference").contentEditable = false;
       }
     }

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import Sortable from 'react-sortablejs';
 import { connect } from 'react-redux';
 import config from "../../config/config.js";
@@ -86,7 +86,7 @@ export const Tabbed2Column = (props) => {
                         onChange={function (items, sortable, evt) { }}
                     >
                         {renderTabElement(element, element?.groupeddata?.bodymatter, parentUrn, asideData, props.index)}
-                    </Sortable> 
+                    </Sortable>
                 </div>
             )
         } else {

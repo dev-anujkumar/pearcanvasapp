@@ -30,10 +30,10 @@ export const deleteComment = (payload) => ({
 
 
 /**
- * 
+ *
  *@discription - This function is to fetchComments of the element called in slate wrapper action
-  @param {String} contentUrn - content urn of slate 
-  @param {String} title - Title of the slate 
+  @param {String} contentUrn - content urn of slate
+  @param {String} title - Title of the slate
 */
 export const fetchComments = (contentUrn, title) => dispatch => {
     let projectUrn = config.projectUrn,
@@ -61,9 +61,9 @@ export const fetchComments = (contentUrn, title) => dispatch => {
 };
 
 /**
- * 
- *@discription - This function is to fetchComments of the element 
-  @param {String} elemenetId - elemenetId of element 
+ *
+ *@discription - This function is to fetchComments of the element
+  @param {String} elemenetId - elemenetId of element
 */
 export const fetchCommentByElement = (elementId, index) => dispatch => {
     return dispatch({
@@ -76,8 +76,8 @@ export const fetchCommentByElement = (elementId, index) => dispatch => {
 };
 
 /**
- * 
- *@discription - This function is to toggle comments panel when click on button 
+ *
+ *@discription - This function is to toggle comments panel when click on button
   @param {String} toggle - value true or false
 */
 
@@ -89,8 +89,8 @@ export const toggleCommentsPanel = (toggle) => dispatch => {
 };
 
 /**
- * 
- *@discription - This function is to toggle reply component when click on reply button in comments panel 
+ *
+ *@discription - This function is to toggle reply component when click on reply button in comments panel
   @param {String} toggle - value true or false
 */
 export const toggleReply = (toggle) => dispatch => {
@@ -101,8 +101,8 @@ export const toggleReply = (toggle) => dispatch => {
 };
 
 /**
- * 
- *@discription - This function is to save reply comment 
+ *
+ *@discription - This function is to save reply comment
   @param {String} commentUrn - Comment urn of comment to reply
   @param {String} reply - reply comment
   @param {String} elementId - Element id of the element
@@ -139,8 +139,8 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
 };
 
 /**
- * 
- *@discription - This function is to resolveComment  
+ *
+ *@discription - This function is to resolveComment
   @param {String} commentUrn - Comment urn of comment to reply
   @param {String} resolveOrOpen - reply comment
   @param {String} elementId - Element id of the element
@@ -172,8 +172,8 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
 };
 
 /**
- * 
- *@discription - This function is to updateComment  
+ *
+ *@discription - This function is to updateComment
   @param {String} commentUrn - Comment urn of comment to reply
   @param {String} updateComment - update comment when click on edit
   @param {String} elementId - Element id of the element
@@ -202,8 +202,8 @@ export const updateComment = (commentUrn, updateCommentParams, elementId) => dis
 };
 
 /**
- * 
- *@discription - This function is to get detail of all project users  
+ *
+ *@discription - This function is to get detail of all project users
   @param {String} commentUrn - Comment urn of comment to reply
 */
 
@@ -222,13 +222,13 @@ export const getProjectUsers = () => dispatch => {
                 payload: response.data
             });
         }).catch(error => {
-            
+
         })
 }
 
 /**
- * 
- *@discription - This function is to Update the assignee of the project 
+ *
+ *@discription - This function is to Update the assignee of the project
   @param {String} commentUrn - Comment urn of comment to reply
   @param {String} newAssignee -Name of the new assignee in the project
   @param {String} elementId -elementId of the element

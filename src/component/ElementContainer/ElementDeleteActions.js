@@ -5,7 +5,7 @@
 import axios from 'axios';
 import config from '../../config/config';
 import { hideBlocker } from '../../js/toggleLoader';
-import { ShowLoader, HideLoader } from '../../constants/IFrameMessageTypes.js';
+import { HideLoader } from '../../constants/IFrameMessageTypes.js';
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
 import { fetchSlateData } from '../CanvasWrapper/CanvasWrapper_Actions';
 import { deleteBlockListElement } from '../ElementContainer/ElementContainerDelete_helpers';
@@ -55,7 +55,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
             isSectionBreak,
             cutCopyParentUrn
         }
-        // This check will remove when TB supports tcm 
+        // This check will remove when TB supports tcm
         let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB ||
                          asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
         if (!isTbElement) {
@@ -215,7 +215,7 @@ export const updateStorePostDelete = (deleteParams) => {
                 newBodymatter[newIndex[0]].groupeddata.bodymatter[newIndex[1]].groupdata.bodymatter[newIndex[2]].elementdata
                 .bodymatter[newIndex[3]].contents.bodymatter[newIndex[4]] = elementToUpdate;
                 break;
-    
+
             case 1:/** Element on slate level */
             default:
                 newBodymatter.splice(index, 1)
@@ -229,7 +229,7 @@ export const updateStorePostDelete = (deleteParams) => {
             deleteBlockListElement(elementId, blElemInSh);
         }
     }
-    
+
     // return newBodymatter
     newParentData[config.slateManifestURN].contents.bodymatter = newBodymatter
     dispatch({
@@ -261,7 +261,7 @@ export const prepareDeleteRequestData = (elementType, payloadParams) => {
     const containerElements = ["element-aside", "element-workedexample", "showhide", "popup", "citations", "poetry", "groupedcontent", "manifestlist"];
     let requestPayload = {
         "index": elementIndex[elementIndex.length - 1]?.toString() || "0",
-        "projectUrn": config.projectUrn        
+        "projectUrn": config.projectUrn
     }
     if (containerElements.indexOf(elementType) > -1) {
         requestPayload.entityUrn = isSectionBreak?.type === 'manifest' ? isSectionBreak.contentUrn : activeElement.contentUrn

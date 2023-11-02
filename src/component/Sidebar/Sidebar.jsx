@@ -65,6 +65,7 @@ class Sidebar extends Component {
             selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue
         };
         this.playbackModeRef = React.createRef();
+        this.playbackModeLabelRef = React.createRef();
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -84,7 +85,7 @@ class Sidebar extends Component {
             }
             if(nextProps?.activeElement?.secondaryOption === SECONDARY_3PI_SMARTLINK && nextProps?.activeElement?.assetIdFor3PISmartlink){
                 selectedIntendedPlaybackModeValue = nextProps?.activeElement?.selectedIntendedPlaybackModeValue;
-            }          
+            }
             return {
                 elementDropdown: elementDropdown,
                 fontBulletElementDropdown,
@@ -93,7 +94,7 @@ class Sidebar extends Component {
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activefontStyle: nextProps?.activeElement?.fontStyle,
                 activebulletIcon: nextProps?.activeElement?.bulletIcon,
-                activeSecondaryOption: nextProps.activeElement.secondaryOption,         
+                activeSecondaryOption: nextProps.activeElement.secondaryOption,
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom: nextProps.activeElement.startNumber,
                 bceToggleValue: nextProps.activeElement.numbered,
@@ -110,7 +111,7 @@ class Sidebar extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.playbackModeRef && !this.playbackModeRef?.current?.contains(event.target)) {
+        if (this.playbackModeRef && this.playbackModeLabelRef && !this.playbackModeRef?.current?.contains(event.target) && !this.playbackModeLabelRef?.current?.contains(event.target)) {
             this.setState({
                 isPlayBackDropdownOpen: false
             })
@@ -120,7 +121,7 @@ class Sidebar extends Component {
     componentDidMount() {
         document.addEventListener('mousedown', this.handleClickOutside);
     }
-    
+
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.handleClickOutside);
     }
@@ -315,7 +316,7 @@ class Sidebar extends Component {
         }
         let elementDropdown = e.target.getAttribute('data-element');
 
-        
+
         if (elementDropdown == 'font' || elementDropdown == 'bullet'){
             if(this.state.fontBulletElementDropdown === elementDropdown)  elementDropdown = '';
             this.setState({fontBulletElementDropdown: elementDropdown});
@@ -419,7 +420,7 @@ class Sidebar extends Component {
         fontBulletOptions = fontBulletOptionList.map(item => {
             if (item !== 'enumType') {
                 return <li key={item} data-value={item} onClick={this.handleFontBulletOptionChange}>
-                    {fontBulletOptionObject[item].text}    
+                    {fontBulletOptionObject[item].text}
                 </li>;
             }
         });
@@ -427,10 +428,9 @@ class Sidebar extends Component {
         let active = '';
         if ((data === "fontStyle" && this.state.fontBulletElementDropdown === 'font') || (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet')) {
             active = 'active';
-        } 
+        }
         const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" &&
         this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
-        
         fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
             className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
             <div className={`element-dropdown-title ${className}`} data-element= {dataElement} onClick={this.toggleElementDropdown}>
@@ -441,7 +441,7 @@ class Sidebar extends Component {
                 {fontBulletOptions}
             </ul>
         </div> : null;
-        
+
         return fontBulletOptions;
     }
 
@@ -668,7 +668,7 @@ class Sidebar extends Component {
                                     }}
                                 />
                             )}
-                        /> 
+                        />
                     </div>)}
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
@@ -753,7 +753,7 @@ class Sidebar extends Component {
             playbackMode = <div
                 className={`element-dropdown`}>
                 <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
-                <div className={`element-dropdown-title intented-dropdown-banner ${disableClass}`} data-element="secondary" onClick={this.toggleIntendedPlaybackDropdown}>
+                <div className={`element-dropdown-title intented-dropdown-banner ${disableClass}`} data-element="secondary" onClick={this.toggleIntendedPlaybackDropdown} ref={this.playbackModeLabelRef}>
                     {this.renderIntendedPlaybackDropdownLabel(this.state.selectedIntendedPlaybackModeValue)}
                     <span> {dropdownArrow} </span>
                 </div>
@@ -1170,12 +1170,12 @@ class Sidebar extends Component {
     }
 
     /**
-     * Responsible for toggling of print of Demand dropdown 
+     * Responsible for toggling of print of Demand dropdown
      * @param {*} e
      */
 
     togglePODDropdown = (e) => {
-        
+
         let selValue = e.target.getAttribute('data-value');
         if(selValue) {
             this.props.setBCEMetadata('podwidth', selValue);
@@ -1189,14 +1189,14 @@ class Sidebar extends Component {
     }
 
     /**
-     * Responsible for rendering of print of Demand 
-     * @param {*} 
+     * Responsible for rendering of print of Demand
+     * @param {*}
      */
 
     podOption = () => {
         if (this.state.activePrimaryOption === 'primary-image-table' || this.state.activePrimaryOption === 'primary-image-figure' ||
-            this.state.activePrimaryOption === 'primary-image-equation' || this.state.activePrimaryOption === DECORATIVE_IMAGE || 
-            (this.state.activePrimaryOption === 'primary-smartlink' && 
+            this.state.activePrimaryOption === 'primary-image-equation' || this.state.activePrimaryOption === DECORATIVE_IMAGE ||
+            (this.state.activePrimaryOption === 'primary-smartlink' &&
             (this.state.activeSecondaryOption === "secondary-interactive-smartlink-third" || this.state.activeSecondaryOption === 'secondary-interactive-smartlink-tab'))) {
             let active = '';
             if (this.state.podOption) {
@@ -1235,7 +1235,7 @@ class Sidebar extends Component {
             )
         }
         return null
-    }  
+    }
 
     render = () => {
         const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false

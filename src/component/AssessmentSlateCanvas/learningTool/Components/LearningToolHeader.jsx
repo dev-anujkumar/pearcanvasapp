@@ -26,7 +26,7 @@ const LearningToolHeader = (props) => {
     const disciplineMenu = prepareDisciplineList(props)
     const appTypeMenu = prepareAppTypeList(props)
 
-    /*** @description - This function is to call search function for the search term 
+    /*** @description - This function is to call search function for the search term
      * @param e - event triggered
     */
     const handleSearch = e => {

@@ -22,7 +22,7 @@ export function searchReducer(state = INITIAL_STATE, action = INITIAL_ACTION) {
         return {
             searchTerm: action.payload,
             parentId: action.parent,
-            deeplink: action.deeplink, 
+            deeplink: action.deeplink,
             scroll: action.scroll,
             scrollTop: action.scrollTop
         }

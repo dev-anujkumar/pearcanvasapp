@@ -54,7 +54,7 @@ export class CanvasWrapper extends Component {
             toggleApo : false,
             isConfigLoaded : true,
             toastMessage : false
-        }  
+        }
     }
 
     static getDerivedStateFromProps(nextProps, prevState){
@@ -65,15 +65,15 @@ export class CanvasWrapper extends Component {
             };
         }
         if(prevState.slateRefreshStatus !== nextProps.slateRefreshStatus) {
-            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} }); 
+            sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus:nextProps.slateRefreshStatus} });
         }
-        return null;    
+        return null;
      }
 
 
-    componentDidMount() {  
+    componentDidMount() {
         sendDataToIframe({ 'type': 'slateRefreshStatus', 'message': {slateRefreshStatus :'Refreshed, a moment ago'} });
-        
+
         sendDataToIframe({
             'type': CanvasIframeLoaded,
             'message': {}
@@ -82,9 +82,9 @@ export class CanvasWrapper extends Component {
             'type': ShowHeader,
             'message': true
         })
-        this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN) 
+        this.props.getSlateLockStatus(config.projectUrn ,config.slateManifestURN)
         localStorage.removeItem('newElement');
-        window.onbeforeunload = () => { 
+        window.onbeforeunload = () => {
             const paramDetails = {
                 'slateEntityURN': config.slateEntityURN,
                 'projectUrn': config.projectUrn,
@@ -111,7 +111,7 @@ export class CanvasWrapper extends Component {
         setTimeout(() => {
             this.setState({
                 toastMessage: false
-            })  
+            })
         }, 2000);
     }
 
@@ -120,7 +120,7 @@ export class CanvasWrapper extends Component {
         this.countTimer =  Date.now();
         removeWirisOverlay()
     }
-    
+
     handleCommentspanel = (event,elementId,index) => {
          event.stopPropagation();
         this.props.toggleCommentsPanel(true);
@@ -128,10 +128,10 @@ export class CanvasWrapper extends Component {
         sendDataToIframe({
             'type': TocToggle,
             'message': {"open":false}
-        });       
+        });
     }
 
-    
+
 
     updateTimer = () => {
         setInterval(() => {
@@ -144,7 +144,7 @@ export class CanvasWrapper extends Component {
         if(config.totalPageCount <= config.page) return false;
         this.props.fetchSlateData(config.slateManifestURN,config.slateEntityURN, config.page, '',"");
     }
-    
+
     ReleaseErrorPopup = () => {
         hideBlocker()
         store.dispatch({type:'ERROR_POPUP', payload:{show:false}})
@@ -174,7 +174,7 @@ export class CanvasWrapper extends Component {
         if(config.isPopupSlate) {
             popupFilter = 'popup';
         }
-        
+
         return (
             <div className='content-composer'>
                 {this.props.showBlocker ? <div className="canvas-blocker" ></div> : '' }
@@ -196,7 +196,7 @@ export class CanvasWrapper extends Component {
                     {/* custom list editor component */}
                 </div>
 
-                <div className='workspace'>               
+                <div className='workspace'>
                     <div id='canvas' className={'canvas'+ isReviewerRoleClass}>
                         <div id='artboard-containers'>
                             <div className="artboard-parent">
@@ -241,7 +241,7 @@ export class CanvasWrapper extends Component {
                                 }
                                 <div className='clr'></div>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div className = "sidebar-panel">
@@ -377,7 +377,7 @@ export default connect(
         fetchProjectFigures,
         setTocContainersAutoNumberList,
         toggleSpellCheckAction,
-        addNewComment, 
+        addNewComment,
         deleteComment,
         cypressPlusEnabled,
         setSlateMatterType,

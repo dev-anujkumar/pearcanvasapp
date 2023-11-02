@@ -2,9 +2,8 @@
 * Root Component of Citation Group Element Component.
 */
 
-import React, { useContext } from 'react';
+import React from 'react';
 import TinyMceEditor from "../tinyMceEditor";
-import config from '../../config/config.js';
 import { getTitleSubtitleModel } from "../../constants/utility.js";
 import { labelHtmlData } from '../../constants/Element_Constants';
 

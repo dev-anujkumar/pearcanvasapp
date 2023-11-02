@@ -89,7 +89,7 @@ class ElementDialogue extends React.PureComponent {
         setTimeout(() => {
             this.setState({
                 showActionUndone: false
-            }) 
+            })
         }, 2000);
     }
 
@@ -171,16 +171,16 @@ class ElementDialogue extends React.PureComponent {
         this.props.handleCheckboxPopup({ event: { target: { checked: false } } })
         hideBlocker();
     }
-    /*** @description - This function is to disable all components 
+    /*** @description - This function is to disable all components
                         when update Popups are open in window */
     showCanvasBlocker = () => {
         this.props.showBlocker(true);
         showTocBlocker();
     }
     /**
-     * 
+     *
         @renderDialogueContent | This function used to render Dialogue Content
-        @param _props | This contains the props object 
+        @param _props | This contains the props object
     **/
     renderDialogueContent = (_props) => {
         let dialogueContent = _props.element?.html?.dialogueContent;
@@ -281,7 +281,7 @@ class ElementDialogue extends React.PureComponent {
         }
     }
 
-    // function to be called on click of dialogue inner elements delete button 
+    // function to be called on click of dialogue inner elements delete button
     handleDialogueInnerElementsDelete = (e, index, element, labelText) => {
         e.stopPropagation();
         this.showCanvasBlocker();
@@ -334,10 +334,10 @@ class ElementDialogue extends React.PureComponent {
 
     /**
      * Handles focus for inner elements (SD and DE)
-     * @param {} c2Flag 
-     * @param {*} showHideObj 
+     * @param {} c2Flag
+     * @param {*} showHideObj
      * @param {*} event Event object
-     * @param {*} index 
+     * @param {*} index
      */
     handleInnerFocus = (c2Flag, showHideObj, event, index) => {
         event.stopPropagation()
@@ -347,8 +347,8 @@ class ElementDialogue extends React.PureComponent {
 
     /**
      * Handles focus for outer parts (rest area except SD and DE)
-     * @param {*} c2Flag 
-     * @param {*} showHideObj 
+     * @param {*} c2Flag
+     * @param {*} showHideObj
      * @param {*} event Event object
      */
     handleOuterFocus = (c2Flag, showHideObj, event) => {
@@ -371,7 +371,7 @@ class ElementDialogue extends React.PureComponent {
         const { activeElement, element } = this.props;
         const elementdata = element.elementdata;
         if (activeElement.elementId === element.id) {
-              
+
             if (activeElement.numbered !== elementdata.numberedlines || activeElement.startNumber !== elementdata.startNumber) {
                 newPSData = {
                    ...newPSData,
@@ -380,8 +380,8 @@ class ElementDialogue extends React.PureComponent {
                        numberedlines: activeElement.numbered,
                        startNumber: activeElement.startNumber
                    }
-               } 
-             
+               }
+
                 callUpdate = true;
             }
         }

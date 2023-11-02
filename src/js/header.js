@@ -79,7 +79,7 @@ const redirectParent = (urlToBeRedirected) => {
 // const logoutWithModernOpenAM = async () => {
 //     const response = await logoutDataActions()
 //     console.log("get response in api",response)
-    
+
 
 // };
 const logoutWithModernOpenAM = async () => {

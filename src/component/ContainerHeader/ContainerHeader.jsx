@@ -14,7 +14,7 @@ import { labelHtmlData } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 
-const { 
+const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_RESUME_NUMBER,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -27,7 +27,7 @@ const {
  */
 function useOutsideAlerter(ref, setState) {
     useEffect(() => {
-        
+
         function handleClickOutside(event) {
             if (ref.current && !ref.current.contains(event.target)) {
                 const div = ref.current;
@@ -46,7 +46,7 @@ function useOutsideAlerter(ref, setState) {
         };
     }, [ref]);
 }
-  
+
 
 export const ContainerHeader = (props) => {
     const AUTO_NUMBER_SETTING_DROPDOWN_VALUES = [AUTO_NUMBER_SETTING_DEFAULT, AUTO_NUMBER_SETTING_RESUME_NUMBER, AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -130,7 +130,7 @@ export const ContainerHeader = (props) => {
     useEffect(() => {
         updateDropdownOptions(); // update the dropdown options if any new value is introduced via Controlled Vocab in the Project Settings
     }, [props.figureDropdownData?.asideCustom, props.figureDropdownData?.workedexampleCustom]);
-    
+
     const handleCloseDropDrown = () => {
         setState({ labelDropDown: false, labelNumberSettingDropDown: false });
     }
@@ -204,7 +204,7 @@ export const ContainerHeader = (props) => {
                 labelElement?.nextElementSibling?.classList?.add('floating-label');
             } else if (lastIndex[lastIndex.length - 1] == 't2') {
                 labelElement?.nextElementSibling?.classList?.add('floating-number');
-            } 
+            }
         }
     }
 

@@ -5,20 +5,20 @@ import '../../styles/ElementButtons/ElementButton.css'
 
 import buttonTypes from './ButtonTypes.js'
 import Tooltip from '../Tooltip';
-import { 
+import {
     stageDirectionIcon,
     dialougeElementIcon,
     workedExampleIcon,
-    sectionBreakElement, 
-    assessmentIcon, 
+    sectionBreakElement,
+    assessmentIcon,
     openerElement,
-    tcmIcon, 
+    tcmIcon,
     editInCypressPlus,
-    textIcon, 
-    imageIcon, 
-    interativeIcon, 
-    audioIcon, 
-    containerIcon, 
+    textIcon,
+    imageIcon,
+    interativeIcon,
+    audioIcon,
+    containerIcon,
     lockIcon,
     metaDataAnchor,
     elmCloseWindowIcon,
@@ -49,19 +49,19 @@ import powerPasteIcon from '../../images/ElementButtons/powerPaste.png'
 import ButtonTypes from './ButtonTypes.js';
 import alfrescoMetadata from '../../images/ElementButtons/alfrescoMetadata.png';
 import tabIcon from '../../images/ElementButtons/tabIcon.png'
-import ElementConstants from '../ElementContainer/ElementConstants'; 
+import ElementConstants from '../ElementContainer/ElementConstants';
 import blureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
 class ElementButton extends Component {
-   
+
   /**
   * Responsible for rendering Button component according to the props received
   * @param type type of button
   * @param clickHandlerFn Handler method to be called on click event
-  *  
+  *
   */
     renderButton = (type, clickHandlerFn, elementType, btnClassName = '', isButtonDisabled = false) => {
         let buttonJSX = null
-        const elementTypeClassName = (elementType === ElementConstants.BLOCK_LIST) ? elementType : ''; 
+        const elementTypeClassName = (elementType === ElementConstants.BLOCK_LIST) ? elementType : '';
         const { labelText,elementId,isSubscribersSlate, isgreyBorder } = this.props;
         const isBorderOff = isgreyBorder ? "greyElementTag" : "";
         switch(type){
@@ -134,7 +134,7 @@ class ElementButton extends Component {
                     {audioIcon}
                     </span>
                 break;
-            case buttonTypes.INTERACTIVE_ELEMENT:                
+            case buttonTypes.INTERACTIVE_ELEMENT:
                 buttonJSX = <span className="btn-element interactive-elem-button" onClick={clickHandlerFn}>
                     {interativeIcon}
                     </span>
@@ -295,13 +295,13 @@ class ElementButton extends Component {
         }
         return buttonJSX
     }
-    
+
     render() {
         const { type, onClick, btnClassName, elementType, isButtonDisabled } = this.props
-        
+
         return(
             <>
-                {this.renderButton(type, onClick, elementType, btnClassName, isButtonDisabled )}             
+                {this.renderButton(type, onClick, elementType, btnClassName, isButtonDisabled )}
             </>
         )
     }

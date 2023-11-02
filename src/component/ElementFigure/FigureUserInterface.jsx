@@ -114,7 +114,7 @@ class FigureUserInterface extends Component {
         if(this.props.interactiveformat==='mmi' || this.props.interactiveformat==='mmi-elm'){
             figureLabelData = this.props.figureDropdownData.audio
         }
-        this.setState({ 
+        this.setState({
             figureLabelData: figureLabelData,
             elementType: this.props.element.figuretype
         });
@@ -209,7 +209,7 @@ class FigureUserInterface extends Component {
         let indexes = index.split('-');
         for (let i=0; i<(indexes.length-1); i++) {
             if (i === 0) {
-                indexToReturn += indexes[0]; 
+                indexToReturn += indexes[0];
             } else {
                 indexToReturn += `-${indexes[i]}`;
             }
@@ -274,13 +274,13 @@ class FigureUserInterface extends Component {
                         <div className="media-assets">
                         <div tabIndex={0} onKeyDown={this.clickNode} ref={this.addVideoRef} className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
                         <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} />
-                        
+
                     </div>
                 </div>
             </div>
                     </KeyboardWrapper>
                     </div>
-                   
+
         )
     }
 
@@ -318,7 +318,7 @@ class FigureUserInterface extends Component {
                             <img width="24px" height="24px" src={figureDeleteIcon} /></div>
                      </div>
                         </KeyboardWrapper>
-                     
+
                     </div>
                     {
                         interactiveformat === "mmi" ?
@@ -431,7 +431,7 @@ class FigureUserInterface extends Component {
                             this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, pdSLfPosterImage, assetIdText, assetPathText)
                     )
                 break;
-                 
+
         }
         return assetJsx;
     }
@@ -449,7 +449,7 @@ class FigureUserInterface extends Component {
     }
 
     handleLabelKeyDown = (event) => {
-       
+
         if(event.keyCode === 13) {
             this.labelListRef.current.childNodes[this.state.showingListIndex].click()
             this.figureLabelRef.current.focus()
@@ -468,7 +468,7 @@ class FigureUserInterface extends Component {
             if(this.labelListRef.current.childNodes[this.state.showingListIndex - 1]) {
                 this.labelListRef.current.childNodes[this.state.showingListIndex - 1].focus()
                 this.setState({showingListIndex: this.state.showingListIndex - 1})
-            
+
             }
         }
         if (event.button != 0) {
@@ -527,7 +527,7 @@ class FigureUserInterface extends Component {
                 hyperlinkClass = interactiveData['hyperlinkClass'] ? interactiveData['hyperlinkClass'] : "";
                 break;
         }
-        
+
         let assetId, assetTitleText, addButtonText, assetIdText, assetPathText, updateButtonText, assetPath;
         switch (element.figuretype) {
             case AUDIO:
@@ -609,7 +609,6 @@ class FigureUserInterface extends Component {
                                                 return (
                                                     <li onKeyDown={this.clickNode} tabIndex={0} currentIndex={i} className="media-dropdown-options" key={i}
                                                     onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
-                                                      
                                                 )
 
                                             })}
@@ -619,7 +618,7 @@ class FigureUserInterface extends Component {
                                 {
                                     figureLabelValue === 'Custom' ?
                                     <KeyboardWrapper index={`${index}-0`} enable={this.isEnableKeyboard()}>
-                                        
+
                                         <div className='image-label'>
                                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur}
                                             permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus}
@@ -654,7 +653,7 @@ class FigureUserInterface extends Component {
                                         <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
                                     </div>
                                 </KeyboardWrapper>
-                              
+
 
                             </header>
                                 <KeyboardWrapper  index={`${index}-2`} enable={this.isEnableKeyboard()}>
@@ -695,7 +694,7 @@ class FigureUserInterface extends Component {
                             </div>
                             <figcaption className={captionDivClass} >
                             <KeyboardWrapper enable={this.isEnableKeyboard()} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} >
-                                
+
                                 <div className="floating-caption-group">
                                     <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur}
                                     permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus}
@@ -719,7 +718,7 @@ class FigureUserInterface extends Component {
                                         <label className={checkHTMLdataInsideString(element?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
                                     </div>
                                 </KeyboardWrapper>
-                            
+
                             </figcredit>
                         </figure>
                     </div>

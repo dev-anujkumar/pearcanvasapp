@@ -71,10 +71,10 @@ class Interactive extends React.Component {
         if(this.props.model && this.props.model.figuredata){
             this.setState({
                 itemID : this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
-                posterImage : this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "", 
+                posterImage : this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
                 itemParentID: this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
                 interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
-            
+
             })
         }
         getAlfrescositeResponse(this.props.elementId, (response) => {
@@ -122,7 +122,7 @@ class Interactive extends React.Component {
             }
         }
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup) {
-            this.dataFromAlfresco(alfrescoAssetData)   
+            this.dataFromAlfresco(alfrescoAssetData)
         }
     }
 
@@ -250,7 +250,7 @@ class Interactive extends React.Component {
             this.props.fetchAssessmentMetadata("interactive", "",
                  { targetId: figureData.interactiveid }
             );
-        })     
+        })
         this.props.updateFigureData(figureData, this.props.index, this.props.elementId, this.props.asideData, () => {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
@@ -280,9 +280,9 @@ class Interactive extends React.Component {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
         })
-        
+
     }
-    
+
         /**
          * @description This function is used to toggle delete popup
          * @param {*} toggleValue Boolean value
@@ -297,7 +297,7 @@ class Interactive extends React.Component {
             })
             this.showCanvasBlocker(toggleValue);
         }
-    
+
         /*** @description This function is used to render delete Popup */
         showDeleteAssetPopup = () => {
             const disableDeleteWarnings = getCookieByName("DISABLE_DELETE_WARNINGS");
@@ -332,7 +332,7 @@ class Interactive extends React.Component {
     renderInteractiveType = (element, itemId, index, slateLockInfo) => {
         let jsx, divImage, figureImage, heading4Label, heading4Title, dataType, id, imageDimension, figcaptionClass, paragraphCredit, hyperlinkClass,path;
         var context = element && element.figuredata && element.figuredata.interactivetype;
-        
+
         /**------------------ Set classes for jsx based on interactivetype value ------------------*/
 
         let interactiveData = interactiveTypeData.hasOwnProperty(context) === true ? interactiveTypeData[context] : interactiveTypeData["fpo"];
@@ -346,7 +346,7 @@ class Interactive extends React.Component {
         figcaptionClass = interactiveData['figcaptionClass'];
         paragraphCredit = interactiveData['paragraphCredit'];
         hyperlinkClass = interactiveData['hyperlinkClass'] ? interactiveData['hyperlinkClass'] : "";
-      
+
         let figureHtmlData = getLabelNumberTitleHTML(element);
 
             return <FigureUserInterface model={this.props.model} interactiveformat={this.props.model.figuredata.interactiveformat}
@@ -438,7 +438,7 @@ class Interactive extends React.Component {
     /**---------------- This section consists of Elm Interactive related methods ----------------*/
 
     /**
-     * @description This function is to add Elm Interactive Asset ot Interactive Element 
+     * @description This function is to add Elm Interactive Asset ot Interactive Element
      * @param {Object} pufObj Objeact containing elmInteractive Asset details
     */
     addElmInteractive = async (pufObj, cb) => {
@@ -502,8 +502,8 @@ class Interactive extends React.Component {
 
     /**
      * Method to fetch thumbnail images for Video-MCQ & Guided-Example
-     * @param {*} elementInteractiveType 
-     * @returns 
+     * @param {*} elementInteractiveType
+     * @returns
      */
     getVideoMCQandGuidedThumbnail = async (assetId) => {
         let interactiveData ={};
@@ -524,7 +524,7 @@ class Interactive extends React.Component {
         }
     }
     /**------------------------------------------------------------------------------------------*/
-    
+
     /**---------------- This section consists of Alfresco Assets related methods ----------------*/
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
@@ -545,7 +545,7 @@ class Interactive extends React.Component {
         let smartlinkAvsString = (isSmartLinkAsset === true) ? smartLinkString : {}
         let smartLinkDesc = (typeof smartlinkAvsString === 'string')? JSON.parse(smartlinkAvsString) : smartlinkAvsString;
         let smartLinkType = smartLinkDesc !== "" ? smartLinkDesc.smartLinkType : "";
-        const avsJsonStringData = imageData?.properties["avs:jsonString"] 
+        const avsJsonStringData = imageData?.properties["avs:jsonString"]
         let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
         let altText = avsStringData?.imageAltText ? avsStringData.imageAltText : "";
         let longDescription = avsStringData?.linkLongDesc ? avsStringData.linkLongDesc : "";
@@ -618,7 +618,7 @@ class Interactive extends React.Component {
                     }
                 }
                 /**let payloadObj = {
-                    asset: {}, 
+                    asset: {},
                     id: ''
                 }
                 this.props.saveSelectedAssetData(payloadObj) */
@@ -650,7 +650,7 @@ class Interactive extends React.Component {
             }
         }
         const payloadObj = {
-            asset: {}, 
+            asset: {},
             id: ''
         }
         this.props.saveSelectedAssetData(payloadObj)
@@ -683,8 +683,8 @@ class Interactive extends React.Component {
                 }
             })
             .then(function (response) {
-               let payloadObj = {launchAlfrescoPopup: true, 
-                alfrescoPath: alfrescoPath, 
+               let payloadObj = {launchAlfrescoPopup: true,
+                alfrescoPath: alfrescoPath,
                 alfrescoListOption: response.data.list.entries,
                 elementId: id,
                 currentAsset
@@ -734,8 +734,8 @@ class Interactive extends React.Component {
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
-                    let messageObj = { appName:'cypress',citeName: citeName, 
-                        citeNodeRef: citeNodeRef, 
+                    let messageObj = { appName:'cypress',citeName: citeName,
+                        citeNodeRef: citeNodeRef,
                         elementId: this.props.elementId,
                         currentAsset
                      }
@@ -799,7 +799,7 @@ class Interactive extends React.Component {
             this.setState({searchTitle:'', filterUUID:''})
         }
     }
-    
+
     AssessmentSearchTitle = (searchTitle, filterUUID) => {
         this.setState({searchTitle, filterUUID});
     }
@@ -834,7 +834,7 @@ class Interactive extends React.Component {
             posterImage['path'] = interactiveData['path'] ? interactiveData['path'] : '';
             let alttext = interactiveData['alttext'] ? interactiveData['alttext'] : '';
             let that = this;
-           
+
                let figureData = {
                    schema: INTERACTIVE_SCHEMA,
                    interactiveid: citeTdxObj.singleAssessmentID.versionUrn,
@@ -844,22 +844,22 @@ class Interactive extends React.Component {
                    interactiveformat: "mmi"
                }
                 figureData.posterimage = posterImage;
-                figureData.alttext = alttext;  
+                figureData.alttext = alttext;
             that.setState({itemID : itemId,
                 imagePath:posterImage.path,
                 itemParentID:citeTdxObj.id,
                 interactiveTitle:citeTdxObj.title
                })
-          
-               that.props.updateFigureData(figureData, that.props.index, that.props.elementId, this.props.asideData, ()=>{               
+
+               that.props.updateFigureData(figureData, that.props.index, that.props.elementId, this.props.asideData, ()=>{
                    that.props.handleFocus("updateFromC2");
                    setTimeout(()=>{
                        that.props.handleBlur()
                    },300)
-                  
+
                })
         }
-        
+
     }
     /**------------------------------------------------------------------------------------------*/
 
@@ -892,7 +892,7 @@ class Interactive extends React.Component {
                 <div className="interactive-element">
                 </div>
             )
-        } 
+        }
     }
 }
 Interactive.displayName = "Interactive";

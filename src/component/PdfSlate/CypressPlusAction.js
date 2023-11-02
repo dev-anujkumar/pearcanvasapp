@@ -53,8 +53,8 @@ const pdfConversionStatus = async () => {
 }
 /**
  * Set status if current pdf slate is merged or not
- * @param {*} flag 
- * @returns 
+ * @param {*} flag
+ * @returns
  */
 export const getJoinedPdfStatus = (flag) => (dispatch) => {
   dispatch({

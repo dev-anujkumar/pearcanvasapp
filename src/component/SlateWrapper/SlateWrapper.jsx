@@ -19,10 +19,9 @@ import ListButtonDropPortal from '../ListButtonDrop/ListButtonDropPortal.jsx';
 import ListButtonDrop from '../ListButtonDrop/ListButtonDrop.jsx';
 import config from '../../config/config';
 import { TEXT, IMAGE, VIDEO, ASSESSMENT, INTERACTIVE, CONTAINER, WORKED_EXAMPLE, SECTION_BREAK, METADATA_ANCHOR, LO_LIST, ELEMENT_ASSESSMENT, OPENER,
-    ALREADY_USED_SLATE , REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, SHOW_HIDE,POP_UP ,
+    REMOVE_LINKED_AUDIO, NOT_AUDIO_ASSET, SPLIT_SLATE_WITH_ADDED_AUDIO , ACCESS_DENIED_CONTACT_ADMIN, SHOW_HIDE,POP_UP ,
     CITATION, ELEMENT_CITATION,SMARTLINK,POETRY ,STANZA, BLOCKCODE, TABLE_EDITOR, FIGURE_MML, MULTI_COLUMN, MMI_ELM, ELEMENT_DIALOGUE, ELEMENT_DISCUSSION, ELEMENT_PDF,
-    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, APPROVE_NORMAL_SLATE,
-    APPROVE_OWNER_SLATE, ALLOWED_SLATES_IN_RC, RELEASE_SLATE_LOCK_ACTION
+    MULTI_COLUMN_3C, REMOVE_LINKED_IMAGE_GLOSSARY, NOT_IMAGE_ASSET, MANIFEST_LIST, OWNER_SLATE_POPUP, TABBED_2_COLUMN, TABBED_COLUMN_TAB, RELEASE_SLATE_LOCK_ACTION
 } from './SlateWrapperConstants';
 import PageNumberElement from './PageNumberElement.jsx';
 // IMPORT - Assets //
@@ -116,7 +115,7 @@ class SlateWrapper extends Component {
             if(!this.props.commentSearchScroll) {
                 document.getElementById('slateWrapper').scrollTop = divObj;
             }
-            
+
             if(this.props.commentSearchScrollTop === divObj) {
                 this.props.getCommentElements('');
             }
@@ -137,7 +136,7 @@ class SlateWrapper extends Component {
             this.props.loadMorePages();
         }
     }
-    
+
 
     /**
      * setListDropRef | sets list drop ref to listDropRef
@@ -153,7 +152,7 @@ class SlateWrapper extends Component {
      */
     handleClickOutside = (event) => {
         // *********************************************************************
-        // handle when clicked outside of listdrop 
+        // handle when clicked outside of listdrop
         if (this.listDropRef && !this.listDropRef.contains(event.target)) {
             if (event.target.classList.contains('fa-list-ol') ||
                 (event.target.type === "button" && event.target.getAttribute('aria-label') === "Ordered List"))
@@ -285,7 +284,7 @@ class SlateWrapper extends Component {
                         <div className={`slate-content ${isOwnerRole(projectSharingRole, isSubscribed) ? 'ownerSlateBackGround' : ''}
                         ${config.slateType === 'assessment' ? 'assessment-slate' : ''}`} data-id={_slateId} slate-type={_slateType}>
                             <div className='element-list'>
-                                <Sortable 
+                                <Sortable
                                     options={{
                                         sort: true,  // sorting inside list
                                         disabled: hasReviewerRole(),
@@ -335,7 +334,7 @@ class SlateWrapper extends Component {
                                     onChange={function (items, sortable, evt) { }}
                                 >
                                     {this['cloneCOSlateControlledSource_' + random]}
-                                </Sortable> 
+                                </Sortable>
                             </div>
                             <SlateFooter elements={_slateBodyMatter} projectSharingRole={projectSharingRole} isSubscribed={isSubscribed}/>
                         </div>
@@ -732,7 +731,7 @@ class SlateWrapper extends Component {
             case 'element-dialogue':
                 this.props.createElement(ELEMENT_DIALOGUE, indexToinsert, parentUrn, asideData, null, null, null, null);
                 break;
-            case 'element-discussion': 
+            case 'element-discussion':
                 this.props.createElement(ELEMENT_DISCUSSION, indexToinsert, parentUrn, asideData, null, null, null, null);
                 break;
             case 'blocklist-elem':
@@ -746,7 +745,7 @@ class SlateWrapper extends Component {
     }
 
     elementSepratorProps = (index, firstOne, parentUrn, asideData, outerAsideIndex , poetryData) => {
-        
+
         return [
             {
                 buttonType: 'text-elem',
@@ -948,8 +947,8 @@ class SlateWrapper extends Component {
                 />
             )
         }
-    
-        return null 
+
+        return null
     }
 
     /**
@@ -1005,7 +1004,7 @@ class SlateWrapper extends Component {
                 return _elements.map((element, index) => {
                         return (
                            <React.Fragment key={element.id}>
-                               <LazyLoad 
+                               <LazyLoad
                                     once={true}
                                     placeholder={<div data-id={element.id}><LargeLoader /></div>}
                                 >
@@ -1083,8 +1082,8 @@ class SlateWrapper extends Component {
                                     }
                                 </LazyLoad>
                             </React.Fragment>
-                           
-                          
+
+
                         )
                 })
             }
@@ -1148,7 +1147,7 @@ class SlateWrapper extends Component {
     */
 
     showAudioRemoveConfirmationPopup = () => {
-        
+
         let dialogText;
         let audioRemoveClass;
         if (this.props.openRemovePopUp) {
@@ -1327,7 +1326,7 @@ class SlateWrapper extends Component {
         this.props.showBlocker(false)
         hideTocBlocker();
         hideBlocker();
-    } 
+    }
 
     /**
     * @description - showUnlockSlatePopup function responsible for showing warning Popup on Admin side when clicked on Unlock button.
@@ -1398,7 +1397,7 @@ class SlateWrapper extends Component {
                     sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } })
                     setTimeout(this.closePopup, 4000)
                 }
-                
+
             }else{
                 setTimeout(this.closePopup, 0)
             }
@@ -1473,7 +1472,7 @@ class SlateWrapper extends Component {
     }
 
     /**
-     * This method renders LO Warning Popup based on Selection 
+     * This method renders LO Warning Popup based on Selection
      */
     showLOWarningPopup = () => {
         const loWarningDialogTxt = externalLOWarningtxt ?? ''
@@ -1498,7 +1497,7 @@ class SlateWrapper extends Component {
 
     /**
      * LO Warning Popup
-     * This method is called on click of Cancel Button 
+     * This method is called on click of Cancel Button
      */
     toggleWarningPopup = (toggleValue, event) => {
         this.props.toggleLOWarningPopup(toggleValue, "");
@@ -1509,7 +1508,7 @@ class SlateWrapper extends Component {
 
     /**
      * LO Warning Popup
-     * This method is called on click of Yes Button 
+     * This method is called on click of Yes Button
      * It unlinks the current slate LOs and then launches new popup
      */
     unlinkSlateLOs = (e) => {
@@ -1548,14 +1547,14 @@ class SlateWrapper extends Component {
     }
 
        /**
-     * This method renders Alfresco Product Link Popup based on Selection 
+     * This method renders Alfresco Product Link Popup based on Selection
      */
         showAlfrescoPopup = () => {
             if (this.props.launchAlfrescoPopup) {
                 this.props.showBlocker(true)
                 showTocBlocker();
                 return (
-                    <AlfrescoPopup 
+                    <AlfrescoPopup
                     alfrescoPath = {this.props.alfrescoPath}
                     alfrescoListOption= {this.props.alfrescoListOption}
                     handleCloseAlfrescoPicker={this.handleCloseAlfrescoPicker}
@@ -1604,7 +1603,7 @@ class SlateWrapper extends Component {
                                 {isApproved() ? 'CLOSE' : 'SAVE & CLOSE'}
                             </button>
                           : ''
-                    } 
+                    }
                 </div>
                 <div id="slateWrapper" className={`slate-wrapper ${slateType === "popup" ? "popup-slate": ""} ${isApproved() ?
                     'hide-scrollbar' : ""}`} onScroll={this.handleScroll}>

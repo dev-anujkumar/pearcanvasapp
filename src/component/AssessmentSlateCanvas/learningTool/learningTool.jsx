@@ -12,8 +12,8 @@ import LearningToolBody from './Components/LearningToolBody.jsx'
 import './../../../styles/AssessmentSlateCanvas/LearningTool/LearningTool.css';
 import { LT_LA_HEADER, LT_LA_SEARCH_TEXT, BUTTON_TEXT_LINK, BUTTON_TEXT_CANCEL, learningToolTableHeaders, learningToolPages } from './learningToolUtility.js';
 /** ----- Import - Action Creators ----- */
-import { removeSelectedData, toolTypeFilterSelectedAction, closeLtAction, selectedFigureAction, learningToolDisFilterAction,
-         learningToolSearchAction, paginationFunctionAction } from './learningToolActions.js';
+import { removeSelectedData, closeLtAction, selectedFigureAction, learningToolDisFilterAction, learningToolSearchAction,
+    paginationFunctionAction } from './learningToolActions.js';
 
 /** @description - LearningTool is a class based component. It is defined simply to make a skelten of the Learning Tool UI */
 class LearningTool extends React.Component {
@@ -29,7 +29,7 @@ class LearningTool extends React.Component {
 
     /**
     * @description - Take the value of selected filter in learning App type and dispatch an action
-    * @param {value} - value of learning app type 
+    * @param {value} - value of learning app type
     */
     setlearningAppType = (value) => {
         let selectedTypeValue = value;
@@ -40,7 +40,7 @@ class LearningTool extends React.Component {
 
     /**
     * @description - Take the value of selected filter in discipline type and dispatch an action
-    * @param {event} - event 
+    * @param {event} - event
     */
     setlearningToolDiscipline = (selectedDisFilterValue) => {
         this.setState({ selectedLearningDiscipline: selectedDisFilterValue })
@@ -151,7 +151,7 @@ class LearningTool extends React.Component {
 
 }
 
-/** 
+/**
  * @discription - dispatch actions as props from this component
  */
 const mapActionToProps = {

@@ -109,7 +109,7 @@ export class ElementMetaLOList extends Component {
 
   /**
      * @description - prepare MA HTML data
-     * @param {object} loldata | object of data and lourn 
+     * @param {object} loldata | object of data and lourn
   */
   prepareLOLData = (lolData) => {
     if (document.getElementsByClassName('learningObjectiveinnerText').length) {
@@ -133,7 +133,7 @@ export class ElementMetaLOList extends Component {
   }
 
   /**
-     * @description - show popup on click on element that no data is present 
+     * @description - show popup on click on element that no data is present
      * @param {object} loldata
   */
   onLOLClickHandle(lolData, e) {

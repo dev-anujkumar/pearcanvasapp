@@ -28,14 +28,14 @@ const CommentMention = (props) => {
   }));
 
   const getUsers = () => {
-    // length is 0 if users clicks view in cypress 
+    // length is 0 if users clicks view in cypress
     // from comments manager
     if(props.projectUsers.length === 0) {
       dispatch(getProjectUsers());
     }
   }
 
-  
+
   const isEditableMode = `${props.isEditMode ? 'edit-mode reply-mention' : 'reply-mention'}`
     return (
       <div className="comment-mentions">

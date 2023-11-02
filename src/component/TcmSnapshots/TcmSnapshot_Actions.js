@@ -69,7 +69,7 @@ var allSnapshotData = [];
 export const sendElementTcmSnapshot = async (snapshotData) => {
         allSnapshotData.push(snapshotData);
         if (timerID) clearTimeout(timerID);
-        timerID = setTimeout(async () => { let snapshots = allSnapshotData; allSnapshotData = []; await callSnapshotAPI(snapshots) }, 500);        
+        timerID = setTimeout(async () => { let snapshots = allSnapshotData; allSnapshotData = []; await callSnapshotAPI(snapshots) }, 500);
 }
 
 const callSnapshotAPI = async (snapshotData) => {
@@ -104,7 +104,7 @@ export const getLatestVersion = async (containerUrn) => {
 }
 
 /**
-     * @description - Get slate linking details for snapshots 
+     * @description - Get slate linking details for snapshots
      * @param {String} containerUrn | Container Entity URN
      * @returns {Object} - Slate Linking label and manifest urn
 */
@@ -149,7 +149,7 @@ export const fetchPOPupSlateData = (manifestURN, entityURN, page, element , inde
             } else if (eleIndex.length == 3 && element.popupdata.bodymatter[eleIndex[0]].type !== 'groupedcontent' ) {   /** Inside WE-BODY */
                 parentData[config.slateManifestURN].contents.bodymatter[eleIndex[0]].elementdata.bodymatter[eleIndex[1]].contents.bodymatter[eleIndex[2]]= element
             }
-            
+
         }
         return dispatch({
             type: AUTHORING_ELEMENT_UPDATE,

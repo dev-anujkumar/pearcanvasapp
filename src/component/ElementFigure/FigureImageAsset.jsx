@@ -38,7 +38,7 @@ const FigureImageAsset = (props) => {
     }
 
     const triggerClickOnEnter = (event) => {
-        if(props.isEnableKeyboard) {     
+        if(props.isEnableKeyboard) {
             const keyCode = event.keyCode;
             if(keyCode === 13) {
                 const node = document.activeElement;
@@ -55,7 +55,7 @@ const FigureImageAsset = (props) => {
 
 
     return (
-       
+
             <div className={`figure-image-container`}>
                 <div id="figure_add_div" className={`pearson-component image figureData  ${isReviewer ? 'pointer-events-none' : ''}
                  ${imageClass} ${props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
@@ -69,7 +69,7 @@ const FigureImageAsset = (props) => {
                                 draggable="false"
                                 width={imgWidth}
                                 height={imgHeight}
-                            /> : 
+                            /> :
                             <KeyboardWrapper index={`${props.index}-image-asset-1`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusSelectAnImage}>
                                     <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={addFigureRef} className='figurebutton'

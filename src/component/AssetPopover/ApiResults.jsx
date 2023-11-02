@@ -4,7 +4,7 @@
 import React from 'react';
 import FigureCard from './FigureCard.jsx';
 import ErrorComp from './ErrorComp.jsx';
-import { formatString, checkIfIncludes, getTitle, getCaption } from './AssetPopover_Helpers'; 
+import { formatString, checkIfIncludes, getTitle, getCaption } from './AssetPopover_Helpers';
 class ApiResults extends React.Component {
     constructor(props) {
         super(props);
@@ -52,7 +52,7 @@ class ApiResults extends React.Component {
         }
         let matchingAssets = this.findMatchingAssets(assetData, ValueToBeSearch)
         let assetTypeTitle = assetType + " " + `(${matchingAssets.length})`
-        
+
         //If number matching Assets has 1> elements then List of matching assets is displayed
         if (matchingAssets.length >= 1) {
             cardForApiResults = <>

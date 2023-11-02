@@ -10,14 +10,14 @@ import { UpdateElementWorkId } from '../GlossaryFootnotePopup/GlossaryFootnote_A
  * is clicked from the tinyMCE toolbar
  * @param {*} status, Status of the marked index pop-up (it is a boolean value)
  * @param {*} popupType, This variable will contain 'Markedindex' value
- * @param {*} markIndexid, This will contain URN id for indexed text  
+ * @param {*} markIndexid, This will contain URN id for indexed text
  * @param {*} elementWorkId This will contain Work URN of the container element
  * @param {*} elementType This will contain element type e.g element authored text
  * @param {*} index This will contain index of the container element in the slate data
- * @param {*} elementSubType 
+ * @param {*} elementSubType
  * @param {*} markIndexText This will contain the text which is going to be indexed
- * @param {*} typeWithPopup 
- * @param {*} poetryField 
+ * @param {*} typeWithPopup
+ * @param {*} poetryField
  */
 export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, elementType, index, elementSubType, markIndexText,
     typeWithPopup, poetryField, isNewIndex) => async (dispatch) => {
@@ -122,8 +122,8 @@ export const markedIndexPopup = (status, popupType, markIndexid, elementWorkId, 
  * along with glossary
  * @param {*} status, Status of the marked index pop-up over glossary
  * @param {*} indexEntry, Value of Index entry field in the marked index pop-up
- * @param {*} subEntry, Value of sub entry field in the marked index pop-up 
- * @param {*} markedIndexEntryURN, URN of indexed text 
+ * @param {*} subEntry, Value of sub entry field in the marked index pop-up
+ * @param {*} markedIndexEntryURN, URN of indexed text
  */
 export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry = "", markedIndexEntryURN = "", differenceValue, crossReferences) => (dispatch) => {
     let indexEntries = {};
@@ -179,7 +179,7 @@ export const markedIndexPopupOverGlossary = (status, indexEntry = "", subEntry =
  * @param {*} glossaryFootElem This will contain html object which contains the glossary data.
  * @param {*} glossaaryFootnoteValue This object will contain all the glossry data.
  * @param {*} index This will contain index of the container element in the slate data.
- * @returns 
+ * @returns
  */
 export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, glossaaryFootnoteValue, index) => {
     let markedIndexFirstLevel = "", markedIndexSecondLevel = "", markedIndexEntryURN = "", indexEntries = {}, markedIndexCrossReferences = [];
@@ -216,9 +216,9 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
                 crossReferences: markedIndexCrossReferences
             },
             markedIndexGlossary: {
-                popUpStatus: false,  
-                indexEntries, 
-                markedIndexEntryURN 
+                popUpStatus: false,
+                indexEntries,
+                markedIndexEntryURN
             },
             elementIndex: index
         }
@@ -226,7 +226,7 @@ export const updateMarkedIndexStore = (glossaryContentText, glossaryFootElem, gl
 }
 
 /**
- * This function makes a call to the content-api and get the drop-down values for the 
+ * This function makes a call to the content-api and get the drop-down values for the
  * cross-reference and after re-formatting the data in the required format, update the
  * redux store
  */

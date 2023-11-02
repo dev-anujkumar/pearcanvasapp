@@ -26,7 +26,7 @@ const ElmUpdateButton = (props) => {
         const approveText = assessmentStatus == 'final' ? "Approved" : "Unapproved"
         const approveIconClass = assessmentStatus == 'final' ? "enable" : "disable"
 
-        if (showUpdateStatus === true) {  
+        if (showUpdateStatus === true) {
             updateDiv = <div className="eml-int-status-block">
                 {(elementType === ELM_INT) && <div className={`elm-status-div ${embeddedElmClass}`}>
                         <p className="eml-int-status-text-tm">{approveText}</p>
@@ -38,9 +38,9 @@ const ElmUpdateButton = (props) => {
                  <span className={`${assessmentItem ? "approved-button-embedded" : "approved-button"} ` + approveIconClass}>{approvedIcon}</span>}
                  <p className={`${assessmentItem ? "approved-button-text-embedded" : "approved-button-text"} ` + approveIconClass}>{approveText}</p></div>}
 
-            </div>       
+            </div>
         } else {
-            updateDiv = (elementType === ELM_INT) ? 
+            updateDiv = (elementType === ELM_INT) ?
                 <div className={`elm-status-div ${embeddedElmClass}`}>
                     <p className="eml-int-status-text-tm">{approveText}</p>
                     <span className={"approved-button " + approveIconClass}>{approvedIcon}</span>
@@ -48,7 +48,6 @@ const ElmUpdateButton = (props) => {
                 <div className={`elm-status-div ${embeddedElmClass}`}>{(approveText === "Unapproved" && assessmentItem) ? "" :
                 <span className={`${assessmentItem ? "approved-button-embedded" : "approved-button"} ` + approveIconClass}>{approvedIcon}</span>}
                 <p className={`${assessmentItem ? "approved-button-text-embedded" : "approved-button-text"} ` + approveIconClass}>{approveText}</p></div>
-        
         }
         return updateDiv
     }

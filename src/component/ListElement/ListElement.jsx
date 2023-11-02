@@ -25,9 +25,9 @@ export class ListElement extends Component {
         this.props.onListSelect(this.state.listType, "");
         this.togglePopup(false,null)
     }
-    
+
     togglePopup = (value,type)=>{
-        showBlocker(value); 
+        showBlocker(value);
         this.props.showBlocker(value)
         if(value){
             showTocBlocker();

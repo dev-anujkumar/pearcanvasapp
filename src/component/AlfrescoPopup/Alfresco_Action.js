@@ -43,8 +43,8 @@ export const saveSelectedAltTextLongDescData = (data) => {
 }
 /**
  * This method is used to fetch Alfresco Site list
- * @param {*} calledFrom 
- * @returns 
+ * @param {*} calledFrom
+ * @returns
  */
 export const fetchAlfrescoSiteDropdownList = (calledFrom) => {
     let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=2500`;

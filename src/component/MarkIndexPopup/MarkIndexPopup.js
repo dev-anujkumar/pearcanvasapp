@@ -130,7 +130,6 @@ componentWillMount() {
       secondLevel = secondLevel.innerHTML.match(/<p>/g) ? secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
         : `<p>${secondLevel.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`;
 
-      
       let checkDifference = this.markedIndexValueDifference(firstLevel, secondLevel, this.props.markedIndexCurrentValue.firstLevel,
       this.props.markedIndexCurrentValue.secondLevel, crossRefValues, this.props.markedIndexCurrentValue.crossReferences.join(','))
       if(markedIndexEntryURN){
@@ -285,7 +284,7 @@ componentWillMount() {
                 </div>
               </div>
             </div>
-            
+
             <CrossReference crossRefValue={this.props.markedIndexCurrentValue?.crossReferences}/>
 
             <div className="button-group">

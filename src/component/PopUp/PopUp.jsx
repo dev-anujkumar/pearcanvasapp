@@ -170,7 +170,7 @@ class PopUp extends React.Component {
         if(this.props.WordPastePopup) {
             isButtonDisabled = element?.classList?.contains('disabled');
         }
-        //Check if TCM Canvas Popup Revert Button is disabled if not disabled then perform click operation 
+        //Check if TCM Canvas Popup Revert Button is disabled if not disabled then perform click operation
         else if(this.props.isTCMCanvasPopup) {
             isButtonDisabled = element?.classList?.contains('disable');
         }
@@ -266,7 +266,7 @@ class PopUp extends React.Component {
 
     /**
     * @description - This function is to handle the buttons (save ,cancel, ok).
-    * @param {event} 
+    * @param {event}
     */
     renderButtons = (props) => {
         if(props.isSlateLocked) return null;
@@ -430,7 +430,7 @@ class PopUp extends React.Component {
                     <span option={SECONDARY_BUTTON} className="cancel-button" onClick={(e) => props.togglePopup(false, e)}>{props.cancelBtnText}</span>
                 </div>
             )
-        } 
+        }
         if (props.unlockSlateToggle) { // Warning buttons actions on unlock button clicked by Admin
             return (
                 <div className={`dialog-buttons`}>
@@ -464,7 +464,7 @@ class PopUp extends React.Component {
     }
     /**
     * @description - This function is responsible for handling the Input box of the popup.
-    * @param {event} 
+    * @param {event}
     */
     renderInputBox = (props) => {
         if (props.alfrescoExpansionPopup || props.showDeleteElemPopup || props.isLockReleasePopup || props.isSplitSlatePopup || props.removeConfirmation ||
@@ -528,29 +528,29 @@ class PopUp extends React.Component {
 
     /**
     * @description - This function is responsible for rendering the Dialog text in the popup.
-    * @param {event} 
+    * @param {event}
     */
 
     renderDialogText = (props) => {
         if(props.alfrescoExpansionPopup){
             let imgList = props?.alfrescoExpansionMetaData?.renderImages?.map((image) => (
                   <div className='imageContainer'>
-                    <img 
-                      className='img-inside-container' 
-                      src={image.imgSrc} 
+                    <img
+                      className='img-inside-container'
+                      src={image.imgSrc}
                       id={image.imgId}
                       onClick={() => this.processImageID(image.imgId)}
-                    /> 
-                  </div>    
+                    />
+                  </div>
                 ))
             return (
-                <> 
+                <>
                    <div className='tableAlfrescoPopupHeader'>{props?.alfrescoExpansionMetaData?.headerText}</div>
                     <div className="Please-select-an-image">{props?.alfrescoExpansionMetaData?.normalText}</div>
                     <div className='tableElement-img-container'>
                         {props.alfrescoExpansionMetaData.renderImages.length > 0 ? imgList : <LargeLoader/>}
                     </div>
-                    
+
                 </>
             )
         }

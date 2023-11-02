@@ -86,12 +86,12 @@ class ElementAsideContainer extends Component {
                         tinyMCE.$('#tinymceToolbar').find('.tox-toolbar__group>.tox-split-button,.tox-toolbar__group>.tox-tbtn').eq(index).addClass('toolbar-disabled')
                     }
                 });
-        }     
+        }
         this.props.handleFocus();
     }
-    
+
     /**
-     * 
+     *
      * @discription - renderSlate | renders slate editor area with all elements it contain
      * @param {string} element -object of element
      */
@@ -235,9 +235,9 @@ class ElementAsideContainer extends Component {
             showHideNode.classList.remove("show-hide-active")
         }
     }
-    
+
     /**
-    * 
+    *
     * @description - This function is section break
     * @param {string} element -object of element
     */
@@ -299,7 +299,7 @@ class ElementAsideContainer extends Component {
     }
 
     /**
-     * 
+     *
      * @description - This function is section break
      * @param {string} _elements -object of element
      */
@@ -379,7 +379,7 @@ class ElementAsideContainer extends Component {
     }
 
     /**
-   * 
+   *
    * @discription - This function is renders element
    * @param {string} _elements -object of element
    * @param {string} parentUrn -parent Entity urn for add new element
@@ -390,7 +390,7 @@ class ElementAsideContainer extends Component {
         const { id, type, subtype, groupeddata, contentUrn } = this.props?.parentElement || {};
         let asideData = {
             type: "element-aside",
-            subtype :this.props.element.subtype, 
+            subtype :this.props.element.subtype,
             id: this.props.element.id,
             contentUrn: this.props.element.contentUrn,
             element : this.props.element,
@@ -469,12 +469,12 @@ class ElementAsideContainer extends Component {
                                 />
                                 {this.section(element, index)}
                                 </>
-                                
+
                                 )
                             }else{
                                 return  this.section(element, index);
                             }
-                           
+
                         } else if (element.type == "manifest" && !firstSection) {
                             return this.sectionBreak(element, index);
                         }
@@ -557,9 +557,9 @@ class ElementAsideContainer extends Component {
     }
 
 /**
- * 
+ *
  * @discription - this function render title fields
- * 
+ *
  */
     renderTitleField = (asideHtmlData) => {
         let showTitleField = this.setFieldsForAside(this.props.element, this.state.asideTitleData);
@@ -611,7 +611,7 @@ class ElementAsideContainer extends Component {
 
 
     /**
-  * 
+  *
   * @discription - This function is renders workexample
   * @param {string} designtype -string to select type of work example
   */
@@ -627,7 +627,7 @@ class ElementAsideContainer extends Component {
     }
 
     /**
-* 
+*
 * @discription - This function is renders diffrent types of border of aside
 * @param {string} designtype -string to select type of aside container
 */
@@ -676,10 +676,10 @@ class ElementAsideContainer extends Component {
         }
     }
 
-    
+
 
     /**
-  * 
+  *
   * @discription - This function is renders aside container
   * @param {string} designtype -string to select type of aside container
   */
@@ -699,7 +699,7 @@ class ElementAsideContainer extends Component {
         this.props.handleBlur();
         const { element, index } = this.props;
 
-        let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false; 
+        let hasAsideTitleData = element?.html?.title && (element.html.title !== "<p class='paragraphNumeroUno'></p>" && element.html.title !== "<p></p>") ? true : false;
         const newToggleValue = hasAsideTitleData ? true : false;
         let labelElement = document.getElementById(`cypress-${index}-t1`);
         let numberElement = document.getElementById(`cypress-${index}-t2`);
@@ -730,7 +730,7 @@ class ElementAsideContainer extends Component {
             }
         }
         if (!newToggleValue && focusInLabel && focusInNumber && focusInTitle) {
-            if ((this.props.elementId !== this.props?.activeElement?.elementId) || (this.props.elementId === this.props?.activeElement?.elementId && (focusOnOtherElement))) { 
+            if ((this.props.elementId !== this.props?.activeElement?.elementId) || (this.props.elementId === this.props?.activeElement?.elementId && (focusOnOtherElement))) {
                 this.props.enableAsideNumbering(newToggleValue, element.id);
             }
         }

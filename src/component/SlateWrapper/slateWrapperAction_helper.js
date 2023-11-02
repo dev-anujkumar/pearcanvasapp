@@ -13,7 +13,6 @@ import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
 import { handleAutoNumberingOnCopyPaste } from '../FigureHeader/AutoNumber_CutCopy_helpers';
 import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
-import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { MANIFEST_LIST } from '../../constants/Element_Constants';
 const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP, POETRY_ELEMENT } = ElementConstants;
 
@@ -30,7 +29,7 @@ export const onPasteSuccess = async (params) => {
         poetryData,
         slateEntityUrn, index2ShowHide, pasteSHIndex
     } = params
-    
+
     const activeEditorId = tinymce && tinymce.activeEditor && tinymce.activeEditor.id
     replaceWirisClassAndAttr(activeEditorId)
     // Store Update on Paste Element
@@ -56,7 +55,7 @@ export const onPasteSuccess = async (params) => {
     if(operationType === 'cut' && elmExist) {
         if('sourceSlateEntityUrn' in elmSelection && 'sourceEntityUrn' in elmSelection &&
         ((elmSelection.sourceSlateEntityUrn === elmSelection.sourceEntityUrn && elmSelection.sourceSlateEntityUrn === config.slateEntityURN) ||
-        (elmSelection.sourceSlateEntityUrn !== elmSelection.sourceEntityUrn && elmSelection.sourceEntityUrn === slateEntityUrn))) {           
+        (elmSelection.sourceSlateEntityUrn !== elmSelection.sourceEntityUrn && elmSelection.sourceEntityUrn === slateEntityUrn))) {
             cutSnap = false;
         }
     }
@@ -243,7 +242,7 @@ export const onPasteSuccess = async (params) => {
                                 item_L0?.contents.bodymatter?.splice(cutIndex, 0, responseData)
                             }
                         });
-                    } else if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest") { /* paste slate level elements inside 2C/WE/Body */ 
+                    } else if(asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest") { /* paste slate level elements inside 2C/WE/Body */
                         item?.groupeddata?.bodymatter[newIndex[1]]?.groupdata?.bodymatter[newIndex[2]]?.elementdata?.bodymatter?.map(item_L2 => {
                             if(item_L2.id === parentUrn?.manifestUrn) {
                                 item_L2?.contents?.bodymatter?.splice(cutIndex, 0, responseData);
@@ -267,7 +266,7 @@ export const onPasteSuccess = async (params) => {
                         newIndex = indexes;
                     }
 
-                    if (asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest") { /* paste elements inside S/H/WE/Body */ 
+                    if (asideData?.subtype === "workedexample" && parentUrn?.elementType === "manifest") { /* paste elements inside S/H/WE/Body */
                         item?.interactivedata[sectionType][newIndex[2]].elementdata?.bodymatter?.map(item_L2 => {
                             if(item_L2.id === parentUrn?.manifestUrn) {
                                 item_L2?.contents?.bodymatter?.splice(cutIndex, 0, responseData);
@@ -276,7 +275,7 @@ export const onPasteSuccess = async (params) => {
                     } else {
                         item?.interactivedata[sectionType][newIndex[2]].elementdata?.bodymatter?.splice(cutIndex, 0, responseData);
                     }
-                } 
+                }
             }
         })
         /* Store update on cut-paste elements inside citation in S/H or slate */
@@ -300,7 +299,7 @@ export const onPasteSuccess = async (params) => {
         newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
             if (item.id == poetryData.parentUrn) {
                 item.contents.bodymatter.splice(cutIndex, 0, responseData)
-            } 
+            }
             else if (item.type == "poetry" && item.id == poetryData.id) {
                 item.contents.bodymatter && item.contents.bodymatter.map((ele) => {
                     if (ele.id === poetryData.parentUrn) {
@@ -334,7 +333,7 @@ export const onPasteSuccess = async (params) => {
                     }
                 })
             }
-        })  
+        })
     } else if (asideData && asideData.type === 'groupedcontent') {
         newParentData[config.slateManifestURN].contents.bodymatter.map((item, i) => {
             if (item.id === asideData.id) {
@@ -401,7 +400,7 @@ function pasteShowhideInAside(item, manifestUrn, responseData, cutIndex) {
                     pasteInShowhide(item_3, responseData, cutIndex);
                 }
             })
-        } 
+        }
     })
 }
 export const checkElementExistence = async (slateEntityUrn = '', elementEntity = '') => {
@@ -531,18 +530,18 @@ export function prepareDataForTcmCreate(type, createdElementData, getState, disp
             showTcmIconInMultiCol(createdElementData, elmUrn);
             break;
          /** case slateWrapperConstants.MULTI_COLUMN_3C:
-            First Column 
+            First Column
             createdElementData.groupeddata.bodymatter[0].groupdata.bodymatter.map(item => {
                 elmUrn.push(item.id)
             })
-            /** Second Column 
+            /** Second Column
             createdElementData.groupeddata.bodymatter[1].groupdata.bodymatter.map(item => {
                 elmUrn.push(item.id)
             })
-            /** Third Column 
+            /** Third Column
             createdElementData.groupeddata.bodymatter[2].groupdata.bodymatter.map(item => {
                 elmUrn.push(item.id)
-            }) 
+            })
             break; */
         case slateWrapperConstants.POP_UP:
             if (tcmFlag === true) {
@@ -588,7 +587,7 @@ function showTcmIconInAside(element, elmUrn) {
                 item?.contents?.bodymatter?.map((ele) => {
                     if(ele?.type === SHOW_HIDE) { /* Ex. -  WE:Body/SectionBreak:SH:P*/
                         showTcmIconInSH(ele, elmUrn);
-                    } 
+                    }
                     else { elmUrn.push(ele.id) } /* Ex. -  WE:Body/SectionBreak:P*/
                 })
             } else {
@@ -616,7 +615,7 @@ function showTcmIconInMultiCol(element, elmUrn) {
 }
 /**
 * @function showTcmIconInSH
-* @description Show tcm icon in right side of element inside Shohide; Ex. -  SH:P 
+* @description Show tcm icon in right side of element inside Shohide; Ex. -  SH:P
 */
 function showTcmIconInSH(element, elmUrn) {
     ["show","hide"].forEach(sectionType => {

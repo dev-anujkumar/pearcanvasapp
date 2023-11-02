@@ -41,7 +41,7 @@ class PdfSlate extends Component {
         if (this.props.element.id === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.getAlfrescoData(alfrescoAssetData)
 			const payloadObj = {
-				asset: {}, 
+				asset: {},
 				id: ''
 			}
 			this.props.saveSelectedAssetData(payloadObj)
@@ -92,11 +92,11 @@ class PdfSlate extends Component {
 						that.sumbitElement();
 					})
 					/* Send retrived data to server to save */
-				} 
+				}
 			} else {
 				console.info("Please import pdf");
 				hideBlocker();
-			} 
+			}
 		} catch (error){
 			console.error("Error - ",error);
 		}
@@ -129,11 +129,11 @@ class PdfSlate extends Component {
 		hideBlocker();
 		this.props.setPdfSlateAssetId(this.state.pdfId)
 	}
-	
+
 	render(){
 		return(
 			<div className="AssessmentSlateCanvas div-position-relative pdf-slate">
-				<PdfSlateComponent 
+				<PdfSlateComponent
 					showDetails = {this.state.showDetails}
 					pdfId = {this.state.pdfId}
 					filetitle = {this.state.filetitle}

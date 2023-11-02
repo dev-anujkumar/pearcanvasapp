@@ -29,7 +29,7 @@ const TCMUtils = {
           latestAcepted = latestAcepted.replaceAll(acceptedTag, pendingTag)
         } catch(e){
             return HtmlDiff.execute(latestAcepted, latestPending);
-        } 
+        }
       }
     }
     return HtmlDiff.execute(latestAcepted, latestPending);
@@ -87,7 +87,7 @@ const TCMUtils = {
    * This method is used to remove the mathML from the snapshot
    * @param {String} data
    */
-  
+
   removeMathML(data) {
     data = data.replace(/data-temp-mathml/g, 'data-mathml');
     let mathMLImages = data.match(/<(img)\s[^>]*data-mathml=.*?>/g);
@@ -108,7 +108,7 @@ const TCMUtils = {
         .replace(/ data-mce-style=\\\\\\"[a-zA-Z0-9-+_!@#$%^&*., ?;:]*\\\\\\"/, '').replace(/(?:\.png)[?][0-9].*?[\\"]/g,'.png\\');
         data = data.replace(tempmathMLImages[index],mathMLImages[index]);
       }
-       
+
     }
     // PCAT-11983 - removing extra attributes from img tag to prevent duplicate tracking
     if (imageAssetContents) {

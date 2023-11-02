@@ -9,7 +9,7 @@ import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare }
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn,
         getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString, hasReviewerRole } from '../../constants/utility';
-import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, LABEL_DROPDOWN_VALUES } from './AutoNumberConstants';
+import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
 import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING } from '../../constants/Element_Constants';
 import { MATH_ML, BLOCK_CODE } from '../../component/ElementFigure/ElementFigure_Constants'
 
@@ -17,7 +17,7 @@ import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 import KeyboardWrapper, { QUERY_SELECTOR } from '../Keyboard/KeyboardWrapper.jsx';
 
-const { 
+const {
     AUTO_NUMBER_SETTING_DEFAULT,
     AUTO_NUMBER_SETTING_RESUME_NUMBER,
     AUTO_NUMBER_SETTING_REMOVE_NUMBER,
@@ -32,7 +32,7 @@ const KEYBOARD_ENABLE = [TABLE, MATH_IMAGE, MATH_ML, BLOCK_CODE, IMAGE, AUDIO, V
  */
 function useOutsideAlerter(ref, setLabelNumberSettingDropDown, setLabelDropDown) {
     useEffect(() => {
-        
+
         function handleClickOutside(event) {
             if (ref.current && !ref.current.contains(event.target)) {
                 const div = ref.current;
@@ -266,7 +266,7 @@ export const FigureHeader = (props) => {
          }
      }
 
-    const isEnableKeyboard = () => { 
+    const isEnableKeyboard = () => {
         if (props.model?.figuredata?.programlanguage === "Select" ) {
                 return false
             }
@@ -301,7 +301,7 @@ export const FigureHeader = (props) => {
                 labelElement?.nextElementSibling?.classList?.remove('floating-label');
             } else if (lastIndex[lastIndex.length - 1] == '1') {
                 labelElement?.nextElementSibling?.classList?.remove('floating-number');
-            } 
+            }
         } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
             labelElement?.nextElementSibling?.classList?.add('transition-none');
         }
@@ -328,7 +328,7 @@ export const FigureHeader = (props) => {
                 labelElement?.nextElementSibling?.classList?.add('floating-label');
             } else if (lastIndex[lastIndex.length - 1] == '1') {
                 labelElement?.nextElementSibling?.classList?.add('floating-number');
-            } 
+            }
         }
     }
 
@@ -437,7 +437,7 @@ export const FigureHeader = (props) => {
                 </div>}
                 {
                    removeLabelCondition &&  (showLabelField && labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ?
-                    <KeyboardWrapper index={`${props.index}-0`}  enable={isEnableKeyboard()}>                                             
+                    <KeyboardWrapper index={`${props.index}-0`}  enable={isEnableKeyboard()}>
                         <div className='image-label'>
                             <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus}
                             onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp}

@@ -111,9 +111,9 @@ export const handlePostMsgOnAddAssess = (addPufFunction, usagetype, type, action
                 if(eventType == 'fromCreate'){
                     /* Get the item data from store */
                     const itemData = store.getState().assessmentReducer?.item ?? {};
-                    if (data.source === "elm") {                  
-                        const items = data.type?.split("|") ?? []; 
-                        if(items.length >= 4){                  
+                    if (data.source === "elm") {
+                        const items = data.type?.split("|") ?? [];
+                        if(items.length >= 4){
                             /* Update newly added Assessment */
                             if (items[0] === "assessment") {
                                 getAssessmentPostMsg(items, usagetype, addPufFunction, itemData, type, getMsgafterAddAssessment);
@@ -171,7 +171,7 @@ export function getInteractivePostMsg(data){
             })
             return dataToSend
         }
-    }  
+    }
 }
 /* get assessment items data from post message */
 export function getAssessmentItemPostMsg(items){
@@ -179,7 +179,7 @@ export function getAssessmentItemPostMsg(items){
         itemid: items[1]?.split("_")[1],
         elementUrn: items[2]?.split("_")[1],
         itemTitle: items[3]?.split("_")[1],
-        calledFrom:'createElm'                               
+        calledFrom:'createElm'
     };
     /* save item data into store */
     store.dispatch(setNewItemFromElm(itemDataFromMsg));

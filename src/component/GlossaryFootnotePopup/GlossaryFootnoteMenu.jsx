@@ -18,7 +18,7 @@ class GlossaryFootnoteMenu extends React.Component {
         super(props);
         this.wrapperRef = null;
     }
-    
+
     handleClickOutside = (event) => {
         if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
             /** Case - event target is not even wiris modal */
@@ -61,7 +61,7 @@ class GlossaryFootnoteMenu extends React.Component {
 
     /**
     * @description - This function is to close the Glossary and Footnote Popup.
-    * @param {event} 
+    * @param {event}
     */
     closePopup = () => {
         this.props.showGlossaaryFootnote(false);
@@ -76,7 +76,7 @@ class GlossaryFootnoteMenu extends React.Component {
         .replace(/\sWirisformula/g, ' temp_Wirisformula').replace(/\uFEFF/g,"");
         html=html.trim();
         tempDiv.innerHTML = html;
-        /** BG-2332 | PCAT-7409 | Multiple Superseeded formatting entry is created in WIP when 
+        /** BG-2332 | PCAT-7409 | Multiple Superseeded formatting entry is created in WIP when
          * entering text by selecting the strikethrough formatting in Footnote and Glossary  */
         while(tinyMCE.$(tempDiv).find('span#_mce_caret').length) {
             tinyMCE.$(tempDiv).find('span#_mce_caret').each(function () {
@@ -141,7 +141,7 @@ class GlossaryFootnoteMenu extends React.Component {
 
     /**
     * @description - This function is to save the Content of Glossary and Footnote.
-    * @param {event} 
+    * @param {event}
     */
     saveContent = () => {
         if (!hasReviewerRole()) {
@@ -199,7 +199,7 @@ class GlossaryFootnoteMenu extends React.Component {
             const imageDefinition = `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}
             <img src="${figureGlossaryData.path}" class="imageAssetContent" width="${figureGlossaryData.width}"
             height="${figureGlossaryData.height}" imageid="${figureGlossaryData.imageid}" ></p>`;
-            definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "") 
+            definition = definition.innerHTML.match(/<p>/g) ? definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")
                         : isFigureDataPresent ? imageDefinition : `<p>${definition.innerHTML.replace(/<br data-mce-bogus="1">/g, "")}</p>`
             term = this.replaceUnwantedtags(term);
             definition = this.replaceUnwantedtags(definition);

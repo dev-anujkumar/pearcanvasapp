@@ -80,7 +80,7 @@ class PageNumberElement extends React.Component {
         this.props.updatePageNumber(pageNumber, id, asideData, parentUrn)
     }
 
-    /* @hidePageNumber@ List of slates where PageNumber is hidden 
+    /* @hidePageNumber@ List of slates where PageNumber is hidden
         return boolean - true for pdf and assessment slate else false */
     hidePageNumber = () => {
         return !([SLATE_TYPE_ASSESSMENT, SLATE_TYPE_PDF].includes(this.props._slateType));
@@ -138,7 +138,7 @@ class PageNumberElement extends React.Component {
                     </div>
                 )
             }
-            
+
         }
         else {
             return (

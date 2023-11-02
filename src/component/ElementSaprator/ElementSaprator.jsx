@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 import Button from '../ElementButtons'
 import Tooltip from '../Tooltip'
 import config from '../../config/config';
-import { hasReviewerRole, sendDataToIframe, hasProjectPermission, isSubscriberRole } from '../../constants/utility.js';
+import { hasReviewerRole, sendDataToIframe, hasProjectPermission } from '../../constants/utility.js';
 import elementTypeConstant, { containerTypeArray } from './ElementSepratorConstants.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
@@ -16,26 +16,26 @@ import { getPasteValidated, MANIFEST_LIST } from '../../constants/Element_Consta
 import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 
-const { TEXT, 
-    IMAGE, 
-    AUDIO, 
-    INTERACTIVE, 
-    ASSESSMENT, 
-    CONTAINER, 
-    WORKED_EXP, 
-    OPENER, 
-    SECTION_BREAK, 
-    METADATA_ANCHOR, 
-    INTERACTIVE_BUTTON, 
-    ELEMENT_ASIDE, 
-    POETRY_ELEMENT, 
-    CITATION, 
-    CITATION_GROUP_ELEMENT, 
-    POETRY, 
-    STANZA_ELEMENT, 
-    CONTAINER_BUTTON, 
-    BACK_MATTER, 
-    FRONT_MATTER, 
+const { TEXT,
+    IMAGE,
+    AUDIO,
+    INTERACTIVE,
+    ASSESSMENT,
+    CONTAINER,
+    WORKED_EXP,
+    OPENER,
+    SECTION_BREAK,
+    METADATA_ANCHOR,
+    INTERACTIVE_BUTTON,
+    ELEMENT_ASIDE,
+    POETRY_ELEMENT,
+    CITATION,
+    CITATION_GROUP_ELEMENT,
+    POETRY,
+    STANZA_ELEMENT,
+    CONTAINER_BUTTON,
+    BACK_MATTER,
+    FRONT_MATTER,
     CONTAINER_INTRO,
     MULTI_COLUMN_CONTAINER,
     MULTI_COLUMN,
@@ -61,7 +61,7 @@ export function ElementSaprator(props) {
     let buttonRef = useRef(null)
 
     /**
-     * @description: This hook is used for handling the outer click, 
+     * @description: This hook is used for handling the outer click,
      * after mounting the component or update the component state this hook will called
      */
     useEffect(() => {
@@ -80,7 +80,7 @@ export function ElementSaprator(props) {
     });
 
     /**
-     * @description: This function is responsable for toggle 
+     * @description: This function is responsable for toggle
      * state to render the dropdown. First close all open dropdowns
      * then open new one
      */
@@ -104,7 +104,7 @@ export function ElementSaprator(props) {
 
     /**
      * Get parent nodes of a dom node
-     * @param {Element node} elem 
+     * @param {Element node} elem
      */
     function getParents(elem) {
         var parents = [];
@@ -157,7 +157,7 @@ export function ElementSaprator(props) {
                 </div>
             )
         }
-        return null  
+        return null
     }
 
     const renderWordPasteButton = (parentElementType, { firstOne, index, userRole, onClickCapture }) => {
@@ -189,16 +189,16 @@ export function ElementSaprator(props) {
             </div>
         )
     }
-    
+
     let pasteRender = false;
     let operationType = '';
     if(props.elementSelection && Object.keys(props.elementSelection).length > 0) {
         pasteRender = true;
         operationType = props.elementSelection.operationType || '';
     }
-    /** 
+    /**
      Hide Paste Button for Container Elements when there is BL inside ShowHide
-     Note:- This will removed once BL will be supported in AS,WE,2C & 3C 
+     Note:- This will removed once BL will be supported in AS,WE,2C & 3C
     */
     if(['element-aside','groupedcontent'].indexOf(props?.asideData?.type) > -1 && props?.elementSelection?.containsBlockList) {
         pasteRender = false;
@@ -249,7 +249,7 @@ ElementSaprator.propTypes = {
  */
 
 function renderConditionalButtons(esProps,sectionBreak,elementType,subtype){
-    let updatedEsProps = esProps.filter((btnObj) => {        
+    let updatedEsProps = esProps.filter((btnObj) => {
       let  buttonType = btnObj.buttonType;
         if (elementType == CITATION_GROUP_ELEMENT && sectionBreak) { /** Container : Citation Group |Render Citation Element*/
             return buttonType == CITATION;
@@ -260,12 +260,12 @@ function renderConditionalButtons(esProps,sectionBreak,elementType,subtype){
             return buttonType === TABBED_TAB;
         }
         else if (elementType == SINGLE_COLUMN) {                     /** Container : C1/C2 in Multi-Column Element*/
-            let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT, CONTAINER_BUTTON, WORKED_EXP ];                  
+            let  MultiColumnPicker = [ TEXT, IMAGE, AUDIO, BLOCK_TEXT_BUTTON, INTERACTIVE_BUTTON, TABLE_EDITOR, ASSESSMENT, CONTAINER_BUTTON, WORKED_EXP ];
             if(config.isPopupSlate){
                 MultiColumnPicker.length = MultiColumnPicker.length -2;
             }
             return MultiColumnPicker.includes(buttonType);
-        } 
+        }
         else {
         if (sectionBreak) {                                          /** Container : Other cases in Wored Example*/
             return buttonType !== WORKED_EXP && buttonType !== CONTAINER_BUTTON && buttonType !== OPENER &&  buttonType !== CITATION &&
@@ -292,8 +292,8 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     buttonType = btnObj.buttonType;
                     return buttonType !== METADATA_ANCHOR;
                 })
-            
-        }else {            
+
+        }else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
                 return buttonType !== METADATA_ANCHOR && buttonType !== SECTION_BREAK && buttonType !== OPENER &&  buttonType !== CITATION &&
@@ -312,23 +312,23 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     if (item.classList && item.classList.contains("disabled")) { item.classList.remove("disabled") }
                 })
             }
-            
+
             if (config.isLOL) {
                 let elements = document.getElementsByClassName(METADATA_ANCHOR);
                 for (let key in elements) {
                     if (elements[key].className && !elements[key].classList.contains("disabled")) { elements[key].className += " disabled"; }
                 }
             }
-            
+
             if(config.isPopupSlate || config.isCO){
                 updatedEsProps = esProps.filter((btnObj) => {
                     buttonType = btnObj.buttonType;
-                    return buttonType !== SECTION_BREAK && buttonType !== OPENER 
+                    return buttonType !== SECTION_BREAK && buttonType !== OPENER
                     && buttonType !== CITATION && btnObj.buttonType !== STANZA_ELEMENT && btnObj.buttonType !== TABBED_TAB;
                 })
             }else{
                 updatedEsProps = esProps.filter((btnObj) => {
-                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION 
+                    return btnObj.buttonType !== SECTION_BREAK && btnObj.buttonType !== CITATION
                     && btnObj.buttonType !== STANZA_ELEMENT && btnObj.buttonType !== TABBED_TAB;
                 })
             }
@@ -338,13 +338,13 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                         buttonType = btnObj.buttonType;
                         return buttonType !== METADATA_ANCHOR;
                     })
-                
+
             }
 
         }
         else if (elementType == ELEMENT_ASIDE || elementType == CITATION_GROUP_ELEMENT || elementType === POETRY || elementType == SINGLE_COLUMN) {
                 updatedEsProps = renderConditionalButtons(esProps, sectionBreak, elementType, subtype);
-        }          
+        }
         else {
             updatedEsProps = esProps.filter((btnObj) => {
                 buttonType = btnObj.buttonType;
@@ -376,7 +376,7 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
 
         return (
             <>{data && data.length >0 && showInteractiveOption && showInteractiveOption.status && showInteractiveOption.type == elem.buttonType &&
-                <ElementContainerType 
+                <ElementContainerType
                     text={elem.buttonType}
                     closeDropDown={closeDropDown}
                     data={data}
@@ -395,11 +395,11 @@ export function renderDropdownButtons(esProps, elementType, sectionBreak, closeD
                     </li>
 
                 </Tooltip>
-            </>                          
+            </>
         )
     })
 }
-  
+
 export function typeOfContainerElements(elem, props) {
     const { index, firstOne, parentUrn, asideData, parentIndex, splithandlerfunction, sectionType } = props
     let newData = containerTypeArray[elem.buttonType];
@@ -449,7 +449,7 @@ export function typeOfContainerElements(elem, props) {
     else{
         return;
     }
-    
+
 }
 
 export const pasteElement = (separatorProps, togglePaste, type) => {

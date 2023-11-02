@@ -88,7 +88,7 @@ import { handleAutonumberingOnCreate } from '../FigureHeader/AutoNumberCreate_he
 import { getSlateLevelData, updateChapterPopupData } from '../FigureHeader/AutoNumberActions';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, autoNumber_ElementSubTypeToCeateKeysMapper, autoNumberContainerTypesAllowed } from '../FigureHeader/AutoNumberConstants';
 import {INCOMING_MESSAGE,REFRESH_MESSAGE} from '../../constants/IFrameMessageTypes';
-import { checkHTMLdataInsideString, getCookieByName } from '../../constants/utility'; 
+import { checkHTMLdataInsideString, getCookieByName } from '../../constants/utility';
 import { prepareBqHtml } from '../../js/utils';
 import { hideToc } from '../../js/toggleLoader';
 import ElementConstants from './ElementConstants.js';
@@ -143,7 +143,7 @@ class ElementContainer extends Component {
     /**
      * This function sets PDF alfresco Id when adding or replacing a PDF
      * to show Expand In Alfresco button
-     * @param {String} id 
+     * @param {String} id
      */
     setPdfSlateAssetId = (id) => {
         this.setState({
@@ -697,7 +697,7 @@ class ElementContainer extends Component {
                 captionHTML !== this.removeClassesFromHtml(previousElementData.html.captions) ||
                 creditsHTML !== this.removeClassesFromHtml(previousElementData.html.credits) ||
                 (oldImage ? oldImage : defaultImageUrl) !== (previousElementData.figuredata.path ? previousElementData.figuredata.path : defaultImageUrl)
-                || (podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : '') && podwidth !== null) 
+                || (podwidth !== (previousElementData.figuredata.podwidth ? previousElementData.figuredata.podwidth : '') && podwidth !== null)
                 || isAltTextLongDescModified
                 );
             }
@@ -773,7 +773,7 @@ class ElementContainer extends Component {
             }
             // Selecting default case 
             if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) &&
-                 this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+                this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -851,7 +851,7 @@ class ElementContainer extends Component {
         creditsHTML = this.removeClassesFromHtml(creditsHTML)
         titleHTML = this.removeClassesFromHtml(titleHTML)
         subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
-        
+
         let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];
         let podwidth = this.props?.activeElement?.podwidth;
         // Commented for future reference > for intended playback mode
@@ -931,7 +931,7 @@ class ElementContainer extends Component {
         let oldTitle = this.removeClassesFromHtml(previousElementData.html.title),
             oldCaption = this.removeClassesFromHtml(previousElementData.html.captions),
             oldCredit = this.removeClassesFromHtml(previousElementData.html.credits)
-        
+
         //Handle Autonumbering
         if (this.props?.isAutoNumberingEnabled && previousElementData?.hasOwnProperty('numberedandlabel')) {
             titleHTML = titleHTML?.replace(/\&amp;/g, "&").replace(/\&lt;/g, '<').replace(/\&gt;/g, '>');
@@ -942,7 +942,7 @@ class ElementContainer extends Component {
             }
             // Selecting default case 
             if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') && !previousElementData?.numberedandlabel)) &&
-                 this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+                this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn && this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -978,7 +978,7 @@ class ElementContainer extends Component {
                 text !== oldtext
             );
         }
-        
+
         return (titleHTML !== oldTitle ||
             captionHTML !== oldCaption ||
             creditsHTML !== oldCredit ||
@@ -1026,8 +1026,8 @@ class ElementContainer extends Component {
             }
             // Selecting default case 
             if ((previousElementData?.hasOwnProperty('manualoverride') || (previousElementData?.hasOwnProperty('numberedandlabel') &&
-                 !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn &&
-                  this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
+                !previousElementData?.numberedandlabel)) && this.props?.autoNumberOption?.entityUrn === previousElementData?.contentUrn &&
+                this.props?.autoNumberOption?.option === AUTO_NUMBER_SETTING_DEFAULT) {
                 return true;
             }
 
@@ -1196,7 +1196,7 @@ class ElementContainer extends Component {
                         /* Contains the data of parent elemens Ex.- 2C/Aside/POP||AgainContainer:SH */
                         const elementLineage = {
                             ...this.props.element, grandParent: { asideData, parentUrn }
-                        }   
+                        }
                         this.props.updateElement(dataToSend, elemIndex, parentUrn, elementLineage, showHideType, parentElement, poetryData);
                     } else {
                         this.props.updateElement(dataToSend, this.props.index, parentUrn, asideData, showHideType, parentElement, poetryData);
@@ -1421,7 +1421,7 @@ class ElementContainer extends Component {
                 break;
         }
     }
-    
+
     handleAutonumberAfterUpdate = async (previousElementData, dataToSend, autoNumberedElements, currentSlateAncestorData, slateLevelData) => {
         if (this.props?.popupParentSlateData?.isPopupSlate) {
             const popupContent = await getSlateLevelData(this.props?.popupParentSlateData?.versionUrn, this.props?.popupParentSlateData.contentUrn);
@@ -1457,14 +1457,14 @@ class ElementContainer extends Component {
             }
             this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else if ((previousElementData?.numberedandlabel) && (!dataToSend.hasOwnProperty('displayedlabel')) &&
-                    (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridelabelvalue'))) {
-            // override label and number case 
+                (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridelabelvalue'))) {
+            // override label and number case
             this.props.updateAutoNumberSequenceOnDelete(parentIndex, dataToSend.contentUrn, autoNumberedElements);
         } else if ((previousElementData?.numberedandlabel) && (previousElementData?.displayedlabel === dataToSend.displayedlabel) &&
-                    (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
-            // override number only case 
+                (dataToSend && dataToSend.manualoverride && dataToSend.manualoverride.hasOwnProperty('overridenumbervalue'))) {
+            // override number only case
             this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
-        } else if ( (previousElementData?.numberedandlabel) && (!(dataToSend.hasOwnProperty('manualoverride'))) ) { 
+        } else if ( (previousElementData?.numberedandlabel) && (!(dataToSend.hasOwnProperty('manualoverride'))) ) {
             // default case
             this.props.updateAutonumberingOnElementTypeUpdate(dataToSend, previousElementData, autoNumberedElements, currentSlateAncestorData, slateLevelData);
         } else {
@@ -1478,7 +1478,7 @@ class ElementContainer extends Component {
     handleBlur = (forceupdate, currrentElement, elemIndex, showHideType, calledFrom, cgTitleFieldData = {}, triggeredFrom = '') => {
         // restrict saving call incase of read only content
         if(hasReviewerRole()) {
-            // condition to work on approved slate for Auto update on Assessment Item 
+            // condition to work on approved slate for Auto update on Assessment Item
             if ((this.props.element?.figuredata?.type !== 'element-assessment' && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
                 sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
                 return;
@@ -1512,7 +1512,7 @@ class ElementContainer extends Component {
             })
         } else {
             parentElement = ((currrentElement && currrentElement.type === elementTypeConstant.CITATION_ELEMENT) || containerParent) ? this.props.parentElement : this.props.element
-        }  
+        }
         if (calledFrom && calledFrom == 'fromEmbeddedAssessment') {
             const seconadaryAssessment = SECONDARY_SINGLE_ASSESSMENT + this.props.element.figuredata.elementdata.assessmentformat;
             this.handleContentChange(node, element, ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, seconadaryAssessment, activeEditorId, forceupdate,
@@ -1616,7 +1616,7 @@ class ElementContainer extends Component {
 
 
     /**
-     * Renders color-palette button for opener element 
+     * Renders color-palette button for opener element
      * @param {e} event
      */
     renderColorPaletteButton = (element, permissions,isSubscribersSlate) => {
@@ -1650,7 +1650,7 @@ class ElementContainer extends Component {
     }
 
     /**
-    * Rendering Opener element text color 
+    * Rendering Opener element text color
     * @param {e} event
     */
     renderTextColorList = () => {
@@ -1668,7 +1668,7 @@ class ElementContainer extends Component {
 
 
     /**
-     * Renders color-text button for opener element 
+     * Renders color-text button for opener element
      * @param {e} event
      */
     renderColorTextButton = (element, permissions,isSubscribersSlate) => {
@@ -1687,8 +1687,8 @@ class ElementContainer extends Component {
     }
 
     /**
-     * show Delete element Popup 
-     * @param {elementId} 
+     * show Delete element Popup
+     * @param {elementId}
      */
     showDeleteElemPopup = (e, popup, sectionBreak, showSectionLabel) => {
         e.stopPropagation();
@@ -1716,7 +1716,7 @@ class ElementContainer extends Component {
     }
 
     /**
-     * show Block Code element warning Popup 
+     * show Block Code element warning Popup
      */
      showBlockCodeElemWarningPopup = (e, popup) => {
         e.stopPropagation();
@@ -1736,7 +1736,7 @@ class ElementContainer extends Component {
         this.toastTimer = setTimeout(() => {
             this.setState({
                 showUndoButton: false
-            })  
+            })
         }, 5000);
     }
 
@@ -1762,7 +1762,7 @@ class ElementContainer extends Component {
         this.toastUndoneTimer = setTimeout(() => {
             this.setState({
                 showActionUndone: false
-            }) 
+            })
         }, 2000);
         this.props.storeDeleteElementKeys({});
     }
@@ -1878,12 +1878,12 @@ class ElementContainer extends Component {
             for (const elm of multipleElement) {
                 elm.classList.add('stop-event')
             }
-            this.props.storeDeleteElementKeys(object); 
+            this.props.storeDeleteElementKeys(object);
         } else {
             sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
         }
-        
-        if(this.state.warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } }); 
+
+        if(this.state.warningPopupCheckbox) sendDataToIframe({ 'type': DISABLE_DELETE_WARNINGS, 'message': { disableDeleteWarnings: true } });
         // api needs to run from here
         if (parentElement?.type === elementTypeConstant.SHOW_HIDE) {
             if (disableDeleteWarnings || this.state.warningPopupCheckbox) {
@@ -1899,7 +1899,7 @@ class ElementContainer extends Component {
                 }, 5000)
             } else {
                 this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
-            }  
+            }
         }
         else {
             if (disableDeleteWarnings || this.state.warningPopupCheckbox) {
@@ -1915,7 +1915,7 @@ class ElementContainer extends Component {
                 }, 5000)
             } else {
                 this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
-            } 
+            }
         }
         this.setState({
             sectionBreak: null,
@@ -2068,7 +2068,7 @@ class ElementContainer extends Component {
             position: position
         })
     }
-    
+
     handleWarningPopupCheckbox = (event) => {
         this.setState({
             warningPopupCheckbox: event?.target?.checked
@@ -2148,8 +2148,8 @@ class ElementContainer extends Component {
     }
 
     /**
-     * Render Element function takes current element from bodymatter and render it into current slate 
-     * @param {element} 
+     * Render Element function takes current element from bodymatter and render it into current slate
+     * @param {element}
     */
     renderElement = (element = {}) => {
         let editor = '';
@@ -2682,7 +2682,7 @@ class ElementContainer extends Component {
                     />;
                     labelText = 'PDF'
                     break;
-                    
+
                 case elementTypeConstant.TCC_ELEMENT:
                     editor = <ElementTCC
                         permissions={permissions}
@@ -2787,7 +2787,7 @@ class ElementContainer extends Component {
                         {this.props?.activeElement?.elementType !== "element-dialogue" && (this.state.assetsPopupStatus && <OpenGlossaryAssets closeAssetsPopup={() => { this.handleAssetsPopupLocation(false) }} position={this.state.position} isImageGlossary={true} isGlossary={true} /> )}
                     </div>
                     {(this.props.elemBorderToggle !== 'undefined' && this.props.elemBorderToggle) || this.state.borderToggle == 'active' ? <div>
-                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !isApproved() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}          
+                        {permissions && permissions.includes('notes_adding') && !anyOpenComment && !isTbElement && !isTccElement && this.state.borderToggle !== 'hideBorder' && !isApproved() && <Button type="add-comment" btnClassName={btnClassName}  elementType={element?.type} onClick={ (e) => this.addOrViewComment(e, element.id,'addComment')} />}
                         {permissions && permissions.includes('note_viewer') && (anyOpenComment && !anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) =>  this.addOrViewComment(e, element.id,'viewComment')} type="view-comment" elementType={element?.type} />}
                         {permissions && permissions.includes('note_viewer') && (anyOpenComment && anyFlaggedComment) && !isTbElement && !isTccElement && <Button elementId={element.id} btnClassName={btnClassName} onClick={(e) => this.addOrViewComment(e, element.id,'viewComment')} type="comment-flagged" elementType={element?.type} />}
                      {  /* edit-button-cypressplus will launch you to cypressplus spa within same pdf*/}
@@ -2798,7 +2798,7 @@ class ElementContainer extends Component {
                         {permissions && permissions?.includes('alfresco_crud_access') && !hasReviewerRole() && element?.type === elementTypeConstant.PDF_SLATE &&
                         (element?.elementdata?.assetid !== "" || this.state.pdfSlateAssetId !== "") && <Button type={`alfresco-TE-metadata`} btnClassName={` metadata-pdfElement ${btnClassName}`} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                         {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole()  && showEditButton && !isDecorativeImage && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'edit-TE-button': 'edit-button'}`} btnClassName={btnClassName} onClick={(e) => this.handleEditButton(e)} />}
-                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole()  && showAlfrescoExpandButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'alfresco-TE-metadata': 'alfresco-metadata'}`} btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />} 
+                        {permissions && permissions.includes('elements_add_remove') && !hasReviewerRole()  && showAlfrescoExpandButton && <Button type={`${element?.figuretype === TABLE_ELEMENT ? 'alfresco-TE-metadata': 'alfresco-metadata'}`} btnClassName={btnClassName} onClick={(e) => this.handleAlfrescoMetadataWindow(e)} />}
                         {(feedback && ! isTbElement) ? <Button elementId={element.id} type="feedback" onClick={(event) => this.handleTCMLaunch(event, element)} /> : ((tcm && !isTbElement) && <Button type="tcm" onClick={(event) => this.handleTCMLaunch(event, element)} btnClassName={element.type === elementTypeConstant.PDF_SLATE && 'pdf-tcm-icon'}/>)}
                     </div> : ''}
                     {this.state.popup && <PopUp
@@ -2854,7 +2854,7 @@ class ElementContainer extends Component {
                             element={this.props.element}
                             index={this.props.index}
                             asideData={this.props.asideData}
-                            />}    
+                            />}
                     {this.props.children &&
                         <PageNumberContext.Consumer>
                             {
@@ -2908,7 +2908,7 @@ class ElementContainer extends Component {
                 activeColumnLabel = propsElementObject.columnIndex;
             }
         }
-        
+
         if (element && 'groupeddata' in element && element.groupeddata && 'bodymatter' in element.groupeddata &&
             element.groupeddata.bodymatter && element.groupeddata.bodymatter.length > 0) {
             return element.groupeddata.bodymatter.map((bodymatter, index) => {
@@ -2936,9 +2936,9 @@ class ElementContainer extends Component {
 
     /**
      * Renders the Cut/Copy Urn/element dialog menu
-     * @param {*} _props 
-     * @param {*} index 
-     * @param {*} inContainer 
+     * @param {*} _props
+     * @param {*} index
+     * @param {*} inContainer
      */
     renderCopyComponent = (_props, index, inContainer, tcmFlag) => {
         if (this.state.showCopyPopup) {
@@ -3029,7 +3029,7 @@ class ElementContainer extends Component {
                     return commentOnEntity === detailsToSet.element.id
                 });
             }
-            
+
             detailsToSet['elmComment'] = elmComment || [];
 
             let elmFeedback = (this.props.tcmData).filter(({ elemURN }) => {
@@ -3046,7 +3046,7 @@ class ElementContainer extends Component {
         }
         /**
          Check if Copied ShowHide contains any BlockList Element
-         Note:- This piece of code and also the propertry named 
+         Note:- This piece of code and also the propertry named
             as 'containsBlockList' in const detailsToSet will be removed once BL will be supported  in AS,WE,2C & 3C
         */
         if(element?.type === 'showhide') {
@@ -3102,7 +3102,7 @@ class ElementContainer extends Component {
         sendDataToIframe({
             'type': CanvasActiveElement,
             'message': {"id":elementId, "active":true, "isSlateLocked": isSlateLocked() }
-        });   
+        });
     }
 
     addOrViewComment = (e, elementId, type) => {
@@ -3162,8 +3162,8 @@ class ElementContainer extends Component {
 
     /**
      * @description - This function is for Open Glossarypopup.
-     * @param {} 
-     * @param 
+     * @param {}
+     * @param
      */
     openGlossaryFootnotePopUp = (glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField) => {
         this.props.glossaaryFootnotePopup(glossaaryFootnote, popUpStatus, glossaryfootnoteid, elementWorkId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, poetryField);
@@ -3171,8 +3171,8 @@ class ElementContainer extends Component {
 
     /**
      * @description - This function is for Open openMarkedIndexPopUp.
-     * @param {} 
-     * @param 
+     * @param {}
+     * @param
      */
      openMarkedIndexPopUp = (popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField, isNewIndex) => {
         this.props.markedIndexPopup(popUpStatus, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, poetryField, isNewIndex);
@@ -3209,7 +3209,7 @@ class ElementContainer extends Component {
                 imageId
             })
         }
-        
+
         if (togglePopup) {
             showTocBlocker();
         } else {
@@ -3226,10 +3226,10 @@ class ElementContainer extends Component {
             popup,
             showAlfrescoExpansionPopup: true
         });
-    } 
+    }
     /**
      * This function will take image id and open it in the Alfresco
-     * @param {*} id 
+     * @param {*} id
      */
     openInNewWindow(id){
         const Url = `${config.ALFRESCO_EDIT_ENDPOINT}${id}`
@@ -3286,7 +3286,7 @@ class ElementContainer extends Component {
             }else {
                 this.handleFigurePopup(true);
             }
-            
+
         }
         else {
             let fullAssessment = checkFullElmAssessment(element);
@@ -3322,7 +3322,7 @@ class ElementContainer extends Component {
             loadTrackChanges(element.id)
         }
     }
-    
+
     render = () => {
         const { element } = this.props;
             try {

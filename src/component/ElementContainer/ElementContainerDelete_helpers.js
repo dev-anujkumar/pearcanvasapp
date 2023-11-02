@@ -1,9 +1,9 @@
 import { sendDataToIframe, replaceWirisClassAndAttr } from '../../constants/utility.js';
-import { 
+import {
     prepareTcmSnapshots,
 } from '../TcmSnapshots/TcmSnapshots_Utility.js';
 //Constants
-import { 
+import {
     AUTHORING_ELEMENT_CREATED,
     GET_TCM_RESOURCES,
 } from "./../../constants/Action_Constants";
@@ -93,7 +93,7 @@ export const onDeleteSuccess = (params) => {
         operationType: 'delete'
     }
     deleteFromStore(args)
-    
+
     /** Delete Tcm data on element delete*/
     if (config.tcmStatus) {
         prepareTCMforDelete(elmId, dispatch, getState);
@@ -126,7 +126,7 @@ export function prepareTCMforDelete(elmId, dispatch, getState) {
     else{
         sendDataToIframe({ 'type': 'projectPendingTcStatus', 'message': 'false' });
     }
-    
+
 }
 
 export const deleteFromPopupInStore = (cutCopyParentData, popupContent) => {
@@ -276,7 +276,7 @@ export const deleteFromStore = async (params) => {
                                 })
                             }
                         })
-                      
+
                     })
                 /* To update redux store while deleting new element inside SH->Block Poetry->Stanza */
                 } else if (element?.type == "showhide" && element?.id === poetryData?.parent?.id) {
@@ -301,7 +301,7 @@ export const deleteFromStore = async (params) => {
                             })
                         }
                     })
-                } else 
+                } else
                 */
                 /* Delete element inside 2C->WE->element */
                 if(element?.type === "groupedcontent") {
@@ -358,7 +358,7 @@ export const deleteFromStore = async (params) => {
             slateLevelData: newParentData
         }
     })
-    
+
     /** ---------------------------- Auto-Numbering handling ------------------------------*/
     const isAutoNumberingEnabled = getState()?.autoNumberReducer?.isAutoNumberingEnabled;
     const autoNumberParams = {
@@ -374,10 +374,10 @@ export const deleteFromStore = async (params) => {
 }
 
 /**
- * function to find selected block list element inside block list data 
- * to delete 
- * @param {String} elementId 
- * @param {Object} elementData 
+ * function to find selected block list element inside block list data
+ * to delete
+ * @param {String} elementId
+ * @param {Object} elementData
  */
 export const deleteBlockListElement = (elementId, elementData) => {
     if (elementData?.listdata?.bodymatter) {
@@ -483,9 +483,9 @@ export const prepareTCMSnapshotsForDelete = async (params, operationType = null)
             index,
             deletedElementVersionUrn: deleteElemData.versionUrn
         }
-        /** 
+        /**
         * @description For SHOWHIDE Element - prepare parent element data
-        * Update - 2C/Aside/POP:SH:New 
+        * Update - 2C/Aside/POP:SH:New
         */
         const typeOfElement = asideData?.type;
         if (typeOfElement === "showhide") {
@@ -533,7 +533,7 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
     const parentType = ['element-aside', 'citations', 'poetry', 'groupedcontent', 'popup'];
     let versionStatus = {};
     let currentSlateData = cutCopyParentUrn && cutCopyParentUrn.sourceSlateManifestUrn?
-                            elementDeleteData.currentParentData[cutCopyParentUrn.sourceSlateManifestUrn] :elementDeleteData.currentParentData[config.slateManifestURN] 
+                        elementDeleteData.currentParentData[cutCopyParentUrn.sourceSlateManifestUrn] :elementDeleteData.currentParentData[config.slateManifestURN]
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
     }

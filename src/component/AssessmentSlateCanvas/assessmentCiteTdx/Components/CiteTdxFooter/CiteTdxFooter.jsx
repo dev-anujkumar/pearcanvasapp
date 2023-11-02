@@ -51,7 +51,7 @@ class CiteTdxFooter extends Component {
                 this.setState({ currentPage: 1 });
                 this.props.getCurrentPageNo(1);
             }
-        }     
+        }
     }
 
     handleClose = (action, citeTdxObj = {}) => {

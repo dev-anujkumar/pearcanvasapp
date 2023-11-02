@@ -1,4 +1,4 @@
-/*** 
+/***
  * @description - The Body comoinent of ELM Assessment
 */
 import React, { Component } from 'react';
@@ -23,7 +23,7 @@ class CiteTdxTable extends Component {
                 activeRow: this.props.currentSingleAssessmentSelected.versionUrn ? this.props.currentSingleAssessmentSelected.versionUrn:""
             })
         }
-       
+
     }
     addAssessment = (addedValue) => {
         this.setState({
@@ -74,8 +74,6 @@ class CiteTdxTable extends Component {
                         </table>
                         {(singleAssessmentData && singleAssessmentData.data && singleAssessmentData.data.length == 0) && (isLoading == false) && (assessmenterrFlag == false) &&
                          <div className ="no-result">No results found</div>}
-                    
-
                 </div>
             </div>
         );
@@ -94,7 +92,7 @@ const mapStateToProps = (state) => {
         isLoading: state.citeTdxReducer.isLoading,
         citeErrorFlag: state.citeTdxReducer.assessmenterrFlag,
         assessmenterrFlag: state.citeTdxReducer.assessmenterrFlag,
-        currentSingleAssessmentSelected: state.citeTdxReducer.currentSingleAssessmentSelected   
+        currentSingleAssessmentSelected: state.citeTdxReducer.currentSingleAssessmentSelected
     }
 }
 

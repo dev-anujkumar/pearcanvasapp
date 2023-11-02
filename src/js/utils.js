@@ -537,7 +537,7 @@ export const spanHandlers = {
 }
 /**
  * Returns the alt text of wiris image
- * @param {Object} targetWirisImage 
+ * @param {Object} targetWirisImage
  */
 export const getWirisAltText = ({target}) =>{
     const WIRIS_ALT_TEXT = target.getAttribute('alt');

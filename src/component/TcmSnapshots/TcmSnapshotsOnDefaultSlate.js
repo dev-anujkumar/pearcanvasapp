@@ -76,7 +76,7 @@ export const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPo
     if (containerElement?.showHideObj?.currentElement?.type === ELEMENT_ASIDE) {
         parentObj = {
             parent: containerElement?.showHideObj?.element,
-            sectionType: containerElement?.sectionType ? containerElement?.sectionType : containerElement?.showHideObj?.element.sectionType 
+            sectionType: containerElement?.sectionType ? containerElement?.sectionType : containerElement?.showHideObj?.element.sectionType
         }
     }
 
@@ -108,7 +108,7 @@ export const tcmSnapshotsCreateAsideWE = (snapshotsData, defaultKeys,index, isPo
         else if (item.type === SHOWHIDE || item.type === POETRY_ELEMENT) {
             tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,item, operationType)
         }
-        
+
         else if (item.type === POPUP_ELEMENT) {
             tcmSnapshotsPopup(wipData,index,containerElement,actionStatus,item,operationType);
         }
@@ -157,7 +157,7 @@ export const tcmSnapshotsPopup =(wipData,index,containerElement,actionStatus,ite
 /* Form @parent@ data for cut/copy operation of aside/we:popup/showhide in multicolumn */
 export function parentData4CutCopyASWE_2C(asideData, parentUrn) {
     const { mcId, manifestUrn, columnName, multiColumnType } = parentUrn || {};
-    return { 
+    return {
         id: mcId || asideData?.id,
         type: "groupedcontent",
         columnId: manifestUrn,
@@ -166,7 +166,7 @@ export function parentData4CutCopyASWE_2C(asideData, parentUrn) {
     }
 }
 
-/* If element is inside Body of Worked-Example then parentUrn 
+/* If element is inside Body of Worked-Example then parentUrn
 * should contain value of body(Manifest) of WE */
 export function setParentUrnData(wipData, item) {
     let parent = wipData;
@@ -210,7 +210,7 @@ export const tcmSnapshotsShowHide =(wipData,index,containerElement,actionStatus,
             manifestUrn: wipData?.groupeddata?.bodymatter?.[eleIndex]?.id
         }
     }
-    
+
     let newContainerElement = {}
     if (containerElement.cutCopyParentUrn) {
         newContainerElement = {
@@ -283,10 +283,10 @@ export const tcmSnapshotsCreatePoetry = (snapshotsData, defaultKeys, index, isPo
     }
     // always one stanza will be created in poetry but in
     // case of cut paste all of them have to be pasted
-    // so multiple snapshots will go 
+    // so multiple snapshots will go
     wipData.contents.bodymatter.map((item) => {
         elementId.childId = item.id;
-        tag.childTag = fetchElementsTag(item); 
+        tag.childTag = fetchElementsTag(item);
         const elementDetails = setElementTypeAndUrn(elementId, tag, isHead, parentUrn?.manifestUrn ? parentUrn.manifestUrn : "", undefined,
         popupInContainer, slateManifestVersioning, isPopupSlate, poetryElement, { asideData, parentUrn, showHideObj }, actionStatus, popupCutCopyParentData);
         prepareAndSendTcmData(elementDetails, item, defaultKeys, actionStatus,index);
@@ -338,7 +338,7 @@ export const tcmSnapshotsCitationPoetry = (containerElement, snapshotsData, defa
     if (containerElement?.showHideObj?.currentElement?.type === 'element-aside' || containerElement?.showHideObj?.currentElement?.type === 'citations') {
         parentObj = {
             parent: containerElement?.showHideObj?.element,
-            sectionType: containerElement?.sectionType ? containerElement?.sectionType : containerElement?.showHideObj?.element.sectionType 
+            sectionType: containerElement?.sectionType ? containerElement?.sectionType : containerElement?.showHideObj?.element.sectionType
         }
     }
     if(parentObj?.parent?.type === ELEMENT_ASIDE && parentObj?.parent?.subtype === WORKED_EXAMPLE) {
@@ -399,7 +399,7 @@ export const tcmSnapshotsInContainerElements = (containerElement, snapshotsData,
             elementId.childId = wipData.id;
             tag.childTag = fetchElementsTag(wipData);
         }
-    } 
+    }
     else if (containerElement?.showHideObj?.containerinSH && (asideData?.parent?.type === SHOWHIDE && asideData?.element?.type === ELEMENT_ASIDE)) {
         elementId.parentId =  asideData?.element?.id ??  "";
         elementId.childId = wipData.id;
@@ -452,7 +452,7 @@ export const tcmSnapshotsAsideWE =(wipData,index,containerElement,actionStatus,i
             id: item.id,
             subtype: item.subtype,
             type: item.type,
-            parent: { 
+            parent: {
                 id: wipData?.id,
                 type: "groupedcontent",
                 columnId: wipData?.groupeddata?.bodymatter[columnIndex]?.id,
@@ -525,7 +525,7 @@ export const containerSnapshotsInShowhide = (wipData, index, containerElement, a
 /**
  * @function fetchParentData
  * @description This function is to set the parentData for the element
- * @param {Object} bodymatter - bodymatter for conversion  
+ * @param {Object} bodymatter - bodymatter for conversion
  * @param {String/Number} indexes - index of element converted
  * @returns {Object} ParentData fo given element
 */
@@ -534,7 +534,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
     const { asideData, parentUrn } = store?.getState()?.appStore || {};
     const { type,  parent, grandParent } = asideData || {};
     const isFigure = (response?.type === FIGURE) && (type === ELEMENT_ASIDE) && (parent?.type === MULTI_COLUMN);
-    
+
     let parentData = {};
     let tempIndex = Array.isArray(indexes) ? indexes : (typeof indexes === "number") ? indexes.toString() : indexes.split("-");
     let isChildElement = elementType.indexOf(bodymatter[tempIndex[0]].type) === -1 ? true : false
@@ -607,7 +607,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
 /**
  * @function setParentUrn
  * @description This function is to set the parentUrn key for the container elements
- * @param {Object} bodymatter - bodymatter for conversion  
+ * @param {Object} bodymatter - bodymatter for conversion
  * @param {String/Number} tempIndex - index of element converted
  * @returns {Object} ParentData fo given element
 */

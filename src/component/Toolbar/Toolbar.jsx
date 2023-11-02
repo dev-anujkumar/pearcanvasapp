@@ -37,7 +37,7 @@ const _Toolbar = props => {
     useEffect(() => {
         setLODropdown(false);
         hideSlateTagIcon()
-      }, [props.setSlateEntity, props.setSlateParent]); 
+      }, [props.setSlateEntity, props.setSlateParent]);
 
     useEffect(() => {
         changeAudioNarration()
@@ -49,9 +49,9 @@ const _Toolbar = props => {
     function hideSlateTagIcon() {
         if (document.getElementsByClassName("slate-tag-icon").length) {
             document.getElementsByClassName("slate-tag-icon")[0].style.display = "block";
-        } 
+        }
     }
-    
+
     /**
      * Function for unlock slate button action
      */
@@ -81,7 +81,7 @@ const _Toolbar = props => {
     function _handleOpenDropdown() {
         setValueOpen(!openDropDown);
     }
-    
+
     /**
      * Function for show/hide dropdown
      */
@@ -166,12 +166,12 @@ const _Toolbar = props => {
             <div className={toolbarClass}>
 
             {/* ************** isSubscriber ************** */}
-            { isSubscribed ? 
+            { isSubscribed ?
             <div className='toolbar-text'>
                 <VisibilityIcon />
                 <div className='read-only'>{SUBSCRIBER_BANNER_MESSAGE}</div>
             </div> :
-            isApprovedCondition ? 
+            isApprovedCondition ?
             <div className='toolbar-text'>
                 <VisibilityIcon />
                 <div className='read-only'>{APPROVED_BANNER_MESSAGE1} </div>
@@ -179,8 +179,8 @@ const _Toolbar = props => {
                 <button variant="outlined" color="primary" className="edit-content-btn" onClick={approveNormalSlate}>
                     {EDIT_CONTENT_BTN}
                 </button>
-            </div> : 
-            (checkSlateLock(props.slateLockInfo)) ? 
+            </div> :
+            (checkSlateLock(props.slateLockInfo)) ?
             <div className='toolbar-text'>
                 <LockIcon />
                 <div><span className='read-only'>{LOCKED_BANNER_MESSAGE} </span><span className='locked-user'>by {lockedByUser} </span>
@@ -193,7 +193,7 @@ const _Toolbar = props => {
                 <div className={`header ${isToolBarBlocked} ${accessToolbar} ${isReadOnly}`} id="tinymceToolbar"></div>
                 {/* ***********************Slate Tag in toolbar******************************************** */}
                 {config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && props.slateType !== "container-introduction" &&
-                !config.parentOfParentItem && 
+                !config.parentOfParentItem &&
                     <div className={props?.isLOExist ? "leaningobjective-block" : `leaningobjective-block ${isToolBarBlocked}`}>
                         <div className="learningobjectiveicon">
                             <div className={`learningobjectiveicon slate-tag-icon ${(hasReviewerRole()  && !props.isLOExist) ? "disable" : ""}`}
@@ -271,7 +271,7 @@ const _Toolbar = props => {
                     {showHeader ? collapseHeader : expandHeader}
                 </div>
             </div>
-        </div>   
+        </div>
     )
 }
 
