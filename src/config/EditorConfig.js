@@ -162,7 +162,6 @@ export const elementTypeOptions = Object.freeze({
 /** Insert Image handler - calls Image Alfresco Picker */
 const insertImageHandler = (params) => {
     let { element, permissions, editor ,props} = params;
-    let blockListData = checkBlockListElement(params.props, "TAB");
     let allowedElementTypes = [ElementConstants.ELEMENT_LIST,ElementConstants.AUTHORED_TEXT,ElementConstants.LEARNING_OBJECTIVE_ITEM,ElementConstants.BLOCKFEATURE];
     if (allowedElementTypes.indexOf(element?.type) > -1) {
         handleC2MediaClick(permissions, editor, element, props.saveSelectedAlfrescoElement);

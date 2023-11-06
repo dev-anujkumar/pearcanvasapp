@@ -11,7 +11,7 @@ import { FIGURE_IMAGE_BUTTON_TITLE, IMAGE_ID, IMAGE_PATH, ALFRESCO_SITE_PATH, UP
  * This is Pure Component to render Image Asset of FigureImage Component
  */
 const FigureImageAsset = (props) => {
-    const { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, onFocusTop, onFocusBottom } = props.figureTypeData;
+    const { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight } = props.figureTypeData;
 
     const addFigureRef = useRef(null);
     const updateFigureRef = useRef(null);

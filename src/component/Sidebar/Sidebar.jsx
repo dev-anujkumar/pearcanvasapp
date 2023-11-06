@@ -973,7 +973,6 @@ class Sidebar extends Component {
             case 'dialogue':
             case 'bce':
             default:
-                let activeElementNode2 = document.querySelector('.element-container.pe')
                 break;
         }
     }

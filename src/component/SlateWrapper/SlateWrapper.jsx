@@ -202,7 +202,7 @@ class SlateWrapper extends Component {
         /**
          * This chunk manages slatelock info
          */
-        const { slateLockInfo: { isLocked, userId, userFirstName, userLastName },projectSubscriptionDetails:{projectSharingRole,projectSubscriptionDetails:{isSubscribed}} } = props
+        const { slateLockInfo: { isLocked },projectSubscriptionDetails:{projectSharingRole,projectSubscriptionDetails:{isSubscribed}} } = props
         if (!isLocked) {
             stateChanged = true;
         }
@@ -1578,7 +1578,6 @@ class SlateWrapper extends Component {
             )
         }
         const slateType = getSlateType(this.props.slateData[config.slateManifestURN])
-        const slatePublishStatus = this.props.slateData?.[config.slateManifestURN]?.type === "popup" && this.props.slateData?.[config.slateManifestURN]?.status === "approved" && config.tempSlateManifestURN  && this.props.slateData?.[config.tempSlateManifestURN]?.status === "approved";
         const {projectSubscriptionDetails:{projectSharingRole, projectSubscriptionDetails:{isSubscribed}}}=this.props
         return (
             <React.Fragment>
