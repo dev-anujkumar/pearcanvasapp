@@ -18,14 +18,11 @@ Array.prototype.move = function (from, to) {
  */
 export const handleAutoNumberingOnDelete = async (params) => {
     const {
-        element,
         type,
         contentUrn,
         getState,
         dispatch,
-        isAutoNumberingEnabled,
-        asideData
-    } = params
+        isAutoNumberingEnabled    } = params
     const slateAncestors = getState().appStore.currentSlateAncestorData;
     const figureParentEntityUrn = getContainerEntityUrn(slateAncestors);
     const autoNumberedElements = getState()?.autoNumberReducer.autoNumberedElements;
