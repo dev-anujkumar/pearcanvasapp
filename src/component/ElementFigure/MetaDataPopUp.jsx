@@ -8,6 +8,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { checkImageForMetadata, checkOpenerElement, checkSmartLinkInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility';
 import { showNotificationOnCanvas } from '../../constants/utility';
+import { checkMetadataIdentical } from '../ElementContainer/ElementContainerUpdate_helpers';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -61,7 +62,7 @@ class MetaDataPopUp extends React.Component {
 					fetchedLongDesc: avsStringData.linkLongDesc,
 					longDescription: avsStringData.linkLongDesc,
 					disableTextFields: true,
-					disableUpdateButton: (this?.props?.element?.figuredata?.alttext===avsStringData?.imageAltText && this?.props?.element?.figuredata?.longdescription===avsStringData?.linkLongDesc) ? false : true
+					disableUpdateButton: checkMetadataIdentical(this?.props?.element?.figuredata?.alttext, this?.props?.element?.figuredata?.longdescription, avsStringData?.imageAltText, avsStringData?.linkLongDesc) ? false : true
 				})}
 			else{
 				this.setState({
@@ -71,7 +72,7 @@ class MetaDataPopUp extends React.Component {
 					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
 					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
 					disableTextFields:  true,
-					disableUpdateButton: checkOpenerElement(this.props.element) ? (this?.props?.element?.backgroundimage?.alttext===properties["cplg:altText"] && this?.props?.element?.backgroundimage?.longdescription===properties["cplg:longDescription"] ? false : true) :  (this?.props?.element?.figuredata?.alttext===properties["cplg:altText"] && this?.props?.element?.figuredata?.longdescription===properties["cplg:longDescription"]) ? false : true
+					disableUpdateButton: checkOpenerElement(this.props.element) ? (checkMetadataIdentical(this?.props?.element?.backgroundimage?.alttext, this?.props?.element?.backgroundimage?.longdescription, properties["cplg:altText"], properties["cplg:longDescription"]) ? false : true) :  checkMetadataIdentical(this?.props?.element?.figuredata?.alttext, this?.props?.element?.figuredata?.longdescription, properties["cplg:altText"], properties['cplg:longDescription']) ? false : true
 				})
 			}
 			}).catch(error => {

@@ -3609,7 +3609,7 @@ export class TinyMceEditor extends Component {
                         this.editorRef.current.style.caretColor = 'transparent';
                         this.editorRef.current.focus();
                     } else {
-                        this.props.handleEditorFocus("", null, null)
+                        this.props.handleEditorFocus("", null, null,'', true)    /* true is passed as last argument to prevent first figure element from activation on project load if there is some change in the asset's metadata as it calls handlefocus from ElementContainer */
                     }
                 }
 

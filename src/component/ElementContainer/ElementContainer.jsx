@@ -86,6 +86,7 @@ import ElementConstants from './ElementConstants.js';
 import { interactivetype } from './ElementConstants';
 import ElementTCC from '../LtiSlate/ElementTCC.jsx';
 import { saveSelectedAltTextLongDescData } from '../AlfrescoPopup/Alfresco_Action';
+import { checkMetadataIdentical } from './ElementContainerUpdate_helpers';
 
 const {
     AUTO_NUMBER_SETTING_DEFAULT,
@@ -339,7 +340,7 @@ class ElementContainer extends Component {
     /**
      * function will be called on element focus of tinymce instance
      */
-    handleFocus = async (updateFromC2Flag, showHideObj, event, labelText) => {
+    handleFocus = async (updateFromC2Flag, showHideObj, event, labelText, tinymceFlag) => {    /* tinmymceFlag indicates that handleFocus is called from tinymceEditor file and is used to prevent first figure element from activation when it is not made active */
         if (event && labelText !== 'fg') {
             event.stopPropagation();
         }
@@ -403,12 +404,12 @@ class ElementContainer extends Component {
             this.props.fetchCommentByElement(this.props.element.id);
         }
         /*--Fetches and updates the alt-text and long-desc for the active element(figure, smartlink, opener) and updates the same in the settings panel*/
-        if(this.state.borderToggle==='showBorder' && !hasReviewerRole()){
+        if(this.state.borderToggle==='showBorder' && !hasReviewerRole() && !tinymceFlag){
                 if(element?.type===ELEMENT_FIGURE){
                     if(checkImageForMetadata(element) && element?.figuredata?.imageid){
                         const assetId = element?.figuredata?.imageid?.replace('urn:pearson:alfresco:', '')
                         const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
-                        if(assetMetadata?.altText!==element?.figuredata?.alttext || assetMetadata?.longDescription!==element?.figuredata?.longdescription){
+                        if(!checkMetadataIdentical(element?.figuredata?.alttext, element?.figuredata?.longdescription, assetMetadata?.altText, assetMetadata?.longDescription)){
                             let	figureData = { ...element?.figuredata };
                             figureData.alttext = assetMetadata?.altText;
                             figureData.longdescription = assetMetadata?.longDescription;
@@ -423,7 +424,7 @@ class ElementContainer extends Component {
                         const assetId = element?.figuredata?.interactiveid?.replace('urn:pearson:alfresco:', '')
                         const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
 		                /*-- Updata the image metadata in wip */
-                        if(assetMetadata?.altText!==element?.figuredata?.alttext || assetMetadata?.longDescription!==element?.figuredata?.longdescription){
+                        if(!checkMetadataIdentical(element?.figuredata?.alttext, element?.figuredata?.longdescription, assetMetadata?.altText, assetMetadata?.longDescription)){
                             let	figureData = { ...element?.figuredata };
                             figureData.alttext = assetMetadata?.altText;
                             figureData.longdescription = assetMetadata?.longDescription;
@@ -437,7 +438,7 @@ class ElementContainer extends Component {
                 else if(checkOpenerElement(element)){
                     const assetId = element?.backgroundimage?.imageid?.replace('urn:pearson:alfresco:', '')
                     const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
-                    if(assetMetadata?.altText!==element?.backgroundimage?.alttext || assetMetadata?.longDescription!==element?.backgroundimage?.longdescription){
+                    if(!checkMetadataIdentical(element?.backgroundimage?.alttext, element?.backgroundimage?.longdescription, assetMetadata?.altText, assetMetadata?.longDescription)){
                         let tempElementData = {...element}
                         tempElementData.backgroundimage.alttext = assetMetadata?.altText;
                         tempElementData.backgroundimage.longdescription = assetMetadata?.longDescription;
@@ -451,6 +452,7 @@ class ElementContainer extends Component {
                     }
                 }
         }
+        
         // disabling Add comment icon for TCC Element in TOC
         if(this.props?.element?.type !== ElementConstants.TCC_ELEMENT) {
             this.handleCommunication(this.props.element.id);
