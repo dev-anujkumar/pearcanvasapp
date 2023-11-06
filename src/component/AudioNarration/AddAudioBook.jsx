@@ -27,7 +27,7 @@ class AddAudioBook extends React.Component {
         this.props.closeAddAudioBook();
         this.handleC2MediaClick(this)
     }
-    
+
     handleSiteOptionsDropdown = (alfrescoPath, id, isGlossary,currentAsset) => {
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
@@ -41,8 +41,8 @@ class AddAudioBook extends React.Component {
                 }
             })
             .then(function (response) {
-               let payloadObj = {launchAlfrescoPopup: true, 
-                alfrescoPath: alfrescoPath, 
+               let payloadObj = {launchAlfrescoPopup: true,
+                alfrescoPath: alfrescoPath,
                 alfrescoListOption: response.data.list.entries,
                 id,
                 isGlossary,
@@ -72,7 +72,7 @@ class AddAudioBook extends React.Component {
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     const citeNodeRef = alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef
-                    let messageObj = {appName:'cypress', citeName:  citeName, 
+                    let messageObj = {appName:'cypress', citeName:  citeName,
                         citeNodeRef: citeNodeRef,
                         elementId: this.props.elementId,
                         calledFrom: 'NarrativeAudio', calledFromGlossaryFootnote: this.props.isGlossary,

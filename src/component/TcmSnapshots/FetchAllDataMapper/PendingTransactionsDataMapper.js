@@ -40,7 +40,7 @@ const PendingTransactionsDataMapper = {
     return returnValue;
   },
 
-  
+
 };
 
 export default PendingTransactionsDataMapper;

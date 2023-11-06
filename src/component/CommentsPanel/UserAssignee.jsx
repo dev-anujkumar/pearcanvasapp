@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 class UserAssignee extends React.Component {
 
     /**
-     * 
+     *
      *@discription - This function is to return jsx of assigneeForm menu
      @param {Array} props - Array of   comments
     @return {String} - returns the jsx code of the assignee menu
@@ -25,7 +25,7 @@ class UserAssignee extends React.Component {
                             }}>
                         </span>
                         <span className="reject-assignee-button" onClick={props.removeAssigneePopup}></span>
-                    
+
                 </>
             );
         } else {

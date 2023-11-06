@@ -40,7 +40,7 @@ class Comments extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to toggle the Action menu
     @param {String} show - true false value to tgoggle the action menu
     */
@@ -53,15 +53,15 @@ class Comments extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to toggle between expanded and collapsed state of replies
-    */    
+    */
     setReplyDropdownState = () => {
         this.setState({ showReplyComments: !this.state.showReplyComments });
     }
-    
+
     /**
-    * 
+    *
     *@discription - This function is to show the comment in slateview
     */
     // printComment = () => {
@@ -74,7 +74,7 @@ class Comments extends React.Component {
     //         var index = string.indexOf(x[i]);
     //         final+="<span style = 'color: #7a797a'>" + string.substring(prevIndex,index) + "</span>";
     //         final+="<span style = 'color: #015a70'>"+x[i]+"</span>";
-    //         prevIndex = index + x[i].length;	
+    //         prevIndex = index + x[i].length;
     //     }
     //     final += "<span>" + string.substring(prevIndex) +  "</span>";
     //     return (
@@ -84,7 +84,7 @@ class Comments extends React.Component {
     // }
 
    /**
-   * 
+   *
    *@discription - This function is to update the comment
    @param {String} property - property to be updated in comment
    */
@@ -101,7 +101,7 @@ class Comments extends React.Component {
     }
 
    /**
-   * 
+   *
    *@discription - This function is to edit the comment
    */
     editComment =(e) =>{
@@ -110,7 +110,7 @@ class Comments extends React.Component {
     }
 
     /**
-     * 
+     *
      *@discription - This function is to set mode of the comment
     @param {String} mode - mode to be set to show comment like resolve,edit
     */
@@ -120,7 +120,7 @@ class Comments extends React.Component {
 
 
    /**
-   * 
+   *
    *@discription - This function is to assign new user
    @param {String} user - assign new user in the comment
    */
@@ -142,10 +142,10 @@ class Comments extends React.Component {
                 isSelectRole: true
             })
         }
-    }    
-    
+    }
+
     /**
-    * 
+    *
     *@discription - This function is to change the assignee
     */
     changeAssignee =()=> {
@@ -178,7 +178,7 @@ class Comments extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to toggle replay form
     @param {String} show - true or false value to toggle form
     */
@@ -190,7 +190,7 @@ class Comments extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to resolve comment
     */
 
@@ -202,7 +202,7 @@ class Comments extends React.Component {
     }
 
   /**
-  * 
+  *
   *@discription - This function is to update comment
   */
     updateCommentText=(e) =>{
@@ -215,7 +215,7 @@ class Comments extends React.Component {
     }
 
     /**
-     * 
+     *
      *@discription - This function is to delete comment
     */
     deleteComment=(e)=> {
@@ -226,7 +226,7 @@ class Comments extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to return jsx of action menu
     @return {String} - returns the jsx code of the action menu
     */
@@ -244,14 +244,14 @@ class Comments extends React.Component {
                 {permissions.includes('notes_resolving_closing') && <li onClick={this.resolveComment}>Resolve</li>}
                 {(config.fullName === comment.commentCreator || config.userId === comment.commentCreator) && permissions.includes('notes_deleting') && <li onClick={this.editComment}>Edit</li>}
                 {permissions.includes('notes_assigning') && <li onClick={this.changeAssignByRole}>Change Assigned Role</li>}
-                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>} 
+                {permissions.includes('notes_assigning') && <li onClick={this.changeAssignee}>Change Assignee</li>}
                 {deleteCommentPermission && <li onClick={this.deleteComment}>Delete</li>}
             </ul>
         )
     }
 
     /**
-    * 
+    *
     *@discription - This function is to return jsx of edit menu
     @return {String} - returns the jsx code of the edit menu
     */
@@ -259,10 +259,10 @@ class Comments extends React.Component {
         return (
 
             <div>
-                <CommentMention 
+                <CommentMention
                 urn={this.props.comment.commentUrn}
-                projectUsers={this.props.users} 
-                comment={this.props.comment.commentString} 
+                projectUsers={this.props.users}
+                comment={this.props.comment.commentString}
                 handleCommentChange={this.updateCommentText}
                 isEditMode={true}
                 />
@@ -288,7 +288,7 @@ class Comments extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to remove the popup of assigne
     */
     removeAssigneePopup =() =>{
@@ -300,7 +300,7 @@ class Comments extends React.Component {
     }
 
     /**
-    * 
+    *
     *@discription - This function is to update the assignee
     */
     updateAssignee = () => {
@@ -351,14 +351,14 @@ class Comments extends React.Component {
                     </div>
                     <div className="comment-body">
                         {
-                            this.state.mode == "edit" ? this.editForm() 
+                            this.state.mode == "edit" ? this.editForm()
                             :
                             <div className="text-medium color-gray-71 mb-4">
                                 <p className="hyphens">
                                     <CommentMention projectUsers={users} readOnly urn={this.props.comment.commentUrn} comment={this.props.comment.commentString}/>
                                 </p>
                             </div>
-                        }         
+                        }
                         <div className="properties">
                             <div className="property">
                                 <span className="property-title">Slate</span>

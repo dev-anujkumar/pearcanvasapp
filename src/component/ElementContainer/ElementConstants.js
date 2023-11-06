@@ -3,7 +3,7 @@ export default {
     AUTHORED_TEXT : "element-authoredtext",
     BLOCKFEATURE : "element-blockfeature",
     ELEMENT_LIST : "element-list",
-/****************Figure Element************************ */    
+/****************Figure Element************************ */
     FIGURE : "figure",
     FIGURE_IMAGE : "image",
     FIGURE_TABLE : "table",
@@ -15,7 +15,7 @@ export default {
     FIGURE_VIDEO : "video",
     FIGURE_ASSESSMENT : "assessment",
     FIGURE_ELEMENT_DISCUSSION : "element-discussion",
- 
+
 /****************Figure Interactive Element************************ */
     INTERACTIVE : "interactive",
     INTERACTIVE_MMI : "mmi",
@@ -28,30 +28,30 @@ export default {
         VIDEO_MCQ: 'video-mcq',
         GUIDED_EXAMPLE: 'guided-example'
     },
-/****************Container Element************************ */  
+/****************Container Element************************ */
     ELEMENT_WORKEDEXAMPLE: "workedexample",
     ELEMENT_ASIDE: "element-aside",
     SHOW_HIDE: "showhide",
     ELEMENT_SECTION_BREAK: 'manifest',
-/****************Metadata Anchor************************ */  
+/****************Metadata Anchor************************ */
     METADATA_ANCHOR : "element-learningobjectivemapping",
     LEARNING_OBJECTIVE_ITEM:"element-learningobjectives",
 
-/****************Metadata Anchor LO List************************ */  
+/****************Metadata Anchor LO List************************ */
     METADATA_ANCHOR_LO_LIST : "element-generateLOlist",
 
-/****************Assessment Slate Element************************ */  
+/****************Assessment Slate Element************************ */
     ASSESSMENT_SLATE : "element-assessment",
     ELEMENT_ASSESSMENT : "ELEMENT_ASSESSMENT ",
 
-/****************Pop Up elment************************ */  
+/****************Pop Up elment************************ */
     POOPUP_ELEMENT:"popup",
 
-/****************Citation elment************************ */  
+/****************Citation elment************************ */
     CITATION_GROUP: "citations",
     CITATION_ELEMENT: "element-citation",
 
-/****************Poetry element************************ */  
+/****************Poetry element************************ */
     POETRY_ELEMENT: "poetry",
     POETRY_STANZA: "stanza",
 
@@ -60,19 +60,19 @@ export default {
     TABBED_TAB: "group",
     TAB: "tab",
 
-/****************Element Dialogue************************ */  
+/****************Element Dialogue************************ */
     ELEMENT_DIALOGUE: "element-dialogue",
     DIALOGUE_SD: "stagedirection",
     DIALOGUE_DE: "lines",
     ELEMENT_DISCUSSION: 'discussion',
 
-/**************** PDF Slate Element ************************ */  
+/**************** PDF Slate Element ************************ */
     PDF_SLATE : "element-pdf",
 
-/**************** LTI Slate Element ************************ */  
+/**************** LTI Slate Element ************************ */
     TCC_ELEMENT : "element-tcc",
 
-/**************** Block list Element ************************ */  
+/**************** Block list Element ************************ */
     BLOCK_LIST : "manifestlist"
 }
 

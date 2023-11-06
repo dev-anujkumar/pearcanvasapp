@@ -12,7 +12,7 @@ export const UsageTypeDropdown = (props) => {
         )
         return assessmentType
     }
-    
+
     return (
         <>
             {renderDropdown()}

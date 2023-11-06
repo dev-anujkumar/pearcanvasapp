@@ -21,7 +21,7 @@ const SearchComponent = props => {
         if(searchTotalCount !== searchEvent.totalCount) {
             handleSearchTotalData(searchEvent.totalCount);
         }
-        
+
         document.addEventListener("mousedown", e => handleSearchBlur(e));
     });
 
@@ -40,7 +40,7 @@ const SearchComponent = props => {
         e.stopPropagation();
         let value = e.target.value;
         handleChange(value);
-        props.getContainerData(value);  
+        props.getContainerData(value);
     }
 
     const handleClose = e => {
@@ -63,7 +63,7 @@ const SearchComponent = props => {
     const setSearchRef = element => {
         searchRef = element;
     }
-    
+
     return (
         <div ref={setSearchRef} className={`search-wrapper ${props.search ? 'active' : ''}`}>
             <div className="search-element">

@@ -33,7 +33,7 @@ import { SET_SELECTION } from './../../constants/Action_Constants.js';
 import tinymce from 'tinymce'
 import SLATE_CONSTANTS  from '../../component/ElementSaprator/ElementSepratorConstants';
 import ElementConstants from '../ElementContainer/ElementConstants';
-import { getShowHideElement, indexOfSectionType } from '../ShowHide/ShowHide_Helper';
+import { getShowHideElement } from '../ShowHide/ShowHide_Helper';
 import { isEmpty } from '../TcmSnapshots/ElementSnapshot_Utility';
 const { SHOW_HIDE, TAB, MULTI_COLUMN, ELEMENT_WORKEDEXAMPLE } = ElementConstants;
 import { callCutCopySnapshotAPI } from '../TcmSnapshots/TcmSnapshot_Actions';
@@ -71,7 +71,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
     };
     if (type == "LO") {
         _requestData.loref = loref ? loref : ""
-    } 
+    }
     else if (type == 'ELEMENT_CITATION') {
         _requestData.parentType = "citations"
     }
@@ -266,7 +266,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
             newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
                 if (item.id == poetryData.parentUrn) {
                     item.contents.bodymatter.splice(index, 0, createdElementData)
-                } 
+                }
                 else if (item.type == "poetry" && item.id == poetryData.id) {
                     item.contents.bodymatter && item.contents.bodymatter.map((ele) => {
                         if (ele.id === poetryData.parentUrn) {
@@ -310,7 +310,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         }
                     });
                 }
-            })  
+            })
         /* To update redux store while creating new element inside TB->Tab->Column */
         } else if (asideData && asideData.type === MULTI_COLUMN && asideData.subtype === TAB) {
             const parentIndexes = asideData.index && asideData.index.split("-")
@@ -331,7 +331,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     column?.groupdata?.bodymatter?.splice(index, 0, createdElementData)
                 }
             })
-        } 
+        }
         /*  Local store update for block list and Text inside block list for multiple levels. */
         else if((type==='MANIFEST_LIST' || type==='TEXT') && blockListDetails!==null){
             const indexes = blockListDetails.indexOrder.split('-');
@@ -349,7 +349,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else if (indexes.length === 9) { // Block list on 3 level nesting
                     initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
-                else { // level 4 
+                else { // level 4
                     initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }// update store for AS/WE(header) if it has Bl inside it and its nesting level
@@ -364,7 +364,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else if (indexes.length === 8) { // Block list on 3 level nesting
                     initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
-                else { // level 4 
+                else { // level 4
                     initialdata[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 } // Manifest List/Text element handelling for Tab element inside TB
             } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
@@ -378,7 +378,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                         break;
                     case 10: // TB:Tab:c1:BL Level 3 nesting
                         initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter.splice(index, 0, createdElementData);
-                        
+
                         break;
                     case 12: // TB:Tab:c1:BL Level 4 nesting
                         initialdata[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]].listdata.bodymatter[indexes[10]].listitemdata.bodymatter.splice(index, 0, createdElementData);
@@ -396,7 +396,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                else if (indexes.length === 9) { // Block list on 3 level nesting
                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                }
-               else { // level 4 
+               else { // level 4
                    initialdata[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter[indexes[8]].listdata.bodymatter[indexes[9]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                }
             }
@@ -411,11 +411,11 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else if (indexes.length === 7) { // Block list on 3 level nesting
                     initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
-                else { // level 4 
+                else { // level 4
                     initialdata[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter[indexes[7]].listitemdata.bodymatter.splice(index, 0, createdElementData)
                 }
             }
-         } 
+         }
          /*  Local store update for manifest list item inside block list for multiple levels. */
          else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="ENTER"){
              const indexes = blockListDetails.indexOrder.split('-');
@@ -444,7 +444,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 }else if (indexes.length === 8) { // Block list on 3 level nesting
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
-                else { // level 4 
+                else { // level 4
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
                 // Manifest List Item handelling for Tab element inside TB
@@ -495,8 +495,8 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                      initialdata[indexes[1]].listitemdata.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]].listdata.bodymatter[indexes[5]].listitemdata.bodymatter[indexes[6]].listdata.bodymatter.splice(index, 0, createdElementData)
                  }
             }
-            
-          } 
+
+          }
          /*  Local store update for manifest list item inside block list for multiple levels. */
           else if(type==='MANIFEST_LIST_ITEM' && blockListDetails!==null && blockListDetails.eventType ==="SHIFT+TAB"){
              const indexes = blockListDetails.indexOrder.split('-');
@@ -522,7 +522,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                 else if (indexes.length === 8) { // Block list on 3 level nesting
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
-                else { // level 4 
+                else { // level 4
                     initialdata[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter.splice(index, 0, createdElementData)
                 }
             } else if (asideData?.parent?.type === MULTI_COLUMN && asideData?.parent?.subtype === TAB) {
@@ -570,7 +570,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
                     item?.groupeddata?.bodymatter.splice(index, 0, createdElementData)
                 }
             })
-        } 
+        }
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, createdElementData);
         }
@@ -608,7 +608,7 @@ export const createElement = (type, index, parentUrn, asideData, outerAsideIndex
         /**------------------------------------------------------------------------------------------------*/
         if (cb) {
             cb();
-        }   
+        }
     }).catch(error => {
         // Opener Element mock creation
 
@@ -746,7 +746,7 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         else {
             newParentData[config.slateManifestURN].contents.bodymatter.splice(index, 0, ...response.data);
         }
-        
+
         dispatch({
             type: AUTHORING_ELEMENT_CREATED,
             payload: {
@@ -758,7 +758,7 @@ export const createPowerPasteElements = (powerPasteData, index, parentUrn, aside
         console.error("Error in Powerpaste", error)
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
     }
-    
+
 }
 
 
@@ -779,7 +779,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
     }
     /* If swapping for inner elements of showhide then add section type also, show|hide */
     if(containerTypeElem === SHOW_HIDE){
-        _requestData.sectionType = sectionType   
+        _requestData.sectionType = sectionType
     }
     let parentData = getState().appStore.slateLevelData;
     let currentParentData = JSON.parse(JSON.stringify(parentData));
@@ -829,7 +829,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     const indexs = elementIndex?.toString().split('-') || [];
                     let sectionType = parentElement?.showHideType;
                     /* TB->Tab->AS/WE->HEAD: Swap Elements */
-                    if(parentElement?.type === ElementConstants.MULTI_COLUMN && parentElement?.subtype === ElementConstants.TAB && indexs?.length === 4) { 
+                    if(parentElement?.type === ElementConstants.MULTI_COLUMN && parentElement?.subtype === ElementConstants.TAB && indexs?.length === 4) {
                         let asid = newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]];
                         if (asid.contentUrn == currentSlateEntityUrn) {
                             asid?.elementdata?.bodymatter?.move(oldIndex, newIndex);
@@ -855,7 +855,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                     const indexs = elementIndex?.toString().split('-') || [];
                     let sectionType = parentElement?.showHideType;
                     /* TB->Tab->AS/WE->HEAD: Swap Elements */
-                    if(parentElement?.type === ElementConstants.MULTI_COLUMN && parentElement?.subtype === ElementConstants.TAB && indexs?.length === 4) { 
+                    if(parentElement?.type === ElementConstants.MULTI_COLUMN && parentElement?.subtype === ElementConstants.TAB && indexs?.length === 4) {
                         newBodymatter[indexs[0]]?.groupeddata?.bodymatter[indexs[1]]?.groupdata?.bodymatter[0].groupeddata?.bodymatter[indexs[2]]?.groupdata?.bodymatter[indexs[3]]?.elementdata?.bodymatter?.map(item => {
                             if (item.contentUrn == currentSlateEntityUrn) {
                                 item?.contents?.bodymatter?.move(oldIndex, newIndex);
@@ -884,7 +884,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                             }
                         });
                     }
-                } 
+                }
                 /** ----------Swapping elements inside Citations Group Element----------------- */
                 else if (containerTypeElem && containerTypeElem == 'cg') {
                     const indexs = elementIndex?.split('-') || [];
@@ -934,7 +934,7 @@ export const swapElement = (dataObj, cb) => (dispatch, getState) => {
                                 })
 
                             })
-                        // handling local redux state for swapping of stanzas inside SH->Poetry  
+                        // handling local redux state for swapping of stanzas inside SH->Poetry
                         } else if (element?.type === "showhide" && sectionType) {
                             element?.interactivedata[sectionType].forEach((eachElement)=>{
                                 if(eachElement?.type === "poetry" && eachElement?.id === poetryId) {
@@ -1213,7 +1213,7 @@ export const updatePageNumber = (pagenumber, elementId, asideData, parentUrn) =>
         if(allElemPageData && allElemPageData.length >0){
             allElemPageData = allElemPageData.filter(ele => { return ele != elementId;});
         }
-       
+
         dispatch({
             type: GET_PAGE_NUMBER,
             payload: {pageNumberData: pageNumberData,
@@ -1253,7 +1253,7 @@ export const setSlateType = (slateType) => (dispatch, getState) => {
         payload: slateType
     })
 }
-// calling this function in communicationChannel 
+// calling this function in communicationChannel
 export const cypressPlusEnabled = (flag, configValue) => dispatch => {
     return dispatch({
         type: CYPRESS_PLUS_ENABLED,
@@ -1387,7 +1387,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         const isAutoNumberingEnabled = getState().autoNumberReducer.isAutoNumberingEnabled;
 
         let slateEntityUrn = config.slateEntityURN;
-        if(parentUrn && 'contentUrn' in parentUrn) { //sectionType && 
+        if(parentUrn && 'contentUrn' in parentUrn) { //sectionType &&
             slateEntityUrn = parentUrn.contentUrn;
         } else if(poetryData && 'contentUrn' in poetryData) {
             slateEntityUrn = poetryData.contentUrn;
@@ -1410,11 +1410,11 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 cutIndex -= elmExist ? 1 : 0;
             }
         }
-        
+
         let elmHtml = ('html' in selection.element) ? selection.element.html : {};
         let elmType = ['figure'];
         let elmSubtype = ['assessment'];
-        if(elmType.indexOf(selection.element.type) >= 0 && 
+        if(elmType.indexOf(selection.element.type) >= 0 &&
             'figuretype' in selection.element && elmSubtype.indexOf(selection.element.type) >= 0) {
             if(!('html' in selection.element)) {
                 elmHtml = { "title": selection.element.title.text || "" }
@@ -1424,13 +1424,13 @@ export const pasteElement = (params) => async (dispatch, getState) => {
             if(!('html' in selection.element)) {
                 elmHtml = { "title": selection.element.title.text || "" }
             } else if (!('title' in selection.element.html)) {
-                elmHtml = { 
+                elmHtml = {
                     ...elmHtml,
-                    "title": "" 
+                    "title": ""
                 }
             }
         }
-        
+
         if(selection.operationType === 'copy' && 'html' in selection.element && 'text' in  selection.element.html) {
             let htmlText = (selection.element.html.text);
             htmlText = htmlText.replace(/(\"page-link-[0-9]{1,2}-[0-9]{2,4}\")/gi, () => `"page-link-${Math.floor(Math.random() * 100)}-${Math.floor(Math.random() * 10000)}"`);
@@ -1521,7 +1521,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                 }]
             }
         }
-        
+
         const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample",'showhide','popup','manifestlist']
         if(acceptedTypes.includes(selection.element.type)) {
             const payloadParams = {
@@ -1630,7 +1630,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
 
                 if((responseData[0]?.type === "figure") && (figureTypes.includes(responseData[0]?.figuretype))  || interactiveType.includes(responseData[0]?.figuredata?.interactivetype)){
                     const elementId = responseData[0].id
-                    handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)   
+                    handleAlfrescoSiteUrl(elementId, selection.alfrescoSiteData)
                 }
                 const pasteSuccessArgs = {
                     responseData: responseData[0],
@@ -1682,7 +1682,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
                     }
                 }
                 /******************************/
-                if (responseData[0].elementdata?.type === "blockquote") {  
+                if (responseData[0].elementdata?.type === "blockquote") {
                     setTimeout(() => {
                         const node1 = document.querySelector(`[data-id="${responseData[0].id}"]`)
                         const node2 = node1?.querySelector(`.paragraphNummerEins`)
@@ -1697,7 +1697,7 @@ export const pasteElement = (params) => async (dispatch, getState) => {
         }
         catch(error) {
             sendDataToIframe({ 'type': HideLoader, 'message': { status: false } });
-            console.error("Exceptional Error on pasting the element:::", error);   
+            console.error("Exceptional Error on pasting the element:::", error);
         }
     }
 }
@@ -1740,7 +1740,7 @@ export const cloneContainer = (insertionIndex, manifestUrn,parentUrn,asideData) 
             parentUrn,
             asideData
         }
-        await (await import("./slateWrapperAction_helper.js")).fetchStatusAndPaste(fetchAndPasteArgs)  
+        await (await import("./slateWrapperAction_helper.js")).fetchStatusAndPaste(fetchAndPasteArgs)
     }
     catch(error) {
         sendDataToIframe({ 'type': HideLoader, 'message': { status: false } })
@@ -1768,7 +1768,7 @@ export const slateVersioning = (updateRCSlate) => (dispatch, getState) => {
             // Making condition true for triggering slate level save api
             localStorage.setItem('isChangeInSlate', 'true');
             localStorage.setItem('slateNewVersion', 'true');
-        
+
             sendDataToIframe({ 'type': 'sendMessageForVersioning', 'message': 'updateSlate' });      // for Toc Slate Refresh
             sendDataToIframe({ 'type': 'slateVersionStatus', 'message': false });
             return true

@@ -11,8 +11,8 @@ const {
 import config from '../../config/config.js';
 /**
  * This function is used to prepare request payload for cut-copy-snapshots
- * @param {*} pasteParams 
- * @returns 
+ * @param {*} pasteParams
+ * @returns
  */
 export const preparePayloadData = (pasteParams) => {
     const {
@@ -42,7 +42,7 @@ export const preparePayloadData = (pasteParams) => {
         "destinationSlateUrn": destnSlateManifestURN,
         "destinationSlateEntityUrn": destnSlateEntityURN,
         "status": config?.tcmStatus === true ? "pending" : "accepted",
-        "elementVersionStatus": elementStatus 
+        "elementVersionStatus": elementStatus
     }
     if(selection.operationType === 'copy'){
         payload.elementEntityUrn = elementNewEntityUrn

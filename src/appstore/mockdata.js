@@ -14,7 +14,7 @@ export default {
           "frontmatter": [],
           "bodymatter": [
               {
-                  
+
                       "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
                       "type": "poetry",
                       "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
@@ -610,7 +610,7 @@ export default {
                 "versionUrn":"urn:pearson:manifest:2fdd7c65-b9fb-4c94-a10f-2a072995e197",
                 "width":"wider"
              },
-            {   
+            {
               "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
               "type": "poetry",
               "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
@@ -702,7 +702,7 @@ export default {
               "index": 1
             },
             {
-                  
+
               "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
               "type": "poetry",
               "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
@@ -1562,7 +1562,7 @@ export default {
               "status": "wip"
             },
             {
-                  
+
               "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
               "type": "showhide",
               "schema": "http://schemas.pearson.com/wip-authoring/poetry/1",
@@ -1689,7 +1689,7 @@ export default {
               "index": 1
             },
             {
-                  
+
               "id": "urn:pearson:manifest:28700dd1-08a2-49ac-aef1-61a48b2e5f6d",
               "type": "groupedcontent",
               "subtype": "tab",
@@ -2059,7 +2059,7 @@ export default {
             {
               "id": "urn:pearson:manifest:8f825efb-9582-41df-995c-383dcdefc06b",
               "type": "showhide",
-              "interactivedata": [[{subtype:"workedexample"}], 
+              "interactivedata": [[{subtype:"workedexample"}],
               [
                 {
                   subtype:"workedexample",
@@ -2187,7 +2187,7 @@ export default {
             {
               "id": "urn:pearson:manifest:8f825efb-9582-41df-995c-383dcdefc06b",
               "type": "showhide",
-              "interactivedata": [[{subtype:"workedexample"}], 
+              "interactivedata": [[{subtype:"workedexample"}],
               [
                 {
                   // subtype:"workedexample",
@@ -2315,7 +2315,7 @@ export default {
             {
               "id": "urn:pearson:manifest:8f825efb-9582-41df-995c-383dcdefc06b",
               "type": "groupedcontent",
-              "interactivedata": [[{subtype:"workedexample"}], 
+              "interactivedata": [[{subtype:"workedexample"}],
               [
                 {
                   // subtype:"workedexample",

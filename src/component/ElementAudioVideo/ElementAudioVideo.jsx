@@ -34,7 +34,7 @@ class ElementAudioVideo extends Component {
             deleteAssetPopup: false
         }
     }
-    
+
     /*** @description This function is used to handle Canvas Blocker on Update */
     showCanvasBlocker = (value) => {
         if (value == true) {
@@ -74,7 +74,7 @@ class ElementAudioVideo extends Component {
                     isDeleteAssetPopup={true}
                     deleteAssetHandler={this.deleteElementAsset}
                     isInputDisabled={true}
-                    isDeleteAssetClass="delete-element-text"    
+                    isDeleteAssetClass="delete-element-text"
                 />
             )
         } else if (this.state.deleteAssetPopup && disableDeleteWarnings) {
@@ -86,7 +86,7 @@ class ElementAudioVideo extends Component {
         }
     }
 
-    
+
     /**
      * @description data after selecting an asset from alfresco c2 module
      * @param {*} data selected asset data
@@ -128,7 +128,7 @@ class ElementAudioVideo extends Component {
                     assetFormat = smartLinkAssetType + "/" + smartLinkUrl?.split('=')[1]
                 }
             }
-           
+
             if(imageData?.clip && Object.keys(imageData.clip).length >0){
                 clipInfo = {
                     "clipid": imageData.clip.id ?? "",
@@ -143,14 +143,14 @@ class ElementAudioVideo extends Component {
             let ensubtitle = ""
             let frenchSubtitle = ""
             let spanishSubtitle = ""
-            
+
             const avsJsonStringValue = imageData?.properties["avs:jsonString"]
             audioDes = avsJsonStringValue && (typeof avsJsonStringValue === 'string') ? JSON.parse(avsJsonStringValue) : avsJsonStringValue;
             //audioDes = imageData?.properties['avs:jsonString'] && JSON.parse(imageData.properties['avs:jsonString'])
             ensubtitle = audioDes?.englishCC ?? "";
             frenchSubtitle = audioDes?.frenchCC ?? "";
             spanishSubtitle = audioDes?.spanishCC ?? "";
-        
+
             if(audioDes?.audioDescription){
                 tracks.push(
                     {
@@ -195,7 +195,7 @@ class ElementAudioVideo extends Component {
                     }
                 )
             }
-            
+
             this.setState({ imgSrc: epsURL, assetData :smartLinkUrl })
             let figureData = {
                 height : height,
@@ -287,7 +287,7 @@ class ElementAudioVideo extends Component {
             }
             // to blank the elementId and asset data after update
             // let payloadObj = {
-            //     asset: {}, 
+            //     asset: {},
             //     id: ''
             // }
             // this.props.saveSelectedAssetData(payloadObj)
@@ -326,8 +326,8 @@ class ElementAudioVideo extends Component {
                 }
             })
             .then(function (response) {
-               let payloadObj = {launchAlfrescoPopup: true, 
-                alfrescoPath: alfrescoPath, 
+               let payloadObj = {launchAlfrescoPopup: true,
+                alfrescoPath: alfrescoPath,
                 alfrescoListOption: response.data.list.entries,
                 id,
                 locationData,
@@ -339,7 +339,7 @@ class ElementAudioVideo extends Component {
                 console.log("Error IN SITE API", error)
             });
     }
-    
+
     componentDidMount() {
         getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
@@ -354,8 +354,8 @@ class ElementAudioVideo extends Component {
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
             this.dataFromAlfresco(alfrescoAssetData)
         }
-    }        
-    
+    }
+
     /**
      * @description function will be called on image src add and fetch resources from Alfresco
      */
@@ -402,7 +402,7 @@ class ElementAudioVideo extends Component {
                 type,
             };
         }
-        
+
 
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
@@ -420,8 +420,8 @@ class ElementAudioVideo extends Component {
                     const locationSiteDataTitle = alfrescoLocationData?.repositoryFolder ? alfrescoLocationData.repositoryFolder : alfrescoLocationData?.title
                     const alfrescoSite = locationSiteDataTitle ? locationSiteDataTitle : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
-                    let messageObj = {appName:'cypress', citeName: citeName, 
-                        citeNodeRef: nodeRefs, 
+                    let messageObj = {appName:'cypress', citeName: citeName,
+                        citeNodeRef: nodeRefs,
                         elementId: this.props.elementId,
                         currentAsset }
                     sendDataToIframe({ 'type': 'launchAlfrescoPicker', 'message': messageObj })
@@ -505,7 +505,7 @@ class ElementAudioVideo extends Component {
                 }
                 break;
         }
-        
+
         this.props.updateFigureData(setFigureData, this.props.index, this.props.elementId, this.props.asideData, () => {
             this.props.handleFocus("updateFromC2");
             this.props.handleBlur();
@@ -518,10 +518,10 @@ class ElementAudioVideo extends Component {
                 <div className={`figureElement`}>
                 {this.state.deleteAssetPopup && this.showDeleteAssetPopup()}
                 <FigureUserInterface deleteElementAsset={this.toggleDeletePopup} alfrescoSite={this.state.alfrescoSite} alfrescoElementId={this.props.alfrescoElementId} alfrescoAssetData={this.props.alfrescoAssetData} launchAlfrescoPopup={this.props.launchAlfrescoPopup} handleC2MediaClick={this.handleC2MediaClick} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleFocus={this.props.handleFocus} handleBlur = {this.props.handleBlur} index={index}  slateLockInfo={slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} />
-                </div>         
+                </div>
             );
         }
-    
+
 }
 
 

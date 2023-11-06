@@ -39,7 +39,7 @@ class MetaDataPopUp extends React.Component {
 
 	/**
     * @description - This function is responsible for showing alfresco metadata in the popup.
-    * @param {event} 
+    * @param {event}
     */
 	getAlfrescoMetadata = () => {
 		let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
@@ -50,9 +50,9 @@ class MetaDataPopUp extends React.Component {
 				'myCloudProxySession': config.myCloudProxySession
 			}
 		}).then(response => {
-			const { properties } = response?.data?.entry || {};	
+			const { properties } = response?.data?.entry || {};
 			if(this?.props?.element?.figuretype === "interactive"){
-				const avsJsonStringData = properties["avs:jsonString"] 
+				const avsJsonStringData = properties["avs:jsonString"]
 				let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
 				this.setState({
 					metaData: properties,
@@ -84,12 +84,12 @@ class MetaDataPopUp extends React.Component {
 		const { metaData,altText, longDescription } = this.state;
 		let body;
 		if(this?.props?.element?.figuretype === "interactive"){
-			const avsJsonStringData = metaData["avs:jsonString"] 
+			const avsJsonStringData = metaData["avs:jsonString"]
         	let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
 			avsStringData.linkLongDesc=longDescription
 			avsStringData.imageAltText=altText
 			body = {
-				properties: { 
+				properties: {
 					"avs:jsonString": JSON.stringify(avsStringData),
 				}
 			}}
@@ -125,7 +125,7 @@ class MetaDataPopUp extends React.Component {
 	updateElementData = () => {
 		const { index, element, asideData } = this.props;
 				/*-- Form data to send to wip */
-		if(element?.type === "openerelement"){ 
+		if(element?.type === "openerelement"){
 			let tempElementData = {...element}
 			tempElementData.backgroundimage.alttext = this.state.altText;
 			tempElementData.backgroundimage.longdescription = this.state.longDescription;
@@ -137,7 +137,7 @@ class MetaDataPopUp extends React.Component {
             }
             this.props.saveSelectedAltTextLongDescData(altLongDescData)
 		}
-		else{	
+		else{
 		let	figureData = { ...element?.figuredata };
 		figureData.alttext = this.state.altText;
 		figureData.longdescription = this.state.longDescription;
@@ -178,12 +178,12 @@ class MetaDataPopUp extends React.Component {
 						<div className="figuremetadata-field">
 							<div className={`alt-text-body ${active === 'altBody' ? 'active' : ""}`} onClick={()=>this.handleActiveState('altBody')} >
 								<p className={`alt-text ${active === 'altBody' ? 'active' : ""}`}>Alt Text</p>
-								<input 
+								<input
 								    autocomplete="off"
-									id="altText_AM" 
-									name="altText_AM" 
-									type="text" 
-									placeholder="Enter your text here" 
+									id="altText_AM"
+									name="altText_AM"
+									type="text"
+									placeholder="Enter your text here"
 									value={altText}
                                     disabled ={this.state.disableTextFields ? false : true}
 									onChange={(e) => {this.handleChangeAltText(e)}}
@@ -191,12 +191,12 @@ class MetaDataPopUp extends React.Component {
 							</div>
 							<div className= {`long-description-body ${active === 'longBody' ? 'active' : ""}`} onClick={()=>this.handleActiveState('longBody')}>
 								<p className={`long-text ${active === 'longBody' ? 'active' : ""}`}>Long Description</p>
-								<textarea 
-									id="longDescription_AM" 
-									name="longDescription_AM" 
-									rows="9" 
-									cols="50" 
-									placeholder="Enter your text here" 
+								<textarea
+									id="longDescription_AM"
+									name="longDescription_AM"
+									rows="9"
+									cols="50"
+									placeholder="Enter your text here"
 									value={longDescription}
 								    disabled ={this.state.disableTextFields ? false : true}
 									onChange={(e) => {this.handleChangeLongDesc(e)}}>
@@ -206,10 +206,10 @@ class MetaDataPopUp extends React.Component {
 						<div className="metadata-button">
 						   <span className={`metadata-import-button ${this.state.disableUpdateButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Update Metadata</span>
 						   <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
-						</div>	
+						</div>
 					</div>
 				</div>
-                        
+
             </div>
         );
     }

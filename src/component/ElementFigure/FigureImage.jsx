@@ -113,7 +113,7 @@ class FigureImage extends Component {
                 if(this.labelListRef.current.childNodes[this.state.showingListIndex - 1]) {
                     this.labelListRef.current.childNodes[this.state.showingListIndex - 1].focus();
                     this.setState({showingListIndex: this.state.showingListIndex - 1});
-                
+
                 }
             }
             if(event.button != 0){
@@ -164,7 +164,7 @@ class FigureImage extends Component {
             return true
         }
         this.toggleDeletePopup(false)
-    
+
         // store current element figuredata in store
         this.props.updateFigureImageDataForCompare(this.props.model.figuredata);
         let setFigureData = {
@@ -185,7 +185,7 @@ class FigureImage extends Component {
             this.props.handleBlur();
         })
     }
-    
+
     /*** @description This function is used to handle Canvas Blocker on delete */
     showCanvasBlocker = (value) => {
         if (value == true) {
@@ -226,7 +226,7 @@ class FigureImage extends Component {
                     deleteAssetHandler={this.deleteFigureResource}
                     isInputDisabled={true}
                     isDeleteAssetClass="delete-element-text"
-                    
+
                 />
             )
         } else if (this.state.deleteAssetPopup && disableDeleteWarnings) {
@@ -539,7 +539,7 @@ class FigureImage extends Component {
                     break;
                 case BLOCK_CODE:
                     elementFigureAlignment = 'code-listing';
-                    break;   
+                    break;
                 case IMAGE:
                 default:
                     elementFigureAlignment = model.alignment ? model.alignment : 'text-width';
@@ -654,10 +654,10 @@ class FigureImage extends Component {
                                             </div>
                                         }
                                         {figureLabelValue === 'Custom' ?
-                                            <KeyboardWrapper index={`${this.props.index}-0`}  enable={this.isEnableKeyboard()}>                                             
+                                            <KeyboardWrapper index={`${this.props.index}-0`}  enable={this.isEnableKeyboard()}>
                                             <div className='image-label'>
                                                     <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                                                
+
                                                 <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
                                             </div> </KeyboardWrapper>:
                                             <div className='image-label hide-field'>
@@ -667,10 +667,10 @@ class FigureImage extends Component {
                                                 <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
                                             </div>
                                         }
-                                    <KeyboardWrapper index={`${this.props.index}-1`} enable={this.isEnableKeyboard()}>        
+                                    <KeyboardWrapper index={`${this.props.index}-1`} enable={this.isEnableKeyboard()}>
                                         <div className={`floating-number-group`}>
                                                 <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber "} model={figureHtmlData.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType}  contenteditable={ !hasReviewerRole()} />
-                                            
+
                                             <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
                                         </div>
                                         </KeyboardWrapper>
@@ -699,13 +699,13 @@ class FigureImage extends Component {
                                 </KeyboardWrapper>
                             </figcaption>}
                             <figcredit >
-                            <KeyboardWrapper enable={this.isEnableKeyboard()} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`}>      
+                            <KeyboardWrapper enable={this.isEnableKeyboard()} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`}>
                                 <div className={`floating-credit-group`}>
-                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={creditsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType}/>     
+                                    <TinyMceEditor onFigureImageFieldFocus={this.onFigureImageFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.model} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={blockMathCodeTypes.includes(this.props?.model?.figuretype)?`${this.props.index}-5`:`${this.props.index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass + " figureCredit"} model={creditsHtml} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} parentElement={this.props.parentElement} showHideType={this.props.showHideType}/>
                                     <label className={checkHTMLdataInsideString(this.props?.model?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
                                 </div>
                             </KeyboardWrapper>
-                                
+
                             </figcredit>
                         </figure>
                     </div>

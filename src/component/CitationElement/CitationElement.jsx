@@ -8,7 +8,7 @@ import TinyMceEditor from "../tinyMceEditor";
 const CitationElement = (props) => {
     const { index, element, className, model, handleFocus, handleBlur, slateLockInfo, permissions, currentElement, asideData } = props
     return (
-        <TinyMceEditor 
+        <TinyMceEditor
             index={index}
             elementId={currentElement.id}
             element={element}

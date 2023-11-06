@@ -13,7 +13,7 @@ import "tinymce/plugins/powerpaste/js/wordimport.js"
 import './../../styles/ElementAuthoring/ElementAuthoring.css';
 import { powerpaste_list_content_style } from '../../config/PowerPasteListElementCss';
 import { handleImagePaste } from '../../constants/utility.js';
-import { UnsupportedContentString } from '../../constants/ToolTip_Constant.js'; 
+import { UnsupportedContentString } from '../../constants/ToolTip_Constant.js';
 
 const PowerPasteElement = (props) => {
 
@@ -63,7 +63,7 @@ const PowerPasteElement = (props) => {
 
   return (
     <>
-      <p 
+      <p
         ref={editorRef}
         id={`textarea-${props.index}`}
         dangerouslySetInnerHTML={{ __html: '' }}
@@ -80,7 +80,7 @@ export default PowerPasteElement
  */
 export const pastePreProcess = (data) => {
   if (!["msoffice"].includes(data.source)) {
-    data.content = "" 
+    data.content = ""
   }
 }
 
@@ -91,7 +91,7 @@ export const pastePreProcess = (data) => {
  */
 export const pastePostProcess = (data, props) => {
   if (data.node) {
-    // if you dont click inside the editor after pasting data first time and try to paste again by 
+    // if you dont click inside the editor after pasting data first time and try to paste again by
     // pressing ctrl + v then this condition runs again so clearing the previous data of editor
     tinyMCE.activeEditor.setContent('');
 
@@ -130,9 +130,9 @@ export const pastePostProcess = (data, props) => {
 /**
  * This function identifies unsupported content during paste from word
  * and replace that content with "Unsupported Content" message in text-editor
- * @param {array} elements 
- * @param {Object} nodeData 
- * @param {Object} props 
+ * @param {array} elements
+ * @param {Object} nodeData
+ * @param {Object} props
  * @returns Content that needs to be pasted on text-editor
  */
 export const prepareFinalPasteContent = (elements,nodeData,props) => {
@@ -173,8 +173,8 @@ export const prepareFinalPasteContent = (elements,nodeData,props) => {
 /**
  * This function filters the supported powerpaste tags and remove images
  * from the content that needs to pass in powerpaste API as payload
- * @param {Array} elements 
- * @param {array} updatedElements 
+ * @param {Array} elements
+ * @param {array} updatedElements
  */
 export const filterSupportedTagAndData = (elements,updatedElements) => {
   elements.forEach(item => {
@@ -210,8 +210,8 @@ export const createPastedElements = (childElements, elements) => {
           elements.push({ html: childElements[i].outerHTML, tagName: childElements[i].tagName });
           break;
         case 'OL':
-          // if the list starts other than numeric format then calls addSpecificOListClasses method 
-          // otherwise calls addOListClasses method for adding list classes to html and if the list 
+          // if the list starts other than numeric format then calls addSpecificOListClasses method
+          // otherwise calls addOListClasses method for adding list classes to html and if the list
           // does not start with digits and has style attribute then remove it
           childElements[i].hasAttribute('style') ? powerPasteHelpers.addSpecificOListClasses(childElements[i], childElements[i], 1) : powerPasteHelpers.addOListClasses(childElements[i], 1);
           if(childElements[i].hasAttribute('style')){
@@ -238,7 +238,7 @@ export const createPastedElements = (childElements, elements) => {
 
 /**
  * TinyMCE keydown event listener
- * @param {*} editor tinyMCE editor instance 
+ * @param {*} editor tinyMCE editor instance
  */
 export const setupKeydownEvent = (editor) => {
   editor.on('keydown', e => {
@@ -260,7 +260,7 @@ export const setupKeydownEvent = (editor) => {
 
 /**
  * TinyMCE focus event listener
- * @param {*} editor tinyMCE editor instance 
+ * @param {*} editor tinyMCE editor instance
  */
 export const editorFocus = (editor) => {
   editor.on('focus', () => {
@@ -270,7 +270,7 @@ export const editorFocus = (editor) => {
 
 /**
  * TinyMCE blur event listener
- * @param {*} editor tinyMCE editor instance 
+ * @param {*} editor tinyMCE editor instance
  */
 export const editorBlur = (editor) => {
   editor.on('blur', () => {
@@ -280,7 +280,7 @@ export const editorBlur = (editor) => {
 
 /**
  * TinyMCE click event listener
- * @param {*} editor tinyMCE editor instance 
+ * @param {*} editor tinyMCE editor instance
  */
 export const editorClick = (editor) => {
   editor.on('click', () => {

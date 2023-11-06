@@ -1,9 +1,9 @@
 import * as tcmSnapshotsOnDefaultSlate from '../../../src/component/TcmSnapshots/TcmSnapshotsOnDefaultSlate';
-
 import tcmTestData,{snapshotsData} from '../../../fixtures/tcmSnapshotTestData.js';
 import config from '../../../src/config/config.js';
 import { showHide } from '../../../fixtures/ElementSHowHideData.js';
 import { poetryElem } from '../../../fixtures/ElementPoetryTestData.js';
+import { MULTI_COLUMN } from '../../../src/constants/Element_Constants';
 
 jest.mock('../../../src/component/TcmSnapshots/TcmSnapshot_Actions.js', () => {
     return {
@@ -511,8 +511,8 @@ describe('Test-4-Function--4--fetchParentData', () => {
     })
     it('Test-4.8-Function--4--fetchParentData', () => {
         const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'fetchParentData');
-        tcmSnapshotsOnDefaultSlate.fetchParentData(bodymatter1, ["2", "1", "1"], {})
-        expect(spyFunction).toHaveBeenCalledWith(bodymatter1, ["2", "1", "1"], {})
+        tcmSnapshotsOnDefaultSlate.fetchParentData(bodymatter1, ["2", "1", "1"], {}, {type: 'figure'})
+        expect(spyFunction).toHaveBeenCalledWith(bodymatter1, ["2", "1", "1"], {}, {type: 'figure'})
     })
 });
 describe('containerSnapshotsInShowhide', () => {
@@ -954,6 +954,11 @@ describe("tcmSnapshotsPopup", () => {
         jest.spyOn(tcmSnapshotsOnDefaultSlate, 'tcmSnapshotsPopup');
         tcmSnapshotsOnDefaultSlate.tcmSnapshotsPopup(snapshotsData.wipData, '','','',item,'cut');
     })    
+    it('sectionType elementType is multicoloum else', () => {
+        let item={popupdata:{}}
+        jest.spyOn(tcmSnapshotsOnDefaultSlate, 'tcmSnapshotsPopup');
+        tcmSnapshotsOnDefaultSlate.tcmSnapshotsPopup(snapshotsData.wipData, '',{parentUrn: {elementType: 'group'}},'',item,'cut');
+    })    
 })
 describe("parentData4CutCopyASWE_2C", () => {
     it('parentData4CutCopyASWE_2C all argument available', () => {
@@ -1056,6 +1061,52 @@ describe("setParentUrn", () => {
         expect(spyFunction).toHaveBeenCalledWith(bodymatter, tempIndex, isFigure, asideData = {});
     })
 
+    it('setParentUrn for tempIndex length is 3 else', () => {
+        let bodymatter={'element-aside': {type: 'element-aside', elementdata: {bodymatter: {'res': 'value'}}}}, tempIndex=['element-aside','res',''], isFigure=true, asideData = {}
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'setParentUrn');
+        tcmSnapshotsOnDefaultSlate.setParentUrn(bodymatter, tempIndex, isFigure, asideData = {})
+        expect(spyFunction).toHaveBeenCalledWith(bodymatter, tempIndex, isFigure, asideData = {});
+    })
+
+    it('setParentUrn for MULTI_COLUMN', () => {
+        let bodymatter={'groupedcontent': {'type': 'groupedcontent','groupeddata': {'bodymatter': {'0': '2'}}, elementdata: {bodymatter: {'0': 'value'}}}}, tempIndex=['groupedcontent','0',''], isFigure=true, asideData = {}
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'setParentUrn');
+        tcmSnapshotsOnDefaultSlate.setParentUrn(bodymatter, tempIndex, isFigure, asideData = {})
+        expect(spyFunction).toHaveBeenCalledWith(bodymatter, tempIndex, isFigure, asideData = {});
+    })
+
+    it('setParentUrn for tempIndex length 4', () => {
+        let bodymatter={'groupedcontent': {'type': 'groupedcontent','groupeddata': {'bodymatter': {'0': '2'}}, elementdata: {bodymatter: {'0': 'value'}}}}, tempIndex=['groupedcontent','0','',''], isFigure=true, asideData = {}
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'setParentUrn');
+        tcmSnapshotsOnDefaultSlate.setParentUrn(bodymatter, tempIndex, isFigure, asideData = {})
+        expect(spyFunction).toHaveBeenCalledWith(bodymatter, tempIndex, isFigure, asideData = {});
+    })
+
+    it('setParentUrn for tempIndex length 4 aside', () => {
+        let bodymatter=[{'type': 'element-aside', elementdata: {bodymatter: [{type: 'showhide'}]}, 'element-aside': {type: 'element-aside'}}], tempIndex=['0','0','',''], isFigure=true, asideData = {}
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'setParentUrn');
+        tcmSnapshotsOnDefaultSlate.setParentUrn(bodymatter, tempIndex, isFigure, asideData = {})
+        expect(spyFunction).toHaveBeenCalledWith(bodymatter, tempIndex, isFigure, asideData = {});
+    })
+
+    it('setParentUrn for tempIndex length 4 showhide', () => {
+        let bodymatter=[{interactivedata: [[{type: 'element-aside'}]], 'type': 'showhide', elementdata: {bodymatter: [{type: 'showhide'}]}, 'element-aside': {type: 'element-aside'}}], tempIndex=['0','0','0',''], isFigure=true, asideData = {}
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'setParentUrn');
+        tcmSnapshotsOnDefaultSlate.setParentUrn(bodymatter, tempIndex, isFigure, asideData = {parent: {showHideType: '0'}})
+        expect(spyFunction).toHaveBeenCalledWith(bodymatter, tempIndex, isFigure, asideData = {parent: {showHideType: '0'}});
+    })
+    it('setParentUrn for tempIndex length 4 showhide else', () => {
+        let bodymatter=[{interactivedata: [[{type: 'aside'}]], 'type': 'showhide', elementdata: {bodymatter: [{type: 'showhide'}]}, 'element-aside': {type: 'element-aside'}}], tempIndex=['0','0','0',''], isFigure=true, asideData = {}
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'setParentUrn');
+        tcmSnapshotsOnDefaultSlate.setParentUrn(bodymatter, tempIndex, isFigure, asideData = {parent: {showHideType: '0'}})
+        expect(spyFunction).toHaveBeenCalledWith(bodymatter, tempIndex, isFigure, asideData = {parent: {showHideType: '0'}});
+    })
+    it('setParentUrn for tempIndex length 4 showhide else', () => {
+        let bodymatter=[{interactivedata: [[{type: 'aside'}]], 'type': 'showhide', elementdata: {bodymatter: [{type: 'showhide'}]}, 'element-aside': {type: 'element-aside'}}], tempIndex=['0','0','0',''], isFigure=true, asideData = {}
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'setParentUrn');
+        tcmSnapshotsOnDefaultSlate.setParentUrn(bodymatter, tempIndex, isFigure, asideData = {})
+        expect(spyFunction).toHaveBeenCalledWith(bodymatter, tempIndex, isFigure, asideData = {});
+    })
 })
 describe("tcmSnapshotsShowHide", () => {
     it('tcmSnapshotsShowHide ', () => {
@@ -1078,5 +1129,43 @@ describe("tcmSnapshotsShowHide", () => {
         const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'tcmSnapshotsShowHide');
         tcmSnapshotsOnDefaultSlate.tcmSnapshotsShowHide(tempsnap.wipData,index,'',actionStatus,item,1)
         expect(spyFunction).toHaveBeenCalledWith(tempsnap.wipData,index,'',actionStatus,item,1);
+    })
+    it('tcmSnapshotsShowHide with no containerElement', () => {
+        let tempsnap={
+            wipData: {
+                type: MULTI_COLUMN,
+                contents:{bodymatter:[{type:'element-list'}]},
+                interactivedata:{'show':[]},
+                groupeddata:{bodymatter:[{groupdata:{bodymatter:[{type:''}]}}]}},
+                elementId:{}, tag:{}, actionStatus:{},popupInContainer:{},slateManifestVersioning:{}
+        }
+        let  actionStatus={},index=1, item={type: ''}
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'tcmSnapshotsShowHide');
+        tcmSnapshotsOnDefaultSlate.tcmSnapshotsShowHide(tempsnap.wipData,index,'',actionStatus,item,1)
+        expect(spyFunction).toHaveBeenCalledWith(tempsnap.wipData,index,'',actionStatus,item,1);
+    })
+})
+describe("tcmSnapshotsCreateShowHide", () => {
+    it('tcmSnapshotsCreateShowHide render', ()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'tcmSnapshotsCreateShowHide');
+        tcmSnapshotsOnDefaultSlate.tcmSnapshotsCreateShowHide({wipData: {interactivedata: {show: [{type: 'element-list'}]}}, elementId: {}, tag: {}, actionStatus: 'cut', popupInContainer: {}, slateManifestVersioning: {}},[], 1, true, {asideData: {type: 'element-aside', subtype: 'workedexample'}, parentUrn: {manifestUrn: '123'}})
+        expect(spyFunction).toHaveBeenCalledWith({wipData: {interactivedata: {show: [{type: 'element-list'}]}}, elementId: {}, tag: {}, actionStatus: 'cut', popupInContainer: {}, slateManifestVersioning: {}},[], 1, true, {asideData: {type: 'element-aside', subtype: 'workedexample'}, parentUrn: {manifestUrn: '123'}});
+    })
+    it('tcmSnapshotsCreateShowHide render', ()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'tcmSnapshotsCreateShowHide');
+        tcmSnapshotsOnDefaultSlate.tcmSnapshotsCreateShowHide({wipData: {interactivedata: {show: [{type: 'element-list'}]}}, elementId: {}, tag: {}, actionStatus: 'cut', popupInContainer: {}, slateManifestVersioning: {}},[], 1, true, {asideData: {type: 'element-aside', subtype: 'workedexample', id: '123'}, parentUrn: {manifestUrn: '123'}})
+        expect(spyFunction).toHaveBeenCalledWith({wipData: {interactivedata: {show: [{type: 'element-list'}]}}, elementId: {}, tag: {}, actionStatus: 'cut', popupInContainer: {}, slateManifestVersioning: {}},[], 1, true, {asideData: {type: 'element-aside', subtype: 'workedexample', id: '123'}, parentUrn: {manifestUrn: '123'}});
+    })
+})
+describe('tcmSnapshotsCreatePoetry', () => {
+    it('tcmSnapshotsCreatePoetry render', ()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'tcmSnapshotsCreatePoetry');
+        tcmSnapshotsOnDefaultSlate.tcmSnapshotsCreatePoetry({wipData: {contents: {bodymatter: [{id: '1'}]}, interactivedata: {show: [{type: 'element-list'}]}}, elementId: {"childId": "1"}, tag: {}, actionStatus: 'cut', popupInContainer: {}, slateManifestVersioning: {}},[], 1, true, {asideData: {type: 'element-aside', subtype: 'workedexample', id: '123'}, parentUrn: {manifestUrn: '123'}}, {})
+        expect(spyFunction).toHaveBeenCalledWith({wipData: {contents: {bodymatter: [{id: '1'}]},interactivedata: {show: [{type: 'element-list'}]}}, elementId: {"childId": "1"}, tag: {}, actionStatus: 'cut', popupInContainer: {}, slateManifestVersioning: {}},[], 1, true, {asideData: {type: 'element-aside', subtype: 'workedexample', id: '123'}, parentUrn: {manifestUrn: '123'}}, {});
+    })
+    it('tcmSnapshotsCreatePoetry render', ()=>{
+        const spyFunction = jest.spyOn(tcmSnapshotsOnDefaultSlate, 'tcmSnapshotsCreatePoetry');
+        tcmSnapshotsOnDefaultSlate.tcmSnapshotsCreatePoetry({wipData: {contents: {bodymatter: [{id: '1'}]}, interactivedata: {show: [{type: 'element-list'}]}}, elementId: {"childId": "1"}, tag: {}, actionStatus: 'cut', popupInContainer: {}, slateManifestVersioning: {}},[], 1, true, {asideData: {type: 'element-aside', subtype: 'workedexample', id: '12'}, parentUrn: {manifestUrn: '123'}}, {})
+        expect(spyFunction).toHaveBeenCalledWith({wipData: {contents: {bodymatter: [{id: '1'}]},interactivedata: {show: [{type: 'element-list'}]}}, elementId: {"childId": "1"}, tag: {}, actionStatus: 'cut', popupInContainer: {}, slateManifestVersioning: {}},[], 1, true, {asideData: {type: 'element-aside', subtype: 'workedexample', id: '12'}, parentUrn: {manifestUrn: '123'}}, {});
     })
 })

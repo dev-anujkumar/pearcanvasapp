@@ -112,7 +112,7 @@ class FigureUserInterface extends Component {
         if(this.props.interactiveformat==='mmi' || this.props.interactiveformat==='mmi-elm'){
             figureLabelData = this.props.figureDropdownData.audio
         }
-        this.setState({ 
+        this.setState({
             figureLabelData: figureLabelData,
             elementType: this.props.element.figuretype
         });
@@ -207,7 +207,7 @@ class FigureUserInterface extends Component {
         let indexes = index.split('-');
         for (let i=0; i<(indexes.length-1); i++) {
             if (i === 0) {
-                indexToReturn += indexes[0]; 
+                indexToReturn += indexes[0];
             } else {
                 indexToReturn += `-${indexes[i]}`;
             }
@@ -272,13 +272,13 @@ class FigureUserInterface extends Component {
                         <div className="media-assets">
                         <div tabIndex={0} onKeyDown={this.clickNode} ref={this.addVideoRef} className='addVideobutton' onClick={this.props.handleC2MediaClick}>{addButtonText}</div>
                         <div className='videoReel'><img width="100%" height="164px" src={assetBackgroundType} />
-                        
+
                     </div>
                 </div>
             </div>
                     </KeyboardWrapper>
                     </div>
-                   
+
         )
     }
 
@@ -312,7 +312,7 @@ class FigureUserInterface extends Component {
                          <div onKeyDown={this.clickNode} ref={this.deleteRef} tabIndex={0} className={`delete-figure-button ${isReviewer} ${element.figuretype === "interactive" ? 'deleteSL' : ''}`} onClick={() => this.props.deleteElementAsset(element)}><img width="24px" height="24px" src={figureDeleteIcon} /></div>
                      </div>
                         </KeyboardWrapper>
-                     
+
                     </div>
                     {
                         interactiveformat === "mmi" ?
@@ -374,7 +374,7 @@ class FigureUserInterface extends Component {
             case AUDIO:
                 assetJsx =
                     assetId ?
-                        this.generateUpdateAssetJSX(element, assetTitleText, figureAudioIcon, assetPath, updateAudioReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension) 
+                        this.generateUpdateAssetJSX(element, assetTitleText, figureAudioIcon, assetPath, updateAudioReel, updateButtonText, assetIdText, assetId, assetPathText, alfrescoSite, imageDimension)
                         :
                         this.generateAddAssetJSX(figureAudioIcon, assetTitleText, addButtonText, audioReel, assetIdText, assetPathText)
                 break;
@@ -414,7 +414,7 @@ class FigureUserInterface extends Component {
                             this.generateAddAssetJSX(smartlinkIcon, assetTitleText, addButtonText, pdSLfPosterImage, assetIdText, assetPathText)
                     )
                 break;
-                 
+
         }
         return assetJsx;
     }
@@ -432,7 +432,7 @@ class FigureUserInterface extends Component {
     }
 
     handleLabelKeyDown = (event) => {
-       
+
         if(event.keyCode === 13) {
             this.labelListRef.current.childNodes[this.state.showingListIndex].click()
             this.figureLabelRef.current.focus()
@@ -451,7 +451,7 @@ class FigureUserInterface extends Component {
             if(this.labelListRef.current.childNodes[this.state.showingListIndex - 1]) {
                 this.labelListRef.current.childNodes[this.state.showingListIndex - 1].focus()
                 this.setState({showingListIndex: this.state.showingListIndex - 1})
-            
+
             }
         }
         if (event.button != 0) {
@@ -508,7 +508,7 @@ class FigureUserInterface extends Component {
                 hyperlinkClass = interactiveData['hyperlinkClass'] ? interactiveData['hyperlinkClass'] : "";
                 break;
         }
-        
+
         let assetId, assetTitleText, addButtonText, assetIdText, assetPathText, updateButtonText, assetPath;
         switch (element.figuretype) {
             case AUDIO:
@@ -570,7 +570,7 @@ class FigureUserInterface extends Component {
                                 <div className='figure-label-field'>
                                     <span className={`label ${this.state.figureDropDown ? 'active' : ''}`}>Label</span>
                                     <KeyboardWrapper index={`${this.props.index}-figure-label`} enable={this.isEnableKeyboard()}>
-                                        <div onClick={() => {if(this.isEnableKeyboard()) {this.figureLabelRef.current.focus()}}}> 
+                                        <div onClick={() => {if(this.isEnableKeyboard()) {this.figureLabelRef.current.focus()}}}>
                                             <div onKeyDown={this.clickNode} tabIndex={0} ref={this.figureLabelRef}  className={this.props.selectedElement === `${QUERY_SELECTOR}-${this.props.index}-figure-label` ? "figure-label-highlight" : "figure-label"} onClick={this.handleFigureDropdown}>
                                                 <span>{figureLabelValue}</span>
                                                 <span> <svg className="dropdown-arrow" viewBox="0 0 9 4.5"><path d="M0,0,4.5,4.5,9,0Z"></path></svg> </span>
@@ -585,7 +585,7 @@ class FigureUserInterface extends Component {
                                             {this.state.figureLabelData.map((label, i) => {
                                                 return (
                                                     <li onKeyDown={this.clickNode} tabIndex={0} currentIndex={i} className="media-dropdown-options" key={i} onClick={() => { this.changeFigureLabel(figureLabelValue, label); this.handleCloseDropDrown() }}>{label}</li>
-                                                      
+
                                                 )
 
                                             })}
@@ -595,7 +595,7 @@ class FigureUserInterface extends Component {
                                 {
                                     figureLabelValue === 'Custom' ?
                                     <KeyboardWrapper index={`${index}-0`} enable={this.isEnableKeyboard()}>
-                                        
+
                                         <div className='image-label'>
                                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                             <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? "transition-none" : "floating-label"}>Label Name</label>
@@ -614,7 +614,7 @@ class FigureUserInterface extends Component {
                                         <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
                                     </div>
                                 </KeyboardWrapper>
-                              
+
 
                             </header>
                                 <KeyboardWrapper  index={`${index}-2`} enable={this.isEnableKeyboard()}>
@@ -644,7 +644,7 @@ class FigureUserInterface extends Component {
                             </div>
                             <figcaption className={captionDivClass} >
                             <KeyboardWrapper enable={this.isEnableKeyboard()} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} >
-                                
+
                                 <div className="floating-caption-group">
                                     <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass} model={captionsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
                                     <label className={checkHTMLdataInsideString(element?.html?.captions) ? "transition-none" : "floating-caption"}>Caption</label>
@@ -658,7 +658,7 @@ class FigureUserInterface extends Component {
                                         <label className={checkHTMLdataInsideString(element?.html?.credits) ? "transition-none" : "floating-credit"}>Credit</label>
                                     </div>
                                 </KeyboardWrapper>
-                            
+
                             </figcredit>
                         </figure>
                     </div>

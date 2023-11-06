@@ -1,5 +1,5 @@
-import { 
-    GET_TCM_RESOURCES, 
+import {
+    GET_TCM_RESOURCES,
     GET_TCM_STATUS_OF_PROJECT,
     LAUNCH_TCM_CANVAS_POPUP,
     SPINNER
@@ -48,7 +48,7 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 return{
                     ...state,
                     spinnerStatus:action.payload
-                }    
+                }
         default:
             return state
     }
