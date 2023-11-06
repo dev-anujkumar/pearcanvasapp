@@ -340,7 +340,7 @@ class ElementContainer extends Component {
     /**
      * function will be called on element focus of tinymce instance
      */
-    handleFocus = async (updateFromC2Flag, showHideObj, event, labelText, tinymceFlag) => {    /* tinmymceFlag indicates that handleFocus is called from tinymceEditor file and is used to prevent first figure element from activation when it is not made active */
+    handleFocus = async (updateFromC2Flag, showHideObj, event, labelText, preventFirstFigActivation) => {    /* preventFirstFigActivation indicates that handleFocus is called from tinymceEditor file and is used to prevent first figure element from activation when it is not made active */
         if (event && labelText !== 'fg') {
             event.stopPropagation();
         }
@@ -404,7 +404,7 @@ class ElementContainer extends Component {
             this.props.fetchCommentByElement(this.props.element.id);
         }
         /*--Fetches and updates the alt-text and long-desc for the active element(figure, smartlink, opener) and updates the same in the settings panel*/
-        if(this.state.borderToggle==='showBorder' && !hasReviewerRole() && !tinymceFlag){
+        if(this.state.borderToggle==='showBorder' && !hasReviewerRole() && !preventFirstFigActivation){
                 if(element?.type===ELEMENT_FIGURE){
                     if(checkImageForMetadata(element) && element?.figuredata?.imageid){
                         const assetId = element?.figuredata?.imageid?.replace('urn:pearson:alfresco:', '')
