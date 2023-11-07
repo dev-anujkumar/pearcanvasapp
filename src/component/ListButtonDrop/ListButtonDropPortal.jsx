@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import config from '../../config/config.js'
 import { checkBlockListElement } from '../../js/TinyMceUtility.js';
+import { elementAsideText, elementListText } from '../../constants/Element_Constants.js';
 class ListButtonDropPortal extends Component {
     constructor(props) {
         super(props);
@@ -64,7 +65,7 @@ class ListButtonDropPortal extends Component {
             this.startValue = null;
             this.selectedOption = null;
             let blockListData = checkBlockListElement({slateLevelData:slateData,index:activeElement.index,asideData:this.props?.asideData}, 'ENTER');
-            if (activeElement.elementWipType === 'element-list') {
+            if (activeElement.elementWipType === elementListText) {
                 const slateObject = slateData[config.slateManifestURN];
                 const { contents } = slateObject;
                 const { bodymatter } = contents;
@@ -73,35 +74,35 @@ class ListButtonDropPortal extends Component {
                     (element) => {
                         let isMatched = false
                         if (element.id === activeElement.elementId) {
-                            isMatched = element.type === 'element-list'
+                            isMatched = element.type === elementListText
                             isMatched && (listElement = element)
                         }
-                        else if (element.type === "element-aside") {
+                        else if (element.type === elementAsideText) {
                             element.elementdata.bodymatter.find(
                                 (nestedElement) => {
                                     if (nestedElement.id === activeElement.elementId) {
-                                        isMatched = nestedElement.type === 'element-list'
+                                        isMatched = nestedElement.type === elementListText
                                         isMatched && (listElement = nestedElement)
                                     }
                                     else if(nestedElement.type === "showhide" && this.props?.asideData?.type === "showhide"){
                                         let indexes = activeElement.index.split("-")
                                         let targetShowhideElem = nestedElement.interactivedata[this.props?.asideData?.sectionType][indexes[3]]
                                         if(targetShowhideElem && targetShowhideElem.id === activeElement.elementId){
-                                            isMatched = targetShowhideElem.type === 'element-list'
+                                            isMatched = targetShowhideElem.type === elementListText
                                             isMatched && (listElement = targetShowhideElem)
                                         }
                                     }
                                     else if (nestedElement.type === "manifest") {
                                         nestedElement.contents.bodymatter.find((leafElement) => {
                                             if (leafElement.id === activeElement.elementId) {
-                                                isMatched = leafElement.type === 'element-list'
+                                                isMatched = leafElement.type === elementListText
                                                 isMatched && (listElement = leafElement)
                                             }
                                             else if(leafElement.type === "showhide" && this.props?.asideData?.type === "showhide"){
                                                 let indexes = activeElement.index.split("-")
                                                 let targetShowhideElem = leafElement.interactivedata[this.props?.asideData?.sectionType][indexes[4]]
                                                 if(targetShowhideElem && targetShowhideElem.id === activeElement.elementId){
-                                                    isMatched = targetShowhideElem.type === 'element-list'
+                                                    isMatched = targetShowhideElem.type === elementListText
                                                     isMatched && (listElement = targetShowhideElem)
                                                 }
                                             }
@@ -114,7 +115,7 @@ class ListButtonDropPortal extends Component {
                             this.props?.asideData?.type === "showhide" && this.props.asideData && element.interactivedata[this.props?.asideData?.sectionType].find(
                                 (nselement) => {
                                     if (nselement.id === activeElement.elementId) {
-                                        isMatched = nselement.type === 'element-list'
+                                        isMatched = nselement.type === elementListText
                                         isMatched && (listElement = nselement)
                                     }
                                 }
@@ -123,38 +124,38 @@ class ListButtonDropPortal extends Component {
                             let indexes = activeElement.index.split("-")
                             let liElement = element.groupeddata && element.groupeddata.bodymatter[indexes[1]] && element.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]]
                             if (liElement && liElement.id === activeElement.elementId) {
-                                isMatched = liElement.type === 'element-list'
+                                isMatched = liElement.type === elementListText
                                 isMatched && (listElement = liElement)
                             }
                             element.groupeddata.bodymatter.map(data => {
                                 data.groupdata.bodymatter.find(
                                     (subNestedElement) => {
-                                        if (subNestedElement.type === 'element-aside') {
+                                        if (subNestedElement.type === elementAsideText) {
                                             subNestedElement.elementdata.bodymatter.find(
                                                 (nestedElement) => {
                                                     if (nestedElement.id === activeElement.elementId) {
-                                                        isMatched = nestedElement.type === 'element-list'
+                                                        isMatched = nestedElement.type === elementListText
                                                         isMatched && (listElement = nestedElement)
                                                     }
                                                     else if (nestedElement.type === "showhide" && this.props?.asideData?.type === "showhide") {
                                                         let indexes = activeElement.index.split("-")
                                                         let targetShowhideElem = nestedElement.interactivedata[this.props?.asideData?.sectionType][indexes[5]]
                                                         if (targetShowhideElem && targetShowhideElem.id === activeElement.elementId) {
-                                                            isMatched = targetShowhideElem.type === 'element-list'
+                                                            isMatched = targetShowhideElem.type === elementListText
                                                             isMatched && (listElement = targetShowhideElem)
                                                         }
                                                     }
                                                     else if (nestedElement.type === "manifest") {
                                                         nestedElement.contents.bodymatter.find((leafElement) => {
                                                             if (leafElement.id === activeElement.elementId) {
-                                                                isMatched = leafElement.type === 'element-list'
+                                                                isMatched = leafElement.type === elementListText
                                                                 isMatched && (listElement = leafElement)
                                                             }
                                                             else if (leafElement.type === "showhide" && this.props?.asideData?.type === "showhide") {
                                                                 let indexes = activeElement.index.split("-")
                                                                 let targetShowhideElem = leafElement.interactivedata[this.props?.asideData?.sectionType][indexes[6]]
                                                                 if (targetShowhideElem && targetShowhideElem.id === activeElement.elementId) {
-                                                                    isMatched = targetShowhideElem.type === 'element-list'
+                                                                    isMatched = targetShowhideElem.type === elementListText
                                                                     isMatched && (listElement = targetShowhideElem)
                                                                 }
                                                             }
@@ -166,7 +167,7 @@ class ListButtonDropPortal extends Component {
                                             let indexes = activeElement.index.split("-")
                                             let targetShowhideElem = subNestedElement.interactivedata[this.props?.asideData?.sectionType][indexes[4]]
                                             if (targetShowhideElem && targetShowhideElem.id === activeElement.elementId) {
-                                                isMatched = targetShowhideElem.type === 'element-list'
+                                                isMatched = targetShowhideElem.type === elementListText
                                                 isMatched && (listElement = targetShowhideElem)
                                             }
                                         }
@@ -191,9 +192,9 @@ class ListButtonDropPortal extends Component {
                 let parentElement= slateData[config.slateManifestURN]?.contents?.bodymatter[indexes[0]];
                 if(this?.props?.asideData.parent && this?.props?.asideData.parent.type === "showhide"){
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,slateData[config.slateManifestURN].contents.bodymatter[indexes[0]].interactivedata[this?.props?.asideData?.parent?.showHideType][indexes[2]]);
-                }else if(parentElement.type ==="element-aside" && parentElement.elementdata?.bodymatter[indexes[1]]?.type === "manifestlist"){
+                }else if(parentElement.type ===elementAsideText && parentElement.elementdata?.bodymatter[indexes[1]]?.type === "manifestlist"){
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,parentElement.elementdata?.bodymatter[indexes[1]]);
-                }else if(parentElement.type ==="element-aside" && parentElement.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist"){
+                }else if(parentElement.type ===elementAsideText && parentElement.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist"){
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,parentElement.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]);
                 }else if(this?.props?.asideData?.parent?.type === 'groupedcontent' && parentElement?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.type === "manifestlist"){
                     metaDataBlockList = this.getBlockListMetaData(blockListData.parentData.id,parentElement?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]);

@@ -9,6 +9,7 @@ import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
 import { checkSlateLock } from '../js/slateLockUtility';
+import { dataMceSelectedText } from './Element_Constants';
 // DECLARATION - const or variables
 export const PRIMARY_BUTTON = "primary";
 export const SECONDARY_BUTTON = "secondary";
@@ -749,9 +750,9 @@ export const replaceUnwantedtags = (html) => {
     tinyMCE.$(tempDiv).find('img').removeAttr('style');
     tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
     tinyMCE.$(tempDiv).find('blockquote').removeAttr('contenteditable');
-    tinyMCE.$(tempDiv).find('blockquote').removeAttr('data-mce-selected');
-    tinyMCE.$(tempDiv).find('code').removeAttr('data-mce-selected');
-    tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
+    tinyMCE.$(tempDiv).find('blockquote').removeAttr(dataMceSelectedText);
+    tinyMCE.$(tempDiv).find('code').removeAttr(dataMceSelectedText);
+    tinyMCE.$(tempDiv).find('img').removeAttr(dataMceSelectedText);
     tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('height');
     tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('width');
     tinyMCE.$(tempDiv).find('.blockquoteMarginalia').removeAttr('contenteditable');
@@ -759,7 +760,7 @@ export const replaceUnwantedtags = (html) => {
     tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
     tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
     tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
-    tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
+    tinyMCE.$(tempDiv).find('a').removeAttr(dataMceSelectedText);
     tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
     tinyMCE.$(tempDiv).find('img.Wirisformula, img.temp_Wirisformula').removeAttr('src');
     tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');

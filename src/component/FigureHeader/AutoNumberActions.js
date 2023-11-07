@@ -10,13 +10,14 @@ import {
 } from '../../constants/Action_Constants.js';
 import { prepareAutoNumberList, getNumberedElements } from './AutoNumber_helperFunctions';
 import store from '../../appstore/store'
+import { applicationJsonText } from '../../constants/Element_Constants.js';
 /**
  *
  */
 
 const commonHeaders = {
     "ApiKey": config.STRUCTURE_APIKEY,
-    "Content-Type": "application/json",
+    "Content-Type": applicationJsonText,
     'myCloudProxySession': config.myCloudProxySession
 }
 
@@ -29,7 +30,7 @@ export const fetchProjectFigures = (currentParentUrn) => async dispatch => {
     try{
         const headers = {
             "ApiKey": config.STRUCTURE_APIKEY,
-            "Content-Type": "application/json",
+            "Content-Type": applicationJsonText,
             'myCloudProxySession': config.myCloudProxySession
         }
         const figureUrl = getAPIUrl(currentParentUrn);
@@ -171,7 +172,7 @@ export const getSlateLevelData = async (manifestURN, entityURN) => {
     try {
         const response = await axios.get(apiUrl, {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": applicationJsonText,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })

@@ -8,6 +8,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { checkImageForMetadata, checkOpenerElement, checkSmartLinkInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility';
 import { showNotificationOnCanvas } from '../../constants/utility';
+import { cplgAltText, cplgLongDescriptionText } from '../../constants/Element_Constants';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -66,12 +67,12 @@ class MetaDataPopUp extends React.Component {
 			else{
 				this.setState({
 					metaData: properties,
-					fetchedAltText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
-					fetchedLongDesc: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
-					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
-					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
+					fetchedAltText: properties.hasOwnProperty(cplgAltText) ? properties[cplgAltText] : "",
+					fetchedLongDesc: properties.hasOwnProperty(cplgLongDescriptionText) ? properties[cplgLongDescriptionText] : "",
+					altText: properties.hasOwnProperty(cplgAltText) ? properties[cplgAltText] : "",
+					longDescription: properties.hasOwnProperty(cplgLongDescriptionText) ? properties[cplgLongDescriptionText] : "",
 					disableTextFields:  true,
-					disableUpdateButton: checkOpenerElement(this.props.element) ? (this?.props?.element?.backgroundimage?.alttext===properties["cplg:altText"] && this?.props?.element?.backgroundimage?.longdescription===properties["cplg:longDescription"] ? false : true) :  (this?.props?.element?.figuredata?.alttext===properties["cplg:altText"] && this?.props?.element?.figuredata?.longdescription===properties["cplg:longDescription"]) ? false : true
+					disableUpdateButton: checkOpenerElement(this.props.element) ? (this?.props?.element?.backgroundimage?.alttext===properties[cplgAltText] && this?.props?.element?.backgroundimage?.longdescription===properties[cplgLongDescriptionText] ? false : true) :  (this?.props?.element?.figuredata?.alttext===properties[cplgAltText] && this?.props?.element?.figuredata?.longdescription===properties[cplgLongDescriptionText]) ? false : true
 				})
 			}
 			}).catch(error => {

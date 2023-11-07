@@ -8,6 +8,7 @@ import { saveGlossaryAndFootnote } from "./GlossaryFootnote_Actions.js"
 import { ShowLoader } from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe, hasReviewerRole } from '../../constants/utility.js';
 import config from '../../config/config';
+import { spanMceCaretText, temp_WirisformulaClass } from '../../constants/Element_Constants.js';
 
 /**
 * @description - GlossaryFootnoteMenu is a class based component. It is defined simply
@@ -71,23 +72,23 @@ class GlossaryFootnoteMenu extends React.Component {
         tempDiv.innerHTML = html;
         /** BG-2332 | PCAT-7409 | Multiple Superseeded formatting entry is created in WIP when
          * entering text by selecting the strikethrough formatting in Footnote and Glossary  */
-        while(tinyMCE.$(tempDiv).find('span#_mce_caret').length) {
-            tinyMCE.$(tempDiv).find('span#_mce_caret').each(function () {
+        while(tinyMCE.$(tempDiv).find(spanMceCaretText).length) {
+            tinyMCE.$(tempDiv).find(spanMceCaretText).each(function () {
                 let innerHtml = this.innerHTML;
                 this.outerHTML = innerHtml;
             });
-            if(tinyMCE.$(tempDiv).find('span#_mce_caret').length === 0) {
+            if(tinyMCE.$(tempDiv).find(spanMceCaretText).length === 0) {
                 break;
             }
         }
-        tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
+        tinyMCE.$(tempDiv).find(spanMceCaretText).remove();
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('data-mce-selected');
-        tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeAttr('height');
-        tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeAttr('width');
+        tinyMCE.$(tempDiv).find(temp_WirisformulaClass).removeAttr('height');
+        tinyMCE.$(tempDiv).find(temp_WirisformulaClass).removeAttr('width');
         tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
-        tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
+        tinyMCE.$(tempDiv).find(temp_WirisformulaClass).removeClass('fr-draggable');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-selected');
         return tempDiv.innerHTML;

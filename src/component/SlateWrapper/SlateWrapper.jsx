@@ -40,7 +40,7 @@ import LazyLoad, {forceCheck} from "react-lazyload";
 import { createPowerPasteElements } from './SlateWrapper_Actions.js';
 
 import { getCommentElements } from './../Toolbar/Search/Search_Action.js';
-import { TEXT_SOURCE, externalLOWarningtxt, UNLOCKSLATEWARNING } from '../../constants/Element_Constants.js';
+import { TEXT_SOURCE, externalLOWarningtxt, UNLOCKSLATEWARNING, imageElemText, assessmentElemText, workedExpElemText, sectionBreakElemText } from '../../constants/Element_Constants.js';
 import AlfrescoPopup from '../AlfrescoPopup/AlfrescoPopup.jsx';
 import { SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI, SLATE_TYPE_PDF } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
 import { ADD_FIGURE_GLOSSARY_POPUP, SET_FIGURE_GLOSSARY } from '../../constants/Action_Constants.js'
@@ -623,7 +623,7 @@ class SlateWrapper extends Component {
         /* For showing the spinning loader send HideLoader message to Wrapper component */
         if (type) { sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); }
         switch (type) {
-            case 'image-elem':
+            case imageElemText:
                 this.props.createElement(IMAGE, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
             case 'audio-elem':
@@ -632,19 +632,19 @@ class SlateWrapper extends Component {
             case 'interactive-elem':
                 this.props.createElement(INTERACTIVE, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
-            case 'assessment-elem':
+            case assessmentElemText:
                 this.props.createElement(ASSESSMENT, indexToinsert, parentUrn, asideData, null, null, null);
                 break;
             case 'container-elem':
                 this.props.createElement(CONTAINER, indexToinsert, parentUrn, asideData, null, null, null)
                 break;
-            case 'worked-exp-elem':
+            case workedExpElemText:
                 this.props.createElement(WORKED_EXAMPLE, indexToinsert, parentUrn, asideData, null, null, null)
                 break;
             case 'opener-elem':
                 this.props.createElement(OPENER, indexToinsert, parentUrn, null, null, null, null)
                 break;
-            case 'section-break-elem':
+            case sectionBreakElemText:
                 parentUrn.contentUrn = asideData.contentUrn
                 parentUrn.manifestUrn = asideData.id
                 if (typeof (outerAsideIndex) == "string") {
@@ -747,8 +747,8 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'image-elem',
-                buttonHandler: () => this.splithandlerfunction('image-elem', index, firstOne, parentUrn, asideData),
+                buttonType: imageElemText,
+                buttonHandler: () => this.splithandlerfunction(imageElemText, index, firstOne, parentUrn, asideData),
                 tooltipText: 'Image',
                 tooltipDirection: 'left'
             },
@@ -777,8 +777,8 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'assessment-elem',
-                buttonHandler: () => this.splithandlerfunction('assessment-elem', index, firstOne, parentUrn, asideData),
+                buttonType: assessmentElemText,
+                buttonHandler: () => this.splithandlerfunction(assessmentElemText, index, firstOne, parentUrn, asideData),
                 tooltipText: 'Assessment',
                 tooltipDirection: 'left'
             },
@@ -789,8 +789,8 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'worked-exp-elem',
-                buttonHandler: () => this.splithandlerfunction('worked-exp-elem', index, firstOne, parentUrn, asideData),
+                buttonType: workedExpElemText,
+                buttonHandler: () => this.splithandlerfunction(workedExpElemText, index, firstOne, parentUrn, asideData),
                 tooltipText: 'Worked Example',
                 tooltipDirection: 'left'
             },
@@ -807,8 +807,8 @@ class SlateWrapper extends Component {
                 tooltipDirection: 'left'
             },
             {
-                buttonType: 'section-break-elem',
-                buttonHandler: () => this.splithandlerfunction('section-break-elem', index, firstOne, parentUrn, asideData, outerAsideIndex),
+                buttonType: sectionBreakElemText,
+                buttonHandler: () => this.splithandlerfunction(sectionBreakElemText, index, firstOne, parentUrn, asideData, outerAsideIndex),
                 tooltipText: 'Section Break',
                 tooltipDirection: 'left'
             },

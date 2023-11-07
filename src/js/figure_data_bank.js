@@ -1,3 +1,5 @@
+import { AUTHORED_TEXT_SCHEMA, INTERACTIVE_FPO, INTERACTIVE_SCHEMA, externalLinkText } from "../constants/Element_Constants"
+
 let figureCommonData = {
     "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
     "height": "422",
@@ -15,7 +17,7 @@ export default {
         "type": "element-authoredtext",
         "schema": "http://schemas.pearson.com/wip-authoring/element/1",
         "elementdata": {
-            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "schema": AUTHORED_TEXT_SCHEMA,
             "text": "",
             "textsemantics": [],
             "mathml": []
@@ -73,79 +75,79 @@ export default {
         "interactiveformat": "mmi",
         "interactivetype": "fpo",
         "numbered": false,
-        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "schema": INTERACTIVE_SCHEMA,
         "startNumber": 0
     },
     "secondary-interactive-smartlink-third" : {
-        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "3rd-party",
-        "interactiveformat": "external-link",
+        "interactiveformat": externalLinkText,
         "posterimage": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        "path": INTERACTIVE_FPO
         }
     },
     "secondary-interactive-smartlink-pdf" : {
-        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "pdf",
-        "interactiveformat": "external-link",
+        "interactiveformat": externalLinkText,
         "posterimage": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        "path": INTERACTIVE_FPO
         },
         "postertext": {
-            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "schema": AUTHORED_TEXT_SCHEMA,
             "text": "",
             "textsemantics": [],
             "mathml": []
         }
     },
     "secondary-interactive-smartlink-web" : {
-        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "web-link",
-        "interactiveformat": "external-link",
+        "interactiveformat": externalLinkText,
         "postertext": {
-            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "schema": AUTHORED_TEXT_SCHEMA,
             "text": "",
             "textsemantics": [],
             "mathml": []
         }
     },
     "secondary-interactive-smartlink-pop-up-web-link" : {
-        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "pop-up-web-link",
-        "interactiveformat": "external-link",
+        "interactiveformat": externalLinkText,
         "postertext": {
-            "schema": "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            "schema": AUTHORED_TEXT_SCHEMA,
             "text": "",
             "textsemantics": [],
             "mathml": []
         }
     },
     "secondary-interactive-smartlink-tab" : {
-        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "table",
-        "interactiveformat": "external-link",
+        "interactiveformat": externalLinkText,
         "posterimage": {
-        "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+        "path": INTERACTIVE_FPO
         }
     },
     "primary-showhide": {
-        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "showhide",
         "interactiveformat": "mmi"
     },
     "primary-popup": {
-        "schema": "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive",
+        "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "popup",
         "interactiveformat": "narrative-link",
         "posterimage": {
-            "path": "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
+            "path": INTERACTIVE_FPO
         }
     },
     "primary-single-assessment": {

@@ -11,6 +11,7 @@ import {
 } from '../../constants/Action_Constants.js'
 import { hideTocBlocker } from '../../js/toggleLoader'
 import { deleteAudio,REFRESH_MESSAGE } from '../../constants/IFrameMessageTypes.js'
+import { applicationJsonText, cmDescriptionText } from '../../constants/Element_Constants.js'
 /**
  *
  * @param {*} value
@@ -86,8 +87,8 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
         try {
             let audioDataResponse = await axios.get(url,{
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
+                    'Accept': applicationJsonText,
+                    'Content-Type': applicationJsonText,
                     'ApiKey': config.AUDIO_API_KEY,
                     'myCloudProxySession': config.myCloudProxySession
                 }
@@ -152,8 +153,8 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
         try {
             let audioDataResponse = await axios.delete(url, {
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
+                    'Accept': applicationJsonText,
+                    'Content-Type': applicationJsonText,
                     'ApiKey': config.AUDIO_API_KEY,
                     'myCloudProxySession': config.myCloudProxySession
                 }
@@ -228,8 +229,8 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
         try {
             let audioPutResponse = await axios.put(url, audioData, {
                 headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
+                    'Accept': applicationJsonText,
+                    'Content-Type': applicationJsonText,
                     'ApiKey': config.AUDIO_API_KEY,
                     'myCloudProxySession': config.myCloudProxySession
                 }
@@ -261,7 +262,7 @@ export const saveDataFromAlfresco = (message) => dispatch => {
         }
     }
     let figureType = imageData?.content?.mimeType?.split('/')[0]
-    let smartLinkAssetType = imageData?.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ? imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
+    let smartLinkAssetType = imageData?.properties[cmDescriptionText] && (typeof (imageData.properties[cmDescriptionText]) == "string") ? imageData.properties[cmDescriptionText].includes('smartLinkType') ? JSON.parse(imageData.properties[cmDescriptionText]).smartLinkType : "" : "";
     const audioFormat = imageData?.mimetype ?? imageData?.content?.mimeType ?? "";
     if (figureType === 'audio') {
         let nonSmartLinkUrl = imageData["institution-urls"] && imageData["institution-urls"][0]?.publicationUrl

@@ -13,7 +13,7 @@ import tinymce from 'tinymce'
 import ElementConstants from '../ElementContainer/ElementConstants.js';
 import { handleAutoNumberingOnCopyPaste } from '../FigureHeader/AutoNumber_CutCopy_helpers';
 import { getAsideElementsWrtKey } from '../FigureHeader/slateLevelMediaMapper';
-import { MANIFEST_LIST } from '../../constants/Element_Constants';
+import { MANIFEST_LIST, elementAsideText } from '../../constants/Element_Constants';
 const { SHOW_HIDE, ELEMENT_ASIDE, MULTI_COLUMN, CITATION_GROUP, POETRY_ELEMENT } = ElementConstants;
 
 export const onPasteSuccess = async (params) => {
@@ -192,12 +192,12 @@ export const onPasteSuccess = async (params) => {
             currentSlateData?.contents?.bodymatter?.map(item => {
                 if(item?.id === manifestUrn) {
                     pasteInShowhide(item, responseData, pasteSHIndex);
-                } else if(item?.type === 'element-aside') {
+                } else if(item?.type === elementAsideText) {
                     pasteShowhideInAside(item, manifestUrn, responseData, pasteSHIndex)
                 } else if(item?.type === "groupedcontent") {
                     item?.groupeddata?.bodymatter?.map(item_4 => {
                         item_4?.groupdata?.bodymatter?.map(item_5 => {
-                            if(item_5?.type === 'element-aside') {
+                            if(item_5?.type === elementAsideText) {
                                 pasteShowhideInAside(item_5, manifestUrn, responseData, pasteSHIndex);
                             }
                             if(item_5?.id === manifestUrn) {
@@ -211,11 +211,11 @@ export const onPasteSuccess = async (params) => {
             console.error(error);
         }
     } else
-    if (asideData && asideData.type == 'element-aside') {
+    if (asideData && asideData.type == elementAsideText) {
         newParentData[config.slateManifestURN].contents.bodymatter.map((item) => {
             if (item.id == parentUrn.manifestUrn) {
                 item.elementdata.bodymatter.splice(cutIndex, 0, responseData)
-            } else if (item.type == "element-aside" && item.id == asideData.id) {
+            } else if (item.type == elementAsideText && item.id == asideData.id) {
                 item.elementdata.bodymatter && item.elementdata.bodymatter.map((ele) => {
                     if (ele.id === parentUrn.manifestUrn) {
                         ele.contents.bodymatter.splice(cutIndex, 0, responseData)
@@ -304,7 +304,7 @@ export const onPasteSuccess = async (params) => {
                         ele.contents.bodymatter.splice(cutIndex, 0, responseData)
                     }
                 })
-            } else if(item?.type == "element-aside"){
+            } else if(item?.type == elementAsideText){
                 item.elementdata?.bodymatter.map((element)=>{
                     if(element.type == "manifest"){ /* paste stanza inside PE in WE  in section break*/
                         element.contents?.bodymatter.map((element1)=>{
@@ -630,7 +630,7 @@ export const setPayloadForContainerCopyPaste = (params) => {
         containerEntityUrn
     } = params
 
-    const acceptedTypes=["element-aside","citations","poetry","groupedcontent","workedexample","showhide","popup","discussion","manifestlist"]
+    const acceptedTypes=[elementAsideText,"citations","poetry","groupedcontent","workedexample","showhide","popup","discussion","manifestlist"]
     if (acceptedTypes.includes(selection.element.type)) {
         if (selection.operationType === "cut") {
             return {

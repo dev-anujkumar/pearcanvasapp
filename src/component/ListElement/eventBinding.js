@@ -7,6 +7,7 @@
 require('./polyfills.js')
 import tinyMCE from 'tinymce';
 import { checkActiveElement } from '../../js/TinyMceUtility.js';
+import { lowerAlphaText, lowerRomanText, shfTabEvntClass, toxTbtnEnabledClass, upperAlphaText } from '../../constants/Element_Constants.js';
 
 /* ------------------------------ START - List toolbar button methods ----------------------------- */
 /**
@@ -259,18 +260,18 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
                 updatelistFlag = false;
                 let timeoutInstance = setTimeout(() => {
                     clearTimeout(timeoutInstance);
-                    let allOlElems = document.querySelector('li.shfTabEvnt').querySelectorAll('ol').length &&
-                        document.querySelector('li.shfTabEvnt').querySelectorAll('ol') ||
-                        document.querySelector('li.shfTabEvnt').querySelectorAll('ul');
+                    let allOlElems = document.querySelector(shfTabEvntClass).querySelectorAll('ol').length &&
+                        document.querySelector(shfTabEvntClass).querySelectorAll('ol') ||
+                        document.querySelector(shfTabEvntClass).querySelectorAll('ul');
                     let firstOlElem = allOlElems[0];
                     let firstLi = [...firstOlElem.children].slice(0, 1)[0];
                     let levelUpOL = firstLi.findChildren('ol')[0] || firstLi.findChildren('ul')[0];
                     let liSiblings = [...firstOlElem.children].slice(1);
                     levelUpOL.append(...liSiblings);
-                    document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0].remove();
-                    document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0].remove();
-                    document.querySelector('li.shfTabEvnt').append(levelUpOL);
-                    document.querySelector('li.shfTabEvnt').classList.remove('shfTabEvnt');
+                    document.querySelector(shfTabEvntClass).querySelectorAll('ol')[0] && document.querySelector(shfTabEvntClass).querySelectorAll('ol')[0].remove();
+                    document.querySelector(shfTabEvntClass).querySelectorAll('ul')[0] && document.querySelector(shfTabEvntClass).querySelectorAll('ul')[0].remove();
+                    document.querySelector(shfTabEvntClass).append(levelUpOL);
+                    document.querySelector(shfTabEvntClass).classList.remove('shfTabEvnt');
                     updateNestedList(e.target);
                     listUpdatedOnce = true;
                 });
@@ -357,18 +358,18 @@ const reformatting = (editor) => {
                 let closestLi = parentOl.closest('li')
                 if ((closestLi.findChildren('ol').length > 0) || (closestLi.findChildren('ul').length > 0)) {
                     closestLi.classList.add('shfTabEvnt');
-                    let allOlElems = document.querySelector('li.shfTabEvnt').querySelectorAll('ol').length &&
-                        document.querySelector('li.shfTabEvnt').querySelectorAll('ol') ||
-                        document.querySelector('li.shfTabEvnt').querySelectorAll('ul');
+                    let allOlElems = document.querySelector(shfTabEvntClass).querySelectorAll('ol').length &&
+                        document.querySelector(shfTabEvntClass).querySelectorAll('ol') ||
+                        document.querySelector(shfTabEvntClass).querySelectorAll('ul');
                     let firstOlElem = allOlElems[0];
                     let firstLi = [...firstOlElem.children].slice(0, 1)[0];
                     let levelUpOL = firstLi.findChildren('ol')[0] || firstLi.findChildren('ul')[0];
                     let liSiblings = [...firstOlElem.children].slice(1);
                     levelUpOL.append(...liSiblings);
-                    document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ol')[0].remove();
-                    document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0] && document.querySelector('li.shfTabEvnt').querySelectorAll('ul')[0].remove();
-                    document.querySelector('li.shfTabEvnt').append(levelUpOL);
-                    document.querySelector('li.shfTabEvnt').classList.remove('shfTabEvnt');
+                    document.querySelector(shfTabEvntClass).querySelectorAll('ol')[0] && document.querySelector(shfTabEvntClass).querySelectorAll('ol')[0].remove();
+                    document.querySelector(shfTabEvntClass).querySelectorAll('ul')[0] && document.querySelector(shfTabEvntClass).querySelectorAll('ul')[0].remove();
+                    document.querySelector(shfTabEvntClass).append(levelUpOL);
+                    document.querySelector(shfTabEvntClass).classList.remove('shfTabEvnt');
                     updateNestedList(editor.targetElm);
                 }
             }
@@ -381,19 +382,19 @@ const reformatting = (editor) => {
  * @param {*} element | target element
  */
 export const updateNestedList = (element) => {
-    let decimalOlClassList = ['decimal', 'lower-alpha', 'lower-roman', 'decimal'];
+    let decimalOlClassList = ['decimal', lowerAlphaText, lowerRomanText, 'decimal'];
     let decimalLiClassList = ['listItemNumeroUnoNumber', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoLowerRoman', 'listItemNumeroUnoNumber'];
 
-    let upperAlphaClassList = ['upper-alpha', 'lower-alpha', 'lower-roman', 'decimal'];
+    let upperAlphaClassList = [upperAlphaText, lowerAlphaText, lowerRomanText, 'decimal'];
     let upperAlphaLiClassList = ['listItemNumeroUnoUpperAlpha', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoLowerRoman', 'listItemNumeroUnoNumber']
 
-    let lowerAlphaClassList = ['lower-alpha', 'lower-roman', 'decimal', 'lower-alpha'];
+    let lowerAlphaClassList = [lowerAlphaText, lowerRomanText, 'decimal', lowerAlphaText];
     let lowerAlphaLiClassList = ['listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoLowerRoman', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerAlpha'];
 
-    let upperRomanClassList = ['upper-roman', 'upper-alpha', 'decimal', 'lower-alpha'];
+    let upperRomanClassList = ['upper-roman', upperAlphaText, 'decimal', lowerAlphaText];
     let upperRomanLiClassList = ['listItemNumeroUnoUpperRoman', 'listItemNumeroUnoUpperAlpha', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerAlpha'];
 
-    let lowerRomanClassList = ['lower-roman', 'lower-alpha', 'decimal', 'lower-roman'];
+    let lowerRomanClassList = [lowerRomanText, lowerAlphaText, 'decimal', lowerRomanText];
     let lowerRomanLiClassList = ['listItemNumeroUnoLowerRoman', 'listItemNumeroUnoLowerAlpha', 'listItemNumeroUnoNumber', 'listItemNumeroUnoLowerRoman'];
     let UlLiClassList = ['listItemNumeroUnoDisc', 'listItemNumeroUnoSquare', 'listItemNumeroUnoCircle', 'listItemNumeroUnoDisc'];
 
@@ -434,11 +435,11 @@ export const updateNestedList = (element) => {
                 allOlElement[i].classList.add(decimalOlClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(decimalLiClassList[treelevel - 1]) });
                 break;
-            case "upper-alpha":
+            case upperAlphaText:
                 allOlElement[i].classList.add(upperAlphaClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(upperAlphaLiClassList[treelevel - 1]) });
                 break;
-            case "lower-alpha":
+            case lowerAlphaText:
                 allOlElement[i].classList.add(lowerAlphaClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(lowerAlphaLiClassList[treelevel - 1]) });
                 break;
@@ -446,7 +447,7 @@ export const updateNestedList = (element) => {
                 allOlElement[i].classList.add(upperRomanClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(upperRomanLiClassList[treelevel - 1]) });
                 break;
-            case "lower-roman":
+            case lowerRomanText:
                 allOlElement[i].classList.add(lowerRomanClassList[treelevel - 1]);
                 [...childLielement].forEach((elem) => { elem.classList.add(lowerRomanLiClassList[treelevel - 1]) });
                 break;
@@ -538,19 +539,19 @@ const createDefaultOlLi = (treelevel, olClass, listType, element) => {
 
 export const removeListHighliting = _ => {
     let listToolbar = document.querySelector('button[title="Unordered List"]')
-    listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+    listToolbar && listToolbar.classList.remove(toxTbtnEnabledClass)
 
     listToolbar = document.querySelector('div[title="Ordered List"]')
-    listToolbar && listToolbar.classList.remove('tox-tbtn--enabled')
+    listToolbar && listToolbar.classList.remove(toxTbtnEnabledClass)
 }
 
 export const highlightListIcon = props => {
     if (props.element.subtype === "disc" || (props.currentElement && props.currentElement.subtype === "disc")) {
         let listToolbar = document.querySelector('button[title="Unordered List"]')
-        listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+        listToolbar && listToolbar.classList.add(toxTbtnEnabledClass)
     } else {
         let listToolbar = document.querySelector('div[title="Ordered List"]');
-        listToolbar && listToolbar.classList.add('tox-tbtn--enabled')
+        listToolbar && listToolbar.classList.add(toxTbtnEnabledClass)
     }
 }
 /* ------------------------------ END - List customized events method ----------------------------- */

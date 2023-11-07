@@ -16,7 +16,7 @@ import RootSingleAssessmentComponent from '../AssessmentSlateCanvas/singleAssess
 import  {setCurrentCiteTdx, setCurrentInnerCiteTdx, getMCQGuidedData, assessmentSorting}  from '../AssessmentSlateCanvas/assessmentCiteTdx/Actions/CiteTdxActions';
 import { connect } from 'react-redux';
 import { sendDataToIframe, getCookieByName } from './../../constants/utility.js';
-import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA } from '../../constants/Element_Constants.js';
+import { INTERACTIVE_FPO, INTERACTIVE_SCHEMA, AUTHORED_TEXT_SCHEMA, institutionUrlsText, cmDescriptionText } from '../../constants/Element_Constants.js';
 import interactiveTypeData from './interactiveTypes.js';
 import elementTypeConstant from '../ElementContainer/ElementConstants.js';
 import TcmConstants from '../TcmSnapshots/TcmConstants.js';
@@ -523,11 +523,11 @@ class Interactive extends React.Component {
         disableHeader(false);
         this.props.showBlocker(false);
         let imageData = data;
-        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.['institution-urls'] && imageData?.['institution-urls'][0]?.publicationUrl ? imageData?.['institution-urls'][0]?.publicationUrl : "";
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.[institutionUrlsText] && imageData?.[institutionUrlsText][0]?.publicationUrl ? imageData?.[institutionUrlsText][0]?.publicationUrl : "";
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
         let smartLinkPath = imageData.properties["avs:url"] ? imageData.properties["avs:url"] : "";
-        let smartLinkString = (imageData.properties["cm:description"] && imageData.properties["cm:description"].toLowerCase() !== "eps media") ? imageData.properties["cm:description"] : "{}";
+        let smartLinkString = (imageData.properties[cmDescriptionText] && imageData.properties[cmDescriptionText].toLowerCase() !== "eps media") ? imageData.properties[cmDescriptionText] : "{}";
         let isSmartLinkAsset = smartLinkString !== "{}" && (smartLinkString.includes("smartLinkType") || !(imageData.hasOwnProperty('content'))) ? true :  false
         let smartlinkAvsString = (isSmartLinkAsset === true) ? smartLinkString : {}
         let smartLinkDesc = (typeof smartlinkAvsString === 'string')? JSON.parse(smartlinkAvsString) : smartlinkAvsString;

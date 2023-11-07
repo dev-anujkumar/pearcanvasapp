@@ -4,6 +4,7 @@ let config_object = configOBJ.default;
 import { publishSlate, publishTitle } from '../js/c4_module.js';
 import { releaseSlateLockWithCallback } from '../component/CanvasWrapper/SlateLock_Actions'
 import { sendDataToIframe } from '../constants/utility';
+import { pearsonDomain } from '../constants/Element_Constants.js';
 var current_slate_urn='';
 /**
 * @description - Set current slate URN.
@@ -101,11 +102,11 @@ const logoutWithModernOpenAM = async () => {
                     } else if (isSubscriberKey) {
                         localStorage.removeItem('hasSubscriberView');
                     }
-                    deleteCookie('PearsonSSOSession', 'pearson.com');
-                    deleteCookie('myCloudProxySession', 'pearson.com');
-                    deleteCookie('DISABLE_DELETE_WARNINGS', 'pearson.com');
-                    deleteCookie('DISABLE_LIST_ELEMENT_WARNING', 'pearson.com');
-                    deleteCookie('DISABLE_DI_CONVERSION_WARNING', 'pearson.com');
+                    deleteCookie('PearsonSSOSession', pearsonDomain);
+                    deleteCookie('myCloudProxySession', pearsonDomain);
+                    deleteCookie('DISABLE_DELETE_WARNINGS', pearsonDomain);
+                    deleteCookie('DISABLE_LIST_ELEMENT_WARNING', pearsonDomain);
+                    deleteCookie('DISABLE_DI_CONVERSION_WARNING', pearsonDomain);
                     removeAllLocal();
                     redirectParent(urlToBeRedirected);
                 }

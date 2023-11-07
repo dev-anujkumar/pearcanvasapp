@@ -12,7 +12,7 @@ import elementTypeConstant, { containerTypeArray } from './ElementSepratorConsta
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import '../../styles/ElementSaprator/ElementSaprator.css'
 import ElementContainerType from '../ElementContainerType/ElementContainerType.jsx'
-import { getPasteValidated, MANIFEST_LIST } from '../../constants/Element_Constants.js';
+import { elementAsideText, getPasteValidated, MANIFEST_LIST } from '../../constants/Element_Constants.js';
 import { cloneContainer } from "../SlateWrapper/SlateWrapper_Actions.js";
 import { indexOfSectionType } from '../ShowHide/ShowHide_Helper';
 
@@ -142,7 +142,7 @@ export function ElementSaprator(props) {
         let pasteValidation = getPasteValidated(props, sourceComp, inputType);
         const popupSlateNotAcceptedTypes = ["groupedcontent", "showhide", "popup", 'citations', 'element-citation', 'poetry', 'stanza'];
         let isChildElementNotAcceptedInPopup = false;
-        if(config.isPopupSlate && props.elementSelection?.element?.type === 'element-aside'){
+        if(config.isPopupSlate && props.elementSelection?.element?.type === elementAsideText){
             let asideNotAcceptedTypes=['poetry', 'stanza', 'popup', 'showhide', 'groupedcontent'];
             isChildElementNotAcceptedInPopup = asideNotAcceptedTypes.includes(props?.asideData?.type)
         }
@@ -164,10 +164,10 @@ export function ElementSaprator(props) {
         const inContainer = [POETRY, CITATION_GROUP_ELEMENT]
         const allowedRoles = ["admin", "manager", "edit", "default_user"];
         const parentContainer = ["groupedcontent", "showhide"]
-        const parentContainerForShowHide = ["groupedcontent", "element-aside"]
+        const parentContainerForShowHide = ["groupedcontent", elementAsideText]
         const hasPasteFromWordPermission = hasProjectPermission("paste_from_word") ;
         let isPasteFromWordBtn = (allowedRoles.includes(userRole) || hasPasteFromWordPermission)
-        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ==='element-aside' && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type)) || (parentUrn?.subtype === TAB) || (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB)) {
+        if (inContainer.includes(parentElementType) || config.isPopupSlate || !isPasteFromWordBtn || (asideData?.type ===elementAsideText && parentContainer.includes(asideData?.parent?.type)) || (asideData?.type === SHOW_HIDE && parentContainerForShowHide.includes(asideData?.grandParent?.asideData?.type)) || (parentUrn?.subtype === TAB) || (asideData?.type === MULTI_COLUMN && asideData?.subtype === TAB)) {
             return null;
         }
         let insertionIndex = firstOne ? index : index + 1
@@ -196,11 +196,11 @@ export function ElementSaprator(props) {
      Hide Paste Button for Container Elements when there is BL inside ShowHide
      Note:- This will removed once BL will be supported in AS,WE,2C & 3C
     */
-    if(['element-aside','groupedcontent'].indexOf(props?.asideData?.type) > -1 && props?.elementSelection?.containsBlockList) {
+    if([elementAsideText,'groupedcontent'].indexOf(props?.asideData?.type) > -1 && props?.elementSelection?.containsBlockList) {
         pasteRender = false;
     }
     /* @hideSplitSlateIcon@ hide split slate icon in following list of elements */
-    const hideSplitSlateIcon = !(['element-aside', 'citations', 'poetry', 'group','showhide'].includes(elementType));
+    const hideSplitSlateIcon = !([elementAsideText, 'citations', 'poetry', 'group','showhide'].includes(elementType));
     let hideElementSeperator = hasReviewerRole() ? 'hideToolbar' : '';
     return (
         <div className={showClass ? `elementSapratorContainer opacityClassOn ignore-for-drag ${hideElementSeperator}` : `elementSapratorContainer ignore-for-drag ${hideElementSeperator}`} id = {props.dataId}>

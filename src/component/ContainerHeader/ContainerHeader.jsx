@@ -9,7 +9,7 @@ import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare }
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from '../FigureHeader/AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString, hasReviewerRole } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES, SIDEBAR, WORKED_EXAMPLE } from '../FigureHeader/AutoNumberConstants';
-import { labelHtmlData } from '../../constants/Element_Constants';
+import { floatingLabelText, floatingNumberText, labelHtmlData, transitionNoneText } from '../../constants/Element_Constants';
 import './../../styles/ElementFigure/ElementFigure.css';
 import './../../styles/ElementFigure/FigureImage.css';
 
@@ -171,17 +171,17 @@ export const ContainerHeader = (props) => {
     const onFigureHeaderFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
         let lastIndex = id && id.toString().split('-');
-        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(transitionNoneText)) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
-        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) { // BG-5075
-            labelElement?.nextElementSibling?.classList?.add('transition-none');
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(transitionNoneText))) { // BG-5075
+            labelElement?.nextElementSibling?.classList?.add(transitionNoneText);
             if (lastIndex[lastIndex.length - 1] == 't1') {
-                labelElement?.nextElementSibling?.classList?.remove('floating-label');
+                labelElement?.nextElementSibling?.classList?.remove(floatingLabelText);
             } else if (lastIndex[lastIndex.length - 1] == 't2') {
-                labelElement?.nextElementSibling?.classList?.remove('floating-number');
+                labelElement?.nextElementSibling?.classList?.remove(floatingNumberText);
             }
         } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
-            labelElement?.nextElementSibling?.classList?.add('transition-none');
+            labelElement?.nextElementSibling?.classList?.add(transitionNoneText);
         }
         props.updateAutoNumberingDropdownForCompare({entityUrn: props.model.contentUrn, option: state.labelNumberSetting});
     }
@@ -193,11 +193,11 @@ export const ContainerHeader = (props) => {
         }
         let lastIndex = id && id.toString().split('-');
         if (labelHtmlData.includes(labelElement?.innerHTML)) {
-            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+            labelElement?.nextElementSibling?.classList?.remove(transitionNoneText);
             if (lastIndex[lastIndex.length - 1] == 't1') {
-                labelElement?.nextElementSibling?.classList?.add('floating-label');
+                labelElement?.nextElementSibling?.classList?.add(floatingLabelText);
             } else if (lastIndex[lastIndex.length - 1] == 't2') {
-                labelElement?.nextElementSibling?.classList?.add('floating-number');
+                labelElement?.nextElementSibling?.classList?.add(floatingNumberText);
             }
         }
     }
@@ -278,28 +278,28 @@ export const ContainerHeader = (props) => {
                    removeLabelCondition &&  (showLabelField && labelNumberSetting === AUTO_NUMBER_SETTING_OVERRIDE_LABLE_NUMBER ?
                         <div className='image-label'>
                             <TinyMceEditor onFigureLabelChange = {handleElementLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-t1`} placeholder="Label Name" tagName={'h4'} className={"heading4Image50TextNumberLabel figureLabel "} model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? "transition-none" : "floating-label"}>Label Name</label>
+                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? transitionNoneText : floatingLabelText}>Label Name</label>
                         </div>
                         :
                         <div className='image-label hide-field'>
                             <TinyMceEditor onFigureLabelChange = {handleElementLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-t1`} placeholder="Label Name" tagName={'h4'} className={"heading4Image50TextNumberLabel figureLabel "} model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? "transition-none" : "floating-label"}>Label Name</label>
+                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? transitionNoneText : floatingLabelText}>Label Name</label>
                         </div>)
                 }
                 {removeLabelCondition && showNumberField && <div className="floating-number-group">
                     <TinyMceEditor onFigureLabelChange = {handleElementLabelChange} labelNumberSetting={labelNumberSetting} contenteditable={labelNumberSetting !== AUTO_NUMBER_SETTING_DEFAULT} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-t2`} placeholder="Number" tagName={'h4'} className={"heading4Image50TextNumberLabel figureNumber " + newClass} model={imgNumberValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                    <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? "transition-none" : "floating-number"}>Number</label>
+                    <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? transitionNoneText : floatingNumberText}>Number</label>
                 </div>}
 
             </header>
             </div>
             <div className="preview">
-                <label className={"transition-none"}>Preview</label>
+                <label className={transitionNoneText}>Preview</label>
                 <TextField disabled id="filled-disabled" className="figure-preview" variant="filled" placeholder="" defaultValue="" multiline value={previewData} fullWidth />
             </div>
             <div className="floating-title-group">
                 <TinyMceEditor onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-t3`} placeholder="Title" tagName={'h4'} className={"heading4Image25TextTitle figureTitle "} model={props?.model?.html?.title} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                <label className={checkHTMLdataInsideString(props?.model?.html?.title) ? "transition-none" : "floating-title"}>Title</label>
+                <label className={checkHTMLdataInsideString(props?.model?.html?.title) ? transitionNoneText : "floating-title"}>Title</label>
             </div>
         </>
     );

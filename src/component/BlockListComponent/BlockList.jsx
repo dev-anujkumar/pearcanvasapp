@@ -2,6 +2,7 @@ import React from 'react';
 import ElementContainer from '../ElementContainer';
 import ElementConstants from '../ElementContainer/ElementConstants';
 import { fetchLiClassName } from './BlockListHelperFunctions';
+import { elementAsideText, pressShiftTabText, typeSomethingText } from '../../constants/Element_Constants';
 
 const BlockList = (props) => {
     let manifestList = props?.manifestList;
@@ -15,7 +16,7 @@ const BlockList = (props) => {
         element: props.element,
         index: props.index
     };
-    const allowedElements = ["showhide", "element-aside", "groupedcontent"];
+    const allowedElements = ["showhide", elementAsideText, "groupedcontent"];
     asideData = allowedElements.includes(type) ? { ...asideData, parent: { id, type, contentUrn, showHideType: props?.showHideType } } : asideData;
     // if BL is inside Tab element then attach the data of TB element for handelling
     if (type === ElementConstants.MULTI_COLUMN && subtype === ElementConstants.TAB) {
@@ -45,23 +46,23 @@ const BlockList = (props) => {
             let normalIndex = typeof (props.index) === 'string' ? (props.index).replaceAll('-', '') : props.index;
             asideData.parentManifestList = props.element;
             asideData.grandParentManifestList = props.grandParentManifestList;
-            let placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 3 ? "Press Shift+Tab to move out" : "Type something...";
-            if ((type === "showhide") || (type === "element-aside" && props.parentElement?.elementdata?.bodymatter[normalIndex[1]]?.contents?.bodymatter[normalIndex[2]].type === 'manifestlist')) {
+            let placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 3 ? pressShiftTabText : typeSomethingText;
+            if ((type === "showhide") || (type === elementAsideText && props.parentElement?.elementdata?.bodymatter[normalIndex[1]]?.contents?.bodymatter[normalIndex[2]].type === 'manifestlist')) {
                  indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
-                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? "Press Shift+Tab to move out" : "Type something...";
-            }else if(type === "element-aside" && props.parentElement?.elementdata?.bodymatter[normalIndex[1]]?.type === 'manifestlist'){
+                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? pressShiftTabText : typeSomethingText;
+            }else if(type === elementAsideText && props.parentElement?.elementdata?.bodymatter[normalIndex[1]]?.type === 'manifestlist'){
                 indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}`}-${props?.indexTemp}${parentIndex}-${index}`;
-                placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 4 ? "Press Shift+Tab to move out" : "Type something...";
+                placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 4 ? pressShiftTabText : typeSomethingText;
                 // Condition for passing correct index when BL is inside Tab element of TB
             } else if (type === ElementConstants.MULTI_COLUMN && subtype === ElementConstants.TAB && groupeddata?.bodymatter[normalIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[normalIndex[2]]?.groupdata?.bodymatter[normalIndex[3]]?.type === 'manifestlist') {
                 indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}-${props?.index?.split('-')[3]}`}-${props?.indexTemp}${parentIndex}-${index}`;
-                placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 6 ? "Press Shift+Tab to move out" : "Type something...";
+                placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 6 ? pressShiftTabText : typeSomethingText;
             }else if(type === "groupedcontent" && props?.parentElement?.groupeddata?.bodymatter[normalIndex[1]]?.groupdata?.bodymatter[normalIndex[2]]?.type === 'manifestlist'){
                 indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
-                placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? "Press Shift+Tab to move out" : "Type something...";
+                placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? pressShiftTabText : typeSomethingText;
             }else if(props?.parentElement){
                 indexToPass = `${typeof (props?.index) === 'number' ? props?.index : `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}`}-${props?.indexTemp}${parentIndex}-${index}`;
-                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? "Press Shift+Tab to move out" : "Type something...";
+                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 5 ? pressShiftTabText : typeSomethingText;
             }
             if(item.type === "element-authoredtext" && item?.html?.text.includes('imageAssetContent')){
                 placeholder = '';

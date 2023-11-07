@@ -15,6 +15,7 @@ import searchIcon from './asset_popover_search_icon.svg';
 import closeIcon from './icon-close.svg';
 import { customEvent } from '../../js/utils';
 import { disableHeader,hideToc} from '../../js/toggleLoader';
+import { assetPopoverAttacherText, blockquoteParagraphNummerEinsText } from '../../constants/Element_Constants.js';
 
 class AssetPopoverSearch extends React.Component {
     constructor(props) {
@@ -26,10 +27,10 @@ class AssetPopoverSearch extends React.Component {
      */
     apoSearchClose = () => {
         let originalText, assetPopoverSpan
-        assetPopoverSpan = document.getElementById('asset-popover-attacher');
+        assetPopoverSpan = document.getElementById(assetPopoverAttacherText);
         if (assetPopoverSpan) {
             originalText = assetPopoverSpan.innerHTML;
-            document.getElementById('asset-popover-attacher').outerHTML = originalText;
+            document.getElementById(assetPopoverAttacherText).outerHTML = originalText;
         }
         this.props.apoSearchClose();
         sendDataToIframe({ 'type': 'enableToc', 'message': {} });
@@ -64,8 +65,8 @@ class AssetPopoverSearch extends React.Component {
             setTimeout(() => {
                 let currentElem = document.getElementById(tinymce.activeEditor.id);
                 if (tinymce.$(currentElem).find('blockquote').length) {
-                    tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].focus();
-                    tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].blur();
+                    tinymce.$(currentElem).find(blockquoteParagraphNummerEinsText)[0].focus();
+                    tinymce.$(currentElem).find(blockquoteParagraphNummerEinsText)[0].blur();
                 }
                 else {
                     currentElem.blur()
@@ -77,7 +78,7 @@ class AssetPopoverSearch extends React.Component {
                 if (assetPopoverId) {
                     document.getElementById(tinymce.activeEditor.id).focus()
                     tinymce.activeEditor.undoManager?.transact(() => {
-                        domNode = document.getElementById('asset-popover-attacher');
+                        domNode = document.getElementById(assetPopoverAttacherText);
                         originalText = domNode.innerHTML;
                         assetPopoverDomId = assetPopoverId;
                         domNode.outerHTML = '<abbr title="Asset Popover" asset-id="' + assetPopoverDomId + '" data-uri="' + elementId + '" class="Pearson-Component AssetPopoverTerm">' + originalText + '</abbr>';
@@ -118,8 +119,8 @@ class AssetPopoverSearch extends React.Component {
         setTimeout(() => {
             let currentElem = document.getElementById(tinymce.activeEditor.id);
             if (tinymce.$(currentElem).find('blockquote').length) {
-                tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].focus();
-                tinymce.$(currentElem).find('blockquote p.paragraphNummerEins')[0].blur();
+                tinymce.$(currentElem).find(blockquoteParagraphNummerEinsText)[0].focus();
+                tinymce.$(currentElem).find(blockquoteParagraphNummerEinsText)[0].blur();
             }
             else {
                 currentElem.focus()

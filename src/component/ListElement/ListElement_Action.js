@@ -7,7 +7,7 @@ import { conversionElement, updateBlockListMetadata } from '../Sidebar/Sidebar_A
 // *************************** List Template ******************************
 let _listObjectTemplate_ = {
     "id": "",
-    "type": "element-list",
+    "type": elementListText,
     "subtype": "",
     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
     "designtype": "list",
@@ -30,7 +30,7 @@ let _listObjectTemplate_ = {
 }
 let _ullistObjectTemplate_ = {
     "id": "",
-    "type": "element-list",
+    "type": elementListText,
     "subtype": "disc",
     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
     "designtype": "list",
@@ -104,7 +104,7 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
             secondaryOption: LIST_TYPE_MAPPINGS[type].mapType,
             labelText: LIST_TYPE_MAPPINGS[type].tag,
             toolbar: elementList[activeElement.elementType]['primary-list'].toolbar,
-            elementWipType: "element-list",
+            elementWipType: elementListText,
             startvalue,
             asideData
         }, fromToolbar));

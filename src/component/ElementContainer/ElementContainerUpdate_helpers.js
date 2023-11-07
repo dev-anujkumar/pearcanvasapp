@@ -23,6 +23,7 @@ import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
 import { startPdfConversion,poolFunc} from '../PdfSlate/CypressPlusAction';
 import elementTypeConstant from './ElementConstants';
+import { elementAsideText, elementAuthoredText, formattedTitleText } from '../../constants/Element_Constants';
 
 
 const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT, TAB, BLOCK_LIST, ELEMENT_ASIDE } = ElementConstants;
@@ -61,7 +62,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
         const parentBlockListContentUrn = newslateData[slateManifestURN].contents.bodymatter[indexes[0]].contentUrn
         dispatch(fetchSlateData(parentBlockListId,parentBlockListContentUrn, 0, {type:'manifestlist' ,indexes:indexes}, CONTAINER_VERSIONING, false));
     }
-    else if (asideData && asideData.type == 'element-aside') {
+    else if (asideData && asideData.type == elementAsideText) {
         asideData.indexes = indexes;
         if (indexes.length === 2 || indexes.length === 3) {
             dispatch(fetchSlateData(versionedData.newParentVersion ? versionedData.newParentVersion : asideData.id, asideData.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
@@ -71,7 +72,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
         } else if ((indexes.length === 4 || indexes.length === 5) && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
             dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }
-    } else if (updatedData?.type == "element-authoredtext" && updatedData?.metaDataField === "formattedTitle" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
+    } else if (updatedData?.type == elementAuthoredText && updatedData?.metaDataField === "formattedTitle" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
         asideData.indexes = indexes;
         asideData.type = 'citations';
         dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
@@ -83,7 +84,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
         dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false))
     }
     else if (parentElement && PARENTELEMENT_TYPES.includes(parentElement.type)) {
-        if ((asideData?.grandParent?.asideData?.type === "element-aside" || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5 || indexes.length === 6) && asideData.type === "poetry") {
+        if ((asideData?.grandParent?.asideData?.type === elementAsideText || asideData?.grandParent?.asideData?.type === "groupedcontent") && (indexes.length === 4 || indexes.length === 5 || indexes.length === 6) && asideData.type === "poetry") {
             dispatch(fetchSlateData(asideData?.grandParent?.asideData?.id, asideData?.grandParent?.asideData?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }  else if (asideData && asideData.type == 'groupedcontent') {
             asideData.indexes = indexes;
@@ -154,8 +155,8 @@ export const updateElementInStore = (paramsObj) => {
                     tcm: _slateObject.tcm ? true : false
                 }
             } else {
-                if (updatedData.type === "element-authoredtext") {
-                    _slateBodyMatter[indexes[0]].interactivedata[sectionType][indexes[2]].contents["formatted-title"] = { ...updatedData }
+                if (updatedData.type === elementAuthoredText) {
+                    _slateBodyMatter[indexes[0]].interactivedata[sectionType][indexes[2]].contents[formattedTitleText] = { ...updatedData }
                 }
             }
         // Update CG inside Slate
@@ -166,8 +167,8 @@ export const updateElementInStore = (paramsObj) => {
                     tcm: _slateObject.tcm ? true : false
                 }
             } else {
-                if (updatedData.type === "element-authoredtext") {
-                    _slateBodyMatter[elementIndex].contents["formatted-title"] = { ...updatedData }
+                if (updatedData.type === elementAuthoredText) {
+                    _slateBodyMatter[elementIndex].contents[formattedTitleText] = { ...updatedData }
                 }
             }
         }
@@ -238,11 +239,11 @@ export const updateElementInStore = (paramsObj) => {
                             },
                         }
                     } else {
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata["formatted-title"] = {
-                            ...element["formatted-title"],
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].popupdata[formattedTitleText] = {
+                            ...element[formattedTitleText],
                             html: updatedData?.html,
                             elementdata: {
-                                ...element["formatted-title"].elementdata,
+                                ...element[formattedTitleText].elementdata,
                                 text: updatedData?.elementdata?.text
                             },
                         }
@@ -260,11 +261,11 @@ export const updateElementInStore = (paramsObj) => {
                             },
                         }
                     } else {
-                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata["formatted-title"] = {
-                            ...element["formatted-title"],
+                        _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[0].groupeddata.bodymatter[indexes[2]].groupdata.bodymatter[indexes[3]].elementdata.bodymatter[indexes[4]].contents.bodymatter[indexes[5]].popupdata[formattedTitleText] = {
+                            ...element[formattedTitleText],
                             html: updatedData?.html,
                             elementdata: {
-                                ...element["formatted-title"].elementdata,
+                                ...element[formattedTitleText].elementdata,
                                 text: updatedData?.elementdata?.text
                             },
                         }
@@ -322,7 +323,7 @@ export const updateElementInStore = (paramsObj) => {
         /* 2C:AS/WE:PS */
         const indexes = elementIndex?.split("-");
         /* 2C:AS/WE-HEAD:PS */
-        if(indexes?.length == 4 && parentUrn?.elementType === "element-aside") {
+        if(indexes?.length == 4 && parentUrn?.elementType === elementAsideText) {
            if(parentElement?.type === "popup") {
                 const element =  _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata;
                 if(updatedData.sectionType === "postertextobject"){
@@ -335,11 +336,11 @@ export const updateElementInStore = (paramsObj) => {
                         },
                     }
                 } else {
-                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata["formatted-title"] = {
-                        ...element["formatted-title"],
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].popupdata[formattedTitleText] = {
+                        ...element[formattedTitleText],
                         html: updatedData?.html,
                         elementdata: {
-                            ...element["formatted-title"].elementdata,
+                            ...element[formattedTitleText].elementdata,
                             text: updatedData?.elementdata?.text
                         },
                     }
@@ -387,11 +388,11 @@ export const updateElementInStore = (paramsObj) => {
                         },
                     }
                 } else { /* 2C:WE-BODY/Section Break:Popup: formatted-title */
-                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata["formatted-title"] = {
-                        ...element["formatted-title"],
+                    _slateBodyMatter[indexes[0]].groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]].elementdata.bodymatter[indexes[3]].contents.bodymatter[indexes[4]].popupdata[formattedTitleText] = {
+                        ...element[formattedTitleText],
                         html: updatedData?.html,
                         elementdata: {
-                            ...element["formatted-title"].elementdata,
+                            ...element[formattedTitleText].elementdata,
                             text: updatedData?.elementdata?.text
                         },
                     }
@@ -467,7 +468,7 @@ export const updateElementInStore = (paramsObj) => {
                         element = { ...dataToReturn }
                     }
                 }
-            } else if (asideData && asideData.type == 'element-aside') {
+            } else if (asideData && asideData.type == elementAsideText) {
 
                 // xxxxxxxxxxxxxxxxxxxx  START update elements inside AS/WE inside S/H  xxxxxxxxxxxxxxxxxx //
                 if (asideData?.parent?.type === "showhide" && element.id == asideData?.parent?.id) {
@@ -552,12 +553,12 @@ export const updateElementInStore = (paramsObj) => {
                             }
                         }
                         else if (nestedEle.type === "popup") {
-                            if (nestedEle.popupdata["formatted-title"] && nestedEle.popupdata["formatted-title"]["id"] === elementId) {
+                            if (nestedEle.popupdata[formattedTitleText] && nestedEle.popupdata[formattedTitleText]["id"] === elementId) {
                                 nestedEle = {
                                     ...nestedEle,
                                     popupdata: {
                                         ...nestedEle.popupdata,
-                                        "formatted-title": { ...updatedData }
+                                        formattedTitleText: { ...updatedData }
                                     },
                                     tcm: _slateObject.tcm ? true : false //add tcm to popup
                                 };
@@ -601,12 +602,12 @@ export const updateElementInStore = (paramsObj) => {
                                     }
                                 }
                                 else if (ele.type === "popup") {
-                                    if (ele.popupdata["formatted-title"] && ele.popupdata["formatted-title"]["id"] === elementId) {
+                                    if (ele.popupdata[formattedTitleText] && ele.popupdata[formattedTitleText]["id"] === elementId) {
                                         ele = {
                                             ...ele,
                                             popupdata: {
                                                 ...ele.popupdata,
-                                                "formatted-title": { ...updatedData }
+                                                formattedTitleText: { ...updatedData }
                                             },
                                             tcm: _slateObject.tcm ? true : false //add tcm to popup
                                         };
@@ -640,12 +641,12 @@ export const updateElementInStore = (paramsObj) => {
                 }
             }
             else if (element.type === "popup") {
-                if (element.popupdata["formatted-title"] && element.popupdata["formatted-title"]["id"] === elementId) {
+                if (element.popupdata[formattedTitleText] && element.popupdata[formattedTitleText]["id"] === elementId) {
                     element = {
                         ...element,
                         popupdata: {
                             ...element.popupdata,
-                            "formatted-title": { ...updatedData }
+                            formattedTitleText: { ...updatedData }
                         },
                         tcm: _slateObject.tcm ? true : false //add tcm to popup
                     };
@@ -662,12 +663,12 @@ export const updateElementInStore = (paramsObj) => {
                 }
             }
             else if (element.type === "poetry") {
-                if (element.contents["formatted-title"] && element.contents["formatted-title"]["id"] === elementId) {
+                if (element.contents[formattedTitleText] && element.contents[formattedTitleText]["id"] === elementId) {
                     element = {
                         ...element,
                         contents: {
                             ...element.contents,
-                            "formatted-title": { ...updatedData }
+                            formattedTitleText: { ...updatedData }
                         }
                     };
                 }
@@ -693,7 +694,7 @@ export const updateElementInStore = (paramsObj) => {
                     })
                     element.contents.bodymatter = newPoetryBodymatter;
                 }
-            } else if (element?.type == "element-aside" && element?.id == asideData?.grandParent?.asideData?.id) { /**updation of PE element inside Aside/WE elements */
+            } else if (element?.type == elementAsideText && element?.id == asideData?.grandParent?.asideData?.id) { /**updation of PE element inside Aside/WE elements */
                 element?.elementdata?.bodymatter.map((elem, index) => {
                     if (elem.type === "poetry") {
                         const newPoetryBodymatter = elem.contents?.bodymatter?.map((stanza) => {
@@ -789,7 +790,7 @@ export const updateElementInStore = (paramsObj) => {
                     }
                 } // check the update of BL in multicolumn and according to the BL's length update the updated data
                 // check the update of BL in Aside/WE header and according to the BL's length update the updated data
-                else if( _slateBodyMatter[indexes[0]]?.type === "element-aside" && _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].type === "manifestlist"){
+                else if( _slateBodyMatter[indexes[0]]?.type === elementAsideText && _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].type === "manifestlist"){
                     if(indexes.length===4){
                         _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]] = updatedData
                     }
@@ -803,7 +804,7 @@ export const updateElementInStore = (paramsObj) => {
                         _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].listdata.bodymatter[indexes[2]].listitemdata.bodymatter[indexes[3]].listdata.bodymatter[indexes[4]].listitemdata.bodymatter[indexes[5]].listdata.bodymatter[indexes[6]].listitemdata.bodymatter[indexes[7]].listdata.bodymatter[indexes[8]].listitemdata.bodymatter[indexes[9]] = updatedData
                     }
                 }// check the update of BL in WE body and according to the BL's length update the updated data
-                else if(_slateBodyMatter[indexes[0]]?.type === "element-aside" && _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].type === "manifestlist"){
+                else if(_slateBodyMatter[indexes[0]]?.type === elementAsideText && _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].type === "manifestlist"){
                     if(indexes.length===5){
                         _slateBodyMatter[indexes[0]].elementdata.bodymatter[indexes[1]].contents.bodymatter[indexes[2]].listdata.bodymatter[indexes[3]].listitemdata.bodymatter[indexes[4]] = updatedData
                     }
@@ -1384,7 +1385,7 @@ const getShowhideParent = async (shParentData) => {
           /* After versioning - Slate in wip but element(3C/2C:SH) is approved; 3C/2C:SH */
         if (asideData?.grandParent?.asideData?.type == 'groupedcontent') {
             parentToCascade = asideData?.grandParent?.asideData
-        } else if (asideData?.grandParent?.asideData?.type == 'element-aside') {
+        } else if (asideData?.grandParent?.asideData?.type == elementAsideText) {
             if (asideData?.grandParent?.asideData?.parent?.type == 'groupedcontent') {
                 parentToCascade = asideData?.grandParent?.asideData?.parent
                 parentToCascade.contentUrn = parentToCascade.parentContentUrn ?  parentToCascade.parentContentUrn :  parentToCascade.contentUrn

@@ -13,7 +13,7 @@ import { guid } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 import './../../styles/ElementAsideContainer/ElementAsideContainer.css';
 import SectionSeperator from './SectionSeperator.jsx';
-import { ASIDE_SOURCE, labelHtmlData } from '../../constants/Element_Constants.js';
+import { ASIDE_SOURCE, elementLabelClass, ignoreForDragClass, labelHtmlData, lazyloadWrapperClass, transitionNoneText } from '../../constants/Element_Constants.js';
 import TinyMceEditor from "../../component/tinyMceEditor";
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, sendDataToIframe, hasReviewerRole } from '../../constants/utility';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
@@ -125,12 +125,12 @@ class ElementAsideContainer extends Component {
                                     fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                                     scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
                                     scrollSpeed: 10,
-                                    handle: '.element-label', //Drag only by element tag name button
+                                    handle: elementLabelClass, //Drag only by element tag name button
                                     dataIdAttr: 'data-id',
                                     scroll: true, // or HTMLElement
-                                    filter: ".ignore-for-drag",
+                                    filter: ignoreForDragClass,
                                     preventOnFilter: false,
-                                    draggable: ".lazyload-wrapper",
+                                    draggable: lazyloadWrapperClass,
                                     forceFallback: true,
                                     onStart: function (/**Event*/) {
                                         // same properties as onEnd
@@ -267,12 +267,12 @@ class ElementAsideContainer extends Component {
                         fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                         scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
                         scrollSpeed: 10,
-                        handle: '.element-label', //Drag only by element tag name button
+                        handle: elementLabelClass, //Drag only by element tag name button
                         dataIdAttr: 'data-id',
                         scroll: true, // or HTMLElement
-                        filter: ".ignore-for-drag",
+                        filter: ignoreForDragClass,
                         preventOnFilter: false,
-                        draggable: ".lazyload-wrapper",
+                        draggable: lazyloadWrapperClass,
                         forceFallback: true,
                         onStart: function (/**Event*/) {
                             // same properties as onEnd
@@ -348,11 +348,11 @@ class ElementAsideContainer extends Component {
                         fallbackTolerance: 0, // Specify in pixels how far the mouse should move before it's considered as a drag.
                         scrollSensitivity: 30, // px, how near the mouse must be to an edge to start scrolling.
                         scrollSpeed: 10,
-                        handle: '.element-label', //Drag only by element tag name button
+                        handle: elementLabelClass, //Drag only by element tag name button
                         dataIdAttr: 'data-id',
                         scroll: true, // or HTMLElement
-                        filter: ".ignore-for-drag",
-                        draggable: ".lazyload-wrapper",
+                        filter: ignoreForDragClass,
+                        draggable: lazyloadWrapperClass,
                         preventOnFilter: false,
                         forceFallback: true,
                         onStart: function (/**Event*/) {
@@ -567,16 +567,16 @@ class ElementAsideContainer extends Component {
                     <header className="figure-header new-figure-image-header">
                         <div className="image-label">
                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t1`} placeholder="Label" tagName={'h4'} className={" figureLabel "} model={asideHtmlData?.formattedLabel} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedLabel) ? "transition-none" : "floating-label"}>Label</label>
+                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedLabel) ? transitionNoneText : "floating-label"}>Label</label>
                         </div>
                         <div className="floating-number-group">
                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t2`} placeholder="Number" tagName={'h4'} className={" figureNumber "} model={asideHtmlData?.formattedNumber} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id}parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedNumber) ? "transition-none" : "floating-number"}>Number</label>
+                            <label className={checkHTMLdataInsideString(asideHtmlData?.formattedNumber) ? transitionNoneText : "floating-number"}>Number</label>
                         </div>
                     </header>
                     <div className="floating-title-group">
                         <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureImageFieldBlur} permissions={this.props.permissions} openGlossaryFootnotePopUp={this.props.openGlossaryFootnotePopUp} element={this.props.element} handleEditorFocus={this.props.handleFocus} handleBlur={this.props.handleBlur} index={`${this.props.index}-t3`} placeholder="Title" tagName={'h4'} className={" figureTitle "} model={asideHtmlData?.formattedTitle} slateLockInfo={this.props.slateLockInfo} glossaryFootnoteValue={this.props.glossaryFootnoteValue} glossaaryFootnotePopup={this.props.glossaaryFootnotePopup} elementId={this.props.elementId} id={this.props.id} parentElement={this.props.parentElement} showHideType={this.props.showHideType} />
-                        <label className={checkHTMLdataInsideString(asideHtmlData?.formattedTitle) ? "transition-none" : "floating-title"}>Title</label>
+                        <label className={checkHTMLdataInsideString(asideHtmlData?.formattedTitle) ? transitionNoneText : "floating-title"}>Title</label>
                     </div>
                 </div>
             )
@@ -585,10 +585,10 @@ class ElementAsideContainer extends Component {
 
     onFigureElementFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
-        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
+        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(transitionNoneText)) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
-        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains('transition-none'))) {
-            labelElement?.nextElementSibling?.classList?.add('transition-none');
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(transitionNoneText))) {
+            labelElement?.nextElementSibling?.classList?.add(transitionNoneText);
         }
     }
 
@@ -654,8 +654,8 @@ class ElementAsideContainer extends Component {
         if (labelElement?.nextElementSibling) {
             labelElement?.nextElementSibling?.classList?.remove('label-color-change');
         }
-        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains('transition-none')) {
-            labelElement?.nextElementSibling?.classList?.remove('transition-none');
+        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains(transitionNoneText)) {
+            labelElement?.nextElementSibling?.classList?.remove(transitionNoneText);
         }
     }
 

@@ -7,7 +7,9 @@ import TinyMceEditor from "../tinyMceEditor";
 import './../../styles/ElementFigure/ElementFigure.css';
 import {
     DEFAULT_IMAGE_DATA_SOURCE,
-    DEFAULT_IMAGE_SOURCE
+    DEFAULT_IMAGE_SOURCE,
+    exifPixelXDimensionText,
+    exifPixelYDimensionText
 } from '../../constants/Element_Constants';
 import config from '../../config/config';
 import axios from 'axios';
@@ -83,8 +85,8 @@ class ElementFigure extends Component {
         let epsURL = imageData.epsUrl? imageData.epsUrl : "";
         let figureType = data?.content?.mimeType?.split('/')[0]
         //commented lines will be used to update the element data
-        let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
-        let height = imageData.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
+        let width = imageData.properties[exifPixelXDimensionText] ? imageData.properties[exifPixelXDimensionText] : "";
+        let height = imageData.properties[exifPixelYDimensionText] ? imageData.properties[exifPixelYDimensionText] : "";
 
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
 
@@ -102,8 +104,8 @@ class ElementFigure extends Component {
                 (data && data.scalemarker && data.scalemarker.properties) ? { "imageid": data.id || null } : null,
                 (data && data.scalemarker && data.scalemarker.properties) ? { "alttext": data.name || "The alttext for the scale image" } : null,
                 (data && data.scalemarker && data.scalemarker.epsUrl) ? { "path": data.scalemarker.epsUrl || null } : null,
-                (data && data.scalemarker && data.properties) ? { "height": data.properties["exif:pixelYDimension"] || null } : null,
-                (data && data.scalemarker && data.scalemarker.properties && data.properties["exif:pixelXDimension"]) ? { "width": data.properties["exif:pixelXDimension"] || null } : null,
+                (data && data.scalemarker && data.properties) ? { "height": data.properties[exifPixelYDimensionText] || null } : null,
+                (data && data.scalemarker && data.scalemarker.properties && data.properties[exifPixelXDimensionText]) ? { "width": data.properties[exifPixelXDimensionText] || null } : null,
             );
             let setFigureData = {
                 path: epsURL,
