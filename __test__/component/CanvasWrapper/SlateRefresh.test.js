@@ -31,6 +31,19 @@ describe('Testing slate refresh', () => {
         expect(dispatch).toHaveBeenCalled();
       },1000)
     });
+    it('mocking Api response resolves apui', async() => {
+      const  id  = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+      let store = mockStore();
+      let result = await handleSlateRefresh(id);
+      let statusObj = '';
+      let statusFunc = '';
+      axios.get.mockImplementation(() => Promise.resolve());
+      let dispatch = jest.fn();
+      result(dispatch);
+      setTimeout(() =>{
+        expect(dispatch).toHaveBeenCalled();
+      },1000)
+    });
     it('mocking Api response reject api', async() => {
       const  id  = "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
       axios.get.mockImplementation(() => Promise.reject());
