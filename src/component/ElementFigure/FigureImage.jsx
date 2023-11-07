@@ -366,12 +366,10 @@ class FigureImage extends Component {
             type: figureType,
         } : null;
 
-        let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
         }
-        var data_1 = false;
         if (alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0) {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef) {         //if alfresco location is available
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {

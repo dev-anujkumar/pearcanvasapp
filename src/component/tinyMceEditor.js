@@ -169,10 +169,8 @@ export class TinyMceEditor extends Component {
                     editor.shortcuts.remove('meta+i', '', '');
                 }
                 const authStore = store.getState();
-                const { projectInfo } = authStore;
-                let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
-                if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove'))
-                     && !hasReviewerRole())) {
+                if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove')) &&
+                    !hasReviewerRole())) {
                     if (editor && editor.id) {
                         document.getElementById(editor.id).setAttribute('contenteditable', false);
                     }
@@ -3337,7 +3335,6 @@ export class TinyMceEditor extends Component {
         let elementId = this.props.elementId;
         let sText = editor.selection.getContent();
         let parser = new DOMParser();
-        let htmlDoc = parser.parseFromString(sText, 'text/html');
         let selectedText = window.getSelection().toString()
         selectedText = String(selectedText).replace(/</g, '&lt;').replace(/>/g, '&gt;');
         this.markIndexText = selectedText;
@@ -3628,7 +3625,6 @@ export class TinyMceEditor extends Component {
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();
                 tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-                let tinymceActiveEditorNode = document.getElementById(tinymce.activeEditor && tinymce.activeEditor.id)
                     let activeElementNode = document.getElementById(activeElementObj.join("-"))
                     if (activeElementNode && tinymce.activeEditor.id == activeElementObj.join("-")) {
                         activeElementNode.innerHTML = tempContainerHtml;

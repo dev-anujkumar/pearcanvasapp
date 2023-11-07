@@ -462,7 +462,6 @@ export class ReactEditor extends React.Component {
 
   render() {
     let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue;
-    let {markedIndexIcon} = this.props;
     const isReviewer = hasReviewerRole();
     // && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552
     let glossaryFootNoteCurrentValue;

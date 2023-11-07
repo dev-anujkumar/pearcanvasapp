@@ -170,7 +170,6 @@ function AlfrescoPopup(props) {
             API to set alfresco location on dashboard
         */
         let url = config.PROJECTAPI_ENDPOINT + '/' + request.projectId + '/alfrescodetails';
-        let SSOToken = request.ssoToken;
         return axios.patch(url, request.alfresco,
             {
                 headers: {

@@ -320,7 +320,7 @@ class Comments extends React.Component {
     }
 
     render() {
-        const { comment, elementId, updateReplyComment, toggleReplyForm, users, roles, permissions } = this.props
+        const { comment, elementId, updateReplyComment, toggleReplyForm, users, roles } = this.props
         let avatarObject = [];
         let avatar = '';
         avatarObject = comment?.commentCreator.split(',');

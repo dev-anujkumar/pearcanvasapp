@@ -69,7 +69,6 @@ export const findElementType = (element, index) => {
     elementType['tag'] = '';
     let altText = "";
     let longDesc = "";
-    let podwidth = POD_DEFAULT_VALUE
     try {
         switch (element.type) {
             case "manifestlist":

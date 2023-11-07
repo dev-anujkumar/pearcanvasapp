@@ -57,7 +57,7 @@ export const tcmSnapshotsForUpdate = async (elementUpdateData, elementIndex, con
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = currentParentData[config.tempSlateManifestURN]
     }
-    const { metaDataField, sectionType, parentElement, showHideObj } = containerElement;
+    const { metaDataField, sectionType, parentElement } = containerElement;
     /* Get the element type */
     const typeOfElement = containerElement?.asideData?.type;
     let tempIndex = elementIndex && typeof (elementIndex) !== 'number' && elementIndex.split('-');
@@ -590,7 +590,6 @@ export const checkContainerElementVersion = async (containerElement, versionStat
                     const multiColumnProperties = containerElement?.poetryData?.element?.grandParent
                     const manifestUrn =  await getLatestVersion(multiColumnProperties.columnContentUrn);
                     containerElement.parentUrn.manifestUrn =manifestUrn;
-                    const mcId = containerElement?.parentUrn?.mcId;
 
                     const cid =  await getLatestVersion(multiColumnProperties.parentContentUrn);
                     containerElement.parentUrn.mcId = cid;

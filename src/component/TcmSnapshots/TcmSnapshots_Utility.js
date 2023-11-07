@@ -85,7 +85,7 @@ export const prepareTcmSnapshots = async (wipData, actionStatus, containerElemen
         parentId:  wipData?.id
     }
     /* Add WE/Aside inside 2C */
-    const { asideData, parentUrn, showHideObj } = containerElement;
+    const { asideData, parentUrn } = containerElement;
     const { id, columnId, columnName, type: gPType } = asideData?.parent || {};
     let multiColumnType = parentUrn?.multiColumnType ? parentUrn?.multiColumnType :
     asideData?.parent?.multiColumnType ? asideData?.parent?.multiColumnType : parentData.multiColumnType ? parentData.multiColumnType : selectionMultiColumnType;
