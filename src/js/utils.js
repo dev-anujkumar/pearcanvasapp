@@ -410,7 +410,7 @@ export const spanHandlers = {
         if (editor.selection.getNode().tagName.toLowerCase() !== 'span' || editor.selection.getNode().className.toLowerCase() !== childClass) {
             elementSearch = editor.selection.getNode().closest(`.${childClass}`);
         }
-        if (elementSearch && elementSearch.tagName.toLowerCase() === 'span' && ((childClass === 'poetryLine' && elementSearch.innerHTML != '<br>') || 
+        if (elementSearch && elementSearch.tagName.toLowerCase() === 'span' && ((childClass === 'poetryLine' && elementSearch.innerHTML != '<br>') ||
             childClass === 'codeNoHighlightLine' || (childClass === 'dialogueLine' && elementSearch.innerHTML != '<br>'))) {
             editor.undoManager.transact(() => {
                 this.performSplitOperation(editor, elementId, parentTag, childClass, position, elementSearch);

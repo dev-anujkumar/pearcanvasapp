@@ -111,7 +111,8 @@ class Sidebar extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.playbackModeRef && this.playbackModeLabelRef && !this.playbackModeRef?.current?.contains(event.target) && !this.playbackModeLabelRef?.current?.contains(event.target)) {
+        if (this.playbackModeRef && this.playbackModeLabelRef && !this.playbackModeRef?.current?.contains(event.target) &&
+        !this.playbackModeLabelRef?.current?.contains(event.target)) {
             this.setState({
                 isPlayBackDropdownOpen: false
             })
@@ -753,7 +754,8 @@ class Sidebar extends Component {
             playbackMode = <div
                 className={`element-dropdown`}>
                 <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
-                <div className={`element-dropdown-title intented-dropdown-banner ${disableClass}`} data-element="secondary" onClick={this.toggleIntendedPlaybackDropdown} ref={this.playbackModeLabelRef}>
+                <div className={`element-dropdown-title intented-dropdown-banner ${disableClass}`} data-element="secondary"
+                onClick={this.toggleIntendedPlaybackDropdown} ref={this.playbackModeLabelRef}>
                     {this.renderIntendedPlaybackDropdownLabel(this.state.selectedIntendedPlaybackModeValue)}
                     <span> {dropdownArrow} </span>
                 </div>

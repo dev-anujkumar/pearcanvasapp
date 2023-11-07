@@ -22,6 +22,7 @@ function elementSepratorProps(){
 }
 storiesOf('Element Aside container', module)
   .addDecorator(withInfo)
-  .add('WorkExample', () => <Provider store = {store} ><ElementAsideContainer  elementSepratorProps  = {elementSepratorProps} element= {elementAsideWorkExample} /></Provider> ,  { notes: "WorkExample Element" })
-  .add('Container', () => <Provider store = {store} ><ElementAsideContainer elementSepratorProps  = {elementSepratorProps} element= {elementAside} /></Provider> ,  { notes: "Container Element" })
-  
+  .add('WorkExample', () => <Provider store = {store} ><ElementAsideContainer  elementSepratorProps  = {elementSepratorProps}
+  element= {elementAsideWorkExample} /></Provider> ,  { notes: "WorkExample Element" })
+  .add('Container', () => <Provider store = {store} ><ElementAsideContainer elementSepratorProps  = {elementSepratorProps}
+  element= {elementAside} /></Provider> ,  { notes: "Container Element" })

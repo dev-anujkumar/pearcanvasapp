@@ -15,5 +15,6 @@ storiesOf('AssessmentSlateCanvas', module)
 
     .addDecorator(withInfo)
 
-    .add('Assessment Slate', () => <div style={{width:"504px", position:"relative", left:"100px"}}>  <AssessmentSlateCanvas 
-    type={this.props.type} getAssessmentDataPopup="false" getAssessmentData="true" assessmentId="urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"  assessmentItemTitle="1.1 Homework" model={assessmentSlateWithData}/></div>)
+    .add('Assessment Slate', () => <div style={{width:"504px", position:"relative", left:"100px"}}>  <AssessmentSlateCanvas
+    type={this.props.type} getAssessmentDataPopup="false" getAssessmentData="true"
+    assessmentId="urn:pearson:work:fa7bcbce-1cc5-467e-be1d-66cc513ec464"  assessmentItemTitle="1.1 Homework" model={assessmentSlateWithData}/></div>)

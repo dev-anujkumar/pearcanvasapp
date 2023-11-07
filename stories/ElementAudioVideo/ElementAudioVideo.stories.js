@@ -11,7 +11,7 @@ import { withInfo } from '@storybook/addon-info';
 const mockStore = configureMockStore(middlewares);
 
 const elemAudioVideoData = mockStore({
-    slateLockReducer:{slateLockInfo:false}   
+    slateLockReducer:{slateLockInfo:false}
   });
 const audioElementTypeSLDefault = {
     "id": "urn:pearson:work:f20316ad-0a22-4f45-975d-ebe4ba1f2564",
@@ -571,8 +571,10 @@ const videoElementTypeAlfrescoWithData = {
 
 storiesOf('Components|ElementAudioVideo', module)
     .addDecorator(withInfo)
-    .add('Audio Type-SL default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}>  <Provider store={elemAudioVideoData}><ElementAudioVideo model={audioElementTypeSLDefault} index="1" /></Provider> </div>)
-    .add('Audio Type-Alfresco default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}> <Provider store={elemAudioVideoData}><ElementAudioVideo model={audioElementTypeAlfrescoDefault} index="2" /></Provider></div>)
+    .add('Audio Type-SL default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}>
+        <Provider store={elemAudioVideoData}><ElementAudioVideo model={audioElementTypeSLDefault} index="1" /></Provider> </div>)
+    .add('Audio Type-Alfresco default', () => <div style={{ width: "500px", position: "relative", left: "100px" }}>
+        <Provider store={elemAudioVideoData}><ElementAudioVideo model={audioElementTypeAlfrescoDefault} index="2" /></Provider></div>)
     .add('Audio Type-SL with data', () => {
         return (
             <div style={{ width: "500px", position: "relative", left: "100px" }}> <Provider store={elemAudioVideoData}>

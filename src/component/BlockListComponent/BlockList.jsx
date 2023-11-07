@@ -57,7 +57,8 @@ const BlockList = (props) => {
                 placeholder = typeof (props?.index) === 'string' && props?.index?.split('-').length >= 4 ? "Press Shift+Tab to move out" : "Type something...";
                 // Condition for passing correct index when BL is inside Tab element of TB
             } else if (type === ElementConstants.MULTI_COLUMN && subtype === ElementConstants.TAB &&
-                groupeddata?.bodymatter[normalIndex[1]].groupdata.bodymatter[0].groupeddata.bodymatter[normalIndex[2]]?.groupdata?.bodymatter[normalIndex[3]]?.type === 'manifestlist') {
+                groupeddata?.bodymatter[normalIndex[1]].groupdata.bodymatter[0].groupeddata
+                .bodymatter[normalIndex[2]]?.groupdata?.bodymatter[normalIndex[3]]?.type === 'manifestlist') {
                 indexToPass = `${typeof (props?.index) === 'number' ? props?.index :
                 `${props?.index?.split('-')[0]}-${props?.index?.split('-')[1]}-${props?.index?.split('-')[2]}-
                 ${props?.index?.split('-')[3]}`}-${props?.indexTemp}${parentIndex}-${index}`;

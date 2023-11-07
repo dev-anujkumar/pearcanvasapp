@@ -6,7 +6,6 @@ import { withInfo } from '@storybook/addon-info';
 import ElementSingleAssessment from './../../src/component/ElementSingleAssessment';
 
 const mockData1={
-    
         "id": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
         "type": "figure",
         "figuretype": "assessment",
@@ -53,13 +52,10 @@ const mockData1={
         "usagetype": "Diagnostic"
         }
         },
-        
         "versionUrn": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
         "contentUrn": "urn:pearson:entity:0f7c431f-e6c9-4574-bfe0-7d4ac25c1032"
-        
 }
 const mockData2={
-    
     "id": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
     "type": "figure",
     "figuretype": "assessment",
@@ -104,14 +100,10 @@ const mockData2={
         "usagetype": "Quiz"
         }
         },
-    
-    
     "versionUrn": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
     "contentUrn": "urn:pearson:entity:0f7c431f-e6c9-4574-bfe0-7d4ac25c1032"
-    
 }
 const mockData3={
-    
     "id": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
     "type": "figure",
     "figuretype": "assessment",
@@ -156,15 +148,11 @@ const mockData3={
         "usagetype": "Quiz"
         }
         },
-    
     "versionUrn": "urn:pearson:work:47926695-265e-469e-bfc3-2c942d2c1824",
     "contentUrn": "urn:pearson:entity:0f7c431f-e6c9-4574-bfe0-7d4ac25c1032"
-    
 }
 
 storiesOf('Components|ElementSingleAssessment', module)
     .addDecorator(withInfo)
     .add('default Assessment', () => <div style={{width:"500px", position:"relative", left:"100px"}}> <ElementSingleAssessment model={mockData3} index="3" /> </div>)
     .add('Assessment with Data', () => <div style={{width:"500px", position:"relative", left:"100px"}}><ElementSingleAssessment model={mockData1} index="1" /></div> )
-        
-  

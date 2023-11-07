@@ -573,7 +573,7 @@ export class TinyMceEditor extends Component {
                         const dialoguClassName = editor.selection?.getNode()?.className
                         let authoredtextClass = this.props?.element?.type === "element-authoredtext" && this.props?.element?.elementdata?.designtype === "handwritingstyle" ?
                                             'paragraphNumeroUno handwritingstyle' : 'paragraphNumeroUno'
-                        let nodeName = 'span'                        
+                        let nodeName = 'span'
                         if (this.props.placeholder === "Enter Character Name...") {
                             nodeName = 'h4'
                         }
@@ -3280,12 +3280,17 @@ export class TinyMceEditor extends Component {
                 tempDiv.innerHTML = tinyMCE.activeEditor.getContent();
                 tinymce.$(tempDiv).find('.blockquote-hidden').remove()
                 if (this.props.model && this.props.model.text && this.props.model.text.includes("blockquoteMarginaliaAttr") && !tempDiv.innerText.trim()) {
-                    let insertText = `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p><p class="blockquoteTextCredit" contenteditable="true" data-placeholder="Attribution Text">${document.getElementsByClassName('blockquoteTextCredit')[0].innerHTML.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p></blockquote>`
+                    let insertText = `<blockquote class="blockquoteMarginaliaAttr" contenteditable="false"><p class="paragraphNummerEins"
+                    contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}"
+                    class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p><p class="blockquoteTextCredit" contenteditable="true"
+                    data-placeholder="Attribution Text">${document.getElementsByClassName('blockquoteTextCredit')[0].innerHTML.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p></blockquote>`
                     tinymce.activeEditor.setContent(insertText);
                     document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
                 }
                 else if (this.props.model && this.props.model.text && this.props.model.text.includes("blockquoteMarginalia") && !tempDiv.innerText.trim()) {
-                    let insertText = `<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins" contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p></blockquote>`;
+                    let insertText = `<blockquote class="blockquoteMarginalia" contenteditable="false"><p class="paragraphNummerEins"
+                    contenteditable="true"><sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}"
+                    class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup></p></blockquote>`;
                     tinymce.activeEditor.setContent(insertText);
                     document.getElementById(tinyMCE.activeEditor.id).classList.remove("place-holder")
                 }
@@ -3296,9 +3301,11 @@ export class TinyMceEditor extends Component {
                      */
                     let domNode = document.getElementById('footnote-attacher');
                     if (domNode) {
-                        domNode.outerHTML = `<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`;
+                        domNode.outerHTML = `<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}"
+                        class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`;
                     } else {
-                        editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}" class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
+                        editor.insertContent(`<sup><a href="#" id = "${res.data.id}" data-uri="${res.data.id}" data-footnoteelementid="${res.data.id}"
+                        class="Pearson-Component paragraphNumeroUnoFootnote">*</a></sup>`);
                     }
                 }
                 this.footnoteGlossaryProgress = true;
@@ -3442,7 +3449,8 @@ export class TinyMceEditor extends Component {
         let blockfeatureType = this.props?.element?.elementdata?.type === "pullquote" ? this.props?.element?.elementdata?.type : ''
         // commented after allowing flow of formatting tags from canvas to glossary term
         // let termText = glossaryTermText.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
-        definition = document.querySelector('#glossary-editor-attacher > div > p') && `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
+        definition = document.querySelector('#glossary-editor-attacher > div > p') && 
+        `<p>${document.querySelector('#glossary-editor-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         term = term?.replace(/<br data-mce-bogus="1">/g, "")
         definition = definition?.replace(/<br data-mce-bogus="1">/g, "")
         customEvent.subscribe('glossaryFootnoteSave', (elementWorkId) => {
@@ -3466,7 +3474,8 @@ export class TinyMceEditor extends Component {
         let firstLevelEntryText = markIndexText;//.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
         // term = document.querySelector('#glossary-editor > div > p') && `<p>${document.querySelector('#glossary-editor > div > p').innerHTML}</p>` || "<p></p>"
         firstLevelEntry = `<p>${firstLevelEntryText}</p>` || "<p></p>"
-        secondLevelEntry = document.querySelector('#index-secondlevel-attacher > div > p') && `<p>${document.querySelector('#index-secondlevel-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
+        secondLevelEntry = document.querySelector('#index-secondlevel-attacher > div > p') &&
+        `<p>${document.querySelector('#index-secondlevel-attacher > div > p').innerHTML}</p>` || "<p><br/></p>"
         firstLevelEntry = firstLevelEntry.replace(/<br data-mce-bogus="1">/g, "")
         secondLevelEntry = secondLevelEntry.replace(/<br data-mce-bogus="1">/g, "")
         customEvent.subscribe('markedIndexSave', (elementWorkId) => {
@@ -3528,7 +3537,8 @@ export class TinyMceEditor extends Component {
             selection.parentNode.removeChild(selection);
         }
 
-        sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new', element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
+        sendDataToIframe({ 'type': LaunchTOCForCrossLinking, 'message': { open: true, case: 'new',
+        element: activeElement.getAttribute('data-id'), link: 'page-link-' + linkCount, blockCanvas: true, crossLink: true } });
     }
 
 
@@ -3624,7 +3634,8 @@ export class TinyMceEditor extends Component {
                     change wiris images to avoid converting to mathml
                 */
                 let tempContainerHtml = tinyMCE.$("#" + activeElementObj.join("-")).html();
-                tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml')
+                .replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
                     let activeElementNode = document.getElementById(activeElementObj.join("-"))
                     if (activeElementNode && tinymce.activeEditor.id == activeElementObj.join("-")) {
                         activeElementNode.innerHTML = tempContainerHtml;
@@ -3699,7 +3710,9 @@ export class TinyMceEditor extends Component {
 
 
                 if (this.editorRef.current) {
-                    if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props?.element?.type) && this.props?.element?.figuretype !== "codelisting")) {
+                    if (!((this.props.element && this.props.element.figuretype === "codelisting" &&
+                    this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") ||
+                    withoutCursorInitailizedElements.includes(this.props?.element?.type) && this.props?.element?.figuretype !== "codelisting")) {
                         this.editorRef.current.style.caretColor = 'transparent';
                         this.editorRef.current.focus();
                     } else {
@@ -3714,7 +3727,9 @@ export class TinyMceEditor extends Component {
                     // commented this code and moved to tinymce.init() function on line 3652 for issue of toolbar not initializing in the first time.(PCAT-20362)
                     // config.editorRefID = this.editorRef.current.id;
                     // let timeoutId = setTimeout(() => {
-                    //     if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props?.element?.type) && this.props?.element?.figuretype !== "codelisting")) {
+                    //     if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage &&
+                    //      this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props?.element?.type) &&
+                    //      this.props?.element?.figuretype !== "codelisting")) {
                     //         const elementID = this.editorRef?.current?.id ? this.editorRef.current.id : config.editorRefID;
                     //         document.getElementById(elementID).click();
                     //     }
@@ -3730,7 +3745,8 @@ export class TinyMceEditor extends Component {
                  * As removing tinymce instance, also updates the images made by the wiris plugin to mathml
                  */
                 let tempFirstContainerHtml = tinyMCE.$("#" + (this.editorRef.current ? this.editorRef.current.id : 'cypress-0')).html()
-                tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula')
+                .replace(/\sWirisformula/g, ' temp_Wirisformula');
                 //Test Case Changes
                 if (this.editorRef.current && document.getElementById(this.editorRef.current.id)) {
                     document.getElementById(this.editorRef.current.id).innerHTML = tempFirstContainerHtml;
@@ -3749,7 +3765,9 @@ export class TinyMceEditor extends Component {
                     if (this.editorRef.current && document.getElementById(this.editorRef.current.id) && newElement) {
                         config.editorRefID = this.editorRef.current.id;
                         let timeoutId = setTimeout(() => {
-                            if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage && this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props?.element?.type) && this.props?.element?.figuretype !== "codelisting")) {
+                            if (!((this.props.element && this.props.element.figuretype === "codelisting" && this.props.element.figuredata.programlanguage &&
+                            this.props.element.figuredata.programlanguage === "Select") || withoutCursorInitailizedElements.includes(this.props?.element?.type) &&
+                            this.props?.element?.figuretype !== "codelisting")) {
                                 const elementID = this.editorRef?.current?.id ? this.editorRef.current.id : config.editorRefID;
                                 document.getElementById(elementID).click();
                             }
@@ -3814,7 +3832,8 @@ export class TinyMceEditor extends Component {
                 return codeModel;
 
             case 'blockquote':
-                if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote")) {
+                if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" ||
+                this.props.element.elementdata.type === "blockquote")) {
                     let bgModel=removeImageCache(node.innerHTML)
                     return bgModel;
                 } else {
@@ -3837,7 +3856,8 @@ export class TinyMceEditor extends Component {
                 return ctModel;
 
             default:
-                let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
+                let defModel = this.props.model && this.props.model.text ? this.props.model.text :
+                (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
                 defModel = removeBOM(defModel)
                 defModel = removeMathmlImageCache(defModel)
                 if(this.props.element.type==="element-list"){
@@ -3857,7 +3877,8 @@ export class TinyMceEditor extends Component {
         else if (this.props.model && this.props.model.text) {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model.text;
-            let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
+            let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') ||
+            testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
             const isContainsBlankLine = testElem.innerHTML.match(/<span/) ? testElem.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
             if (testElem.innerText || isContainsMath || isContainsBlankLine) {
                 if (testElem.innerText.trim() == "" && !testElem.innerText.trim().length && !isContainsMath && !isContainsBlankLine) {
@@ -3894,7 +3915,8 @@ export class TinyMceEditor extends Component {
         } else {
             let testElem = document.createElement('div');
             testElem.innerHTML = this.props.model;
-            let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') || testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
+            let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes('class="Wirisformula') ||
+            testElem.innerHTML.match(/<img/).input.includes('class="temp_Wirisformula')) : false;
             const isContainsBlankLine = testElem.innerHTML.match(/<span/) ? testElem.innerHTML.match(/<span/).input.includes('class="answerLineContent') : false;
             if (!testElem?.innerText?.trim()) {
                 testElem.innerText = "";
@@ -3923,7 +3945,8 @@ export class TinyMceEditor extends Component {
             if (tooltipText) {
                 tooltipText.innerText = this.getElementTypeForToolbar(this.props.element);
             }
-            if ((this.props?.element && this.props?.element?.type === "element-list") || (this.props?.currentElement && this.props?.currentElement?.type === "element-list")) {
+            if ((this.props?.element && this.props?.element?.type === "element-list") || (this.props?.currentElement &&
+                this.props?.currentElement?.type === "element-list")) {
                 highlightListIcon(this.props);
             }
             this.elementConverted = false;
@@ -3956,7 +3979,9 @@ export class TinyMceEditor extends Component {
          document.removeEventListener("visibilitychange", () => { this.props?.saveCaretPosition('') });
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
-            if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && this.props.element.type && this.props.element.type === "figure" && this.props.element.figuretype !== "interactive" && !(tinymce.activeEditor?.targetElm?.className?.includes("figureLabel"))))) {
+            if (!(ed_id.includes('glossary') || ed_id.includes('footnote') || (this.props.element && this.props.element.type &&
+                this.props.element.type === "figure" && this.props.element.figuretype !== "interactive" &&
+                !(tinymce.activeEditor?.targetElm?.className?.includes("figureLabel"))))) {
                 removeTinyDefaultAttribute(tinymce.activeEditor.targetElm)
                 tinymce.remove(`#${ed_id}`)
                 tinymce.$('.wrs_modal_desktop').remove();
@@ -4019,7 +4044,8 @@ export class TinyMceEditor extends Component {
         const authStore = store.getState();
         const {projectInfo} = authStore;
         let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
-        if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove')) && !isSubscriber)) {        // when user doesn't have edit permission
+        if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') ||
+        this.props.permissions.includes('elements_add_remove')) && !isSubscriber)) {        // when user doesn't have edit permission
             if (tinymce.activeEditor && tinymce.activeEditor.id) {
                 tinymceActiveEditorNode.setAttribute('contenteditable', false)
             }
@@ -4045,7 +4071,8 @@ export class TinyMceEditor extends Component {
         /*
             checking for same target based on data-id not id
         */
-        if (tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container') && tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')) {
+        if (tinymce.activeEditor && tinymce.activeEditor.targetElm.closest('.element-container') &&
+            tinymce.activeEditor.targetElm.closest('.element-container').getAttribute('data-id') != e.currentTarget.closest('.element-container').getAttribute('data-id')) {
             isSameTargetBasedOnDataId = false;
         }
         /**
@@ -4064,7 +4091,8 @@ export class TinyMceEditor extends Component {
             currentActiveNode = activeContainerNode
         }
 
-        let currentElementId = this.props?.currentElement && currentTarget && currentTarget.getAttribute('data-id') ? this.props?.currentElement?.id : this.props?.element?.id
+        let currentElementId = this.props?.currentElement && currentTarget && currentTarget.getAttribute('data-id') ?
+        this.props?.currentElement?.id : this.props?.element?.id
         if (currentActiveNode && currentActiveNode.getAttribute('data-id') === currentElementId) {
             isSameByElementId = true;
         }
@@ -4074,7 +4102,9 @@ export class TinyMceEditor extends Component {
          */
         let activeEditorId = '';
         let newCurrentTargetNode = tinyMCE.$("#" + currentTarget.id)
-        if ((!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId) && currentActiveNode && tinymce.activeEditor && tinymceActiveEditorNode && !(tinymce.activeEditor.id.includes('glossary') || tinymce.activeEditor.id.includes('footnote'))) {
+        if ((!isSameTargetBasedOnDataId || !isSameTarget || !isSameByElementId) && currentActiveNode &&
+        tinymce.activeEditor && tinymceActiveEditorNode && !(tinymce.activeEditor.id.includes('glossary') ||
+        tinymce.activeEditor.id.includes('footnote'))) {
             activeEditorId = tinymce.activeEditor.id;
             /**
              * Before removing the current tinymce instance, update wiris image attribute data-mathml to data-temp-mathml and class Wirisformula to temp_Wirisformula
@@ -4094,8 +4124,10 @@ export class TinyMceEditor extends Component {
                 tempContainerHtml = tinyMCE.$("[data-id='" + previousTargetId + "'] .cypress-editable").html()
                 tempNewContainerHtml = tinyMCE.$("[data-id='" + currentTargetId + "'] .cypress-editable").html()
             }
-            tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
-            tempNewContainerHtml = tempNewContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+            tempContainerHtml = tempContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula')
+            .replace(/\sWirisformula/g, ' temp_Wirisformula');
+            tempNewContainerHtml = tempNewContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula')
+            .replace(/\sWirisformula/g, ' temp_Wirisformula');
 
             /*
                 Before entering to new element follow same  procedure
@@ -4114,7 +4146,8 @@ export class TinyMceEditor extends Component {
                 }
         }
 
-        if(isSameByElementId && e.target && (e.target.className && e.target.className.includes('opener-title') || e.target.parentNode && e.target.parentNode.className && e.target.parentNode.className.includes('opener-title'))) {
+        if(isSameByElementId && e.target && (e.target.className && e.target.className.includes('opener-title') || e.target.parentNode &&
+        e.target.parentNode.className && e.target.parentNode.className.includes('opener-title'))) {
             (e.target.classList.remove('opener-caret') || e.target.parentNode.classList.remove('opener-caret'))
         }
 
@@ -4141,7 +4174,8 @@ export class TinyMceEditor extends Component {
                 let ed_id = tinymce.editors[i].id;
                 if (!(ed_id.includes('glossary') || ed_id.includes('footnote'))) {
                     let tempFirstContainerHtml = tinyMCE.$("#" + tinymce.editors[i].id).html()
-                    tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
+                    tempFirstContainerHtml = tempFirstContainerHtml.replace(/\sdata-mathml/g, ' data-temp-mathml')
+                    .replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula');
                     let tinymceEditorNode = document.getElementById(tinymce.editors[i].id);
                     const tinymceEditorNodeInnerHTML = tinymceEditorNode?.innerHTML
                     if (tinymceEditorNodeInnerHTML && tempFirstContainerHtml ) {
@@ -4168,7 +4202,8 @@ export class TinyMceEditor extends Component {
             currentTarget.focus();
             let termText = newCurrentTargetNode && newCurrentTargetNode.html();
             tinymce.init(this.editorConfig).then(() => {
-                if (termText && termText.length && 'type' in this.props.element && this.props.element.type !== 'poetry' && this.props.element.type !== 'element-list' &&
+                if (termText && termText.length && 'type' in this.props.element && this.props.element.type !== 'poetry' &&
+                this.props.element.type !== 'element-list' &&
                     !(this.props.element.type === "showhide" && this.props.currentElement.type === 'element-list')) {
                     if (termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
                         (newCurrentTargetNode.html()).search(/^(<.*>(<br.*>)<\/.*>)+$/g) >= 0) {
@@ -4177,7 +4212,8 @@ export class TinyMceEditor extends Component {
                     /***
                      * [BG-2225] | Unwanted saving calls in video element
                      */
-                    if ('type' in this.props.element && (this.props.element.type === "figure" || this.props.element.type ==="element-aside") && termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
+                    if ('type' in this.props.element && (this.props.element.type === "figure" ||
+                    this.props.element.type ==="element-aside") && termText.search(/^(<.*>(<br.*>)<\/.*>)+$/g) < 0 &&
                         (newCurrentTargetNode.html()).search(/^(<br.*>)+$/g) >= 0) {
                         termText = newCurrentTargetNode.html();
                     }
@@ -4191,7 +4227,8 @@ export class TinyMceEditor extends Component {
                 // footnode lies in the end then remove the superscript mode from the end of text.
                 if (tinymce.activeEditor?.selection?.getContent() === "") { // if user is not selecting any text on the editor
                     let activeNode = tinymce.activeEditor.selection.getNode()
-                    if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
+                    if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' &&
+                    activeNode?.parentNode?.nodeName === 'SUP') {
                         this.removeSupFormat(clickedX, clickedY);
                     }
                     else if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1) {
@@ -4201,7 +4238,8 @@ export class TinyMceEditor extends Component {
                             selectNode = cursorNode
                             tinymce.activeEditor.selection.select(selectNode);
                             this.removeSupFormat(clickedX, clickedY);
-                        } else if (cursorNode?.nodeName === 'SUP' && cursorNode?.childNodes?.length && cursorNode?.childNodes[0]?.nodeName === 'A') {
+                        } else if (cursorNode?.nodeName === 'SUP' && cursorNode?.childNodes?.length &&
+                        cursorNode?.childNodes[0]?.nodeName === 'A') {
                             selectNode = cursorNode.childNodes[0]
                             tinymce.activeEditor.selection.select(selectNode);
                             this.removeSupFormat(clickedX, clickedY);
@@ -4230,7 +4268,8 @@ export class TinyMceEditor extends Component {
                     tinymce.activeEditor.selection.collapse(false);
                     this.handleCodeClick(tinymce.activeEditor, true);
                 }
-                if (this.props?.element?.type === 'stanza' || this?.props?.element?.type === 'element-dialogue' && this.props.placeholder !== "Enter Stage Directions...") {
+                if (this.props?.element?.type === 'stanza' || this?.props?.element?.type === 'element-dialogue' &&
+                this.props.placeholder !== "Enter Stage Directions...") {
                     const data = tinymce.activeEditor?.selection?.getNode()
                     const stanzaClassList = data?.classList
                     let stanzaClassListWithFormatting = data?.closest('span')?.classList
@@ -4293,7 +4332,8 @@ export class TinyMceEditor extends Component {
                     assetPopoverButtonNode.removeAttribute('aria-pressed')
                     assetPopoverButtonNode.classList.remove('tox-tbtn--disabled')
                 }
-                if ((this.props.element && this.props.element.type === "element-list") || (this.props.currentElement && this.props.currentElement.type === "element-list")) {
+                if ((this.props.element && this.props.element.type === "element-list") ||
+                (this.props.currentElement && this.props.currentElement.type === "element-list")) {
                     highlightListIcon(this.props);
                 }
                 else {
@@ -4306,7 +4346,8 @@ export class TinyMceEditor extends Component {
 
                 if (tinymce.activeEditor?.selection?.getContent() === "") { // if user is not selecting any text on the editor
                     let activeNode = tinymce.activeEditor.selection.getNode()
-                    if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' && activeNode?.parentNode?.nodeName === 'SUP') {
+                    if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1 && activeNode?.nodeName === 'A' &&
+                    activeNode?.parentNode?.nodeName === 'SUP') {
                         this.removeSupFormat(clickedX, clickedY);
                     }
                     else if (tinymce.activeEditor.getContent()?.indexOf("<sup>") > -1) {
@@ -4426,7 +4467,8 @@ export class TinyMceEditor extends Component {
         }
         const eventTarget = e?.target
         let checkCanvasBlocker = document.querySelector("div.canvas-blocker");
-        let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote");
+        let isBlockQuote = this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" ||
+        this.props.element.elementdata.type === "blockquote");
         if (isBlockQuote && this.isctrlPlusV) {
             e.preventDefault();
             return false;
@@ -4445,7 +4487,8 @@ export class TinyMceEditor extends Component {
             e.stopPropagation();
             return;
         }
-        if (((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) || this.props.placeholder === 'Enter Button Label')) ||
+        if (((this.props?.element?.type === 'figure') && (config.figureFieldsPlaceholders.includes(this.props.placeholder) ||
+        this.props.placeholder === 'Enter Button Label')) ||
             (this.props.element && this.props?.element?.type === 'element-aside' && this.props.element?.html?.title)) {
             this.props.onFigureImageFieldBlur(this.props.index);
         }
@@ -4489,7 +4532,8 @@ export class TinyMceEditor extends Component {
                 poetryStanza.each(function () {
                     let imgTag = this && this.getElementsByTagName("img")
                     const blankLines = this && this.getElementsByClassName("answerLineContent")
-                    if ((this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') && !(imgTag && imgTag.length) && !(blankLines && blankLines.length)) {
+                    if ((this.innerHTML === '' || this.innerHTML === "<br>" || this.textContent.trim() == '') &&
+                    !(imgTag && imgTag.length) && !(blankLines && blankLines.length)) {
                         this.remove();
                     }
                 })
@@ -4541,11 +4585,13 @@ export class TinyMceEditor extends Component {
                 elemNode.innerHTML.replace(/<br>/g, "") !== ""
             ) {
                 this.props.createPopupUnit(this.props.popupField, true, this.props.index, this.props.element)
-            } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement && elemNode && elemNode.innerHTML.replace(/<br>/g, "").replace(/<p><\/p>/g, "") !== "") {
+            } else if (this.props.element && this.props.element.type === "poetry" && !this.props.currentElement &&
+            elemNode && elemNode.innerHTML.replace(/<br>/g, "").replace(/<p><\/p>/g, "") !== "") {
                 this.props.createPoetryElements(this.props.poetryField, true, this.props.index, this.props.element)
             } else {
                 let cgTitleFieldData = {};
-                if (this.props?.citationAsideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" && this.props?.currentElement?.type === "element-authoredtext") {
+                if (this.props?.citationAsideData?.parent?.type === "showhide" && this.props?.element?.type === "citations" &&
+                this.props?.currentElement?.type === "element-authoredtext") {
                     cgTitleFieldData.asideData = this.props.citationAsideData;
                     cgTitleFieldData.parentElement = this.props.parentElement;
                 }
@@ -4568,7 +4614,8 @@ export class TinyMceEditor extends Component {
         let index = this.props.index;
         let elementSubType = this.props.element ? this.props.element.figuretype : '';
         let markIndexText = this.markIndexText;
-        this.props.openMarkedIndexPopUp && this.props.openMarkedIndexPopUp(status, popupType, markIndexid, elementId, elementType, index, elementSubType, markIndexText, callback, typeWithPopup, this.props.poetryField, isNewIndex);
+        this.props.openMarkedIndexPopUp && this.props.openMarkedIndexPopUp(status, popupType, markIndexid, elementId, elementType, index,
+            elementSubType, markIndexText, callback, typeWithPopup, this.props.poetryField, isNewIndex);
     }
 
     toggleGlossaryandFootnotePopup = (status, popupType, glossaryfootnoteid, callback) => {
@@ -4581,7 +4628,8 @@ export class TinyMceEditor extends Component {
         let elementSubType = this.props.element ? this.props.element.figuretype : '';
         let glossaryTermText = this.glossaryTermText;
         let blockfeatureType = this.props?.element?.elementdata?.type === "pullquote" ? this.props?.element?.elementdata?.type : ''
-        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId, elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, this.props.poetryField );
+        this.props.openGlossaryFootnotePopUp && this.props.openGlossaryFootnotePopUp(status, popupType, glossaryfootnoteid, elementId,
+            elementType, index, blockfeatureType, elementSubType, glossaryTermText, callback, typeWithPopup, this.props.poetryField );
     }
 
     generateHiddenElement = () => {
@@ -4616,7 +4664,9 @@ export class TinyMceEditor extends Component {
                 let paraModel = this.props.model
                 paraModel = removeBOM(paraModel)
                 return (
-                    <p ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: paraModel }}></p>
+                    <p ref={this.editorRef} id={id} onKeyDown={this.normalKeyDownHandler} onBlur={this.handleBlur}
+                    onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true}
+                    contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: paraModel }}></p>
                 );
             case 'h4':
                 let model = ""
@@ -4656,10 +4706,13 @@ export class TinyMceEditor extends Component {
                 let codeModel = this.props.model
                 codeModel = removeBOM(codeModel)
                 return (
-                    <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: codeModel }}></code>
+                    <code ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes}
+                    placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}
+                    dangerouslySetInnerHTML={{ __html: codeModel }}></code>
                 )
             case 'blockquote':
-                if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" || this.props.element.elementdata.type === "blockquote")) {
+                if (this.props.element && this.props.element.elementdata && (this.props.element.elementdata.type === "marginalia" ||
+                this.props.element.elementdata.type === "blockquote")) {
                 let tmpModel = ""
                 let tempDiv = document.createElement('div');
                 tempDiv.innerHTML = this.props.model;
@@ -4668,7 +4721,10 @@ export class TinyMceEditor extends Component {
                 }
                 tmpModel = removeBOM(tmpModel)
                     return (
-                        <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: tmpModel }} onChange={this.handlePlaceholder}>{/* htmlToReactParser.parse(this.props.model.text) */}</p>
+                        <p ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick}
+                        className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true}
+                        contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: tmpModel }} onChange={this.handlePlaceholder}>
+                        {/* htmlToReactParser.parse(this.props.model.text) */}</p>
                     )
                 } else {
                     classes = classes + ' pullquote-editor';
@@ -4676,7 +4732,9 @@ export class TinyMceEditor extends Component {
                     pqModel = removeBOM(pqModel)
 
                     return (
-                        <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: pqModel }} onChange={this.handlePlaceholder}></div>
+                        <div ref={this.editorRef} id={id} onBlur={this.handleBlur} onClick={this.handleClick}
+                        className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}
+                        dangerouslySetInnerHTML={{ __html: pqModel }} onChange={this.handlePlaceholder}></div>
                     )
                 }
             case 'figureCredit':
@@ -4684,7 +4742,10 @@ export class TinyMceEditor extends Component {
                 figCreditModel = removeBOM(figCreditModel)
 
                 return (
-                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : undefined} id={id} onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: figCreditModel }} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : undefined} id={id}
+                    onBlur={this.handleBlur} onKeyDown={this.normalKeyDownHandler} onClick={this.handleClick} className={classes}
+                    placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: figCreditModel }}
+                    onChange={this.handlePlaceholder}></div>
                 )
             case 'element-citation':
                 let ctModel = this.props.model && this.props.model.text || '<p class="paragraphNumeroUnoCitation"><br/></p>'
@@ -4706,10 +4767,14 @@ export class TinyMceEditor extends Component {
                     ></div>
                 )
             default:
-                let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ? this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
+                let defModel = this.props.model && this.props.model.text ? this.props.model.text : (typeof (this.props.model) === 'string' ?
+                this.props.model : '<p class="paragraphNumeroUno"><br/></p>')
                 defModel = removeBOM(defModel)
                 return (
-                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : undefined} onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes} placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition} dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
+                    <div ref={this.editorRef} data-id={this.props.currentElement ? this.props.currentElement.id : undefined}
+                    onKeyDown={this.normalKeyDownHandler} id={id} onBlur={this.handleBlur} onClick={this.handleClick} className={classes}
+                    placeholder={this.props.placeholder} suppressContentEditableWarning={true} contentEditable={!lockCondition}
+                    dangerouslySetInnerHTML={{ __html: defModel }} onChange={this.handlePlaceholder}></div>
                 )
         }
 
@@ -4719,7 +4784,8 @@ export class TinyMceEditor extends Component {
         const authStore = store.getState();
         const {projectInfo} = authStore;
         let isSubscriber = isSubscriberRole(projectInfo?.projectSharingRole, projectInfo?.projectSubscriptionDetails?.isSubscribed);
-        if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove')) && !isSubscriber)) {
+        if (this.props.permissions && !((this.props.permissions.includes('access_formatting_bar') || this.props.permissions.includes('elements_add_remove')) &&
+        !isSubscriber)) {
                 document.getElementById(tinymce.activeEditor.id).setAttribute('contenteditable', false)
             }
         }
@@ -4761,5 +4827,6 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement, saveSelectedAlfrescoElement, saveCaretPosition, approvedSlatePopupStatus }
+    { conversionElement, wirisAltTextPopup, saveInlineImageData, createElement, deleteElement,
+        saveSelectedAlfrescoElement, saveCaretPosition, approvedSlatePopupStatus }
 )(TinyMceEditor);
