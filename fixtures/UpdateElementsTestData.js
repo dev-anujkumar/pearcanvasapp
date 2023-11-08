@@ -1,4 +1,4 @@
-export const elementAuthoredText = {
+export const ELEMENT_AUTHORED = {
     comments: false,
     contentUrn: "urn:pearson:entity:f8eb3251-4fab-45b8-be3e-7afe954d53ab",
     id: "urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0",

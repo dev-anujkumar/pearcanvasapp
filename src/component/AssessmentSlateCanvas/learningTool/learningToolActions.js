@@ -18,7 +18,7 @@ import {
 } from '../../../constants/Action_Constants';
 import { LT_LA_API_ERROR } from './learningToolUtility';
 import { specialCharacterEncode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
-import { applicationJsonText } from '../../../constants/Element_Constants';
+import { CONTENT_TYPE } from '../../../constants/Element_Constants';
 /**
   * @discription - This action is dispatched when search of leaning template
   * @param {String} toolType - value of learning tool type selected from dropdown
@@ -32,7 +32,7 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
     {
       headers: {
         'X-Roles': 'ContentPlanningAdmin',
-        'Content-Type': applicationJsonText,
+        'Content-Type': CONTENT_TYPE,
         'apikey': config.STRUCTURE_APIKEY,
         'myCloudProxySession': config.myCloudProxySession
       }
@@ -75,7 +75,7 @@ export const openLTFunction = (taxonomyId) => dispatch => {
     {
       headers: {
         'X-Roles': 'ContentPlanningAdmin',
-        'Content-Type': applicationJsonText,
+        'Content-Type': CONTENT_TYPE,
         'apikey': config.STRUCTURE_APIKEY,
         'myCloudProxySession': config.myCloudProxySession
       }
@@ -192,7 +192,7 @@ export const fetchLearningTemplates = () => async dispatch => {
     const resp = await axios(url, {
       method: 'GET',
       headers: {
-        'Content-Type': applicationJsonText,
+        'Content-Type': CONTENT_TYPE,
         'myCloudProxySession': config.myCloudProxySession
       }
     });

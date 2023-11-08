@@ -14,7 +14,7 @@ import {
 import { specialCharacterDecode } from '../assessmentCiteTdx/Actions/CiteTdxActions.js';
 import { fetchAssessmentMetadata, fetchAssessmentVersions, setItemUpdateEvent, fetchAssessmentItems } from './assessmentActions.js';
 import { hideBlocker} from '../../../js/toggleLoader';
-import { elmAssessmentText } from '../../../constants/Element_Constants.js';
+import { ELM_ASSESSMENT } from '../../../constants/Element_Constants.js';
 const AssessmentAPIHandlers = {
     /** @description This function prepares list of Assessment UsageTypes from api-response */
     prepareUsageTypeData: (res) => {
@@ -147,7 +147,7 @@ const AssessmentAPIHandlers = {
     /** @description This function handles assessment-metadata API response for Assessment */
     assessmentMetadataHandler: async (responseData, calledFrom, assessmentData, assessmentItemData, dispatch) => {
         const assessmentStatus = AssessmentAPIHandlers.setAssessmentStatus(responseData.status);
-        const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : elmAssessmentText;
+        const assessmentTitle = responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : ELM_ASSESSMENT;
         let dataForUpdate = AssessmentAPIHandlers.prepareUnapprovedData(responseData, assessmentTitle, assessmentStatus, assessmentData);
         if (calledFrom == 'fromNextVersion') {  /* APPROVED | UPDATE */
             dataForUpdate = AssessmentAPIHandlers.prepareApprovedData(assessmentData, responseData, assessmentTitle);
@@ -337,7 +337,7 @@ const AssessmentAPIHandlers = {
     interactiveMetadataUpdateHandler: (responseData, assessmentData, dispatch) => {
         const latestVersion = {
             id: responseData.versionUrn,
-            title: responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : elmAssessmentText,
+            title: responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : ELM_ASSESSMENT,
             latestCleanVersion: AssessmentAPIHandlers.checkElmVersionIsClean(responseData),
             status: AssessmentAPIHandlers.setAssessmentStatus(responseData.status)
         }
@@ -351,7 +351,7 @@ const AssessmentAPIHandlers = {
     assessmentMetadataUpdateHandler: (responseData, assessmentData, assessmentItemData, dispatch) => {
         const latestVersion = {
             id: responseData.versionUrn,
-            title: responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : elmAssessmentText,
+            title: responseData.name ? specialCharacterDecode(responseData.name) : responseData.defaultTitle ? specialCharacterDecode(responseData.defaultTitle) : ELM_ASSESSMENT,
             latestCleanVersion: AssessmentAPIHandlers.checkElmVersionIsClean(responseData),
             status: AssessmentAPIHandlers.setAssessmentStatus(responseData.status)
         }

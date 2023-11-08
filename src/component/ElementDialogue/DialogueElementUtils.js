@@ -1,6 +1,6 @@
 
 import config from "../../config/config.js";
-import { stopEventText } from "../../constants/Element_Constants.js";
+import { STOP_EVENT } from "../../constants/Element_Constants.js";
 import ElementConstants from '../ElementContainer/ElementConstants';
 
 export const createPSDataForUpdateAPI = (_props, newPSData) => {
@@ -28,11 +28,11 @@ export const handleCommonEvents = (deletedElmKey, addEvent) => {
         deletedElm?.classList?.add("hideElement");
         const sapratorElm = document.querySelector(`[sepratorID="${deletedElmKey}"]`);
         sapratorElm?.classList?.add("hideElement");
-        document.getElementById('previous-slate-button')?.classList?.add(stopEventText)
-        document.getElementById('next-slate-button')?.classList?.add(stopEventText)
+        document.getElementById('previous-slate-button')?.classList?.add(STOP_EVENT)
+        document.getElementById('next-slate-button')?.classList?.add(STOP_EVENT)
         const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
         for (const elm of multipleElement) {
-            elm.classList.add(stopEventText)
+            elm.classList.add(STOP_EVENT)
         }
     }
     else {
@@ -40,11 +40,11 @@ export const handleCommonEvents = (deletedElmKey, addEvent) => {
         deletedElm?.classList?.remove("hideElement");
         const sapratorElm = document.querySelector(`[sepratorID="${deletedElmKey}"]`)
         sapratorElm?.classList?.remove("hideElement");
-        document.getElementById('previous-slate-button')?.classList?.remove(stopEventText)
-        document.getElementById('next-slate-button')?.classList?.remove(stopEventText)
+        document.getElementById('previous-slate-button')?.classList?.remove(STOP_EVENT)
+        document.getElementById('next-slate-button')?.classList?.remove(STOP_EVENT)
         const multipleElement = document.querySelectorAll('.power-paste-icon,.split-icon, .delete-icon,.popup-button,.element-label')
         for (const elm of multipleElement) {
-            elm.classList.remove(stopEventText)
+            elm.classList.remove(STOP_EVENT)
         }
     }
 }

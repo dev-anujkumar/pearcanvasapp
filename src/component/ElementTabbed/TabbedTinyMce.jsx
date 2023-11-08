@@ -5,16 +5,16 @@
 import React from 'react';
 import TinyMceEditor from "../tinyMceEditor";
 import { getTitleSubtitleModel } from "../../constants/utility.js";
-import { labelHtmlData, transitionNoneText } from '../../constants/Element_Constants';
+import { labelHtmlData, TRANSITION_NONE } from '../../constants/Element_Constants';
 
 const onTabTitleFieldFocus = (id) => {
     let labelElement = document.getElementById(`cypress-${id}`);
-    if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(transitionNoneText)) {
+    if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE)) {
         labelElement?.nextElementSibling?.classList?.add('label-color-change');
-    } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(transitionNoneText))) {
-        labelElement?.nextElementSibling?.classList?.add(transitionNoneText);
+    } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE))) {
+        labelElement?.nextElementSibling?.classList?.add(TRANSITION_NONE);
     } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
-        labelElement?.nextElementSibling?.classList?.add(transitionNoneText);
+        labelElement?.nextElementSibling?.classList?.add(TRANSITION_NONE);
     }
 }
 
@@ -24,7 +24,7 @@ const onTabTitleFieldBlur = (id) => {
         labelElement?.nextElementSibling?.classList?.remove('label-color-change');
     }
     if (labelHtmlData.includes(labelElement?.innerHTML)) {
-        labelElement?.nextElementSibling?.classList?.remove(transitionNoneText);
+        labelElement?.nextElementSibling?.classList?.remove(TRANSITION_NONE);
         labelElement?.nextElementSibling?.classList?.add('floating-title');
     }
 }

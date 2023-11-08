@@ -2,7 +2,7 @@ import { fetchElementsTag } from "./ElementSnapshot_Utility";
 import TcmConstants from "./TcmConstants";
 import store from '../../appstore/store.js';
 import { prepareAndSendTcmData, prepareTcmSnapshots, setElementTypeAndUrn } from "./TcmSnapshots_Utility";
-import { elementAsideText } from "../../constants/Element_Constants";
+import { ELEMENT_ASIDE } from "../../constants/Element_Constants";
 
 const {
     elementType,
@@ -329,7 +329,7 @@ export const tcmSnapshotsCitationPoetry = (containerElement, snapshotsData, defa
     const { wipData, elementId, tag, actionStatus, popupInContainer,slateManifestVersioning } = snapshotsData;
     let isHead = "", parentUrnToSend={};
     let parentObj = {};
-    if (containerElement?.showHideObj?.currentElement?.type === elementAsideText || containerElement?.showHideObj?.currentElement?.type === 'citations') {
+    if (containerElement?.showHideObj?.currentElement?.type === ELEMENT_ASIDE || containerElement?.showHideObj?.currentElement?.type === 'citations') {
         parentObj = {
             parent: containerElement?.showHideObj?.element,
             sectionType: containerElement?.sectionType ? containerElement?.sectionType : containerElement?.showHideObj?.element.sectionType
@@ -484,7 +484,7 @@ export const tcmSnapshotsMultiColumn = (containerElement,snapshotsData, defaultK
             if(ele?.type === SHOWHIDE || ele?.type === POETRY_ELEMENT) {
                tcmSnapshotsShowHide(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType);
             } else
-            if(ele?.type === elementAsideText) {
+            if(ele?.type === ELEMENT_ASIDE) {
                tcmSnapshotsAsideWE(wipData,index,containerElement,actionStatus,ele, eleIndex, operationType)
             } else if(ele?.type === 'manifestlist') {
                 return false;
@@ -534,7 +534,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
     if (isChildElement == true) {
         if (showHideObj) {
             parentData.showHideObj = { ...showHideObj }
-            if (!(asideData?.type === elementAsideText && asideData?.parent?.type === 'showhide' && tempIndex?.length > 3)) {
+            if (!(asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === 'showhide' && tempIndex?.length > 3)) {
                 const { parentElement } = setParentUrn(bodymatter, tempIndex);
                 parentData.parentUrn = {
                     manifestUrn: parentElement?.id,
@@ -555,7 +555,7 @@ export const fetchParentData = (bodymatter, indexes, showHideObj, response) => {
                 parentData.parentUrn.columnIndex = multiColumnData.columnIndex;
             }
         }
-        if (showHideObj && ((asideData?.type === elementAsideText && asideData?.parent?.type === 'showhide' && tempIndex?.length > 3))) {
+        if (showHideObj && ((asideData?.type === ELEMENT_ASIDE && asideData?.parent?.type === 'showhide' && tempIndex?.length > 3))) {
             parentData.showHideObj = { ...showHideObj }
             parentData.parentUrn = { ...parentUrn }
             parentData.asideData = { ...asideData }

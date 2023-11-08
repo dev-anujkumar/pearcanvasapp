@@ -11,7 +11,7 @@ import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import { getWirisAltText } from '../js/utils';
 import { setFormattingToolbar, updateCurrentValue } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import { markedIndexPopupOverGlossary } from './MarkIndexPopup/MarkIndex_Action';
-import { classTempWirisformula, classWirisformula, dataMathmlText, placeHolderText } from '../constants/Element_Constants.js';
+import { CLASS_TEMP_WIRISFORMULA, CLASS_WIRISFORMULA, DATA_MATHML, PLACE_HOLDER } from '../constants/Element_Constants.js';
 
 export class ReactEditor extends React.Component {
   constructor(props) {
@@ -113,7 +113,7 @@ export class ReactEditor extends React.Component {
   revertingTempContainerHtml = editor => {
     let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
     let elementNode = document.getElementById(editor.id)
-    revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,dataMathmlText).replace(/temp_Wirisformula/g,'Wirisformula');
+    revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g,DATA_MATHML).replace(/temp_Wirisformula/g,'Wirisformula');
     if(elementNode){
       elementNode.innerHTML = revertingTempContainerHtml;
     }
@@ -127,12 +127,12 @@ export class ReactEditor extends React.Component {
     let activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
     let contentHTML = e.target.innerHTML;
     if (activeElement) {
-      let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes(classWirisformula)||contentHTML.match(/<img/).input.includes(classTempWirisformula)):false
+      let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes(CLASS_WIRISFORMULA)||contentHTML.match(/<img/).input.includes(CLASS_TEMP_WIRISFORMULA)):false
       if (activeElement.innerText.trim().length || isContainsMath) {
-        activeElement.classList.remove(placeHolderText)
+        activeElement.classList.remove(PLACE_HOLDER)
       }
       else {
-        activeElement.classList.add(placeHolderText)
+        activeElement.classList.add(PLACE_HOLDER)
       }
     }
   }
@@ -147,12 +147,12 @@ export class ReactEditor extends React.Component {
         contentHTML = e.target.getContent(),
         activeElement = editor.dom.getParent(editor.selection.getStart(), ".definition-editor");
     if (activeElement) {
-        let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes(classWirisformula)||contentHTML.match(/<img/).input.includes(classTempWirisformula)):false
+        let isContainsMath = contentHTML.match(/<img/)?(contentHTML.match(/<img/).input.includes(CLASS_WIRISFORMULA)||contentHTML.match(/<img/).input.includes(CLASS_TEMP_WIRISFORMULA)):false
         if(content.trim().length || contentHTML.match(/<math/g) || isContainsMath){
-            activeElement.classList.remove(placeHolderText)
+            activeElement.classList.remove(PLACE_HOLDER)
         }
         else {
-            activeElement.classList.add(placeHolderText)
+            activeElement.classList.add(PLACE_HOLDER)
         }
     }
   }
@@ -311,17 +311,17 @@ export class ReactEditor extends React.Component {
     testElem.innerHTML = model;
 
     if (testElem && model) {
-      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes(classWirisformula) || testElem.innerHTML.match(/<img/).input.includes(classTempWirisformula)) : false;
+      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes(CLASS_WIRISFORMULA) || testElem.innerHTML.match(/<img/).input.includes(CLASS_TEMP_WIRISFORMULA)) : false;
       if (testElem.innerHTML && testElem.innerText?.trim() == "" && !testElem.innerText?.trim().length && !isContainsMath) {
         this.placeHolderClass = tempPlaceHolderclass;
       } else {
-        this.placeHolderClass = tempPlaceHolderclass.replace(placeHolderText, '')
+        this.placeHolderClass = tempPlaceHolderclass.replace(PLACE_HOLDER, '')
       }
     } else {
-      if (tempPlaceHolderclass &&tempPlaceHolderclass.includes(placeHolderText)) {
+      if (tempPlaceHolderclass &&tempPlaceHolderclass.includes(PLACE_HOLDER)) {
         this.placeHolderClass = tempPlaceHolderclass
       } else {
-        this.placeHolderClass = tempPlaceHolderclass + placeHolderText;
+        this.placeHolderClass = tempPlaceHolderclass + PLACE_HOLDER;
       }
     }
   }
@@ -337,10 +337,10 @@ export class ReactEditor extends React.Component {
 
   setGlossaryFootnoteNode = (id, glossaryNode, footnoteNode) => {
     if(id === "glossary-0" && glossaryNode && this.termtext){
-      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,dataMathmlText).replace(/temp_Wirisformula/g,'Wirisformula');
+      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,DATA_MATHML).replace(/temp_Wirisformula/g,'Wirisformula');
     }
     else if(id === "footnote-0" && footnoteNode && this.termtext){
-      footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,dataMathmlText).replace(/temp_Wirisformula/g,'Wirisformula');
+      footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,DATA_MATHML).replace(/temp_Wirisformula/g,'Wirisformula');
     }
   }
 
@@ -437,7 +437,7 @@ export class ReactEditor extends React.Component {
       /**
        * BG-1907 -[PCAT-7395] Temp classes in mathml cause issue in opening wiris editor.
        */
-      termText = termText.replace(/data-temp-mathml/g,dataMathmlText).replace(/temp_Wirisformula/g,'Wirisformula');
+      termText = termText.replace(/data-temp-mathml/g,DATA_MATHML).replace(/temp_Wirisformula/g,'Wirisformula');
       document.getElementById(currentTarget.id).innerHTML = termText;
      }
      tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.

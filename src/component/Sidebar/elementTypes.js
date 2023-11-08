@@ -1,4 +1,4 @@
-import { image50Text, imageActualSizeText, imageFullText, imageTextWidthText, imageWiderText, longDescriptionText } from "../../constants/Element_Constants";
+import { IMAGE_50, IMAGE_ACTUAL_SIZE, IMAGE_FULL, IMAGE_TEXT_WIDTH, IMAGE_WIDER, LONG_DESCRIPTION } from "../../constants/Element_Constants";
 
 export default {
     'element-authoredtext': {
@@ -158,12 +158,12 @@ export default {
                 'secondary-image-figure-width': {
                     text: 'Text Width',
                     labelText: 'Fg',
-                    enum: imageTextWidthText
+                    enum: IMAGE_TEXT_WIDTH
                 },
                 'secondary-image-figure-actual': {
                     text: 'Actual Size',
                     labelText: 'Fg',
-                    enum: imageActualSizeText
+                    enum: IMAGE_ACTUAL_SIZE
                 },
                 'secondary-image-figure-quarter': {
                     text: '25% Text Width',
@@ -173,7 +173,7 @@ export default {
                 'secondary-image-figure-half': {
                     text: '50% Text Width',
                     labelText: 'Fg',
-                    enum: image50Text
+                    enum: IMAGE_50
                 },
                 'secondary-image-figure-three-quarter': {
                     text: '75% Text Width',
@@ -183,12 +183,12 @@ export default {
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
                     labelText: 'Fg',
-                    enum: imageWiderText
+                    enum: IMAGE_WIDER
                 },
                 'secondary-image-figure-full': {
                     text: 'Full Screen',
                     labelText: 'Fg',
-                    enum: imageFullText
+                    enum: IMAGE_FULL
                 }
             },
             attributes: {
@@ -197,7 +197,7 @@ export default {
                     isEditable: false
                 },
                 long_description: {
-                    text: longDescriptionText,
+                    text: LONG_DESCRIPTION,
                     isEditable: false
                 }
             }
@@ -239,7 +239,7 @@ export default {
                     isEditable: false
                 },
                 long_description: {
-                    text: longDescriptionText,
+                    text: LONG_DESCRIPTION,
                     isEditable: false
                 }
             }
@@ -281,7 +281,7 @@ export default {
                     isEditable: false
                 },
                 long_description: {
-                    text: longDescriptionText,
+                    text: LONG_DESCRIPTION,
                     isEditable: false
                 }
             }
@@ -294,12 +294,12 @@ export default {
                 'secondary-image-figure-width': {
                     text: 'Text Width',
                     labelText: 'DI',
-                    enum: imageTextWidthText
+                    enum: IMAGE_TEXT_WIDTH
                 },
                 'secondary-image-figure-actual': {
                     text: 'Actual Size',
                     labelText: 'DI',
-                    enum: imageActualSizeText
+                    enum: IMAGE_ACTUAL_SIZE
                 },
                 'secondary-image-figure-quarter': {
                     text: '25% Text Width',
@@ -309,7 +309,7 @@ export default {
                 'secondary-image-figure-half': {
                     text: '50% Text Width',
                     labelText: 'DI',
-                    enum: image50Text
+                    enum: IMAGE_50
                 },
                 'secondary-image-figure-three-quarter': {
                     text: '75% Text Width',
@@ -319,12 +319,12 @@ export default {
                 'secondary-image-figure-wider': {
                     text: 'Wider Than Text',
                     labelText: 'DI',
-                    enum: imageWiderText
+                    enum: IMAGE_WIDER
                 },
                 'secondary-image-figure-full': {
                     text: 'Full Screen',
                     labelText: 'DI',
-                    enum: imageFullText
+                    enum: IMAGE_FULL
                 }
             }
         },
@@ -850,7 +850,7 @@ export default {
                             isEditable: false
                         },
                         long_description: {
-                            text: longDescriptionText,
+                            text: LONG_DESCRIPTION,
                             isEditable: false
                         }
                     }
@@ -872,7 +872,7 @@ export default {
                             isEditable: false
                         },
                         long_description: {
-                            text: longDescriptionText,
+                            text: LONG_DESCRIPTION,
                             isEditable: false
                         }
                     }
@@ -940,7 +940,7 @@ export default {
                     isEditable: false
                 },
                 long_description: {
-                    text: longDescriptionText,
+                    text: LONG_DESCRIPTION,
                     isEditable: false
                 }
             }

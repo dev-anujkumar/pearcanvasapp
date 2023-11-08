@@ -8,7 +8,7 @@ import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 
 // // IMPORT - Assets //
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
-import { DEFAULT_VIDEO_POSTER_IMAGE, avsJsonStringText, cmDescriptionText, institutionUrlsText } from './../../constants/Element_Constants';
+import { DEFAULT_VIDEO_POSTER_IMAGE, AVS_JSONSTRING, CM_DESCRIPTION, INSTITUTION_URLS } from './../../constants/Element_Constants';
 import { hasReviewerRole, sendDataToIframe, getCookieByName } from '../../constants/utility.js'
 import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import {alfrescoPopup, saveSelectedAssetData  , saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action'
@@ -98,18 +98,18 @@ class ElementAudioVideo extends Component {
         let imageData = data;
         let clipInfo;
         let audioDes;
-        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.[institutionUrlsText] && imageData?.[institutionUrlsText][0]?.publicationUrl ? imageData?.[institutionUrlsText][0]?.publicationUrl : "";
+        let epsURL = imageData.epsUrl ? imageData.epsUrl : imageData?.[INSTITUTION_URLS] && imageData?.[INSTITUTION_URLS][0]?.publicationUrl ? imageData?.[INSTITUTION_URLS][0]?.publicationUrl : "";
         let assetFormat=""
         let figureType = imageData?.content?.mimeType?.split('/')[0]
         let width = imageData?.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
         let height = imageData?.properties["exif:pixelYDimension"] ? imageData.properties["exif:pixelYDimension"] : "";
-        let smartLinkAssetType = imageData.properties[cmDescriptionText] && (typeof (imageData.properties[cmDescriptionText]) == "string") ? imageData.properties[cmDescriptionText].includes('smartLinkType') ? JSON.parse(imageData.properties[cmDescriptionText]).smartLinkType : "" : "";
+        let smartLinkAssetType = imageData.properties[CM_DESCRIPTION] && (typeof (imageData.properties[CM_DESCRIPTION]) == "string") ? imageData.properties[CM_DESCRIPTION].includes('smartLinkType') ? JSON.parse(imageData.properties[CM_DESCRIPTION]).smartLinkType : "" : "";
         smartLinkAssetType = smartLinkAssetType?.toLowerCase();
         if((this.state.elementType.toLowerCase() === figureType) || (this.state.elementType.toLowerCase() === smartLinkAssetType)) {
         if (figureType === "video" || figureType === "audio" || smartLinkAssetType == "video" || smartLinkAssetType == "audio") {
             if ((figureType === "video" || smartLinkAssetType == "video") && (epsURL === "" || epsURL == undefined)) {
-                if(imageData?.properties[avsJsonStringText]){
-                    const avsJsonStringData = imageData?.properties[avsJsonStringText]
+                if(imageData?.properties[AVS_JSONSTRING]){
+                    const avsJsonStringData = imageData?.properties[AVS_JSONSTRING]
                     const avsJsonString = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
                     const imageReference = avsJsonString?.imageReferenceURL ?? DEFAULT_VIDEO_POSTER_IMAGE;
                     epsURL = imageReference
@@ -117,7 +117,7 @@ class ElementAudioVideo extends Component {
             }
             let smartLinkUrl = "";
             if(figureType === "video" || figureType === "audio"){
-                smartLinkUrl = imageData[institutionUrlsText] && imageData[institutionUrlsText][0]?.publicationUrl
+                smartLinkUrl = imageData[INSTITUTION_URLS] && imageData[INSTITUTION_URLS][0]?.publicationUrl
                 if (figureType === "audio" && !smartLinkUrl) {
                     smartLinkUrl = imageData?.smartLinkURl
                 }
@@ -144,7 +144,7 @@ class ElementAudioVideo extends Component {
             let frenchSubtitle = ""
             let spanishSubtitle = ""
 
-            const avsJsonStringValue = imageData?.properties[avsJsonStringText]
+            const avsJsonStringValue = imageData?.properties[AVS_JSONSTRING]
             audioDes = avsJsonStringValue && (typeof avsJsonStringValue === 'string') ? JSON.parse(avsJsonStringValue) : avsJsonStringValue;
             //audioDes = imageData?.properties['avs:jsonString'] && JSON.parse(imageData.properties['avs:jsonString'])
             ensubtitle = audioDes?.englishCC ?? "";
@@ -381,10 +381,10 @@ class ElementAudioVideo extends Component {
                 const assetID = id?.replace("urn:pearson:alfresco:", "")
                 const properties = await getAssetMetadata(assetID)
                 let parsed = ''
-                if(properties && properties.hasOwnProperty(cmDescriptionText))
+                if(properties && properties.hasOwnProperty(CM_DESCRIPTION))
                 {
                     try{
-                        parsed = JSON.parse(properties[cmDescriptionText])   // to parse properties['cm:description'] if the selected asset is smartlink-audio/smartlink-video
+                        parsed = JSON.parse(properties[CM_DESCRIPTION])   // to parse properties['cm:description'] if the selected asset is smartlink-audio/smartlink-video
                     }
                     catch(e){
                     }

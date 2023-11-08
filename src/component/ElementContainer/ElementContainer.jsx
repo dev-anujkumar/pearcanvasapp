@@ -23,7 +23,7 @@ import './../../styles/ElementContainer/ElementContainer.css';
 import { fetchCommentByElement, getProjectUsers } from '../CommentsPanel/CommentsPanel_Action'
 import elementTypeConstant from './ElementConstants'
 import { setActiveElement, fetchElementTag, openPopupSlate, createPoetryUnit } from './../CanvasWrapper/CanvasWrapper_Actions';
-import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, TABLE_ELEMENT, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB, DECORATIVE_IMAGE, formattedTitleText, formattedSubtitleText, urnPearsonAlfrescoText, dataMceStyleText, dataMceSelectedText, imgWirisformulaClass, popupWebLinkText, previousSlateButtonText, stopEventText, nextSlateButtonText, multipleElementClasses } from './../../constants/Element_Constants';
+import { COMMENTS_POPUP_DIALOG_TEXT, COMMENTS_POPUP_ROWS, MULTI_COLUMN_3C, MULTI_COLUMN_2C, OWNERS_ELM_DELETE_DIALOG_TEXT, TABLE_ELEMENT, SECTION_BREAK_LABELTEXT, TABBED_2_COLUMN, TABBED_TAB, DECORATIVE_IMAGE, FORMATTED_TITLE, FORMATTED_SUBTITLE, URN_PEARSON_ALFRESCO, DATA_MCE_STYLE, DATA_MCE_SELECTED, IMG_WIRIS_FORMULA_CLASS, POP_UP_WEB_LINK, PREVIOUS_SLATE_BUTTON, STOP_EVENT, NEXT_SLATE_BUTTON, MULTIPLE_ELEMENT_CLASSES } from './../../constants/Element_Constants';
 import { showTocBlocker, hideBlocker } from '../../js/toggleLoader'
 import { sendDataToIframe, hasReviewerRole, matchHTMLwithRegex, encodeHTMLInWiris, createTitleSubtitleModel, removeBlankTags, removeUnoClass, getShowhideChildUrns, createLabelNumberTitleModel, isOwnerRole, removeSpellCheckDOMAttributes, isApproved, isSlateLocked, hasReviewerSubscriberRole, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js';
 import { ShowLoader, CanvasActiveElement, AddOrViewComment, DISABLE_DELETE_WARNINGS } from '../../constants/IFrameMessageTypes.js';
@@ -148,19 +148,19 @@ class ElementContainer extends Component {
             this.props.getElementStatus(element.id, this.props.index)
         }
         else if (element && element.type === "popup") {
-            if (element.popupdata.hasOwnProperty(formattedTitleText)) {
-                !elementStatus[element.popupdata[formattedTitleText].id] && this.props.getElementStatus(element.popupdata[formattedTitleText].id, this.props.index)
+            if (element.popupdata.hasOwnProperty(FORMATTED_TITLE)) {
+                !elementStatus[element.popupdata[FORMATTED_TITLE].id] && this.props.getElementStatus(element.popupdata[FORMATTED_TITLE].id, this.props.index)
             }
-            if (element.popupdata.hasOwnProperty(formattedSubtitleText)) {
-                !elementStatus[element.popupdata[formattedSubtitleText].id] && this.props.getElementStatus(element.popupdata[formattedSubtitleText].id, this.props.index)
+            if (element.popupdata.hasOwnProperty(FORMATTED_SUBTITLE)) {
+                !elementStatus[element.popupdata[FORMATTED_SUBTITLE].id] && this.props.getElementStatus(element.popupdata[FORMATTED_SUBTITLE].id, this.props.index)
             }
             if (element.popupdata.hasOwnProperty("postertextobject")) {
                 !elementStatus[element.popupdata["postertextobject"][0].id] && this.props.getElementStatus(element.popupdata["postertextobject"][0].id, this.props.index)
             }
         }
         else if (element && (element.type === "poetry" || element.type === "citations")) {
-            if (element.contents && element.contents.hasOwnProperty(formattedTitleText)) {
-                !elementStatus[element.contents[formattedTitleText].id] && this.props.getElementStatus(element.contents[formattedTitleText].id, this.props.index)
+            if (element.contents && element.contents.hasOwnProperty(FORMATTED_TITLE)) {
+                !elementStatus[element.contents[FORMATTED_TITLE].id] && this.props.getElementStatus(element.contents[FORMATTED_TITLE].id, this.props.index)
             }
             if (element.contents && element.contents.hasOwnProperty("creditsarray")) {
                 !elementStatus[element.contents["creditsarray"][0].id] && this.props.getElementStatus(element.contents["creditsarray"][0].id, this.props.index)
@@ -406,7 +406,7 @@ class ElementContainer extends Component {
         if(this.state.borderToggle==='showBorder' && !hasReviewerRole()){
                 if(element?.type===ELEMENT_FIGURE){
                     if(checkImageForMetadata(element) && element?.figuredata?.imageid){
-                        const assetId = element?.figuredata?.imageid?.replace(urnPearsonAlfrescoText, '')
+                        const assetId = element?.figuredata?.imageid?.replace(URN_PEARSON_ALFRESCO, '')
                         const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
                         if(assetMetadata?.altText!==element?.figuredata?.alttext || assetMetadata?.longDescription!==element?.figuredata?.longdescription){
                             let	figureData = { ...element?.figuredata };
@@ -420,7 +420,7 @@ class ElementContainer extends Component {
                         }
                     }
                     else if(checkSmartLinkInteractive(element)){
-                        const assetId = element?.figuredata?.interactiveid?.replace(urnPearsonAlfrescoText, '')
+                        const assetId = element?.figuredata?.interactiveid?.replace(URN_PEARSON_ALFRESCO, '')
                         const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
 		                /*-- Updata the image metadata in wip */
                         if(assetMetadata?.altText!==element?.figuredata?.alttext || assetMetadata?.longDescription!==element?.figuredata?.longdescription){
@@ -435,7 +435,7 @@ class ElementContainer extends Component {
                     }
                 }
                 else if(checkOpenerElement(element)){
-                    const assetId = element?.backgroundimage?.imageid?.replace(urnPearsonAlfrescoText, '')
+                    const assetId = element?.backgroundimage?.imageid?.replace(URN_PEARSON_ALFRESCO, '')
                     const assetMetadata = await getAlfrescoMetadataForAsset(assetId, element?.figuretype)
                     if(assetMetadata?.altText!==element?.backgroundimage?.alttext || assetMetadata?.longDescription!==element?.backgroundimage?.longdescription){
                         let tempElementData = {...element}
@@ -477,34 +477,34 @@ class ElementContainer extends Component {
         tinyMCE.$(tempDiv).find('br').remove();
         tinyMCE.$(tempDiv).find('.blockquote-hidden').remove();
         tinyMCE.$(tempDiv).find('span#_mce_caret').remove();
-        tinyMCE.$(tempDiv).find('img').removeAttr(dataMceStyleText);
+        tinyMCE.$(tempDiv).find('img').removeAttr(DATA_MCE_STYLE);
         tinyMCE.$(tempDiv).find('img').removeAttr('data-custom-editor');
-        tinyMCE.$(tempDiv).find('p').removeAttr(dataMceStyleText);
-        tinyMCE.$(tempDiv).find('h1').removeAttr(dataMceStyleText);
-        tinyMCE.$(tempDiv).find('h2').removeAttr(dataMceStyleText);
-        tinyMCE.$(tempDiv).find('h3').removeAttr(dataMceStyleText);
-        tinyMCE.$(tempDiv).find('h4').removeAttr(dataMceStyleText);
-        tinyMCE.$(tempDiv).find('h5').removeAttr(dataMceStyleText);
-        tinyMCE.$(tempDiv).find('h6').removeAttr(dataMceStyleText);
-        tinyMCE.$(tempDiv).find('ol').removeAttr(dataMceStyleText);
+        tinyMCE.$(tempDiv).find('p').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h1').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h2').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h3').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h4').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h5').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('h6').removeAttr(DATA_MCE_STYLE);
+        tinyMCE.$(tempDiv).find('ol').removeAttr(DATA_MCE_STYLE);
         tinyMCE.$(tempDiv).find('ol').removeAttr('style');
         tinyMCE.$(tempDiv).find('img').removeAttr('style');
         tinyMCE.$(tempDiv).find('p').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('blockquote').removeAttr('contenteditable');
-        tinyMCE.$(tempDiv).find('blockquote').removeAttr(dataMceSelectedText);
-        tinyMCE.$(tempDiv).find('code').removeAttr(dataMceSelectedText);
-        tinyMCE.$(tempDiv).find('img').removeAttr(dataMceSelectedText);
-        tinyMCE.$(tempDiv).find(imgWirisformulaClass).removeAttr('height');
-        tinyMCE.$(tempDiv).find(imgWirisformulaClass).removeAttr('width');
+        tinyMCE.$(tempDiv).find('blockquote').removeAttr(DATA_MCE_SELECTED);
+        tinyMCE.$(tempDiv).find('code').removeAttr(DATA_MCE_SELECTED);
+        tinyMCE.$(tempDiv).find('img').removeAttr(DATA_MCE_SELECTED);
+        tinyMCE.$(tempDiv).find(IMG_WIRIS_FORMULA_CLASS).removeAttr('height');
+        tinyMCE.$(tempDiv).find(IMG_WIRIS_FORMULA_CLASS).removeAttr('width');
         tinyMCE.$(tempDiv).find('.blockquoteMarginalia').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('.paragraphNummerEins').removeAttr('contenteditable');
         tinyMCE.$(tempDiv).find('img').removeAttr('draggable');
         tinyMCE.$(tempDiv).find('img.temp_Wirisformula').removeClass('fr-draggable');
         tinyMCE.$(tempDiv).find('a').removeAttr('data-mce-href');
-        tinyMCE.$(tempDiv).find('a').removeAttr(dataMceSelectedText);
+        tinyMCE.$(tempDiv).find('a').removeAttr(DATA_MCE_SELECTED);
         tinyMCE.$(tempDiv).find('a').removeAttr('data-custom-editor');
-        tinyMCE.$(tempDiv).find(imgWirisformulaClass).removeAttr('src');
-        tinyMCE.$(tempDiv).find(imgWirisformulaClass).removeAttr('data-mce-src');
+        tinyMCE.$(tempDiv).find(IMG_WIRIS_FORMULA_CLASS).removeAttr('src');
+        tinyMCE.$(tempDiv).find(IMG_WIRIS_FORMULA_CLASS).removeAttr('data-mce-src');
         tinyMCE.$(tempDiv).find('img.imageAssetContent').removeAttr('data-mce-src');
         tempDiv.innerHTML = removeBlankTags(tempDiv.innerHTML)
         return encodeHTMLInWiris(tempDiv.innerHTML);
@@ -826,7 +826,7 @@ class ElementContainer extends Component {
         titleHTML = this.removeClassesFromHtml(titleHTML)
         subtitleHTML = subtitleHTML.match(/(<p.*?>.*?<\/p>)/g) ? subtitleHTML : `<p>${subtitleHTML}</p>`;
 
-        let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', popupWebLinkText, 'table'];
+        let smartlinkContexts = ['3rd-party', 'pdf', 'web-link', POP_UP_WEB_LINK, 'table'];
         let podwidth = this.props?.activeElement?.podwidth;
         // Commented for future reference > for intended playback mode
         const oldIntendedPlaybackModeValue = previousElementData?.figuredata?.intendedPlaybackMode;
@@ -844,7 +844,7 @@ class ElementContainer extends Component {
         if(interactivetype.includes(previousElementData?.figuredata?.interactivetype)) {
             isAltTextLongDescModified = this.props.oldSmartLinkDataForCompare !== previousElementData.figuredata
         }
-        if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === popupWebLinkText ||
+        if (previousElementData.figuredata.interactivetype === "pdf" || previousElementData.figuredata.interactivetype === POP_UP_WEB_LINK ||
             previousElementData.figuredata.interactivetype === "web-link" || previousElementData.figuredata.interactivetype === '3rd-party' ||
             previousElementData.figuredata.interactivetype === 'table') {
             let pdfPosterTextDOM = document.getElementById(`cypress-${index}-3`)
@@ -1308,7 +1308,7 @@ class ElementContainer extends Component {
                     // let html = node.innerHTML;
                     let parentIndex = parentElement.type == "showhide" || parentElement.type == "popup" ? activeEditorId : `cypress-${this.props.index}`
                     let currentListNode = document.getElementById(parentIndex)
-                    tinyMCE.$(currentListNode).find('ol').removeAttr(dataMceStyleText);
+                    tinyMCE.$(currentListNode).find('ol').removeAttr(DATA_MCE_STYLE);
                     currentListNode.innerHTML = currentListNode.innerHTML.replace(/counter-increment:section/g, "counter-increment: section")
                     for (let i = 0; i < tinyMCE.$(currentListNode).find('li').length; i++) {
                         tinyMCE.$(currentListNode).find('li')[i].innerHTML = tinyMCE.$(currentListNode).find('li')[i].innerHTML.replace(/[\r\n]+/gm, "");
@@ -1665,11 +1665,11 @@ class ElementContainer extends Component {
         deletedElm?.classList?.remove("hideElement");
         const sapratorElm = document.getElementById(`${this.state.undoElement}`)
         sapratorElm?.classList?.remove("hideElement");
-        document.getElementById(previousSlateButtonText)?.classList?.remove(stopEventText)
-        document.getElementById(nextSlateButtonText)?.classList?.remove(stopEventText)
-        const multipleElement = document.querySelectorAll(multipleElementClasses)
+        document.getElementById(PREVIOUS_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+        document.getElementById(NEXT_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+        const multipleElement = document.querySelectorAll(MULTIPLE_ELEMENT_CLASSES)
         for (const elm of multipleElement) {
-            elm.classList.remove(stopEventText)
+            elm.classList.remove(STOP_EVENT)
         }
         clearTimeout(this.timer)
         clearTimeout(this.showHideTimer)
@@ -1690,8 +1690,8 @@ class ElementContainer extends Component {
     handleUndoOptionTimer = () => {
         let { parentElement } = this.props;
         const { id, type, index, elements, containerElements, parentUrn, asideData, contentUrn, poetryData } = this.props.deletedKeysValue
-        document.getElementById(previousSlateButtonText)?.classList?.remove(stopEventText)
-        document.getElementById(nextSlateButtonText)?.classList?.remove(stopEventText)
+        document.getElementById(PREVIOUS_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+        document.getElementById(NEXT_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
         clearTimeout(this.timer)
         clearTimeout(this.showHideTimer)
         clearTimeout(this.toastTimer)
@@ -1709,9 +1709,9 @@ class ElementContainer extends Component {
         this.props.storeDeleteElementKeys({});
         sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
         setTimeout(() => {
-            const multipleElement = document.querySelectorAll(multipleElementClasses)
+            const multipleElement = document.querySelectorAll(MULTIPLE_ELEMENT_CLASSES)
             for (const elm of multipleElement) {
-                elm.classList.remove(stopEventText)
+                elm.classList.remove(STOP_EVENT)
             }
         }, 300)
     }
@@ -1792,11 +1792,11 @@ class ElementContainer extends Component {
             deletedElm?.classList?.add("hideElement");
             const sapratorElm = document.getElementById(`${id}`)
             sapratorElm?.classList?.add("hideElement");
-            document.getElementById(previousSlateButtonText)?.classList?.add(stopEventText)
-            document.getElementById(nextSlateButtonText)?.classList?.add(stopEventText)
-            const multipleElement = document.querySelectorAll(multipleElementClasses)
+            document.getElementById(PREVIOUS_SLATE_BUTTON)?.classList?.add(STOP_EVENT)
+            document.getElementById(NEXT_SLATE_BUTTON)?.classList?.add(STOP_EVENT)
+            const multipleElement = document.querySelectorAll(MULTIPLE_ELEMENT_CLASSES)
             for (const elm of multipleElement) {
-                elm.classList.add(stopEventText)
+                elm.classList.add(STOP_EVENT)
             }
             this.props.storeDeleteElementKeys(object);
         } else {
@@ -1810,11 +1810,11 @@ class ElementContainer extends Component {
                 this.showHideTimer = setTimeout(() => {
                     this.props.deleteElementAction(id, type, index, this.props.element, containerElements, this.props.showBlocker);
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
-                    document.getElementById(previousSlateButtonText)?.classList?.remove(stopEventText)
-                    document.getElementById(nextSlateButtonText)?.classList?.remove(stopEventText)
-                    const multipleElement = document.querySelectorAll(multipleElementClasses)
+                    document.getElementById(PREVIOUS_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+                    document.getElementById(NEXT_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+                    const multipleElement = document.querySelectorAll(MULTIPLE_ELEMENT_CLASSES)
                     for (const elm of multipleElement) {
-                        elm.classList.remove(stopEventText)
+                        elm.classList.remove(STOP_EVENT)
                     }
                 }, 5000)
             } else {
@@ -1826,11 +1826,11 @@ class ElementContainer extends Component {
                 this.timer = setTimeout(() => {
                     this.props.deleteElement(id, type, parentUrn, asideData, contentUrn, index, poetryData, this.props.element, null);
                     sendDataToIframe({ 'type': "isUndoToastMsgOpen", 'message': { status: false } });
-                    document.getElementById(previousSlateButtonText)?.classList?.remove(stopEventText)
-                    document.getElementById(nextSlateButtonText)?.classList?.remove(stopEventText)
-                    const multipleElement = document.querySelectorAll(multipleElementClasses)
+                    document.getElementById(PREVIOUS_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+                    document.getElementById(NEXT_SLATE_BUTTON)?.classList?.remove(STOP_EVENT)
+                    const multipleElement = document.querySelectorAll(MULTIPLE_ELEMENT_CLASSES)
                     for (const elm of multipleElement) {
-                        elm.classList.remove(stopEventText)
+                        elm.classList.remove(STOP_EVENT)
                     }
                 }, 5000)
             } else {
@@ -1928,8 +1928,8 @@ class ElementContainer extends Component {
             if (element.popupdata && element.popupdata.bodymatter && element.popupdata.bodymatter.length > 0) {
                 popupChildUrns.push(element.popupdata.bodymatter[0].id);
             }
-            if (element.popupdata && element.popupdata[formattedTitleText]) {
-                popupChildUrns.push(element.popupdata[formattedTitleText].id);
+            if (element.popupdata && element.popupdata[FORMATTED_TITLE]) {
+                popupChildUrns.push(element.popupdata[FORMATTED_TITLE].id);
             }
             if (element.popupdata && element.popupdata.postertextobject[0]) {
                 popupChildUrns.push(element.popupdata.postertextobject[0].id);
@@ -2936,7 +2936,7 @@ class ElementContainer extends Component {
             detailsToSet['elmFeedback'] = elmFeedback || [];
         }
         const figureTypes = ["image", "mathImage", "table", "video", "audio"]
-        const interactiveType = ["3rd-party", "pdf", "web-link", popupWebLinkText, "table"]
+        const interactiveType = ["3rd-party", "pdf", "web-link", POP_UP_WEB_LINK, "table"]
         if ((element?.type === "figure") && (figureTypes.includes(element?.figuretype)) || interactiveType.includes(element?.figuredata?.interactivetype) ) {
             getAlfrescositeResponse(id, (response) => {
                 detailsToSet['alfrescoSiteData'] = response
@@ -3094,7 +3094,7 @@ class ElementContainer extends Component {
         }else{
             imageId = this.props?.element?.figuredata?.imageid ?? 'urn:pearson:alfresco:6b860521-9132-4051-b6cc-dfa020866864';
         }
-        imageId = imageId.replace(urnPearsonAlfrescoText, '');
+        imageId = imageId.replace(URN_PEARSON_ALFRESCO, '');
         this.props.showBlocker(togglePopup);
         if(elementType === 'TE'){
             this.setState({
@@ -3163,7 +3163,7 @@ class ElementContainer extends Component {
                 }
             }
             if (imageId) {
-                imageId = imageId.replace(urnPearsonAlfrescoText, '');
+                imageId = imageId.replace(URN_PEARSON_ALFRESCO, '');
                 this.openInNewWindow(imageId);
             }
         }

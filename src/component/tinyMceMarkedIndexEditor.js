@@ -11,7 +11,7 @@ import { wirisAltTextPopup } from './SlateWrapper/SlateWrapper_Actions';
 import { getWirisAltText } from '../js/utils';
 import { setFormattingToolbar } from './GlossaryFootnotePopup/GlossaryFootnote_Actions.js';
 import { markedIndexPopup } from '../component/MarkIndexPopup/MarkIndex_Action';
-import { classTempWirisformula, classWirisformula, dataMathmlText, markedindex0Id, markedindexCrossReferenceId } from '../constants/Element_Constants.js';
+import { CLASS_TEMP_WIRISFORMULA, CLASS_WIRISFORMULA, DATA_MATHML, MARKEDINDEX_0_ID, MARKEDINDEX_CROSS_REFERENCE_ID } from '../constants/Element_Constants.js';
 
 export class ReactMarkedIndexEditor extends React.Component {
   constructor(props) {
@@ -117,7 +117,7 @@ export class ReactMarkedIndexEditor extends React.Component {
   revertingTempContainerHtml = editor => {
     let revertingTempContainerHtml = editor.getContentAreaContainer().innerHTML;
     let elementNode = document.getElementById(editor.id)
-    revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g, dataMathmlText).replace(/temp_Wirisformula/g, 'Wirisformula');
+    revertingTempContainerHtml = revertingTempContainerHtml.replace(/data-temp-mathml/g, DATA_MATHML).replace(/temp_Wirisformula/g, 'Wirisformula');
     if (elementNode) {
       elementNode.innerHTML = revertingTempContainerHtml;
     }
@@ -140,7 +140,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     let activeElement = editor.dom.getParent(editor.selection.getStart(), ".markedindex-editor");
     let contentHTML = e.target.innerHTML;
     if (activeElement) {
-      let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes(classWirisformula) || contentHTML.match(/<img/).input.includes(classTempWirisformula)) : false
+      let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes(CLASS_WIRISFORMULA) || contentHTML.match(/<img/).input.includes(CLASS_TEMP_WIRISFORMULA)) : false
 
       if (activeElement.innerText.trim().length || isContainsMath) {
         activeElement.classList.remove('place-holder')
@@ -148,10 +148,10 @@ export class ReactMarkedIndexEditor extends React.Component {
           tinymce.$(`#${this.props.markedLabelId}`).addClass('transition-none')
           tinymce.$(`#${this.props.markedLabelId}`).removeClass('floating-title')
         }
-        if(editor.id === markedindex0Id){
+        if(editor.id === MARKEDINDEX_0_ID){
           tinymce.$('.printIndex-save-button').removeClass('disabled');
         }
-        if(this.props.id === markedindexCrossReferenceId) {
+        if(this.props.id === MARKEDINDEX_CROSS_REFERENCE_ID) {
           tinymce.$('.cross-ref-tooltip').removeClass('disable-tooltip')
         }
       }
@@ -161,16 +161,16 @@ export class ReactMarkedIndexEditor extends React.Component {
           tinymce.$(`#${this.props.markedLabelId}`).addClass('floating-title')
           tinymce.$(`#${this.props.markedLabelId}`).removeClass('transition-none')
         }
-        if(editor.id === markedindex0Id){
+        if(editor.id === MARKEDINDEX_0_ID){
           tinymce.$('.printIndex-save-button').addClass('disabled');
         }
-        if(this.props.id === markedindexCrossReferenceId) {
+        if(this.props.id === MARKEDINDEX_CROSS_REFERENCE_ID) {
           tinymce.$('.cross-ref-tooltip').addClass('disable-tooltip')
         }
       }
     }
 
-    if(editor.id === markedindexCrossReferenceId){
+    if(editor.id === MARKEDINDEX_CROSS_REFERENCE_ID){
       let value = e.target.innerHTML.replace(/<br data-mce-bogus="1">/g, "");
       let lableElement = document.getElementById('cross-ref');
       if(value !== ""){
@@ -207,7 +207,7 @@ export class ReactMarkedIndexEditor extends React.Component {
       contentHTML = e.target.getContent(),
       activeElement = editor.dom.getParent(editor.selection.getStart(), ".markedindex-editor");
     if (activeElement) {
-      let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes(classWirisformula) || contentHTML.match(/<img/).input.includes(classTempWirisformula)) : false
+      let isContainsMath = contentHTML.match(/<img/) ? (contentHTML.match(/<img/).input.includes(CLASS_WIRISFORMULA) || contentHTML.match(/<img/).input.includes(CLASS_TEMP_WIRISFORMULA)) : false
       if (content.trim().length || contentHTML.match(/<math/g) || isContainsMath) {
         activeElement.classList.remove('place-holder')
       }
@@ -366,7 +366,7 @@ export class ReactMarkedIndexEditor extends React.Component {
     testElem.innerHTML = model;
 
     if (testElem && model) {
-      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes(classWirisformula) || testElem.innerHTML.match(/<img/).input.includes(classTempWirisformula)) : false;
+      let isContainsMath = testElem.innerHTML.match(/<img/) ? (testElem.innerHTML.match(/<img/).input.includes(CLASS_WIRISFORMULA) || testElem.innerHTML.match(/<img/).input.includes(CLASS_TEMP_WIRISFORMULA)) : false;
       if (testElem.innerHTML && testElem.innerText?.trim() == "" && !testElem.innerText?.trim().length && !isContainsMath) {
         this.placeHolderClass = tempPlaceHolderclass;
       } else {
@@ -382,7 +382,7 @@ export class ReactMarkedIndexEditor extends React.Component {
   }
 
   setGlossaryFootnoteTerm = (id, glossaryNode) => {
-    if (id === markedindex0Id) {
+    if (id === MARKEDINDEX_0_ID) {
       this.termtext = glossaryNode && glossaryNode.innerHTML;
     }
     // else if(id === "footnote-0"){
@@ -391,11 +391,11 @@ export class ReactMarkedIndexEditor extends React.Component {
   }
 
   setGlossaryFootnoteNode = (id, glossaryNode) => {
-    if (id === markedindex0Id && glossaryNode && this.termtext) {
-      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g, dataMathmlText).replace(/temp_Wirisformula/g, 'Wirisformula');
+    if (id === MARKEDINDEX_0_ID && glossaryNode && this.termtext) {
+      glossaryNode.innerHTML = this.termtext.replace(/data-temp-mathml/g, DATA_MATHML).replace(/temp_Wirisformula/g, 'Wirisformula');
     }
     // else if(id === "footnote-0" && footnoteNode && this.termtext){
-    //   footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,dataMathmlText).replace(/temp_Wirisformula/g,'Wirisformula');
+    //   footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,DATA_MATHML).replace(/temp_Wirisformula/g,'Wirisformula');
     // }
   }
 
@@ -413,7 +413,7 @@ export class ReactMarkedIndexEditor extends React.Component {
         this.editorRef.current.focus();
       }, 0)
       this.editorConfig.selector = '#' + this.editorRef.current.id;
-      let glossaryNode = document.getElementById(markedindex0Id)
+      let glossaryNode = document.getElementById(MARKEDINDEX_0_ID)
       this.setGlossaryFootnoteTerm(this.props.id, glossaryNode)
       tinymce.init(this.editorConfig).then((d) => {
         setFormattingToolbar('removeTinymceSuperscript')
@@ -433,7 +433,7 @@ export class ReactMarkedIndexEditor extends React.Component {
       }
     }
     this.handlePlaceholer()
-    let glossaryNode = document.getElementById(markedindex0Id)
+    let glossaryNode = document.getElementById(MARKEDINDEX_0_ID)
     setFormattingToolbar('removeTinymceSuperscript')
     setFormattingToolbar('removeGlossaryFootnoteSuperscript')
     this.setGlossaryFootnoteNode(this.props.id, glossaryNode)
@@ -494,18 +494,18 @@ export class ReactMarkedIndexEditor extends React.Component {
         /**
          * BG-1907 -[PCAT-7395] Temp classes in mathml cause issue in opening wiris editor.
          */
-        termText = termText.replace(/data-temp-mathml/g, dataMathmlText).replace(/temp_Wirisformula/g, 'Wirisformula');
+        termText = termText.replace(/data-temp-mathml/g, DATA_MATHML).replace(/temp_Wirisformula/g, 'Wirisformula');
         document.getElementById(currentTarget.id).innerHTML = termText;
       }
       tinymce.activeEditor.selection.placeCaretAt(clickedX, clickedY) //Placing exact cursor position on clicking.
     });
 
-    if(e.target.id === markedindexCrossReferenceId){
-      const indexEntry = document.getElementById(markedindex0Id)?.innerHTML?.replace('<br data-mce-bogus="1">', "")?.replace('&nbsp;', "");
+    if(e.target.id === MARKEDINDEX_CROSS_REFERENCE_ID){
+      const indexEntry = document.getElementById(MARKEDINDEX_0_ID)?.innerHTML?.replace('<br data-mce-bogus="1">', "")?.replace('&nbsp;', "");
       if(indexEntry) {
-        document.getElementById(markedindexCrossReferenceId).contentEditable = true;
+        document.getElementById(MARKEDINDEX_CROSS_REFERENCE_ID).contentEditable = true;
       } else {
-        document.getElementById(markedindexCrossReferenceId).contentEditable = false;
+        document.getElementById(MARKEDINDEX_CROSS_REFERENCE_ID).contentEditable = false;
       }
     }
   }

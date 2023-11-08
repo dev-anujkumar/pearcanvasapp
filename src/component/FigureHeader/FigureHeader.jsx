@@ -9,7 +9,7 @@ import { updateAutoNumberingDropdownForCompare, updateAudioVideoDataForCompare }
 import { setAutoNumberSettingValue, getLabelNumberPreview, getContainerNumber, getLabelNumberFieldValue, getContainerEntityUrn, getNumberData, getValueOfLabel } from './AutoNumber_helperFunctions';
 import { checkHTMLdataInsideString, hasReviewerRole } from '../../constants/utility';
 import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from './AutoNumberConstants';
-import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING, transitionNoneText, floatingLabelText, floatingNumberText } from '../../constants/Element_Constants';
+import { IMAGE, TABLE, MATH_IMAGE, AUDIO, VIDEO, labelHtmlData, INTERACTIVE, TABLE_AS_MARKUP, AUTHORED_TEXT, CODELISTING, TRANSITION_NONE, FLOATING_LABEL, FLOATING_NUMBER } from '../../constants/Element_Constants';
 import { MATH_ML, BLOCK_CODE } from '../../component/ElementFigure/ElementFigure_Constants'
 
 import './../../styles/ElementFigure/ElementFigure.css';
@@ -286,17 +286,17 @@ export const FigureHeader = (props) => {
     const onFigureHeaderFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
         let lastIndex = id && id.toString().split('-');
-        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(transitionNoneText)) {
+        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE)) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
-        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(transitionNoneText))) { // BG-5075
-            labelElement?.nextElementSibling?.classList?.add(transitionNoneText);
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE))) { // BG-5075
+            labelElement?.nextElementSibling?.classList?.add(TRANSITION_NONE);
             if (lastIndex[lastIndex.length - 1] == '0') {
-                labelElement?.nextElementSibling?.classList?.remove(floatingLabelText);
+                labelElement?.nextElementSibling?.classList?.remove(FLOATING_LABEL);
             } else if (lastIndex[lastIndex.length - 1] == '1') {
-                labelElement?.nextElementSibling?.classList?.remove(floatingNumberText);
+                labelElement?.nextElementSibling?.classList?.remove(FLOATING_NUMBER);
             }
         } else if (labelHtmlData.includes(labelElement?.innerHTML)) {
-            labelElement?.nextElementSibling?.classList?.add(transitionNoneText);
+            labelElement?.nextElementSibling?.classList?.add(TRANSITION_NONE);
         }
         const imagetypes = ["image", "table", "mathImage", "tableasmarkup", "authoredtext", "codelisting"];
         if (imagetypes.indexOf(props?.model?.figuretype) > -1) {
@@ -316,11 +316,11 @@ export const FigureHeader = (props) => {
         }
         let lastIndex = id && id.toString().split('-');
         if (labelHtmlData.includes(labelElement?.innerHTML)) {
-            labelElement?.nextElementSibling?.classList?.remove(transitionNoneText);
+            labelElement?.nextElementSibling?.classList?.remove(TRANSITION_NONE);
             if (lastIndex[lastIndex.length - 1] == '0') {
-                labelElement?.nextElementSibling?.classList?.add(floatingLabelText);
+                labelElement?.nextElementSibling?.classList?.add(FLOATING_LABEL);
             } else if (lastIndex[lastIndex.length - 1] == '1') {
-                labelElement?.nextElementSibling?.classList?.add(floatingNumberText);
+                labelElement?.nextElementSibling?.classList?.add(FLOATING_NUMBER);
             }
         }
     }
@@ -430,30 +430,30 @@ export const FigureHeader = (props) => {
                     <KeyboardWrapper index={`${props.index}-0`}  enable={isEnableKeyboard()}>
                         <div className='image-label'>
                             <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-0`} placeholder="Label" tagName={'h4'} className={figLabelClass + " figureLabel "} model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? transitionNoneText : floatingLabelText}>Label</label>
+                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? TRANSITION_NONE : FLOATING_LABEL}>Label</label>
                         </div> </KeyboardWrapper>
                         :
                         <div className='image-label hide-field'>
                             <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-0`} placeholder="Label" tagName={'h4'} className={figLabelClass + " figureLabel "} model={imgLabelValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? transitionNoneText : floatingLabelText}>Label</label>
+                            <label className={checkHTMLdataInsideString(`<p>${imgLabelValue}</p>`) ? TRANSITION_NONE : FLOATING_LABEL}>Label</label>
                         </div>)
                 }
                 {removeLabelCondition && showNumberField && <div className="floating-number-group">
                     <KeyboardWrapper enable={labelNumberSetting === AUTO_NUMBER_SETTING_DEFAULT ? false : isEnableKeyboard()} index={`${props.index}-1`}>
                     <TinyMceEditor onFigureLabelChange={handleFigureLabelChange} labelNumberSetting={labelNumberSetting} contenteditable={ !hasReviewerRole() && (labelNumberSetting !== AUTO_NUMBER_SETTING_DEFAULT)} onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-1`} placeholder="Number" tagName={'h4'} className={figLabelClass + " figureNumber " + newClass} model={imgNumberValue} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
                     </KeyboardWrapper>
-                    <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? transitionNoneText : floatingNumberText}>Number</label>
+                    <label className={checkHTMLdataInsideString(`<p>${imgNumberValue}</p>`) ? TRANSITION_NONE : FLOATING_NUMBER}>Number</label>
                 </div>}
 
             </header>
             <div className="preview">
-                <label className={transitionNoneText}>Preview</label>
+                <label className={TRANSITION_NONE}>Preview</label>
                 <TextField disabled id="filled-disabled" className={"figure-preview"} variant="filled" placeholder="" defaultValue="" multiline value={previewData} fullWidth />
             </div>
             <KeyboardWrapper enable={isEnableKeyboard()} index={`${props.index}-2`}>
                 <div className="floating-title-group">
                     <TinyMceEditor onFigureImageFieldFocus={onFigureHeaderFieldFocus} onFigureImageFieldBlur={onFigureHeaderFieldBlur} permissions={props.permissions} openGlossaryFootnotePopUp={props.openGlossaryFootnotePopUp} element={props.model} handleEditorFocus={props.handleFocus} handleBlur={props.handleBlur} index={`${props.index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass + " figureTitle "} model={figureHtmlData.formattedTitle} slateLockInfo={props.slateLockInfo} glossaryFootnoteValue={props.glossaryFootnoteValue} glossaaryFootnotePopup={props.glossaaryFootnotePopup} elementId={props.elementId} parentElement={props.parentElement} showHideType={props.showHideType} />
-                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? transitionNoneText : "floating-title"}>Title</label>
+                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? TRANSITION_NONE : "floating-title"}>Title</label>
                 </div>
             </KeyboardWrapper>
         </>

@@ -10,7 +10,7 @@ import { sendDataToIframe, getTitleSubtitleModel, hasReviewerRole } from '../../
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js'
 import { findKey } from "lodash";
 import { savePopupParentSlateData } from '../FigureHeader/AutoNumberCreate_helper';
-import { formattedSubtitleText, formattedTitleText } from '../../constants/Element_Constants';
+import { FORMATTED_SUBTITLE, FORMATTED_TITLE } from '../../constants/Element_Constants';
 
 /**
 * @description - Interactive is a class based component. It is defined simply
@@ -89,14 +89,14 @@ class ElementPopup extends React.Component {
         let formattedTitle, formattedSubtitle
 
         /** If both formatted-title and subtitle or only formatted-title is present */
-        if (popupdata && popupdata.hasOwnProperty(formattedTitleText)) {
-            formattedTitle = getTitleSubtitleModel(popupdata[formattedTitleText].html.text, formattedTitleText).replace(/&nbsp;/g, "")
-            formattedSubtitle = getTitleSubtitleModel(popupdata[formattedTitleText].html.text, formattedSubtitleText)
+        if (popupdata && popupdata.hasOwnProperty(FORMATTED_TITLE)) {
+            formattedTitle = getTitleSubtitleModel(popupdata[FORMATTED_TITLE].html.text, FORMATTED_TITLE).replace(/&nbsp;/g, "")
+            formattedSubtitle = getTitleSubtitleModel(popupdata[FORMATTED_TITLE].html.text, FORMATTED_SUBTITLE)
         }
         /** If only formatted-subtitle is present */
-        else if (popupdata && popupdata.hasOwnProperty(formattedSubtitleText) && !popupdata.hasOwnProperty(formattedTitleText)) {
+        else if (popupdata && popupdata.hasOwnProperty(FORMATTED_SUBTITLE) && !popupdata.hasOwnProperty(FORMATTED_TITLE)) {
             formattedTitle = `<p class="paragraphNumeroUno"><br/></p>`
-            formattedSubtitle = getTitleSubtitleModel(popupdata[formattedSubtitleText].html.text, formattedSubtitleText)
+            formattedSubtitle = getTitleSubtitleModel(popupdata[FORMATTED_SUBTITLE].html.text, FORMATTED_SUBTITLE)
         }
         else {
             formattedTitle = `<p class="paragraphNumeroUno"><br/></p>`
@@ -116,14 +116,14 @@ class ElementPopup extends React.Component {
                             placeholder = "Enter Label..."
                             tagName = {'h4'}
                             model = {formattedTitle}
-                            currentElement = {popupdata && (popupdata[formattedTitleText] || popupdata[formattedSubtitleText])}
+                            currentElement = {popupdata && (popupdata[FORMATTED_TITLE] || popupdata[FORMATTED_SUBTITLE])}
                             handleEditorFocus = {this.props.handleFocus}
                             handleBlur = {this.props.handleBlur}
                             slateLockInfo = {slateLockInfo}
                             glossaryFootnoteValue = {this.props.glossaryFootnoteValue}
                             glossaaryFootnotePopup = {this.props.glossaaryFootnotePopup}
                             elementId = {this.props.elementId}
-                            popupField = {formattedTitleText}
+                            popupField = {FORMATTED_TITLE}
                             createPopupUnit = {this.createPopupUnit}
                             handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
                             handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}
@@ -137,14 +137,14 @@ class ElementPopup extends React.Component {
                             placeholder = "Enter Title..."
                             tagName = {'h4'}
                             model={formattedSubtitle}
-                            currentElement = {popupdata && (popupdata[formattedTitleText] || popupdata[formattedSubtitleText])}
+                            currentElement = {popupdata && (popupdata[FORMATTED_TITLE] || popupdata[FORMATTED_SUBTITLE])}
                             handleEditorFocus = {this.props.handleFocus}
                             handleBlur = {this.props.handleBlur}
                             slateLockInfo = {slateLockInfo}
                             glossaryFootnoteValue = {this.props.glossaryFootnoteValue}
                             glossaaryFootnotePopup = {this.props.glossaaryFootnotePopup}
                             elementId = {this.props.elementId}
-                            popupField = {formattedSubtitleText}
+                            popupField = {FORMATTED_SUBTITLE}
                             createPopupUnit = {this.createPopupUnit}
                             handleAudioPopupLocation = {this.props.handleAudioPopupLocation}
                             handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}

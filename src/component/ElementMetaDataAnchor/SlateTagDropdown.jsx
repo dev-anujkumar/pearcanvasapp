@@ -7,7 +7,7 @@ import { OpenLOPopup, AlignToExternalFramework, AlignToExternalFrameworkSlateDro
     } from '../../constants/IFrameMessageTypes';
 import { sendDataToIframe } from '../../constants/utility.js';
 import { connect } from 'react-redux';
-import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, CYPRESS_LF, disableButttonText } from '../../constants/Element_Constants';
+import { ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, CYPRESS_LF, DISABLE_BUTTTON } from '../../constants/Element_Constants';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { loNextIcon } from './../../images/ElementButtons/ElementButtons.jsx';
 class SlateTagDropdown extends React.Component {
@@ -249,7 +249,7 @@ class SlateTagDropdown extends React.Component {
     render = () => {
       const enableExtLO =this.checkExternalFramework();
       const isExternalLoInAssessment = this.checkExternalFrameworkAS();
-      const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' && this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? disableButttonText : "";
+      const subscriberContent = (this.props?.projectSubscriptionDetails?.projectSharingRole === 'SUBSCRIBER' && this.props?.projectSubscriptionDetails?.projectSubscriptionDetails?.isSubscribed) ? DISABLE_BUTTTON : "";
       return (
         <div>
           <div className="learningobjectivedropdown" ref={node1 => this.node1 = node1}>
@@ -257,9 +257,9 @@ class SlateTagDropdown extends React.Component {
                 <div>
                   {
                     !isExternalLoInAssessment?
-                    <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO ? '' : disableButttonText}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
+                    <li onClick={this.launchExternalFrameworkPopup} className={enableExtLO ? '' : DISABLE_BUTTTON}><span>{AlignToExternalFrameworkSlateDropdown}</span></li>
                     :
-                    <li onClick={this.toggleLoOptionsDropdownAS} className={enableExtLO ? '' : disableButttonText}><span>{AlignToExternalFrameworkSlateDropdown}</span><span className='lo-navigation-icon2'>{loNextIcon}</span></li>
+                    <li onClick={this.toggleLoOptionsDropdownAS} className={enableExtLO ? '' : DISABLE_BUTTTON}><span>{AlignToExternalFrameworkSlateDropdown}</span><span className='lo-navigation-icon2'>{loNextIcon}</span></li>
                   }
                 </div>
               </ul>

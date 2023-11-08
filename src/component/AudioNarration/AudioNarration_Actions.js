@@ -11,7 +11,7 @@ import {
 } from '../../constants/Action_Constants.js'
 import { hideTocBlocker } from '../../js/toggleLoader'
 import { deleteAudio,REFRESH_MESSAGE } from '../../constants/IFrameMessageTypes.js'
-import { applicationJsonText, cmDescriptionText } from '../../constants/Element_Constants.js'
+import { CONTENT_TYPE, CM_DESCRIPTION } from '../../constants/Element_Constants.js'
 /**
  *
  * @param {*} value
@@ -87,8 +87,8 @@ export const fetchAudioNarrationForContainer = (slateData,isGlossary ='') => asy
         try {
             let audioDataResponse = await axios.get(url,{
                 headers: {
-                    'Accept': applicationJsonText,
-                    'Content-Type': applicationJsonText,
+                    'Accept': CONTENT_TYPE,
+                    'Content-Type': CONTENT_TYPE,
                     'ApiKey': config.AUDIO_API_KEY,
                     'myCloudProxySession': config.myCloudProxySession
                 }
@@ -153,8 +153,8 @@ export const deleteAudioNarrationForContainer = (isGlossary = null) => async(dis
         try {
             let audioDataResponse = await axios.delete(url, {
                 headers: {
-                    'Accept': applicationJsonText,
-                    'Content-Type': applicationJsonText,
+                    'Accept': CONTENT_TYPE,
+                    'Content-Type': CONTENT_TYPE,
                     'ApiKey': config.AUDIO_API_KEY,
                     'myCloudProxySession': config.myCloudProxySession
                 }
@@ -229,8 +229,8 @@ export const addAudioNarrationForContainer = (audioData, isGlossary='') => async
         try {
             let audioPutResponse = await axios.put(url, audioData, {
                 headers: {
-                    'Accept': applicationJsonText,
-                    'Content-Type': applicationJsonText,
+                    'Accept': CONTENT_TYPE,
+                    'Content-Type': CONTENT_TYPE,
                     'ApiKey': config.AUDIO_API_KEY,
                     'myCloudProxySession': config.myCloudProxySession
                 }
@@ -262,7 +262,7 @@ export const saveDataFromAlfresco = (message) => dispatch => {
         }
     }
     let figureType = imageData?.content?.mimeType?.split('/')[0]
-    let smartLinkAssetType = imageData?.properties[cmDescriptionText] && (typeof (imageData.properties[cmDescriptionText]) == "string") ? imageData.properties[cmDescriptionText].includes('smartLinkType') ? JSON.parse(imageData.properties[cmDescriptionText]).smartLinkType : "" : "";
+    let smartLinkAssetType = imageData?.properties[CM_DESCRIPTION] && (typeof (imageData.properties[CM_DESCRIPTION]) == "string") ? imageData.properties[CM_DESCRIPTION].includes('smartLinkType') ? JSON.parse(imageData.properties[CM_DESCRIPTION]).smartLinkType : "" : "";
     const audioFormat = imageData?.mimetype ?? imageData?.content?.mimeType ?? "";
     if (figureType === 'audio') {
         let nonSmartLinkUrl = imageData["institution-urls"] && imageData["institution-urls"][0]?.publicationUrl

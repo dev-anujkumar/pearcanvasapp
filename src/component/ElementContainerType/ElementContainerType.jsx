@@ -5,7 +5,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import config from '../../config/config';
 import '../../styles/ElementContainerType/ElementContainerType.css'
 import elementTypeConstant from  '../ElementContainer/ElementConstants.js';
-import { blockTextButtonText, elementAsideText } from '../../constants/Element_Constants';
+import { BLOCK_TEXT_BUTTON, ELEMENT_ASIDE } from '../../constants/Element_Constants';
 const { SHOW_HIDE } = elementTypeConstant;
 
 export default function ElementContainerType(props) {
@@ -22,7 +22,7 @@ export default function ElementContainerType(props) {
         switch (props.text) {
             case 'interactive-elem-button': elementPickerPosition = 5; break;
             case 'container-elem-button': elementPickerPosition = props.elementType === "showhide" ? 7 : 8; break;
-            case blockTextButtonText : elementPickerPosition = 4; break;
+            case BLOCK_TEXT_BUTTON : elementPickerPosition = 4; break;
             case "multi-column-group": elementPickerPosition = 10; break;
         }
 
@@ -53,20 +53,20 @@ export default function ElementContainerType(props) {
             });
         }
         /**Block List option only visible on Slate Level & inside SH */
-        const blocklistAllowedIn = ['','showhide',elementAsideText, "group"];
+        const blocklistAllowedIn = ['','showhide',ELEMENT_ASIDE, "group"];
         if (blocklistAllowedIn.indexOf(elementType) === -1) {
             propsData = propsData.filter( obj => obj.text !== 'Block List');
         }
         /**Block List option hidden for SH which is already in Container like 2C/3C/Aside/WE */
-        if ((elementType === 'showhide' && indexOfElement.length > 3) || (elementType === elementAsideText && parentIndex.length >= 3)) {
+        if ((elementType === 'showhide' && indexOfElement.length > 3) || (elementType === ELEMENT_ASIDE && parentIndex.length >= 3)) {
             propsData = propsData.filter(obj => obj.text !== 'Block List');
         }
         /* Not show Popup/SH/Interactive elements inside SH interactive Picker */
         const hideElementList = ["show-hide-elem", "popup-elem", "elm-interactive-elem", "interactive-elem", "element-discussion"];
         const hideElementListMulticolumn = ["Add Pop Up","Add Discussion"]
         return propsData && propsData.map((item, index) => {
-            if ((elementType === elementAsideText && asideData?.parent?.type === "groupedcontent" && text === blockTextButtonText && item.text === "Block Poetry") ||
-            ((elementType === elementAsideText || elementType === "group") && config.isPopupSlate && text === blockTextButtonText && item.text === "Block Poetry") ||
+            if ((elementType === ELEMENT_ASIDE && asideData?.parent?.type === "groupedcontent" && text === BLOCK_TEXT_BUTTON && item.text === "Block Poetry") ||
+            ((elementType === ELEMENT_ASIDE || elementType === "group") && config.isPopupSlate && text === BLOCK_TEXT_BUTTON && item.text === "Block Poetry") ||
             (text === "interactive-elem-button" && (elementType === "group" && hideElementListMulticolumn.includes(item.text)))
             || (config.isPopupSlate && item.text === "Add Pop Up") ||
             /* Not show poetry/Popup/SH inside SH interactive Picker */

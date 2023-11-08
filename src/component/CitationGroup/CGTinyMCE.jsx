@@ -7,7 +7,7 @@ import TinyMceEditor from "../tinyMceEditor";
 import { CitationGroupContext } from '../ElementContainer/ElementCitationContext'
 import config from '../../config/config.js';
 import { getTitleSubtitleModel, sendDataToIframe } from "../../constants/utility.js"
-import { formattedTitleText } from '../../constants/Element_Constants';
+import { FORMATTED_TITLE } from '../../constants/Element_Constants';
 
 const CGTinyMCE = (props) => {
     const context = useContext(CitationGroupContext)
@@ -20,13 +20,13 @@ const CGTinyMCE = (props) => {
         id : context.id,
         placeholder : "Enter Title...",
         tagName : 'h4',
-        model : context.element.contents && context.element.contents[formattedTitleText] && context.element.contents[formattedTitleText].html && context.element.contents[formattedTitleText].html.text ? getTitleSubtitleModel(context.element.contents[formattedTitleText].html.text, "formatted-subtitle").replace(/&nbsp;/g, "") : `<p class="paragraphNumeroUno"><br/></p>`,
-        currentElement : context.element.contents && context.element.contents[formattedTitleText],
+        model : context.element.contents && context.element.contents[FORMATTED_TITLE] && context.element.contents[FORMATTED_TITLE].html && context.element.contents[FORMATTED_TITLE].html.text ? getTitleSubtitleModel(context.element.contents[FORMATTED_TITLE].html.text, "formatted-subtitle").replace(/&nbsp;/g, "") : `<p class="paragraphNumeroUno"><br/></p>`,
+        currentElement : context.element.contents && context.element.contents[FORMATTED_TITLE],
         handleEditorFocus : context.handleFocus,
         handleBlur  :  context.handleBlur,
         slateLockInfo : context.slateLockInfo,
-        elementId : context.element.contents && context.element.contents[formattedTitleText] && context.element.contents[formattedTitleText].id,
-        citationField  :  formattedTitleText,
+        elementId : context.element.contents && context.element.contents[FORMATTED_TITLE] && context.element.contents[FORMATTED_TITLE].id,
+        citationField  :  FORMATTED_TITLE,
         createPopupUnit : (popupField, forceupdate, index, parentElement) => createPopupUnit(popupField, forceupdate, index, parentElement, props, context),
         parentElement : context.element,
         citationAsideData : props.citationAsideData

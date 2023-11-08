@@ -1,4 +1,4 @@
-import { AUTHORED_TEXT_SCHEMA, INTERACTIVE_FPO, INTERACTIVE_SCHEMA, externalLinkText } from "../constants/Element_Constants"
+import { AUTHORED_TEXT_SCHEMA, INTERACTIVE_FPO, INTERACTIVE_SCHEMA, EXTERNAL_LINK } from "../constants/Element_Constants"
 
 let figureCommonData = {
     "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
@@ -82,7 +82,7 @@ export default {
         "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "3rd-party",
-        "interactiveformat": externalLinkText,
+        "interactiveformat": EXTERNAL_LINK,
         "posterimage": {
         "path": INTERACTIVE_FPO
         }
@@ -91,7 +91,7 @@ export default {
         "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "pdf",
-        "interactiveformat": externalLinkText,
+        "interactiveformat": EXTERNAL_LINK,
         "posterimage": {
         "path": INTERACTIVE_FPO
         },
@@ -106,7 +106,7 @@ export default {
         "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "web-link",
-        "interactiveformat": externalLinkText,
+        "interactiveformat": EXTERNAL_LINK,
         "postertext": {
             "schema": AUTHORED_TEXT_SCHEMA,
             "text": "",
@@ -118,7 +118,7 @@ export default {
         "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "pop-up-web-link",
-        "interactiveformat": externalLinkText,
+        "interactiveformat": EXTERNAL_LINK,
         "postertext": {
             "schema": AUTHORED_TEXT_SCHEMA,
             "text": "",
@@ -130,7 +130,7 @@ export default {
         "schema": INTERACTIVE_SCHEMA,
         "interactiveid": "",
         "interactivetype": "table",
-        "interactiveformat": externalLinkText,
+        "interactiveformat": EXTERNAL_LINK,
         "posterimage": {
         "path": INTERACTIVE_FPO
         }

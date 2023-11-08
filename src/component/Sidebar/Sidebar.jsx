@@ -14,7 +14,7 @@ import PopUp from '../PopUp/index.js';
 import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE, DISABLE_PLAYBACK_MODE_VENDORS } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
-import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE, elementAssessmentText, pointerEventsNoneText, primaryBlockcodeEquationText, elementAsideText, sidebarDisableText } from '../../constants/Element_Constants.js';
+import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE, ELEMENT_ASSESSMENT_LOWERCASE, POINTER_EVENTS_NONE, PRIMARY_BLOCKCODE_EQUATION, ELEMENT_ASIDE, SIDEBAR_DISABLE } from '../../constants/Element_Constants.js';
 import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants';
 import { SECONDARY_SINGLE_ASSESSMENT_LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js'
 import { createPSDataForUpdateAPI } from '../ElementDialogue/DialogueElementUtils.js';
@@ -177,7 +177,7 @@ class Sidebar extends Component {
         podOption: false,
       });
       const {asideData} = this.props;
-      if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== elementAssessmentText) {
+      if (this.props.activeElement.elementId !== "" &&this.props.activeElement.elementWipType !== ELEMENT_ASSESSMENT_LOWERCASE) {
         if (this.props.activeElement.elementWipType == "manifestlist") {
         let blockListMetaDataPayload = {
             blockListData: {
@@ -273,7 +273,7 @@ class Sidebar extends Component {
         activebulletIcon: iconColorValue,
       });
       const {asideData} = this.props;
-      if (this.props.activeElement.elementId !== "" &&this.props.activeElement?.elementWipType !== elementAssessmentText) {
+      if (this.props.activeElement.elementId !== "" &&this.props.activeElement?.elementWipType !== ELEMENT_ASSESSMENT_LOWERCASE) {
         if (this.props.activeElement?.elementWipType == "manifestlist") {
         let blockListMetaDataPayload = {
             blockListData: {
@@ -328,7 +328,7 @@ class Sidebar extends Component {
 
     primaryOption = () => {
         const { activePrimaryOption } = this.state
-        const isReadOnly =  hasReviewerRole() ? pointerEventsNoneText : ''
+        const isReadOnly =  hasReviewerRole() ? POINTER_EVENTS_NONE : ''
         let primaryOptions = '';
         if (this.state.activeElementType) {
             let className = ""
@@ -336,15 +336,15 @@ class Sidebar extends Component {
             let primaryOptionList = Object.keys(primaryOptionObject);
             const isSmartlinkElement = this.state.activePrimaryOption === PRIMARY_SMARTLINK ? SMARTLINK_ELEMENT_DROPDOWN_TITLE: '';
             if (primaryOptionList.length > 0) {
-                if (this.state.activeElementType === elementAssessmentText) {
+                if (this.state.activeElementType === ELEMENT_ASSESSMENT_LOWERCASE) {
                     delete primaryOptionList[1];
                 }
-                let disabledPrimaryOptions = ["primary-mathml-equation", primaryBlockcodeEquationText, "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup"];
+                let disabledPrimaryOptions = ["primary-mathml-equation", PRIMARY_BLOCKCODE_EQUATION, "primary-editor-table-equation", "primary-elm-interactive", "primary-mmi", "primary-smartlink", "primary-showhide", "primary-popup"];
                 if (disabledPrimaryOptions.indexOf(activePrimaryOption) > -1) {
                     className = "disabled"
                 }
                 primaryOptions = primaryOptionList.map(item => {
-                    if (item !== 'enumType' && item !== 'primary-mathml-equation' && item !== primaryBlockcodeEquationText && item !== 'primary-editor-table-equation') {
+                    if (item !== 'enumType' && item !== 'primary-mathml-equation' && item !== PRIMARY_BLOCKCODE_EQUATION && item !== 'primary-editor-table-equation') {
                         return <li key={item} data-value={item} onClick={this.handlePrimaryOptionChange}>
                             {primaryOptionObject[item].text}
                         </li>;
@@ -355,9 +355,9 @@ class Sidebar extends Component {
                 if (this.state.elementDropdown === 'primary') {
                     active = 'active';
                 }
-                const sidebarDisableCondition = (this.props.activeElement?.elementType === elementAsideText && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
+                const sidebarDisableCondition = (this.props.activeElement?.elementType === ELEMENT_ASIDE && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
-                    className={`element-dropdown ${sidebarDisableCondition ? sidebarDisableText : ""}`}>
+                    className={`element-dropdown ${sidebarDisableCondition ? SIDEBAR_DISABLE : ""}`}>
                     {isSmartlinkElement && <div className='categories'>{CATEGORY}</div>}
                     <div className={`element-dropdown-title ${className} ${isSmartlinkElement}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
@@ -421,10 +421,10 @@ class Sidebar extends Component {
         if ((data === "fontStyle" && this.state.fontBulletElementDropdown === 'font') || (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet')) {
             active = 'active';
         }
-        const sidebarDisableCondition = (this.props.activeElement?.elementType === elementAsideText && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
+        const sidebarDisableCondition = (this.props.activeElement?.elementType === ELEMENT_ASIDE && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
 
         fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
-            className={`element-dropdown ${sidebarDisableCondition ? sidebarDisableText : ""}`}>
+            className={`element-dropdown ${sidebarDisableCondition ? SIDEBAR_DISABLE : ""}`}>
             <div className={`element-dropdown-title ${className}`} data-element= {dataElement} onClick={this.toggleElementDropdown}>
                 {fontBulletOptionObject[dataValue]?.text}
                 {disabledPrimaryOption.indexOf(dataValue) > -1 ? null : dropdownArrow}
@@ -564,7 +564,7 @@ class Sidebar extends Component {
             isPlayBackDropdownOpen: false
         });
 
-        if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== elementAssessmentText) {
+        if (this.props.activeElement.elementId !== '' && this.props.activeElement.elementWipType !== ELEMENT_ASSESSMENT_LOWERCASE) {
             this.props.conversionElement({
                 elementId: this.props.activeElement.elementId,
                 elementType: this.state.activeElementType,
@@ -586,7 +586,7 @@ class Sidebar extends Component {
             let secondaryOptionList = Object.keys(secondaryOptionObject);
             let isLearnosityProject = this.props.isLearnosityProject && this.props.isLearnosityProject[0]?.ItemBankName ? true : false;
             let showLearnosityDropdown = false;
-            if (this.state.activePrimaryOption === primaryBlockcodeEquationText && this.state.activeSecondaryOption !== "secondary-blockcode-language-default") {
+            if (this.state.activePrimaryOption === PRIMARY_BLOCKCODE_EQUATION && this.state.activeSecondaryOption !== "secondary-blockcode-language-default") {
                 secondaryOptionList.splice(0, 1)
             }
             // checking active element and primary option to allow column 3 secondary option
@@ -624,10 +624,10 @@ class Sidebar extends Component {
                 }
                 //Removing Select option from dropdown values
                 if (languageDropdownOptions.length )  languageDropdownOptions = languageDropdownOptions.filter(option => option.text !== 'Select')
-                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === elementAsideText && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
-                const disableClass = hasReviewerRole() ? pointerEventsNoneText : ''
+                const sidebarDisableCondition = ((this.props.showHideObj && this.props.activeElement.elementType) || (this.props.activeElement?.elementType === ELEMENT_ASIDE && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut"))
+                const disableClass = hasReviewerRole() ? POINTER_EVENTS_NONE : ''
                 secondaryOptions = <div
-                    className={`element-dropdown ${display} ${sidebarDisableCondition ? sidebarDisableText: ""} `}>
+                    className={`element-dropdown ${display} ${sidebarDisableCondition ? SIDEBAR_DISABLE: ""} `}>
                     {isSmartlinkElement && <div className='sub-categories'>{SUB_CATEGORY}</div>}
                     {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled} ${isSmartlinkElement}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
@@ -735,7 +735,7 @@ class Sidebar extends Component {
             if (this.state.isPlayBackDropdownOpen) {
                 active = 'active';
             }
-            let disableClass = hasReviewerRole()  ? pointerEventsNoneText : '';
+            let disableClass = hasReviewerRole()  ? POINTER_EVENTS_NONE : '';
             disableClass = `${disableClass} ${disablePlaybackMode ? "disablePlaybackMode" : ""}`
             playbackMode = <div
                 className={`element-dropdown`}>
@@ -779,7 +779,7 @@ class Sidebar extends Component {
 
     attributions = () => {
         let toggleAsideNumber = false;
-        if (this.props.activeElement.elementType === elementAsideText || this.props.activeElement.elementType === "element-workedexample") {
+        if (this.props.activeElement.elementType === ELEMENT_ASIDE || this.props.activeElement.elementType === "element-workedexample") {
             toggleAsideNumber = this.setToggleForAside(this.props.activeElement, this.props.asideTitleData);
         }
         let hasAsideTitleData = this.props?.activeElement?.asideNumber || false;
@@ -838,7 +838,7 @@ class Sidebar extends Component {
                     </div>
                 });
             }
-            if (this.state.activePrimaryOption === primaryBlockcodeEquationText && this.props.activeElement.elementId) {
+            if (this.state.activePrimaryOption === PRIMARY_BLOCKCODE_EQUATION && this.props.activeElement.elementId) {
                 let activeElement = document.querySelector(`[data-id="${this.props.activeElement.elementId}"]`)
                 let attrNode = activeElement ? activeElement.querySelector(".blockCodeFigure") : null
                 if (attrNode) {
@@ -898,7 +898,7 @@ class Sidebar extends Component {
                 </div>
                 return attributions;
             }
-            if ((this.props.activeElement.elementType === elementAsideText || this.props.activeElement.elementType === "element-workedexample")) {
+            if ((this.props.activeElement.elementType === ELEMENT_ASIDE || this.props.activeElement.elementType === "element-workedexample")) {
                attributions = <div className="asideNumberHeading">
                     <div className="toggleAsideNumber">Label, Number, Title</div>
                     <div className="setting-value" onClick={() => this.handleAsideNumber(toggleAsideNumber)}>
@@ -1187,7 +1187,7 @@ class Sidebar extends Component {
             if (attrNode) {
                 attrNode.setAttribute("podwidth", showPodValue)
             }
-            const hasReviewerClass = hasReviewerRole() ? pointerEventsNoneText : ''
+            const hasReviewerClass = hasReviewerRole() ? POINTER_EVENTS_NONE : ''
 
             return (
                 <div className='printOnDemand'>

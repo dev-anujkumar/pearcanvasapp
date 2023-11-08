@@ -19,7 +19,7 @@ import { checkContainerElementVersion, fetchElementWipData, fetchManifestStatus,
 const { ELEMENT_ASIDE, MULTI_COLUMN, SHOWHIDE } = TcmConstants;
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { getSlateLevelData, updateChapterPopupData, popupCutCopyParentData } from '../FigureHeader/AutoNumberActions';
-import { elementAsideText } from '../../constants/Element_Constants.js';
+import { ELEMENT_ASIDE } from '../../constants/Element_Constants.js';
 export const onDeleteSuccess = (params) => {
     const {
         deleteElemData,
@@ -201,7 +201,7 @@ export const deleteFromStore = async (params) => {
                 element?.groupdata?.bodymatter?.map(item => {
                     delInsideWE(item, asideData, parentUrn, elmId);
                 })
-            } else if (parentUrn && parentUrn.elementType == elementAsideText && asideData?.parent?.type !== 'showhide') {
+            } else if (parentUrn && parentUrn.elementType == ELEMENT_ASIDE && asideData?.parent?.type !== 'showhide') {
                 if (element.id === parentUrn.manifestUrn) {
                     element.elementdata.bodymatter.forEach((ele, indexInner) => {
                         if (ele.id === elmId) {
@@ -217,7 +217,7 @@ export const deleteFromStore = async (params) => {
                     })
                 }
           /* Delete element inside S/H:AS/WE:ELEMENTS */
-        } else if (asideData?.parent?.type === 'showhide' && asideData?.type === elementAsideText && element.id === asideData?.parent?.id) {
+        } else if (asideData?.parent?.type === 'showhide' && asideData?.type === ELEMENT_ASIDE && element.id === asideData?.parent?.id) {
             let section = asideData?.parent?.showHideType;
             delInsideWE(element.interactivedata[section][iList[2]], asideData, parentUrn, elmId);
         } else if (poetryData && poetryData.type == 'poetry') {
@@ -227,7 +227,7 @@ export const deleteFromStore = async (params) => {
                             element.contents.bodymatter.splice(indexInner, 1);
                         }
                     })
-                } else if (element?.type == elementAsideText && element.id === poetryData?.parent?.id) {  /* To update redux store while deleting new element inside WE/Aside->Block Poetry->Stanza */
+                } else if (element?.type == ELEMENT_ASIDE && element.id === poetryData?.parent?.id) {  /* To update redux store while deleting new element inside WE/Aside->Block Poetry->Stanza */
                   element?.elementdata?.bodymatter.forEach((ele) => {
                         if (ele?.type == "poetry" && ele.id == poetryData?.parentUrn) {
                             ele.contents?.bodymatter.forEach((ele1, indexInner) => {
@@ -322,11 +322,11 @@ export const deleteFromStore = async (params) => {
                     deleteBlockListElement(elmId, blElemInSh);
                 }
             } // check Aside/WE header has a blockList in it and then delete
-            else if (element?.type === elementAsideText && element?.elementdata?.bodymatter[indexes[1]]?.type === "manifestlist"){
+            else if (element?.type === ELEMENT_ASIDE && element?.elementdata?.bodymatter[indexes[1]]?.type === "manifestlist"){
                 let blEleminAS = element?.elementdata?.bodymatter[indexes[1]];
                 deleteBlockListElement(elmId, blEleminAS);
             } // check WE body has a blockList in it and then delete
-            else if (element?.type === elementAsideText && element?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist"){
+            else if (element?.type === ELEMENT_ASIDE && element?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]]?.type === "manifestlist"){
                 let blEleminWE = element?.elementdata?.bodymatter[indexes[1]]?.contents?.bodymatter[indexes[2]];
                 deleteBlockListElement(elmId, blEleminWE);
             }else if (element?.type === "groupedcontent" && element?.groupeddata?.bodymatter[indexes[1]]?.groupdata?.bodymatter[indexes[2]]?.type === "manifestlist"){
@@ -449,7 +449,7 @@ export const prepareTCMSnapshotsForDelete = async (params, operationType = null)
     const deleteBodymatter = cutCopyParentUrn && cutCopyParentUrn.slateLevelData ? deleteParentData[cutCopyParentUrn.sourceSlateManifestUrn]?.contents.bodymatter :deleteParentData[config.slateManifestURN].contents.bodymatter;
     if (elementTypeTCM.indexOf(type) !== -1 || containerType.indexOf(type) !== -1) {
         let wipData={}
-        if(showHideObj?.currentElement?.type === elementAsideText && isSectionBreak?.type === 'manifest'){
+        if(showHideObj?.currentElement?.type === ELEMENT_ASIDE && isSectionBreak?.type === 'manifest'){
             wipData = isSectionBreak
         }
         else{
@@ -478,7 +478,7 @@ export const prepareTCMSnapshotsForDelete = async (params, operationType = null)
         */
         const typeOfElement = asideData?.type;
         if (typeOfElement === "showhide") {
-            if (showHideObj?.currentElement?.type === elementAsideText && type === 'manifest') {
+            if (showHideObj?.currentElement?.type === ELEMENT_ASIDE && type === 'manifest') {
                 containerElement = {
                     parentElement: { ...asideData, sectionType: showHideObj?.showHideType },
                     asideData: {
@@ -519,13 +519,13 @@ export const tcmSnapshotsForDelete = async (elementDeleteData, type, containerEl
         status:"pending",
         fromWhere:"delete"
     }
-    const parentType = [elementAsideText, 'citations', 'poetry', 'groupedcontent', 'popup'];
+    const parentType = [ELEMENT_ASIDE, 'citations', 'poetry', 'groupedcontent', 'popup'];
     let versionStatus = {};
     let currentSlateData = cutCopyParentUrn && cutCopyParentUrn.sourceSlateManifestUrn? elementDeleteData.currentParentData[cutCopyParentUrn.sourceSlateManifestUrn] :elementDeleteData.currentParentData[config.slateManifestURN]
     if(config.isPopupSlate){
         currentSlateData.popupSlateData = elementDeleteData.currentParentData[config.tempSlateManifestURN]
     }
-    if ((parentType.indexOf(type) === -1) || (type === elementAsideText && parentUrn && elementDeleteData?.wipData?.type === "manifest") ) {
+    if ((parentType.indexOf(type) === -1) || (type === ELEMENT_ASIDE && parentUrn && elementDeleteData?.wipData?.type === "manifest") ) {
         versionStatus = fetchManifestStatus(elementDeleteData.bodymatter, containerElement, type);
     }
     containerElement = await checkContainerElementVersion(containerElement, versionStatus, currentSlateData, actionStatus.action, elementDeleteData?.wipData?.type);

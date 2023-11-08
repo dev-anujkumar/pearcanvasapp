@@ -1,4 +1,4 @@
-import { elementAsideText } from "../../constants/Element_Constants"
+import { ELEMENT_ASIDE } from "../../constants/Element_Constants"
 
 export const autoNumberElementsAllowed = ['figure']
 export const LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES = {
@@ -72,7 +72,7 @@ export const moduleTypes = ['module', 'appendix']
 export const slateTypes = ["section", "assessment-slate", "cover", 'titlepage', 'copyright', 'listofcontents', 'appendixslate', 'pdfslate', 'container-introduction']
 
 export const containerElements = {
-  ASIDE: elementAsideText,
+  ASIDE: ELEMENT_ASIDE,
   POPUP: 'popup',
   SHOW_HIDE: 'showhide',
   MULTI_COLUMN: 'groupedcontent',
@@ -130,7 +130,7 @@ export const DISPLAYED_LABELS = {
 
 export const ELEMENT_TYPES = {
   FIGURE: 'figure',
-  ELEMENT_ASIDE: elementAsideText
+  ELEMENT_ASIDE: ELEMENT_ASIDE
 }
 
 export const autoNumber_ElementSubTypeToCeateKeysMapper = {
@@ -161,8 +161,8 @@ export const autoNumber_ElementTypeToStoreKeysMapper = {
 export const SIDEBAR = "sidebar"
 export const TACTIC = "Tactic"
 export const WORKED_EXAMPLE = "workedexample"
-export const autoNumberContainerTypesAllowed = [elementAsideText]
-export const containerElementTypes = ['popup', 'showhide', 'groupedcontent', elementAsideText, 'group'];
+export const autoNumberContainerTypesAllowed = [ELEMENT_ASIDE]
+export const containerElementTypes = ['popup', 'showhide', 'groupedcontent', ELEMENT_ASIDE, 'group'];
 export const autoNumberFigureTypesAllowed = ['audio', 'video', 'image', 'table', 'mathImage', 'interactive', 'tableasmarkup', 'authoredtext', 'codelisting']
 export const autoNumberFigureTypesForConverion = ['IMAGE', 'TABLE', 'MATH', 'AUDIO', 'VIDEO', 'SMART_LINK', 'CONTAINER', 'WORKED_EXAMPLE', 'TABLE_EDITOR', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR'];
 export const displayLabelsForAutonumbering = ['Figure', 'Table', 'Equation', 'Audio', 'Video', 'Interactive', 'Exhibit']
@@ -171,5 +171,5 @@ export const displayLabelsForAudioVideo = ['Audio', 'Video'];
 export const displayLabelsForContainer = ['Aside', 'Worked Example'];
 export const ELEMENT_TYPES_FOR_AUTO_NUMBER = ['IMAGE', 'VIDEO', 'INTERACTIVE', 'SMART_LINK', 'MMI_ELM', 'CONTAINER', 'WORKED_EXAMPLE', 'TABLE_EDITOR', 'MATH_ML_CHEM_EDITOR', 'BLOCK_CODE_EDITOR'];
 export const autoNumberFieldsPlaceholders = ['Number', 'Label', 'Label Name']
-export const autoNumberContainerTypeForDelete = [elementAsideText, 'container']
+export const autoNumberContainerTypeForDelete = [ELEMENT_ASIDE, 'container']
 export const convertToDefaultNumberType = ['TABLE', 'MATHIMAGE']

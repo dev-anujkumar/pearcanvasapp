@@ -16,7 +16,7 @@ import {
     UPDATE_ROLE,
     ADD_NEW_COMMENT
 } from '../../constants/Action_Constants';
-import { applicationJsonText } from '../../constants/Element_Constants';
+import { CONTENT_TYPE } from '../../constants/Element_Constants';
 
 export const addNewComment = (payload) => ({
     type: ADD_NEW_COMMENT,
@@ -41,7 +41,7 @@ export const fetchComments = (contentUrn, title) => dispatch => {
         url = `${config.REACT_APP_API_URL}v1/narrative/${projectUrn}/aggregatedComments/container/${contentUrn}`
     return axios.get(url, {
         headers: {
-            "Content-Type": applicationJsonText,
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
@@ -118,7 +118,7 @@ export const replyComment = (commentUrn, reply, elementId) => dispatch => {
     return axios.post(url, replyDataToSend,
         {
             headers: {
-                "Content-Type": applicationJsonText,
+                "Content-Type": CONTENT_TYPE,
                 ApiKey: config.STRUCTURE_APIKEY,
                 'myCloudProxySession': config.myCloudProxySession
             }
@@ -155,7 +155,7 @@ export const resolveComment = (commentUrn, resolveOrOpen, elementId) => dispatch
     return axios.put(url, request,
         {
             headers: {
-                "Content-Type": applicationJsonText,
+                "Content-Type": CONTENT_TYPE,
                 ApiKey: config.STRUCTURE_APIKEY,
                 'myCloudProxySession': config.myCloudProxySession
             }
@@ -187,7 +187,7 @@ export const updateComment = (commentUrn, updateCommentParams, elementId) => dis
     return axios.put(url, request,
         {
             headers: {
-                "Content-Type": applicationJsonText,
+                "Content-Type": CONTENT_TYPE,
                 ApiKey: config.STRUCTURE_APIKEY,
                 'myCloudProxySession': config.myCloudProxySession
             }
@@ -214,7 +214,7 @@ export const getProjectUsers = () => dispatch => {
     return axios.get(url,
         {
             headers: {
-                "Content-Type": applicationJsonText,
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }).then(response => {
@@ -242,7 +242,7 @@ export const updateAssignee = (commentUrn, newAssignee, elementId) => dispatch =
     };
     return axios.put(url, req, {
         headers: {
-            "Content-Type": applicationJsonText,
+            "Content-Type": CONTENT_TYPE,
             ApiKey: config.STRUCTURE_APIKEY,
             'myCloudProxySession': config.myCloudProxySession
         }
@@ -267,7 +267,7 @@ export const updateRole = (commentUrn, newRole, elementId) => dispatch => {
     };
     return axios.put(url, req, {
         headers: {
-            "Content-Type": applicationJsonText,
+            "Content-Type": CONTENT_TYPE,
             ApiKey: config.STRUCTURE_APIKEY,
             'myCloudProxySession': config.myCloudProxySession
         }

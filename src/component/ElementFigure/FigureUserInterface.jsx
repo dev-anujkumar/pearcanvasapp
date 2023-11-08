@@ -15,7 +15,7 @@ import {videoIcon, figureAudioIcon, smartlinkIcon} from '../../images/ElementBut
 import pdSLfPosterImage from '../../images/ElementButtons/pdSLfPosterImage.png';
 import slPosterImage from '../../images/ElementButtons/slPosterImage.png'
 import  figureDeleteIcon from '../../images/ElementButtons/figureDeleteIcon.svg';
-import { labelHtmlData, AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE, transitionNoneText, hideFieldText } from '../../constants/Element_Constants';
+import { labelHtmlData, AUDIO, VIDEO, INTERACTIVE, DEFAULT_VIDEO_POSTER_IMAGE, TRANSITION_NONE, HIDE_FIELD } from '../../constants/Element_Constants';
 import figureData from './figureTypes';
 import interactiveTypeData from '../ElementInteractive/interactiveTypes.js';
 import SmallRoundedButton from './Small_RoundedButton.jsx';
@@ -163,10 +163,10 @@ class FigureUserInterface extends Component {
 
     onFigureElementFieldFocus = (id) => {
         let labelElement = document.getElementById(`cypress-${id}`);
-        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(transitionNoneText)) {
+        if (labelElement?.nextElementSibling && labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE)) {
             labelElement?.nextElementSibling?.classList?.add('label-color-change');
-        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(transitionNoneText))) { // BG-5075
-            labelElement?.nextElementSibling?.classList?.add(transitionNoneText);
+        } else if (!(labelHtmlData.includes(labelElement?.innerHTML)) && !(labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE))) { // BG-5075
+            labelElement?.nextElementSibling?.classList?.add(TRANSITION_NONE);
         }
         if (this.props.element.figuretype === 'interactive') {
             this.props.updateSmartLinkDataForCompare(this.props.element.figuredata);
@@ -184,8 +184,8 @@ class FigureUserInterface extends Component {
         if (labelElement?.nextElementSibling) {
             labelElement?.nextElementSibling?.classList?.remove('label-color-change');
         }
-        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains(transitionNoneText)) {
-            labelElement?.nextElementSibling?.classList?.remove(transitionNoneText);
+        if (labelHtmlData.includes(labelElement?.innerHTML) && labelElement?.nextElementSibling?.classList?.contains(TRANSITION_NONE)) {
+            labelElement?.nextElementSibling?.classList?.remove(TRANSITION_NONE);
         }
         if (id === '0-0' && labelElement?.innerHTML) {
             let dropdownData = this.convertOptionsToLowercase(this.state.figureLabelData);
@@ -423,11 +423,11 @@ class FigureUserInterface extends Component {
         let buttonElementDiv = document.getElementsByClassName(`Rectangle-button ${id}`);
         let hyperlinkTextDiv = document.getElementsByClassName(`actionPUdiv ${id}`);
         if (value === 'show') {
-            buttonElementDiv[0]?.classList?.add(hideFieldText);
-            hyperlinkTextDiv[0]?.classList?.remove(hideFieldText);
+            buttonElementDiv[0]?.classList?.add(HIDE_FIELD);
+            hyperlinkTextDiv[0]?.classList?.remove(HIDE_FIELD);
         } else {
-            buttonElementDiv[0]?.classList?.remove(hideFieldText);
-            hyperlinkTextDiv[0]?.classList?.add(hideFieldText);
+            buttonElementDiv[0]?.classList?.remove(HIDE_FIELD);
+            hyperlinkTextDiv[0]?.classList?.add(HIDE_FIELD);
         }
     }
 
@@ -598,20 +598,20 @@ class FigureUserInterface extends Component {
 
                                         <div className='image-label'>
                                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass + " figureLabel "} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
-                                            <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? transitionNoneText : "floating-label"}>Label Name</label>
+                                            <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? TRANSITION_NONE : "floating-label"}>Label Name</label>
                                         </div>
 
                                     </KeyboardWrapper>
                                         :
                                         <div className='image-label hide-field'>
                                             <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-0`} placeholder="Label Name" tagName={'h4'} className={figLabelClass} model={figureHtmlData.formattedLabel} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
-                                            <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? transitionNoneText : "floating-label"}>Label Name</label>
+                                            <label className={checkHTMLdataInsideString(figureHtmlData.formattedLabel) ? TRANSITION_NONE : "floating-label"}>Label Name</label>
                                         </div>
                                 }
                                 <KeyboardWrapper enable={this.isEnableKeyboard()} index={`${index}-1`}>
                                     <div className="floating-number-group">
                                         <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-1`} placeholder="Number" tagName={'h4'} className={figNumberClass} model={figureHtmlData.formattedNumber} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation}  contenteditable={ !hasReviewerRole()} />
-                                        <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? transitionNoneText : "floating-number"}>Number</label>
+                                        <label className={checkHTMLdataInsideString(figureHtmlData.formattedNumber) ? TRANSITION_NONE : "floating-number"}>Number</label>
                                     </div>
                                 </KeyboardWrapper>
 
@@ -620,7 +620,7 @@ class FigureUserInterface extends Component {
                                 <KeyboardWrapper  index={`${index}-2`} enable={this.isEnableKeyboard()}>
                                 <div className="floating-title-group">
                                     <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={`${index}-2`} placeholder="Title" tagName={'h4'} className={figTitleClass} model={figureHtmlData.formattedTitle} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
-                                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? transitionNoneText : "floating-title"}>Title</label>
+                                    <label className={checkHTMLdataInsideString(figureHtmlData.formattedTitle) ? TRANSITION_NONE : "floating-title"}>Title</label>
                                 </div>
                                 </KeyboardWrapper>
                                </>}
@@ -647,7 +647,7 @@ class FigureUserInterface extends Component {
 
                                 <div className="floating-caption-group">
                                     <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-4` : `${index}-3`} placeholder="Caption" tagName={'p'} className={figCaptionClass} model={captionsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
-                                    <label className={checkHTMLdataInsideString(element?.html?.captions) ? transitionNoneText : "floating-caption"}>Caption</label>
+                                    <label className={checkHTMLdataInsideString(element?.html?.captions) ? TRANSITION_NONE : "floating-caption"}>Caption</label>
                                 </div>
                                 </KeyboardWrapper>
                             </figcaption>
@@ -655,7 +655,7 @@ class FigureUserInterface extends Component {
                                 <KeyboardWrapper enable={this.isEnableKeyboard()} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`}>
                                     <div className="floating-credit-group">
                                         <TinyMceEditor onFigureImageFieldFocus={this.onFigureElementFieldFocus} onFigureImageFieldBlur={this.onFigureElementFieldBlur} permissions={permissions} openGlossaryFootnotePopUp={openGlossaryFootnotePopUp} element={element} handleEditorFocus={handleFocus} handleBlur={handleBlur} index={element.figuretype === INTERACTIVE ? `${index}-5` : `${index}-4`} placeholder="Credit" tagName={'figureCredit'} className={figCreditClass} model={creditsHtml} slateLockInfo={slateLockInfo} glossaryFootnoteValue={glossaryFootnoteValue} glossaaryFootnotePopup={glossaaryFootnotePopup} elementId={elementId} id={this.props.id} handleAudioPopupLocation={this.props.handleAudioPopupLocation} handleAssetsPopupLocation={this.props.handleAssetsPopupLocation} />
-                                        <label className={checkHTMLdataInsideString(element?.html?.credits) ? transitionNoneText : "floating-credit"}>Credit</label>
+                                        <label className={checkHTMLdataInsideString(element?.html?.credits) ? TRANSITION_NONE : "floating-credit"}>Credit</label>
                                     </div>
                                 </KeyboardWrapper>
 
