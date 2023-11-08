@@ -7,22 +7,22 @@ function RevealAnswer(props) {
 	return (
 		<div className="showhide-reveal-ans-block revel">
 			<div className="showhide-call-action-text-div">Call to Action Button text:</div>
-			<TinyMceEditor 
+			<TinyMceEditor
 				permissions = {props.permissions}
 				openGlossaryFootnotePopUp = {props.openGlossaryFootnotePopUp}
-				index = {`${index}-1-0`} 
-				placeholder = {REVEAL_TEXT_PLACEHOLDER} 
-				className = {"actionPU formatted-text"} 
+				index = {`${index}-1-0`}
+				placeholder = {REVEAL_TEXT_PLACEHOLDER}
+				className = {"actionPU formatted-text"}
 				id = {props.id}
 				element = {element}
 				currentElement = {element?.interactivedata?.postertextobject[0]}
 				model = {element?.interactivedata?.postertextobject[0]?.html?.text}
 				handleEditorFocus = {props.handleFocus}
-				handleBlur = {props.handleBlur} 
-				slateLockInfo = {slateLockInfo} 
+				handleBlur = {props.handleBlur}
+				slateLockInfo = {slateLockInfo}
 				elementId = {props?.element?.id}
 				parentElement = {element}
-				popupField = {showHideConstants.REVEAL_TEXT} 
+				popupField = {showHideConstants.REVEAL_TEXT}
 				handleAudioPopupLocation = {props.handleAudioPopupLocation}
 				showHideType = {showHideConstants.REVEAL_TEXT}
 				saveCaretPosition = {props.saveCaretPosition}

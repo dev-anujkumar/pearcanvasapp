@@ -37,7 +37,7 @@ export const getOpenerContent = (textSemantics, type, titleText) => {
                 else if(contentLabelData && !contentData){
                     dataToReturn = titleText.substring(contentLabelData.charEnd + 1).trimLeft()
                 }
-                break;      
+                break;
         }
     } else if ((textSemantics == undefined || textSemantics.length === 0) && titleText) {
         switch (type) {

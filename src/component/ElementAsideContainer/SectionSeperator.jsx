@@ -15,18 +15,18 @@ class SectionSeperator extends Component {
             btnClassName:""
         }
     }
-    
+
  /**
-    * 
+    *
     * @discription - This function handles the click event on section
-    */ 
+    */
      handleSeperator = (e) =>{
         e.stopPropagation();
         e.preventDefault();
         this.setState({
             sectionFocus: true,
             btnClassName: 'activeTagBgColor'
-        }) 
+        })
         this.props.setActiveElement(this.props.element)
         let toolbar = config.asideToolbar
         if (toolbar && toolbar.length) {
@@ -46,30 +46,30 @@ class SectionSeperator extends Component {
     }
 
      /**
-    * 
+    *
     * @discription - This function handles the blur event on section
-    */ 
-   
+    */
+
      handleSeperatorBlur = (e)=>{
         e.stopPropagation();
         e.preventDefault();
         this.setState({
             sectionFocus: false,
             btnClassName: ''
-        }) 
+        })
     }
     render(){
         const {sectionFocus,btnClassName} = this.state;
         const { elemBorderToggle, borderToggle, element } = this.props;
         let showBorder = `section-seperator ${sectionFocus?"section-seperator-focus":""}`
         return (
-            <div className = "aside-section-seperator" tabIndex="0" onClick = {this.handleSeperator} onBlur = {this.handleSeperatorBlur} 
+            <div className = "aside-section-seperator" tabIndex="0" onClick = {this.handleSeperator} onBlur = {this.handleSeperatorBlur}
             className={
                 (elemBorderToggle !== 'undefined' && elemBorderToggle && (borderToggle !== 'hideBorder')) || borderToggle == 'active'? showBorder:""} >
 
                 {this.state.showCopyPopup && <CutCopyDialog inContainer={true} element={this.props.element} toggleCopyMenu={this.toggleCopyMenu} copyClickedX={this.copyClickedX} copyClickedY={this.copyClickedY} userRole={this.props.userRole} />}
                 {(elemBorderToggle !== 'undefined' && elemBorderToggle && (borderToggle !== 'hideBorder')) || borderToggle == 'active' ?
-                    <div> 
+                    <div>
                         <Button copyContext={(e)=>{OnCopyContext(e,this.toggleCopyMenu,true)}} btnClassName={btnClassName} type="element-label" labelText="SB" />
                       {this.props.permissions.includes('elements_add_remove') && !hasReviewerRole() && <Button  onClick={(e) => this.props.showDeleteElemPopup(e,true, element, true)} type="delete-element" />}
                     </div>:""

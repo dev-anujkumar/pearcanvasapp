@@ -1,4 +1,4 @@
-/*** 
+/***
  * @description - The Body comoinent of ELM Assessment
 */
 import React, { Component } from 'react';
@@ -48,7 +48,7 @@ class CiteTdxTable extends Component {
             })
         }
     }
-    
+
     addAssessment = (addedValue) => {
         this.props.setCurrentCiteTdx(addedValue);
     }
@@ -75,7 +75,7 @@ class CiteTdxTable extends Component {
         this.props.assessmentSorting(sortByParameter,sortOrder);
         this.props.getCiteTdxData(this.props.assessmentType, this.props.searchTitle, this.props.searchUuidVal,this.props.currentPageNo);
         }
-        
+
     }
     tableHeaders = ["Title", "Type", "Date Modified", "Modified By", "UUID"];
 

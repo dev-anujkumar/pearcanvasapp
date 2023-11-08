@@ -61,7 +61,7 @@ const setAssetData=(toggleApoPopup,apoObject,showApoCurrentlyLinked,currentlyLin
 
 /**
  * Handler for clear assetpopover link
- * @param {Id of assetpopover} assetPopoverID 
+ * @param {Id of assetpopover} assetPopoverID
  */
 export const clearAssetPopoverLink = (assetPopoverID) => {
     let domNode = document.querySelector('abbr[asset-id="' + assetPopoverID + '"');

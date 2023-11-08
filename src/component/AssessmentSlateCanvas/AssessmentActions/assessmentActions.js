@@ -85,7 +85,7 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
                         break;
                     case 'assessmentArray':
                         return assessmentEntityUrnHandler(res.data);
-                    case 'interactive': 
+                    case 'interactive':
                         return interactiveMetadataHandler(res.data, calledFrom, assessmentData, dispatch);
                     default:
                         assessmentErrorHandler(type,':Invalid Type of Assessment for Metadata');
@@ -197,7 +197,7 @@ export const openElmAssessmentPortal = (assessmentData) => (dispatch) => {
 }
 
 /**
- * This Function is used to update all the assessments with the given workUrn present in the project with the latest workUrn 
+ * This Function is used to update all the assessments with the given workUrn present in the project with the latest workUrn
  * @param oldWorkUrn current workURN of the assessment
  * @param updatedWorkUrn latest workURN of the assessment
  */
@@ -241,7 +241,7 @@ export const resetAssessmentStore = () => {
 }
 
 /**
- * This Function is used to call updateAssessmentVersion in case of same assessment being updated 
+ * This Function is used to call updateAssessmentVersion in case of same assessment being updated
  * @param assessmentID array of old & new AssessmentIds
  */
 export const checkEntityUrn = (assessmentID) => async (dispatch) => {

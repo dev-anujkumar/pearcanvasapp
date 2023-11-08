@@ -139,7 +139,7 @@ class AssessmentSlateData extends Component {
                 }
                 sendDataToIframe({ 'type': 'getAssessmentLO', 'message': { projectURN: config.projectUrn, assessmentUrn, apiKeys_LO, externalLFUrn:externalLFUrn, isElementUpdate, currentContainerUrn: config.slateManifestURN, loAssociation: this.props?.slateLevelData[config?.slateManifestURN]?.contents?.bodymatter[0]?.elementdata?.loAssociation } });
             }
-            else { //set tag to grey heresss                 
+            else { //set tag to grey heresss
                 let newMessage = { assessmentResponseMsg: false };
                 this.props.isLOExist(newMessage);
             }
@@ -189,11 +189,11 @@ class AssessmentSlateData extends Component {
             this.props.setCurrentCiteTdx(selectedAssessment);
             this.AssessmentSearchTitle(assessmentData.title, searchUUID);
             this.props.setAssessmentFilterParams(assessmentData.title, searchUUID);
-        }        
+        }
     }
 
-    /*** @description - This is the function to add CITE/TDX Asset to Assessment Slate 
-    * @param citeTdxObj - The object contains data about CITE/TDX Assessment 
+    /*** @description - This is the function to add CITE/TDX Asset to Assessment Slate
+    * @param citeTdxObj - The object contains data about CITE/TDX Assessment
     */
     addCiteTdxAssessment = (citeTdxObj) => {
         this.props.addCiteTdxAssessment(citeTdxObj, this.state.activeAssessmentType);
@@ -212,8 +212,8 @@ class AssessmentSlateData extends Component {
 
     /**----------------- This section consists of Elm/Learnosity Assets related methods ----------------*/
 
-    /*** @description - This is the function to add Elm/Learnosity Asset to Assessment Slate 
-    * @param pufObj - The object contains data about Elm/Learnosity Assessment 
+    /*** @description - This is the function to add Elm/Learnosity Asset to Assessment Slate
+    * @param pufObj - The object contains data about Elm/Learnosity Assessment
     */
     addPufAssessment = (pufObj) => {
         let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
@@ -350,9 +350,9 @@ class AssessmentSlateData extends Component {
         showBlocker(value);
     }
 
-    /*** @description - This is the root function to add/change Assessment 
+    /*** @description - This is the root function to add/change Assessment
      * @param e - event triggered
-     * @param activeAssessmentType - assessment -type 
+     * @param activeAssessmentType - assessment -type
     */
     mainAddAssessment = (e, activeAssessmentType) => {
         if (hasReviewerRole()) {
@@ -401,7 +401,7 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to handle the Assessment type change
      * @param type - the type of assessment selected from the dropdown
-     * @param e - event triggered 
+     * @param e - event triggered
     */
     handleAssessmentTypeChange = (type, e, calledFrom) => {
         e?.preventDefault();
@@ -422,7 +422,7 @@ class AssessmentSlateData extends Component {
         }
     }
 
-    /**@description - This Function sets the AssessmentType 
+    /**@description - This Function sets the AssessmentType
      * * @param type - the type of assessment selected from the dropdown
     */
     setUpdateAssessmentType=(type)=>{
@@ -462,14 +462,14 @@ class AssessmentSlateData extends Component {
 
     /*** @description - This function is to handle the Assessment Usage-type change
      * @param usageType - the usage-type selected from the dropdown
-     * @param e - event triggered 
+     * @param e - event triggered
     */
     handleAssessmentUsageTypeChange = (usageType) => {
         const isElmLearnosity = (this.state.activeAssessmentType == PUF || this.state.activeAssessmentType == LEARNOSITY) ? true : false
         if (isElmLearnosity) {
             let usageTypeList = this.props?.assessmentReducer?.usageTypeListData;
             const { assessmentSlateObj, assessmentReducer } = this.props;
-            const newAssessmentData =  assessmentSlateObj  && assessmentSlateObj.assessmentId && assessmentReducer[assessmentSlateObj.assessmentId] 
+            const newAssessmentData =  assessmentSlateObj  && assessmentSlateObj.assessmentId && assessmentReducer[assessmentSlateObj.assessmentId]
             const updatedUsageType = usageTypeList && usageTypeList.find((type) => type.label === usageType)
             if (newAssessmentData?.intendedUsage?.length>0 && !(newAssessmentData.intendedUsage.includes(updatedUsageType?.usagetype))) {
                 this.setState({
@@ -487,7 +487,7 @@ class AssessmentSlateData extends Component {
     }
 
 
-    
+
     setChangeUsageType(usageType){
         this.setState({
             activeAssessmentUsageType: usageType,
@@ -576,9 +576,9 @@ class AssessmentSlateData extends Component {
     }
 
     /*** @description - This is the function to set usageType type dropdown
-    * @param assessmentUsageType usage type 
+    * @param assessmentUsageType usage type
     */
-    setUsageType = (assessmentUsageType) => { 
+    setUsageType = (assessmentUsageType) => {
         let newSlateSelectType = <div className="assessment-label">Select usage type<span className="required">*</span></div>
         let usageType = <><div className="slate_assessment_metadata_container">
             {this.props.getAssessmentData === false && this.props.getAssessmentDataPopup === false ? newSlateSelectType : this.state.isUpdateFinal === false ? <div className="assessment-label">Usage type</div> : newSlateSelectType}
@@ -598,7 +598,7 @@ class AssessmentSlateData extends Component {
         return usageType;
     }
     /**
-     * @description This function is used to toggle changeUsageTypePopup 
+     * @description This function is used to toggle changeUsageTypePopup
      * @param {*} toggleValue Boolean value
      * @param {*} event event object
      */

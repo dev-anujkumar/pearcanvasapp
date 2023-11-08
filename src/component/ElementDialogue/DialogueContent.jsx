@@ -27,7 +27,7 @@ function DialogueContent(props) {
                     innerHTML = `<p>${currentNode.innerHTML}</p>`
                     if(DEClassName) innerHTML = `<p ${DEClassName}>${currentNode.innerHTML}</p>`;
                     innerText = currentNode.innerText
-                    const obj = { 
+                    const obj = {
                          ...props.model[props.index],
                          characterName: innerHTML,
                     }
@@ -42,7 +42,7 @@ function DialogueContent(props) {
                 glossaaryFootnotePopup={props.glossaaryFootnotePopup}
                 handleAudioPopupLocation = {props.handleAudioPopupLocation}
                 handleAssetsPopupLocation={props.handleAssetsPopupLocation}
-                
+
             />
             </KeyboardWrapper>
             <KeyboardWrapper index={`${props.elementIndex}-${props.index}-1-DE`}  enable>
@@ -59,7 +59,7 @@ function DialogueContent(props) {
                     let innerHTML, innerText;
                     innerHTML = `<p>${currentNode.innerHTML}</p>`;
                     innerText = currentNode.innerText
-                    const obj = { 
+                    const obj = {
                          ...props.model[props.index],
                         text: innerHTML,
                     }
@@ -79,7 +79,7 @@ function DialogueContent(props) {
         </Fragment>
     } else {
         const stageDirectionModel = prepareStageDirectionDom(props.model[props?.index]?.text)
-        editor = 
+        editor =
          <KeyboardWrapper index={`${props.elementIndex}-${props.index}-SD`}  enable>
         <TinyMceEditor
             index={`${props.elementIndex}-${props.index}`}
@@ -94,7 +94,7 @@ function DialogueContent(props) {
                 let innerHTML, innerText;
                 innerHTML = currentNode.innerHTML
                 innerText = currentNode.innerText
-                    const obj = { 
+                    const obj = {
                          ...props.model[props.index],
                         text: innerHTML,
                     }

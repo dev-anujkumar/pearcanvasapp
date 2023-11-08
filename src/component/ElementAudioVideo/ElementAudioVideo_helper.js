@@ -1,8 +1,8 @@
 import axios from "axios";
 import config from "../../config/config";
 
-/*** 
- *@description - This is the function to get the asset metadata 
+/***
+ *@description - This is the function to get the asset metadata
  *@param assetID - This is the asset ID for which metadata is fetched
 */
 export const getAssetMetadata = async (assetID) => {

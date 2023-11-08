@@ -61,7 +61,7 @@ export class ReactEditor extends React.Component {
               setFormattingToolbar('removeGlossaryFootnoteSuperscript')
               setFormattingToolbar('removeTinymceSuperscript')
             }
-          });      
+          });
       },
       init_instance_callback: (editor) => {
         if (hasReviewerRole() && !hasProjectPermission('elements_add_remove')) {        // when user doesn't have edit permission
@@ -74,7 +74,7 @@ export class ReactEditor extends React.Component {
           setFormattingToolbar('disableTinymceToolbar')
           setFormattingToolbar('removeTinymceSuperscript')
         }
-        /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */ 
+        /* Reverting data-temp-mathml to data-mathml and class Wirisformula to temp_WirisFormula */
         this.revertingTempContainerHtml(editor)
       },
     }
@@ -169,7 +169,7 @@ export class ReactEditor extends React.Component {
         args.content = tempContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
       }else{
           args.content = tinymce.activeEditor.selection.getContent();
-      } 
+      }
   }
 
   pastePostProcess = (plugin, args) => {
@@ -178,7 +178,7 @@ export class ReactEditor extends React.Component {
       let content = args.node.innerHTML
       content = content.replace(/\&nbsp;/g, ' ');
       args.node.innerHTML = content;
-    }   
+    }
   }
 
   /*
@@ -268,11 +268,11 @@ export class ReactEditor extends React.Component {
       }
     });
   };
-  
+
   addMathmlFormulaButton = editor => {
     /*
       Adding button and bind exec command on clicking the button to open the Mathml editor
-      Default command tiny_ce)wiris_openFormulaEditor is not working, so have added the command 
+      Default command tiny_ce)wiris_openFormulaEditor is not working, so have added the command
       copying from wiris plugin file(onAction)
     */
     editor.ui.registry.addButton("tinyMcewirisformulaEditor", {
@@ -342,7 +342,7 @@ export class ReactEditor extends React.Component {
       footnoteNode.innerHTML = this.termtext.replace(/data-temp-mathml/g,'data-mathml').replace(/temp_Wirisformula/g,'Wirisformula');
     }
   }
-  
+
   componentDidMount() {
     let _isEditorPlaced = false;
     for (let i = tinymce.editors.length - 1; i > -1; i--) {
@@ -359,7 +359,7 @@ export class ReactEditor extends React.Component {
       this.editorConfig.selector = '#' + this.editorRef.current.id;
       let glossaryNode = document.getElementById('glossary-0')
       let footnoteNode = document.getElementById('footnote-0')
-      this.setGlossaryFootnoteTerm(this.props.id, glossaryNode, footnoteNode)      
+      this.setGlossaryFootnoteTerm(this.props.id, glossaryNode, footnoteNode)
       tinymce.init(this.editorConfig).then((d) => {
         setFormattingToolbar('removeTinymceSuperscript')
         setFormattingToolbar('removeGlossaryFootnoteSuperscript')
@@ -442,7 +442,7 @@ export class ReactEditor extends React.Component {
      tinymce.activeEditor.selection.placeCaretAt(clickedX,clickedY) //Placing exact cursor position on clicking.
     })
   }
-  
+
   updateCurrentGlossaryValue = () => {
     if(this.props.id === 'glossary-1' || this.props.id === 'glossary-0'){
       const term = document.getElementById('glossary-0')?.innerHTML || '';
@@ -458,9 +458,8 @@ export class ReactEditor extends React.Component {
 
   render() {
     let propsGlossaryFootNoteCurrentValue = this.props.glossaryFootNoteCurrentValue;
-    let {markedIndexIcon} = this.props;
     const isReviewer = hasReviewerRole();
-    // && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552 
+    // && this.props.glossaryFootNoteCurrentValue.replace(/&nbsp;/g, ' ');      //BG-2552
     let glossaryFootNoteCurrentValue;
     try{
       glossaryFootNoteCurrentValue = (propsGlossaryFootNoteCurrentValue && tinyMCE.$(propsGlossaryFootNoteCurrentValue.trim()).length) ? (tinyMCE.$(propsGlossaryFootNoteCurrentValue))[0].innerHTML : propsGlossaryFootNoteCurrentValue;
@@ -469,7 +468,7 @@ export class ReactEditor extends React.Component {
       glossaryFootNoteCurrentValue = propsGlossaryFootNoteCurrentValue;
     }
     glossaryFootNoteCurrentValue = glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/^(\ |&nbsp;|&#160;)+|(\ |&nbsp;|&#160;)+$/g, '&nbsp;');
-    
+
     return (
       <div className={`glossary-toolbar ${isReviewer? "pointer-events-none" : ""}`}>
         <p ref={this.editorRef} className={this.placeHolderClass} placeholder={this.props.placeholder} onClick={this.handleClick} contentEditable={`${!isReviewer}`} id={this.props.id} dangerouslySetInnerHTML={{ __html: glossaryFootNoteCurrentValue && glossaryFootNoteCurrentValue.replace(/\sdata-mathml/g, ' data-temp-mathml').replace(/\"Wirisformula/g, '"temp_Wirisformula').replace(/\sWirisformula/g, ' temp_Wirisformula') }}></p>

@@ -34,19 +34,17 @@ class AddImageGlossary extends Component {
         if (hasReviewerRole()) {
             return true
         }
-        let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
         }
-        var data_1 = false;
         if (alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0) {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef) {         //if alfresco location is available
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
                     const alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.repositoryFolder
                     const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
-                    const citeNodeRef= alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef; 
+                    const citeNodeRef= alfrescoPath?.alfresco?.guid ? alfrescoPath.alfresco.guid : alfrescoPath.alfresco.nodeRef;
                     let messageObj = {
                         appName:'cypress',
                         citeName: citeName,
@@ -86,7 +84,6 @@ class AddImageGlossary extends Component {
     handleSiteOptionsDropdown = (alfrescoPath, id, isImageGlossary, currentAsset) =>{
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        let SSOToken = config.ssoToken;
         return axios.get(url,
             {
                 headers: {
@@ -97,9 +94,9 @@ class AddImageGlossary extends Component {
                 }
             })
             .then(function (response) {
-               let payloadObj = { 
-                launchAlfrescoPopup: true, 
-                alfrescoPath: alfrescoPath, 
+               let payloadObj = {
+                launchAlfrescoPopup: true,
+                alfrescoPath: alfrescoPath,
                 alfrescoListOption: response.data.list.entries,
                 id,
                 isImageGlossary,

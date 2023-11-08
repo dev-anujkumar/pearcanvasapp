@@ -8,6 +8,7 @@ import axios from 'axios';
 import config from '../../config/config';
 import { checkImageForMetadata, checkOpenerElement, checkSmartLinkInteractive } from '../AssessmentSlateCanvas/AssessmentActions/assessmentUtility';
 import { showNotificationOnCanvas } from '../../constants/utility';
+import { checkMetadataIdentical } from '../ElementContainer/ElementContainerUpdate_helpers';
 /**
 * @description - PopUp is a class based component. It is defined simply
 * to make a skeleton of PopUps.
@@ -18,6 +19,8 @@ class MetaDataPopUp extends React.Component {
         this.state = {
            altText:"",
 		   longDescription:"",
+		   fetchedAltText: '',
+		   fetchedLongDesc: '',
 		   active:'',
 		   disableTextFields:false,
 		   disableUpdateButton:false
@@ -37,7 +40,7 @@ class MetaDataPopUp extends React.Component {
 
 	/**
     * @description - This function is responsible for showing alfresco metadata in the popup.
-    * @param {event} 
+    * @param {event}
     */
 	getAlfrescoMetadata = () => {
 		let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/nodes/`+ this.props.imageId;
@@ -48,24 +51,28 @@ class MetaDataPopUp extends React.Component {
 				'myCloudProxySession': config.myCloudProxySession
 			}
 		}).then(response => {
-			const { properties } = response?.data?.entry || {};	
+			const { properties } = response?.data?.entry || {};
 			if(this?.props?.element?.figuretype === "interactive"){
-				const avsJsonStringData = properties["avs:jsonString"] 
+				const avsJsonStringData = properties["avs:jsonString"]
 				let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
 				this.setState({
 					metaData: properties,
 					altText: avsStringData.imageAltText,
+					fetchedAltText: avsStringData.imageAltText,
+					fetchedLongDesc: avsStringData.linkLongDesc,
 					longDescription: avsStringData.linkLongDesc,
 					disableTextFields: true,
-					disableUpdateButton: (this?.props?.element?.figuredata?.alttext===avsStringData?.imageAltText && this?.props?.element?.figuredata?.longdescription===avsStringData?.linkLongDesc) ? false : true
+					disableUpdateButton: checkMetadataIdentical(this?.props?.element?.figuredata?.alttext, this?.props?.element?.figuredata?.longdescription, avsStringData?.imageAltText, avsStringData?.linkLongDesc) ? false : true
 				})}
 			else{
 				this.setState({
 					metaData: properties,
+					fetchedAltText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
+					fetchedLongDesc: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
 					altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
 					longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
 					disableTextFields:  true,
-					disableUpdateButton: checkOpenerElement(this.props.element) ? (this?.props?.element?.backgroundimage?.alttext===properties["cplg:altText"] && this?.props?.element?.backgroundimage?.longdescription===properties["cplg:longDescription"] ? false : true) :  (this?.props?.element?.figuredata?.alttext===properties["cplg:altText"] && this?.props?.element?.figuredata?.longdescription===properties["cplg:longDescription"]) ? false : true
+					disableUpdateButton: checkOpenerElement(this.props.element) ? (checkMetadataIdentical(this?.props?.element?.backgroundimage?.alttext, this?.props?.element?.backgroundimage?.longdescription, properties["cplg:altText"], properties["cplg:longDescription"]) ? false : true) :  checkMetadataIdentical(this?.props?.element?.figuredata?.alttext, this?.props?.element?.figuredata?.longdescription, properties["cplg:altText"], properties['cplg:longDescription']) ? false : true
 				})
 			}
 			}).catch(error => {
@@ -78,12 +85,12 @@ class MetaDataPopUp extends React.Component {
 		const { metaData,altText, longDescription } = this.state;
 		let body;
 		if(this?.props?.element?.figuretype === "interactive"){
-			const avsJsonStringData = metaData["avs:jsonString"] 
+			const avsJsonStringData = metaData["avs:jsonString"]
         	let avsStringData = avsJsonStringData && (typeof avsJsonStringData === 'string') ? JSON.parse(avsJsonStringData) : avsJsonStringData;
 			avsStringData.linkLongDesc=longDescription
 			avsStringData.imageAltText=altText
 			body = {
-				properties: { 
+				properties: {
 					"avs:jsonString": JSON.stringify(avsStringData),
 				}
 			}}
@@ -119,7 +126,7 @@ class MetaDataPopUp extends React.Component {
 	updateElementData = () => {
 		const { index, element, asideData } = this.props;
 				/*-- Form data to send to wip */
-		if(element?.type === "openerelement"){ 
+		if(element?.type === "openerelement"){
 			let tempElementData = {...element}
 			tempElementData.backgroundimage.alttext = this.state.altText;
 			tempElementData.backgroundimage.longdescription = this.state.longDescription;
@@ -131,7 +138,7 @@ class MetaDataPopUp extends React.Component {
             }
             this.props.saveSelectedAltTextLongDescData(altLongDescData)
 		}
-		else{	
+		else{
 		let	figureData = { ...element?.figuredata };
 		figureData.alttext = this.state.altText;
 		figureData.longdescription = this.state.longDescription;
@@ -140,6 +147,20 @@ class MetaDataPopUp extends React.Component {
 			this.props.handleFocus("updateFromC2")
 			this.props.handleBlur()
 		})}
+	}
+
+	handleChangeAltText = (e) => {
+		if(e?.target?.value===this.state.fetchedAltText && this.state.longDescription===this.state.fetchedLongDesc)
+		this.setState({altText: e?.target?.value, disableUpdateButton: false})
+		else
+		this.setState({altText: e?.target?.value, disableUpdateButton: true})
+	}
+
+	handleChangeLongDesc = (e) => {
+		if(e?.target?.value===this.state.fetchedLongDesc && this.state.altText===this.state.fetchedAltText)
+		this.setState({ longDescription: e?.target?.value, disableUpdateButton: false})
+		else
+		this.setState({ longDescription: e?.target?.value, disableUpdateButton: true})
 	}
 
     render() {
@@ -158,38 +179,38 @@ class MetaDataPopUp extends React.Component {
 						<div className="figuremetadata-field">
 							<div className={`alt-text-body ${active === 'altBody' ? 'active' : ""}`} onClick={()=>this.handleActiveState('altBody')} >
 								<p className={`alt-text ${active === 'altBody' ? 'active' : ""}`}>Alt Text</p>
-								<input 
+								<input
 								    autocomplete="off"
-									id="altText_AM" 
-									name="altText_AM" 
-									type="text" 
-									placeholder="Enter your text here" 
+									id="altText_AM"
+									name="altText_AM"
+									type="text"
+									placeholder="Enter your text here"
 									value={altText}
                                     disabled ={this.state.disableTextFields ? false : true}
-									onChange={(e) => this.setState({ altText: e.target.value, disableUpdateButton: true })}
+									onChange={(e) => {this.handleChangeAltText(e)}}
 								/>
 							</div>
 							<div className= {`long-description-body ${active === 'longBody' ? 'active' : ""}`} onClick={()=>this.handleActiveState('longBody')}>
 								<p className={`long-text ${active === 'longBody' ? 'active' : ""}`}>Long Description</p>
-								<textarea 
-									id="longDescription_AM" 
-									name="longDescription_AM" 
-									rows="9" 
-									cols="50" 
-									placeholder="Enter your text here" 
+								<textarea
+									id="longDescription_AM"
+									name="longDescription_AM"
+									rows="9"
+									cols="50"
+									placeholder="Enter your text here"
 									value={longDescription}
 								    disabled ={this.state.disableTextFields ? false : true}
-									onChange={(e) => this.setState({ longDescription: e.target.value, disableUpdateButton: true })}>
+									onChange={(e) => {this.handleChangeLongDesc(e)}}>
 								</textarea>
 							</div>
 						</div>
 						<div className="metadata-button">
 						   <span className={`metadata-import-button ${this.state.disableUpdateButton ? '' : "disabled"}`} onClick={(e) => this.sendAlfrescoMetadata(e)}>Update Metadata</span>
 						   <span className="cancel-button" id='close-container' onClick={(e) => togglePopup(false, e)}>Cancel</span>
-						</div>	
+						</div>
 					</div>
 				</div>
-                        
+
             </div>
         );
     }

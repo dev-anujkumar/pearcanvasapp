@@ -1314,7 +1314,8 @@ describe('Test for Sidebar component', () => {
              const event = {
                  target:[]
              }
-             sidebarInstance.playbackModeRef = "playbackmode"
+             sidebarInstance.playbackModeRef = { current: { contains: jest.fn()}} 
+             sidebarInstance.playbackModeLabelRef = { current: { contains: jest.fn()} }
              sidebarInstance.handleClickOutside(event);
          })
          it('handleClickOutside Event else case', () => {

@@ -119,7 +119,7 @@ export const checkEmbeddedElmAssessment = (element, assessReducer) => {
     if (element && element.type == ELEMENT_FIGURE && element.figuretype == FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && isElmLearnosityAssessment(element.figuredata.elementdata) && element.figuredata.elementdata.assessmentid) {
         const id = element.figuredata.elementdata.assessmentid;
         const status = assessReducer?.hasOwnProperty(id) ?
-                    assessReducer[id].showUpdateStatus : false;    
+                    assessReducer[id].showUpdateStatus : false;
         return !status;
     }
     return false;

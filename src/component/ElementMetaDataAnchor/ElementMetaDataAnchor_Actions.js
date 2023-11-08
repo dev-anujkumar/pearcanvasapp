@@ -1,4 +1,4 @@
-import { 
+import {
     CURRENT_SLATE_LF,
     TOGGLE_LO_WARNING_POPUP,
     DEFAULT_LF
