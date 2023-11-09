@@ -54,26 +54,15 @@ describe('Tests slateLock  action', () => {
         axios.get = jest.fn(() => Promise.resolve(newRes2));
         actions.getSlateLockStatus(projectUrn, slateId)(dispatch)
     })
-    // it('testing-- getSlateLockStatus  catch', () => {
-    //     let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
-    //         slateId = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
-    //     store = mockStore(() => initialState);
-    //     axios.get = jest.fn(() => Promise.reject({}));
-    //     const spyFunction = jest.spyOn(actions, 'getSlateLockStatus');
-    //     actions.getSlateLockStatus(projectUrn, slateId)
-    //     expect(callback).not.toBeCalled();
-    //     expect(spyFunction).toHaveBeenCalled();
-    //     spyFunction.mockClear();
     it('testing-- getSlateLockStatusWithCallback  catch', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
-            slateId = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
+        slateId = "urn:pearson:manifest:e55c1c98-ffe6-487d-b8b2-f8f45513d66d"
         store = mockStore(() => initialState);
         axios.get = jest.fn(() => Promise.reject({}));
         const spyFunction = jest.spyOn(actions, 'getSlateLockStatus');
         actions.getSlateLockStatus(projectUrn, slateId)
-            //expect(callback).not.toBeCalled();
-            expect(spyFunction).toHaveBeenCalled();
-            spyFunction.mockClear();
+        expect(spyFunction).toHaveBeenCalled();
+        spyFunction.mockClear();
     })
     it('testing-- getSlateLockStatusWithCallback  then', () => {
         let projectUrn = "urn:pearson:distributable:7fd85d45-fd60-4e0e-8491-a9b5c9677ee8",
