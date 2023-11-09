@@ -19,7 +19,6 @@ const PendingTransactionsDataMapper = {
         index, changeStatus, changeTime,
       },
     } = data;
-    pendingElementSnapshot = TCMUtils.replaceNBSPWithSpace(pendingElementSnapshot);
     elementChangeType = elementChangeType.toLowerCase();
     returnValue.elementChangeType = elementChangeType;
     returnValue.theme = elementChangeType === 'create' ? 'new' : elementChangeType === 'delete' ? 'deleted' : '';
@@ -41,7 +40,7 @@ const PendingTransactionsDataMapper = {
     return returnValue;
   },
 
-  
+
 };
 
 export default PendingTransactionsDataMapper;

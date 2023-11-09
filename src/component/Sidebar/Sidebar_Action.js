@@ -7,7 +7,7 @@ import {
     ERROR_POPUP,
     GET_TCM_RESOURCES,
     AUTHORING_ELEMENT_UPDATE,
-    CHECK_ASIDE_NUMBER 
+    CHECK_ASIDE_NUMBER
 } from './../../constants/Action_Constants';
 import elementTypes from './../Sidebar/elementTypes';
 import figureDataBank from '../../js/figure_data_bank';
@@ -119,8 +119,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 delete oldElementData.figuredata?.type
             }
             // Resetting fields on conversion from decorative image to other figure types
-            else if (oldElementData.figuredata?.decorative) {    
-                dispatch(decoToOtherTypeConversion(true));   
+            else if (oldElementData.figuredata?.decorative) {
+                dispatch(decoToOtherTypeConversion(true));
                 dispatch(fetchOldDataAfterConversion(oldElementData));
                 if (isAutoNumberingEnabled && oldElementData?.hasOwnProperty('numberedandlabel')) {
                     oldElementData.numberedandlabel = true
@@ -270,7 +270,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     if (isAutoNumberingEnabled && (outputPrimaryOptionEnum === 'AUDIO' || outputPrimaryOptionEnum === 'VIDEO')) {
         conversionDataToSend = {
             ...conversionDataToSend,
-            displayedlabel: outputPrimaryOptionEnum === 'AUDIO' ? 'Audio' : 'Video'      
+            displayedlabel: outputPrimaryOptionEnum === 'AUDIO' ? 'Audio' : 'Video'
         }
     }
 
@@ -283,7 +283,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
     }
     config.isSavingElement = true
     const url = `${config.REACT_APP_API_URL}v1/slate/elementTypeConversion/${overallType}`
-    axios.post(url, JSON.stringify(conversionDataToSend), { 
+    axios.post(url, JSON.stringify(conversionDataToSend), {
         headers: {
             "Content-Type": "application/json",
             'myCloudProxySession': config.myCloudProxySession
@@ -318,7 +318,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 }
                 else {
                     /**
-                    * @param {Object} newAppStore 
+                    * @param {Object} newAppStore
                     * @description - Adding showhide data into appstore variable to form snapshots of conversion
                     */
                     const newAppStore = showHideObj?.element?.type === "showhide" ? { ...appStore, showHideObj } : appStore;
@@ -364,7 +364,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 }, 0)
                 ctaNode.classList.add("place-holder")
             }
-        } 
+        }
         /**-------------------------------------------------------------------------------------------------------- */
         let storeElement = store[config.slateManifestURN];
         let bodymatter = storeElement.contents.bodymatter;
@@ -447,7 +447,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             activeElementObject.numbered= res.data.figuredata.numbered
           activeElementObject.startNumber= res.data.figuredata.startNumber
            activeElementObject.syntaxhighlighting= res.data.figuredata.syntaxhighlighting
-            
+
         }
         const asideElementTypes = ['element-aside', 'element-workedexample'];
         if (asideElementTypes.includes(newElementData.elementType)) {
@@ -485,8 +485,8 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
                 elementWipType: "element-authoredtext"
             }
         }
-        
-        //tcm conversion code   
+
+        //tcm conversion code
         if (config.tcmStatus && !isTbElement) {
             if (elementType.indexOf(oldElementData.type) !== -1) {
                 prepareDataForConversionTcm(oldElementData.id, getState, dispatch, res.data.id, res.data);
@@ -502,7 +502,7 @@ export const convertElement = (oldElementData, newElementData, oldElementInfo, s
             node2?.focus()
         }
     })
-    
+
     .catch(err =>{
         sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })
         dispatch({type: ERROR_POPUP, payload:{show: true}})
@@ -582,8 +582,8 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
         let versionStatus = fetchManifestStatus(convertBodymatter, convertParentData,response.type);
         /** latest version for WE/CE/PE/AS/2C*/
         convertParentData = await checkContainerElementVersion(convertParentData, versionStatus, currentSlateData)
-        /** 
-        * @description For SHOWHIDE Element - create showHideObj/AsideData/parentUrn to prepare 
+        /**
+        * @description For SHOWHIDE Element - create showHideObj/AsideData/parentUrn to prepare
         * snapshots of showhide element
         * @param {String} typeOfElement
         */
@@ -599,7 +599,7 @@ export const tcmSnapshotsForConversion = async (elementConversionData,indexes,ap
             actionStatusVersioning.status ="accepted"
             prepareTcmSnapshots(oldElementData, actionStatusVersioning, convertParentData, "",indexes);
         }
-       
+
         prepareTcmSnapshots(response,actionStatus, convertParentData,"",indexes);
     } catch(error){
         console.log("Error: ", error)
@@ -631,7 +631,7 @@ const prepareAssessmentDataForConversion = (oldElementData, format) => {
     if (oldElementData && oldElementData.title && oldElementData.title.text) {
         oldElementData.title.text = "";
     }
-    
+
     /** [PCAT-6792] | WIP changes in embedded assessment */
     /** [PCAT-7961] | case(1) - As no unique figuredata.id is present for the assessment,the  'figuredata.id' key is removed */
     if (oldElementData && oldElementData.figuredata && (oldElementData.figuredata.id || oldElementData.figuredata.id == "")) {
@@ -731,19 +731,19 @@ export const handleElementConversion = (elementData, store, activeElement, fromT
                         if( bodymatter[index] && (('elementdata' in bodymatter[index] && 'bodymatter' in bodymatter[index].elementdata) || ('contents' in bodymatter[index] && 'bodymatter' in bodymatter[index].contents) || 'interactivedata' in bodymatter[index])) {
                             bodymatter = bodymatter[index].elementdata && bodymatter[index].elementdata.bodymatter ||   bodymatter[index].contents && bodymatter[index].contents.bodymatter ||  bodymatter[index].interactivedata[showHideObj.showHideType]
                         }
-                        
+
                     }
                 }
-            
+
             });
         }
     }
-    
+
     return store;
 }
 
 /**
- * 
+ *
  * @param {Object} elementData | element's data which is being converted
  * @param {Boolean} fromToolbar | conversion from toolbar (only list type)
  */
@@ -803,13 +803,13 @@ export const updateBlockListMetadata = (dataToUpdate) => (dispatch, getState) =>
             if ((dataToUpdate?.asideData?.parent?.type && dataToUpdate.asideData.parent.type === "showhide" && dataToUpdate?.asideData?.parent?.showHideType) || (dataToUpdate?.asideData?.type && dataToUpdate.asideData.type === "showhide" && dataToUpdate?.asideData?.sectionType)) {
                 let showHideSection = dataToUpdate?.asideData?.parent?.showHideType ? dataToUpdate.asideData.parent.showHideType : dataToUpdate.asideData.sectionType;
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].interactivedata[showHideSection][slateLevelBLIndex[2]], dataToSend)
-            } // For Nested BL inside AS i.e Slate->AS/WE(header)->BL 
+            } // For Nested BL inside AS i.e Slate->AS/WE(header)->BL
             else if(parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.type === "groupedcontent"){
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.groupeddata?.bodymatter[slateLevelBLIndex[1]]?.groupdata?.bodymatter[slateLevelBLIndex[2]], dataToSend)
-            }// For Nested BL inside 2C & 3C i.e Slate->2C/3C->BL 
+            }// For Nested BL inside 2C & 3C i.e Slate->2C/3C->BL
             else if((dataToUpdate?.slateLevelBLIndex?.length)%2 === 0 && parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.type === "element-aside"){
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]].elementdata.bodymatter[slateLevelBLIndex[1]], dataToSend)
-            } // For Nested BL inside AS i.e Slate->WE(Body)->BL 
+            } // For Nested BL inside AS i.e Slate->WE(Body)->BL
             else if(parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.type === "element-aside"){
                 updateBLMetaData(dataToUpdate?.blockListData?.id, parsedParentData[config?.slateManifestURN]?.contents?.bodymatter[slateLevelBLIndex[0]]?.elementdata?.bodymatter[slateLevelBLIndex[1]]?.contents?.bodymatter[slateLevelBLIndex[2]], dataToSend)
             }//For BL on Slate Level i.e Slate->BL
@@ -1017,7 +1017,7 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
                     newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].startlinenumber = dataToUpdate.startNumber
                     updatedElement = newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]]
                     break;
-    
+
                 case 3:      /** Toggle Use Line of PE inside multicolumn/ WE section break*/
                     if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]].numberedline = dataToUpdate.isNumbered
@@ -1035,7 +1035,7 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
                    break;
     }
         }
-    } 
+    }
         elementEntityUrn = updatedElement?.contentUrn
 
         if (typeof tmpIndex === 'number') {
@@ -1051,7 +1051,7 @@ const updateContainerMetadataInStore = (updateParams, elementEntityUrn="") => (d
                 case 3:
                     if (newBodymatter[tmpIndex[0]].type == "groupedcontent") {
                         newBodymatter[tmpIndex[0]].groupeddata.bodymatter[tmpIndex[1]].groupdata.bodymatter[tmpIndex[2]] = updatedElement
-                    } 
+                    }
                     if (newBodymatter[tmpIndex[0]].type == "element-aside") {
                         newBodymatter[tmpIndex[0]].elementdata.bodymatter[tmpIndex[1]].contents.bodymatter[tmpIndex[2]] = updatedElement
                     }

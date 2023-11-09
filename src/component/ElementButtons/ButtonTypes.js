@@ -18,7 +18,7 @@ export default {
     IMAGE_ELEMENT : "image-elem",
     AUDIO_ELEMENT : "audio-elem",
     INTERACTIVE_ELEMENT : "interactive-elem-button",
-    CONTAINER_ELEMENT : "container-elem-button",    
+    CONTAINER_ELEMENT : "container-elem-button",
     WORKED_EXAMPLE_ELEMENT : "worked-exp-elem",
     ASSESSMENT_ELEMENT : "assessment-elem",
     OPENER_ELEMENT : "opener-elem",

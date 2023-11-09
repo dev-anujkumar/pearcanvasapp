@@ -119,7 +119,7 @@ export const checkEmbeddedElmAssessment = (element, assessReducer) => {
     if (element && element.type == ELEMENT_FIGURE && element.figuretype == FIGURE_ASSESSMENT && element.figuredata && element.figuredata.elementdata && isElmLearnosityAssessment(element.figuredata.elementdata) && element.figuredata.elementdata.assessmentid) {
         const id = element.figuredata.elementdata.assessmentid;
         const status = assessReducer?.hasOwnProperty(id) ?
-                    assessReducer[id].showUpdateStatus : false;    
+                    assessReducer[id].showUpdateStatus : false;
         return !status;
     }
     return false;
@@ -158,6 +158,18 @@ export const checkOpenerElement = (element) => {
     }
     return false;
 }
+
+/**
+ * @description - This is the function to check if the element is figure image but not decorative image
+ * @param element - element's details
+ */
+export const checkImageForMetadata = (element) => {
+    const ImageTypes = ["image", "mathImage", "table"];
+    if(ImageTypes?.includes(element.figuretype) && !element.figuredata.hasOwnProperty('decorative'))
+        return true
+    return false;
+}
+
 export const checkFigureMetadata = (element, buttonType = null) => {
     const figureImageTypes = ["image", "mathImage", "table"];
     const smartlinkContexts = ['3rd-party', 'pdf', 'web-link', 'pop-up-web-link', 'table'];

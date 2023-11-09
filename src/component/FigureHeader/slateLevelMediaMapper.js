@@ -23,9 +23,9 @@ export const getAutoNumberedElementsOnSlate = async (slateLevelData, params) => 
 
 /**
  * Get List of Media Elements on a Slate
- * @param {*} bodyMatter 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} bodyMatter
+ * @param {*} imagesList
+ * @returns
  */
 export const getImagesInsideSlates = async (bodyMatter, numberedElements = [], parentIndex = [], parentDetails = [], popupElementsList = []) => {
     if (bodyMatter?.length > 0) {
@@ -135,9 +135,9 @@ export const getPopupDataInsideContainer = async (bodyMatter, parentIndex = [], 
 
 /**
  * Get List of Aside Elements on a Slate
- * @param {*} bodyMatter 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} bodyMatter
+ * @param {*} imagesList
+ * @returns
  */
 export const getAsideElementsWrtKey = async (bodyMatter, typeKey, numberedElements = [], parentIndex = [], parentDetails = []) => {
     if (bodyMatter?.length > 0 && typeKey) {
@@ -261,9 +261,9 @@ export const getMediaElementInPopup = async (containerData, numberedElements) =>
 }
 /**
  * Prepare list of media elements in Aside/WE
- * @param {*} containerData 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} containerData
+ * @param {*} imagesList
+ * @returns
  */
 export const getMediaElementInAsideWE = async (containerData, numberedElements, parentIndex) => {
     if (containerData?.elementdata?.bodymatter?.length > 0) {
@@ -290,15 +290,15 @@ export const getMediaElementInAsideWE = async (containerData, numberedElements, 
 
 /**
  * Prepare list of media elements in MultiColumn 2C/3C
- * @param {*} containerData 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} containerData
+ * @param {*} imagesList
+ * @returns
  */
 export const getMediaElementInMultiColumn = async (containerData, numberedElements, parentIndex) => {
     if (containerData?.groupeddata?.bodymatter?.length > 0) {
         let groupedDataBodyMatter = containerData?.groupeddata?.bodymatter;
         for(let i in groupedDataBodyMatter){
-            let colData = groupedDataBodyMatter[i]; 
+            let colData = groupedDataBodyMatter[i];
             if (colData.type === containerElements.GROUP) {
                 containerData.indexPos = [...parentIndex];
                 containerData.indexPos.push(i);
@@ -329,9 +329,9 @@ export const getMediaElementInMultiColumn = async (containerData, numberedElemen
 
 /**
  * Prepare list of media elements in Showhide
- * @param {*} containerData 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} containerData
+ * @param {*} imagesList
+ * @returns
  */
 export const getMediaElementInShowhide = async (containerData, numberedElements, containerIndex) => {
     const showHideContent = await containerBodyMatter(containerData);
@@ -382,9 +382,9 @@ export const getContainerInPopup = (containerData, numberedElements, elementType
 
 /**
  * Prepare list of media elements in MultiColumn 2C/3C
- * @param {*} containerData 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} containerData
+ * @param {*} imagesList
+ * @returns
  */
 export const getContainerInMultiColumn = async (containerData, numberedElements, parentIndex, elementType) => {
     if (containerData?.groupeddata?.bodymatter?.length > 0) {
@@ -417,9 +417,9 @@ export const getContainerInMultiColumn = async (containerData, numberedElements,
 
 /**
  * Prepare list of media elements in Showhide
- * @param {*} containerData 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} containerData
+ * @param {*} imagesList
+ * @returns
  */
 export const getContainerInShowhide = async (containerData, numberedElements, elementType) => {
     const showHideContent = await containerBodyMatter(containerData)

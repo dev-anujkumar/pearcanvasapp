@@ -43,10 +43,10 @@ export class CitationGroup extends Component {
                     pasteElement={this.props.pasteElement}
                     source={CITATION_SOURCE}
                 />
-            </> 
+            </>
         )
     }
-    
+
     /**
      * Renders Citation elements
      * @param {object} _slateBodyMatter - Bodymatter containing an array of citation elements
@@ -123,7 +123,7 @@ export class CitationGroup extends Component {
                                 }
                               </LazyLoad>
                             </React.Fragment>
-                          
+
                         )
                    // }
 
@@ -160,7 +160,7 @@ export class CitationGroup extends Component {
         }
         return dataObj
     }
-    
+
     /**
      * Renders a container containing Citation elements
      * @param {object} context - component's context object (destructured)
@@ -215,7 +215,7 @@ export class CitationGroup extends Component {
                                         cgThis.props.swapElement(dataObj, () => { })
                                         cgThis.context.setActiveElement(dataObj.swappedElementData, dataObj.newIndex);
                                         config.citationFlag= false;
-                                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } }); 
+                                        sendDataToIframe({ 'type': ShowLoader, 'message': { status: true } });
                                     },
                                 }}
                                 ref={(c) => {
@@ -259,7 +259,7 @@ export class CitationGroup extends Component {
         }
         this.context.handleFocus("", "", event)
     }
-    
+
     render() {
         const { context } = this
         return (
@@ -271,7 +271,7 @@ export class CitationGroup extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    
+
 })
 
 const mapDispatchToProps = {

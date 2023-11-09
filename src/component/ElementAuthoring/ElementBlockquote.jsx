@@ -17,7 +17,7 @@ export class ElementBlockquote extends Component {
         //checking no of childs in node
         let firstParaBlock = tempDiv.children[0]?.children[0]?.outerHTML
         let attrParaBlock = tempDiv.children[0]?.children[1]?.classList?.contains('blockquoteTextCredit') ? tempDiv.children[0]?.children[1].outerHTML : tempDiv.children[0]?.children[2]?.outerHTML
-        let blockquoteElement = 
+        let blockquoteElement =
       <div>
          <blockquote className={blockquoteClass}>
          <KeyboardWrapper enable index={`${this.props.index}-0`}>

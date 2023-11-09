@@ -4,7 +4,7 @@ export const SLATE_API_ERROR = "Error in getting slate data. Please try again."
 export const SECTION_BREAK_LABELTEXT = "SB"
 
 /*---------------Element Figure ----------------------*/
-export const TABLE_AS_MARKUP = "tableasmarkup" 
+export const TABLE_AS_MARKUP = "tableasmarkup"
 export const FIGURE = "figure"
 export const IMAGE = "image"
 export const TABLE = "table"
@@ -19,7 +19,7 @@ export const WIDER = "wider"
 export const FULL = "full"
 export const DEFAULT_IMAGE_DATA_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
 export const DEFAULT_IMAGE_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png"
-/*---------------Element Audio-Video ----------------------*/ 
+/*---------------Element Audio-Video ----------------------*/
 export const AUDIO = "audio"
 export const VIDEO = "video"
 export const INTERACTIVE = "interactive"
@@ -28,11 +28,11 @@ export const MULTI_COLUMN = "groupedcontent"
 export const TAB = "tab"
 export const DEFAULT_VIDEO_POSTER_IMAGE = "https://cite-media-stg.pearson.com/legacy_paths/af7f2e5c-1b0c-4943-a0e6-bd5e63d52115/FPO-audio_video.png"
 
-/*---------------Element Interactive ----------------------*/ 
+/*---------------Element Interactive ----------------------*/
 export const INTERACTIVE_FPO = "https://cite-media-stg.pearson.com/legacy_paths/32bbc5d4-f003-4e4b-a7f8-3553b071734e/FPO-interactive.png"
 export const INTERACTIVE_SCHEMA = "http://schemas.pearson.com/wip-authoring/interactive/1#/definitions/interactive"
 export const AUTHORED_TEXT_SCHEMA = "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext"
-/*---------------Element Single Assessment ----------------------*/ 
+/*---------------Element Single Assessment ----------------------*/
 export const ESA_DIALOG_TEXT='PLEASE ENTER A PRODUCT UUID'
 export const ESA_POPUP_PLACEHOLDER='UUID'
 export const ESA_POPUP_ROWS='1'
@@ -44,11 +44,11 @@ export const ASSESSMENT_SLATE = "element-assessment"
 export const DEFAULT_ASSESSMENT_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
 export const DEFAULT_ASSESSMENT_DATA_SOURCE = "https://cite-media-stg.pearson.com/legacy_paths/8efb9941-4ed3-44a3-8310-1106d3715c3e/FPO-assessment.png"
 
-/*---------------Comments Panel PopUp----------------------*/ 
+/*---------------Comments Panel PopUp----------------------*/
 export const COMMENTS_POPUP_DIALOG_TEXT="Please enter a comment:"
 export const COMMENTS_POPUP_ROWS='10'
 
-/*---------------Delete PopUp----------------------*/ 
+/*---------------Delete PopUp----------------------*/
 export const SECTION_BREAK_DELETE_TEXT="Are you sure you want to delete the section break, elements beneath it will also get deleted?"
 export const OWNERS_ELM_DELETE_DIALOG_TEXT="You are trying to delete a container/element that is subscribed to in other projects. Are you sure you want to continue?"
 export const ELEMENT_ASSESSMENT = "ELEMENT_ASSESSMENT";
@@ -86,12 +86,12 @@ export const LIST_TYPE_MAPPINGS = {
 }
 
 
-/****************SlateTagDropdown************************ */ 
+/****************SlateTagDropdown************************ */
 export const SLATE_ASSESSMENT = 'assessment';
 export const ASSESSMENT_ITEM = 'assessmentItem';
 export const ASSESSMENT_ITEM_TDX = 'tdxAssessmentItem';
 
-/****************Print On Demand************************ */ 
+/****************Print On Demand************************ */
 export const POD_DEFAULT_VALUE = '';
 /*********************** Sidebar Dropdown*********************** */
 export const disabledPrimaryOption = [
@@ -193,11 +193,11 @@ export const getPasteValidated = (separatorProps, sourceType, selectionType) => 
 
 /**
  * Function - Check if Aside/WE selected to CUT/COPY has PE/SH/POPUP then restrict it be copied inside SH
- * @param {*} separatorProps 
- * @param {*} sourceType 
- * @param {*} selectionType 
- * @param {*} validation 
- * @returns 
+ * @param {*} separatorProps
+ * @param {*} sourceType
+ * @param {*} selectionType
+ * @param {*} validation
+ * @returns
  */
 const checkShowHidePasteValidation = (selectedElement, sourceType, selectionType, validation, sourceElementIndex) => {
     let isValidPaste = validation;
@@ -230,11 +230,11 @@ const checkShowHidePasteValidation = (selectedElement, sourceType, selectionType
 }
 /**
  * Function - Check if Showhide selected to CUT/COPY has AS/WE then restrict it be copied inside 2C/3C
- * @param {*} separatorProps 
- * @param {*} sourceType 
- * @param {*} selectionType 
- * @param {*} validation 
- * @returns 
+ * @param {*} separatorProps
+ * @param {*} sourceType
+ * @param {*} selectionType
+ * @param {*} validation
+ * @returns
  */
 const checkMultiColumnPasteValidation = (selectedElement, sourceType, selectionType, validation) => {
     let isValidPaste = validation;
@@ -256,11 +256,11 @@ const checkMultiColumnPasteValidation = (selectedElement, sourceType, selectionT
 }
 /**
  * Function - Check if Showhide selected to CUT/COPY has AS/WE then restrict it be copied inside AS/WE
- * @param {*} separatorProps 
- * @param {*} sourceType 
- * @param {*} selectionType 
- * @param {*} validation 
- * @returns 
+ * @param {*} separatorProps
+ * @param {*} sourceType
+ * @param {*} selectionType
+ * @param {*} validation
+ * @returns
  */
 const checkASWEPasteValidation = (selectedElement, sourceType, selectionType, validation, sourceElementIndex, parentDetails) => {
     let isValidPaste = validation;

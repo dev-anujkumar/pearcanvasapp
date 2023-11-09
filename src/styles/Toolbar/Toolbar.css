@@ -748,7 +748,7 @@ margin-left:6px;
 .lock-button{
   color: #005A70 !important;
   height: 28px;
-  font-family: Open Sans;
+  font-family: 'Open Sans', sans-serif;
   font-size: 13px !important;
   font-weight: 400 !important;
   line-height: 18px !important;

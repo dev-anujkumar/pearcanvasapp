@@ -6,7 +6,7 @@ class CurrentProjectUsers extends React.Component {
     }
 
     /**
-     * 
+     *
      *@discription - This function is to get the user of project
       @param {String} user - get user name
     */

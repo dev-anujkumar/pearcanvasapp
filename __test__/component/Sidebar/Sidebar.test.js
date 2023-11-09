@@ -139,9 +139,9 @@ describe('Test for Sidebar component', () => {
        
         const spySetSecondary = jest.spyOn(sidebarInstance, 'setSecondary');
         sidebarInstance.setSecondary(secondaryValue, secondaryLabel);
-        expect(sidebar.find('.element-dropdown').length).toBe(3)
+        expect(sidebar.find('.element-dropdown').length).toBe(4)
         expect(sidebar.find('.element-dropdown-title[data-element="primary"]').length).toBe(1)
-        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(1)
+        expect(sidebar.find('.element-dropdown-title[data-element="secondary"]').length).toBe(2)
         expect(spySetSecondary).toHaveBeenCalled();
     });
 
@@ -1270,6 +1270,13 @@ describe('Test for Sidebar component', () => {
             sidebarInstance.handleIntendedPlaybackDropdown(event);
             expect(sidebarInstance.state.attrInput).toEqual('');
         })
+         
+         it("renderIntendedPlaybackDropdownLabel method ", () => {
+             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props} /></Provider>);
+             const sidebarInstance = sidebar.find('Sidebar').instance();
+             sidebarInstance.renderIntendedPlaybackDropdownLabel("default");
+             expect(sidebarInstance.state.attrInput).toEqual('');
+         })
         it("playbackMode method ", () => {
             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props}/></Provider>);
             const sidebarInstance = sidebar.find('Sidebar').instance();
@@ -1296,5 +1303,29 @@ describe('Test for Sidebar component', () => {
             sidebarInstance.playbackMode();
             expect(sidebarInstance.state.attrInput).toEqual('');
         })
+         it('componentWillUnmount Event', () => {
+             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props} /></Provider>);
+             const sidebarInstance = sidebar.find('Sidebar').instance();
+             sidebarInstance.componentWillUnmount();
+         })
+         it('handleClickOutside Event', () => {
+             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props} /></Provider>);
+             const sidebarInstance = sidebar.find('Sidebar').instance();
+             const event = {
+                 target:[]
+             }
+             sidebarInstance.playbackModeRef = { current: { contains: jest.fn()}} 
+             sidebarInstance.playbackModeLabelRef = { current: { contains: jest.fn()} }
+             sidebarInstance.handleClickOutside(event);
+         })
+         it('handleClickOutside Event else case', () => {
+             let sidebar = mount(<Provider store={sidebarWithData}><Sidebar   {...props} /></Provider>);
+             const sidebarInstance = sidebar.find('Sidebar').instance();
+             const event = {
+                 target: ["playbackmoderef"]
+             }
+             sidebarInstance.playbackModeRef = null
+             sidebarInstance.handleClickOutside(event);
+         })
     })
 });

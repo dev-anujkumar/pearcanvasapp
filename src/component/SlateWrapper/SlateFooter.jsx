@@ -1,6 +1,6 @@
 import React from 'react';
 import config from '../../config/config';
-import {isOwnerRole, isSubscriberRole} from '../../constants/utility';
+import {isOwnerRole} from '../../constants/utility';
 
 export function SlateFooter(props) {
     const {projectSharingRole, isSubscribed}=props

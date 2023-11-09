@@ -17,7 +17,7 @@ const ShowHideUiBlock = (props) => {
 	/**
 	* @function renderNestedElements
 	* @description-This function is to display seprator and elements in show|hide section inside showhide
-	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer   
+	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer
 	*/
 	function renderNestedElements() {
 		return element?.interactivedata[sectionType]?.map((item, i) => {
@@ -41,7 +41,7 @@ const ShowHideUiBlock = (props) => {
 	* @function showSeprator
 	* @description-This function is to display seprator at different levels inside showhide
 	* @param {String} i - indexes of elements - "showhide-show|hide|revealAnswer-element"
-	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer   
+	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer
 	* @param {Boolean} isFirst - is this first seprator in section of showhide
 	*/
 	function showSeprator(i, isFirst) {
@@ -84,7 +84,7 @@ const ShowHideUiBlock = (props) => {
 	/**
 	* @function renderElements
 	* @description-This function is to display different elements inside showhide
-	* @param {Object} item - data of element(Text|Image) inside ShowHide   
+	* @param {Object} item - data of element(Text|Image) inside ShowHide
 	* @param {String} eleIndex - indexes of elements - "showhide-show|hide|revealAnswer-element"
 	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer
 	*/
@@ -131,13 +131,13 @@ const ShowHideUiBlock = (props) => {
 			<div className="showhide-heading-div">{ sectionHeading } Element</div>
 			{ showSeprator(sepratorIndex, true) }
 			{/* SortElement to sort innner elements */}
-			<SortElement 
+			<SortElement
 				onSortUpdate = {onSortUpdate}
 				sectionType = {sectionType}
 				hasReviewerRole = {hasReviewerRole()}
 			>
 				{ renderNestedElements() }
-			</SortElement>	
+			</SortElement>
 		</div>
 	)
 }

@@ -9,7 +9,7 @@ import cypressConfig from '../config/cypressConfig';
 import store from '../appstore/store'
 import { handleBlankLineDom } from '../component/ElementContainer/UpdateElements';
 import { checkSlateLock } from '../js/slateLockUtility';
-// DECLARATION - const or variables 
+// DECLARATION - const or variables
 export const PRIMARY_BUTTON = "primary";
 export const SECONDARY_BUTTON = "secondary";
 export const CHECKBOX_MESSAGE = "Don't ask me again";
@@ -77,7 +77,6 @@ export const guid = () => {
 
 export const hasProjectPermission = (value) => {
     const authStore = store.getState();
-    const {projectInfo} = authStore;
     const isReadOnlyContent = isApprovedOrSubscribed(authStore)
     let permissions = authStore && authStore.appStore.permissions;
     let hasPermissions = permissions && permissions.includes(value);
@@ -104,9 +103,9 @@ export const isApprovedOrSubscribed = (authStore) => {
 }
 /**
  * This function checks the conditions for Reviewer users and approved/subscribed content both
- * at same time to show or hide elements borders. Preference is giving to reviewer user and border 
+ * at same time to show or hide elements borders. Preference is giving to reviewer user and border
  * will be visible for reviewer user
- * @returns 
+ * @returns
  */
 export const isApproved = () =>{
     const authStore = store.getState();
@@ -137,7 +136,7 @@ export const hasReviewerRole = (value) => {
 
 /**
  * This function checks the conditions for Reviewer users and subscribed content both
- * @returns 
+ * @returns
  */
 export const hasReviewerSubscriberRole = () => {
     const authStore = store.getState();
@@ -202,7 +201,7 @@ export const encodeHTMLInWiris = (str) => {
  */
 const removeTagsforSubTitle = (htmlText, elementType) => {
     if (elementType === 'figure') {
-        return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<number>?.+<\/number>/g, "").replace(/<p>|<\/p>/g, "")    
+        return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<number>?.+<\/number>/g, "").replace(/<p>|<\/p>/g, "")
     }
     return htmlText.replace(/<label>?.+<\/label>/g, "").replace(/<p>|<\/p>/g, "")
 }
@@ -221,7 +220,7 @@ export const getTitleSubtitleModel = (model, modelType, modelElement = "popup") 
         if (modelType === "formatted-title"){
             try{
                 if(model && model.match(/<label>?.+<\/label>/g)){
-                    modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`   
+                    modelToReturn = `<p class="paragraphNumeroUno">${modelDom.children[0].innerHTML}</p>`
                 }
                 else{
                     modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
@@ -233,8 +232,8 @@ export const getTitleSubtitleModel = (model, modelType, modelElement = "popup") 
         } else if (modelType === "formatted-number"){
             try{
                 if(model && model.match(/<number>?.+<\/number>/g)){
-                    let numberHtml = modelDom.children[0].tagName === 'NUMBER' ? modelDom.children[0].innerHTML : modelDom.children[1].innerHTML; 
-                    modelToReturn = `<p class="paragraphNumeroUno">${numberHtml}</p>`   
+                    let numberHtml = modelDom.children[0].tagName === 'NUMBER' ? modelDom.children[0].innerHTML : modelDom.children[1].innerHTML;
+                    modelToReturn = `<p class="paragraphNumeroUno">${numberHtml}</p>`
                 }
                 else{
                     modelToReturn = `<p class="paragraphNumeroUno"><br/></p>`
@@ -313,9 +312,9 @@ export const createLabelNumberTitleModel = (labelHTML, numberHTML, titleHTML) =>
     if (labelHTML === "" && numberHTML === ""){
         return `<p>${titleHTML}</p>`
     } else if (numberHTML === "" && labelHTML) {
-        return `<p><label>${labelHTML}&nbsp;</label>${titleHTML}</p>`    
+        return `<p><label>${labelHTML}&nbsp;</label>${titleHTML}</p>`
     } else if (labelHTML === "" && numberHTML) {
-        return `<p><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`    
+        return `<p><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`
     }
     return `<p><label>${labelHTML}&nbsp;</label><number>${numberHTML}&nbsp;</number>${titleHTML}</p>`
 }
@@ -361,7 +360,7 @@ export const checkHTMLdataInsideString = (htmlNode) => {
     if (tempDiv?.firstChild && tempDiv?.firstChild?.innerHTML) {
         if (tempDiv.firstChild.innerHTML === "<br>" || tempDiv.firstChild.innerHTML === "</br>" || tempDiv.firstChild.innerHTML === "<br data-mce-bogus=\"1\">") {
             return '';
-        } else { 
+        } else {
             return tempDiv?.firstChild?.innerHTML;
         }
     } else {
@@ -430,7 +429,7 @@ export const dropdownValueForFiguretype = (element, figureDropdownData) => {
 }
 
 /** This is a list of HTML Entity code mapped to their HTML Entity name and Special Character |
- *  It is used for mapping special characters in Wiris data 
+ *  It is used for mapping special characters in Wiris data
  */
 const htmlEntityList = {
     "§#160;": ["", "&nbsp;"],
@@ -641,7 +640,7 @@ const htmlEntityList = {
 
 /**
  * Removes blank/unused HTML tags from model
- * @param {String} htmlString HTML model string 
+ * @param {String} htmlString HTML model string
  */
 export const removeBlankTags = htmlString => {
     let domParsed = new DOMParser().parseFromString(htmlString, "text/html")
@@ -669,7 +668,7 @@ export const removeUnoClass = (htmlString) => {
     }
     catch (error) {
         /** Probably 'classToRemove' would be null
-         * So, returning input without processing 
+         * So, returning input without processing
         */
         return htmlString
     }
@@ -709,7 +708,7 @@ export const defaultMathImagePath = "https://cite-media-stg.pearson.com/legacy_p
  * @param {Object} element Showhide element data
  */
 export const getShowhideChildUrns = (element) => {
-    
+
     try {
         const extractIdCallback = ({ id }) => id
         const interactivedataObj = element.interactivedata
@@ -778,7 +777,7 @@ export const prepareDialogueDom = (model) => {
     let lineModel = ConvertedModel ? ConvertedModel : '<span class="dialogueLine"><br /></span>'
     return lineModel;
 }
-// This function is use to add Playscript stageDirection class 
+// This function is use to add Playscript stageDirection class
 export const prepareStageDirectionDom = (model) => {
     const ConvertedModel = model.includes('<p>') ? model?.replace(/<p>/g, "<p class ='stageDirectionLine'>") : model
     return ConvertedModel;
@@ -960,13 +959,13 @@ export const handleTextToRetainFormatting = (pastedContent, testElement, props) 
             default: break;
         }
     }
-    
+
     if (ALLOWED_FORMATTING_TOOLBAR_TAGS.some(el => updatedText.match(el))) {
         if (ALLOWED_ELEMENT_IMG_PASTE.includes(props?.element?.type) && updatedText.match('<img ')) {
             if (updatedText.match('class="Wirisformula')) {
                 pastedContent = handleWirisImgPaste(updatedText)
             } else if(props?.element?.type === 'element-blockfeature' && props.placeholder === "Attribution Text") {
-                   pastedContent = handleImagePaste(updatedText) 
+                   pastedContent = handleImagePaste(updatedText)
             } else {
                 pastedContent = updatedText;
             }
@@ -988,9 +987,9 @@ export const handleTinymceEditorPlugins = (plugins) => {
     return editorPlugins;
 }
 /**
- * This function is used to restricts Pasting of Wiris Images 
- * @param {*} updatedText 
- * @returns 
+ * This function is used to restricts Pasting of Wiris Images
+ * @param {*} updatedText
+ * @returns
  */
 export const handleWirisImgPaste = (updatedText) => {
     let updatePasteContent = updatedText.replace(/<img align="middle" class="Wirisformula"([\w\W]+?)>/g,'')
@@ -999,8 +998,8 @@ export const handleWirisImgPaste = (updatedText) => {
 /**
  * This function is used to restricts pasting of images inside title,caption,credit etc..
  * fields of figure (or other) elements
- * @param {*} updatedText 
- * @returns 
+ * @param {*} updatedText
+ * @returns
  */
 export const handleImagePaste = (updatedText) => {
    let updatePasteContent = updatedText.replace(/<img ([\w\W]+?)>/g,'');
@@ -1069,14 +1068,23 @@ export const removedDOMAttributes = (innerHTML, className) => {
     return tempDiv?.innerHTML;
 }
 
-export const showNotificationOnCanvas = (message) => {
+export const showNotificationOnCanvas = (message, type) => {
     let linkNotification = document.getElementById('link-notification');
     if (linkNotification) {
+        if(type && type==='metadataUpdated')
+        {
+            linkNotification.style.background = '#000000'
+            linkNotification.style.fontSize = '14px'
+        }
         linkNotification.innerText = message;
         linkNotification.style.display = "block";
         setTimeout(() => {
             linkNotification.style.display = "none";
             linkNotification.innerText = "";
+            if(type && type==='metadataUpdated'){
+                linkNotification.style.background = '#444'
+                linkNotification.style.fontSize = '12px'
+            }
         }, 3000);
     }
 }
@@ -1091,7 +1099,7 @@ export const isDialogueIndent = (stanzaClassList) => {
     return (stanzaClassList?.contains('SDLineLevel1') || stanzaClassList?.contains('SDLineLevel2') || stanzaClassList?.contains('SDLineLevel3') || stanzaClassList?.contains('DELineLevel1') || stanzaClassList?.contains('DELineLevel2') || stanzaClassList?.contains('DELineLevel3')|| stanzaClassList?.contains('CNLineLevel1') || stanzaClassList?.contains('CNLineLevel2')|| stanzaClassList?.contains('CNLineLevel3'))
 }
 
-// This function is use to return Playscript character class 
+// This function is use to return Playscript character class
 export const getDEClassType = (classList) => {
     if(classList?.contains("CNLineLevel1")) {
         return 'class=\"CNLineLevel1\"';
@@ -1101,7 +1109,7 @@ export const getDEClassType = (classList) => {
         return 'class=\"CNLineLevel3\"';
     }
 }
-// This function is use to return Playscript character class 
+// This function is use to return Playscript character class
 export const getDEClassName = (classList) => {
     if(classList?.includes("CNLineLevel1")) {
         return 'CNLineLevel1';
@@ -1112,4 +1120,12 @@ export const getDEClassName = (classList) => {
     } else {
         return "characterPS";
     }
+}
+/**
+ * This function remove blankspaces and converters the provided string in lowercase
+ * @param {String} string
+ * @returns
+ */
+export const removeBlankSpaceAndConvertToLowercase = (string) => {
+    if (string) return string.split(' ').join('').toLowerCase()
 }

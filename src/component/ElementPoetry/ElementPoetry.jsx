@@ -140,7 +140,7 @@ class ElementPoetry extends Component {
             </>
         )
     }
-    
+
     /**
     * @description - renderStanzas is a function for rendering the stanza element inside poetry element
     * @param {*} stanzas is the array of stanza element
@@ -155,7 +155,7 @@ class ElementPoetry extends Component {
             id: this.props.elementId,
             contentUrn : this.props.model.contentUrn,
             element : this.props.model,
-            index : this.props?.index        
+            index : this.props?.index
         };
          /* @columnIndex@ */
          const columnIndex = this.props?.index?.toString().split("-").length === 3 ? this.props.index.split("-")[1] : "";
@@ -166,10 +166,10 @@ class ElementPoetry extends Component {
 
         /* Adding parent id and type to update redux store while creating new element inside WE/Aside->Block Poetry->Stanza */
         poetryData = (type === "element-aside") ? {...poetryData, parent: { id, type, contentUrn }} : poetryData;
-        
+
         /* Adding parent id and type to update redux store while creating new element inside 2c->Block Poetry->Stanza */
         poetryData = (type === ElementConstants.MULTI_COLUMN && !subtype) ? {...poetryData, parent: { id, type, columnId, columnName: columnIndex == 0 ? "C1" : columnIndex == 1 ? "C2" : "C3", multiColumnType: multiColumnType, parentContentUrn, columnContentUrn }} : poetryData;
-        
+
         /* Adding parent id , type and showHideType to update redux store while creating new element inside SH->Block Poetry->Stanza */
         poetryData = (type === "showhide") ? { ...poetryData, parent: { id, type, contentUrn, showHideType: this.props?.showHideType } } : poetryData;
         /* Adding parent id and type to update redux store while creating new element inside TB->Tab->Aside->New */
@@ -205,7 +205,7 @@ class ElementPoetry extends Component {
                             <LazyLoad
                                 once={true}
                                 placeholder={<div data-id={element.id}><LargeLoader /></div>}
-                            >                                  
+                            >
                             {index === 0 && <ElementSaprator
                                 index={index}
                                 firstOne={index === 0}
@@ -254,7 +254,7 @@ class ElementPoetry extends Component {
                                 source={POETRY_SOURCE}
                                 dataId = {element.id}
                             />
-                            </LazyLoad> 
+                            </LazyLoad>
                         </React.Fragment>
                     )
 
@@ -266,7 +266,7 @@ class ElementPoetry extends Component {
             console.log("error", error)
         }
     }
-    
+
     render() {
         return this.renderStanzaContainer(this.props)
     }

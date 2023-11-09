@@ -85,7 +85,7 @@ export const checkTCM = element => {
                 case 'assessment': return ASSESSMENT;
                 default: return TEXT;
             }
-            
+
         case 'showhide': return SHOW_HIDE;
 
         case "element-aside": return CONTAINER;
@@ -193,3 +193,26 @@ export const SLATE_REFRESH_ACTION = "click_on_slate_refresh_button"
 export const RELEASE_SLATE_LOCK_ACTION = "release_slate_lock"
 /************************************************************************************/
 export const SECONDARY_3PI_SMARTLINK = 'secondary-interactive-smartlink-third'
+
+/**** Default intended playback mode based on vendors *****/
+
+export const DEFAULT_PLAYBACK_MODE = {
+    "socialexplorer": "inline",
+    "geogebra": "inline",
+    "metrodigi": "inline",
+    "discussionspa": "inline",
+    "graphits": "inline",
+    "knowdl": "inline",
+    "mapmaster": "inline",
+    "pearsoncanadainline": "inline",
+    "physioex": "inline",
+    "smartsparrow": "inline",
+    "wonda": "inline",
+    "usolver": "inline",
+    "acloserlook": "modal",
+    "vitalsource": "default",
+    "none": "modal",
+    "unitytiny":"default"
+}
+export const UNITY_TINY = "unitytiny"
+export const DISABLE_PLAYBACK_MODE_VENDORS = ['vitalsource','unitytiny']

@@ -9,14 +9,13 @@ import KeyboardWrapper from '../../Keyboard/KeyboardWrapper.jsx';
 const ElementContainerHOC = (WrappedComponent) => {
     // ...and returns another component...
     return class extends Component {
-        
+
         renderContainer = (model, index, slateLockInfo) => {
             const { element } = this.props
-            
+
             let divClass = 'figureElement',
             divContainerClass= 'divImageTextWidth',
             figureClass='figureImageTextWidth',
-            figLabelClass= 'heading4ImageTextWidthNumberLabel',
             figTitleClass= 'heading4ImageTextWidthTitle',
             // figCaptionClass= 'figcaptionImageTextWidth',
             figCreditClass= 'paragraphImageTextWidthCredit'
@@ -36,9 +35,8 @@ const ElementContainerHOC = (WrappedComponent) => {
             let formattedCredit = model.contents.hasOwnProperty('creditsarray') && model.contents['creditsarray'].length ?
                 model.contents["creditsarray"][0].html && model.contents["creditsarray"][0].html.text : "<p><br/></p>";
             let subTitle
-            let Title = subTitle = element.contents && element.contents['formatted-title']
             let credit = element.contents && element.contents.hasOwnProperty('creditsarray') && element.contents['creditsarray'][0]
-            
+
             let poetryElem = <div className={divClass}>
                 <div className={divContainerClass}>
                     <figure className={figureClass} >

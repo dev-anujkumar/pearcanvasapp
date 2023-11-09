@@ -27,7 +27,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
         return false;
     }
     let url = `${config.LOCK_API_BASE_URL}/locks?projectUrn=${projectUrn}&slateId=${slateId}`
-    
+
     // if projectUrn and slateId has values then only call should be triggered
     if (projectUrn && slateId) {
         return axios.get(url, {
@@ -63,7 +63,7 @@ export const getSlateLockStatus = (projectUrn, slateId) => (dispatch) => {
  * @param {*} slateId Slate manifest URN
  * @param {*} callback Callback method to be executed
  */
- export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) => { 
+ export const getSlateLockStatusWithCallback = (projectUrn, slateId, callback) => {
     if(process.env.NODE_ENV === "development"){
         return callback({isLocked : false, userId : ""})
     }
@@ -191,7 +191,7 @@ export const releaseSlateLockWithCallback = (projectUrn, slateId, callback) =>{
 
 /**
  * Action Creator
- * Sets a flag after slate is locked 
+ * Sets a flag after slate is locked
  * @param {*} inLockPeriod tells whether the slate is in lock period or not
  */
 export const setLockPeriodFlag = (inLockPeriod) => (dispatch) => {
@@ -203,7 +203,7 @@ export const setLockPeriodFlag = (inLockPeriod) => (dispatch) => {
 
 /**
  * Action Creator
- * Sets User details on slate from count API response 
+ * Sets User details on slate from count API response
  * @param {*} lockInfo tells the user details
  */
 export const saveLockDetails = (lockInfo) => (dispatch) =>{

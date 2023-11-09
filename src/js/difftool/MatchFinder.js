@@ -72,7 +72,7 @@ export default class MatchFinder {
         const blockSize = this.options.blockSize;
 
         let block = [];
-        
+
 
         for (let indexInOld = this.startInOld; indexInOld < this.endInOld; indexInOld++) {
             let word = this.normalizeForIndex(this.oldWords[indexInOld]);
@@ -80,7 +80,7 @@ export default class MatchFinder {
             if (index === null) {
                 continue;
             }
-            
+
             let newMatchLengthAt = new Map();
             if (!this.wordIndices.has(index)) {
                 matchLengthAt = newMatchLengthAt;
@@ -89,7 +89,7 @@ export default class MatchFinder {
             for (let indexInNew of this.wordIndices.get(index)) {
                 let newMatchLength = (matchLengthAt.has(indexInNew - 1) ? matchLengthAt.get(indexInNew - 1) : 0) + 1;
                 newMatchLengthAt.set(indexInNew, newMatchLength);
-                
+
                 if (newMatchLength > bestMatchSize) {
                     bestMatchInOld = indexInOld - newMatchLength - blockSize + 2;
                     bestMatchInNew = indexInNew - newMatchLength - blockSize + 2;

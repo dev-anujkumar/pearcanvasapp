@@ -15,10 +15,10 @@ import { requestConfigURI, getCookieByName } from './constants/utility';
 import { initializeGTM } from '../src/js/ga'
 import CanvasWrapper from './component/CanvasWrapper';
 import { modifyObjKeys } from './js/appUtils';
-// IMPORT - Assets // 
+// IMPORT - Assets //
 import './styles/style.css';
 
-console.log("!!!!! ---- canvas-1.51.21 ---- !!!!!")
+console.log("!!!!! ---- canvas-1.52.17 ---- !!!!!")
 
 class App extends Component {
     constructor(props) {
@@ -29,10 +29,10 @@ class App extends Component {
         let isRefreshBrowser = localStorage.getItem('browser_refresh');
         if (isRefreshBrowser == '0') {
             localStorage.setItem('isChangeInSlate', 'false');
-        } 
+        }
         this.getEnvConfig();
     }
-    
+
     getEnvConfig = () => {
         let requestURI = requestConfigURI();
         return axios.get(`${cypressConfig.getENVConfig}v1/taskdef/cypress/environment/${requestURI}`, {
@@ -55,8 +55,8 @@ class App extends Component {
                 const ssoToken = params.get('ssoToken')
                 this.getQueryParameter(projectUrn, projectEntityUrn, slateEntityURN,slateManifestURN,ssoToken);
             }
-            
-            
+
+
         }).catch((error) => {
             console.log("Error in fetching origin:", error)
         })

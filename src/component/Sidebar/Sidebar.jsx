@@ -8,10 +8,10 @@ import { conversionElement, setBCEMetadata, updateBlockListMetadata, updateConta
 import { updateElement } from '../ElementContainer/ElementContainer_Actions';
 import { setCurrentModule } from '../ElementMetaDataAnchor/ElementMetaDataAnchor_Actions';
 import './../../styles/Sidebar/Sidebar.css';
-import { hasReviewerRole, getSlateType, getCookieByName, isSlateLocked } from '../../constants/utility.js'
+import { hasReviewerRole, getSlateType, getCookieByName, isSlateLocked, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
 import config from '../../../src/config/config.js';
 import PopUp from '../PopUp/index.js';
-import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE } from '../SlateWrapper/SlateWrapperConstants.js';
+import { SYNTAX_HIGHLIGHTING,CHANGE_ASSESSMENT_TYPE, INTENDED_PLAYBACK_CATEGORY, SUB_CATEGORY, CATEGORY, MODAL_MESSAGE, PRIMARY_SMARTLINK, SMARTLINK_ELEMENT_DROPDOWN_TITLE, SECONDARY_3PI_SMARTLINK, SET_AS_DECORATIVE_IMAGE, DISABLE_PLAYBACK_MODE_VENDORS } from '../SlateWrapper/SlateWrapperConstants.js';
 import { showBlocker, hideBlocker,hideToc} from '../../js/toggleLoader';
 import { customEvent } from '../../js/utils.js';
 import { disabledPrimaryOption, MULTI_COLUMN_3C, intendedPlaybackModeDropdown, DECORATIVE_IMAGE } from '../../constants/Element_Constants.js';
@@ -62,6 +62,8 @@ class Sidebar extends Component {
             isPlayBackDropdownOpen: false,
             selectedIntendedPlaybackModeValue : this.props.activeElement?.selectedIntendedPlaybackModeValue
         };
+        this.playbackModeRef = React.createRef();
+        this.playbackModeLabelRef = React.createRef();
     }
 
     static getDerivedStateFromProps = (nextProps, prevState) => {
@@ -81,7 +83,7 @@ class Sidebar extends Component {
             }
             if(nextProps?.activeElement?.secondaryOption === SECONDARY_3PI_SMARTLINK && nextProps?.activeElement?.assetIdFor3PISmartlink){
                 selectedIntendedPlaybackModeValue = nextProps?.activeElement?.selectedIntendedPlaybackModeValue;
-            }          
+            }
             return {
                 elementDropdown: elementDropdown,
                 fontBulletElementDropdown,
@@ -90,7 +92,7 @@ class Sidebar extends Component {
                 activePrimaryOption: nextProps.activeElement.primaryOption,
                 activefontStyle: nextProps?.activeElement?.fontStyle,
                 activebulletIcon: nextProps?.activeElement?.bulletIcon,
-                activeSecondaryOption: nextProps.activeElement.secondaryOption,         
+                activeSecondaryOption: nextProps.activeElement.secondaryOption,
                 activeLabelText: nextProps.activeElement.tag,
                 bceNumberStartFrom: nextProps.activeElement.startNumber,
                 bceToggleValue: nextProps.activeElement.numbered,
@@ -106,6 +108,21 @@ class Sidebar extends Component {
         return null;
     }
 
+    handleClickOutside = (event) => {
+        if (this.playbackModeRef && this?.playbackModeRef?.current && this.playbackModeLabelRef && this?.playbackModeLabelRef?.current && !this.playbackModeRef?.current?.contains(event.target) && !this.playbackModeLabelRef?.current?.contains(event.target)) {
+            this.setState({
+                isPlayBackDropdownOpen: false
+            })
+        }
+    }
+    /**handling intendedPlaymode on outside click*/
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
     setToggleForAside = (activeElement, asideTitleData) => {
         if (activeElement && asideTitleData) {
             const asideObj = asideTitleData.filter(obj => {
@@ -295,7 +312,7 @@ class Sidebar extends Component {
         }
         let elementDropdown = e.target.getAttribute('data-element');
 
-        
+
         if (elementDropdown == 'font' || elementDropdown == 'bullet'){
             if(this.state.fontBulletElementDropdown === elementDropdown)  elementDropdown = '';
             this.setState({fontBulletElementDropdown: elementDropdown});
@@ -341,7 +358,7 @@ class Sidebar extends Component {
                 const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
                 primaryOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
                     className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
-                    {/* {isSmartlinkElement && <div className='categories'>{CATEGORY}</div>} */}
+                    {isSmartlinkElement && <div className='categories'>{CATEGORY}</div>}
                     <div className={`element-dropdown-title ${className} ${isSmartlinkElement}`} data-element="primary" onClick={this.toggleElementDropdown}>
                         {primaryOptionObject[this.state.activePrimaryOption].text}
                         {disabledPrimaryOption.indexOf(activePrimaryOption) > -1 ? null : dropdownArrow}
@@ -395,7 +412,7 @@ class Sidebar extends Component {
         fontBulletOptions = fontBulletOptionList.map(item => {
             if (item !== 'enumType') {
                 return <li key={item} data-value={item} onClick={this.handleFontBulletOptionChange}>
-                    {fontBulletOptionObject[item].text}    
+                    {fontBulletOptionObject[item].text}
                 </li>;
             }
         });
@@ -403,9 +420,9 @@ class Sidebar extends Component {
         let active = '';
         if ((data === "fontStyle" && this.state.fontBulletElementDropdown === 'font') || (data === "bulletIcon" &&  this.state.fontBulletElementDropdown === 'bullet')) {
             active = 'active';
-        } 
+        }
         const sidebarDisableCondition = (this.props.activeElement?.elementType === "element-aside" && this.props.cutCopySelection?.element?.id === this.props.activeElement?.elementId && this.props.cutCopySelection?.operationType === "cut")
-        
+
         fontBulletOptions = (this.props.activeElement.elementType !== "element-dialogue") ? <div
             className={`element-dropdown ${sidebarDisableCondition ? "sidebar-disable" : ""}`}>
             <div className={`element-dropdown-title ${className}`} data-element= {dataElement} onClick={this.toggleElementDropdown}>
@@ -416,7 +433,7 @@ class Sidebar extends Component {
                 {fontBulletOptions}
             </ul>
         </div> : null;
-        
+
         return fontBulletOptions;
     }
 
@@ -611,7 +628,7 @@ class Sidebar extends Component {
                 const disableClass = hasReviewerRole() ? "pointer-events-none" : ''
                 secondaryOptions = <div
                     className={`element-dropdown ${display} ${sidebarDisableCondition ? "sidebar-disable": ""} `}>
-                    {/* {isSmartlinkElement && <div className='sub-categories'>{SUB_CATEGORY}</div>} */}
+                    {isSmartlinkElement && <div className='sub-categories'>{SUB_CATEGORY}</div>}
                     {this.props.activeElement.tag !== 'BCE' ? (<div className={`element-dropdown-title ${disabled} ${isSmartlinkElement}`} data-element="secondary" onClick={enableColumn3SecondaryOption ? null : this.toggleElementDropdown}>
                         {secondaryOptionObject[this.state.activeSecondaryOption].text}
                         {((isLearnosityProject && showLearnosityDropdown) || enableColumn3SecondaryOption) ? "" : <span> {dropdownArrow} </span>}
@@ -638,7 +655,7 @@ class Sidebar extends Component {
                                     }}
                                 />
                             )}
-                        /> 
+                        />
                     </div>)}
                     <ul className={`element-dropdown-content secondary-options ${active}`}>
                         {secondaryOptions}
@@ -707,6 +724,7 @@ class Sidebar extends Component {
     /**@description render playbackMode for 3PI smartlink for added alfresco assets*/
     playbackMode = () => {
         let playbackMode = '';
+        const disablePlaybackMode = DISABLE_PLAYBACK_MODE_VENDORS.includes(removeBlankSpaceAndConvertToLowercase(this.props?.activeElement?.vendor))
         if (this.state.activeElementType) {
             playbackMode = intendedPlaybackModeDropdown.map(item => {
                 return <li key={item?.value} data-value={item?.value} onClick={this.handleIntendedPlaybackDropdown}>
@@ -717,16 +735,17 @@ class Sidebar extends Component {
             if (this.state.isPlayBackDropdownOpen) {
                 active = 'active';
             }
-            const disableClass = hasReviewerRole() ? "pointer-events-none" : '';
+            let disableClass = hasReviewerRole()  ? "pointer-events-none" : '';
+            disableClass = `${disableClass} ${disablePlaybackMode ? "disablePlaybackMode" : ""}`
             playbackMode = <div
                 className={`element-dropdown`}>
                 <div className='categories'>{INTENDED_PLAYBACK_CATEGORY}</div>
-                <div className={`element-dropdown-title intented-dropdown-banner ${disableClass}`} data-element="secondary" onClick={this.toggleIntendedPlaybackDropdown}>
+                <div className={`element-dropdown-title intented-dropdown-banner ${disableClass}`} data-element="secondary" onClick={this.toggleIntendedPlaybackDropdown} ref={this.playbackModeLabelRef}>
                     {this.renderIntendedPlaybackDropdownLabel(this.state.selectedIntendedPlaybackModeValue)}
                     <span> {dropdownArrow} </span>
                 </div>
                 {this.modalBanner()}
-                <ul className={`element-dropdown-content secondary-options playback-dropdown ${active}`}>
+                <ul ref={this.playbackModeRef} className={`element-dropdown-content secondary-options playback-dropdown ${active}`}>
                     {playbackMode}
                 </ul>
             </div>;
@@ -751,6 +770,9 @@ class Sidebar extends Component {
     }
 
     renderIntendedPlaybackDropdownLabel = (value) => {
+        if (value === "default") {
+            return "Default"
+        }
         const finalValue = intendedPlaybackModeDropdown.find(obj => obj.value === value);
         if (finalValue) return finalValue.label;
     }
@@ -951,7 +973,6 @@ class Sidebar extends Component {
             case 'dialogue':
             case 'bce':
             default:
-                let activeElementNode2 = document.querySelector('.element-container.pe')
                 break;
         }
     }
@@ -1123,12 +1144,12 @@ class Sidebar extends Component {
     }
 
     /**
-     * Responsible for toggling of print of Demand dropdown 
+     * Responsible for toggling of print of Demand dropdown
      * @param {*} e
      */
 
     togglePODDropdown = (e) => {
-        
+
         let selValue = e.target.getAttribute('data-value');
         if(selValue) {
             this.props.setBCEMetadata('podwidth', selValue);
@@ -1142,14 +1163,14 @@ class Sidebar extends Component {
     }
 
     /**
-     * Responsible for rendering of print of Demand 
-     * @param {*} 
+     * Responsible for rendering of print of Demand
+     * @param {*}
      */
 
     podOption = () => {
         if (this.state.activePrimaryOption === 'primary-image-table' || this.state.activePrimaryOption === 'primary-image-figure' ||
-            this.state.activePrimaryOption === 'primary-image-equation' || this.state.activePrimaryOption === DECORATIVE_IMAGE || 
-            (this.state.activePrimaryOption === 'primary-smartlink' && 
+            this.state.activePrimaryOption === 'primary-image-equation' || this.state.activePrimaryOption === DECORATIVE_IMAGE ||
+            (this.state.activePrimaryOption === 'primary-smartlink' &&
             (this.state.activeSecondaryOption === "secondary-interactive-smartlink-third" || this.state.activeSecondaryOption === 'secondary-interactive-smartlink-tab'))) {
             let active = '';
             if (this.state.podOption) {
@@ -1188,7 +1209,7 @@ class Sidebar extends Component {
             )
         }
         return null
-    }  
+    }
 
     render = () => {
         const isDecorativeImage = this.props.model?.figuredata?.decorative ? true : false
@@ -1201,7 +1222,7 @@ class Sidebar extends Component {
                     {this.renderSyntaxHighlighting(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.renderLanguageLabel(this.props.activeElement && this.props.activeElement.tag || '')}
                     {this.secondaryOption()}
-                    {/* commenting for future reference {activeElement?.assetIdFor3PISmartlink && this.playbackMode()} */}
+                    {activeElement?.assetIdFor3PISmartlink && this.playbackMode()}
                     {!isDecorativeImage && this.attributions()}
                     {this.podOption()}
                     {this.state.showSyntaxHighlightingPopup && <PopUp confirmCallback={this.handleSyntaxHighligtingRemove} togglePopup={(value) => { this.handleSyntaxHighlightingPopup(value) }} dialogText={SYNTAX_HIGHLIGHTING} slateLockClass="lock-message" sytaxHighlight={true} />}
