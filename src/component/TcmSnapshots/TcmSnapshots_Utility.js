@@ -429,7 +429,7 @@ export const prepareAndSendTcmData = async (elementDetails, wipData, defaultKeys
         };
         if(currentSnapshot && ((currentSnapshot.elementType.includes("CTA") && !currentSnapshot.elementType.includes("SH")) ||
             currentSnapshot.elementType.includes("LB")) && currentSnapshot.action == 'create' && operType!=='copy'){
-            currentSnapshot.status = 'accepted'  
+            currentSnapshot.status = 'accepted'
             if(currentSnapshot.elementType.includes("LB") && CurrentSlateStatus != 'approved'){
                 res.elementdata.text = ''
                 currentSnapshot.elementWip = JSON.stringify(res)
@@ -511,7 +511,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
 
         if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
-            popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate 
+            popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
         }
@@ -539,7 +539,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             const headString = poetryParentURN?.manifestUrn == poetryAsideData?.id ? "HEAD" : "BODY";
             elementTag = `WE:${headString}:${elementTag}`
             elementId = `${poetryAsideData.id}+${(poetryParentURN?.manifestUrn && headString === "BODY") ?
-            `${poetryParentURN.manifestUrn}+` : ""}${eleId.parentId}+${eleId.childId}`          
+            `${poetryParentURN.manifestUrn}+` : ""}${eleId.parentId}+${eleId.childId}`
         }
         else if (poetryAsideData?.type === MULTI_COLUMN && parentUrn) { /* 2C:BP || 3C:BP */
             const {columnName, manifestUrn, mcId} = poetryParentURN;
@@ -561,7 +561,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
             elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}
             ${eleId.popID ? eleId.popID : slateManifestVersioning ? slateManifestVersioning:config.slateManifestURN}+${elementId}`;
         } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
-            !popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from popup slate to normal slate 
+            !popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from popup slate to normal slate
             elementTag = `${elementTag}`;
             elementId = `${elementId}`;
         } else if (config.isPopupSlate && !tag?.isMultiColumnInPopup) {                //POP:BODY:WE:BODY:P
@@ -570,7 +570,7 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         }
 
         if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
-            popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate 
+            popupCutCopyParentData?.isPopupSlate && !config.isPopupSlate) {            // operation cut from popup slate to normal slate
             elementTag = `POP:BODY:${elementTag}`;
             elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
         }
@@ -585,11 +585,11 @@ export const setElementTypeAndUrn = (eleId, tag, isHead, sectionId , eleIndex,po
         elementTag = `${tag.popupParentTag ? tag.popupParentTag + ":" : ""}${elementTag}`;
         elementId = `${eleId.popupParentId ? eleId.popupParentId + "+" : ""}${elementId}`;
     } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
-        !popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from normal slate to popup slate 
+        !popupCutCopyParentData?.isPopupSlate && config.isPopupSlate) {            // operation cut from normal slate to popup slate
         elementTag = `${elementTag}`;
         elementId = `${elementId}`;
     } else if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
-        popupCutCopyParentData?.isPopupSlate ) {            // operation cut from popup slate to normal slate 
+        popupCutCopyParentData?.isPopupSlate ) {            // operation cut from popup slate to normal slate
         elementTag = `POP:BODY:${elementTag}`;
         elementId = `${popupCutCopyParentData?.versionUrn ? popupCutCopyParentData?.versionUrn : config.slateManifestURN}+${elementId}`;
     } else if (config.isPopupSlate && !tag?.isMultiColumnInPopup && !(containerElement?.cutCopyParentUrn)) {                //POP:BODY:WE:BODY:P
@@ -670,7 +670,7 @@ export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, sl
         }
     }
     if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
-        popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate 
+        popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to normal slate
         let newManifestUrn = await getLatestVersion(popupCutCopyParentData?.parentSlateEntityUrn);
         tcmKeys = {
             ...tcmKeys,
@@ -680,7 +680,7 @@ export const setDefaultKeys = async (actionStatus, isContainer, inPopupSlate, sl
     }
     if (popupCutCopyParentData?.operationType === 'cut' && actionStatus?.action === 'delete' &&
         popupCutCopyParentData?.isPopupSlate && config.isPopupSlate && (popupCutCopyParentData?.versionUrn !== popupParentSlateData?.versionUrn) &&
-        !popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to popup slate 
+        !popupCutCopyParentData?.isSlateApproved) {            // operation cut from popup slate to popup slate
         tcmKeys = {
             ...tcmKeys,
             slateID: popupCutCopyParentData?.parentSlateId ? popupCutCopyParentData?.parentSlateId : tcmKeys.slateID,
@@ -917,8 +917,8 @@ export const setContentSnapshot = (element, elementDetails, actionStatus, Curren
         snapshotData = blockQuoteText && blockQuoteText.trim() !== "" ? blockQuoteText.replace(bqHiddenText,"").replace(bqAttrHtmlTrue, "").replace(bqAttrHtmlFalse, "") : "";
     } else if(elementDetails && elementDetails.elementType && (elementDetails.elementType.includes("LB") && actionStatus &&
         actionStatus.action == 'create') && CurrentSlateStatus != 'approved' && elementDetails.isMetaFieldExist === true){
-        snapshotData = '<p></p>'          
-    }  
+        snapshotData = '<p></p>'
+    }
     /**else if(element.type === ELEMENT_LIST && element.html && element.html.text){
         snapshotData = element.html.text.replace(/<br>/g,"")
     }*/

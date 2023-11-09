@@ -235,7 +235,7 @@ export class TinyMceEditor extends Component {
                         editor.selection.placeCaretAt(clickedX, clickedY);
                     }
 
-                    if(e.level && e.level.content?.match(/<blockquote/)?.input?.includes('class="blockquoteMarginalia') 
+                    if(e.level && e.level.content?.match(/<blockquote/)?.input?.includes('class="blockquoteMarginalia')
                         && e.level.content?.match(/<img/)?.input?.includes('class="imageAssetContent')){
                         this.props.handleBlur(null, this.props.currentElement, this.props.index, null, eventTarget)
                     }
@@ -2130,7 +2130,7 @@ export class TinyMceEditor extends Component {
                         selectedText = String(selectedText)?.replace(/</g, '&lt;')?.replace(/>/g, '&gt;');
                         if (selectedText?.trim() !== "" || selectedText?.length === 0) {
                             document.querySelector(`[title="${INSERT_NON_BREAKING_SPACE}"]`)?.classList?.add('disable-non-breaking')
-                        } 
+                        }
                         if (activeSpace === `non-breaking-space` || (ALLOWED_FORMATTING_TOOLBAR_TAGS?.some(el => editor?.selection?.getContent()?.match(el)) &&
                             editor?.selection?.getContent()?.includes('class="non-breaking-space"'))) {
                             let img = document.createElement("img");
