@@ -36,7 +36,6 @@ let  initialState = {
     markedIndexReducer: {"elementIndex" : "0"}
 };
 
-
 jest.mock('../../../src/config/config.js', () => ({
     slateManifestURN: "urn:pearson:manifest:e652706d-b04b-4111-a083-557ae121ag0i",
     ASSET_POPOVER_ENDPOINT:"https://contentapis-staging.pearsoncms.net/manifest-api/",
@@ -51,7 +50,8 @@ jest.mock('../../../src/appstore/store', () => {
     return {
         getState: () => {
             return {
-                appStore:{slateLevelData:mockData,
+                appStore:{
+                    slateLevelData:mockData,
                     activeElement: {
                         altText: "",
                         elementId: "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184",
@@ -65,6 +65,11 @@ jest.mock('../../../src/appstore/store', () => {
                     },
                     parentUrn : {
                         contentUrn : "urn:pearson:work:282ddf7a-4e73-4cb7-814c-5873bc750184"
+                    }
+                },
+                asideData:{
+                    parent:{
+                        showHideType: true
                     }
                 },
                 markedIndexReducer:{
@@ -110,6 +115,18 @@ describe('Tests marked index action', () => {
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
    });
+   it('should test marked index in 2C ', async() => {
+    let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','stanza','1-1-0', undefined,'<p>index</p>', "element-authoredtext", undefined, true);
+    const item = await result(store.dispatch);
+    expect(item.type).toEqual('OPEN_MARKED_INDEX');
+    expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
+    });
+    it('should test marked index in 2C ', async() => {
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0b','stanza-type','1-1-0', undefined,'<p>index</p>', "element-authoredtext", undefined, true);
+        const item = await result(store.dispatch);
+        expect(item.type).toEqual('OPEN_MARKED_INDEX');
+        expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('<p>index</p>');
+        });
 
    it('should test marked index in aside ', async() => {
         let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','8-0', undefined,'<p>index</p>', "element-authoredtext", undefined, true);
@@ -120,6 +137,12 @@ describe('Tests marked index action', () => {
 
     it('should test marked index in aside of 2C', async() => {
         let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','9-0-0-0', undefined,'index', "element-authoredtext", undefined, true);
+        const item = await result(store.dispatch);
+        expect(item.type).toEqual('OPEN_MARKED_INDEX');
+        expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('index');
+    });
+    it('should test marked index in aside of 2C', async() => {
+        let result = await actions.markedIndexPopup(true,"Markedindex",'urn:pearson:work:2318c849-3144-44b0-ba2f-a30895fcef6b','urn:pearson:work:8a49e877-144a-4750-92d2-81d5188d8e0a','element-authoredtext','26-0-0-0-0', undefined,'index', "element-authoredtext", undefined, true);
         const item = await result(store.dispatch);
         expect(item.type).toEqual('OPEN_MARKED_INDEX');
         expect(item.payload.markedIndexCurrentValue.firstLevel).toEqual('index');
