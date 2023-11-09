@@ -1,6 +1,6 @@
 import * as updateFunction from '../../../src/component/ElementContainer/UpdateElements';
 import * as utils from '../../../src/constants/utility';
-import { poetryTitle, stanzaData, citationElementData, ELEMENT_AUTHORED, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData,asideElementData, interactiveDataPDF,poetryElementData } from '../../../fixtures/UpdateElementsTestData';
+import { poetryTitle, stanzaData, citationElementData, elementAuthoredText, figureData, audioVideoData, interactiveData, mathMLData, blockCodeEditorData, singleAssessmentData, assessmentSlateData, openerElementData,asideElementData, interactiveDataPDF,poetryElementData } from '../../../fixtures/UpdateElementsTestData';
 import tinyMCE from 'tinymce/tinymce'
 import config from "../../../src/config/config.js"
 import { figureImageData, updatedElement, figureElmInteractiveData, figureBlockCodeData, figureBlockMathData } from "./UpdateElementsTestData.js";
@@ -19,7 +19,7 @@ describe('Test for UpdateElements Functions', () => {
     it('Test for ELEMENT-TYPE----->element-authoredtext', () => {
         config.elementStatus["urn:pearson:work:681c7a22-e40a-451f-9f87-dae336cfb2c0"] = 'approved';
         let type = "element-authoredtext",
-            previousElementData = ELEMENT_AUTHORED,
+            previousElementData = elementAuthoredText,
             node = {},
             elementType = "element-authoredtext",
             primaryOption = "primary-paragraph",
@@ -130,7 +130,7 @@ describe('Test for UpdateElements Functions', () => {
         element.id = "cypress-7-1";
         document.body.appendChild(element);
         let type = "element-authoredtext",
-            previousElementData = ELEMENT_AUTHORED,
+            previousElementData = elementAuthoredText,
             node = {},
             elementType = "element-authoredtext",
             primaryOption = "primary-paragraph",
@@ -461,7 +461,7 @@ describe('Test for UpdateElements Functions', () => {
         element.id = "cypress-7-1";
         document.body.appendChild(element);
         let type = "element-authoredtext",
-            previousElementData = ELEMENT_AUTHORED,
+            previousElementData = elementAuthoredText,
             node = {},
             elementType = "element-authoredtext",
             primaryOption = "primary-paragraph",
@@ -487,7 +487,7 @@ describe('Test for UpdateElements Functions', () => {
         element.id = "cypress-7-1";
         document.body.appendChild(element);
         let type = "element-authoredtext",
-            previousElementData = ELEMENT_AUTHORED,
+            previousElementData = elementAuthoredText,
             node = {},
             elementType = "element-authoredtext",
             primaryOption = "primary-paragraph",
