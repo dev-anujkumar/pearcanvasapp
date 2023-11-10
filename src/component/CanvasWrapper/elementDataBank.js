@@ -1,8 +1,8 @@
-import { ELEMENT_AUTHORED, PRIMARY_ASIDE_ASIDE, PRIMARY_BLOCKQUOTE, PRIMARY_LIST, PRIMARY_SMARTLINK, SECONDARY_IMAGE_FIGURE_HALF } from '../../constants/Element_Constants'
+import { ELEMENT_AUTHOREDTEXT, PRIMARY_ASIDE_ASIDE, PRIMARY_BLOCKQUOTE, PRIMARY_LIST, PRIMARY_SMARTLINK, SECONDARY_IMAGE_FIGURE_HALF } from '../../constants/Element_Constants'
 const elementDataBank = {
 
     "element-authoredtext" : {
-        "elementType" : ELEMENT_AUTHORED,
+        "elementType" : ELEMENT_AUTHOREDTEXT,
         "primaryOption" : "primary-paragraph",
         "secondaryOption" : "secondary-paragraph"
     },
@@ -12,36 +12,36 @@ const elementDataBank = {
         "secondaryOption" : "secondary-column-1"
     },
     "element-authoredtext-heading" : {
-        "elementType" : ELEMENT_AUTHORED,
+        "elementType" : ELEMENT_AUTHOREDTEXT,
         "primaryOption" : "primary-heading",
         // "secondaryOption" : "secondary-heading-{number}"
     },
     "element-authoredtext-handwriting" : {
-        "elementType" : ELEMENT_AUTHORED,
+        "elementType" : ELEMENT_AUTHOREDTEXT,
         "primaryOption" : "primary-handwriting",
         "secondaryOption" : "subtype-handwriting"
     },
 
     "element-blockfeature" : {
         "pullquote" : {
-            "elementType" : ELEMENT_AUTHORED,
+            "elementType" : ELEMENT_AUTHOREDTEXT,
             "primaryOption" : PRIMARY_BLOCKQUOTE,
             "secondaryOption" : "secondary-pullquote"
         },
         "blockquote" : {
-            "elementType" : ELEMENT_AUTHORED,
+            "elementType" : ELEMENT_AUTHOREDTEXT,
             "primaryOption" : PRIMARY_BLOCKQUOTE,
             "secondaryOption" : "secondary-marginalia"
         },
         "marginalia" : {
-            "elementType" : ELEMENT_AUTHORED,
+            "elementType" : ELEMENT_AUTHOREDTEXT,
             "primaryOption" : PRIMARY_BLOCKQUOTE,
             "secondaryOption" : "secondary-marginalia-attribution"
         }
     },
 
     "element-learningobjectives" : {
-        "elementType" : ELEMENT_AUTHORED,
+        "elementType" : ELEMENT_AUTHOREDTEXT,
         "primaryOption" : "primary-learning-objective",
         "secondaryOption" : "secondary-learning-objective"
     },
@@ -69,37 +69,37 @@ const elementDataBank = {
 
     "element-list" : {
         "disc" : {
-            "elementType" : ELEMENT_AUTHORED,
+            "elementType" : ELEMENT_AUTHOREDTEXT,
             "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-1"
         },
         "decimal" : {
-            "elementType" : ELEMENT_AUTHORED,
+            "elementType" : ELEMENT_AUTHOREDTEXT,
             "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-2"
         },
         "upper-alpha" : {
-            "elementType" : ELEMENT_AUTHORED,
+            "elementType" : ELEMENT_AUTHOREDTEXT,
             "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-3"
         },
         "lower-alpha" : {
-            "elementType" : ELEMENT_AUTHORED,
+            "elementType" : ELEMENT_AUTHOREDTEXT,
             "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-4"
         },
         "upper-roman" : {
-            "elementType" : ELEMENT_AUTHORED,
+            "elementType" : ELEMENT_AUTHOREDTEXT,
             "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-5"
         },
         "lower-roman" : {
-            "elementType" : ELEMENT_AUTHORED,
+            "elementType" : ELEMENT_AUTHOREDTEXT,
             "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-6"
         },
         "none" : {
-            "elementType" : ELEMENT_AUTHORED,
+            "elementType" : ELEMENT_AUTHOREDTEXT,
             "primaryOption" : PRIMARY_LIST,
             "secondaryOption" : "secondary-list-7"
         }

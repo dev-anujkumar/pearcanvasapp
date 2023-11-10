@@ -3,7 +3,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
 import { matchHTMLwithRegex, removeBlankTags, getDesignType, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
 import store from '../../appstore/store'
-import { POD_DEFAULT_VALUE, ELEMENT_AUTHORED, FORMATTED_TITLE, SCHEMA_URL } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, ELEMENT_AUTHOREDTEXT, FORMATTED_TITLE, SCHEMA_URL } from '../../constants/Element_Constants'
 import { findElementType, getDefaultPlaybackMode } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel } from '../../constants/utility';
@@ -589,7 +589,7 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             footnotes : [ ]
         },
         figuredata : {
-            type: ELEMENT_AUTHORED,
+            type: ELEMENT_AUTHOREDTEXT,
             schema: "http://schemas.pearson.com/wip-authoring/element/1",
             elementdata: {
                 schema: SCHEMA_URL,
@@ -818,11 +818,11 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {}
                 },
-                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" && previousElementData.type === ELEMENT_AUTHORED) ? "AUTHORED_TEXT" : inputElementType,
+                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" && previousElementData.type === ELEMENT_AUTHOREDTEXT) ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
 
-            if(type === ELEMENT_AUTHORED){
+            if(type === ELEMENT_AUTHOREDTEXT){
                 const classList = node?.firstChild?.classList?.value?.split(" ") ?? [];
                 dataToReturn["designtype"] = getDesignType(classList);
                 if(dataToReturn.designtype === null) {
@@ -861,7 +861,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 dataToReturn["elementParentEntityUrn"] = containerContext?.props?.parentManifestListItem?.contentUrn
             }
             else if(parentElement && parentElement.type === "showhide" && showHideType){
-                const poetryElementTypes = ['poetry', 'stanza', ELEMENT_AUTHORED];
+                const poetryElementTypes = ['poetry', 'stanza', ELEMENT_AUTHOREDTEXT];
                 dataToReturn.sectionType = showHideType;
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
                 // checking for poetry element inside SH element to pass some extra parameters inside update request

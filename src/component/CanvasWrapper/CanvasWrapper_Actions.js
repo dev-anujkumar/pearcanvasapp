@@ -46,7 +46,7 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, fetchAnySlateData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB, ELEMENT_AUTHORED, ELEMENT_ASIDE, CONTENT_TYPE, FORMATTED_TITLE } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB, ELEMENT_AUTHOREDTEXT, ELEMENT_ASIDE, CONTENT_TYPE, FORMATTED_TITLE } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
@@ -81,7 +81,7 @@ export const findElementType = (element, index) => {
                     contentUrn : element.contentUrn
                 }
                 break;
-            case ELEMENT_AUTHORED:
+            case ELEMENT_AUTHOREDTEXT:
             case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
                 if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
@@ -286,7 +286,7 @@ export const findElementType = (element, index) => {
                 if (element.elementdata && element.elementdata.assessmentformat) {
                     element.elementdata.assessmentformat = element.elementdata.assessmentformat.toLowerCase()  /**PCAT-7526 fixes */
                 }
-                elementType = { ...elementDataBank[ELEMENT_AUTHORED] }
+                elementType = { ...elementDataBank[ELEMENT_AUTHOREDTEXT] }
                 break;
             case  'groupedcontent':
                 elementType = {
@@ -335,7 +335,7 @@ export const findElementType = (element, index) => {
                 break;
             }
             default:
-                elementType = { ...elementDataBank[ELEMENT_AUTHORED] }
+                elementType = { ...elementDataBank[ELEMENT_AUTHOREDTEXT] }
         }
     } catch (err) {
         elementType = {

@@ -14,7 +14,6 @@ import tinymce from 'tinymce';
 import { handleAutoNumberingOnDelete } from '../FigureHeader/AutoNumber_DeleteAndSwap_helpers';
 import { getAutoNumberedElementsOnSlate } from '../FigureHeader/slateLevelMediaMapper';
 import ElementConstants from '../ElementContainer/ElementConstants';
-import { ELEMENT_CONTAINER_DELETE_HELPERS_FILE_PATH } from '../../constants/Element_Constants';
 
 export const deleteElementAction = (elementId, type, eleIndex, activeElement, containerElements, cb) => (dispatch, getState) => {
     const elementIndex = eleIndex?.toString()?.split('-')
@@ -59,12 +58,12 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
         // This check will remove when TB supports tcm
         let isTbElement = asideData?.subtype === ElementConstants.TAB || asideData?.parent?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.subtype === ElementConstants.TAB || asideData?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB;
         if (!isTbElement) {
-            const { prepareTCMSnapshotsForDelete } = (await import(ELEMENT_CONTAINER_DELETE_HELPERS_FILE_PATH))
+            const { prepareTCMSnapshotsForDelete } = (await import("./ElementContainerDelete_helpers.js"))
             prepareTCMSnapshotsForDelete(deleteData);
         }
 
         /** --------- When slate is Approved: Refresh TOC ------------------------------*/
-        const { onSlateApproved } = (await import(ELEMENT_CONTAINER_DELETE_HELPERS_FILE_PATH))
+        const { onSlateApproved } = (await import("./ElementContainerDelete_helpers.js"))
         if (currentSlateData.status === 'approved') {
             return onSlateApproved(currentSlateData, dispatch, fetchSlateData)
         }
@@ -87,7 +86,7 @@ export const deleteElementAction = (elementId, type, eleIndex, activeElement, co
 
         /** -------------------------- TCM Icon handling -----------------------------*/
         if (config.tcmStatus) {
-            const { prepareTCMforDelete } = (await import(ELEMENT_CONTAINER_DELETE_HELPERS_FILE_PATH))
+            const { prepareTCMforDelete } = (await import("./ElementContainerDelete_helpers.js"))
             prepareTCMforDelete(elementId, dispatch, getState);
         }
 

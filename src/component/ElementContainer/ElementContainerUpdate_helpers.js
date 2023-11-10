@@ -23,7 +23,7 @@ import { findSectionType, getShowHideElement } from '../ShowHide/ShowHide_Helper
 import { isElementInsideBlocklist } from '../../js/TinyMceUtility';
 import { startPdfConversion,poolFunc} from '../PdfSlate/CypressPlusAction';
 import elementTypeConstant from './ElementConstants';
-import { ELEMENT_ASIDE, ELEMENT_AUTHORED, FORMATTED_TITLE } from '../../constants/Element_Constants';
+import { ELEMENT_ASIDE, ELEMENT_AUTHOREDTEXT, FORMATTED_TITLE } from '../../constants/Element_Constants';
 
 
 const { AUTHORED_TEXT, SHOW_HIDE, FIGURE, ELEMENT_DIALOGUE, MULTI_COLUMN, POOPUP_ELEMENT, TAB, BLOCK_LIST, ELEMENT_ASIDE } = ElementConstants;
@@ -72,7 +72,7 @@ export const updateNewVersionElementInStore = (paramObj) => {
         } else if ((indexes.length === 4 || indexes.length === 5) && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
             dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
         }
-    } else if (updatedData?.type == ELEMENT_AUTHORED && updatedData?.metaDataField === "formattedTitle" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
+    } else if (updatedData?.type == ELEMENT_AUTHOREDTEXT && updatedData?.metaDataField === "formattedTitle" && asideData?.parent?.type === 'showhide' && asideData?.parent?.showHideType) {
         asideData.indexes = indexes;
         asideData.type = 'citations';
         dispatch(fetchSlateData(asideData?.parent?.id, asideData?.parent?.contentUrn, 0, asideData, CONTAINER_VERSIONING, false));
@@ -155,7 +155,7 @@ export const updateElementInStore = (paramsObj) => {
                     tcm: _slateObject.tcm ? true : false
                 }
             } else {
-                if (updatedData.type === ELEMENT_AUTHORED) {
+                if (updatedData.type === ELEMENT_AUTHOREDTEXT) {
                     _slateBodyMatter[indexes[0]].interactivedata[sectionType][indexes[2]].contents[FORMATTED_TITLE] = { ...updatedData }
                 }
             }
@@ -167,7 +167,7 @@ export const updateElementInStore = (paramsObj) => {
                     tcm: _slateObject.tcm ? true : false
                 }
             } else {
-                if (updatedData.type === ELEMENT_AUTHORED) {
+                if (updatedData.type === ELEMENT_AUTHOREDTEXT) {
                     _slateBodyMatter[elementIndex].contents[FORMATTED_TITLE] = { ...updatedData }
                 }
             }
