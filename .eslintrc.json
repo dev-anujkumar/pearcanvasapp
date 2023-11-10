@@ -12,9 +12,9 @@
         "react"
     ],
     "rules": {
-         "no-trailing-spaces": "error",
-        // "eol-last": ["error", "always"],
-        // "eqeqeq": ["error", "always"],
-        "max-len": ["error", { "code": 180 }]
+         "no-trailing-spaces": "error",              // Rule for "Trailing spaces not allowed" code smell
+         "eol-last": ["error", "always"],            // Rule for "Newline required at end of file but not found" code smell
+         "eqeqeq": ["error", "always"],              // Rule for "Expected === instead of ==" codesmell
+         "max-len": ["error", { "code": 180 }]       // Rule for "Maximum line length allowed is 180" codesmell
     }
 }
