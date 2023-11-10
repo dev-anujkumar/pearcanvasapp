@@ -151,7 +151,7 @@ describe('TestS Learning_Tool_ActionS', () => {
                     expect(obj.payload.showDisFilterValues).toEqual(false);
                 }
             }
-            axios.get = jest.fn(() => Promise.reject({}));
+            axios.get = jest.fn(() => Promise.reject());
             const spyFunction = jest.spyOn(actions, 'openLTFunction');
             actions.openLTFunction('disciplines')(dispatch);
             spyFunction.mockClear();
@@ -177,6 +177,25 @@ describe('TestS Learning_Tool_ActionS', () => {
             expect(spyFunction).toHaveBeenCalledWith(learningSystem, learningAppType, searchLabel, searchKeyword);
             spyFunction.mockClear();
         });
+        it('Testing------- learningToolSearchAction', () => {
+            let learningSystem = 'knowdl',
+                learningAppType = 'helpdesk',
+                searchLabel = 'Title',
+                searchKeyword = 'Test'
+            // let responseData = { data: tempFiguresForResults }
+            let dispatch = (obj) => {
+                if (obj && obj.type === LT_API_RESULT) {
+                    expect(obj.payload.showDisFilterValues).toEqual(true);
+                    expect(obj.payload.apiResponse).toEqual(tempFiguresForResults);
+                    expect(obj.payload.showLTBody).toEqual(true);
+                }
+            }
+            const spyFunction = jest.spyOn(actions, 'learningToolSearchAction');
+            axios.get = jest.fn(() => Promise.reject());
+            actions.learningToolSearchAction(learningSystem, learningAppType, searchLabel, searchKeyword)(dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(learningSystem, learningAppType, searchLabel, searchKeyword);
+            spyFunction.mockClear();
+        });
     });
     describe('Testing------- fetchLearningTemplates', () => {
         it('Testing------- fetchLearningTemplates-Then', async () => {
@@ -191,11 +210,11 @@ describe('TestS Learning_Tool_ActionS', () => {
             axios.get = await jest.fn(() => Promise.resolve(responseData));
             actions.fetchLearningTemplates()(dispatch);
             axios.get.mockImplementation(() => Promise.resolve(responseData));
-            global.fetch = jest.fn().mockImplementationOnce(() => {
-                return new Promise((resolve, reject) => {
-                    resolve({json: jest.fn(()=> responseData)});
-                });
-            });
+            // global.fetch = jest.fn().mockImplementationOnce(() => {
+            //     return new Promise((resolve, reject) => {
+            //         resolve({json: jest.fn(()=> responseData)});
+            //     });
+            // });
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
