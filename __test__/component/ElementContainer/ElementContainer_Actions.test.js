@@ -5,7 +5,7 @@ import * as actions from '../../../src/component/ElementContainer/ElementContain
 import { communicationAssessmentSlateData, slateWithCitationElement} from "../../../fixtures/slateTestingData"
 import config from '../../../src/config/config.js';
 import { stub } from 'sinon';
-import { slateLevelData, addNewComment, slateLevelDataWithApproved, slateLevelDataWithoutApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData, popupSlateLevelDataWithApproved } from "../../../fixtures/containerActionsTestingData"
+import { slateLevelData, addNewComment, slateLevelDataWithApproved, slateLevelDataWithoutApproved, blockfeature, defaultSlateDataFigure, newslateShowhideData, popupSlateLevelDataWithApproved, newSlateDataFigure } from "../../../fixtures/containerActionsTestingData"
 import { ADD_NEW_COMMENT, AUTHORING_ELEMENT_CREATED, AUTHORING_ELEMENT_UPDATE, DELETE_SHOW_HIDE_ELEMENT, UPDATE_MULTIPLE_COLUMN_INFO, UPDATE_OLD_FIGUREIMAGE_INFO, UPDATE_OLD_SMARTLINK_INFO, UPDATE_OLD_AUDIOVIDEO_INFO, UPDATE_AUTONUMBERING_DROPDOWN_VALUE, UPDATE_TABLE_ELEMENT_EDITED_DATA,SET_ELEMENT_STATUS, APPROVED_SLATE_POPUP_STATUS, DECO_TO_OTHER_IMG_TYPES, FETCH_CONVERSION_DATA } from '../../../src/constants/Action_Constants';
 import { JSDOM } from 'jsdom'
 import MockAdapter from 'axios-mock-adapter';
@@ -1988,6 +1988,62 @@ describe('Tests ElementContainer Actions', () => {
             //expect(store.getActions()).toEqual(expectedActions);
       
         })
+
+        it('testing------- UpdateFigure Data Showhide >3 index------action if condition coverage', () => {
+            let initialStateWithFigure = {
+                slateLevelData: newSlateDataFigure,
+                appStore: newSlateDataFigure,
+                learningToolReducer: {
+                    shouldHitApi: false,
+                    learningToolTypeValue: '',
+                    apiResponse: [],
+                    showErrorMsg: true, //should be false
+                    showLTBody: false,
+                    learningTypeSelected: false,
+                    showDisFilterValues: false,
+                    selectedResultFormApi: '',
+                    resultIsSelected: false,
+                    toggleLT: false,
+                    linkButtonDisable: true,
+                    apiResponseForDis: [],
+                    learningToolDisValue: '',
+                    numberOfRows: 25,
+                },
+                glossaryFootnoteReducer: {
+                    glossaryFootnoteValue: { elementWorkId: "4343653" },
+                    glossaryFootNoteCurrentValue: "",
+                    elementIndex: ""
+                }
+            };
+            config.slateManifestURN = "urn:pearson:manifest:61b991e6-8a64-4214-924c-bb60c34cbe1c"
+            let store = mockStore(() => initialStateWithFigure);
+            let elementId = "urn:pearson:work:aca6096b-d0b6-4358-a2c7-313188665d231";
+            const expectedActions = [{
+                type: AUTHORING_ELEMENT_UPDATE,
+                payload: defaultSlateDataFigure,
+            }];
+
+
+            moxios.wait(() => {
+                const request = moxios.requests.mostRecent();
+                request.respondWith({
+                    status: 200,
+                    response: 200
+                });
+            });
+            const updateddata = {
+                "path": "https://cite-media-stg.pearson.com/legacy_paths/796ae729-d5af-49b5-8c99-437d41cd2ef7/FPO-image.png",
+                "height": "1225",
+                "width": "1440",
+                "schema": "http://schemas.pearson.com/wip-authoring/image/1#/definitions/image",
+                "imageid": "urn:pearson:alfresco:600efdb1-a28c-4ec3-8b54-9aad364c8c2c",
+                "slateVersionUrn": "urn:pearson:manifest:d9023151-3417-4482-8175-fc965466220e"
+            }
+            store.dispatch(actions.updateFigureData(updateddata, "4-1-0", elementId, cb));
+            //expect(store.getActions()).toEqual(expectedActions);
+      
+        })
+
     })
     xdescribe('catch cases', () => {
     it('testing------- ADD COMMENT ------action- catch case', () => {
@@ -2039,6 +2095,7 @@ describe('Tests ElementContainer Actions', () => {
             // expect(store.getActions()).toEqual(expectedActions);
         });
     })
+    
     })
     describe('testing----------- Other methods -------------',() => {
 
