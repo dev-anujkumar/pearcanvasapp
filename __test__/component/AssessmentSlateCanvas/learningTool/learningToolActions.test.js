@@ -210,11 +210,11 @@ describe('TestS Learning_Tool_ActionS', () => {
             axios.get = await jest.fn(() => Promise.resolve(responseData));
             actions.fetchLearningTemplates()(dispatch);
             axios.get.mockImplementation(() => Promise.resolve(responseData));
-            // global.fetch = jest.fn().mockImplementationOnce(() => {
-            //     return new Promise((resolve, reject) => {
-            //         resolve({json: jest.fn(()=> responseData)});
-            //     });
-            // });
+            global.fetch = jest.fn().mockImplementationOnce(() => {
+                return new Promise((resolve, reject) => {
+                    resolve({json: jest.fn(()=> responseData)});
+                });
+            });
             expect(spyFunction).toHaveBeenCalled();
             spyFunction.mockClear();
         });
