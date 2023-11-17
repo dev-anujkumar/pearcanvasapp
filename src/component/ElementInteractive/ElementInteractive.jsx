@@ -27,7 +27,7 @@ import PopUp from '../PopUp';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 import {alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action';
-import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper';
+import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper';
 import { updateSmartLinkDataForCompare, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 import { setAutoNumberSettingValue } from '../FigureHeader/AutoNumber_helperFunctions';
@@ -72,15 +72,11 @@ class Interactive extends React.Component {
                 posterImage : this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
                 itemParentID: this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
                 interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
-
+                alfrescoSite: this.props.model?.alfrescoPlatformMetadata?.repositoryFolder ?
+                              this.props.model?.alfrescoPlatformMetadata?.repositoryFolder : this.props.model?.alfrescoPlatformMetadata?.title,
+                alfrescoSiteData: { ...this.props.model?.alfrescoPlatformMetadata }
             })
         }
-        getAlfrescositeResponse(this.props.elementId, (response) => {
-            this.setState({
-                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
-                alfrescoSiteData: { ...response }
-            })
-        })
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {

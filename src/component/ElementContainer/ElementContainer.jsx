@@ -59,7 +59,6 @@ import { SET_SEARCH_URN, SET_COMMENT_SEARCH_URN } from './../../constants/Search
 import { ELEMENT_ASSESSMENT, PRIMARY_SINGLE_ASSESSMENT, SECONDARY_SINGLE_ASSESSMENT, PRIMARY_SLATE_ASSESSMENT, SECONDARY_SLATE_ASSESSMENT, SLATE_TYPE_PDF, SLATE_TYPE_ASSESSMENT, SLATE_TYPE_LTI , OPENER_ELEMENT , FIGURE_INTERACTIVE, ELEMENT_FIGURE } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import elementTypes from './../Sidebar/elementTypes.js';
 import {enableAsideNumbering} from './../Sidebar/Sidebar_Action';
-import { getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js';
 import ElementDialogue from '../ElementDialogue';
 import ElementDiscussion from '../ElementDiscussion';
 import PdfSlate from '../PdfSlate/PdfSlate.jsx';
@@ -2940,9 +2939,7 @@ class ElementContainer extends Component {
         const figureTypes = ["image", "mathImage", "table", "video", "audio"]
         const interactiveType = ["3rd-party", "pdf", "web-link", "pop-up-web-link", "table"]
         if ((element?.type === "figure") && (figureTypes.includes(element?.figuretype)) || interactiveType.includes(element?.figuredata?.interactivetype) ) {
-            getAlfrescositeResponse(id, (response) => {
-                detailsToSet['alfrescoSiteData'] = response
-            })
+            detailsToSet['alfrescoSiteData'] = this.props?.element?.alfrescoPlatformMetadata
         }
         /**
          Check if Copied ShowHide contains any BlockList Element

@@ -34,14 +34,7 @@ describe('-----------------------Test AlfrescoSiteUrl_helper Functions----------
             spyHandleAlfrescoSiteUrl.mockClear();
         })
     });
-    describe('Test-2-Function--1--getAlfrescositeResponse', () => {
-        it('getAlfrescositeResponse', () => {
-            const spyGetAlfrescositeResponse  = jest.spyOn(AlfrescoSiteUrlMethods, 'getAlfrescositeResponse')
-            AlfrescoSiteUrlMethods.getAlfrescositeResponse();
-            expect(spyGetAlfrescositeResponse).toHaveBeenCalled();
-            spyGetAlfrescositeResponse.mockClear();
-        })
-    });
+
     describe('Test-3-Function--1--handleSiteOptionsDropdown', () => {
         it('handleSiteOptionsDropdown', () => {
             axios.get.mockResolvedValue({

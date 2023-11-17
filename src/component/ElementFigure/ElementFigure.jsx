@@ -14,7 +14,7 @@ import axios from 'axios';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML } from '../../constants/utility';
 import { hideTocBlocker, disableHeader } from '../../js/toggleLoader'
 import figureData from './figureTypes';
-import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js'
+import { handleAlfrescoSiteUrl } from './AlfrescoSiteUrl_helper.js'
 import {alfrescoPopup, saveSelectedAssetData} from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 
@@ -43,12 +43,11 @@ class ElementFigure extends Component {
     componentDidMount() {
         const figureImageTypes = ["image", "mathImage", "table"]
         if(figureImageTypes.includes(this.props?.model?.figuretype)){
-          getAlfrescositeResponse(this.props.elementId, (response) => {
             this.setState({
-                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
-                alfrescoSiteData:{...response}
+            alfrescoSite: this.props.model?.alfrescoPlatformMetadata?.repositoryFolder ?
+                          this.props.model?.alfrescoPlatformMetadata?.repositoryFolder : this.props.model?.alfrescoPlatformMetadata?.title,
+            alfrescoSiteData: { ...this.props.model?.alfrescoPlatformMetadata}
             })
-          })
         }
     }
 

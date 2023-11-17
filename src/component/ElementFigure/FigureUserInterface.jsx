@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 // IMPORT - Components //
 import TinyMceEditor from "../tinyMceEditor";
 // IMPORT - Assets //
-import { getAlfrescositeResponse } from './AlfrescoSiteUrl_helper.js';
 import { getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, removeUnoClass, hasReviewerRole } from '../../constants/utility';
 import './../../styles/ElementFigure/FigureUserInterface.css';
 import { updateSmartLinkDataForCompare, updateAudioVideoDataForCompare } from '../ElementContainer/ElementContainer_Actions';
@@ -52,11 +51,11 @@ class FigureUserInterface extends Component {
 
     componentDidMount() {
         document.addEventListener('mousedown', this.handleClickOutside);
-        getAlfrescositeResponse(this.props.elementId, (response) => {
-            this.setState({
-                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title
-            })
+        this.setState({
+            alfrescoSite: this.props.model?.alfrescoPlatformMetadata?.repositoryFolder ?
+                         this.props.model?.alfrescoPlatformMetadata?.repositoryFolder : this.props.model?.alfrescoPlatformMetadata?.title,
         })
+
         this.updateDropdownOptions();
         let figureHtmlData = this.checkForAutoNumberedContent(this.props.element) ? { formattedLabel: `<p>${this.props.element?.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.element);
         let figureLabelValue = this.state;
