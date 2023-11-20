@@ -2939,7 +2939,7 @@ class ElementContainer extends Component {
         const figureTypes = ["image", "mathImage", "table", "video", "audio"]
         const interactiveType = ["3rd-party", "pdf", "web-link", "pop-up-web-link", "table"]
         if ((element?.type === "figure") && (figureTypes.includes(element?.figuretype)) || interactiveType.includes(element?.figuredata?.interactivetype) ) {
-            detailsToSet['alfrescoSiteData'] = this.props?.element?.alfrescoPlatformMetadata
+            detailsToSet['alfrescoSiteData'] = element?.alfrescoPlatformMetadata
         }
         /**
          Check if Copied ShowHide contains any BlockList Element

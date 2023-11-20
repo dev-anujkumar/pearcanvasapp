@@ -66,15 +66,16 @@ class Interactive extends React.Component {
     }
 
     componentDidMount(){
+        const { alfrescoPlatformMetadata } = this.props.model
         if(this.props.model && this.props.model.figuredata){
             this.setState({
                 itemID : this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
                 posterImage : this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
                 itemParentID: this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
                 interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
-                alfrescoSite: this.props.model?.alfrescoPlatformMetadata?.repositoryFolder ?
-                              this.props.model?.alfrescoPlatformMetadata?.repositoryFolder : this.props.model?.alfrescoPlatformMetadata?.title,
-                alfrescoSiteData: { ...this.props.model?.alfrescoPlatformMetadata }
+                alfrescoSite: alfrescoPlatformMetadata && (alfrescoPlatformMetadata?.repositoryFolder ?
+                              alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title),
+                alfrescoSiteData: { ...alfrescoPlatformMetadata }
             })
         }
     }

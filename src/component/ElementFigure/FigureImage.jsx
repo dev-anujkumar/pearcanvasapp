@@ -54,12 +54,13 @@ class FigureImage extends Component {
     }
 
     componentDidMount() {
+        const { alfrescoPlatformMetadata } = this.props.model 
         document.addEventListener('mousedown', this.handleClickOutside);
 
         this.setState({
-            alfrescoSite: this.props.model?.alfrescoPlatformMetadata?.repositoryFolder ?
-                          this.props.model?.alfrescoPlatformMetadata?.repositoryFolder : this.props.model?.alfrescoPlatformMetadata?.title,
-            alfrescoSiteData: { ...this.props.model?.alfrescoPlatformMetadata}
+            alfrescoSite: alfrescoPlatformMetadata && (alfrescoPlatformMetadata?.repositoryFolder ?
+                          alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title),
+            alfrescoSiteData: { ...alfrescoPlatformMetadata }
         })
         let figureHtmlData = this.props.isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ? {formattedLabel: `<p>${this.props.model.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.model);
         let figureLabelValue = this.state;
