@@ -596,6 +596,654 @@ describe('Test for Sidebar component', () => {
             sidebarInstance.handleFontBulletOptionChange(target);
             expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
         })
+        it("Testing handleSetDecorativeImagePopup", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleSetDecorativeImagePopup')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleSetDecorativeImagePopup();
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing setUpdatedAssessmentType", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'setUpdatedAssessmentType')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.setUpdatedAssessmentType(123);
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handleUpdateAssessmentTypePopup", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleUpdateAssessmentTypePopup')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleUpdateAssessmentTypePopup(123);
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handleSecondaryLanguageChange", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleSecondaryLanguageChange')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleSecondaryLanguageChange({target: 1}, {item: 'abc', labelText: 'def'});
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handleDialogueBlur", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleDialogueBlur')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleDialogueBlur();
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handleDialogueToggle", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleDialogueToggle')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleDialogueToggle();
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handleDialogueNumber", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleDialogueNumber')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleDialogueNumber({target: {value: 'abc'}});
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handleNumberedLineToggle", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleNumberedLineToggle')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleNumberedLineToggle();
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing setStartLineNumber", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'setStartLineNumber')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.setStartLineNumber({target: {value: 'abc'}});
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handleAsideNumber", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleAsideNumber')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleAsideNumber(123);
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handleBQAttributionBlur", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleBQAttributionBlur')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleBQAttributionBlur();
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
+        it("Testing handleDecorativePopup", () => {
+            const sidebarWithData2 = mockStore({
+                appStore: {
+                    activeElement: {
+                        ...activeElement,
+                        elementWipType: "manifestlist",
+                        fontStyle: "font-type-1",
+                        index: 1,
+                        tag: "BL",
+                        toolbar: ['insertmedia']
+                    },
+                    activeElementType:"manifestlist",
+                    value:[]
+                },
+                metadataReducer: {
+                    showModule: true
+                },
+                selectionReducer:{
+                    selection:""
+                },
+                tcmReducer: {
+                    tisTCMCanvasPopupLaunched:false,
+                    tcmSnapshotData: {},
+                    elementData: {},
+                    tcmStatus: false
+                },
+                autoNumberReducer: {
+                    isAutoNumberingEnabled: false
+                },
+                alfrescoReducer : {
+                    alfrescoAltLongDescData: {
+                        altText: '',
+                        longDesc: '',
+                        savedAltLongDesData: 'abc'
+                    }
+                }
+            });
+            let sidebar = mount(<Provider store={sidebarWithData2}><Sidebar   {...props} /></Provider>);
+            const sidebarInstance = sidebar.find('Sidebar').instance();
+            const spyHandleFontBulletOptionChange = jest.spyOn(sidebarInstance, 'handleDecorativePopup')
+            const target = {
+                target: {
+                    getAttribute: function (dataValue) {
+                        return 'font-style-1';
+                    }
+                }
+            }
+            sidebarInstance.setState({
+                activeElementType:'manifestlist',
+                activefontStyle:'font-type-1'
+            })
+            sidebarInstance.handleDecorativePopup();
+            expect(spyHandleFontBulletOptionChange).toHaveBeenCalled();
+        })
     })
     describe('Testing setToggleForAside',() => {
         const sidebarWithData1 = mockStore({
