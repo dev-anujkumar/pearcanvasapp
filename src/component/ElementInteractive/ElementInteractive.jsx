@@ -73,7 +73,7 @@ class Interactive extends React.Component {
                 posterImage : this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
                 itemParentID: this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
                 interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
-                alfrescoSite: alfrescoPlatformMetadata ? (alfrescoPlatformMetadata?.repositoryFolder ?
+                alfrescoSite: (alfrescoPlatformMetadata && Object.keys(alfrescoPlatformMetadata).length > 0) ? (alfrescoPlatformMetadata?.repositoryFolder ?
                               alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title) : "",
                 alfrescoSiteData: { ...alfrescoPlatformMetadata }
             })

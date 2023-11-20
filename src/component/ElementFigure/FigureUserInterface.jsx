@@ -53,7 +53,7 @@ class FigureUserInterface extends Component {
         const {alfrescoPlatformMetadata} = this.props.model
         document.addEventListener('mousedown', this.handleClickOutside);
         this.setState({
-            alfrescoSite: alfrescoPlatformMetadata ? (alfrescoPlatformMetadata?.repositoryFolder ?
+            alfrescoSite: (alfrescoPlatformMetadata && Object.keys(alfrescoPlatformMetadata).length > 0) ? (alfrescoPlatformMetadata?.repositoryFolder ?
                           alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title) : ""
         })
 

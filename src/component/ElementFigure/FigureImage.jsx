@@ -58,7 +58,7 @@ class FigureImage extends Component {
         document.addEventListener('mousedown', this.handleClickOutside);
 
         this.setState({
-            alfrescoSite: alfrescoPlatformMetadata ? (alfrescoPlatformMetadata?.repositoryFolder ?
+            alfrescoSite: (alfrescoPlatformMetadata && Object.keys(alfrescoPlatformMetadata).length > 0) ? (alfrescoPlatformMetadata?.repositoryFolder ?
                           alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata.title) : "",
             alfrescoSiteData: { ...alfrescoPlatformMetadata }
         })

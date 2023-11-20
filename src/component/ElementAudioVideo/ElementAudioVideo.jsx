@@ -343,7 +343,7 @@ class ElementAudioVideo extends Component {
     componentDidMount() {
         const {alfrescoPlatformMetadata} = this.props.model
         this.setState({
-            alfrescoSite: alfrescoPlatformMetadata ? (alfrescoPlatformMetadata?.repositoryFolder ?
+            alfrescoSite: (alfrescoPlatformMetadata && Object.keys(alfrescoPlatformMetadata).length > 0) ? (alfrescoPlatformMetadata?.repositoryFolder ?
                           alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title) : "",
             alfrescoSiteData: { ...alfrescoPlatformMetadata }
         })

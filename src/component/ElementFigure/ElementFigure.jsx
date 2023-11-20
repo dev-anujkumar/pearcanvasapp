@@ -45,7 +45,7 @@ class ElementFigure extends Component {
         const figureImageTypes = ["image", "mathImage", "table"]
         if(figureImageTypes.includes(this.props?.model?.figuretype)){
             this.setState({
-                alfrescoSite: alfrescoPlatformMetadata ? (alfrescoPlatformMetadata?.repositoryFolder ?
+                alfrescoSite: (alfrescoPlatformMetadata && Object.keys(alfrescoPlatformMetadata).length > 0) ? (alfrescoPlatformMetadata?.repositoryFolder ?
                               alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title) : "",
                 alfrescoSiteData: { ...alfrescoPlatformMetadata }
             })
