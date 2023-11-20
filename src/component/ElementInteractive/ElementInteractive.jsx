@@ -507,6 +507,11 @@ class Interactive extends React.Component {
         posterImage['imageid'] = interactiveData['imageId'] ?? '';
         posterImage['path'] = interactiveData['path'] ?? '';
         const alttext = interactiveData['alttext'] ?? '';
+        if(posterImage['imageid'] === '' && posterImage['path'] === ''){
+            return {
+                alttext
+            }
+        }
         return {
             posterImage,
             alttext
@@ -585,11 +590,13 @@ class Interactive extends React.Component {
                     interactiveformat: INTERACTIVE_EXTERNAL_LINK,
                     interactivetitle: smartLinkTitle,
                     vendor: vendorName,
-                    posterimage: {
+                    "path": smartLinkPath
+                }
+                if(uniqueIDInteractive !== '' || epsURL !== ''){
+                    figuredata.posterimage = {
                         "imageid": uniqueIDInteractive,
                         "path": epsURL
-                    },
-                    "path": smartLinkPath
+                    }
                 }
                 if (interactivetype === THIRD_PARTY || interactivetype === EXTERNAL_WEBSITE_LINK) {
                     figuredata.alttext = altText
@@ -827,7 +834,9 @@ class Interactive extends React.Component {
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
                }
-                figureData.posterimage = posterImage;
+               if(posterImage['imageid'] !== '' || posterImage['path'] !== ''){
+                    figureData.posterimage = posterImage;
+                }
                 figureData.alttext = alttext;
             that.setState({itemID : itemId,
                 imagePath:posterImage.path,
