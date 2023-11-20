@@ -148,6 +148,11 @@ class GlossaryFootnotePopup extends Component {
 
                 tinymce.remove(`#${ed_id}`)
                 tinymce.$('.wrs_modal_desktop').remove();
+            } else if (ed_id?.includes('cypress')) {
+                //As fix of PCAT-20297: Resetting the modalDilogue of wiris editor for current element editor
+                const wirisPluginInstance = window.WirisPlugin.instances[ed_id];
+                if (wirisPluginInstance?.core?.modalDialog)
+                    wirisPluginInstance.core.modalDialog = null;
             }
         }
     }
