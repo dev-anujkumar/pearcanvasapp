@@ -5,6 +5,7 @@ import axios from 'axios';
 /**************************Import Modules**************************/
 import config from '../../../src/config/config';
 import * as autoNumberActions from '../../../src/component/FigureHeader/AutoNumberActions';
+import { popupCutCopyParentData } from '../../../src/component/FigureHeader/AutoNumberActions';
 /*************************Import Constants*************************/
 import { SET_AUTO_NUMBER_TOGGLE, GET_ALL_AUTO_NUMBER_ELEMENTS, SET_AUTO_NUMBER_SEQUENCE, GET_TOC_AUTO_NUMBERING_LIST } from "../../../src/constants/Action_Constants";
 import { mockFiguresAPIResponse, mockNumberedElements, mockAutoNumberingDetails, mockAudioAPIResponse, mockVideoAPIResponse } from './AutoNumberApiTestData';
@@ -45,6 +46,34 @@ describe('-----------------Testing AutoNumber Actions-----------------', () => {
         }
         it('Test-1.1---fetchProjectFigures-Then- with res.data', () => {
             let elementType = "IMAGE";
+            let responseData = {
+                data: mockFiguresAPIResponse
+            }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(GET_ALL_AUTO_NUMBER_ELEMENTS);
+            }
+            const spyFunction = jest.spyOn(autoNumberActions, 'fetchProjectFigures');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            autoNumberActions.fetchProjectFigures(elementType)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-1.1---fetchProjectFigures-Then- with res.data', () => {
+            let elementType = "frontMatter";
+            let responseData = {
+                data: mockFiguresAPIResponse
+            }
+            let dispatch = (obj) => {
+                expect(obj.type).toBe(GET_ALL_AUTO_NUMBER_ELEMENTS);
+            }
+            const spyFunction = jest.spyOn(autoNumberActions, 'fetchProjectFigures');
+            axios.get = jest.fn(() => Promise.resolve(responseData));
+            autoNumberActions.fetchProjectFigures(elementType)(dispatch, getState);
+            expect(spyFunction).toHaveBeenCalled();
+            spyFunction.mockClear();
+        });
+        it('Test-1.1---fetchProjectFigures-Then- with res.data', () => {
+            let elementType = "backMatter";
             let responseData = {
                 data: mockFiguresAPIResponse
             }

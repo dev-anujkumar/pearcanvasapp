@@ -1407,3 +1407,23 @@ const cascadeElement = async (parentElement, dispatch, parentElementIndex, fetch
     parentElement.callFrom = calledFrom
     await dispatch(fetchSlateData(parentElement.id, parentElement.contentUrn, 0, parentElement,""));
 }
+
+/**
+ * @description - This function checks whether the asset's current metadata is identical to the fetched metadata or not
+ * @param currentAltText -  Asset's current alt-text
+ * @param currentLongDesc -  Asset's current long-desc
+ * @param fetchedAltText -  Asset's fetched alt-text
+ * @param fetchedLongDesc - Asset's fetched long-desc
+ */
+export const checkMetadataIdentical = (currentAltText, currentLongDesc, fetchedAltText, fetchedLongDesc) => {
+    if(!currentAltText && !fetchedAltText && !currentLongDesc && !fetchedLongDesc)
+        return true
+    else if(!currentAltText && !fetchedAltText && currentLongDesc===fetchedLongDesc)
+        return true
+    else if(currentAltText===fetchedAltText && !currentLongDesc && !fetchedLongDesc)
+        return true
+    else if(currentAltText===fetchedAltText && currentLongDesc===fetchedLongDesc)
+        return true
+    else 
+        return false
+    }

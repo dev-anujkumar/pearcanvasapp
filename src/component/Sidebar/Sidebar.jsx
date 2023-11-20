@@ -109,7 +109,7 @@ class Sidebar extends Component {
     }
 
     handleClickOutside = (event) => {
-        if (this.playbackModeRef && this.playbackModeLabelRef && !this.playbackModeRef?.current?.contains(event.target) && !this.playbackModeLabelRef?.current?.contains(event.target)) {
+        if (this.playbackModeRef && this?.playbackModeRef?.current && this.playbackModeLabelRef && this?.playbackModeLabelRef?.current && !this.playbackModeRef?.current?.contains(event.target) && !this.playbackModeLabelRef?.current?.contains(event.target)) {
             this.setState({
                 isPlayBackDropdownOpen: false
             })
