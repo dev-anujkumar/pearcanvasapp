@@ -507,7 +507,7 @@ class Interactive extends React.Component {
         posterImage['imageid'] = interactiveData['imageId'] ?? '';
         posterImage['path'] = interactiveData['path'] ?? '';
         const alttext = interactiveData['alttext'] ?? '';
-        if(posterImage['imageid'] === '' && posterImage['path'] === ''){
+        if(!posterImage['imageid'] && !posterImage['path']){
             return {
                 alttext
             }
@@ -592,7 +592,7 @@ class Interactive extends React.Component {
                     vendor: vendorName,
                     "path": smartLinkPath
                 }
-                if(uniqueIDInteractive !== '' || epsURL !== ''){
+                if(uniqueIDInteractive || epsURL){
                     figuredata.posterimage = {
                         "imageid": uniqueIDInteractive,
                         "path": epsURL
@@ -834,7 +834,7 @@ class Interactive extends React.Component {
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
                }
-               if(posterImage['imageid'] !== '' || posterImage['path'] !== ''){
+               if(posterImage['imageid'] || posterImage['path']){
                     figureData.posterimage = posterImage;
                 }
                 figureData.alttext = alttext;

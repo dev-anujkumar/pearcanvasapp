@@ -271,21 +271,9 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
                 previousElementData.figuredata.posterimage.podwidth = podwidthToSend
             }
             else {
-                let figuredata;
-                if(podwidthToSend !== ''){
-                    figuredata = {
-                        ...previousElementData.figuredata,
-                        posterimage: {
-                            podwidth: podwidthToSend,
-                            imageid: '',
-                            path: ''
-                        }
-                    }
-                }else{
-                    figuredata = {
-                        ...previousElementData.figuredata,
-                    }
-                }
+                const figuredata = {
+                    ...previousElementData.figuredata,
+                };
                 previousElementData.figuredata = figuredata;
             }
         }
