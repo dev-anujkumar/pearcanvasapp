@@ -148,6 +148,9 @@ describe('Testing GlossaryFootnote component with props', () => {
     })
     it('Test-componentWillUnmount', () => {
         tinymce["editors"] = [{ id: 'cypress-3' }, { id: 'footnote-0' }]
+        tinymce["activeEditor"] = {
+            id:"cypress-3"
+        }
         window['WirisPlugin'] = wirisInstance
         const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
         GlossaryFootnotePopupInstance.componentWillUnmount()
@@ -156,6 +159,9 @@ describe('Testing GlossaryFootnote component with props', () => {
     })
     it('Test-componentWillUnmount', () => {
         tinymce["editors"] = [{ id: 'cypres-3' }, { id: 'footnote-0' }]
+        tinymce["activeEditor"] = {
+            id: "cypress-3"
+        }
         window['WirisPlugin'] = wirisInstance
         const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
         GlossaryFootnotePopupInstance.componentWillUnmount()
@@ -167,6 +173,9 @@ describe('Testing GlossaryFootnote component with props', () => {
             id: "cypress-3"
         }
         tinymce["editors"] = [{ id: 'cypress-3' }, { id: 'footnote-0' }]
+        tinymce["activeEditor"] = {
+            id: undefined
+        }
         window['WirisPlugin'] = {
             instances: {
                 [editor.id]: {

@@ -135,7 +135,6 @@ class GlossaryFootnotePopup extends Component {
     }
 
     componentWillUnmount() {
-
         for (let i = tinymce.editors.length - 1; i > -1; i--) {
             let ed_id = tinymce.editors[i].id;
             if (ed_id.includes('glossary') || ed_id.includes('footnote')) {
@@ -148,12 +147,16 @@ class GlossaryFootnotePopup extends Component {
 
                 tinymce.remove(`#${ed_id}`)
                 tinymce.$('.wrs_modal_desktop').remove();
-            } else if (ed_id?.includes('cypress')) {
-                //As fix of PCAT-20297: Resetting the modalDilogue of wiris editor for current element editor
-                const wirisPluginInstance = window.WirisPlugin.instances[ed_id];
-                if (wirisPluginInstance?.core?.modalDialog)
-                    wirisPluginInstance.core.modalDialog = null;
             }
+        }
+        
+        //As fix of PCAT-20297: Resetting the modalDilogue of wiris editor for current element editor
+        const activeEditor = tinymce.activeEditor
+        const activeEditorId = activeEditor && activeEditor.id
+        if (activeEditorId) {
+            const wirisPluginInstance = window.WirisPlugin.instances[activeEditorId];
+            if (wirisPluginInstance?.core?.modalDialog)
+                wirisPluginInstance.core.modalDialog = null;
         }
     }
 }
