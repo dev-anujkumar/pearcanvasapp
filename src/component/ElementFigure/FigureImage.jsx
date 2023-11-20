@@ -59,7 +59,7 @@ class FigureImage extends Component {
 
         this.setState({
             alfrescoSite: alfrescoPlatformMetadata && (alfrescoPlatformMetadata?.repositoryFolder ?
-                          alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title),
+                          alfrescoPlatformMetadata?.repositoryFolder : (alfrescoPlatformMetadata?.title ? alfrescoPlatformMetadata?.title : "")),
             alfrescoSiteData: { ...alfrescoPlatformMetadata }
         })
         let figureHtmlData = this.props.isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ? {formattedLabel: `<p>${this.props.model.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.model);
