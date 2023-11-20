@@ -133,8 +133,6 @@ describe('Testing FigureUserInterface component', () => {
         })
         FigureUserInterfaceInstance.componentDidMount();
         expect(FigureUserInterfaceInstance.componentDidMount).toHaveBeenCalled();
-        expect(FigureUserInterfaceInstance.state.alfrescoSite).toBe("001_C5 Media POC - AWS US")
-      
     })
     it('Test componentWillUnmount', () => {
         

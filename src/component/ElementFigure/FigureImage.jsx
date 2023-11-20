@@ -7,7 +7,7 @@ import BlockMathCode from './BlockMathCode.jsx';
 // IMPORT - Assets //
 import { DEFAULT_IMAGE_SOURCE, labelHtmlData } from '../../constants/Element_Constants';
 import config from '../../config/config';
-import { getAlfrescositeResponse, handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
+import { handleAlfrescoSiteUrl, handleSiteOptionsDropdown } from './AlfrescoSiteUrl_helper.js';
 import { sendDataToIframe, hasReviewerRole, getLabelNumberTitleHTML, checkHTMLdataInsideString, dropdownValueAtIntialize, dropdownValueForFiguretype, labelValueForFiguretype, getCookieByName } from '../../constants/utility';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
 import { decoToOtherTypeConversion, fetchOldDataAfterConversion, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions.js';
@@ -54,12 +54,13 @@ class FigureImage extends Component {
     }
 
     componentDidMount() {
+        const { alfrescoPlatformMetadata } = this.props.model 
         document.addEventListener('mousedown', this.handleClickOutside);
-        getAlfrescositeResponse(this.props.elementId, (response) => {
-            this.setState({
-                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
-                alfrescoSiteData: { ...response }
-            })
+
+        this.setState({
+            alfrescoSite: (alfrescoPlatformMetadata && Object.keys(alfrescoPlatformMetadata).length > 0) ? (alfrescoPlatformMetadata?.repositoryFolder ?
+                          alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata.title) : "",
+            alfrescoSiteData: { ...alfrescoPlatformMetadata }
         })
         let figureHtmlData = this.props.isAutoNumberingEnabled && imageFigureTypes.indexOf(this.props.model.figuretype) > -1  ? {formattedLabel: `<p>${this.props.model.displayedlabel}</p>`} : getLabelNumberTitleHTML(this.props.model);
         let figureLabelValue = this.state;

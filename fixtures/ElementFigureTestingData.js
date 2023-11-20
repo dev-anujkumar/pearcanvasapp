@@ -49,6 +49,15 @@ export const figureImage50TextElementDefault = {
         "postertext": "",
         "tableasHTML": ""
     },
+    "alfrescoPlatformMetadata": {
+        "nodeRef": "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+        "repositoryName": "AWS US",
+        "repositoryFolder": "001_C5 Media POC",
+        "repositoryUrl": "https://staging.api.pearson.com/content/cmis/uswip-aws",
+        "visibility": "MODERATED",
+        "siteId": "001_C5 Media POC",
+        "currentAsset": {}
+    },
     "comments": true,
     "tcm": true,
     "versionUrn": "urn:pearson:work:c04d373e-4534-412f-bb75-dfb8d32577f5",
@@ -2444,6 +2453,15 @@ export const newVideoObjWithData = {
             "path": "https://cite-media-stg.pearson.com/legacy_paths/c778faed-76e1-4523-a402-2fbbaf16036c/AL1273283_Mpeg4_H264.mp4",
             "format": "video/mp4", "charAt": 0
         }]
+    },
+    "alfrescoPlatformMetadata": {
+        "nodeRef": "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+        "repositoryName": "AWS US",
+        "repositoryFolder": "001_C5 Media POC",
+        "repositoryUrl": "https://staging.api.pearson.com/content/cmis/uswip-aws",
+        "visibility": "MODERATED",
+        "siteId": "001_C5 Media POC",
+        "currentAsset": {}
     },
     "html": {
         "title": "<p><label>dasas dasda da&nbsp;</label><number>dasdsdas&nbsp;</number><sup><a href=\"#\" data-uri=\"urn:pearson:work:c3cf2216-c1db-4c53-874d-b866accb5cc1\" data-footnoteelementid=\"urn:pearson:work:c3cf2216-c1db-4c53-874d-b866accb5cc1\" class=\"Pearson-Component paragraphNumeroUnoFootnote\">*</a></sup>&nbsp; sd sdsf casa saas ddasda sdas dad sasaz sdas</p>",
