@@ -273,7 +273,12 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
             else {
                 const figuredata = {
                     ...previousElementData.figuredata,
-                };
+                    posterimage: {
+                        podwidth: podwidthToSend,
+                        imageid: '',
+                        path: ''
+                    }
+                }
                 previousElementData.figuredata = figuredata;
             }
         }
