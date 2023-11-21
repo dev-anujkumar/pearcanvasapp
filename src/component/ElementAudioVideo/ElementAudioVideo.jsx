@@ -10,7 +10,7 @@ import FigureUserInterface from '../ElementFigure/FigureUserInterface.jsx';
 import './../../styles/ElementAudioVideo/ElementAudioVideo.css';
 import { DEFAULT_VIDEO_POSTER_IMAGE } from './../../constants/Element_Constants';
 import { hasReviewerRole, sendDataToIframe, getCookieByName } from '../../constants/utility.js'
-import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
+import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper.js'
 import {alfrescoPopup, saveSelectedAssetData  , saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 import { hideTocBlocker, disableHeader, showTocBlocker, hideToc } from '../../js/toggleLoader';
@@ -341,11 +341,11 @@ class ElementAudioVideo extends Component {
     }
 
     componentDidMount() {
-        getAlfrescositeResponse(this.props.elementId, (response) => {
-            this.setState({
-                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
-                alfrescoSiteData:{...response}
-            })
+        const {alfrescoPlatformMetadata} = this.props.model
+        this.setState({
+            alfrescoSite: (alfrescoPlatformMetadata && Object.keys(alfrescoPlatformMetadata).length > 0) ? (alfrescoPlatformMetadata?.repositoryFolder ?
+                          alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title) : "",
+            alfrescoSiteData: { ...alfrescoPlatformMetadata }
         })
     }
 

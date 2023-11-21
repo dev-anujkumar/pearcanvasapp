@@ -151,7 +151,7 @@ describe('TestS Learning_Tool_ActionS', () => {
                     expect(obj.payload.showDisFilterValues).toEqual(false);
                 }
             }
-            axios.get = jest.fn(() => Promise.reject({}));
+            axios.get = jest.fn(() => Promise.reject());
             const spyFunction = jest.spyOn(actions, 'openLTFunction');
             actions.openLTFunction('disciplines')(dispatch);
             spyFunction.mockClear();
@@ -173,6 +173,25 @@ describe('TestS Learning_Tool_ActionS', () => {
             }
             const spyFunction = jest.spyOn(actions, 'learningToolSearchAction');
             axios.get = jest.fn(() => Promise.resolve(responseData));
+            actions.learningToolSearchAction(learningSystem, learningAppType, searchLabel, searchKeyword)(dispatch);
+            expect(spyFunction).toHaveBeenCalledWith(learningSystem, learningAppType, searchLabel, searchKeyword);
+            spyFunction.mockClear();
+        });
+        it('Testing------- learningToolSearchAction', () => {
+            let learningSystem = 'knowdl',
+                learningAppType = 'helpdesk',
+                searchLabel = 'Title',
+                searchKeyword = 'Test'
+            // let responseData = { data: tempFiguresForResults }
+            let dispatch = (obj) => {
+                if (obj && obj.type === LT_API_RESULT) {
+                    expect(obj.payload.showDisFilterValues).toEqual(true);
+                    expect(obj.payload.apiResponse).toEqual(tempFiguresForResults);
+                    expect(obj.payload.showLTBody).toEqual(true);
+                }
+            }
+            const spyFunction = jest.spyOn(actions, 'learningToolSearchAction');
+            axios.get = jest.fn(() => Promise.reject());
             actions.learningToolSearchAction(learningSystem, learningAppType, searchLabel, searchKeyword)(dispatch);
             expect(spyFunction).toHaveBeenCalledWith(learningSystem, learningAppType, searchLabel, searchKeyword);
             spyFunction.mockClear();

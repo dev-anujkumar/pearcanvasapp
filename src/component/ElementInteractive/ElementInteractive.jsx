@@ -27,7 +27,7 @@ import PopUp from '../PopUp';
 import { OPEN_ELM_PICKER, TOGGLE_ELM_SPA, SAVE_ELM_DATA, ELM_CREATE_IN_PLACE } from '../../constants/IFrameMessageTypes';
 import { handlePostMsgOnAddAssess } from '../ElementContainer/AssessmentEventHandling';
 import {alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement} from '../AlfrescoPopup/Alfresco_Action';
-import { handleAlfrescoSiteUrl, getAlfrescositeResponse } from '../ElementFigure/AlfrescoSiteUrl_helper';
+import { handleAlfrescoSiteUrl } from '../ElementFigure/AlfrescoSiteUrl_helper';
 import { updateSmartLinkDataForCompare, updateAutoNumberingDropdownForCompare } from '../ElementContainer/ElementContainer_Actions';
 import { DELETE_DIALOG_TEXT } from '../SlateWrapper/SlateWrapperConstants';
 import { setAutoNumberSettingValue } from '../FigureHeader/AutoNumber_helperFunctions';
@@ -66,21 +66,18 @@ class Interactive extends React.Component {
     }
 
     componentDidMount(){
+        const { alfrescoPlatformMetadata } = this.props.model
         if(this.props.model && this.props.model.figuredata){
             this.setState({
                 itemID : this.props.model.figuredata.interactiveid ? this.props.model.figuredata.interactiveid : "",
                 posterImage : this.props.model.figuredata.posterimage && this.props.model.figuredata.posterimage.path ? this.props.model.figuredata.posterimage.path : "",
                 itemParentID: this.props.model.figuredata.interactiveparentid ? this.props.model.figuredata.interactiveparentid : "",
                 interactiveTitle: this.props.model.figuredata.interactivetitle? this.props.model.figuredata.interactivetitle : "",
-
+                alfrescoSite: (alfrescoPlatformMetadata && Object.keys(alfrescoPlatformMetadata).length > 0) ? (alfrescoPlatformMetadata?.repositoryFolder ?
+                              alfrescoPlatformMetadata?.repositoryFolder : alfrescoPlatformMetadata?.title) : "",
+                alfrescoSiteData: { ...alfrescoPlatformMetadata }
             })
         }
-        getAlfrescositeResponse(this.props.elementId, (response) => {
-            this.setState({
-                alfrescoSite: response.repositoryFolder ? response.repositoryFolder : response.title,
-                alfrescoSiteData: { ...response }
-            })
-        })
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -507,6 +504,11 @@ class Interactive extends React.Component {
         posterImage['imageid'] = interactiveData['imageId'] ?? '';
         posterImage['path'] = interactiveData['path'] ?? '';
         const alttext = interactiveData['alttext'] ?? '';
+        if(!posterImage['imageid'] && !posterImage['path']){
+            return {
+                alttext
+            }
+        }
         return {
             posterImage,
             alttext
@@ -585,11 +587,13 @@ class Interactive extends React.Component {
                     interactiveformat: INTERACTIVE_EXTERNAL_LINK,
                     interactivetitle: smartLinkTitle,
                     vendor: vendorName,
-                    posterimage: {
+                    "path": smartLinkPath
+                }
+                if(uniqueIDInteractive || epsURL){
+                    figuredata.posterimage = {
                         "imageid": uniqueIDInteractive,
                         "path": epsURL
-                    },
-                    "path": smartLinkPath
+                    }
                 }
                 if (interactivetype === THIRD_PARTY || interactivetype === EXTERNAL_WEBSITE_LINK) {
                     figuredata.alttext = altText
@@ -827,7 +831,9 @@ class Interactive extends React.Component {
                    interactivetype: tempInteractiveType,
                    interactiveformat: "mmi"
                }
-                figureData.posterimage = posterImage;
+               if(posterImage['imageid'] || posterImage['path']){
+                    figureData.posterimage = posterImage;
+                }
                 figureData.alttext = alttext;
             that.setState({itemID : itemId,
                 imagePath:posterImage.path,

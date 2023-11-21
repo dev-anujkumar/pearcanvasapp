@@ -348,7 +348,16 @@ describe('Testing Element Audio-Video component', () => {
                            "format":"audio/mpeg",
                            "charAt":0
                         }
-                     }
+                     },
+                     "alfrescoPlatformMetadata": {
+                        "nodeRef": "ebaaf975-a68b-4ca6-9604-3d37111b847a",
+                        "repositoryName": "AWS US",
+                        "repositoryFolder": "001_C5 Media POC",
+                        "repositoryUrl": "https://staging.api.pearson.com/content/cmis/uswip-aws",
+                        "visibility": "MODERATED",
+                        "siteId": "001_C5 Media POC",
+                        "currentAsset": {}
+                    },
                 }
             };
             const elementAudioVideo = mount(<Provider store={elementAudioVideoData}><ElementAudioVideo {...props} /></Provider>)
