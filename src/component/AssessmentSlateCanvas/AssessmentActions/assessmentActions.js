@@ -13,7 +13,8 @@ import {
     UPDATE_ASSESSMENT_ID,
     ASSESSMENT_RELOAD_CONFIRMATION,
     UPDATED_ASSESSMENTS_ARRAY,
-    ASESSMENT_UPDATE_DATA_ARRAY
+    ASESSMENT_UPDATE_DATA_ARRAY,
+    UPDATE_ASSESSMENT_DATA
 } from "../../../constants/Action_Constants";
 import { ELM_PORTAL_ERROR_MSG, AUTO_UPDATE_FAIL_ERROR } from '../AssessmentSlateConstants.js';
 /**Import -other dependencies */
@@ -67,6 +68,7 @@ export const fetchUsageTypeData = (entityType) => (dispatch) => {
 export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assessmentItemData) => (dispatch) => {
     const workUrn = (type == 'assessment' || type == 'assessmentArray' || type == 'interactive') ? assessmentData.targetId : assessmentItemData.targetItemid;
     if(workUrn){
+        // const url = `${config.UPDATE_ASSESSMENT_JAVA_ENDPOINT}/project/${config.projectUrn}/container/${config.slateEntityURN}/updateAssessments?vcs=true`
         const url = `${config.ASSESSMENT_ENDPOINT}assessment/v2/${workUrn}`;
         return axios.get(url, {
             headers: {
@@ -75,7 +77,12 @@ export const fetchAssessmentMetadata = (type, calledFrom, assessmentData, assess
                 'myCloudProxySession': config.myCloudProxySession
             }
         }).then(async (res) => {
-            if (res && res.data && res.data.status) {
+            // console.log("nish ressssssssssponseeeeeeeeeeeeeeeee", res)
+            if (res && res.data && res.status) {
+                // dispatch({
+                //     type: UPDATE_ASSESSMENT_DATA,
+                //     payload: res.data
+                // })
                 switch (type) {
                     case 'assessment':
                         await assessmentMetadataHandler(res.data, calledFrom, assessmentData, assessmentItemData, dispatch);
@@ -228,7 +235,7 @@ export const updateAssessmentVersion = (oldWorkUrn, updatedWorkUrn) => dispatch 
             }
         })
         hideBlocker();
-        handleRefreshSlate(dispatch);
+        // handleRefreshSlate(dispatch);
         console.error("Unable to update the latest workUrn for >>>>", oldWorkUrn)
     })
 }
