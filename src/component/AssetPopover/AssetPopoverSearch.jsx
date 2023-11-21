@@ -93,14 +93,14 @@ class AssetPopoverSearch extends React.Component {
     }
 
     /**
-     * Fn for return selectedfigure after save on selected figure 
+     * Fn for return selectedfigure after save on selected figure
      */
     apoSearchSave = (apoObject, imageObj) => {
         this.saveAssetLinkedMedia(apoObject, imageObj)
     }
 
     /**
-     *Function for setting state when any figure selected and store that id for future implementation 
+     *Function for setting state when any figure selected and store that id for future implementation
      *Args comming from figurecard onChange
      */
     selectedFigure = (figureData) => {
@@ -108,10 +108,10 @@ class AssetPopoverSearch extends React.Component {
     }
 
     /**
-     * Remove link 
+     * Remove link
     */
     removeLink = () => {
-        let assetId = this.props.apoObject && this.props.apoObject.assetId;       
+        let assetId = this.props.apoObject && this.props.apoObject.assetId;
         this.props.assetIdForSnapshot(assetId)
         clearAssetPopoverLink(assetId);
         this.apoSearchClose();
@@ -150,7 +150,7 @@ class AssetPopoverSearch extends React.Component {
     }
 
     /**
-     *Jsx for apo body or results from API 
+     *Jsx for apo body or results from API
      */
     apoBodyJsx = (ValueToBeSearch) => {
         const assetArray = {
@@ -242,7 +242,7 @@ class AssetPopoverSearch extends React.Component {
 }
 
 /**
- * Auto dispatch Actions 
+ * Auto dispatch Actions
  */
 const mapActionToProps = {
     apoSearchClose: apoSearchCloseAction,

@@ -49,6 +49,21 @@ const initialState ={
 }
 let store = mockStore(initialState);
 
+const editor = {
+    id: "cypress-3"
+}
+const wirisInstance = {
+    instances: {
+        [editor.id]: {
+            openNewFormulaEditor: () => { },
+            core: {
+                getCustomEditors: () => { return { disable: () => { return false } } },
+                modalDialog: {}
+            },
+            getCore: () => { return { getCustomEditors: () => { return { enable: () => { } } } } }
+        }
+    }
+}
 describe('Testing GlossaryFootnote component with props', () => {
     let props={
         permissions:[],
@@ -132,9 +147,50 @@ describe('Testing GlossaryFootnote component with props', () => {
     })
     })
     it('Test-componentWillUnmount', () => {
+        tinymce["editors"] = [{ id: 'cypress-3' }, { id: 'footnote-0' }]
+        tinymce["activeEditor"] = {
+            id:"cypress-3"
+        }
+        window['WirisPlugin'] = wirisInstance
         const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
         GlossaryFootnotePopupInstance.componentWillUnmount()
         expect(spycomponentWillUnmount).toHaveBeenCalled() 
+        spycomponentWillUnmount.mockClear()
+    })
+    it('Test-componentWillUnmount', () => {
+        tinymce["editors"] = [{ id: 'cypres-3' }, { id: 'footnote-0' }]
+        tinymce["activeEditor"] = {
+            id: "cypress-3"
+        }
+        window['WirisPlugin'] = wirisInstance
+        const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
+        GlossaryFootnotePopupInstance.componentWillUnmount()
+        expect(spycomponentWillUnmount).toHaveBeenCalled()
+        spycomponentWillUnmount.mockClear()
+    })
+    it('Test-componentWillUnmount', () => {
+        const editor = {
+            id: "cypress-3"
+        }
+        tinymce["editors"] = [{ id: 'cypress-3' }, { id: 'footnote-0' }]
+        tinymce["activeEditor"] = {
+            id: undefined
+        }
+        window['WirisPlugin'] = {
+            instances: {
+                [editor.id]: {
+                    openNewFormulaEditor: () => { },
+                    core: {
+                        getCustomEditors: () => { return { disable: () => { return false } } },
+                        modalDialog: null
+                    },
+                    getCore: () => { return { getCustomEditors: () => { return { enable: () => { } } } } }
+                }
+            }
+        }
+        const spycomponentWillUnmount = jest.spyOn(GlossaryFootnotePopupInstance, 'componentWillUnmount')
+        GlossaryFootnotePopupInstance.componentWillUnmount()
+        expect(spycomponentWillUnmount).toHaveBeenCalled()
         spycomponentWillUnmount.mockClear()
     })
 

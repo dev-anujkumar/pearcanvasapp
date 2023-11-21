@@ -11,7 +11,7 @@ export default function Tooltip(props) {
      * Hooks declearation
      */
     const {direction, tooltipText, children, showClass, showDetails} = props
-    
+
     return(
         <div className="tooltip">
             {children}

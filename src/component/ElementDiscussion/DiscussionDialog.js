@@ -160,7 +160,7 @@ const DiscussionDialog = ({
                   <td>
                     <div className="titleRadioContainerDiscussion">
                       <input
-                        
+
                         checked={
                           selectedDiscussion?.discussionUrn ===
                           item.discussionUrn
@@ -193,7 +193,7 @@ const DiscussionDialog = ({
 
           <div className="footerContainerDiscussion">
             <div className="paginationContainerDiscussion">
-              
+
             </div>
             <div
               onClick={() => {

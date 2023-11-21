@@ -33,7 +33,7 @@ function SortElement(props) {
 			>
 				{props.children}
 			</Sortable>
-		</div> 
+		</div>
 	)
 }
 

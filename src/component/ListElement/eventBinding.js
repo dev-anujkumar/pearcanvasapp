@@ -69,7 +69,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     const _selRange = editor.selection.getRng(true);
     const isMultilineSelection = _selRange.startContainer !== _selRange.endContainer;
     let listUpdatedOnce = false;
-    let isOnlyListElement = element && element.type && element.type === "element-list" 
+    let isOnlyListElement = element && element.type && element.type === "element-list"
     let { olClass, treelevel, listType } = getListClassTypeAndTreeLvl(element)
 
     /**
@@ -120,7 +120,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
                         prohibitEventBubling(e);
                         return false;
                     }
-                    
+
                     prohibitEventBubling(e);
                     /** case - remove last created blank list row before creating new paragraph */
                     if (editor.targetElm.querySelectorAll('li').length > 1) {
@@ -138,7 +138,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
                             anchorNode && anchorNode.remove();
                         }
                     }
-                
+
                     if(newNode)
                     {
                         showHideCallback()
@@ -165,7 +165,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
     }
 
     /**
-     * Case - if editor does not contain any list item 
+     * Case - if editor does not contain any list item
      * then perform normal create Para elememt
      */
     if (editor.targetElm.querySelectorAll('li').length == 0) {
@@ -315,7 +315,7 @@ export const bindKeyDownEvent = (editor, e, element,showHideCallback) => {
         });
 
         let activeLiNode = document.getElementsByClassName("cypress-editable mce-content-body mce-edit-focus")
-        
+
         if (activeLiNode && activeLiNode[0]) {
             const activeNodeOffsetLeft = tinyMCE.$(editor.selection.getNode())[0].offsetLeft
             activeLiNode[0].scrollLeft = activeNodeOffsetLeft

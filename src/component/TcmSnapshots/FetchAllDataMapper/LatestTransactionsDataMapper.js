@@ -25,11 +25,6 @@ const LatestTransactionsDataMapper = {
           },
     } = data;
 
-    // replacing the &nbsp; with space character
-    acceptedElementSnapshot = acceptedElementSnapshot
-
-  // replacing the &nbsp; with space character
-  pendingElementSnapshot = pendingElementSnapshot
     if (acceptedElementType !== pendingElementType) {
       result.prevElementType = elementChangeType === 'delete' ? pendingElementType && TCMUtils.getElementType(pendingElementType) : acceptedElementType && TCMUtils.getElementType(acceptedElementType);
     } else {

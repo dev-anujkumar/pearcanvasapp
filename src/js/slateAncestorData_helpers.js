@@ -1,7 +1,7 @@
 /**
  * This functions gets the list of slates in the given toc container
- * @param {*} apiData 
- * @param {*} slateEntityUrn 
+ * @param {*} apiData
+ * @param {*} slateEntityUrn
  * @returns SlatesList
  */
 import { GET_SLATE_LIST_IN_CONTAINER } from '../constants/Action_Constants';
@@ -44,7 +44,7 @@ const getSlatesinBodymatter = (currentMatterData, currentParentUrn, slatesList) 
             currentMatterData.forEach(container => {
                 if (container.label == TOC_CONTAINER.PART && container.contents?.length > 0) {
                     const isParentatLevel2 = container.contents.findIndex(item2 => item2.entityUrn === currentParentUrn)
-                    if (isParentatLevel2 > -1) {  //chapter in part 
+                    if (isParentatLevel2 > -1) {  //chapter in part
                         const currentContainerData2 = container.contents[isParentatLevel2]?.contents || []
                         if (container.contents[isParentatLevel2]?.label == TOC_CONTAINER.PART && currentContainerData2?.length > 0) {
                             slatesList = getSlatesinFMandBM([currentContainerData2[0]], slatesList)
@@ -100,7 +100,7 @@ const getSlatesinFMandBM = (currentMatterData, slatesList) => {
  * @function setItemDetails
  * @description-This function is to prepare details for an item
  * @param {Object} item
- * @returns {Object}  
+ * @returns {Object}
 */
 const setItemDetails = (item) => {
     return item?.entityUrn

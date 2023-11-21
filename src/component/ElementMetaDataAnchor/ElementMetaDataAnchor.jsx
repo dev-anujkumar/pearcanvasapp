@@ -59,7 +59,7 @@ export class ElementMetaDataAnchor extends Component {
 
   /**
      * @description - Prepare HTML for LO item on slate
-     * @param {object} lodata | object of lo data 
+     * @param {object} lodata | object of lo data
   */
   prepareLOData = () => {
     let loData = ""
@@ -113,7 +113,7 @@ export class ElementMetaDataAnchor extends Component {
       }
       else if ( !loData ) {
           this.props.showBlocker(true);
-          sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: '', apiKeys_LO: '', wrapperURL: config.WRAPPER_URL } }) 
+          sendDataToIframe({ 'type': 'getLOEditPopup', 'message': { lodata: loData, projectURN: config.projectUrn, slateURN: '', apiKeys_LO: '', wrapperURL: config.WRAPPER_URL } })
         }
     }
   }
@@ -164,7 +164,7 @@ export class ElementMetaDataAnchor extends Component {
           'defaultLF':defaultLF
         }
       })
-  } 
+  }
 
 }
 ElementMetaDataAnchor.defaultProps = {

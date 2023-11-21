@@ -39,7 +39,7 @@ class OpenerElement extends Component {
         this.setWrapperRef = this.setWrapperRef.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
     }
-    
+
     componentDidUpdate(prevProps) {
         const { elementId, alfrescoElementId, alfrescoAssetData, launchAlfrescoPopup } = this.props
         if (elementId === alfrescoElementId && prevProps.alfrescoElementId !== alfrescoElementId && !launchAlfrescoPopup ) {
@@ -74,7 +74,7 @@ class OpenerElement extends Component {
                 document.querySelector("[name='long_description']").innerHTML = longDesc;
         }
         let payloadObj = {
-            asset: {}, 
+            asset: {},
             id: ''
         }
         this.props.saveSelectedAssetData(payloadObj)
@@ -86,11 +86,10 @@ class OpenerElement extends Component {
         disableHeader(false)
         hideTocBlocker()
     }
-    
+
     handleSiteOptionsDropdown = (alfrescoPath, id, currentAsset) =>{
         let that = this
         let url = `${config.ALFRESCO_EDIT_METADATA}api/-default-/public/alfresco/versions/1/people/-me-/sites?maxItems=1000`;
-        let SSOToken = config.ssoToken;
         return axios.get(url,
             {
                 headers: {
@@ -101,8 +100,8 @@ class OpenerElement extends Component {
                 }
             })
             .then(function (response) {
-               let payloadObj = {launchAlfrescoPopup: true, 
-                alfrescoPath: alfrescoPath, 
+               let payloadObj = {launchAlfrescoPopup: true,
+                alfrescoPath: alfrescoPath,
                 alfrescoListOption: response.data.list.entries,
                 id,
                 currentAsset
@@ -128,16 +127,14 @@ class OpenerElement extends Component {
             e.stopPropagation();
             return;
         }
-        let that = this;
         let alfrescoPath = config.alfrescoMetaData;
         if (alfrescoPath && this.state.projectMetadata) {
             alfrescoPath.alfresco = this.state.projectMetadata.alfresco;
         }
-        var data_1 = false;
         if(alfrescoPath && alfrescoPath.alfresco && Object.keys(alfrescoPath.alfresco).length > 0 ) {
             if (alfrescoPath?.alfresco?.guid || alfrescoPath?.alfresco?.nodeRef ) {         //if alfresco location is available
                 if (this.props.permissions && this.props.permissions.includes('add_multimedia_via_alfresco')) {
-                let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId            
+                let alfrescoSiteName = alfrescoPath?.alfresco?.name ? alfrescoPath.alfresco.name : alfrescoPath.alfresco.siteId
                 const alfrescoSite = alfrescoPath?.alfresco?.title ? alfrescoPath.alfresco.title : alfrescoSiteName
                     const citeName = alfrescoSite?.split('/')?.[0] || alfrescoSite
                     const citeNodeRef = alfrescoPath?.alfresco?.nodeRef ? alfrescoPath?.alfresco?.nodeRef : alfrescoPath.alfresco.guid
@@ -211,7 +208,7 @@ class OpenerElement extends Component {
         }
         else {
             this.props.accessDenied(true)
-        } 
+        }
     }
     /**
      * Handles label model change event
@@ -221,10 +218,10 @@ class OpenerElement extends Component {
         this.setState({
             label: e.target.innerHTML
         }, () => {this.handleBlur(e)})
-        
+
         this.toggleLabelDropdown()
     }
-    
+
     /**
      * Toggles label dropdown
      */
@@ -239,7 +236,7 @@ class OpenerElement extends Component {
      */
     renderLabelDropdown = () => {
         const { showLabelDropdown } = this.state
-        let openerElementLabelOptions 
+        let openerElementLabelOptions
         switch(this.props.setSlateParent){
             case "module":
                 openerElementLabelOptions = moduleLabelOptions
@@ -249,7 +246,7 @@ class OpenerElement extends Component {
             break;
             default:
                 openerElementLabelOptions = labelOptions
-            break; 
+            break;
         }
         const openerLabelOptions = openerElementLabelOptions.map((value, index) => {
             return <li key={index} data-value={value} onClick={this.handleOpenerLabelChange}>{value}</li>
@@ -311,7 +308,7 @@ class OpenerElement extends Component {
 
         return styleObj
     }
-    
+
     /**
      * Handles Focus on opener element
      * @param {slateLockInfo} Slate lock data
@@ -323,8 +320,8 @@ class OpenerElement extends Component {
 
     createSemantics = ({...values}) => {
         let textSemantics = [];
-        let currentIndex = 0;   
-        
+        let currentIndex = 0;
+
         if(values.label && values.number){
             Object.keys(values).forEach(item => {
             textSemantics.push({
@@ -344,7 +341,7 @@ class OpenerElement extends Component {
                 "charEnd": currentIndex += (hasValue).length
             });
         }
-    
+
         return textSemantics;
     }
 
@@ -389,7 +386,7 @@ class OpenerElement extends Component {
         }
 
         titleHTML = titleHTML.replace(/class="paragraphNumeroUno"/g, "").replace("<p >", '').replace(/<br>/g, '').replace("</p>", '')
-        let labelNumberTitleHTML = createLabelNumberTitleModel(label, number, titleHTML);  
+        let labelNumberTitleHTML = createLabelNumberTitleModel(label, number, titleHTML);
         labelNumberTitleHTML = labelNumberTitleHTML.replace(/&nbsp;/g, ' ')
         if(element?.html.title === labelNumberTitleHTML  && this.state.imgSrc!==event?.imgSrc){ //After adding chaining saving call not triggering
             flag = false
@@ -424,7 +421,7 @@ class OpenerElement extends Component {
         if( document.getElementById('tinymceToolbar')){
             document.getElementById('tinymceToolbar').classList.add('toolbar-disabled')
         }
-    }   
+    }
     renderExistingCOImage = () => {
         let COImg = <div className="exisiting-opener-element-image-view">
             <div className="update-image-label" onClick={()=>{ !hasReviewerRole() && this.setState({updateImageOptions:!this.state.updateImageOptions})}}>Update Image
@@ -433,8 +430,8 @@ class OpenerElement extends Component {
           {this.state.updateImageOptions? <ul className="image-global-button">
                 <li onClick={this.handleC2GlobalCO}>Global Opener Element Site</li>
                 <li onClick={this.handleC2MediaClick}>Choose from project's Alfresco site</li>
-            </ul>:null} 
-        </div> 
+            </ul>:null}
+        </div>
         return COImg
     }
     renderDefaultCOImage = () => {
@@ -500,10 +497,10 @@ class OpenerElement extends Component {
                     </div>
                 </div>
                 {imgSrc?this.renderExistingCOImage():this.renderDefaultCOImage()}
-                
+
                 <figure className="pearson-component opener-image figureData" style={{ backgroundColor: `${backgroundColor}` }}>
                     <img style={styleObj} src={imgSrc ? imgSrc : noImage}
-                        draggable="false" 
+                        draggable="false"
                     />
                 </figure>
             </div>
@@ -549,4 +546,4 @@ const mapStateToProps = (state) => {
 export default connect(
     mapStateToProps,
     mapActionToProps
-)(OpenerElement);  
+)(OpenerElement);

@@ -1,5 +1,5 @@
-/** 
- * This Module contains all the Actions related to Learning Tool-Learning App Assessments 
+/**
+ * This Module contains all the Actions related to Learning Tool-Learning App Assessments
  */
 import config from '../../../config/config';
 import axios from 'axios';
@@ -39,7 +39,7 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
   )
     .then(res => {
       dispatch({
-        type: LT_API_RESULT, 
+        type: LT_API_RESULT,
         payload: {
           apiResponse: res.data,
           showDisFilterValues: true,
@@ -53,7 +53,7 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
     ).catch(error => {
       console.error('Error in fetching from LT_LA API', error)
       dispatch({
-        type: LT_API_RESULT_FAIL, 
+        type: LT_API_RESULT_FAIL,
         payload: {
           showLTBody: true,
           errorFlag: true,
@@ -64,7 +64,7 @@ export const learningToolSearchAction = (learningSystem, learningAppType, search
 };
 
 /**
-  * @discription This action is dispached to fetch dropdown values for Learning Systems 
+  * @discription This action is dispached to fetch dropdown values for Learning Systems
   *               and Disciplines based on taxomonic IDs
   * @param {String} taxonomyId taxonomy ID
   */
@@ -156,7 +156,7 @@ export const openLtAction = () => {
 */
 export const getDiscipline = (data) => {
   return {
-    type: GET_DISCIPLINE, 
+    type: GET_DISCIPLINE,
     payload: {
       showDisFilterValues: true,
       apiResponseForDis: data.options
@@ -183,7 +183,7 @@ export const linkDisable = () => {
 }
 
 /**
-  * @discription This action is dispached to fetch dropdown values for Learning Systems 
+  * @discription This action is dispached to fetch dropdown values for Learning Systems
   */
 export const fetchLearningTemplates = () => async dispatch => {
   let url = `${config.REACT_APP_API_URL}v1/content/assessment/learningobjectivetemplate`;

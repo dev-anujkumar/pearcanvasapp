@@ -18,12 +18,12 @@ function PdfSlateComponent(props)  {
 							{(!config.SHOW_CYPRESS_PLUS || !config.isCypressPlusEnabled ) && (<div className="slate_assessment_change_button" onClick={ OpenAlfresco }>Change PDF</div>)}
 						</div>
 								{config.isCypressPlusEnabled && config.SHOW_CYPRESS_PLUS && element?.elementdata?.conversionstatus  &&
-						<div className='slate_cypress_plus_enhance' > 
-					
+						<div className='slate_cypress_plus_enhance' >
+
 						<Tooltip direction='enhance' tooltipText={CYPRESS_PLUS_TOOLTIP} >
 							<div className="slate_assessment_cypress_plus_enhance">Cypress+ Enhanced</div>
 						</Tooltip>
-								
+
 							</div>
 	}
 					</div>
@@ -34,9 +34,9 @@ function PdfSlateComponent(props)  {
 
 	return (
 		<div className="AssessmentSlateCanvas div-position-relative">
-			{ 
+			{
 				showDetails ? showPDFDetails() :
-				<div 
+				<div
 					className = "slate_assessment_type_button add-pdf-button"
 					onClick = { OpenAlfresco }
 				>

@@ -179,6 +179,18 @@
   height: 28px;  
 }
 
+.dialog-button{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto;
+}
+
+.edit-metadata-sub-heading{
+padding-top: 5px;
+font-size: 14px;
+}
+
 .subscriberSlate-buttons{
   height: 36px;
 }
@@ -493,7 +505,7 @@
 
 .figure-popup{
   width: 640px;
-  height: 476px;
+  height: 505px;
   z-index: 9999;
   background-color: #fff;
   top: -32px;
@@ -596,7 +608,7 @@
   font-size: 16px;
   color: #005a70;
   font-weight: 600;
-  float: left;
+  /* float: left; */
 }
 
 .alt-text-body {
@@ -691,10 +703,10 @@
   border-bottom: 1px solid #005a70;
 }
 .figuremetadata-field {
-  margin-top:42px;
+  margin-top:15px;
 }
 .metadata-button{
-  margin-top: 35px;
+  margin-top: 25px;
 }
 .figuremetadata-field-table {
   margin-top:14px;
@@ -858,7 +870,7 @@ a.paragraphNumeroUnoFootnote del{
 }
 
 .dialog-window.tcm-canvas-popup strong ins{
-  color: #5a5656 !important;
+  color: #081E27 !important;
   font-weight: bold !important;
 }
 

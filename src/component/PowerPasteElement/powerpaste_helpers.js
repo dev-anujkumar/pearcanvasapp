@@ -19,7 +19,7 @@ export default {
    * Removes nesting beyond 4 levels
    * @param {*} ulNode UL/OL HTML node
    * @param {*} listType OL or UL
-   * @returns 
+   * @returns
    */
   removeExtraNesting: function (ulNode, listType) {
     const ulTags = ulNode?.getElementsByTagName?.(listType)
@@ -35,7 +35,7 @@ export default {
 
   /**
    * Replaces <fragment> content with plain text
-   * @param {*} node 
+   * @param {*} node
    */
   removeFragment: (node) => {
     node.innerHTML = node.innerHTML
@@ -130,7 +130,7 @@ export default {
     if (node === null || node === undefined) {
       return;
     }
-    
+
     if (node?.tagName === "OL") {
       if (depth === 4) {
         const domParser = new DOMParser()
@@ -288,7 +288,7 @@ export default {
     if (node === null || node === undefined) {
       return;
     }
-    
+
     node.removeAttribute("style");
     if (node.tagName === "UL") {
       node.classList.add("disc");

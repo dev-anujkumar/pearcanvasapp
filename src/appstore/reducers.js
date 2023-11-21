@@ -319,18 +319,18 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 oldFiguredata: action.payload.oldFiguredata
             }
-        case WIRIS_ALT_TEXT_POPUP : 
+        case WIRIS_ALT_TEXT_POPUP :
         return {
             ...state,
             wirisAltText : action.payload
         }
 
-        case LEARNOSITY_PROJECT_INFO : 
+        case LEARNOSITY_PROJECT_INFO :
         return {
             ...state,
             isLearnosityProjectInfo : action.payload
         }
-        case SET_FIGURE_GLOSSARY : 
+        case SET_FIGURE_GLOSSARY :
         return {
             ...state,
             figureGlossaryData : action.payload
@@ -447,12 +447,12 @@ export default function (state = INITIAL_STATE, action = INITIAL_ACTION) {
                 ...state,
                 approvedSlatePopupstatus: action.payload
             }
-        case DECO_TO_OTHER_IMG_TYPES: 
+        case DECO_TO_OTHER_IMG_TYPES:
             return {
                 ...state,
                 decoToOtherTypes: action.payload
             }
-        case FETCH_CONVERSION_DATA: 
+        case FETCH_CONVERSION_DATA:
             return {
                 ...state,
                 conversionData: action.payload

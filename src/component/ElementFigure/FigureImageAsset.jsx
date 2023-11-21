@@ -11,7 +11,7 @@ import { FIGURE_IMAGE_BUTTON_TITLE, IMAGE_ID, IMAGE_PATH, ALFRESCO_SITE_PATH, UP
  * This is Pure Component to render Image Asset of FigureImage Component
  */
 const FigureImageAsset = (props) => {
-    const { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight, onFocusTop, onFocusBottom } = props.figureTypeData;
+    const { imageClass, dataType, imageDimension, actualSizeClass, imgWidth, imgHeight } = props.figureTypeData;
 
     const addFigureRef = useRef(null);
     const updateFigureRef = useRef(null);
@@ -38,7 +38,7 @@ const FigureImageAsset = (props) => {
     }
 
     const triggerClickOnEnter = (event) => {
-        if(props.isEnableKeyboard) {     
+        if(props.isEnableKeyboard) {
             const keyCode = event.keyCode;
             if(keyCode === 13) {
                 const node = document.activeElement;
@@ -55,7 +55,7 @@ const FigureImageAsset = (props) => {
 
 
     return (
-       
+
             <div className={`figure-image-container`}>
                 <div id="figure_add_div" className={`pearson-component image figureData  ${isReviewer ? 'pointer-events-none' : ''} ${imageClass} ${props.model.figuredata.tableasHTML !== "" ? 'table-figure-data' : ""}`} data-type={dataType} >
                     {
@@ -68,7 +68,7 @@ const FigureImageAsset = (props) => {
                                 draggable="false"
                                 width={imgWidth}
                                 height={imgHeight}
-                            /> : 
+                            /> :
                             <KeyboardWrapper index={`${props.index}-image-asset-1`} enable={props.isEnableKeyboard}>
                                 <div onClick={focusSelectAnImage}>
                                     <div onKeyDown={triggerClickOnEnter} tabIndex={0} ref={addFigureRef} className='figurebutton' onClick={(e) => props.addFigureResource(e)}>{FIGURE_IMAGE_BUTTON_TITLE}</div>

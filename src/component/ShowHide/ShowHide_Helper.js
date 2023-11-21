@@ -13,7 +13,7 @@ const figElements = ['figure', "interactive", "audio", "video"];
 const textElements = ['element-authoredtext', 'element-list', 'element-blockfeature', 'element-learningobjectives'];
 export const REVEAL_TEXT_PLACEHOLDER = "This field cannot be empty, either add specific content or add in the default content of Reveal Answer"
 
-/** 
+/**
 * @description findSectionType - Return the section type of showhide element
 * @param {Number} index - index of show|hide|revelAnswer
 */
@@ -95,15 +95,15 @@ export const addElementInShowHide = (index, sectionType, type2BAdded, props) => 
 	/**
 	* @function createShowHideElement
 	* @description - This function is to create elements inside showhide
-	* @param {String} id - id of parent element (ShowHide)   
+	* @param {String} id - id of parent element (ShowHide)
 	* @param {String} sectionType - type of section in showhide element - show|hide|revealAnswer
 	* @param {Object} index - Array of indexs
 	* @param {String} contentUrn - of parent element(showhide)
-	* @param {String} elementToAdd - type of new element to be addedd - text|image 
+	* @param {String} elementToAdd - type of new element to be addedd - text|image
 	*/
 	props.createShowHideElement(id, sectionType, index, contentUrn, null, elementLineage, props?.index, type2BAdded);
 }
-/** 
+/**
 * @description getShowHideElement - Return the showhide element object from slate data
 * @param {Object} _slateBodyMatter - slate data from store
 * @param {Number} indexlength - indexlength of showhide element on slate
@@ -120,7 +120,7 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList, element
 				sh_Element = elementType === ElementConstants.BLOCKFEATURE ?  _slateBodyMatter[iList[0]] : _slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]];
                 break;
 			case 5:
-				sh_Element =  _slateBodyMatter[iList[0]].type === ElementConstants.MULTI_COLUMN ? 
+				sh_Element =  _slateBodyMatter[iList[0]].type === ElementConstants.MULTI_COLUMN ?
 					_slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]] : /* 2C:SH:Element */
 					_slateBodyMatter[iList[0]]?.elementdata.bodymatter[iList[1]]?.contents.bodymatter[iList[2]]; /* WE:Body:SH:Element */
                 break;
@@ -135,7 +135,7 @@ export function getShowHideElement(_slateBodyMatter, indexlength, iList, element
             case 7: /* TB:Tab:AS/WE-Head:SH:Element */
                 if (parentElement?.parent?.subtype === ElementConstants.TAB || parentElement?.grandParent?.asideData?.parent?.subtype === ElementConstants.TAB) {
                     sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[0]?.groupeddata.bodymatter[iList[2]].groupdata.bodymatter[iList[3]]?.elementdata.bodymatter[iList[4]];
-                    /* 2C:WE-Body:SH:Element */ 
+                    /* 2C:WE-Body:SH:Element */
                 } else {
                     sh_Element =  _slateBodyMatter[iList[0]]?.groupeddata.bodymatter[iList[1]].groupdata.bodymatter[iList[2]]?.elementdata.bodymatter[iList[3]]?.contents.bodymatter[iList[4]];
                 }
@@ -208,7 +208,7 @@ const getTextElementInShowHide = (bodymatter, indexes, showHideObj, parentElemen
             showHideElement = bodymatter[indexes[0]]?.elementdata?.bodymatter[indexes[1]]
             break;
         case 5:
-            showHideElement = bodymatter[indexes[0]].type === ElementConstants.MULTI_COLUMN ? 
+            showHideElement = bodymatter[indexes[0]].type === ElementConstants.MULTI_COLUMN ?
 					bodymatter[indexes[0]]?.groupeddata.bodymatter[indexes[1]].groupdata.bodymatter[indexes[2]] : /* 2C:SH:Element */
 					bodymatter[indexes[0]]?.elementdata.bodymatter[indexes[1]]?.contents.bodymatter[indexes[2]]; /* WE:Body:SH:Element */
             break;
@@ -270,7 +270,7 @@ const getFigureElementsInShowHide = (bodymatter, indexes, showHideObj) => {
 /**
  * @function getShowHideIndex
  * @description This function prepares the index of figure element inside ShowHide
- * @param {*} tempIndex 
+ * @param {*} tempIndex
  */
 export const getShowHideIndex = (tempIndex) => {
     let eleIndex;
@@ -288,7 +288,7 @@ export const getShowHideIndex = (tempIndex) => {
  * @param {*} activeElemType type of inner element
  * @param {*} showHideObj showHide details
  * @param {*} indexes element index
- * @returns 
+ * @returns
  */
 export const onUpdateSuccessInShowHide = (resData, bodymatter, indexes, parentElement) => {
     let showHideElement = getShowHideElement(bodymatter, indexes?.length, indexes, null, parentElement);
@@ -333,7 +333,7 @@ export const onGlossaryFnUpdateSuccessInShowHide = (resData, bodymatter, activeE
                 sh_Object.interactivedata[sectionType][indexes[shAtIndex - 2]] = {
                     ...elementInSH,
                     html: {...elementInSH?.html, ...resData?.html},
-                    elementdata: resData?.elementdata 
+                    elementdata: resData?.elementdata
                 }
             }else{
                 sh_Object.interactivedata[sectionType][indexes[shAtIndex - 1]] = {
@@ -400,7 +400,7 @@ export const onGlossaryFnUpdateSuccessInShowHide123 = (resData, bodymatter, acti
  * @function getElementType
  * @description This function return the element type in format which required for element creation
  * @param {*} type2BAdded  type of element ex. - "blockcode-elem"
- * @returns 
+ * @returns
  */
 function getElementType(type2BAdded) {
     switch(type2BAdded){

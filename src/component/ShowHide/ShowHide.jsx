@@ -10,7 +10,7 @@ import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader } from '../../constants/IFrameMessageTypes.js';
 
 /**
-* @ShowHide is container class of showhide element. 
+* @ShowHide is container class of showhide element.
 */
 class ShowHide extends React.Component {
 
@@ -18,7 +18,7 @@ class ShowHide extends React.Component {
 	* @function onSortUpdate
 	* @description - This function is to sort inner element by dragging inside showhide
 	* @param {String} event - event data
-	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer   
+	* @param {String} sectionType - section of ShowHide - show|hide|revealAnswer
 	*/
 	onSortUpdate = (event, sectionType) => {
 		const { element, index, parentElement, setActiveElement } = this.props || {};
@@ -68,7 +68,7 @@ class ShowHide extends React.Component {
 		return (
 			<div className="show-hide-component">
 				{/* Show Section of Component*/}
-				<ShowHideUiBlock 
+				<ShowHideUiBlock
 					addNestedElements = {addNestedElements}
 					sectionType = {"show"}
 					sepratorIndex = {`${index}-0-0`}
@@ -79,7 +79,7 @@ class ShowHide extends React.Component {
 				{/* Reveal Answer Component*/}
 				<RevealAnswer {...this.props} saveCaretPosition={this.props.saveCaretPosition} />
 				{/* Hide Section of Component*/}
-				<ShowHideUiBlock 
+				<ShowHideUiBlock
 					addNestedElements = {addNestedElements}
 					sectionType = {"hide"}
 					sepratorIndex = {`${index}-2-0`}

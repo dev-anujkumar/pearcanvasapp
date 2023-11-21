@@ -5,15 +5,14 @@
 import { AUTO_NUMBER_ELEMENTS, slateTypes, SHOWHIDE_SECTION, CONTAINER_LABELS, DISPLAYED_LABELS, ELEMENT_TYPES, containerElements, autoNumberElementsAllowed } from './AutoNumberConstants';
 /**
  * Common API Data handler for all elements supporting Auto-numbering
- * @param {*} projectContent 
- * @param {*} mediaData 
- * @returns 
+ * @param {*} projectContent
+ * @param {*} mediaData
+ * @returns
  */
 export const mediaElementAPI_Handler = (params, projectContent, numberedElements) => { // projectContent = response.data.contents
     let {
         elementType,
         autoNumberedElements,
-        atContainerLevel
     } = params
     // config.atContainerLevel = atContainerLevel
     if (projectContent['frontMatter']?.length > 0) {
@@ -56,9 +55,9 @@ export const mediaElementAPI_Handler = (params, projectContent, numberedElements
 
 /**
  * Get Media Elements list in the Project BodyMatter
- * @param {*} bodyMatterContent 
- * @param {*} numberedElements 
- * @returns 
+ * @param {*} bodyMatterContent
+ * @param {*} numberedElements
+ * @returns
  */
 export const getContentInBodyMatter = (bodyMatterContent, numberedElements) => {
     if (bodyMatterContent?.length > 0) {
@@ -89,10 +88,10 @@ export const getContentInBodyMatter = (bodyMatterContent, numberedElements) => {
 
 /**
  * Prepare the list of media elements inside Chapter
- * @param {*} apiContent 
- * @param {*} matterType 
- * @param {*} numberedElements 
- * @returns 
+ * @param {*} apiContent
+ * @param {*} matterType
+ * @param {*} numberedElements
+ * @returns
  */
 const getContentInChapter = (apiContent, matterType, numberedElements) => {
     const bodyMatter = Object.values(apiContent?.contents)?.flat();
@@ -116,10 +115,10 @@ const getContentInChapter = (apiContent, matterType, numberedElements) => {
 
 /**
  * Get Media Elements list inside a container
- * @param {*} container 
- * @param {*} numberedElements 
- * @param {*} matterType 
- * @param {*} parentEntityUrn 
+ * @param {*} container
+ * @param {*} numberedElements
+ * @param {*} matterType
+ * @param {*} parentEntityUrn
  */
 const getContainerMediaElementsList = (container, matterType, numberedElements, parentEntityUrn) => {
     if (container?.contents?.bodyMatter?.length > 0) {
@@ -142,9 +141,9 @@ const getContainerMediaElementsList = (container, matterType, numberedElements, 
 
 /**
  * Get List of Media Elements on a Slate
- * @param {*} bodyMatter 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} bodyMatter
+ * @param {*} imagesList
+ * @returns
  */
 const getImagesInsideSlates = (slateEntityUrn, slateData, bodyMatter, numberedElements = {}, parentDetails = []) => {
     if (Object.keys(numberedElements).length < 1) {
@@ -259,9 +258,9 @@ const containerBodyMatter = (container) => {
 
 /**
  * Prepare list of media elements in Aside/WE
- * @param {*} containerData 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} containerData
+ * @param {*} imagesList
+ * @returns
  */
 const getMediaElementInAsideWEPopup = (slateEntityUrn, containerData, numberedElements) => {
     const containerContent = containerBodyMatter(containerData)
@@ -281,9 +280,9 @@ const getMediaElementInAsideWEPopup = (slateEntityUrn, containerData, numberedEl
 
 /**
  * Prepare list of media elements in MultiColumn 2C/3C
- * @param {*} containerData 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} containerData
+ * @param {*} imagesList
+ * @returns
  */
 const getMediaElementInMultiColumn = (slateEntityUrn, containerData, numberedElements) => {
     const mulColumnContent = containerBodyMatter(containerData)
@@ -309,9 +308,9 @@ const getMediaElementInMultiColumn = (slateEntityUrn, containerData, numberedEle
 
 /**
  * Prepare list of media elements in Showhide
- * @param {*} containerData 
- * @param {*} imagesList 
- * @returns 
+ * @param {*} containerData
+ * @param {*} imagesList
+ * @returns
  */
 const getMediaElementInShowhide = (slateEntityUrn, containerData, numberedElements) => {
     const showHideContent = containerBodyMatter(containerData);
@@ -331,10 +330,10 @@ const getMediaElementInShowhide = (slateEntityUrn, containerData, numberedElemen
 
 /**
  * Prepare list of media elements in FrontMatter & BackMatter
- * @param {*} apiContent 
- * @param {*} matterType 
- * @param {*} numberedElements 
- * @returns 
+ * @param {*} apiContent
+ * @param {*} matterType
+ * @param {*} numberedElements
+ * @returns
  */
 export const getContentInFMandBM = (apiContent, matterType, numberedElements) => {
     if (apiContent[matterType]?.length > 0) {
