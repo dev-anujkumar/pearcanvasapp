@@ -590,13 +590,11 @@ class Interactive extends React.Component {
                     interactiveformat: INTERACTIVE_EXTERNAL_LINK,
                     interactivetitle: smartLinkTitle,
                     vendor: vendorName,
-                    "path": smartLinkPath
-                }
-                if(uniqueIDInteractive || epsURL){
-                    figuredata.posterimage = {
+                    posterimage: {
                         "imageid": uniqueIDInteractive,
                         "path": epsURL
-                    }
+                    },
+                    "path": smartLinkPath
                 }
                 if (interactivetype === THIRD_PARTY || interactivetype === EXTERNAL_WEBSITE_LINK) {
                     figuredata.alttext = altText
