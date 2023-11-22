@@ -1,4 +1,4 @@
-import { LIST_TYPE_MAPPINGS } from '../../constants/Element_Constants';
+import { ELEMENT_LIST, LIST_TYPE_MAPPINGS } from '../../constants/Element_Constants';
 // IMPORT - other dependencies
 import elementList from '../Sidebar/elementTypes.js';
 import { conversionElement, updateBlockListMetadata } from '../Sidebar/Sidebar_Action.js';
@@ -7,7 +7,7 @@ import { conversionElement, updateBlockListMetadata } from '../Sidebar/Sidebar_A
 // *************************** List Template ******************************
 let _listObjectTemplate_ = {
     "id": "",
-    "type": "element-list",
+    "type": ELEMENT_LIST,
     "subtype": "",
     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
     "designtype": "list",
@@ -30,7 +30,7 @@ let _listObjectTemplate_ = {
 }
 let _ullistObjectTemplate_ = {
     "id": "",
-    "type": "element-list",
+    "type": ELEMENT_LIST,
     "subtype": "disc",
     "schema": "http://schemas.pearson.com/wip-authoring/element/1",
     "designtype": "list",
@@ -105,7 +105,7 @@ export const convertToListElement = (type, startvalue, fromToolbar=true) => (dis
             secondaryOption: LIST_TYPE_MAPPINGS[type].mapType,
             labelText: LIST_TYPE_MAPPINGS[type].tag,
             toolbar: elementList[activeElement.elementType]['primary-list'].toolbar,
-            elementWipType: "element-list",
+            elementWipType: ELEMENT_LIST,
             startvalue,
             asideData
         }, fromToolbar));

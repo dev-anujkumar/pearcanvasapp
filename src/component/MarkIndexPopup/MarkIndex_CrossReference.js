@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Tooltip from '../Tooltip';
 import ReactMarkedIndexEditor from "../tinyMceMarkedIndexEditor";
 import { CrossRefCheckbox } from './CrossRefCheckBox';
-import { MARKEDINDEX_NO_RESULT_FOUND_TEXT } from './../../constants/Element_Constants';
+import { MARKEDINDEX_NO_RESULT_FOUND_TEXT, HIDE_CROSS_REF_LABEL_CLASS, SHOW_CROSS_REF_LABEL_CLASS } from './../../constants/Element_Constants';
 
 
 export const CrossReference = ({crossRefValue}) => {
@@ -68,11 +68,11 @@ export const CrossReference = ({crossRefValue}) => {
 
         let activeElement = document.getElementById('cross-ref');
         if(tempCrossRef.length > 0){
-            activeElement.classList.remove('show-cross-ref-label');
-            activeElement.classList.add('hide-cross-ref-label');
+            activeElement.classList.remove(SHOW_CROSS_REF_LABEL_CLASS);
+            activeElement.classList.add(HIDE_CROSS_REF_LABEL_CLASS);
         }else{
-            activeElement.classList.add('show-cross-ref-label');
-            activeElement.classList.remove('hide-cross-ref-label');
+            activeElement.classList.add(SHOW_CROSS_REF_LABEL_CLASS);
+            activeElement.classList.remove(HIDE_CROSS_REF_LABEL_CLASS);
         }
 
         setcrossRef(tempCrossRef);
@@ -92,9 +92,12 @@ export const CrossReference = ({crossRefValue}) => {
                     <Tooltip direction="bottom cross-ref-tooltip" showClass={crossRef.length === 0 ? true : false} tooltipText={crossRef.join(',')}>
                         <div className="markedindex-secondlevel-label" onClick={handleDropDownClick}>
                             <label className="cross-reference-lable">Cross Reference (See Also)</label>
-                            <ReactMarkedIndexEditor className='markedindex-editor place-holder cross-reference' id='markedindex-cross-reference'
-                             markIndexCurrentValue={crossRef.join(',')} filterCrossRef={filterCrossRef} isFilterCrossRefNeeded={crossRefValue?.length > 0 ? false : true}/>
-                            <label id="cross-ref" className={crossRef.length === 0 ? 'show-cross-ref-label' : 'hide-cross-ref-label'} onClick={focusOnPara}>None</label>
+                            <ReactMarkedIndexEditor
+                                className='markedindex-editor place-holder cross-reference' id='markedindex-cross-reference'
+                                markIndexCurrentValue={crossRef.join(',')} filterCrossRef={filterCrossRef}
+                                isFilterCrossRefNeeded={crossRefValue?.length > 0 ? false : true} />
+                            <label id="cross-ref" className={crossRef.length === 0 ?
+                                SHOW_CROSS_REF_LABEL_CLASS : HIDE_CROSS_REF_LABEL_CLASS} onClick={focusOnPara}>None</label>
                         </div>
                     </Tooltip>
                 </div>

@@ -1,5 +1,6 @@
 import config from '../../config/config';
 import axios from 'axios';
+import { CONTENT_TYPE } from '../../constants/Element_Constants';
 
 export const handleAlfrescoSiteUrl = (elementId, data) => {
     let url = `${config.NARRATIVE_API_ENDPOINT}v2/${elementId}/platformMetadata/alfresco`
@@ -12,7 +13,7 @@ export const handleAlfrescoSiteUrl = (elementId, data) => {
 
     axios.put(url, req, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(response => {
@@ -26,8 +27,8 @@ export const getAlfrescositeResponse = (elementId, callback) => {
     fetch(url, {
         method: 'GET',
         headers: {
-            "Content-Type": "application/json",
-            'Accept': 'application/json',
+            "Content-Type": CONTENT_TYPE,
+            'Accept': CONTENT_TYPE,
             'Cache-Control': 'no-cache',
             'myCloudProxySession': config.myCloudProxySession
         }
@@ -44,9 +45,9 @@ export const handleSiteOptionsDropdown = (alfrescoPath, id, locationData, curren
         return axios.get(url,
             {
                 headers: {
-                    'Accept': 'application/json',
+                    'Accept': CONTENT_TYPE,
                     'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
+                    'Content-Type': CONTENT_TYPE,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             })

@@ -46,7 +46,7 @@ import figureData from '../ElementFigure/figureTypes.js';
 import { fetchAllSlatesData, fetchAnySlateData, setCurrentSlateAncestorData } from '../../js/getAllSlatesData.js';
 import {getCurrentSlatesList} from '../../js/slateAncestorData_helpers';
 import { handleTCMData } from '../TcmSnapshots/TcmSnapshot_Actions.js';
-import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, MULTI_COLUMN_3C, SLATE_API_ERROR, TABBED_2_COLUMN, TAB, ELEMENT_AUTHOREDTEXT, ELEMENT_ASIDE, CONTENT_TYPE, FORMATTED_TITLE } from '../../constants/Element_Constants'
 import { ELM_INT, FIGURE_ASSESSMENT, ELEMENT_ASSESSMENT, LEARNOSITY } from '../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { tcmSnapshotsForCreate } from '../TcmSnapshots/TcmSnapshotsCreate_Update';
 import { fetchAssessmentMetadata , resetAssessmentStore } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions.js';
@@ -81,7 +81,7 @@ export const findElementType = (element, index) => {
                     contentUrn : element.contentUrn
                 }
                 break;
-            case 'element-authoredtext':
+            case ELEMENT_AUTHOREDTEXT:
             case 'stanza':
                 elementType['elementType'] = elementDataBank[element.type]["elementType"];
                 if ('elementdata' in element && 'headers' in element.elementdata && element.elementdata.headers) {
@@ -228,7 +228,7 @@ export const findElementType = (element, index) => {
                         break;
                 }
                 break;
-            case 'element-aside':
+            case ELEMENT_ASIDE:
              	if(element.subtype =="" || element.subtype == undefined){
                     element.subtype = "sidebar";
                     element.designtype = "asideLearningObjective";
@@ -291,7 +291,7 @@ export const findElementType = (element, index) => {
                 if (element.elementdata && element.elementdata.assessmentformat) {
                     element.elementdata.assessmentformat = element.elementdata.assessmentformat.toLowerCase()  /**PCAT-7526 fixes */
                 }
-                elementType = { ...elementDataBank["element-authoredtext"] }
+                elementType = { ...elementDataBank[ELEMENT_AUTHOREDTEXT] }
                 break;
             case  'groupedcontent':
                 elementType = {
@@ -340,7 +340,7 @@ export const findElementType = (element, index) => {
                 break;
             }
             default:
-                elementType = { ...elementDataBank["element-authoredtext"] }
+                elementType = { ...elementDataBank[ELEMENT_AUTHOREDTEXT] }
         }
     } catch (err) {
         elementType = {
@@ -435,7 +435,7 @@ export const getDiscussionItemsbyLOB = (lineOfBusiness) => {
     },
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })
@@ -474,7 +474,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
     // console.log("the lob url is " + lobURL)
     return axios.get(lobURL, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then (response => {
@@ -501,7 +501,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             const lobPermissionsURL = `${config.REACT_APP_API_URL}v1/lobs/permissions/setting/${lineOfBusiness}`;
             axios.get(lobPermissionsURL, {
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": CONTENT_TYPE,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }).then (response => {
@@ -519,7 +519,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
             const workflowRoleURL = `${config.REACT_APP_API_URL}v1/lobs/workflow/${lineOfBusiness}`;
             axios.get(workflowRoleURL, {
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": CONTENT_TYPE,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }).then(response => {
@@ -543,7 +543,7 @@ export const getProjectDetails = () => (dispatch, getState) => {
              axios.get(usageTypeUrl, {
                 headers: {
                     ApiKey:config.STRUCTURE_APIKEY,
-                    'Content-Type':'application/json',
+                    'Content-Type':CONTENT_TYPE,
                     Authorization:config.CMDS_AUTHORIZATION,
                     'myCloudProxySession': config.myCloudProxySession
                 }
@@ -634,7 +634,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
     }
     return axios.get(apiUrl, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(slateData => {
@@ -749,7 +749,7 @@ export const fetchSlateData = (manifestURN, entityURN, page, versioning, calledF
 		}
 		else{
 			if (Object.values(slateData.data).length > 0) {
-                if(versioning && (versioning.type === 'element-aside')) {
+                if(versioning && (versioning.type === ELEMENT_ASIDE)) {
                     let parentData = getState().appStore.slateLevelData;
                     let newslateData = JSON.parse(JSON.stringify(parentData));
                     if (versioning.indexes.length === 4 && versioning.parent.type === 'groupedcontent') {
@@ -1241,7 +1241,7 @@ export const setActiveElement = (activeElement = {}, index = 0,parentUrn = {},as
 export const fetchAuthUser = () => dispatch => {
     return axios.get(`${config.JAVA_API_URL}v2/dashboard/userInfo/users/${config.userId}?userName=${config.userId}`, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
@@ -1347,15 +1347,15 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                 break;
         }
         if (targetPopupElement) {
-            targetPopupElement.popupdata["formatted-title"] = responseData
-            if (popupField === "formatted-title") {
+            targetPopupElement.popupdata[FORMATTED_TITLE] = responseData
+            if (popupField === FORMATTED_TITLE) {
 
-                targetPopupElement.popupdata["formatted-title"].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
+                targetPopupElement.popupdata[FORMATTED_TITLE].html.text = createTitleSubtitleModel(elemNode.innerHTML, "")
             }
             else {
-                targetPopupElement.popupdata["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                targetPopupElement.popupdata[FORMATTED_TITLE].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
             }
-            targetPopupElement.popupdata["formatted-title"].elementdata.text = elemNode.innerText
+            targetPopupElement.popupdata[FORMATTED_TITLE].elementdata.text = elemNode.innerText
             switch(popupElementIndex?.length) {
                 case 3:
                     _slateObject.contents.bodymatter[popupElementIndex[0]].elementdata.bodymatter[popupElementIndex[1]] = targetPopupElement;
@@ -1399,17 +1399,17 @@ export const appendCreatedElement = async (paramObj, responseData) => {
                 targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]].interactivedata[sectionType][popupElementIndex[2]];
             }
             if (targetCG) {
-                targetCG.contents["formatted-title"] = responseData;
-                targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
-                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText;
+                targetCG.contents[FORMATTED_TITLE] = responseData;
+                targetCG.contents[FORMATTED_TITLE].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
+                targetCG.contents[FORMATTED_TITLE].elementdata.text = elemNode.innerText;
                 _slateObject.contents.bodymatter[popupElementIndex[0]].interactivedata[sectionType][popupElementIndex[2]] = targetCG;
             }
         } else {
             targetCG = _slateObject.contents.bodymatter[popupElementIndex[0]];
             if (targetCG) {
-                targetCG.contents["formatted-title"] = responseData;
-                targetCG.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
-                targetCG.contents["formatted-title"].elementdata.text = elemNode.innerText;
+                targetCG.contents[FORMATTED_TITLE] = responseData;
+                targetCG.contents[FORMATTED_TITLE].html.text = createTitleSubtitleModel("", elemNode.innerHTML);
+                targetCG.contents[FORMATTED_TITLE].elementdata.text = elemNode.innerText;
                 _slateObject.contents.bodymatter[popupElementIndex[0]] = targetCG;
             }
         }
@@ -1482,7 +1482,7 @@ export const createPopupUnit = (popupField, parentElement, cb, popupElementIndex
         JSON.stringify(_requestData),
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })
@@ -1553,7 +1553,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
         JSON.stringify(_requestData),
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         })
@@ -1570,7 +1570,7 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
 
         if(targetPoetryElement){
             if(poetryField==="creditsarray"){
-                if(targetPoetryElement?.type == "element-aside"){ /* update credit of PE inside aside */
+                if(targetPoetryElement?.type == ELEMENT_ASIDE){ /* update credit of PE inside aside */
                     targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
                         if (element.type == "poetry" && element.id == activeElementId) {
                             element.contents[poetryField] = [response.data]
@@ -1618,8 +1618,8 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 targetPoetryElement.contents[poetryField][0].elementdata.text = elemNode.innerText
             }
         }
-            else if(poetryField==="formatted-title"){
-                if(targetPoetryElement?.type == "element-aside"){ /* update Title of PE inside aside */
+            else if(poetryField===FORMATTED_TITLE){
+                if(targetPoetryElement?.type == ELEMENT_ASIDE){ /* update Title of PE inside aside */
                     targetPoetryElement?.elementdata?.bodymatter.map((element, index)=>{
                         if (element.type == "poetry" && element.id == activeElementId) {
                             element.contents[poetryField] = response.data
@@ -1664,17 +1664,17 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
             }
         }
             else if(poetryField==="formatted-subtitle"){
-                if (targetPoetryElement?.type == "element-aside") {
+                if (targetPoetryElement?.type == ELEMENT_ASIDE) {
                     targetPoetryElement?.elementdata?.bodymatter.map((element, index) => {
                         if (element.type == "poetry" && element.id == activeElementId) { /* update subtitle of PE inside Aside/WE */
-                            element.contents["formatted-title"] = response.data
-                            element.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                            element.contents[FORMATTED_TITLE] = response.data
+                            element.contents[FORMATTED_TITLE].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                             targetPoetryElement.elementdata.bodymatter[index] = element
                         } else if (element.type == "manifest") { /* update subtitle of PE inside WE in section break */
                             element.contents?.bodymatter.map((element1, maniIndex) => {
                                 if (element1?.type == "poetry" && element1?.id == activeElementId) {
-                                    element1.contents["formatted-title"] = response.data
-                                    element1.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                                    element1.contents[FORMATTED_TITLE] = response.data
+                                    element1.contents[FORMATTED_TITLE].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                                     targetPoetryElement.elementdata.bodymatter[index].contents.bodymatter[maniIndex] = element1
                                 }
                             })
@@ -1684,8 +1684,8 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                     targetPoetryElement.groupeddata?.bodymatter.map((groupElem1, groupIndex) => {
                         groupElem1.groupdata?.bodymatter.map((groupElem2, groupIndex1) => {
                             if (groupElem2.type == "poetry" && groupElem2.id == activeElementId) {
-                                groupElem2.contents["formatted-title"] = response.data
-                                groupElem2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                                groupElem2.contents[FORMATTED_TITLE] = response.data
+                                groupElem2.contents[FORMATTED_TITLE].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                                 targetPoetryElement.groupeddata.bodymatter[groupIndex].groupdata.bodymatter[groupIndex1] = groupElem2
                             }
                         })
@@ -1693,15 +1693,15 @@ export const createPoetryUnit = (poetryField, parentElement,cb, ElementIndex, sl
                 }  else if (targetPoetryElement?.type == "showhide") {
                     targetPoetryElement.interactivedata[parentElement?.showHideType].map((element2, index) => {
                         if (element2.type == "poetry" && element2.id == activeElementId) {
-                            element2.contents["formatted-title"] = response.data
-                            element2.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                            element2.contents[FORMATTED_TITLE] = response.data
+                            element2.contents[FORMATTED_TITLE].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                             targetPoetryElement.interactivedata[parentElement?.showHideType][index] = element2
                         }
                     })
                 }
                 else {
-                targetPoetryElement.contents["formatted-title"] = response.data
-                targetPoetryElement.contents["formatted-title"].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
+                targetPoetryElement.contents[FORMATTED_TITLE] = response.data
+                targetPoetryElement.contents[FORMATTED_TITLE].html.text = createTitleSubtitleModel("", elemNode.innerHTML)
                 }
             }
             _slateObject.contents.bodymatter[ElementIndex] = targetPoetryElement
@@ -1733,7 +1733,7 @@ export const setSlateLength = (length) => {
 export const fetchLearnosityContent = () => dispatch => {
     return axios.get(`${config.LEARNOSITY_CONTENT_BRIDGE_API}${config.projectEntityUrn}`, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then((response) => {
@@ -1761,7 +1761,7 @@ export const fetchProjectLFs = () => dispatch => {
     axios.get(`${config.MANIFEST_READONLY_ENDPOINT}v2/${config.projectUrn}/learningframeworks`, {
         headers: {
             "ApiKey": config.STRUCTURE_APIKEY,
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             "x-Roles": "ContentPlanningAdmin",
             'myCloudProxySession': config.myCloudProxySession
         }
@@ -1840,7 +1840,7 @@ const getLOBList = () => {
 		headers: {
 			"ApiKey": config.STRUCTURE_APIKEY,
             "myCloudProxySession": config.myCloudProxySession,
-			"Content-Type": "application/json",
+			"Content-Type": CONTENT_TYPE,
 			"x-Roles": "LearningAdmin",
 		}
 	})

@@ -13,6 +13,7 @@ import TcmConstants, { ASSESSMENT_TYPE } from './TcmConstants.js';
 import { handleBlankLineDom } from '../ElementContainer/UpdateElements.js';
 import store from '../../appstore/store.js';
 import { tcmSnapshotsOnDefaultSlate } from './TcmSnapshotsOnDefaultSlate.js';
+import { FORMATTED_TITLE, PARAGRAPH_HTML, PARAGRAPH_NUMEROUNO_CLASS } from '../../constants/Element_Constants.js';
 
 
 let operType = "";
@@ -221,10 +222,11 @@ export const tcmSnapshotsMetadataField = (snapshotsData, defaultKeys, containerE
     let elementDetails;
     const { parentElement, metaDataField, CurrentSlateStatus, isMetaFieldExist } = containerElement
     const { wipData, elementId, tag, actionStatus, popupInContainer, slateManifestVersioning } = snapshotsData;
-    let wipDataTitle = calledFrom == 'delete'|| calledFrom == 'create' ? wipData.popupdata['formatted-title'] : wipData  // delete Whole pop case handling
+    let wipDataTitle = calledFrom == 'delete'|| calledFrom == 'create' ? wipData.popupdata[FORMATTED_TITLE] : wipData  // delete Whole pop case handling
     elementId.parentId = parentElement.id;
-    elementId.childId = wipData.type === POPUP_ELEMENT ? wipData.popupdata['formatted-title'] &&
-    wipData.popupdata['formatted-title'].id : wipData.id;; // delete Whole pop case handling
+    elementId.childId = wipData.type === POPUP_ELEMENT ?
+        wipData.popupdata[FORMATTED_TITLE] && wipData.popupdata[FORMATTED_TITLE].id :
+        wipData.id;; // delete Whole pop case handling
 
     tag.parentTag = fetchElementsTag(parentElement);
     tag.childTag = fetchElementsTag(parentElement, type ? type : metaDataField ? metaDataField : "");
@@ -268,14 +270,14 @@ export const tcmSnapshotsInPopupElement = (snapshotsData, defaultKeys, container
     if (defaultKeys.action === 'create' && type == POP_UP) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
         tcmSnapshotsCreatePopup(snapshotsData, defaultKeys,index);
-        if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
+        if((metaDataField && parentElement && parentElement.popupdata[FORMATTED_TITLE])){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
         }
     }
     else if ((defaultKeys.action === 'create' && type == POPUP_ELEMENT && operationType==='copy') || (operationType === 'cut' &&
         defaultKeys.action === 'update')) {     /** Create Popup */
         tcmSnapshotsPopupCTA(snapshotsData, defaultKeys, containerElement,index);
-        if((metaDataField && parentElement && parentElement.popupdata['formatted-title'])){
+        if((metaDataField && parentElement && parentElement.popupdata[FORMATTED_TITLE])){
             tcmSnapshotsMetadataField(snapshotsData, defaultKeys, containerElement, metaDataField,index, 'create');
         }
     }
@@ -832,12 +834,12 @@ export const prepareElementSnapshots = async (element,actionStatus,index, elemen
 export const setFigureElementContentSnapshot = (element, actionStatus) => {
     let formattedLabel, formattedNumber, formattedTitle
     let isAutoNumberingEnabled= store?.getState()?.autoNumberReducer?.isAutoNumberingEnabled ?? false;
-    formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(' class="paragraphNumeroUno"', '');
+    formattedTitle = getTitleSubtitleModel(element.html.title, "formatted-subtitle", "figure").replace(PARAGRAPH_NUMEROUNO_CLASS, '');
     if (isAutoNumberingEnabled && autoNumberedElements(element)) {
         formattedLabel = getAutoNumberedLabelData(element)
     } else {
-        formattedLabel = getTitleSubtitleModel(element.html.title, "formatted-title", "figure").replace(' class="paragraphNumeroUno"', '');
-        formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(' class="paragraphNumeroUno"', '');
+        formattedLabel = getTitleSubtitleModel(element.html.title, FORMATTED_TITLE, "figure").replace(PARAGRAPH_NUMEROUNO_CLASS, '');
+        formattedNumber = getTitleSubtitleModel(element.html.title, "formatted-number", "figure").replace(PARAGRAPH_NUMEROUNO_CLASS, '');
     }
     let snapshotData = {
         title: handleBlankLineDom(formattedLabel, 'BlankLine') || "",
@@ -851,17 +853,17 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
     }
     switch (element.figuretype) {
         case "video":
-            snapshotData["metadata"] = element.figuredata?.videoid?.trim().length ? `<p>${element.figuredata.videoid}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.figuredata?.videoid?.trim().length ? `<p>${element.figuredata.videoid}</p>` : PARAGRAPH_HTML
             break;
         case "audio":
-            snapshotData["metadata"] = element.figuredata.audioid.trim().length ? `<p>${element.figuredata.audioid}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.figuredata.audioid.trim().length ? `<p>${element.figuredata.audioid}</p>` : PARAGRAPH_HTML
             break;
         case "codelisting":             // for BCE
-            snapshotData["codeblock"] =  element.html.preformattedtext ? element.html.preformattedtext : "<p><br></p>"
+            snapshotData["codeblock"] =  element.html.preformattedtext ? element.html.preformattedtext : PARAGRAPH_HTML
             snapshotData["metadata"] = prepareMetablock(element, actionStatus)
             break;
         case "authoredtext":            // for MML
-            snapshotData["metadata"] = element.html.text ? `${handleBlankLineDom(element.html.text, 'BlankLine')}` : "<p><br></p>"
+            snapshotData["metadata"] = element.html.text ? `${handleBlankLineDom(element.html.text, 'BlankLine')}` : PARAGRAPH_HTML
             break;
         case "interactive":
             snapshotData = {
@@ -889,7 +891,7 @@ export const setFigureElementContentSnapshot = (element, actionStatus) => {
         case "table":
         case "mathImage":
         default:
-            snapshotData["metadata"] = element.figuredata.imageid.trim().length ? `<p>${element.figuredata.imageid}</p>` : "<p><br></p>"
+            snapshotData["metadata"] = element.figuredata.imageid.trim().length ? `<p>${element.figuredata.imageid}</p>` : PARAGRAPH_HTML
             break;
     }
     return snapshotData

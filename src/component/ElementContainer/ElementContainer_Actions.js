@@ -24,6 +24,7 @@ import { updateAutoNumberedElement } from './UpdateElements';
 import { updateAssessmentId } from '../AssessmentSlateCanvas/AssessmentActions/assessmentActions';
 import store from '../../appstore/store';
 import { FIGURE_INTERACTIVE } from '../AssessmentSlateCanvas/AssessmentSlateConstants';
+import { CONTENT_TYPE, CPLG_ALT, CPLG_LONGDESCRIPTION, ELEMENT_ASSESSMENT_LOWERCASE } from '../../constants/Element_Constants';
 const { SHOW_HIDE, ELEMENT_ASIDE, ELEMENT_WORKEDEXAMPLE, TAB, MULTI_COLUMN } = ElementConstants;
 
 const {
@@ -55,7 +56,7 @@ export const addComment = (commentString, elementId) => (dispatch) => {
     return axios.post(url, newComment,
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 ApiKey: config.STRUCTURE_APIKEY,
                 'myCloudProxySession': config.myCloudProxySession
             }
@@ -114,7 +115,7 @@ export const deleteElement = (elmId, type, parentUrn, asideData, contentUrn, ind
         JSON.stringify(_requestData),
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -164,8 +165,9 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
     poetryData, isFromRC, upadtedSlateData) => async (dispatch, getState) => {
     if (hasReviewerRole()) {
         // condition to work on approved slate for Auto update on Assessment slate and items
-        if (((updatedData?.type !== 'element-assessment' ? updatedData?.figuredata?.type !== 'element-assessment' : false)
-        && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
+        if (((updatedData?.type !== ELEMENT_ASSESSMENT_LOWERCASE ?
+            updatedData?.figuredata?.type !== ELEMENT_ASSESSMENT_LOWERCASE : false)
+            && !hasReviewerSubscriberRole()) || hasReviewerSubscriberRole()) {
             sendDataToIframe({ 'type': 'isDirtyDoc', 'message': { isDirtyDoc: false } })   //hide saving spinner
             return;
         }
@@ -236,7 +238,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         updatedData1,
             {
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": CONTENT_TYPE,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             }
@@ -260,7 +262,7 @@ export const updateElement = (updatedData, elementIndex, parentUrn, asideData, s
         // Making condition true for triggering slate level save api
         localStorage.setItem('isChangeInSlate', 'true');
         processAndStoreUpdatedResponse(updateArgs)
-        if (updatedData.type == "element-assessment") {
+        if (updatedData.type == ELEMENT_ASSESSMENT_LOWERCASE) {
             let newAssessmentId = response?.data?.elementdata?.assessmentid;
             config.assessmentId = newAssessmentId;
             store.dispatch(updateAssessmentId(response?.data?.id));
@@ -440,7 +442,7 @@ export const getTableEditorData = (elementid,updatedData) => (dispatch, getState
     return axios.get(`${config.REACT_APP_API_URL}v1/slate/narrative/data/${config.projectUrn}/${elementId}`,
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -527,7 +529,7 @@ export const createShowHideElement = (elementId, type, index, parentContentUrn, 
         JSON.stringify(_requestData),
         {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 'myCloudProxySession': config.myCloudProxySession
             }
         }
@@ -651,7 +653,7 @@ export const getElementStatus = (elementWorkId, index) => async (dispatch) => {
     const resp = await fetch(apiUrl, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': CONTENT_TYPE,
             'ApiKey': config.APO_API_KEY,
             'myCloudProxySession': config.myCloudProxySession
         }
@@ -890,7 +892,7 @@ export const updateAsideNumber = (previousData, index, elementId, isAutoNumberin
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${elementEntityUrn}/metadata?isHtmlPresent=true`
     return axios.put(url, dataToSend, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
@@ -976,7 +978,7 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
     let url = `${config.REACT_APP_API_URL}v1/${config.projectUrn}/container/${previousData.contentUrn}/metadata?isHtmlPresent=true`
     return axios.put(url, dataToSend, {
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": CONTENT_TYPE,
             'myCloudProxySession': config.myCloudProxySession
         }
     }).then(res => {
@@ -1048,16 +1050,16 @@ export const updateTabTitle = (previousData, index, parentElement) => (dispatch,
         let response = await axios.get(url,
             {
                 headers: {
-                    'Accept': 'application/json',
+                    'Accept': CONTENT_TYPE,
                     'ApiKey': config.CMDS_APIKEY,
-                    'Content-Type': 'application/json',
+                    'Content-Type': CONTENT_TYPE,
                     'myCloudProxySession': config.myCloudProxySession
                 }
             });
         const {properties} = response.data.entry;
         return {
-            altText : properties["cplg:altText"] ?? "",
-            longdescription: properties["cplg:longDescription"] ?? ""
+            altText : properties[CPLG_ALT] ?? "",
+            longdescription: properties[CPLG_LONGDESCRIPTION] ?? ""
         }
     } catch(error){
         return {
@@ -1168,7 +1170,7 @@ export const saveTEMetadata = async (editedImageList) => {
                 }
                 const response = axios.put(url, body, {
                     headers: {
-                        "Content-Type": "application/json",
+                        "Content-Type": CONTENT_TYPE,
                         "apikey": config.CMDS_APIKEY,
                         'myCloudProxySession': config.myCloudProxySession
                     }
@@ -1286,7 +1288,7 @@ export const getAlfrescoMetadataForAsset = async (assetId, figuretype) => {
     try{
         const response = await axios.get(url, {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": CONTENT_TYPE,
                 "apikey": config.CMDS_APIKEY,
                 'myCloudProxySession': config.myCloudProxySession
             }
@@ -1302,8 +1304,8 @@ export const getAlfrescoMetadataForAsset = async (assetId, figuretype) => {
             }}
             else{
                 return {
-                    altText: properties.hasOwnProperty("cplg:altText") ? properties["cplg:altText"] : "",
-                    longDescription: properties.hasOwnProperty("cplg:longDescription") ? properties["cplg:longDescription"] : "",
+                    altText: properties.hasOwnProperty(CPLG_ALT) ? properties[CPLG_ALT] : "",
+                    longDescription: properties.hasOwnProperty(CPLG_LONGDESCRIPTION) ? properties[CPLG_LONGDESCRIPTION] : "",
                 }
             }
         }

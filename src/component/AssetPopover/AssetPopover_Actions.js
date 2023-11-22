@@ -12,6 +12,7 @@ import config from '../../config/config.js'
 import { sendDataToIframe } from '../../constants/utility.js';
 import { ShowLoader , HideLoader} from '../../constants/IFrameMessageTypes.js';
 import { slateLinkDetails } from '../TcmSnapshots/TcmSnapshot_Actions.js';
+import { CONTENT_TYPE } from '../../constants/Element_Constants.js';
 let currentlySearching = false;
 let searchterm = "";
 
@@ -142,7 +143,7 @@ export async function getAssetPopoverId(workUrn) {
     let response = await fetch(config.NARRATIVE_API_ENDPOINT + 'v2', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': CONTENT_TYPE,
         'apikey': config.APO_API_KEY,
         myCloudProxySession: config.myCloudProxySession
       }
@@ -167,7 +168,7 @@ export const getCurrentlyLinkedImage = async (id, cb) => {
     let response = await fetch(url, {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': CONTENT_TYPE,
         'apikey': config.APO_API_KEY,
         myCloudProxySession: config.myCloudProxySession
       }
@@ -219,7 +220,7 @@ export const getElementVersionContent = async (elementId) =>{
       let response = await fetch(workUrl, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': CONTENT_TYPE,
           'apikey': config.APO_API_KEY,
           myCloudProxySession: config.myCloudProxySession
         }

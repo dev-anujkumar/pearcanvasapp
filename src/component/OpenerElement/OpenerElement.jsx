@@ -12,6 +12,7 @@ import axios from 'axios';
 import { alfrescoPopup, saveSelectedAssetData, saveSelectedAlfrescoElement, saveSelectedAltTextLongDescData } from '../AlfrescoPopup/Alfresco_Action'
 import { connect } from 'react-redux';
 import TinyMceEditor from '../tinyMceEditor';
+import { CPLG_ALT, CPLG_LONGDESCRIPTION, NAME_ATTR_SELECT, NAME_ATTR_SELECT_LONGDESC } from '../../constants/Element_Constants';
 
 class OpenerElement extends Component {
 
@@ -20,10 +21,10 @@ class OpenerElement extends Component {
         const { textsemantics, text } = props.element.title;
         const bgImage = props.element.backgroundimage.path;
 
-        if (document.querySelector("[name='alt_text']") && props.element.backgroundimage.alttext)
-            document.querySelector("[name='alt_text']").innerHTML = props.element.backgroundimage.alttext;
-        if (document.querySelector("[name='long_description']") && props.element.backgroundimage.longdescripton)
-            document.querySelector("[name='long_description']").innerHTML = props.element.backgroundimage.longdescripton;
+        if (document.querySelector(NAME_ATTR_SELECT) && props.element.backgroundimage.alttext)
+            document.querySelector(NAME_ATTR_SELECT).innerHTML = props.element.backgroundimage.alttext;
+        if (document.querySelector(NAME_ATTR_SELECT_LONGDESC) && props.element.backgroundimage.longdescripton)
+            document.querySelector(NAME_ATTR_SELECT_LONGDESC).innerHTML = props.element.backgroundimage.longdescripton;
 
         this.state = {
             label: getOpenerContent(textsemantics, "label", text) || 'No Label',
@@ -55,11 +56,11 @@ class OpenerElement extends Component {
         let imageId = `urn:pearson:alfresco:${uniqID}`;
         let figureType = data?.content?.mimeType?.split('/')[0]
         let width = imageData.properties["exif:pixelXDimension"] ? imageData.properties["exif:pixelXDimension"] : "";
-        let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
-        let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
+        let altText = imageData.properties[CPLG_ALT] ? imageData.properties[CPLG_ALT] : '';
+        let longDesc = imageData.properties[CPLG_LONGDESCRIPTION] ? imageData.properties[CPLG_LONGDESCRIPTION] : "";
         if (figureType === "image" || figureType === "table" || figureType === "mathImage" || figureType === "authoredtext") {
-            let altText = imageData.properties["cplg:altText"] ? imageData.properties["cplg:altText"] : '';
-            let longDesc = imageData.properties['cplg:longDescription'] ? imageData.properties['cplg:longDescription'] : "";
+            let altText = imageData.properties[CPLG_ALT] ? imageData.properties[CPLG_ALT] : '';
+            let longDesc = imageData.properties[CPLG_LONGDESCRIPTION] ? imageData.properties[CPLG_LONGDESCRIPTION] : "";
             this.setState({
                 imgSrc: epsURL,
                 imageId: imageId,
@@ -68,10 +69,10 @@ class OpenerElement extends Component {
             }, ()=>{
             this.handleBlur({imgSrc: epsURL, imageId});
             });
-            if (document.querySelector("[name='alt_text']"))
-                document.querySelector("[name='alt_text']").innerHTML = altText;
-            if (document.querySelector("[name='long_description']"))
-                document.querySelector("[name='long_description']").innerHTML = longDesc;
+            if (document.querySelector(NAME_ATTR_SELECT))
+                document.querySelector(NAME_ATTR_SELECT).innerHTML = altText;
+            if (document.querySelector(NAME_ATTR_SELECT_LONGDESC))
+                document.querySelector(NAME_ATTR_SELECT_LONGDESC).innerHTML = longDesc;
         }
         let payloadObj = {
             asset: {},
@@ -397,10 +398,10 @@ class OpenerElement extends Component {
 
         let altText = "";
         let longDesc = "";
-        if (document.querySelector("[name='alt_text']"))
-            altText = document.querySelector("[name='alt_text']").innerHTML;
-        if (document.querySelector("[name='long_description']"))
-            longDesc = document.querySelector("[name='long_description']").innerHTML;
+        if (document.querySelector(NAME_ATTR_SELECT))
+            altText = document.querySelector(NAME_ATTR_SELECT).innerHTML;
+        if (document.querySelector(NAME_ATTR_SELECT_LONGDESC))
+            longDesc = document.querySelector(NAME_ATTR_SELECT_LONGDESC).innerHTML;
 
         element.backgroundimage.path = imgSrc;
         element.backgroundimage.imageid = imageId;

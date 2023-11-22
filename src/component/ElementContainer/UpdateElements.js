@@ -3,7 +3,7 @@ import elementTypes from './../Sidebar/elementTypes';
 import config from '../../config/config';
 import { matchHTMLwithRegex, removeBlankTags, getDesignType, removeBlankSpaceAndConvertToLowercase } from '../../constants/utility.js'
 import store from '../../appstore/store'
-import { POD_DEFAULT_VALUE } from '../../constants/Element_Constants'
+import { POD_DEFAULT_VALUE, ELEMENT_AUTHOREDTEXT, FORMATTED_TITLE, SCHEMA_URL } from '../../constants/Element_Constants'
 import { findElementType, getDefaultPlaybackMode } from "../CanvasWrapper/CanvasWrapper_Actions";
 import { storeOldAssetForTCM } from './ElementContainer_Actions';
 import { createLabelNumberTitleModel } from '../../constants/utility';
@@ -11,7 +11,7 @@ import { LABEL_NUMBER_SETTINGS_DROPDOWN_VALUES } from '../FigureHeader/AutoNumbe
 import { setAutonumberingValuesForPayload, getValueOfLabel, generateDropdownDataForFigures } from '../FigureHeader/AutoNumber_helperFunctions';
 import { UNITY_TINY } from '../SlateWrapper/SlateWrapperConstants';
 const indivisualData = {
-    schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+    schema: SCHEMA_URL,
     textsemantics: [ ],
     mathml: [ ]
 }
@@ -341,7 +341,7 @@ export const generateCommonFigureDataInteractive = (index, previousElementData, 
         let pdfPosterTextHTML = posterTextHTML.match(/(<p.*?>.*?<\/p>)/g)?posterTextHTML:`<p>${posterTextHTML}</p>`
         data.html.postertext = pdfPosterTextHTML
         data.figuredata.postertext = {
-            schema : "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+            schema : SCHEMA_URL,
             text : posterText,
             textsemantics : [ ]
         }
@@ -595,10 +595,10 @@ const generateCommonFigureDataAT = (index, previousElementData, elementType, pri
             footnotes : [ ]
         },
         figuredata : {
-            type: "element-authoredtext",
+            type: ELEMENT_AUTHOREDTEXT,
             schema: "http://schemas.pearson.com/wip-authoring/element/1",
             elementdata: {
-                schema: "http://schemas.pearson.com/wip-authoring/authoredtext/1#/definitions/authoredtext",
+                schema: SCHEMA_URL,
                 text: eleText,
                 textsemantics: [],
                 mathml: []
@@ -758,7 +758,7 @@ const validateRevealAnswerData = (showHideType, node, elementType, isHeader) => 
  * @param {*} _previousElementData element data inside popup
  */
 export const getMetaDataFieldForPopup = ({ popupdata: _popupdata }, _previousElementData) => {
-    let hasFormattedTitle = _popupdata.hasOwnProperty("formatted-title"),
+    let hasFormattedTitle = _popupdata.hasOwnProperty(FORMATTED_TITLE),
         hasFormattedSubtitle = _popupdata.hasOwnProperty("formatted-subtitle");
 
     if (hasFormattedTitle && hasFormattedSubtitle) {
@@ -827,12 +827,12 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     footnotes : previousElementData.html.footnotes || {},
                     glossaryentries : previousElementData.html.glossaryentries || {}
                 },
-                inputType : parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" &&
-                previousElementData.type === "element-authoredtext") ? "AUTHORED_TEXT" : inputElementType,
+                inputType: parentElement && (parentElement.type === "popup" || parentElement.type === "citations" || parentElement.type === "poetry" &&
+                previousElementData.type === ELEMENT_AUTHOREDTEXT) ? "AUTHORED_TEXT" : inputElementType,
                 inputSubType : parentElement && (parentElement.type == "popup" || parentElement.type === "poetry") ? "NA" : inputElementSubType
             }
 
-            if(type === 'element-authoredtext'){
+            if(type === ELEMENT_AUTHOREDTEXT){
                 const classList = node?.firstChild?.classList?.value?.split(" ") ?? [];
                 dataToReturn["designtype"] = getDesignType(classList);
                 if(dataToReturn.designtype === null) {
@@ -855,7 +855,7 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                     dataToReturn.metaDataField = getMetaDataFieldForPopup(parentElement, previousElementData)
                 }
             } else if(parentElement && parentElement.type === "poetry"){
-                if(parentElement.contents && parentElement.contents["formatted-title"] && parentElement.contents["formatted-title"]["id"] === previousElementData.id){
+                if(parentElement.contents && parentElement.contents[FORMATTED_TITLE] && parentElement.contents[FORMATTED_TITLE]["id"] === previousElementData.id){
                     dataToReturn["metaDataField"] = "formattedTitle";
                 }
                 else if(parentElement.contents && parentElement.contents["creditsarray"] && parentElement.contents["creditsarray"].length &&
@@ -873,14 +873,14 @@ export const createUpdatedData = (type, previousElementData, node, elementType, 
                 dataToReturn["elementParentEntityUrn"] = containerContext?.props?.parentManifestListItem?.contentUrn
             }
             else if(parentElement && parentElement.type === "showhide" && showHideType){
-                const poetryElementTypes = ['poetry', 'stanza', 'element-authoredtext'];
+                const poetryElementTypes = ['poetry', 'stanza', ELEMENT_AUTHOREDTEXT];
                 dataToReturn.sectionType = showHideType;
                 dataToReturn["elementParentEntityUrn"] = parentElement.contentUrn
                 // checking for poetry element inside SH element to pass some extra parameters inside update request
                 if (elementType && poetryElementTypes.includes(elementType) && parentElement?.interactivedata) {
                     parentElement?.interactivedata?.[showHideType].forEach(poetryElement => {
                         if(poetryElement?.type === 'poetry') {
-                            if(poetryElement?.contents?.['formatted-title']?.id === previousElementData.id) {
+                            if(poetryElement?.contents?.[FORMATTED_TITLE]?.id === previousElementData.id) {
                                 dataToReturn["metaDataField"] = "formattedTitle";
                                 dataToReturn["elementParentEntityUrn"] = poetryElement.contentUrn
                             }

@@ -17,7 +17,7 @@ import { loadTrackChanges } from '../../CanvasWrapper/TCM_Integration_Actions';
 import { ALREADY_USED_SLATE_TOC, ELEMENT_ASSESSMENT, PROJECT_PREVIEW_ACTION, SLATE_REFRESH_ACTION, RELEASE_SLATE_LOCK_ACTION,
         CHANGE_SLATE_ACTION } from '../../SlateWrapper/SlateWrapperConstants'
 import { prepareLODataForUpdate, setCurrentSlateLOs, getSlateMetadataAnchorElem, prepareLO_WIP_Data } from '../../ElementMetaDataAnchor/ExternalLO_helpers.js';
-import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES } from '../../../constants/Element_Constants.js';
+import { CYPRESS_LF, EXTERNAL_LF, SLATE_ASSESSMENT, ASSESSMENT_ITEM, ASSESSMENT_ITEM_TDX, FETCH_LO_FOR_SLATES, IMG_HTML, FRONT_MATTER, BACK_MATTER, CM_DESCRIPTION, ELEMENT_LEARNING_OBJECTIVE_MAPPING } from '../../../constants/Element_Constants.js';
 import { LEARNOSITY, LEARNING_TEMPLATE, PUF, CITE, TDX  } from '../../AssessmentSlateCanvas/AssessmentSlateConstants.js';
 import { fetchAlfrescoSiteDropdownList } from '../../AlfrescoPopup/Alfresco_Action';
 import { getContainerEntityUrn } from '../../FigureHeader/AutoNumber_helperFunctions';
@@ -168,7 +168,7 @@ function CommunicationChannel(WrappedComponent) {
                     if (message?.LOList?.length) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         message.LOList.map(loData => {
-                            loData.label.en = loData.label.en.replace(regex, "<img src='$1'></img>");
+                            loData.label.en = loData.label.en.replace(regex, IMG_HTML);
                         });
                         this.props.currentSlateLOMath(message.LOList);
                     } else {
@@ -215,7 +215,7 @@ function CommunicationChannel(WrappedComponent) {
                         const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                         this.props.currentSlateLOData.map(loData => {
                             if (loData?.label?.en) {
-                                loData.label.en = loData.label.en.replace(regex, "<img src='$1'></img>")
+                                loData.label.en = loData.label.en.replace(regex, IMG_HTML)
                             }
                         })
                         this.props.currentSlateLO(this.props.currentSlateLOData);
@@ -234,7 +234,7 @@ function CommunicationChannel(WrappedComponent) {
                         const { assessmenId } = this.props.assessmentReducer
                         const slateVersionStatus = this.props.slateLevelData[config.slateManifestURN]?.status
                         const approvedAssessmentCheck = slateVersionStatus === "approved" && dataToSend.type === "element-assessment"
-                        if (config.parentEntityUrn !== ("Front Matter" || "Back Matter")) {
+                        if (config.parentEntityUrn !== (FRONT_MATTER || BACK_MATTER)) {
                             let assessmentUrn = message?.assessmentUrn ?? document.getElementsByClassName("slate_assessment_data_id_lo")[0].innerText;
                             sendDataToIframe({ 'type': 'AssessmentSlateTagStatus', 'message': { assessmentId:  assessmentUrn ? assessmentUrn :
                                              config.assessmentId, AssessmentSlateTagStatus : message.slateTagEnabled, containerUrn: slateManifestUrn } });
@@ -691,8 +691,9 @@ function CommunicationChannel(WrappedComponent) {
         handleAudioData = (message) => {
             let imageData = message.asset;
             let figureType = imageData?.content?.mimeType?.split('/')[0]
-            let smartLinkAssetType = imageData?.properties["cm:description"] && (typeof (imageData.properties["cm:description"]) == "string") ?
-            imageData.properties["cm:description"].includes('smartLinkType') ? JSON.parse(imageData.properties["cm:description"]).smartLinkType : "" : "";
+            let smartLinkAssetType = imageData?.properties[CM_DESCRIPTION] && (typeof (imageData.properties[CM_DESCRIPTION]) == "string") ?
+            imageData.properties[CM_DESCRIPTION].includes('smartLinkType') ?
+            JSON.parse(imageData.properties[CM_DESCRIPTION]).smartLinkType : "" : "";
             if (figureType == "audio" || smartLinkAssetType?.toLowerCase() == "audio") {
                 this.props.saveDataFromAlfresco(message);
                 let payloadObj = {
@@ -844,7 +845,7 @@ function CommunicationChannel(WrappedComponent) {
                 if (message?.loLinked?.length) {
                     const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g;
                     message.loLinked.map(loData => {
-                        loData.label.en = loData?.label?.en.replace(regex, "<img src='$1'></img>") ?? loData.label.en;
+                        loData.label.en = loData?.label?.en.replace(regex, IMG_HTML) ?? loData.label.en;
                     });
                 }
                 const newLOsLinked = [...message.loLinked];
@@ -890,7 +891,7 @@ function CommunicationChannel(WrappedComponent) {
                 message.loObj ? this.props.currentSlateLOMath([message.loObj.label.en]) : this.props.currentSlateLOMath("");
                 if (message.loObj && message.loObj.label && message.loObj.label.en) {
                     const regex = /<math.*?data-src=\'(.*?)\'.*?<\/math>/g
-                    message.loObj.label.en = message.loObj.label.en.replace(regex, "<img src='$1'></img>");
+                    message.loObj.label.en = message.loObj.label.en.replace(regex, IMG_HTML);
                 }
                 const loDataToSave = config.slateType == SLATE_ASSESSMENT ? message : message.loObj ? [message.loObj] : [message]
                 this.props.currentSlateLO(loDataToSave);
@@ -903,13 +904,13 @@ function CommunicationChannel(WrappedComponent) {
 
                 let loIndex = [];
                 bodymatter.forEach((item, index) => {
-                    if (item.type == "element-learningobjectivemapping") {
+                    if (item.type == ELEMENT_LEARNING_OBJECTIVE_MAPPING) {
                         LOElements.push(item.id)
                         loIndex.push(index);
                     }
                     if (item.type == "element-aside") {
                         item.elementdata.bodymatter.forEach((ele, indexInner) => {
-                            if (ele.type == "element-learningobjectivemapping") {
+                            if (ele.type == ELEMENT_LEARNING_OBJECTIVE_MAPPING) {
                                 LOElements.push(ele.id)
                                 indexInner = index + "-" + indexInner;
                                 loIndex.push(indexInner);
@@ -924,7 +925,7 @@ function CommunicationChannel(WrappedComponent) {
                         "loref": loUrn
                     },
                     "metaDataAnchorID": LOElements,
-                    "elementVersionType": "element-learningobjectivemapping",
+                    "elementVersionType": ELEMENT_LEARNING_OBJECTIVE_MAPPING,
                     "loIndex": loIndex
                 }
                 if (LOElements.length) {
@@ -1131,7 +1132,7 @@ function CommunicationChannel(WrappedComponent) {
                     'assessmentApiUrl': config.ASSESSMENT_ENDPOINT,
                     'structureApiEndpoint':config.AUDIO_NARRATION_URL
                 }
-                if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && (FETCH_LO_FOR_SLATES.includes(config.slateType))) {
+                if (config.parentEntityUrn !== FRONT_MATTER && config.parentEntityUrn !== BACK_MATTER && (FETCH_LO_FOR_SLATES.includes(config.slateType))) {
                     let externalLFUrn = []
                     if (this?.props?.projectLearningFrameworks?.externalLF?.length) {
                         this.props.projectLearningFrameworks.externalLF.map(lf => externalLFUrn.push(lf.urn));
@@ -1139,7 +1140,7 @@ function CommunicationChannel(WrappedComponent) {
                     sendDataToIframe({ 'type': 'getSlateLO', 'message': { projectURN: config.projectUrn, slateURN: config.slateManifestURN,
                     apiKeys_LO,externalLFUrn:externalLFUrn ,entityURN:config.slateEntityURN} })
                 }
-                else if (config.parentEntityUrn !== "Front Matter" && config.parentEntityUrn !== "Back Matter" && config.slateType == "container-introduction") {
+                else if (config.parentEntityUrn !== FRONT_MATTER && config.parentEntityUrn !== BACK_MATTER && config.slateType == "container-introduction") {
                     sendDataToIframe({ 'type': 'getLOList', 'message': { projectURN: config.projectUrn, chapterURN: config.parentContainerUrn, apiKeys_LO } })
                 }
             }
